@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Theme;
 use Illuminate\Http\Request;
 use App\Question;
 use App\Codificator;
@@ -32,15 +33,32 @@ class QuestionController extends Controller{
         $type = $request->input('type');
 
         //с помощью кодификаторов составляем трехразрядный код вопроса
-        $query1 = $codificator->whereValue($section)->select('code')->first();
+        $query1 = $codificator->whereCodificator_type('Раздел')->whereValue($section)->select('code')->first();
         $section_code = $query1->code;
-        $query2 = $codificator->whereValue($theme)->select('code')->first();
+        $query2 = $codificator->whereCodificator_type('Тема')->whereValue($theme)->select('code')->first();
         $theme_code = $query2->code;
         $query3 = $codificator->whereCodificator_type('Тип')->whereValue($type)->select('code')->first();
         $type_code = $query3->code;
         $code = $section_code.'.'.$theme_code.'.'.$type_code;
 
         return $code;
+    }
+
+    private function getCode($id, Question $question, Codificator $codificator, Theme $tema){
+        $query = $question->whereId_question($id)->select('code')->first();
+        $code = $query->code;          //получили код вопроса
+        $array = explode('.',$code);
+        print_r($array);
+        $query1 = $codificator->whereCodificator_type('Раздел')->whereCode($array[0])->select('value')->first();
+        $section = $query1->value;
+        $query2 = $codificator->whereCodificator_type('Тема')->whereCode($array[1])->join('themes', 'themes.theme', '=', 'codificators.value')->where('themes.section', '=', $section)->select('value')->first();
+        $theme = $query2->value;
+        $query3 = $codificator->whereCodificator_type('Тип')->whereCode($array[2])->select('value')->first();
+        $type = $query3->value;
+        $decode = array('section' => $section, 'theme' => $theme, 'type' => $type,
+                        'section_code' => $array[0], 'theme_code' => $array[1], 'type_code' => $array[2]);
+
+        return $decode;
     }
 
     public function index(){
@@ -68,8 +86,9 @@ class QuestionController extends Controller{
         return redirect()->route('question_index');
     }
 
-    public function show($id, Question $question){  //показать вопрос
-        //$typedef = $question->table('questions')->whereId_question($id)->select('title','variants')->first();
+    public function show($id, Question $question, Codificator $codificator,  Theme $tema){  //показать вопрос
+        $decode = $this->getCode($id, $question, $codificator, $tema);
+        $type = $decode['type'];
 
         $query = $question->whereId_question($id)->select('title','variants','answer')->first();
         $text = $query->title;

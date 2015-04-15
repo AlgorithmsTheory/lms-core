@@ -10,12 +10,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 /**
- * App\Song
- *
- * @property integer $id
- * @property string $title
- * @property string $lyrics
- * @property string $slug
  * @method static \Illuminate\Database\Query\Builder|\App\Question whereId_question($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Question  whereTitle($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Question  whereAnswer($value)

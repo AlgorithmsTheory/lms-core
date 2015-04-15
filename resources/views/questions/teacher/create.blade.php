@@ -10,7 +10,7 @@
 <form action=""
 <table>
     <tr>
-        <td><p>Текст</p></td>
+        <td><p>Текст</p></td>         <!--обязательное поле-->
         <td><input type="text"  name="title"></td>
     </tr>
     <tr>
@@ -22,19 +22,19 @@
         <td><input type="text"  name="variants"></td> <!--динамическое добавление полей ввода для вариантов через JS-->
     </tr>
     <tr>
-        <td><p>Раздел</p></td>
+        <td><p>Раздел</p></td>          <!--обязательное поле-->
         <td><input type="text"  name="section"></td>
     </tr>
     <tr>
-        <td><p>Тема</p></td>
+        <td><p>Тема</p></td>            <!--обязательное поле-->
         <td><input type="text"  name="theme"></td>
     </tr>
     <tr>
-        <td><p>Тип</p></td>
+        <td><p>Тип</p></td>             <!--обязательное поле-->
         <td><input type="text"  name="type"></td>
     </tr>
     <tr>
-        <td><p>Баллов за верный ответ</p></td>
+        <td><p>Баллов за верный ответ</p></td>      <!--обязательное поле-->
         <td><input type="number" min="0" name="points"></td>
     </tr>
  </table>
