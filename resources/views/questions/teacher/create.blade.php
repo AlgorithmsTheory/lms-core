@@ -7,7 +7,6 @@
 
 {!! Form::open(['method' => 'PATCH', 'route' => 'question_add']) !!}
 
-<form action=""
 <table>
     <tr>
         <td><p>Текст</p></td>         <!--обязательное поле-->

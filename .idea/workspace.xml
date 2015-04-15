@@ -34,7 +34,7 @@
       <file leaf-file-name="QuestionController.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/QuestionController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="54" column="32" selection-start="2032" selection-end="2032" vertical-scroll-proportion="0.5224806" vertical-offset="1035" max-vertical-offset="3024">
+            <state line="78" column="4" selection-start="3017" selection-end="3017" vertical-scroll-proportion="2.1271317" vertical-offset="672" max-vertical-offset="3808">
               <folding>
                 <element signature="e#125#139#0" expanded="true" />
               </folding>
@@ -85,19 +85,8 @@
       <file leaf-file-name="create.blade.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create.blade.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="76" selection-start="1166" selection-end="1166" vertical-scroll-proportion="0.0" vertical-offset="503" max-vertical-offset="1400">
-              <folding>
-                <marker date="1429089599213" expanded="true" signature="5:1338" placeholder="..." />
-                <marker date="1429089599213" expanded="true" signature="12:1330" placeholder="..." />
-                <marker date="1429089599213" expanded="true" signature="188:1246" placeholder="..." />
-                <marker date="1429089599213" expanded="true" signature="197:321" placeholder="..." />
-                <marker date="1429089599213" expanded="true" signature="330:422" placeholder="..." />
-                <marker date="1429089599213" expanded="true" signature="431:673" placeholder="..." />
-                <marker date="1429089599213" expanded="true" signature="682:810" placeholder="..." />
-                <marker date="1429089599213" expanded="true" signature="819:945" placeholder="..." />
-                <marker date="1429089599213" expanded="true" signature="954:1079" placeholder="..." />
-                <marker date="1429089599213" expanded="true" signature="1088:1236" placeholder="..." />
-              </folding>
+            <state line="8" column="0" selection-start="165" selection-end="165" vertical-scroll-proportion="0.0" vertical-offset="294" max-vertical-offset="1372">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -132,11 +121,11 @@
         <option value="$PROJECT_DIR$/database/migrations/2015_04_14_122008_create_tests_table.php" />
         <option value="$PROJECT_DIR$/database/migrations/2015_04_14_134131_create_codificators_table.php" />
         <option value="$PROJECT_DIR$/resources/views/questions/student/show.blade.php" />
-        <option value="$PROJECT_DIR$/resources/views/questions/teacher/create.blade.php" />
         <option value="$PROJECT_DIR$/database/migrations/2015_04_15_104415_create_themes_table.php" />
         <option value="$PROJECT_DIR$/app/Theme.php" />
         <option value="$PROJECT_DIR$/app/Question.php" />
         <option value="$PROJECT_DIR$/app/Codificator.php" />
+        <option value="$PROJECT_DIR$/resources/views/questions/teacher/create.blade.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/QuestionController.php" />
       </list>
     </option>
@@ -482,18 +471,7 @@
     <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="17" column="46" selection-start="341" selection-end="375" vertical-scroll-proportion="0.0" vertical-offset="84" max-vertical-offset="1064">
-          <folding>
-            <marker date="1429089599213" expanded="true" signature="5:1338" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="12:1330" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="188:1246" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="197:321" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="330:422" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="431:673" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="682:810" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="819:945" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="954:1079" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="1088:1236" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -541,18 +519,7 @@
     <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="17" column="46" selection-start="341" selection-end="375" vertical-scroll-proportion="0.0" vertical-offset="84" max-vertical-offset="1064">
-          <folding>
-            <marker date="1429089599213" expanded="true" signature="5:1338" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="12:1330" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="188:1246" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="197:321" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="330:422" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="431:673" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="682:810" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="819:945" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="954:1079" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="1088:1236" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -600,18 +567,7 @@
     <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="17" column="46" selection-start="341" selection-end="375" vertical-scroll-proportion="0.0" vertical-offset="84" max-vertical-offset="1064">
-          <folding>
-            <marker date="1429089599213" expanded="true" signature="5:1338" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="12:1330" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="188:1246" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="197:321" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="330:422" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="431:673" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="682:810" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="819:945" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="954:1079" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="1088:1236" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -645,18 +601,7 @@
     <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="7" column="61" selection-start="145" selection-end="157" vertical-scroll-proportion="0.0" vertical-offset="196" max-vertical-offset="1008">
-          <folding>
-            <marker date="1429089599213" expanded="true" signature="5:1338" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="12:1330" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="188:1246" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="197:321" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="330:422" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="431:673" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="682:810" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="819:945" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="954:1079" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="1088:1236" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -820,24 +765,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="76" selection-start="1166" selection-end="1166" vertical-scroll-proportion="0.0" vertical-offset="503" max-vertical-offset="1400">
-          <folding>
-            <marker date="1429089599213" expanded="true" signature="5:1338" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="12:1330" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="188:1246" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="197:321" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="330:422" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="431:673" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="682:810" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="819:945" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="954:1079" placeholder="..." />
-            <marker date="1429089599213" expanded="true" signature="1088:1236" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/questions/student/show.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="5" column="57" selection-start="210" selection-end="210" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="476">
@@ -861,6 +788,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="0" selection-start="165" selection-end="165" vertical-scroll-proportion="0.0" vertical-offset="294" max-vertical-offset="1372">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="13" column="50" selection-start="444" selection-end="444" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="560">
@@ -870,7 +804,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/QuestionController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="32" selection-start="2032" selection-end="2032" vertical-scroll-proportion="0.5224806" vertical-offset="1035" max-vertical-offset="3024">
+        <state line="78" column="4" selection-start="3017" selection-end="3017" vertical-scroll-proportion="2.1271317" vertical-offset="672" max-vertical-offset="3808">
           <folding>
             <element signature="e#125#139#0" expanded="true" />
           </folding>

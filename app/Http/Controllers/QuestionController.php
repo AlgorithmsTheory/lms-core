@@ -44,11 +44,11 @@ class QuestionController extends Controller{
         return $code;
     }
 
-    private function getCode($id, Question $question, Codificator $codificator, Theme $tema){
+    private function getCode($id, Question $question, Codificator $codificator, Theme $tema){        //декодирование вопроса в асс. массив
         $query = $question->whereId_question($id)->select('code')->first();
         $code = $query->code;          //получили код вопроса
         $array = explode('.',$code);
-        print_r($array);
+       // print_r($array);
         $query1 = $codificator->whereCodificator_type('Раздел')->whereCode($array[0])->select('value')->first();
         $section = $query1->value;
         $query2 = $codificator->whereCodificator_type('Тема')->whereCode($array[1])->join('themes', 'themes.theme', '=', 'codificators.value')->where('themes.section', '=', $section)->select('value')->first();
@@ -76,7 +76,7 @@ class QuestionController extends Controller{
 
     public function create(){             //переход на страницу формы добавления
         return view('questions.teacher.create');
-}
+    }
 
     public function add(Question $question, Codificator $codificator, Request $request){  //обработка формы добавления
        $code = $this->setCode($codificator, $request);
@@ -90,13 +90,41 @@ class QuestionController extends Controller{
         $decode = $this->getCode($id, $question, $codificator, $tema);
         $type = $decode['type'];
 
-        $query = $question->whereId_question($id)->select('title','variants','answer')->first();
-        $text = $query->title;
-        $answer = $query->answer;
-        $parse = $query->variants;
-        $variants = explode(";", $parse);
-        //$field = $question->whereId_question($id)->select('title')->first();
-        return view('questions.student.show', compact('text','variants','answer'));
+        switch($type){
+            case 'Выбор одного из списка':                      //Стас
+            $query = $question->whereId_question($id)->select('title','variants','answer')->first();
+            $text = $query->title;
+            $answer = $query->answer;
+            $parse = $query->variants;
+            $variants = explode(";", $parse);
+            //$field = $question->whereId_question($id)->select('title')->first();
+            return view('questions.student.show', compact('text','variants','answer'));
+            break;
+
+            case 'Текстовый вопрос':                            //Стас
+                echo 'Вопрос на вставление слова';
+                break;
+
+            case 'Таблица соответствий':                        //Миша
+                echo 'ВОпрос на таблицу соответствий';
+                break;
+
+            case 'Да/Нет':                                      //Миша
+                echo 'Вопрос выбора да или нет';
+                break;
+
+            case 'Вопрос на вычисление':
+                echo 'Вопрос на вычисление';
+                break;
+
+            case 'Вопрос на соответствие':
+                echo 'Вопрос на соответствие';
+                break;
+
+            case 'Вид фунции':
+                echo 'Вопрос на определение аналитического вида функции';
+                break;
+        }
     }
 
     public function check(Request $request){   //обработать ответ на вопрос
