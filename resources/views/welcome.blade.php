@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Laravel</title>
+		<title>Завершение теста</title>
 		
 		<link href='//fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
 
@@ -40,8 +40,8 @@
 	<body>
 		<div class="container">
 			<div class="content">
-				<div class="title">Laravel 5</div>
-				<div class="quote">{{ Inspiring::quote() }}</div>
+				<div class="title">Вы ответили на {{ $score }} из {{ $total }} вопросов</div>
+                <div class="title">{!! link_to_route('question_index', 'Вернуться на главную') !!} </div>
 			</div>
 		</div>
 	</body>
