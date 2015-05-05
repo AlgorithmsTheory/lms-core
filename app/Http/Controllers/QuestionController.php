@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Test;
 use App\Theme;
 use Illuminate\Http\Request;
 use App\Question;
@@ -61,26 +62,51 @@ class QuestionController extends Controller{
         return $decode;
     }
 
-    private function prepareTest(){            //выборка вопросов
+    private function destruct(Test $test, $id_test){
+        $query = $test->whereId_test($id_test)->select('structure')->first();
+        $structure = $query->structure;
+        $destructured = explode(';', $structure);
+        $array = [];
+        for ($i=0; $i<count($destructured); $i++){
+            $temp_array = explode('-', $destructured[$i]);
+            for ($j=0; $j<=1; $j++){
+                $array[$i][$j] = $temp_array[$j];
+            }
+        }
+        return $array;
+}
+
+    private function prepareTest(Test $test, $id_test){            //выборка вопросов
         $question = $this->question;
         $array = [];
-        $query=$question->where('code', '=', '1.5.1')->orWhere('code', '=', '1.5.2')->get();
-        //$query=$question->where('code', '=', '1.1.1')->get();
-        foreach ($query as $id){
-            array_push($array,$id->id_question);
+        $k = 0;
+        $temp_array = [];
+        $destructured = $this->destruct($test, $id_test);
+
+        for ($i=0; $i<count($destructured); $i++){
+            //echo $destructured[$i][1].'<br>';
+            $query=$question->where('code', '=', $destructured[$i][1])->get();          //ищем всевозможные коды вопросов
+            //$query=$question->where('code', '=', '1.1.1')->get();
+            foreach ($query as $id){
+                array_push($temp_array,$id->id_question);                               //для каждого кода создаем массив всех вопрососв с этим кодом
+            }
+            for ($j=0; $j<$destructured[$i][0]; $j++){                                  //и выбираем заданное количество случайных
+                $index = rand(0,count($temp_array)-1);
+                $choisen = $temp_array[$index];
+                $temp_array[$index]=$temp_array[count($temp_array)-1];
+                $temp_array[count($temp_array)-1] = $choisen;
+                array_pop($temp_array);
+                $array[$k] = $choisen;
+                $k++;
+            }
+            $temp_array = [];
         }
-        return $array;    //формируем массив из id вошедших в тест вопросов
+        return $array;          //формируем массив из id вошедших в тест вопросов
     }
 
-    public function result(){
-        $score = Session::get('score');
-        $total = Session::get('num');
-        return view('welcome', compact('score', 'total'));
-    }
-
-    private function chooseQuestion(){
+    private function chooseQuestion(Test $test, $id_test){
         if (!Session::has('test')){                //генерируем тест, если еше не создан
-            $array = $this->prepareTest();
+            $array = $this->prepareTest($test, $id_test);
             $ser_array = serialize($array);
             Session::put('test', $ser_array);         //в сессии храним массив вопросов
             Session::put('score', 0);                 //количество правильных овтетов
@@ -104,6 +130,12 @@ class QuestionController extends Controller{
         }
     }
 
+    public function result(){
+        $score = Session::get('score');
+        $total = Session::get('num');
+        return view('welcome', compact('score', 'total'));
+    }
+
     public function index(){
         //Дефолтная страница при разграничении прав
         /*if (Session::has('username')){
@@ -112,9 +144,9 @@ class QuestionController extends Controller{
         if (Session::has('teachername')){
             return view('questions.teacher.index');
         }*/
-        $questions = $this->question->get();
+        //$questions = $this->question->get();
         //dd($questions);
-        return view('questions.teacher.index', compact('questions'));
+        return view('questions.teacher.index'/*, compact('questions')*/);
     }
 
     public function create(){             //переход на страницу формы добавления
@@ -130,10 +162,11 @@ class QuestionController extends Controller{
         return redirect()->route('question_index');
     }
 
-    public function showTest($num, Codificator $codificator,  Theme $tema){  //показать вопрос в тесте
-        $id = $this->chooseQuestion();       //получаем id случайного вопроса
+    public function showTest($num, Codificator $codificator,  Theme $tema, Test $test){  //показать вопрос в тесте
+        $id_test = 1;
+        $id = $this->chooseQuestion($test, $id_test);          //получаем id случайного вопроса
         $score = Session::get('score');
-        if ($id == -1)                       //проверяем, не закончились ли вопросы
+        if ($id == -1)                                         //проверяем, не закончились ли вопросы
             return redirect()->route('question_result');
         //print_r (unserialize(Session::get('test')));
         $question = $this->question;
@@ -268,7 +301,7 @@ class QuestionController extends Controller{
         }
     }
 
-    public function show($id, Codificator $codificator,  Theme $tema){  //показать вопрос
+   /* public function show($id, Codificator $codificator,  Theme $tema){  //показать вопрос
         $question = $this->question;
         $decode = $this->getCode($id, $codificator, $tema);
         $type = $decode['type'];
@@ -359,7 +392,7 @@ class QuestionController extends Controller{
                     }
                 }
                 /*echo $counter.'=='.count($answers).'<br>';
-                echo $broken.'<br>';*/
+                echo $broken.'<br>';
                 if ($counter == count($answers) && (empty($choices))){      //счетчик правильных ответов должен быть равен количеству
                     echo 'Верно <br><br>';                                  //правильных ответов и массив выбранных ответов д.б. пустым
                     echo link_to_route('question_index', 'Вернуться к списку вопросов');
@@ -392,7 +425,7 @@ class QuestionController extends Controller{
                 echo 'Вопрос на определение аналитического вида функции';
                 break;
         }
-    }
+    }*/
 
     public function killSession(){
         Session::flush();
