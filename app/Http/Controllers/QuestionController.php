@@ -14,6 +14,7 @@ use App\Theme;
 use Illuminate\Http\Request;
 use App\Question;
 use App\Codificator;
+use View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use PDOStatement;
@@ -162,37 +163,33 @@ class QuestionController extends Controller{
         return redirect()->route('question_index');
     }
 
-    public function showTest($num, Codificator $codificator,  Theme $tema, Test $test){  //показать вопрос в тесте
-        $id_test = 1;
-        $id = $this->chooseQuestion($test, $id_test);          //получаем id случайного вопроса
-        $score = Session::get('score');
-        if ($id == -1)                                         //проверяем, не закончились ли вопросы
-            return redirect()->route('question_result');
-        //print_r (unserialize(Session::get('test')));
+    private function showTest($id_question){  //показать вопрос в тесте
         $question = $this->question;
+        $codificator = new Codificator();
+        $tema = new Theme();
         //echo $id.'<br>';
-        $decode = $this->getCode($id, $codificator, $tema);
+        $decode = $this->getCode($id_question, $codificator, $tema);
         $type = $decode['type'];
 
         switch($type){
             case 'Выбор одного из списка':                      //Стас
-                $query = $question->whereId_question($id)->select('title','variants','answer')->first();
+                $query = $question->whereId_question($id_question)->select('title','variants','answer')->first();
                 $text = $query->title;
-                $answer = $query->answer;
                 $parse = $query->variants;
                 $variants = explode(";", $parse);
-                //$field = $question->whereId_question($id)->select('title')->first();
-                return view('tests.show1', compact('text','variants','answer','type','num', 'score'));
+                $view = 'tests.show1';
+                $array = array('view' => $view, 'arguments' => array('text' => $text, "variants" => $variants, "type" => $type, "id" => $id_question));
+                return $array;
                 break;
 
             case 'Выбор нескольких из списка':
-                $query = $question->whereId_question($id)->select('title','variants','answer')->first();
+                $query = $question->whereId_question($id_question)->select('title','variants','answer')->first();
                 $text = $query->title;
-                $answer = $query->answer;
                 $parse = $query->variants;
                 $variants = explode(";", $parse);
-                //$field = $question->whereId_question($id)->select('title')->first();
-                return view('tests.show2', compact('text','variants','answer','type','num', 'score'));
+                $view = 'tests.show2';
+                $array = array('view' => $view, 'arguments' => array('text' => $text, "variants" => $variants, "type" => $type, "id" => $id_question));
+                return $array;
                 break;
 
             case 'Текстовый вопрос':                            //Стас
@@ -219,6 +216,20 @@ class QuestionController extends Controller{
                 echo 'Вопрос на определение аналитического вида функции';
                 break;
         }
+    }
+
+    public function showViews($id_test, Test $test){
+        $query = $test->whereId_test($id_test)->select('amount')->first();   //кол-во вопрососв в тесте
+        $amount = $query->amount;
+        $widgets = [];
+        for ($i=0; $i<$amount; $i++){
+            $id = $this->chooseQuestion($test, $id_test);          //должны получать название view и необходимые параметры
+            $data = $this->showTest($id);
+            //print_r (unserialize(Session::get('test')));
+            $widgets[] = View::make($data['view'], $data['arguments']);
+        }
+        $widgetListView = View::make('questions.student.widget_list')->with('widgets', $widgets);
+        return $widgetListView;
     }
 
     public function checkTest(Request $request){   //обработать ответ на вопрос

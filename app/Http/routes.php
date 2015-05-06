@@ -21,7 +21,8 @@ Route::get('questions', ['as' => 'question_index', 'uses' => 'QuestionController
 Route::get('questions/create', ['as' => 'question_create', 'uses' => 'QuestionController@create']);
 Route::get('questions/kill-session', ['as' => 'question_kill_session', 'uses' => 'QuestionController@killSession']);
 Route::get('questions/show/{id}', ['as' => 'question_show', 'uses' => 'QuestionController@show']);
-Route::get('questions/show-test/{num}', ['as' => 'question_showtest', 'uses' => 'QuestionController@showTest']);
+//Route::get('questions/show-test/{num}', ['as' => 'question_showtest', 'uses' => 'QuestionController@showTest']);
+Route::get('questions/show-test/{id_test}', ['as' => 'question_showtest', 'uses' => 'QuestionController@showViews']);
 Route::get('questions/result', ['as' => 'question_result', 'uses' => 'QuestionController@result']);
 Route::patch('questions/check', ['as' => 'question_check', 'uses' => 'QuestionController@check']);
 Route::patch('questions/check-test', ['as' => 'question_checktest', 'uses' => 'QuestionController@checkTest']);
