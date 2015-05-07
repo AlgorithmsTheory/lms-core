@@ -228,12 +228,14 @@ class QuestionController extends Controller{
             //print_r (unserialize(Session::get('test')));
             $widgets[] = View::make($data['view'], $data['arguments']);
         }
-        $widgetListView = View::make('questions.student.widget_list')->with('widgets', $widgets);
+        $widgetListView = View::make('questions.student.widget_list',compact('amount'))->with('widgets', $widgets);
         return $widgetListView;
     }
 
     public function checkTest(Request $request){   //обработать ответ на вопрос
-        $num = $request->input('num');
+        return 'Привет!';
+    }
+        /*$num = $request->input('num');
         $num++;
         switch($request->input('type')){
             case 'Выбор одного из списка':                      //Стас
@@ -274,8 +276,8 @@ class QuestionController extends Controller{
                         }
                     }
                 }
-                /*echo $counter.'=='.count($answers).'<br>';
-                echo $broken.'<br>';*/
+                echo $counter.'=='.count($answers).'<br>';
+                echo $broken.'<br>';
                 if ($counter == count($answers) && (empty($choices))){      //счетчик правильных ответов должен быть равен количеству
                     Session::put('score', Session::get('score')+1);         //правильных ответов и массив выбранных ответов д.б. пустым
                     return redirect()->route('question_showtest', [$num]);
@@ -310,7 +312,7 @@ class QuestionController extends Controller{
                 echo 'Вопрос на определение аналитического вида функции';
                 break;
         }
-    }
+    }*/
 
    /* public function show($id, Codificator $codificator,  Theme $tema){  //показать вопрос
         $question = $this->question;

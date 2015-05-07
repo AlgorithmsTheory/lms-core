@@ -34,10 +34,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="QuestionController.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="QuestionController.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/QuestionController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="226" column="41" selection-start="9417" selection-end="9417" vertical-scroll-proportion="3.4499204" vertical-offset="4018" max-vertical-offset="12460">
+            <state line="238" column="15" selection-start="9882" selection-end="9882" vertical-scroll-proportion="0.0" vertical-offset="6202" max-vertical-offset="12516">
               <folding>
                 <element signature="e#125#138#0" expanded="true" />
               </folding>
@@ -48,8 +48,11 @@
       <file leaf-file-name="show2.blade.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/views/tests/show2.blade.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="53" selection-start="244" selection-end="244" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="560">
-              <folding />
+            <state line="9" column="11" selection-start="361" selection-end="361" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="532">
+              <folding>
+                <marker date="1430912363820" expanded="true" signature="5:403" placeholder="..." />
+                <marker date="1430912363820" expanded="true" signature="12:395" placeholder="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -57,16 +60,16 @@
       <file leaf-file-name="show1.blade.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/views/tests/show1.blade.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="11" selection-start="256" selection-end="256" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="560">
+            <state line="9" column="11" selection-start="356" selection-end="356" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="532">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="widget_list.blade.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="widget_list.blade.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/resources/views/questions/student/widget_list.blade.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="22" selection-start="124" selection-end="124" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="420">
+            <state line="24" column="5" selection-start="1075" selection-end="1075" vertical-scroll-proportion="0.13354531" vertical-offset="588" max-vertical-offset="1372">
               <folding />
             </state>
           </provider>
@@ -105,16 +108,16 @@
         <option value="$PROJECT_DIR$/resources/views/questions/student/show3.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/questions/teacher/index.blade.php" />
         <option value="$PROJECT_DIR$/app/Http/routes.php" />
-        <option value="$PROJECT_DIR$/resources/views/questions/student/widget_list.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/tests/show2.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/tests/show1.blade.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/QuestionController.php" />
+        <option value="$PROJECT_DIR$/resources/views/questions/student/widget_list.blade.php" />
       </list>
     </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="1" />
+    <option name="x" value="2" />
     <option name="width" value="1364" />
     <option name="height" value="728" />
   </component>
@@ -368,7 +371,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1" y="0" width="1364" height="728" extended-state="0" />
+    <frame x="2" y="0" width="1364" height="728" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -430,15 +433,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/QuestionController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="155" column="38" selection-start="6680" selection-end="6680" vertical-scroll-proportion="0.0" vertical-offset="4340" max-vertical-offset="12348">
-          <folding>
-            <element signature="e#125#138#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="20" column="16" selection-start="766" selection-end="766" vertical-scroll-proportion="0.0" vertical-offset="560" max-vertical-offset="924">
@@ -710,15 +704,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="32" selection-start="1213" selection-end="1222" vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="952">
-          <folding>
-            <element signature="e#7#392#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/standard_4.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="135" column="9" selection-start="4778" selection-end="4809" vertical-scroll-proportion="0.33281493" vertical-offset="3566" max-vertical-offset="30464">
@@ -733,33 +718,52 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/questions/student/widget_list.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="22" selection-start="124" selection-end="124" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="420">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/tests/show1.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="11" selection-start="256" selection-end="256" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="560">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/tests/show2.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="53" selection-start="244" selection-end="244" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="560">
+        <state line="9" column="11" selection-start="361" selection-end="361" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="532">
+          <folding>
+            <marker date="1430912363820" expanded="true" signature="5:403" placeholder="..." />
+            <marker date="1430912363820" expanded="true" signature="12:395" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/DHTML.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1374" column="0" selection-start="21359" selection-end="21359" vertical-scroll-proportion="0.0" vertical-offset="38262" max-vertical-offset="106764">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/QuestionController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="226" column="41" selection-start="9417" selection-end="9417" vertical-scroll-proportion="3.4499204" vertical-offset="4018" max-vertical-offset="12460">
+        <state line="238" column="15" selection-start="9882" selection-end="9882" vertical-scroll-proportion="0.0" vertical-offset="6202" max-vertical-offset="12516">
           <folding>
             <element signature="e#125#138#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="32" selection-start="1213" selection-end="1222" vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="952">
+          <folding>
+            <element signature="e#7#392#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/tests/show1.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="11" selection-start="356" selection-end="356" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="532">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/questions/student/widget_list.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="5" selection-start="1075" selection-end="1075" vertical-scroll-proportion="0.13354531" vertical-offset="588" max-vertical-offset="1372">
+          <folding />
         </state>
       </provider>
     </entry>

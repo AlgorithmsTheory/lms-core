@@ -8,7 +8,6 @@
 @foreach ($variants as $var)
 <input type="checkbox"  name="choice[]" value="{{ $var }}"> {{ $var }} <br>
 @endforeach
-<input type="submit" name="check" value="Ответить">
 {!! Form::close() !!}
 <br>
 </body>
