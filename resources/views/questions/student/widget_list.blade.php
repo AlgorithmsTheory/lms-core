@@ -42,6 +42,7 @@
 <input id="super{{$i}}" type="hidden" name="{{$i}}" value="жопа">
 @endfor
 <input id="amount" type="hidden" name="amount" value="{{ $amount }}">
+<input type="hidden" name="id_test" value="{{ $id_test }}">
 <input id="check" onClick="fillSuper()" type="submit" name="check" value="Отправить">
 {!! Form::close() !!}
 </body>
