@@ -27,7 +27,9 @@ class QuestionController extends Controller{
         $this->question=$question;
     }
 
-    private function setCode(Codificator $codificator, Request $request){  //Установить код вопроса
+    private function setCode(){  //Установить код вопроса
+        $codificator = new Codificator();
+        $request = new Request();
         //получаем необходимые данные из формы
         $section = $request->input('section');
         $theme = $request->input('theme');
@@ -45,7 +47,8 @@ class QuestionController extends Controller{
         return $code;
     }
 
-    private function getCode($id, Codificator $codificator, Theme $tema){        //декодирование вопроса в асс. массив
+    private function getCode($id){        //декодирование вопроса в асс. массив
+        $codificator = new Codificator();
         $question = $this->question;
         $query = $question->whereId_question($id)->select('code')->first();
         $code = $query->code;          //получили код вопроса
@@ -63,7 +66,8 @@ class QuestionController extends Controller{
         return $decode;
     }
 
-    private function destruct(Test $test, $id_test){
+    private function destruct($id_test){
+        $test = new Test();
         $query = $test->whereId_test($id_test)->select('structure')->first();
         $structure = $query->structure;
         $destructured = explode(';', $structure);
@@ -77,12 +81,12 @@ class QuestionController extends Controller{
         return $array;
 }
 
-    private function prepareTest(Test $test, $id_test){            //выборка вопросов
+    private function prepareTest($id_test){            //выборка вопросов
         $question = $this->question;
         $array = [];
         $k = 0;
         $temp_array = [];
-        $destructured = $this->destruct($test, $id_test);
+        $destructured = $this->destruct($id_test);
 
         for ($i=0; $i<count($destructured); $i++){
             //echo $destructured[$i][1].'<br>';
@@ -105,9 +109,9 @@ class QuestionController extends Controller{
         return $array;          //формируем массив из id вошедших в тест вопросов
     }
 
-    private function chooseQuestion(Test $test, $id_test){
+    private function chooseQuestion($id_test){
         if (!Session::has('test')){                //генерируем тест, если еше не создан
-            $array = $this->prepareTest($test, $id_test);
+            $array = $this->prepareTest($id_test);
             $ser_array = serialize($array);
             Session::put('test', $ser_array);         //в сессии храним массив вопросов
             Session::put('score', 0);                 //количество правильных овтетов
@@ -128,6 +132,91 @@ class QuestionController extends Controller{
             $ser_array = serialize($array);
             Session::put('test', $ser_array );
             return $choisen;
+        }
+    }
+
+    private function check($array){       //проверяет правильность вопроса и на выходе дает баллы за вопрос
+        $question = $this->question;
+        $id = $array[0];
+        print_r($array);
+        $array[0] = $array[count($array)-1];     //убираем из входного массива id вопроса,
+        array_pop($array);                       //чтобы остались лишь выбранные варианты ответа
+        $query = $question->whereId_question($id)->select('answer','points')->first();
+        $answer = $query->answer;
+        $points = $query->points;
+        $type = $this->getCode($id)['type'];
+        print_r($array);
+        switch($type){
+            case 'Выбор одного из списка':                      //Стас
+                if ($array[0] == $answer){
+                    $score = $points;
+                }
+                else {
+                    $score = 0;
+                }
+                return $score;
+                break;
+
+            case 'Выбор нескольких из списка':
+                $choices = $array;
+                $answers = explode(';', $answer);
+                $counter = 0;
+                $broken = 0;
+                for ($i=0; $i<count($answers); $i++ ){        //сравниваем каждый правильный ответ
+                    if ($counter == -1) break;
+                    for ($j=0; $j<count($choices); $j++){      // с каждым выбранным
+                        //echo $answers[$i].'=='.$choices[$j].'<br>';
+                        if ($answers[$i] != $choices[$j]){
+                            $broken++;                          //прибавляем счетчик непрвильных ответов
+                        }
+                        else {
+                            $buf = $choices[$j];
+                            $choices[$j] = $choices[count($choices)-1];     //меняем местами правильный ответ с последним для удаления
+                            $choices[count($choices)-1] =  $buf;
+                            array_pop($choices);                         //удаляем правильный проверенный вариант из массива выбранных ответов
+                            $counter++;                                  // прибавляем счетчик правильных ответов
+                            $broken = 0;
+                            break;
+                        }
+                        if ($broken == count($answers)){                 //если на данной итерации все ответы неверные, то конец
+                            $counter = -1;
+                        }
+                    }
+                }
+                //echo $counter.'=='.count($answers).'<br>';
+                //echo $broken.'<br>';
+                if ($counter == count($answers) && (empty($choices))){      //счетчик правильных ответов должен быть равен количеству
+                    $score = $points;         //правильных ответов и массив выбранных ответов д.б. пустым
+                }
+                else {
+                   $score = 0;
+                }
+                return $score;
+                break;
+
+            case 'Текстовый вопрос':                            //Стас
+                echo 'Вопрос на вставление слова';
+                break;
+
+            case 'Таблица соответствий':                        //Миша
+                echo 'Вопрос на таблицу соответствий';
+                break;
+
+            case 'Да/Нет':                                      //Миша
+                echo 'Вопрос выбора да или нет';
+                break;
+
+            case 'Вопрос на вычисление':
+                echo 'Вопрос на вычисление';
+                break;
+
+            case 'Вопрос на соответствие':
+                echo 'Вопрос на соответствие';
+                break;
+
+            case 'Вид функции':
+                echo 'Вопрос на определение аналитического вида функции';
+                break;
         }
     }
 
@@ -154,8 +243,9 @@ class QuestionController extends Controller{
         return view('questions.teacher.create');
     }
 
-    public function add(Codificator $codificator, Request $request){  //обработка формы добавления
-       $code = $this->setCode($codificator, $request);
+    public function add(){  //обработка формы добавления
+        $request = new Request();
+        $code = $this->setCode();
 
         //добавляем вопрос в таблицу
         $question = $this->question;
@@ -165,10 +255,8 @@ class QuestionController extends Controller{
 
     private function showTest($id_question){  //показать вопрос в тесте
         $question = $this->question;
-        $codificator = new Codificator();
-        $tema = new Theme();
         //echo $id.'<br>';
-        $decode = $this->getCode($id_question, $codificator, $tema);
+        $decode = $this->getCode($id_question);
         $type = $decode['type'];
 
         switch($type){
@@ -218,12 +306,13 @@ class QuestionController extends Controller{
         }
     }
 
-    public function showViews($id_test, Test $test){
+    public function showViews($id_test){
+        $test = new Test();
         $query = $test->whereId_test($id_test)->select('amount')->first();   //кол-во вопрососв в тесте
         $amount = $query->amount;
         $widgets = [];
         for ($i=0; $i<$amount; $i++){
-            $id = $this->chooseQuestion($test, $id_test);          //должны получать название view и необходимые параметры
+            $id = $this->chooseQuestion($id_test);          //должны получать название view и необходимые параметры
             $data = $this->showTest($id);
             //print_r (unserialize(Session::get('test')));
             $widgets[] = View::make($data['view'], $data['arguments']);
@@ -233,86 +322,21 @@ class QuestionController extends Controller{
     }
 
     public function checkTest(Request $request){   //обработать ответ на вопрос
-        return 'Привет!';
-    }
-        /*$num = $request->input('num');
-        $num++;
-        switch($request->input('type')){
-            case 'Выбор одного из списка':                      //Стас
-                if ($request->input('choice') == $request->input('answer')){
-                    Session::put('score', Session::get('score')+1);
-                    return redirect()->route('question_showtest', [$num]);
-                    //header('Refresh: 3; URL=http://localhost/uir/public/questions');     //поменять время ожидания
-                }
-                else {
-                    return redirect()->route('question_showtest', [$num]);
-                }
-                break;
-
-            case 'Выбор нескольких из списка':
-                $answer = $request->input('answer');
-                $choices = ($request->input('choice'));
-                $answers = explode(';', $answer);
-                $counter = 0;
-                $broken = 0;
-                for ($i=0; $i<count($answers); $i++ ){        //сравниваем каждый правильный ответ
-                    if ($counter == -1) break;
-                    for ($j=0; $j<count($choices); $j++){      // с каждым выбранным
-                        //echo $answers[$i].'=='.$choices[$j].'<br>';
-                        if ($answers[$i] != $choices[$j]){
-                            $broken++;                          //прибавляем счетчик непрвильных ответов
-                        }
-                        else {
-                            $buf = $choices[$j];
-                            $choices[$j] = $choices[count($choices)-1];     //меняем местами правильный ответ с последним для удаления
-                            $choices[count($choices)-1] =  $buf;
-                            array_pop($choices);                         //удаляем правильный проверенный вариант из массива выбранных ответов
-                            $counter++;                                  // прибавляем счетчик правильных ответов
-                            $broken = 0;
-                            break;
-                        }
-                        if ($broken == count($answers)){                 //если на данной итерации все ответы неверные, то конец
-                            $counter = -1;
-                        }
-                    }
-                }
-                echo $counter.'=='.count($answers).'<br>';
-                echo $broken.'<br>';
-                if ($counter == count($answers) && (empty($choices))){      //счетчик правильных ответов должен быть равен количеству
-                    Session::put('score', Session::get('score')+1);         //правильных ответов и массив выбранных ответов д.б. пустым
-                    return redirect()->route('question_showtest', [$num]);
-                    //header('Refresh: 3; URL=http://localhost/uir/public/questions');         //поменять время ожидания
-                }
-                else {
-                    return redirect()->route('question_showtest', [$num]);
-                }
-                break;
-
-            case 'Текстовый вопрос':                            //Стас
-                echo 'Вопрос на вставление слова';
-                break;
-
-            case 'Таблица соответствий':                        //Миша
-                echo 'Вопрос на таблицу соответствий';
-                break;
-
-            case 'Да/Нет':                                      //Миша
-                echo 'Вопрос выбора да или нет';
-                break;
-
-            case 'Вопрос на вычисление':
-                echo 'Вопрос на вычисление';
-                break;
-
-            case 'Вопрос на соответствие':
-                echo 'Вопрос на соответствие';
-                break;
-
-            case 'Вид функции':
-                echo 'Вопрос на определение аналитического вида функции';
-                break;
+        //$request = new Request();
+        $amount = $request->input('amount');
+        $sum = 0;
+        for ($i=0; $i<$amount; $i++){        //обрабатываем каждый вопрос
+            $data = $request->input($i);
+            $array = json_decode($data);
+            $score[$i] = $this->check($array);
+            $sum += $score[$i];
         }
-    }*/
+        return $sum;
+            /*print_r($data);
+            echo '<br>';
+            print_r($array);
+            echo '<br><br>';*/
+    }
 
    /* public function show($id, Codificator $codificator,  Theme $tema){  //показать вопрос
         $question = $this->question;
