@@ -7,10 +7,14 @@
            for (var i=0; i<amount; i++){
                //alert ('i= '+i);
                var k = 0;
+               var pattern = /^\d+$/;
                var allElem = document.forms[i].elements;
                for (var j=0; j<document.forms[i].elements.length; j++){
                    //alert (allElem[j].name);
-                   if(allElem[j].name=='num' || (allElem[j].name=='choice' && allElem[j].checked == true) || (allElem[j].name=='choice[]' && allElem[j].checked == true)) {
+                   if(allElem[j].name=='num' ||
+                   (allElem[j].name=='choice' && allElem[j].checked == true) ||
+                   (allElem[j].name=='choice[]' && allElem[j].checked == true) ||
+                   pattern.test(allElem[j].name)) {
                        array[k] = allElem[j].value;
                        k++;
                        //alert (allElem[j].value);

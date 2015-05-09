@@ -156,14 +156,15 @@ class QuestionController extends Controller{
     private function check($array){       //проверяет правильность вопроса и на выходе дает баллы за вопрос
         $question = $this->question;
         $id = $array[0];
-        //print_r($array);
-        $array[0] = $array[count($array)-1];     //убираем из входного массива id вопроса,
-        array_pop($array);                       //чтобы остались лишь выбранные варианты ответа
+        for ($i=0; $i < count($array)-1; $i++){                                    //передвигаем массив, чтобы первый элемент оказался последни
+            $array[$i] = $array[$i+1];
+        }
+        array_pop($array);                                             //убираем из входного массива id вопроса, чтобы остались лишь выбранные варианты ответа
         $query = $question->whereId_question($id)->select('answer','points')->first();
         $answer = $query->answer;
         $points = $query->points;
         $type = $this->getCode($id)['type'];
-        //print_r($array);
+        echo '<br>';
         switch($type){
             case 'Выбор одного из списка':                      //Стас
                 if ($array[0] == $answer){
@@ -172,7 +173,7 @@ class QuestionController extends Controller{
                 else {
                     $score = 0;
                 }
-                echo $score.'<br>';
+                //echo $score.'<br>';
                 return $score;
                 break;
 
@@ -183,7 +184,6 @@ class QuestionController extends Controller{
                 $step = $points/count($answers);
                 for ($i=0; $i<count($answers); $i++ ){        //сравниваем каждый правильный ответ
                     for ($j=0; $j<count($choices); $j++){      // с каждым выбранным
-                        //echo $answers[$i].'=='.$choices[$j].'<br>';
                         if ($answers[$i] == $choices[$j]){
                             $buf = $choices[$j];
                             $choices[$j] = $choices[count($choices)-1];     //меняем местами правильный ответ с последним для удаления
@@ -194,8 +194,6 @@ class QuestionController extends Controller{
                         }
                     }
                 }
-                //echo $counter.'=='.count($answers).'<br>';
-                //echo $broken.'<br>';
                 if (!(empty($choices))){                    //если выбраны лишние варианты
                     for ($i=0; $i<count($choices); $i++){
                         $score -= $step;
@@ -207,12 +205,26 @@ class QuestionController extends Controller{
                 if ($score < 0){                          //если ушел в минус
                     $score = 0;
                 }
-                echo $score.'<br>';
+                //echo $score.'<br>';
                 return $score;
                 break;
 
             case 'Текстовый вопрос':                            //Стас
-                echo 'Вопрос на вставление слова';
+                $question = $this->question;
+                $query = $question->whereId_question($id)->select('variants', 'answer', 'points')->first();
+                $parse = $query->variants;
+                $variants = explode("<>", $parse);
+                $parse_answer = $query->answer;
+                $answer = explode(";", $parse_answer);
+                $points = $query->points;
+                $score = 0;
+                $step = $points/count($variants);
+                for ($i=0; $i < count($variants); $i++){
+                    if ($array[$i] == $answer[$i]){
+                        $score +=$step;
+                    }
+                }
+                return $score;
                 break;
 
             case 'Таблица соответствий':                        //Миша
@@ -277,7 +289,7 @@ class QuestionController extends Controller{
 
         switch($type){
             case 'Выбор одного из списка':                      //Стас
-                $query = $question->whereId_question($id_question)->select('title','variants','answer')->first();
+                $query = $question->whereId_question($id_question)->select('title','variants')->first();
                 $text = $query->title;
                 $parse = $query->variants;
                 $variants = explode(";", $parse);
@@ -288,7 +300,7 @@ class QuestionController extends Controller{
                 break;
 
             case 'Выбор нескольких из списка':
-                $query = $question->whereId_question($id_question)->select('title','variants','answer')->first();
+                $query = $question->whereId_question($id_question)->select('title','variants')->first();
                 $text = $query->title;
                 $parse = $query->variants;
                 $variants = explode(";", $parse);
@@ -299,7 +311,23 @@ class QuestionController extends Controller{
                 break;
 
             case 'Текстовый вопрос':                            //Стас
-                echo 'Вопрос на вставление слова';
+                $query = $question->whereId_question($id_question)->select('title','variants','answer')->first();
+                $text = $query->title;
+                $text_parts = explode("<>", $text);                         //части текста между селектами
+                $parse = $query->variants;
+                $variants = explode("<>", $parse);
+                $num_slot = count($variants);
+                $parse_group_variants = [];
+                $group_variants = [];
+                $num_var = [];
+                for ($i=0; $i < count($variants); $i++){
+                    $parse_group_variants[$i] = explode(";",$variants[$i]);                //варинаты каждого селекта
+                    $group_variants[$i] = $this->mixVariants($parse_group_variants[$i]);   //перемешиваем варианты
+                    $num_var[$i] = count($group_variants[$i]);
+                }
+                $view = 'tests.show3';
+                $array = array('view' => $view, 'arguments' => array('text' => $text, "variants" => $group_variants, "type" => $type, "id" => $id_question, "text_parts" => $text_parts, "num_var" => $num_var, "num_slot" => $num_slot));
+                return $array;
                 break;
 
             case 'Таблица соответствий':                        //Миша
@@ -390,21 +418,20 @@ class QuestionController extends Controller{
             case 'Текстовый вопрос':                            //Стас
                 $query = $question->whereId_question($id)->select('title','variants','answer')->first();
                 $text = $query->title;
-                $text_parts = explode("<>", $text);
+                $text_parts = explode("<>", $text);                         //части текста между селектами
                 $answer = $query->answer;
                 $parse = $query->variants;
                 $variants = explode("<>", $parse);
                 $num_slot = count($variants);
+                $parse_group_variants = [];
                 $group_variants = [];
                 $num_var = [];
                 for ($i=0; $i < count($variants); $i++){
-                    $group_variants[$i] = explode(";",$variants[$i]);
+                    $parse_group_variants[$i] = explode(";",$variants[$i]);                //варинаты каждого селекта
+                    $group_variants[$i] = $this->mixVariants($parse_group_variants[$i]);   //перемешиваем варианты
                     $num_var[$i] = count($group_variants[$i]);
                 }
-                //print_r($group_variants);
-                //echo $num_slot.'<br>';
-               //print_r($num_var);
-                return view('questions.student.show3', compact('text_parts','group_variants','answer','type', 'num_var','num_slot'));
+                return view('questions.student.show3', compact('text_parts','group_variants','answer','type','num_var','num_slot','id'));
                 break;
 
             case 'Таблица соответствий':                        //Миша
@@ -479,11 +506,26 @@ class QuestionController extends Controller{
                 break;
 
             case 'Текстовый вопрос':                            //Стас
-                echo 'Вопрос на вставление слова';
+                $question = $this->question;
+                $id = $request->input('id');
+                $query = $question->whereId_question($id)->select('variants', 'answer', 'points')->first();
+                $parse = $query->variants;
+                $variants = explode("<>", $parse);
+                $parse_answer = $query->answer;
+                $answer = explode(";", $parse_answer);
+                $points = $query->points;
+                $score = 0;
+                $step = $points/count($variants);
+                for ($i=0; $i < count($variants); $i++){
+                    //echo $request->input($i).' = '.$answer[$i].'<br>';
+                    if ($request->input($i) == $answer[$i]){
+                        $score +=$step;
+                    }
+                }
+                echo 'Вы верно выбрали '.$score.' из '.$points.' вариантов!';
                 break;
 
             case 'Таблица соответствий':                        //Миша
-                echo 'Вопрос на таблицу соответствий';
                 break;
 
             case 'Да/Нет':                                      //Миша
