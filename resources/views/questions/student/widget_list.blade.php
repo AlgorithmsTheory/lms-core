@@ -1,5 +1,10 @@
 <html>
-<script type="text/javascript">
+<head>
+    <title>Тест</title>
+
+    {!! HTML::style('css/test_style.css') !!}
+    <script src="/public/js/jquery-1.11.3.js"></script>
+    <script type="text/javascript">
     <!--
        function fillSuper(){
            var array = [];
@@ -33,21 +38,92 @@
     }
      // -->
 </script>
+</head>
 <body>
+<nav class="fixed-nav">
+    <div class="menu wrapper">
+        <ul>
+            @for ($i=0; $i<$amount; $i++)
+            <li class="NotAnswered" id="{{$i}}"><a href="#form{{$i+1}}" class="SmoothScroll"> {{$i+1}} </a></li>
+           @endfor
+        </ul>
+    </div>
+</nav>
+
 <h1>Добро пожаловать в систему тестирования</h1>
 <p>Всего в тесте оказалось {{ $amount }} вопросов</p>
-<ul>
+
+    <?php $i=1;?>
     @foreach($widgets as $widget)
-    <li>{!! $widget !!}</li>
+    <br id="form{{$i}}">
+    <?php $i++;?>
+    {!! $widget !!}
     @endforeach
-</ul>
-{!! Form::open(['method' => 'PATCH', 'route' => 'question_checktest', 'name' => 'super', 'onsubmit' => 'return sendForm();']) !!}
+
+{!! Form::open(['method' => 'PATCH', 'route' => 'question_checktest', 'class' => 'smart-blue', 'name' => 'super', 'onsubmit' => 'return sendForm();']) !!}
 @for ($i = 0; $i < $amount; $i++)
-<input id="super{{$i}}" type="hidden" name="{{$i}}" value="жопа">
+<input id="super{{$i}}" type="hidden" name="{{$i}}" value="">
 @endfor
 <input id="amount" type="hidden" name="amount" value="{{ $amount }}">
 <input type="hidden" name="id_test" value="{{ $id_test }}">
-<input id="check" onClick="fillSuper()" type="submit" name="check" value="Отправить">
+<input id="check" onClick="fillSuper()" class="smart-blue" type="submit" name="check" value="Отправить">
 {!! Form::close() !!}
+
+<script>
+    $('.SmoothScroll').click(function(event) {
+        event.preventDefault();
+        var href=$(this).attr('href');
+        var target=$(href);
+        var top=target.offset().top;
+        $('html,body').animate({
+            scrollTop: top
+        }, 1000);
+    });
+
+    $(document).change(function(){
+        var formsCount = document.forms.length;
+        var index;
+        var flag = [true];
+        var elementNumber;
+        var elementToChange;
+        var typeOfForm; //1 2 3 или 4 (тип вопроса)
+        for (index = 0; index < formsCount; ++index) {
+            flag[index] = false;
+            typeOfForm = document.forms[index].type.value;
+            for(elementNumber = 0; elementNumber < document.forms[index].elements.length; ++elementNumber){
+                if(typeOfForm == 9){
+//спросить у Стаса
+                }
+                if(typeOfForm == 20){
+//спросить у Стаса
+                }
+                if(typeOfForm == 2){
+// таблица соответствий
+                    if(document.forms[index].elements[elementNumber].checked == true){
+                        flag[index] = true;
+                    }
+                }
+                if(typeOfForm == 1){
+//да/нет
+                    if(document.forms[index].elements[elementNumber].checked == true){
+                        flag[index] = true;
+                    }
+                }
+            }
+            if (flag[index] == true) {
+                elementToChange = document.getElementById(index);
+                elementToChange.className = "BeenSeen";
+                //alert(index);
+            }
+            else{
+                elementToChange = document.getElementById(index);
+                elementToChange.className = "NotAnswered";
+            }
+
+        }
+
+    });
+</script>
+
 </body>
 </html>

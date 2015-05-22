@@ -19,6 +19,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use PDOStatement;
 use Session;
+use App\Bruser;
 
 class QuestionController extends Controller{
     private $question;
@@ -52,7 +53,7 @@ class QuestionController extends Controller{
         $query = $question->whereId_question($id)->select('code')->first();
         $code = $query->code;          //получили код вопроса
         $array = explode('.',$code);
-       // print_r($array);
+        // print_r($array);
         $query1 = $codificator->whereCodificator_type('Раздел')->whereCode($array[0])->select('value')->first();
         $section = $query1->value;
         $query2 = $codificator->whereCodificator_type('Тема')->whereCode($array[1])->join('themes', 'themes.theme', '=', 'codificators.value')->where('themes.section', '=', $section)->select('value')->first();
@@ -60,7 +61,7 @@ class QuestionController extends Controller{
         $query3 = $codificator->whereCodificator_type('Тип')->whereCode($array[2])->select('value')->first();
         $type = $query3->value;
         $decode = array('section' => $section, 'theme' => $theme, 'type' => $type,
-                        'section_code' => $array[0], 'theme_code' => $array[1], 'type_code' => $array[2]);
+            'section_code' => $array[0], 'theme_code' => $array[1], 'type_code' => $array[2]);
 
         return $decode;
     }
@@ -97,7 +98,7 @@ class QuestionController extends Controller{
             }
         }
         return $array;
-}
+    }
 
     private function prepareTest($id_test){            //выборка вопросов
         $question = $this->question;
@@ -128,17 +129,16 @@ class QuestionController extends Controller{
     }
 
     private function chooseQuestion($id_test){
-        if (!Session::has('test')){                //генерируем тест, если еше не создан
+        @session_start();
+        if (empty($_SESSION['test'.$_SESSION['username']])){                //генерируем тест, если еше не создан
             $array = $this->prepareTest($id_test);
             $ser_array = serialize($array);
-            Session::put('test', $ser_array);         //в сессии храним массив вопросов
-            Session::put('score', 0);                 //количество правильных овтетов
-            Session::put('num', count($array));       //всего вопросов
+            $_SESSION['test'.$_SESSION['username']] = $ser_array;         //в сессии храним массив вопросов
         }
-        $ser_array = Session::get('test');
+        $ser_array = $_SESSION['test'.$_SESSION['username']];
         $array = unserialize($ser_array);
         if (empty($array)){               //если вопросы кончились, завершаем тест
-            Session::forget('test');
+            unset($_SESSION['test'.$_SESSION['username']]);
             return -1;
         }
         else{
@@ -148,7 +148,7 @@ class QuestionController extends Controller{
             $array[count($array)-1] = $choisen;
             array_pop($array);                   //удаляем его из списка
             $ser_array = serialize($array);
-            Session::put('test', $ser_array );
+            $_SESSION['test'.$_SESSION['username']] = $ser_array;
             return $choisen;
         }
     }
@@ -156,25 +156,35 @@ class QuestionController extends Controller{
     private function check($array){       //проверяет правильность вопроса и на выходе дает баллы за вопрос
         $question = $this->question;
         $id = $array[0];
-        for ($i=0; $i < count($array)-1; $i++){                                    //передвигаем массив, чтобы первый элемент оказался последни
-            $array[$i] = $array[$i+1];
-        }
-        array_pop($array);                                             //убираем из входного массива id вопроса, чтобы остались лишь выбранные варианты ответа
         $query = $question->whereId_question($id)->select('answer','points')->first();
         $answer = $query->answer;
         $points = $query->points;
         $type = $this->getCode($id)['type'];
-        echo '<br>';
+        if (count($array)==1){           //если не был отмечен ни один вариант
+            $score = 0;
+            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points);
+            return $data;
+        }
+        for ($i=0; $i < count($array)-1; $i++){                                    //передвигаем массив, чтобы первый элемент оказался последни
+            $array[$i] = $array[$i+1];
+        }
+        array_pop($array);                                             //убираем из входного массива id вопроса, чтобы остались лишь выбранные варианты ответа
         switch($type){
             case 'Выбор одного из списка':                      //Стас
                 if ($array[0] == $answer){
                     $score = $points;
+                    $data = array('mark'=>'Верно','score'=> $score, 'id' => $id, 'points' => $points);
                 }
                 else {
                     $score = 0;
+                    $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points);
                 }
                 //echo $score.'<br>';
-                return $score;
+                if ($score != $points){
+                    $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points);
+                }
+                //echo $score.'<br>';
+                return $data;
                 break;
 
             case 'Выбор нескольких из списка':
@@ -205,8 +215,13 @@ class QuestionController extends Controller{
                 if ($score < 0){                          //если ушел в минус
                     $score = 0;
                 }
+
+                if ($score == $points){
+                    $data = array('mark'=>'Верно','score'=> $score, 'id' => $id, 'points' => $points);
+                }
+                else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points);
                 //echo $score.'<br>';
-                return $score;
+                return $data;
                 break;
 
             case 'Текстовый вопрос':                            //Стас
@@ -232,7 +247,16 @@ class QuestionController extends Controller{
                 break;
 
             case 'Да/Нет':                                      //Миша
-                echo 'Вопрос выбора да или нет';
+                $query = $question->whereId_question($id)->select('variants', 'answer', 'points', 'title')->first();
+                $count = 0;
+                $text_parse = $query->title;
+                $parse_answer = $query->answer;
+                $answer_parse = explode(";" ,$parse_answer);
+                $text = explode(";" , $text_parse);
+                for ($i = 0; $i < count($text); $i++){
+                    if($answer_parse[$i] == $array[$i]) $count++;
+                }
+                return $count;
                 break;
 
             case 'Вопрос на вычисление':
@@ -249,11 +273,11 @@ class QuestionController extends Controller{
         }
     }
 
-    public function result(){
+    /*public function result(){
         $score = Session::get('score');
         $total = Session::get('num');
         return view('welcome', compact('score', 'total'));
-    }
+    }*/
 
     public function index(){
         //Дефолтная страница при разграничении прав
@@ -265,7 +289,36 @@ class QuestionController extends Controller{
         }*/
         $questions = $this->question->get();
         //dd($questions);
-        return view('questions.teacher.index', compact('questions'));
+        $username =  null;
+        session_start();
+        if (!empty($_SESSION['username'])){
+            unset($_SESSION['test'.$_SESSION['username']]);
+            $username =  $_SESSION['username'];
+        }
+        return view('questions.teacher.index', compact('questions', 'username'));
+    }
+
+    public function form(Request $request){
+        $user = new Bruser();
+        session_start();
+        $username = $request->input('username');
+        $query = $user->whereName($username)->select('password')->get();
+        foreach ($query as $password){
+            $pass = $password->password;
+            //echo $pass.'=='.$request->input('password');
+            if ($pass == $request->input('password')){
+                $_SESSION['username'] = $username;
+            }
+        }
+       if (empty($_SESSION['username'])){
+            echo 'Неверный пароль';
+        }
+        else echo  $_SESSION['username'];
+       return redirect()->route('question_index');
+    }
+
+    public function enter(){
+        return view('questions.student.ty');
     }
 
     public function create(){             //переход на страницу формы добавления
@@ -281,11 +334,12 @@ class QuestionController extends Controller{
         return redirect()->route('question_index');
     }
 
-    private function showTest($id_question){  //показать вопрос в тесте
+    private function showTest($id_question, $count){  //показать вопрос в тесте
         $question = $this->question;
         //echo $id.'<br>';
         $decode = $this->getCode($id_question);
         $type = $decode['type'];
+        $type_code = $decode['type_code'];
 
         switch($type){
             case 'Выбор одного из списка':                      //Стас
@@ -295,7 +349,7 @@ class QuestionController extends Controller{
                 $variants = explode(";", $parse);
                 $new_variants = $this->mixVariants($variants);
                 $view = 'tests.show1';
-                $array = array('view' => $view, 'arguments' => array('text' => $text, "variants" => $new_variants, "type" => $type, "id" => $id_question));
+                $array = array('view' => $view, 'arguments' => array('text' => $text, "variants" => $new_variants, "type" => $type_code, "id" => $id_question, "count" => $count));
                 return $array;
                 break;
 
@@ -306,7 +360,7 @@ class QuestionController extends Controller{
                 $variants = explode(";", $parse);
                 $new_variants = $this->mixVariants($variants);
                 $view = 'tests.show2';
-                $array = array('view' => $view, 'arguments' => array('text' => $text, "variants" => $new_variants, "type" => $type, "id" => $id_question));
+                $array = array('view' => $view, 'arguments' => array('text' => $text, "variants" => $new_variants, "type" => $type_code, "id" => $id_question, "count" => $count));
                 return $array;
                 break;
 
@@ -326,7 +380,7 @@ class QuestionController extends Controller{
                     $num_var[$i] = count($group_variants[$i]);
                 }
                 $view = 'tests.show3';
-                $array = array('view' => $view, 'arguments' => array('text' => $text, "variants" => $group_variants, "type" => $type, "id" => $id_question, "text_parts" => $text_parts, "num_var" => $num_var, "num_slot" => $num_slot));
+                $array = array('view' => $view, 'arguments' => array('text' => $text, "variants" => $group_variants, "type" => $type_code, "id" => $id_question, "text_parts" => $text_parts, "num_var" => $num_var, "num_slot" => $num_slot, "count" => $count));
                 return $array;
                 break;
 
@@ -335,7 +389,12 @@ class QuestionController extends Controller{
                 break;
 
             case 'Да/Нет':                                      //Миша
-                echo 'Вопрос выбора да или нет';
+                $query = $question->whereId_question($id_question)->select('title','answer')->first();
+                $text_parse = $query->title;
+                $text = explode(";" , $text_parse);
+                $view = 'tests.show5';
+                $array = array('view' => $view, 'arguments' => array('text' => $text, "type" => $type_code, "id" => $id_question, "count" => $count));
+                return $array;
                 break;
 
             case 'Вопрос на вычисление':
@@ -353,13 +412,14 @@ class QuestionController extends Controller{
     }
 
     public function showViews($id_test){
+        //Session::flush();
         $test = new Test();
         $query = $test->whereId_test($id_test)->select('amount')->first();   //кол-во вопрососв в тесте
         $amount = $query->amount;
         $widgets = [];
         for ($i=0; $i<$amount; $i++){
-            $id = $this->chooseQuestion($id_test);          //должны получать название view и необходимые параметры
-            $data = $this->showTest($id);
+            $id = $this->chooseQuestion($id_test);
+            $data = $this->showTest($id, $i+1);                  //должны получать название view и необходимые параметры
             //print_r (unserialize(Session::get('test')));
             $widgets[] = View::make($data['view'], $data['arguments']);
         }
@@ -368,23 +428,38 @@ class QuestionController extends Controller{
     }
 
     public function checkTest(Request $request){   //обработать ответ на вопрос
+        @session_start();
         $amount = $request->input('amount');
         $id_test = $request->input('id_test');
         $test = new Test();
         $query = $test->whereId_test($id_test)->select('total')->first();
         $total = $query->total;
-        $sum = 0;
+        $score_sum = 0;
+        $points_sum = 0;
+        $view = [];
+        $j = 0;
         for ($i=0; $i<$amount; $i++){        //обрабатываем каждый вопрос
             $data = $request->input($i);
             $array = json_decode($data);
-            $score[$i] = $this->check($array);
-            $sum += $score[$i];
+            $data = $this->check($array);
+            if ($data['mark'] == 'Неверно'){
+                $view[$j]= $data['id'];      //массив неверных вопросов
+                $j++;
+            }
+            $score_sum += $data['score'];
+            $points_sum += $data['points'];
         }
-        echo 'Вы набрали '.$sum.' ,баллов из '.$total.' возможных!';
-            /*print_r($data);
-            echo '<br>';
-            print_r($array);
-            echo '<br><br>';*/
+        if ($points_sum != 0){
+            $score = 100*$score_sum/$points_sum;
+        }
+        else $score = 100;
+        $number_of_wrong = count($view);
+        unset($_SESSION['test'.$_SESSION['username']]);
+        return view('tests.rybaresults', compact('view','score', 'number_of_wrong'));
+        /*print_r($data);
+        echo '<br>';
+        print_r($array);
+        echo '<br><br>';*/
     }
 
     public function show($id){  //показать вопрос
@@ -439,7 +514,12 @@ class QuestionController extends Controller{
                 break;
 
             case 'Да/Нет':                                      //Миша
-                echo 'Вопрос выбора да или нет';
+                $query = $question->whereId_question($id)->select('title','answer')->first();
+                $text_parse = $query->title;
+                $text = explode(";" , $text_parse);
+                $view = 'tests.show5';
+                $array = array('view' => $view, 'arguments' => array('text' => $text, "id" => $id, ));
+                return view('tests.show5' , compact('text','answer'));
                 break;
 
             case 'Вопрос на вычисление':
@@ -464,21 +544,22 @@ class QuestionController extends Controller{
                     echo link_to_route('question_index', 'Вернуться к списку вопросов');
                     //header('Refresh: 3; URL=http://localhost/uir/public/questions');     //поменять время ожидания
                 }
-                else echo 'Неверно';
+                else echo 'Неверно<br><br>';
+                echo link_to_route('question_index', 'Вернуться к списку вопросов');
                 break;
 
             case 'Выбор нескольких из списка':
                 $answer = $request->input('answer');
                 $choices = ($request->input('choice'));
                 $points = ($request->input('points'));
-                echo $points.'<br>';
+                // echo $points.'<br>';
                 $answers = explode(';', $answer);
                 $score = 0;
                 $step = $points/count($answers);
-                echo $step.'<br>';
+                //echo $step.'<br>';
                 for ($i=0; $i<count($answers); $i++ ){        //сравниваем каждый правильный ответ
                     for ($j=0; $j<count($choices); $j++){      // с каждым выбранным
-                        echo $answers[$i].'=='.$choices[$j].'<br>';
+                        // echo $answers[$i].'=='.$choices[$j].'<br>';
                         if ($answers[$i] == $choices[$j]){
                             $buf = $choices[$j];
                             $choices[$j] = $choices[count($choices)-1];     //меняем местами правильный ответ с последним для удаления
@@ -493,16 +574,21 @@ class QuestionController extends Controller{
                 //echo $broken.'<br>';
                 if (!(empty($choices))){                    //если выбраны лишние варианты
                     for ($i=0; $i<count($choices); $i++){
-                        $score -= $step;
+                        return 'Неверно';
                     }
                 }
                 if ($score > $points){                    //если при округлении получилось больше максимального числа баллов
                     $score = $points;
+                    return 'Верно';
                 }
                 if ($score < 0){                          //если ушел в минус
                     $score = 0;
+                    return 'Неверно';
                 }
-                echo $score.'<br>';
+                if ($score == $points){
+                    return 'Верно';
+                }
+                else return 'Неверно';
                 break;
 
             case 'Текстовый вопрос':                            //Стас

@@ -1,7 +1,8 @@
 <html>
 <body>
-<h2>Вопрос номер {{ $id }}</h2>
-{!! Form::open(['method' => 'PATCH', 'route' => 'question_checks']) !!}
+{!! Form::open(['method' => 'PATCH', 'route' => 'question_checks', 'class' => 'smart-blue']) !!}
+<h1>Вопрос {{ $count }}</h1>
+<h2>{{ $text }}</h2>
 <input type="hidden" name="type" value="{{ $type }}">
 <input type="hidden" name="num" value="{{ $id }}">
 <p>
