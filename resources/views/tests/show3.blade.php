@@ -2,7 +2,7 @@
 <body>
 {!! Form::open(['method' => 'PATCH', 'route' => 'question_checks', 'class' => 'smart-blue']) !!}
 <h1>Вопрос {{ $count }}</h1>
-<h2>{{ $text }}</h2>
+<h2>Заполните пропуски в тексте</h2>
 <input type="hidden" name="type" value="{{ $type }}">
 <input type="hidden" name="num" value="{{ $id }}">
 <p>

@@ -5,7 +5,7 @@
 {!! link_to_route('question_enter', 'Войти') !!} <br>
 <h2>Здесь Вы можете пройти тест </h2>
 
-    <!-- {!! link_to_route('question_create', 'Добавить новый вопрос') !!} <br> -->
+     {!! link_to_route('question_create', 'Добавить новый вопрос') !!} <br>
     <!--{!! link_to_route('question_kill_session', 'Удалить сессию') !!} <br> -->
     {!! link_to_route('question_showtest', 'Перейти на страницу тестов', ['1']) !!} <br>
 

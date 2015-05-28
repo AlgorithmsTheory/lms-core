@@ -115,12 +115,9 @@ class QuestionController extends Controller{
                 array_push($temp_array,$id->id_question);                               //для каждого кода создаем массив всех вопрососв с этим кодом
             }
             for ($j=0; $j<$destructured[$i][0]; $j++){                                  //и выбираем заданное количество случайных
-                $index = rand(0,count($temp_array)-1);
-                $choisen = $temp_array[$index];
-                $temp_array[$index]=$temp_array[count($temp_array)-1];
-                $temp_array[count($temp_array)-1] = $choisen;
+                $temp_array = $this->randomArray($temp_array);
+                $array[$k] = $temp_array[count($temp_array)-1];
                 array_pop($temp_array);
-                $array[$k] = $choisen;
                 $k++;
             }
             $temp_array = [];
@@ -142,10 +139,8 @@ class QuestionController extends Controller{
             return -1;
         }
         else{
-            $index = rand(0,count($array)-1);     //выбираем случайный вопрос
-            $choisen = $array[$index];
-            $array[$index]=$array[count($array)-1];
-            $array[count($array)-1] = $choisen;
+            $array = $this->randomArray($array);
+            $choisen = $array[count($array)-1];
             array_pop($array);                   //удаляем его из списка
             $ser_array = serialize($array);
             $_SESSION['test'.$_SESSION['username']] = $ser_array;
@@ -183,7 +178,7 @@ class QuestionController extends Controller{
                 if ($score != $points){
                     $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points);
                 }
-                //echo $score.'<br>';
+                echo $score.'<br>';
                 return $data;
                 break;
 
@@ -220,7 +215,7 @@ class QuestionController extends Controller{
                     $data = array('mark'=>'Верно','score'=> $score, 'id' => $id, 'points' => $points);
                 }
                 else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points);
-                //echo $score.'<br>';
+                echo $score.'<br>';
                 return $data;
                 break;
 
@@ -233,13 +228,19 @@ class QuestionController extends Controller{
                 $answer = explode(";", $parse_answer);
                 $points = $query->points;
                 $score = 0;
+                $p = 0;                          //счетчик правильных ответов
                 $step = $points/count($variants);
                 for ($i=0; $i < count($variants); $i++){
                     if ($array[$i] == $answer[$i]){
                         $score +=$step;
+                        $p++;
                     }
                 }
-                return $score;
+                if($p == count($variants))
+                    $data = array('mark'=>'Верно','score'=> $score, 'id' => $id, 'points' => $points);
+                else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points);
+                echo $score.'<br>';
+                return $data;
                 break;
 
             case 'Таблица соответствий':                        //Миша
@@ -380,7 +381,7 @@ class QuestionController extends Controller{
                     $num_var[$i] = count($group_variants[$i]);
                 }
                 $view = 'tests.show3';
-                $array = array('view' => $view, 'arguments' => array('text' => $text, "variants" => $group_variants, "type" => $type_code, "id" => $id_question, "text_parts" => $text_parts, "num_var" => $num_var, "num_slot" => $num_slot, "count" => $count));
+                $array = array('view' => $view, 'arguments' => array("variants" => $group_variants, "type" => $type_code, "id" => $id_question, "text_parts" => $text_parts, "num_var" => $num_var, "num_slot" => $num_slot, "count" => $count));
                 return $array;
                 break;
 
@@ -412,7 +413,6 @@ class QuestionController extends Controller{
     }
 
     public function showViews($id_test){
-        //Session::flush();
         $test = new Test();
         $query = $test->whereId_test($id_test)->select('amount')->first();   //кол-во вопрососв в тесте
         $amount = $query->amount;
@@ -420,7 +420,6 @@ class QuestionController extends Controller{
         for ($i=0; $i<$amount; $i++){
             $id = $this->chooseQuestion($id_test);
             $data = $this->showTest($id, $i+1);                  //должны получать название view и необходимые параметры
-            //print_r (unserialize(Session::get('test')));
             $widgets[] = View::make($data['view'], $data['arguments']);
         }
         $widgetListView = View::make('questions.student.widget_list',compact('amount', 'id_test'))->with('widgets', $widgets);
@@ -451,6 +450,7 @@ class QuestionController extends Controller{
         }
         if ($points_sum != 0){
             $score = 100*$score_sum/$points_sum;
+            $score = round($score,1);
         }
         else $score = 100;
         $number_of_wrong = count($view);
