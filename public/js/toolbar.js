@@ -23,8 +23,10 @@ $(document).change(function(){
         flag[index] = false;
         typeOfForm = document.forms[index].type.value;
         for(elementNumber = 0; elementNumber < document.forms[index].elements.length - 1; ++elementNumber){
-            if(typeOfForm == 10){
-                //спросить у Стаса
+            if(typeOfForm == 5){
+                if(document.forms[index].elements[elementNumber].checked == true && document.forms[index].elements[elementNumber].value != 2){
+                    flag[index] = true;
+                }
             }
             if(typeOfForm == 3){
                 //select

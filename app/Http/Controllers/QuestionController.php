@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Qtypes\YesNo;
 use App\Test;
 use App\Theme;
 use Illuminate\Http\Request;
@@ -163,7 +164,7 @@ class QuestionController extends Controller{
             $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points);
             return $data;
         }
-        for ($i=0; $i < count($array)-1; $i++){                                    //передвигаем массив, чтобы первый элемент оказался последни
+        for ($i=0; $i < count($array)-1; $i++){                                    //передвигаем массив, чтобы первый элемент оказался последним
             $array[$i] = $array[$i+1];
         }
         array_pop($array);                                             //убираем из входного массива id вопроса, чтобы остались лишь выбранные варианты ответа
@@ -191,16 +192,9 @@ class QuestionController extends Controller{
                 break;
 
             case 'Да/Нет':                                      //Миша
-                $query = $question->whereId_question($id)->select('variants', 'answer', 'points', 'title')->first();
-                $count = 0;
-                $text_parse = $query->title;
-                $parse_answer = $query->answer;
-                $answer_parse = explode(";" ,$parse_answer);
-                $text = explode(";" , $text_parse);
-                for ($i = 0; $i < count($text); $i++){
-                    if($answer_parse[$i] == $array[$i]) $count++;
-                }
-                return $count;
+                $yes_no = new YesNo($id);
+                $data = $yes_no->check($array);
+                return $data;
                 break;
 
             case 'Вопрос на вычисление':
@@ -309,11 +303,8 @@ class QuestionController extends Controller{
                 break;
 
             case 'Да/Нет':                                      //Миша
-                $query = $question->whereId_question($id_question)->select('title','answer')->first();
-                $text_parse = $query->title;
-                $text = explode(";" , $text_parse);
-                $view = 'tests.show5';
-                $array = array('view' => $view, 'arguments' => array('text' => $text, "type" => $type_code, "id" => $id_question, "count" => $count));
+                $yes_no = new YesNo($id_question);
+                $array = $yes_no->show($count);
                 return $array;
                 break;
 
@@ -359,6 +350,7 @@ class QuestionController extends Controller{
         for ($i=0; $i<$amount; $i++){        //обрабатываем каждый вопрос
             $data = $request->input($i);
             $array = json_decode($data);
+            print_r($array);
             $data = $this->check($array);
             if ($data['mark'] == 'Неверно'){
                 $view[$j]= $data['id'];      //массив неверных вопросов
