@@ -20,7 +20,6 @@
     </div>
 </nav>
 <br><br>
-<h1>Добро пожаловать в систему тестирования</h1>
 
     <?php $i=1;?>
     @foreach($widgets as $widget)
@@ -29,13 +28,13 @@
     {!! $widget !!}
     @endforeach
 
-{!! Form::open(['method' => 'PATCH', 'route' => 'question_checktest', 'class' => 'smart-blue', 'name' => 'super', 'onsubmit' => 'return sendForm();']) !!}
+{!! Form::open(['method' => 'PATCH', 'route' => 'question_checktest', 'name' => 'super', 'onsubmit' => 'return sendForm();']) !!}
 @for ($i = 0; $i < $amount; $i++)
 <input id="super{{$i}}" type="hidden" name="{{$i}}" value="">
 @endfor
 <input id="amount" type="hidden" name="amount" value="{{ $amount }}">
 <input type="hidden" name="id_test" value="{{ $id_test }}">
-<input id="check" onClick="fillSuper()" class="smart-blue" type="submit" name="check" value="Отправить">
+<input id="check" onClick="fillSuper()" class="button-submit" type="submit" name="check" value="Отправить">
 {!! Form::close() !!}
 
 {!! HTML::script('js/toolbar.js') !!}

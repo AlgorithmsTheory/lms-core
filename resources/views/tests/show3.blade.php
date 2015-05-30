@@ -15,6 +15,7 @@
         </select></span>
     @endfor
     {{ $text_parts[$num_slot] }} </p>
+<input type="checkbox" name="seeLater" class="css-checkbox"><span class="css-checkbox">Вернуться позже</span>
 {!! Form::close() !!}
 </body>
 </html>

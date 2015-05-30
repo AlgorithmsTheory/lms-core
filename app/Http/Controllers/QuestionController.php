@@ -8,7 +8,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Test;
 use App\Theme;
 use Illuminate\Http\Request;
@@ -20,6 +19,10 @@ use Illuminate\Support\Facades\DB;
 use PDOStatement;
 use Session;
 use App\Bruser;
+use App\Qtypes\OneChoice;
+use App\Qtypes\MultiChoice;
+use App\Qtypes\FillGaps;
+
 
 class QuestionController extends Controller{
     private $question;
@@ -66,7 +69,7 @@ class QuestionController extends Controller{
         return $decode;
     }
 
-    private function randomArray($array){
+    private static function randomArray($array){
         $index = rand(0,count($array)-1);     //выбираем случайный вопрос
         $chosen = $array[$index];
         $array[$index]=$array[count($array)-1];
@@ -74,11 +77,11 @@ class QuestionController extends Controller{
         return $array;                        //получаем тот же массив, где выбранный элемент стоит на последнем месте для удаления
     }
 
-    private function mixVariants($variants){
+    public static function mixVariants($variants){
         $num_var = count($variants);
         $new_variants = [];
         for ($i=0; $i<$num_var; $i++){                        //варианты в случайном порядке
-            $variants = $this->randomArray($variants);
+            $variants = QuestionController::randomArray($variants);
             $chosen = array_pop($variants);
             $new_variants[$i] = $chosen;
         }
@@ -166,80 +169,20 @@ class QuestionController extends Controller{
         array_pop($array);                                             //убираем из входного массива id вопроса, чтобы остались лишь выбранные варианты ответа
         switch($type){
             case 'Выбор одного из списка':                      //Стас
-                if ($array[0] == $answer){
-                    $score = $points;
-                    $data = array('mark'=>'Верно','score'=> $score, 'id' => $id, 'points' => $points);
-                }
-                else {
-                    $score = 0;
-                    $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points);
-                }
-                //echo $score.'<br>';
-                if ($score != $points){
-                    $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points);
-                }
-                echo $score.'<br>';
+                $one_choice = new OneChoice($id);
+                $data = $one_choice->check($array);
                 return $data;
                 break;
 
             case 'Выбор нескольких из списка':
-                $choices = $array;
-                $answers = explode(';', $answer);
-                $score = 0;
-                $step = $points/count($answers);
-                for ($i=0; $i<count($answers); $i++ ){        //сравниваем каждый правильный ответ
-                    for ($j=0; $j<count($choices); $j++){      // с каждым выбранным
-                        if ($answers[$i] == $choices[$j]){
-                            $buf = $choices[$j];
-                            $choices[$j] = $choices[count($choices)-1];     //меняем местами правильный ответ с последним для удаления
-                            $choices[count($choices)-1] =  $buf;
-                            array_pop($choices);                         //удаляем правильный проверенный вариант из массива выбранных ответов
-                            $score += $step;
-                            break;
-                        }
-                    }
-                }
-                if (!(empty($choices))){                    //если выбраны лишние варианты
-                    for ($i=0; $i<count($choices); $i++){
-                        $score -= $step;
-                    }
-                }
-                if ($score > $points){                    //если при округлении получилось больше максимального числа баллов
-                    $score = $points;
-                }
-                if ($score < 0){                          //если ушел в минус
-                    $score = 0;
-                }
-
-                if ($score == $points){
-                    $data = array('mark'=>'Верно','score'=> $score, 'id' => $id, 'points' => $points);
-                }
-                else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points);
-                echo $score.'<br>';
+                $multi_choice = new MultiChoice($id);
+                $data = $multi_choice->check($array);
                 return $data;
                 break;
 
             case 'Текстовый вопрос':                            //Стас
-                $question = $this->question;
-                $query = $question->whereId_question($id)->select('variants', 'answer', 'points')->first();
-                $parse = $query->variants;
-                $variants = explode("<>", $parse);
-                $parse_answer = $query->answer;
-                $answer = explode(";", $parse_answer);
-                $points = $query->points;
-                $score = 0;
-                $p = 0;                          //счетчик правильных ответов
-                $step = $points/count($variants);
-                for ($i=0; $i < count($variants); $i++){
-                    if ($array[$i] == $answer[$i]){
-                        $score +=$step;
-                        $p++;
-                    }
-                }
-                if($p == count($variants))
-                    $data = array('mark'=>'Верно','score'=> $score, 'id' => $id, 'points' => $points);
-                else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points);
-                echo $score.'<br>';
+                $fill_gaps = new FillGaps($id);
+                $data = $fill_gaps->check($array);
                 return $data;
                 break;
 
@@ -344,44 +287,20 @@ class QuestionController extends Controller{
 
         switch($type){
             case 'Выбор одного из списка':                      //Стас
-                $query = $question->whereId_question($id_question)->select('title','variants')->first();
-                $text = $query->title;
-                $parse = $query->variants;
-                $variants = explode(";", $parse);
-                $new_variants = $this->mixVariants($variants);
-                $view = 'tests.show1';
-                $array = array('view' => $view, 'arguments' => array('text' => $text, "variants" => $new_variants, "type" => $type_code, "id" => $id_question, "count" => $count));
+                $one_choice = new OneChoice($id_question);
+                $array = $one_choice->show($count);
                 return $array;
                 break;
 
             case 'Выбор нескольких из списка':
-                $query = $question->whereId_question($id_question)->select('title','variants')->first();
-                $text = $query->title;
-                $parse = $query->variants;
-                $variants = explode(";", $parse);
-                $new_variants = $this->mixVariants($variants);
-                $view = 'tests.show2';
-                $array = array('view' => $view, 'arguments' => array('text' => $text, "variants" => $new_variants, "type" => $type_code, "id" => $id_question, "count" => $count));
+                $multi_choice = new MultiChoice($id_question);
+                $array = $multi_choice->show($count);
                 return $array;
                 break;
 
             case 'Текстовый вопрос':                            //Стас
-                $query = $question->whereId_question($id_question)->select('title','variants','answer')->first();
-                $text = $query->title;
-                $text_parts = explode("<>", $text);                         //части текста между селектами
-                $parse = $query->variants;
-                $variants = explode("<>", $parse);
-                $num_slot = count($variants);
-                $parse_group_variants = [];
-                $group_variants = [];
-                $num_var = [];
-                for ($i=0; $i < count($variants); $i++){
-                    $parse_group_variants[$i] = explode(";",$variants[$i]);                //варинаты каждого селекта
-                    $group_variants[$i] = $this->mixVariants($parse_group_variants[$i]);   //перемешиваем варианты
-                    $num_var[$i] = count($group_variants[$i]);
-                }
-                $view = 'tests.show3';
-                $array = array('view' => $view, 'arguments' => array("variants" => $group_variants, "type" => $type_code, "id" => $id_question, "text_parts" => $text_parts, "num_var" => $num_var, "num_slot" => $num_slot, "count" => $count));
+                $fill_gaps = new FillGaps($id_question);
+                $array = $fill_gaps->show($count);
                 return $array;
                 break;
 
@@ -460,176 +379,6 @@ class QuestionController extends Controller{
         echo '<br>';
         print_r($array);
         echo '<br><br>';*/
-    }
-
-    public function show($id){  //показать вопрос
-        $question = $this->question;
-        $decode = $this->getCode($id);
-        $type = $decode['type'];
-
-        switch($type){
-            case 'Выбор одного из списка':                      //Стас
-                $query = $question->whereId_question($id)->select('title','variants','answer')->first();
-                $text = $query->title;
-                $answer = $query->answer;
-                $parse = $query->variants;
-                $variants = explode(";", $parse);
-                //$field = $question->whereId_question($id)->select('title')->first();
-                return view('questions.student.show1', compact('text','variants','answer','type','num'));
-                break;
-
-            case 'Выбор нескольких из списка':
-                $query = $question->whereId_question($id)->select('title','variants','answer', 'points')->first();
-                $text = $query->title;
-                $answer = $query->answer;
-                $points = $query->points;
-                $parse = $query->variants;
-                $variants = explode(";", $parse);
-                $new_variants = $this->mixVariants($variants);            //перемешиваем варианты
-                //$field = $question->whereId_question($id)->select('title')->first();
-                return view('questions.student.show2', compact('text','new_variants','answer','type', 'points'));
-                break;
-
-            case 'Текстовый вопрос':                            //Стас
-                $query = $question->whereId_question($id)->select('title','variants','answer')->first();
-                $text = $query->title;
-                $text_parts = explode("<>", $text);                         //части текста между селектами
-                $answer = $query->answer;
-                $parse = $query->variants;
-                $variants = explode("<>", $parse);
-                $num_slot = count($variants);
-                $parse_group_variants = [];
-                $group_variants = [];
-                $num_var = [];
-                for ($i=0; $i < count($variants); $i++){
-                    $parse_group_variants[$i] = explode(";",$variants[$i]);                //варинаты каждого селекта
-                    $group_variants[$i] = $this->mixVariants($parse_group_variants[$i]);   //перемешиваем варианты
-                    $num_var[$i] = count($group_variants[$i]);
-                }
-                return view('questions.student.show3', compact('text_parts','group_variants','answer','type','num_var','num_slot','id'));
-                break;
-
-            case 'Таблица соответствий':                        //Миша
-                echo 'Вопрос на таблицу соответствий';
-                break;
-
-            case 'Да/Нет':                                      //Миша
-                $query = $question->whereId_question($id)->select('title','answer')->first();
-                $text_parse = $query->title;
-                $text = explode(";" , $text_parse);
-                $view = 'tests.show5';
-                $array = array('view' => $view, 'arguments' => array('text' => $text, "id" => $id, ));
-                return view('tests.show5' , compact('text','answer'));
-                break;
-
-            case 'Вопрос на вычисление':
-                echo 'Вопрос на вычисление';
-                break;
-
-            case 'Вопрос на соответствие':
-                echo 'Вопрос на соответствие';
-                break;
-
-            case 'Вид фунции':
-                echo 'Вопрос на определение аналитического вида функции';
-                break;
-        }
-    }
-
-    public function checks(Request $request){   //обработать ответ на вопрос
-        switch($request->input('type')){
-            case 'Выбор одного из списка':                      //Стас
-                if ($request->input('choice') == $request->input('answer')){
-                    echo 'Верно <br><br>';
-                    echo link_to_route('question_index', 'Вернуться к списку вопросов');
-                    //header('Refresh: 3; URL=http://localhost/uir/public/questions');     //поменять время ожидания
-                }
-                else echo 'Неверно<br><br>';
-                echo link_to_route('question_index', 'Вернуться к списку вопросов');
-                break;
-
-            case 'Выбор нескольких из списка':
-                $answer = $request->input('answer');
-                $choices = ($request->input('choice'));
-                $points = ($request->input('points'));
-                // echo $points.'<br>';
-                $answers = explode(';', $answer);
-                $score = 0;
-                $step = $points/count($answers);
-                //echo $step.'<br>';
-                for ($i=0; $i<count($answers); $i++ ){        //сравниваем каждый правильный ответ
-                    for ($j=0; $j<count($choices); $j++){      // с каждым выбранным
-                        // echo $answers[$i].'=='.$choices[$j].'<br>';
-                        if ($answers[$i] == $choices[$j]){
-                            $buf = $choices[$j];
-                            $choices[$j] = $choices[count($choices)-1];     //меняем местами правильный ответ с последним для удаления
-                            $choices[count($choices)-1] =  $buf;
-                            array_pop($choices);                         //удаляем правильный проверенный вариант из массива выбранных ответов
-                            $score += $step;
-                            break;
-                        }
-                    }
-                }
-                //echo $counter.'=='.count($answers).'<br>';
-                //echo $broken.'<br>';
-                if (!(empty($choices))){                    //если выбраны лишние варианты
-                    for ($i=0; $i<count($choices); $i++){
-                        return 'Неверно';
-                    }
-                }
-                if ($score > $points){                    //если при округлении получилось больше максимального числа баллов
-                    $score = $points;
-                    return 'Верно';
-                }
-                if ($score < 0){                          //если ушел в минус
-                    $score = 0;
-                    return 'Неверно';
-                }
-                if ($score == $points){
-                    return 'Верно';
-                }
-                else return 'Неверно';
-                break;
-
-            case 'Текстовый вопрос':                            //Стас
-                $question = $this->question;
-                $id = $request->input('id');
-                $query = $question->whereId_question($id)->select('variants', 'answer', 'points')->first();
-                $parse = $query->variants;
-                $variants = explode("<>", $parse);
-                $parse_answer = $query->answer;
-                $answer = explode(";", $parse_answer);
-                $points = $query->points;
-                $score = 0;
-                $step = $points/count($variants);
-                for ($i=0; $i < count($variants); $i++){
-                    //echo $request->input($i).' = '.$answer[$i].'<br>';
-                    if ($request->input($i) == $answer[$i]){
-                        $score +=$step;
-                    }
-                }
-                echo 'Вы верно выбрали '.$score.' из '.$points.' вариантов!';
-                break;
-
-            case 'Таблица соответствий':                        //Миша
-                break;
-
-            case 'Да/Нет':                                      //Миша
-                echo 'Вопрос выбора да или нет';
-                break;
-
-            case 'Вопрос на вычисление':
-                echo 'Вопрос на вычисление';
-                break;
-
-            case 'Вопрос на соответствие':
-                echo 'Вопрос на соответствие';
-                break;
-
-            case 'Вид фунции':
-                echo 'Вопрос на определение аналитического вида функции';
-                break;
-        }
     }
 
     public function killSession(){
