@@ -23,7 +23,7 @@ use App\Bruser;
 use App\Qtypes\OneChoice;
 use App\Qtypes\MultiChoice;
 use App\Qtypes\FillGaps;
-
+use App\Qtypes\AccordanceTable;
 
 class QuestionController extends Controller{
     private $question;
@@ -188,7 +188,9 @@ class QuestionController extends Controller{
                 break;
 
             case 'Таблица соответствий':                        //Миша
-                echo 'Вопрос на таблицу соответствий';
+                $accordance_table = new AccordanceTable($id);
+                $data = $accordance_table->check($array);
+                return $data;
                 break;
 
             case 'Да/Нет':                                      //Миша
@@ -273,11 +275,8 @@ class QuestionController extends Controller{
     }
 
     private function showTest($id_question, $count){  //показать вопрос в тесте
-        $question = $this->question;
-        //echo $id.'<br>';
         $decode = $this->getCode($id_question);
         $type = $decode['type'];
-        $type_code = $decode['type_code'];
 
         switch($type){
             case 'Выбор одного из списка':                      //Стас
@@ -299,7 +298,9 @@ class QuestionController extends Controller{
                 break;
 
             case 'Таблица соответствий':                        //Миша
-                echo 'Вопрос на таблицу соответствий';
+                $accordance_table = new AccordanceTable($id_question);
+                $array = $accordance_table->show($count);
+                return $array;
                 break;
 
             case 'Да/Нет':                                      //Миша
@@ -350,7 +351,7 @@ class QuestionController extends Controller{
         for ($i=0; $i<$amount; $i++){        //обрабатываем каждый вопрос
             $data = $request->input($i);
             $array = json_decode($data);
-            print_r($array);
+            //print_r($array);
             $data = $this->check($array);
             if ($data['mark'] == 'Неверно'){
                 $view[$j]= $data['id'];      //массив неверных вопросов

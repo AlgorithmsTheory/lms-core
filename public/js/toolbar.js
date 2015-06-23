@@ -34,7 +34,7 @@ $(document).change(function(){
                     flag[index] = true;
                 }
             }
-            if(typeOfForm == 2){
+            if(typeOfForm == 2 || typeOfForm == 4){
                 // таблица соответствий
                 if(document.forms[index].elements[elementNumber].checked == true){
                     flag[index] = true;
