@@ -20,8 +20,8 @@ class FillGaps extends QuestionType {
 
     public function show($count){
         $text_parts = explode("<>", $this->text);                         //части текста между селектами
-        $parse = $this->variants;
-        $variants = explode("<>", $parse);
+        $parse = explode("%", $this->variants);
+        $variants = explode("<>", $parse[0]);
         $num_slot = count($variants);
         $parse_group_variants = [];
         $group_variants = [];
@@ -37,14 +37,16 @@ class FillGaps extends QuestionType {
     }
 
     public function check($array){
-        $parse = $this->variants;
-        $variants = explode("<>", $parse);
+        $parse = explode("%", $this->variants);    //первый элемент - все варианты через <>, второй - стоимости через ;
+        $variants = explode("<>", $parse[0]);
+        $values = explode (";", $parse[1]);
+
         $parse_answer = $this->answer;
         $answer = explode(";", $parse_answer);
         $score = 0;
         $p = 0;                          //счетчик правильных ответов
-        $step = $this->points/count($variants);
         for ($i=0; $i < count($variants); $i++){
+            $step = $this->points * $values[$i];
             if ($array[$i] == $answer[$i]){
                 $score +=$step;
                 $p++;
