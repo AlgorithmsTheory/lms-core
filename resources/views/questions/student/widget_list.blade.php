@@ -1,5 +1,6 @@
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Тест</title>
 
     {!! HTML::style('css/test_style.css') !!}

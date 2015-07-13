@@ -28,3 +28,4 @@ Route::get('questions/show-test/{id_test}', ['as' => 'question_showtest', 'uses'
 Route::get('questions/result', ['as' => 'question_result', 'uses' => 'QuestionController@result']);
 Route::patch('questions/check', ['as' => 'question_checks', 'uses' => 'QuestionController@checks']);
 Route::patch('questions/check-test', ['as' => 'question_checktest', 'uses' => 'QuestionController@checkTest']);
+Route::get('tests', ['as' => 'tests', 'uses' => 'TestController@index']);

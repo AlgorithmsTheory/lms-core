@@ -8,22 +8,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Qtypes\YesNo;
-use App\Test;
-use App\Theme;
+use Cookie;
+use Session;
+use View;
+use App\Result;
 use Illuminate\Http\Request;
 use App\Question;
 use App\Codificator;
-use View;
+use App\Test;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use PDOStatement;
-use Session;
 use App\Bruser;
 use App\Qtypes\OneChoice;
 use App\Qtypes\MultiChoice;
 use App\Qtypes\FillGaps;
 use App\Qtypes\AccordanceTable;
+use App\Qtypes\YesNo;
 
 class QuestionController extends Controller{
     private $question;
@@ -156,7 +158,6 @@ class QuestionController extends Controller{
         $question = $this->question;
         $id = $array[0];
         $query = $question->whereId_question($id)->select('answer','points')->first();
-        $answer = $query->answer;
         $points = $query->points;
         $type = $this->getCode($id)['type'];
         if (count($array)==1){           //если не был отмечен ни один вариант
@@ -213,6 +214,42 @@ class QuestionController extends Controller{
         }
     }
 
+    private function calcMarkBologna($max, $real){          //вычисляет оценку по Болонской системе
+        if ($real < $max * 0.6){
+            return 'F';
+        }
+        if ($real >= $max * 0.6 && $real < $max * 0.65){
+            return 'E';
+        }
+        if ($real >= 0.65 && $real < $max * 0.75){
+            return 'D';
+        }
+        if ($real >= 0.75 && $real < $max * 0.85){
+            return 'C';
+        }
+        if ($real >= 0.85 && $real < $max * 0.9){
+            return 'B';
+        }
+        if ($real >= 0.9){
+            return 'A';
+        }
+    }
+
+    private function calcMarkRus($max, $real){       //вычисляет оценку по обычной 5-тибалльной шкале
+        if ($real < $max * 0.6){
+            return '2';
+        }
+        if ($real >= $max * 0.6 && $real < $max * 0.7){
+            return '3';
+        }
+        if ($real >= 0.7 && $real < $max * 0.9){
+            return '4';
+        }
+        if ($real >= 0.9){
+            return '5';
+        }
+    }
+
     /*public function result(){
         $score = Session::get('score');
         $total = Session::get('num');
@@ -227,7 +264,7 @@ class QuestionController extends Controller{
         if (Session::has('teachername')){
             return view('questions.teacher.index');
         }*/
-        $questions = $this->question->get();
+        //$questions = $this->question->get();
         //dd($questions);
         $username =  null;
         session_start();
@@ -235,7 +272,7 @@ class QuestionController extends Controller{
             unset($_SESSION['test'.$_SESSION['username']]);
             $username =  $_SESSION['username'];
         }
-        return view('questions.teacher.index', compact('questions', 'username'));
+        return view('questions.teacher.index', compact('username'));
     }
 
     public function form(Request $request){
@@ -324,17 +361,38 @@ class QuestionController extends Controller{
     }
 
     public function showViews($id_test){
+        session_start();
+        if (!Session::has('passed_test_id')){    //устанавливаем id пройденного теста
+            Session::put('passed_test_id',0);
+        }
+        Session::put('passed_test_id', Session::get('passed_test_id')+1);
+        $current_test = Session::get('passed_test_id');
+        //создаем строку в таблице пройденных тестов
         $test = new Test();
-        $query = $test->whereId_test($id_test)->select('amount')->first();   //кол-во вопрососв в тесте
+        $result = new Result();
+        $query = $test->whereId_test($id_test)->select('amount', 'test_name')->first();   //кол-во вопрососв в тесте
+        $result->id_result = Session::get('passed_test_id');
+        $result->id_user = 1;        //пока без привзяки к таблице пользователей
+        $result->id_test = $id_test;
+        $result->test_name = $query->test_name;
         $amount = $query->amount;
+        $result->amount = $amount;
+        $result->save();
+
         $widgets = [];
+        $saved_test = [];
         for ($i=0; $i<$amount; $i++){
             $id = $this->chooseQuestion($id_test);
             $data = $this->showTest($id, $i+1);                  //должны получать название view и необходимые параметры
+            $saved_test[] = $data;
             $widgets[] = View::make($data['view'], $data['arguments']);
         }
+        $saved_test = serialize($saved_test);
+        Result::where('id_result', '=', Session::get('passed_test_id'))->update(['result' => $saved_test]);
         $widgetListView = View::make('questions.student.widget_list',compact('amount', 'id_test'))->with('widgets', $widgets);
-        return $widgetListView;
+        $response = new Response($widgetListView);
+        $response->withCookie(cookie('current_test', $current_test));
+        return $response;
     }
 
     public function checkTest(Request $request){   //обработать ответ на вопрос
@@ -342,40 +400,62 @@ class QuestionController extends Controller{
         $amount = $request->input('amount');
         $id_test = $request->input('id_test');
         $test = new Test();
-        $query = $test->whereId_test($id_test)->select('total')->first();
+        $query = $test->whereId_test($id_test)->select('total', 'test_name', 'amount')->first();
         $total = $query->total;
+        $test_name = explode(";", $query->test_name);
         $score_sum = 0;
         $points_sum = 0;
-        $view = [];
-        $j = 0;
+        $mark = [];
+        $j = 1;
         for ($i=0; $i<$amount; $i++){        //обрабатываем каждый вопрос
             $data = $request->input($i);
             $array = json_decode($data);
             //print_r($array);
             $data = $this->check($array);
-            if ($data['mark'] == 'Неверно'){
-                $view[$j]= $data['id'];      //массив неверных вопросов
+            /*if ($data['mark'] == 'Неверно'){
+                $mark[$j]= $data['mark'];      //массив неверных вопросов
                 $j++;
-            }
-            $score_sum += $data['score'];
-            $points_sum += $data['points'];
+            }*/
+            $right_or_wrong[$j] = $data['mark'];
+            $j++;
+            $score_sum += $data['score'];     //сумма набранных баллов
+            $points_sum += $data['points'];   //сумма максимально возможных баллов
         }
         if ($points_sum != 0){
-            $score = 100*$score_sum/$points_sum;
+            $score = $total*$score_sum/$points_sum;
             $score = round($score,1);
         }
-        else $score = 100;
-        $number_of_wrong = count($view);
+        else $score = $total;
+
+        $mark_bologna = $this->calcMarkBologna($total, $score);    //оценки
+        $mark_rus = $this->calcMarkRus($total, $score);
+        $mark = $mark_bologna.';'.$mark_rus;
+        $result = new Result();
+        $current_test = Cookie::get('current_test');
+        $number_of_wrong = count($mark);
         unset($_SESSION['test'.$_SESSION['username']]);
-        return view('tests.rybaresults', compact('view','score', 'number_of_wrong'));
+
+        if ($test_name[0] != 'Тренировочный'){
+            $result->whereId_result($current_test)->update(['result' => $score, 'mark' => $mark]);
+            return view('tests.ctrresults', compact('score', 'mark_bologna', 'mark_rus'));
+        }
+        else{
+            $amount = $query->amount;
+            $widgets = [];
+            $query = $result->whereId_result($current_test)->first();
+            $saved_test = $query->result;
+            $saved_test = unserialize($saved_test);
+            for ($i=0; $i<$amount; $i++){
+                $widgets[] = View::make($saved_test[$i]['view'], $saved_test[$i]['arguments']);
+            }
+            $result->whereId_result($current_test)->update(['result' => $score, 'mark' => $mark]);
+            $widgetListView = View::make('questions.student.training_test',compact('amount', 'id_test','score','right_or_wrong','number_of_wrong', 'mark_bologna', 'mark_rus'))->with('widgets', $widgets);
+            return $widgetListView;
+        }
         /*print_r($data);
         echo '<br>';
         print_r($array);
         echo '<br><br>';*/
     }
 
-    public function killSession(){
-        Session::flush();
-        return redirect()->route('question_index');
-    }
 } 

@@ -24,22 +24,25 @@ class TestController extends Controller{
     }
 
     public function index(){
-        return view('tests.index');
+        $tr_tests = [];             //массив тренировочных тестов
+        $ctr_tests = [];            //массив контрольных тестов
+        $tr_names = [];
+        $ctr_names = [];
+        $query = $this->test->select('id_test', 'test_name')->get();
+        foreach ($query as $test){
+            $test_name = explode(";", $test->test_name);
+            if ($test_name[0] == 'Тренировочный'){
+                array_push($tr_tests, $test->id_test);          //название тренировочного теста состоит из слова "Тренировочный" и
+                array_push($tr_names, $test_name[1]);           //самого названия теста
+            }
+            else {
+                array_push($ctr_tests, $test->id_test);
+                array_push($ctr_names, $test->test_name);
+            }
+        }
+        $tr_amount = count($tr_tests);
+        $ctr_amount = count($ctr_tests);
+        return view('tests.index', compact('tr_tests', 'ctr_tests', 'tr_names', 'ctr_names', 'tr_amount', 'ctr_amount'));
     }
 
-    public function prepareTest(Question $question){
-        $array = [];
-        $query=$question->where('code', '=', '1.5.1')->orWhere('code', '=', '1.5.2')->get();
-        foreach ($query as $id){
-             array_push($array,$id->id_question);
-        }
-        return $array;
-    }
-        $index = rand(0,count($array)-1);
-        $choisen = $array[$index];
-        $array[$index]=$array[count($array)-1];
-        $array[count($array)-1] = $choisen;
-        array_pop($array);
-        $q->show($choisen, $num, $codificator, $tema);
-   }
-} 
+}
