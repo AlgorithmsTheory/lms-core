@@ -9,7 +9,6 @@
 namespace App\Http\Controllers;
 
 use Cookie;
-use Session;
 use View;
 use App\Result;
 use Illuminate\Http\Request;
@@ -18,14 +17,13 @@ use App\Codificator;
 use App\Test;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
-use PDOStatement;
 use App\Bruser;
 use App\Qtypes\OneChoice;
 use App\Qtypes\MultiChoice;
 use App\Qtypes\FillGaps;
 use App\Qtypes\AccordanceTable;
 use App\Qtypes\YesNo;
+
 
 class QuestionController extends Controller{
     private $question;
@@ -299,7 +297,13 @@ class QuestionController extends Controller{
     }
 
     public function create(){             //переход на страницу формы добавления
-        return view('questions.teacher.create');
+        $codificator = new Codificator();
+        $sections = [];
+        $query = $codificator->whereCodificator_type('Раздел')->select('value')->get();
+        foreach ($query as $section){
+            array_push($sections,$section->value);
+        }
+        return view('questions.teacher.create', compact('sections'));
     }
 
     public function add(Request $request){  //обработка формы добавления
@@ -361,17 +365,13 @@ class QuestionController extends Controller{
     }
 
     public function showViews($id_test){
-        session_start();
-        if (!Session::has('passed_test_id')){    //устанавливаем id пройденного теста
-            Session::put('passed_test_id',0);
-        }
-        Session::put('passed_test_id', Session::get('passed_test_id')+1);
-        $current_test = Session::get('passed_test_id');
         //создаем строку в таблице пройденных тестов
         $test = new Test();
         $result = new Result();
+        $query = Result::max('id_result');     //пример использования агрегатных функций!!!
+        $current_result = $query+1;            //создаем новый результат
         $query = $test->whereId_test($id_test)->select('amount', 'test_name')->first();   //кол-во вопрососв в тесте
-        $result->id_result = Session::get('passed_test_id');
+        $result->id_result = $current_result;
         $result->id_user = 1;        //пока без привзяки к таблице пользователей
         $result->id_test = $id_test;
         $result->test_name = $query->test_name;
@@ -388,10 +388,10 @@ class QuestionController extends Controller{
             $widgets[] = View::make($data['view'], $data['arguments']);
         }
         $saved_test = serialize($saved_test);
-        Result::where('id_result', '=', Session::get('passed_test_id'))->update(['result' => $saved_test]);
+        Result::where('id_result', '=', $current_result)->update(['result' => $saved_test]);
         $widgetListView = View::make('questions.student.widget_list',compact('amount', 'id_test'))->with('widgets', $widgets);
         $response = new Response($widgetListView);
-        $response->withCookie(cookie('current_test', $current_test));
+        $response->withCookie(cookie('current_test', $current_result));
         return $response;
     }
 

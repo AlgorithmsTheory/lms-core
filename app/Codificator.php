@@ -7,9 +7,10 @@
  */
 
 namespace App;
-use Illuminate\Database\Eloquent\Model as Eloquent;
 
 /**
+ * App\Codificator
+ *
  * @method static \Illuminate\Database\Query\Builder|\App\Codificator whereId_codificator($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Codificator  whereCodificator_type($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Codificator  whereValue($value)
@@ -19,9 +20,8 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent|\App\Codificator  select()
  * @method static \Illuminate\Database\Eloquent|\App\Codificator  first()
  * @method static \Illuminate\Database\Eloquent|\App\Codificator  join($value)
- *
  */
-class Codificator extends Eloquent {
+class Codificator extends \Eloquent {
     protected $table = 'codificators';
     public $timestamps = false;
     protected $fillable = ['codificator_type', 'value', 'code'];
