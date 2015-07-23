@@ -15,8 +15,16 @@
     return \App\Question::whereId_question($id_question)->first();
 });*/
 
+Route::filter('csrf-ajax', function()
+{
+    if (Session::token() != Request::header('x-csrf-token'))
+    {
+        throw new Illuminate\Session\TokenMismatchException;
+    }
+});
+
 Route::get('/', 'WelcomeController@index');
-Route::patch('questions/create', ['as' => 'question_add', 'uses' => 'QuestionController@add']);
+Route::post('questions/create', ['as' => 'question_add', 'uses' => 'QuestionController@add']);
 Route::get('questions', ['as' => 'question_index', 'uses' => 'QuestionController@index']);
 Route::get('questions-enter', ['as' => 'question_enter', 'uses' => 'QuestionController@enter']);
 Route::patch('questions-form', ['as' => 'question_form', 'uses' => 'QuestionController@form']);
@@ -26,6 +34,7 @@ Route::get('questions/show/{id}', ['as' => 'question_show', 'uses' => 'QuestionC
 //Route::get('questions/show-test/{num}', ['as' => 'question_showtest', 'uses' => 'QuestionController@showTest']);
 Route::get('questions/show-test/{id_test}', ['as' => 'question_showtest', 'uses' => 'QuestionController@showViews']);
 Route::get('questions/result', ['as' => 'question_result', 'uses' => 'QuestionController@result']);
+Route::post('test', array('as'=>'test', 'uses'=>'QuestionController@getThemes'));
 Route::patch('questions/check', ['as' => 'question_checks', 'uses' => 'QuestionController@checks']);
 Route::patch('questions/check-test', ['as' => 'question_checktest', 'uses' => 'QuestionController@checkTest']);
 Route::get('tests', ['as' => 'tests', 'uses' => 'TestController@index']);

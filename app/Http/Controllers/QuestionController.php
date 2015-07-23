@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Question;
 use App\Codificator;
 use App\Test;
+use App\Theme;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Bruser;
@@ -149,6 +150,55 @@ class QuestionController extends Controller{
             $ser_array = serialize($array);
             $_SESSION['test'.$_SESSION['username']] = $ser_array;
             return $choisen;
+        }
+    }
+
+    private function showTest($id_question, $count){  //показать вопрос в тесте
+        $decode = $this->getCode($id_question);
+        $type = $decode['type'];
+
+        switch($type){
+            case 'Выбор одного из списка':                      //Стас
+                $one_choice = new OneChoice($id_question);
+                $array = $one_choice->show($count);
+                return $array;
+                break;
+
+            case 'Выбор нескольких из списка':
+                $multi_choice = new MultiChoice($id_question);
+                $array = $multi_choice->show($count);
+                return $array;
+                break;
+
+            case 'Текстовый вопрос':                            //Стас
+                $fill_gaps = new FillGaps($id_question);
+                $array = $fill_gaps->show($count);
+                return $array;
+                break;
+
+            case 'Таблица соответствий':                        //Миша
+                $accordance_table = new AccordanceTable($id_question);
+                $array = $accordance_table->show($count);
+                return $array;
+                break;
+
+            case 'Да/Нет':                                      //Миша
+                $yes_no = new YesNo($id_question);
+                $array = $yes_no->show($count);
+                return $array;
+                break;
+
+            case 'Вопрос на вычисление':
+                echo 'Вопрос на вычисление';
+                break;
+
+            case 'Вопрос на соответствие':
+                echo 'Вопрос на соответствие';
+                break;
+
+            case 'Вид функции':
+                echo 'Вопрос на определение аналитического вида функции';
+                break;
         }
     }
 
@@ -315,52 +365,17 @@ class QuestionController extends Controller{
         return redirect()->route('question_index');
     }
 
-    private function showTest($id_question, $count){  //показать вопрос в тесте
-        $decode = $this->getCode($id_question);
-        $type = $decode['type'];
-
-        switch($type){
-            case 'Выбор одного из списка':                      //Стас
-                $one_choice = new OneChoice($id_question);
-                $array = $one_choice->show($count);
-                return $array;
-                break;
-
-            case 'Выбор нескольких из списка':
-                $multi_choice = new MultiChoice($id_question);
-                $array = $multi_choice->show($count);
-                return $array;
-                break;
-
-            case 'Текстовый вопрос':                            //Стас
-                $fill_gaps = new FillGaps($id_question);
-                $array = $fill_gaps->show($count);
-                return $array;
-                break;
-
-            case 'Таблица соответствий':                        //Миша
-                $accordance_table = new AccordanceTable($id_question);
-                $array = $accordance_table->show($count);
-                return $array;
-                break;
-
-            case 'Да/Нет':                                      //Миша
-                $yes_no = new YesNo($id_question);
-                $array = $yes_no->show($count);
-                return $array;
-                break;
-
-            case 'Вопрос на вычисление':
-                echo 'Вопрос на вычисление';
-                break;
-
-            case 'Вопрос на соответствие':
-                echo 'Вопрос на соответствие';
-                break;
-
-            case 'Вид функции':
-                echo 'Вопрос на определение аналитического вида функции';
-                break;
+    public function getThemes(Request $request){
+        if ($request->ajax()) {
+           $themes = new Theme();
+            $query = $themes->whereSection($request->input('choice'))->select('theme')->get();
+            echo '<select name="section-theme" id="select-theme" class="form-control" size="1">
+                    <option value="$nbsp"></option>';
+            foreach ($query as $str){
+                echo '<option value="'.$str->theme.'">'.$str->theme.'</option>';
+            }
+            echo '</select>
+                    <label for="select-theme">Тема</label>';
         }
     }
 

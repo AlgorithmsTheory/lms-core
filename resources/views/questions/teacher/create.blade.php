@@ -1,9 +1,10 @@
 <html>
 <head>
+    <meta name="csrf_token" content="{{ csrf_token() }}" />
     {!! HTML::style('css/bootstrap.css') !!}
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/materialadmin.css') !!}
-    {!! HTML::style('cssmaterial-design-iconic-font.min.css') !!}
+    {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     {!! HTML::script('js/jquery.js') !!}
 </head>
 <body>
@@ -12,8 +13,8 @@
 
 <h2 class="text-primary">Создать новый вопрос</h2>
 
-{!! Form::open(['method' => 'PATCH', 'route' => 'question_add', 'class' => 'form']) !!}
-
+<form action="question_add" method="POST" class="form">
+<input type="hidden" name="_token" value="{{ csrf_token() }}">
 <div class="col-lg-offset-1 col-md-10 col-sm-6">
     <div class="card">
         <div class="card-body">
@@ -52,33 +53,35 @@
         </div>
         <div class="card-body">
             <div class="form-group">
-                <select name="section" id="select" class="form-control" size="1">
+                <select name="section" id="select-section" class="form-control" size="1">
                     <option value="$nbsp"></option>
                     @foreach ($sections as $section)
                         <option value="{{$section}}">{{$section}}</option>/td>
                     @endforeach
                 </select>
-                <label for="select">Раздел</label>
+                <label for="select-section">Раздел</label>
             </div>
 
-            <p>Тема</p>                                                                <!--обязательное поле-->
-            <input type="text"  name="theme">
+            <div class="form-group" id="container">
+
+            </div>
 
             <p>Тип</p>                                                                <!--обязательное поле-->
             <input type="text"  name="type">
 
             <p>Баллов за верный ответ</p>                                            <!--обязательное поле-->
             <input type="number" min="0" name="points">
-
+            <select name="id" id="select-section" class="form-control" size="1">
             <input type="submit" value="Добавить" name="update">
-{!! Form::close() !!}
         </div>
     </div>
 </div>
-
+</form>
+<a id="updatejq" href="">  [updatejq ]  </a>
 <script type="text/javascript">
     $(function(){
         var count = 5;
+
         $('#add-var').click(function(){
             $('#variants').append('\
             <div class="form-group">\
@@ -87,14 +90,59 @@
             </div>\
             ');
             count++;
-        })
+        });
 
         $('#del-var').click(function(){
             if (count > 2){
                 lastelem = $('#variants').children().last().remove();
                 count--;
             }
-            })
+            });
+
+        $('#select-section').change(function(){
+            choice = $('#select-section option:selected').val();
+            token = $('.form').children().eq(0).val();
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url:   "{{URL::route('test')}}",
+                    beforeSend: function (xhr) {
+                        var token = $('meta[name="csrf_token"]').attr('content');
+
+                        if (token) {
+                            return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                        }
+                    },
+                    data: { choice: choice, token: 'token' },
+                    success: function(html){
+                        $('#container').html(html);
+                    }
+                    /*success: function(data){
+                        alert(data);
+                    }*/
+                });
+                return false;
+            });
+
+        /*$("a#updatejq").click(function() {
+            //No special header needed, form is serialized, token goes right through
+            //no different than a regular laravel post.
+            dataString = $(".form").serialize();
+            alert('here');
+            $.ajax({
+                type: "POST",
+                url:"{{URL::route('test')}}",  //Notice here you just echo out the route to controller method.
+                data: dataString,
+                //dataType: "json", //////////json not applicable at all here. Commented out.
+                success: function() {
+                    alert('updated');
+                    //You could even have a modal popup
+                    //here to notify an update.
+
+                }
+            });
+            return false;
+        });*/
     })
 </script>
 {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
