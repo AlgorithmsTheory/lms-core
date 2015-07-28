@@ -8,6 +8,8 @@
 
 namespace App\Qtypes;
 use App\Http\Controllers\QuestionController;
+use App\Question;
+use Illuminate\Http\Request;
 
 
 class OneChoice extends QuestionType {
@@ -15,8 +17,18 @@ class OneChoice extends QuestionType {
     function __construct($id_question){
        parent::__construct($id_question);
     }
+
     public function  create(){
 
+    }
+
+    public  function add(Request $request, $code){
+        $variants = $request->input('variants')[0];
+        for ($i=1; $i<count($request->input('variants')); $i++){
+            $variants = $variants.';'.$request->input('variants')[$i];
+        }
+        $answer = $request->input('variants')[0];
+        Question::insert(array('code' => $code, 'title' => $request->input('title'), 'variants' => $variants, 'answer' => $answer, 'points' => $request->input('points')));
     }
 
     public function show($count){

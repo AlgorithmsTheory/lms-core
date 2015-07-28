@@ -8,6 +8,8 @@
 
 namespace App\Qtypes;
 use App\Http\Controllers\QuestionController;
+use App\Question;
+use Illuminate\Http\Request;
 
 class MultiChoice extends QuestionType {
     const type_code = 2;
@@ -16,6 +18,30 @@ class MultiChoice extends QuestionType {
     }
     public function  create(){
 
+    }
+
+    public function add(Request $request, $code){
+        $variants = $request->input('variants')[0];
+        $answers = '';
+        $flag = false;
+        $j = 0;
+        for ($i=1; $i<count($request->input('variants')); $i++){
+            $variants = $variants.';'.$request->input('variants')[$i];
+        }
+        while ($flag != true && $j<count($request->input('answers'))){
+            if (isset($request->input('answers')[$j])){
+                $answers = $request->input('variants')[$request->input('answers')[$j]-1];
+                $j++;
+                break;
+            }
+            $j++;
+        }
+        for ($i=$j; $i<count($request->input('answers')); $i++){
+            if (isset($request->input('answers')[$i])){
+                $answers = $answers.';'.$request->input('variants')[$request->input('answers')[$i]-1];
+            }
+        }
+        Question::insert(array('code' => $code, 'title' => $request->input('title'), 'variants' => $variants, 'answer' => $answers, 'points' => $request->input('points')));
     }
 
     public function show($count){

@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent|\App\Question  first()
  * @method static \Illuminate\Database\Eloquent|\App\Question  insert($array)
  * @method static \Illuminate\Database\Eloquent|\App\Question  table($array)
+ * @method static \Illuminate\Database\Eloquent|\App\Question  max($array)
  *
  */
 class Question extends Eloquent {
