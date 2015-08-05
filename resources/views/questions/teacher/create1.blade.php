@@ -11,7 +11,7 @@
 
             <div id="variants" class="col-md-10 col-sm-6">
                 <div class="form-group">
-                    <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>
+                    <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="Этот вариант будет ответом"></textarea>
                     <label for="textarea3">Вариант 1</label>
                 </div>
                 <div class="form-group">

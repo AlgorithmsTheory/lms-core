@@ -383,9 +383,13 @@ class QuestionController extends Controller{
                     break;
 
                 case 'Текстовый вопрос':                            //Стас
-                    $fill_gaps = new FillGaps($id);
-                    $data = $fill_gaps->check($array);
-                    return $data;
+                    $codificator = new Codificator();
+                    $sections = [];
+                    $query = $codificator->whereCodificator_type('Раздел')->select('value')->get();
+                    foreach ($query as $section){
+                        array_push($sections,$section->value);
+                    }
+                    return (String) view('questions.teacher.create3', compact('sections'));
                     break;
 
                 case 'Таблица соответствий':                        //Миша
@@ -432,7 +436,8 @@ class QuestionController extends Controller{
                 break;
 
             case 'Текстовый вопрос':                            //Стас
-
+                $fill_gaps = new FillGaps($id);
+                $fill_gaps->add($request, $code);
                 break;
 
             case 'Таблица соответствий':                        //Миша

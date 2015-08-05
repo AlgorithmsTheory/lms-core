@@ -2,6 +2,7 @@
 <head>
     <meta name="csrf_token" content="{{ csrf_token() }}" />
     {!! HTML::style('css/bootstrap.css') !!}
+    {!! HTML::style('css/test_style.css') !!}
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/materialadmin.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}

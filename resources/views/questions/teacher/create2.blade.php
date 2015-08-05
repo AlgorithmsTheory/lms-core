@@ -55,7 +55,7 @@
         </div>
     </div>
     <div class="col-md-2 col-sm-6" style="margin-top: 220px" id="add-del-buttons">
-        <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-var-2"><b>+</b>   </button>
+        <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-var-2"><b>+</b></button>
         <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-var-2"><b>-</b></button>
     </div>
 </div>
