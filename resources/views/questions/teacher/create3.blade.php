@@ -1,6 +1,6 @@
 <div class="card-body">
     <div class="form-group">
-        <input type="text" class="form-control" name="title" id="edit-text" value="" placeholder="Введите текст вопроса. Затем нажмите кнопку завершения редактирования, чтобы выбрать пропущенные слова">
+        <textarea class="form-control" name="title" id="edit-text" rows="3" placeholder="Введите текст вопроса. Затем нажмите кнопку завершения редактирования, чтобы выбрать пропущенные слова"></textarea>
         <p class="lead" id="general-text"></p>
         <label for="textarea1">Текст</label>
         <input type="hidden" value="">
@@ -33,10 +33,23 @@
         <label for="points">Баллы за верный ответ</label>
     </div>
 
-    <button class="btn btn-primary btn-raised" type="submit-text" id="submit">Добавить вопрос</button>
+    <button class="btn btn-primary btn-raised" type="submit" id="submit-text">Добавить вопрос</button>
+    <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
 </div>
 </div>
 </div>
 <input type="hidden" id="number-of-blocks" value="" name="number_of_blocks">
 </form>
+<div id="question-preview" class="modalDialog">
+    <div>
+        <a id="close-btn" class="btn ink-reaction btn-floating-action btn-danger close" href="#close" title="Close">X</a>
+        <h2>Предварительный просмотр</h2>
+        <form class="smart-blue">
+            <h1>Вопрос 1</h1>
+            <h2>Заполните пропуски в тексте</h2>
+            <div id="preview-container"></div>
+        </form>
+        <button class="btn btn-primary btn-raised" type="submit" id="submit-text">Добавить вопрос</button>
+    </div>
+</div>
 </div>

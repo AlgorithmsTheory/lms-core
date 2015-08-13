@@ -5,7 +5,7 @@
     var margin = 220;                                                                                                   //расстояние верхней границы кнопок доавления и удаления
     var margins = [];                                                                                                   //расстояние верхней границы кнопок добавления и удаления для текстового вопроса
     for (k=0; k<50; k++){
-        margins[k] = 220;
+        margins[k] = 294;
     }
     var counts = [];                                                                                                    //счетчики числа вариантов для текстового вопроса
     for (k=0; k<50; k++){
@@ -57,7 +57,7 @@
                             <label for="textarea3">Вариант 4</label>\
                         </div>\
                     </div>\
-                    <div class="col-md-2 col-sm-6" style="margin-top: 220px" id="add-del-buttons-'+word_number+'">\
+                    <div class="col-md-2 col-sm-6" style="margin-top: 294px" id="add-del-buttons-'+word_number+'">\
                         <button type="button" class="btn ink-reaction btn-floating-action btn-success add-var-3" id="var-add-button-'+word_number+'"><b>+</b>   </button>\
                         <button type="button" class="btn ink-reaction btn-floating-action btn-danger del-var-3" id="var-del-button-'+word_number+'"><b>-</b></button>\
                     </div>\
@@ -214,7 +214,7 @@
         var j=1;
         var flag = true;
         text = $('#edit-text').val();
-        var pattern = /\s|,|\.|\?|!/;
+        var pattern = /\s|,|\.|\?|!|-|:|"/;
 
         //каждое слово запихиваем в спан
         $('#general-text').attr('style', 'display:block;');
@@ -236,14 +236,14 @@
         spanLast = j-1;                                                                                                 //запоминаем номер последнего спана
         spanEdge = j-1;                                                                                                 //запоминаем номер крайнего спана (в данном случае совпадают)
 
-        $('#edit-text').attr('type', 'hidden');                                                                         //прячем поле формы с текстом вопроса
+        $('#edit-text').css({'display' : 'none'});                                                                      //прячем поле формы с текстом вопроса
         $('#finish-edit').attr('id', 'edit');                                                                           //меняем статус кнопки
         $('#button-title').text('Вернуться к редактированию');                                                          //меняем текст кнопки
 
         //работа с блоками, если они уже были созданы
         for (i=1; i<word_number; i++){                                                                                  //идем по всем уже выбранным словам (блокам)
              for (q=1; q<j; q++){                                                                                       //для каждого выбранного слова идем по всем словам в новом тексте
-                 if ($('#card-body-'+i+' textarea').first().text() == $('#text-part-'+q).text()){                       //если слова совпали
+                 if ($('#card-body-'+i+' textarea').eq(1).text() == $('#text-part-'+q).text()){                         //если слова совпали
                      if ($('#card-body-'+i).attr('class').substring(15) != q){                                          //если старый номер слова в тексте больше не совпадает с новым
                          $('#card-body-'+i).attr('class', 'card-body span-'+q);                                         //присваиваем блоку класс с актуальным номером спана
                          flag = true;
@@ -255,7 +255,7 @@
                  else flag = false;
              }
         if (flag == false){           //если для предыдущего слово не было найдено в новом тексте
-            $('#card-body-'+i+' textarea').first().text($('#text-part-'+$('#card-body-'+i).attr('class').substring(15)).text());       //пишем в первый вариант текущего блока слово с номером, соответсвующим старому номеру в тексте
+            $('#card-body-'+i+' textarea').eq(1).text($('#text-part-'+$('#card-body-'+i).attr('class').substring(15)).text());       //пишем в первый вариант текущего блока слово с номером, соответсвующим старому номеру в тексте
             $('#text-part-'+$('#card-body-'+i).attr('class').substring(15)).attr('style', 'cursor:pointer; background-color:lightgreen;');  //задаем цвет слову в новом тексте
             flag = true;
         }
@@ -265,7 +265,7 @@
     //возвращение в режим набора текста вопроса
     $('#type_question_add').on('click','#edit', function(){
         $('#button-title').text('Завершить редактирование текста');                                                     //меняем текст кнопки
-        $('#edit-text').attr('type', 'text');                                                                           //вновь показываем поле формы с текстом вопроса
+        $('#edit-text').css({'display' : 'block'});                                                                     //вновь показываем поле формы с текстом вопроса
         $('#general-text').attr('style', 'display:none;');                                                              //прячем набранный текст
         $('#edit').attr('id', 'finish-edit');                                                                           //меняем статус кнопки
 
@@ -282,7 +282,7 @@
                 if ($(this).css('background-color') == 'rgb(144, 238, 144)'){                                           //слово уже выделено (выделено светло-зеленым)
                     $(this).css({'background-color':''});
                     for (i=1; i<word_number; i++){
-                        if ($('#card-body-'+i).children().first().children().first().children().first().text() == $(this).text()){  //ищем нужный блок
+                        if ($('#card-body-'+i+' textarea').eq(1).text() == $(this).text()){                             //ищем нужный блок
                             removeBlock(i);
                             break;
                         }
@@ -320,8 +320,9 @@
 
         if ($('#union').text() == 'Объединить'){                                                                        //если включен режим объединения в компакты
             var tempSpan = parseInt($(this).attr('id').substring(10),10);                                               //текущий выбранный спан
+            var temp;
             if (startSpan == tempSpan) return;                                                                          //если выбранный спан совпадает с начальным, то ничего не выпоняем
-            var q;
+            var q,l;
             if (startSpan == 0){                                                                                        //если еще не было выделено ни одного элемента
                 if (belongSelection(startSpan)) return;
                 startSpan = parseInt($(this).attr('id').substring(10),10);
@@ -348,10 +349,12 @@
                         if ($('#text-part-'+q).hasClass('wrapped') == false) {
                             $('#text-part-'+q).addClass('wrapped');
                             if (q != endSpan){
-                                $('#text-part-'+q).next().addClass('wrapped');
+                                temp =  $('#text-part-'+q).next();
                                 // заглушка - можно написать проверку, чтобы проверялось не только два специальных символа, а до конца выделения
-                                if ($('#text-part-'+q).next().next().hasClass('text-part') == false){
-                                    $('#text-part-'+q).next().next().addClass('wrapped');
+                                while (temp.hasClass('text-part') == false){
+                                    //alert(temp.text());
+                                    temp.addClass('wrapped');
+                                    temp = temp.next();
                                 }
                             }
                         }
@@ -472,14 +475,62 @@
         $('#number-of-blocks').val(word_number-1);                                                                      //заносим в форму информацию о количестве пропущенных слов
         var i;
         var sumCost = 0;
+        var costStting = '';
         for (i=1; i<word_number; i++){
+            $('#column-'+i+' textarea').first().val().replace(/,/, '.');                                                //меняем в стоимости запятую на точку для правильной обработки на сервере
+            $('#column-'+i+' textarea').first().text().replace(/,/, '.');
             sumCost += Number($('#column-'+i+' textarea').first().val());                                               //считаем сумму всех стоимостей
+            costStting += $('#column-'+i+' textarea').eq(1).val()+': '+$('#column-'+i+' textarea').eq(0).val()+'\n';    //создаем строку вида "слово: стоимость"
         }
-        if (sumCost > 1){                                                                                               //не сабмитим, если стоимости выше 1
-            alert('Сумма стоимостей не может превышать единицу!');
+        if (sumCost != 1){                                                                                              //не сабмитим, если стоимости не равны 1 в сумме
+            alert('Сумма стоимостей должна быть равна единице!\n' + costStting);
             return false;
         }
         else return true;
+    });
+
+    //заполнение preview в зависимсти от типа вопроса
+    $('#type_question_add').on('click', '#preview-btn', function(){
+       $('#preview-text').text($('#textarea1').val());                                                                  //вписываем текст вопроса
+        var i;
+        var str = '';
+       var type = $('#select-type').val();
+       switch (type) {                                                                                                  //для каждого типа вопроса заполняем варианты
+           case 'Выбор одного из списка':
+               $('.textarea3').each(function(){
+                   $('#preview-container').append('<input type="radio" value="'+$(this).val()+'"> '+$(this).val()+'<br>');
+               });
+               break;
+           case 'Выбор нескольких из списка':
+               $('.textarea3').each(function(){
+                   $('#preview-container').append('<input type="checkbox" value="'+$(this).val()+'"> '+$(this).val()+'<br>');
+               });
+               break;
+           case 'Текстовый вопрос':
+               //$('#preview-container').append($('#general-text').text());
+               $('#general-text').clone().appendTo('#preview-container');
+               for (i=1; i<word_number; i++){
+                   str = '<span><select>\
+                       <option disabled selected>Вставьте пропущенное слово</option>';
+                   $("#card-body-"+i+" textarea").each(function(){
+                       if ($(this).next().text() != 'Стоимость'){
+                           str += '<option value="'+$(this).val()+'">'+$(this).val()+'</option>';
+                       }
+                   });
+                   str +=  '</select></span>';
+                   $('#preview-container #text-part-'+$('#card-body-'+i).attr('class').substring(15)).html(str);
+               }
+               $('#preview-container #general-text').children().removeAttr('id');
+               $('#preview-container #general-text').children().removeAttr('style');
+               $('#preview-container #general-text').children().removeAttr('class');
+               $('#preview-container #general-text').removeAttr('class');
+               $('#preview-container #general-text').removeAttr('id');
+               break;
+       }
+    });
+
+    $('#type_question_add').on('click', '#close-btn', function(){
+        $('#preview-container').empty();
     });
 
 

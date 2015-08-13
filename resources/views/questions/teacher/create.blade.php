@@ -6,6 +6,7 @@
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/materialadmin.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
+    {!! HTML::style('css/materialadmin_demo.css') !!}
     {!! HTML::script('js/jquery.js') !!}
 </head>
 <body>
@@ -33,6 +34,7 @@
                     </div>
 
                         <div id="type_question_add"></div>
+
 
 
 {!! HTML::script('js/questionCreate.js') !!}

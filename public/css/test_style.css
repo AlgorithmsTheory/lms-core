@@ -189,3 +189,69 @@ a {
     margin-top: 200px;
     border-bottom: 20px;
 }
+
+.modalDialog {
+    position: fixed;
+    font-family: Arial, Helvetica, sans-serif;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 99999;
+    -webkit-transition: opacity 400ms ease-in;
+    -moz-transition: opacity 400ms ease-in;
+    transition: opacity 400ms ease-in;
+    display: none;
+    pointer-events: none;
+}
+
+.modalDialog:target {
+    display: block;
+    pointer-events: auto;
+}
+
+.modalDialog > div {
+    width: 1000px;
+    position: relative;
+    margin: 10% auto;
+    padding: 5px 20px 13px 20px;
+    border-radius: 10px;
+    background: #e5e6e6;
+}
+
+.close {
+    position: absolute;
+    right: -18px;
+    text-align: center;
+    top: -4px;
+    width: 24px;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+    -moz-box-shadow: 1px 1px 3px #000;
+    -webkit-box-shadow: 1px 1px 3px #000;
+    box-shadow: 1px 1px 3px #000;
+}
+
+#preview-btn:link {
+    text-decoration:none;
+    background-color: #0C84E4;
+}
+
+#preview-btn:visited {
+    text-decoration:none;
+    background-color: #0C84E4;
+}
+
+#close-btn {
+    width: 3%;
+    height: 4%;
+}
+#close-btn:link {
+    background-color: #f44336;
+}
+
+#close-btn:visited {
+    background-color: #f44336;
+}

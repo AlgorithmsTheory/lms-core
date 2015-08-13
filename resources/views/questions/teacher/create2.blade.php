@@ -80,10 +80,23 @@
     </div>
 
     <button class="btn btn-primary btn-raised" type="submit">Добавить вопрос</button>
+    <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
 </div>
 </div>
 </div>
 </form>
+<div id="question-preview" class="modalDialog">
+    <div>
+        <a id="close-btn" class="btn ink-reaction btn-floating-action btn-danger close" href="#close" title="Close">X</a>
+        <h2>Предварительный просмотр</h2>
+        <form class="smart-blue">
+            <h1>Вопрос 1</h1>
+            <h2 id="preview-text"></h2>
+            <div id="preview-container"></div>
+        </form>
+        <button class="btn btn-primary btn-raised" type="submit">Добавить вопрос</button>
+    </div>
+</div>
 </div>
 
 
