@@ -1,6 +1,6 @@
 <div class="card-body">
     <div class="form-group">
-        <textarea class="form-control" name="title" id="edit-text" rows="3" placeholder="Введите текст вопроса. Затем нажмите кнопку завершения редактирования, чтобы выбрать пропущенные слова"></textarea>
+        <textarea class="form-control" name="title" id="edit-text" rows="3" placeholder="Введите текст вопроса, нажмите кнопку завершения редактирования, затем выделите пропущенные слова"></textarea>
         <p class="lead" id="general-text"></p>
         <label for="textarea1">Текст</label>
         <input type="hidden" value="">
@@ -33,7 +33,7 @@
         <label for="points">Баллы за верный ответ</label>
     </div>
 
-    <button class="btn btn-primary btn-raised" type="submit" id="submit-text">Добавить вопрос</button>
+    <button class="btn btn-primary btn-raised submit-question" type="submit" id="submit-text">Добавить вопрос</button>
     <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
 </div>
 </div>
@@ -49,7 +49,7 @@
             <h2>Заполните пропуски в тексте</h2>
             <div id="preview-container"></div>
         </form>
-        <button class="btn btn-primary btn-raised" type="submit" id="submit-text">Добавить вопрос</button>
+        <button class="btn btn-primary btn-raised submit-question" type="submit" id="submit-text">Добавить вопрос</button>
     </div>
 </div>
 </div>

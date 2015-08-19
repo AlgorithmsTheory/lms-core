@@ -1,6 +1,6 @@
         <div class="card-body">
             <div class="form-group">
-                <textarea  name="title" id="textarea1" class="form-control" rows="3" placeholder=""></textarea>
+                <textarea  name="title" id="textarea1" class="form-control" rows="3" placeholder="" required></textarea>
                 <label for="textarea1">Текст</label>
             </div>
 
@@ -11,19 +11,19 @@
 
             <div id="variants" class="col-md-10 col-sm-6">
                 <div class="form-group">
-                    <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="Этот вариант будет ответом"></textarea>
+                    <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="Этот вариант будет ответом" required></textarea>
                     <label for="textarea3">Вариант 1</label>
                 </div>
                 <div class="form-group">
-                    <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>
+                    <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
                     <label for="textarea3">Вариант 2</label>
                 </div>
                 <div class="form-group">
-                    <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>
+                    <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
                     <label for="textarea3">Вариант 3</label>
                 </div>
                 <div class="form-group">
-                    <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>
+                    <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
                     <label for="textarea3">Вариант 4</label>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                 <label for="points">Баллы за верный ответ</label>
             </div>
 
-            <button class="btn btn-primary btn-raised" type="submit">Добавить вопрос</button>
+            <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>
             <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
         </div>
     </div>
@@ -67,7 +67,7 @@
                     <h2 id="preview-text"></h2>
                     <div id="preview-container"></div>
                 </form>
-                <button class="btn btn-primary btn-raised" type="submit">Добавить вопрос</button>
+                <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>
             </div>
         </div>
 </div>

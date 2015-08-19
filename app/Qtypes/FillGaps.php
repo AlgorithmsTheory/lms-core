@@ -23,23 +23,24 @@ class FillGaps extends QuestionType {
     public function add(Request $request, $code){
         $variants = '';
         $arr_answers = [];
-        $answers = $request->input('variants-1')[1];
+        $answers = explode('|',$request->input('variants-1')[1])[0];
         for ($i=0; $i<$request->input('number_of_blocks'); $i++){
             for ($j=1; $j<count($request->input('variants-'.($i+1))); $j++){
                 if ($i == 0 && $j == 1){
-                    $variants = $request->input('variants-'.($i+1))[$j];
+                    $variants = explode('|',$request->input('variants-'.($i+1))[$j])[0];
                 }
                 if ($j == 1 && $i != 0){
-                    $variants = $variants.'<>'.$request->input('variants-'.($i+1))[$j];
+                    $variants = $variants.'<>'.explode('|',$request->input('variants-'.($i+1))[$j])[0];
                 }
                 if ($j != 1 ){
                     $variants = $variants.';'.$request->input('variants-'.($i+1))[$j];
                 }
             }
             if ($i != 0){
-                $answers = $answers.';'.$request->input('variants-'.($i+1))[1];
+                $answers = $answers.';'.explode('|',$request->input('variants-'.($i+1))[1])[0];
             }
             $arr_answers[$i] = $request->input('variants-'.($i+1))[1];
+            print_r($arr_answers);
         }
         $variants = $variants.'%'.$request->input('variants-1')[0];
         for ($i=2; $i<=$request->input('number_of_blocks'); $i++){
@@ -47,7 +48,7 @@ class FillGaps extends QuestionType {
         }
         $wet_text = $request->input('title');
         for ($i=0; $i<count($arr_answers); $i++){
-            $wet_text = preg_replace('/'.$arr_answers[$i].'/', '<>' , $wet_text);
+            $wet_text = preg_replace('~'.explode('|',$arr_answers[$i])[0].'\|'.explode('|',$arr_answers[$i])[1].'~', '<>' , $wet_text);
         }
         Question::insert(array('code' => $code, 'title' => $wet_text, 'variants' => $variants, 'answer' => $answers, 'points' => $request->input('points')));
     }
