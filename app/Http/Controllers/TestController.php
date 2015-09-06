@@ -60,4 +60,16 @@ class TestController extends Controller{
         return view('tests.create', compact('types', 'sections'));
     }
 
+    public function getTheme(Request $request){
+        if ($request->ajax()) {
+            $themes = new Theme();
+            $themes_list = [];
+            $query = $themes->whereSection($request->input('choice'))->select('theme')->get();
+            foreach ($query as $str){
+                array_push($themes_list,$str->theme);
+            }
+            return (String) view('tests.getTheme', compact('themes_list'));
+        }
+    }
+
 }

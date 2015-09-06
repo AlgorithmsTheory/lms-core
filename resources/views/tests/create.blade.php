@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <meta name="csrf_token" content="{{ csrf_token() }}" />
     {!! HTML::style('css/bootstrap.css') !!}
@@ -15,6 +15,11 @@
     <div class="section-body">
         <div class="col-md-12 col-sm-6 card style-primary">
             <h1 class="text-default-bright">Создать тест</h1>
+        </div>
+
+        <!-- модуль задания основных настроек теста -->
+        <div class="col-lg-offset-1 col-md-10 col-sm-10 card style-gray">
+            <h2 class="text-default-bright">Настройка теста</h2>
         </div>
         <form action="{{URL::route('question_add')}}" method="POST" class="form">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -77,7 +82,64 @@
                     </div>
                 </div>
             </div>
-            
+
+            <!-- модуль создания структуры теста -->
+            <div class="col-lg-offset-1 col-md-10 col-sm-10 card style-gray">
+                <h2 class="text-default-bright">Состав теста</h2>
+            </div>
+            <div class="col-lg-offset-1 col-md-10 col-sm-1">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-striped no-margin table-bordered">
+                            <thead>
+                            <tr>
+                                <th style="width:30px">Количество вопросов</th>
+                                <th>Раздел</th>
+                                <th>Тема</th>
+                                <th>Тип</th>
+                                <th>Баллов от</th>
+                                <th>Баллов до</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><input type="number" min="1" name="total" id="total" size="1" class="form-control" style="width:30px"></td>
+                                <td> <select name="section" id="select-section" class="form-control" size="1" style="width:300px">
+                                        <option value="$nbsp"></option>
+                                        @foreach ($sections as $section)
+                                        <option value="{{$section}}">{{$section}}</option>/td>
+                                        @endforeach
+                                    </select></td>
+                                <td>
+                                        <div class="form-group" id="container"">
+                                            <select name="theme" id="select-theme" class="form-control" size="1">
+                                            <option value="&nbsp">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</option>
+                                        <!-- контейнер для ajax -->
+                                        </div>
+                                </td>
+                                <td> <select name="type" id="select-type" class="form-control" size="1">
+                                        <option value="$nbsp"></option>
+                                        @foreach ($types as $type)
+                                        <option value="{{$type}}">{{$type}}</option>/td>
+                                        @endforeach
+                                    </select></td>
+                                <td><input type="number" min="1" name="points-from" id="points-from" size="1" class="form-control" style="width:30px"></td>
+                                <td><input type="number" min="1" name="points-till" id="points-till" size="1" class="form-control" style="width:30px"></td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {!! HTML::script('js/testCreate.js') !!}
             {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
             {!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
             {!! HTML::script('js/libs/bootstrap/bootstrap.min.js') !!}
