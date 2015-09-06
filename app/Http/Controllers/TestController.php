@@ -45,4 +45,19 @@ class TestController extends Controller{
         return view('tests.index', compact('tr_tests', 'ctr_tests', 'tr_names', 'ctr_names', 'tr_amount', 'ctr_amount'));
     }
 
+    public function create(){
+        $codificator = new Codificator();
+        $types = [];
+        $sections = [];
+        $query = $codificator->whereCodificator_type('Тип')->select('value')->get();                                    //формируем массив типов
+        foreach ($query as $type){
+            array_push($types,$type->value);
+        }
+        $query = $codificator->whereCodificator_type('Раздел')->select('value')->get();                                 //формируем массив разделов
+        foreach ($query as $section){
+            array_push($sections, $section->value);
+        }
+        return view('tests.create', compact('types', 'sections'));
+    }
+
 }
