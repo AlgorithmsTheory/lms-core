@@ -3,4 +3,5 @@
     @foreach ($themes_list as $theme)
     <option value="{{$theme}}">{{$theme}}</option>
     @endforeach
+    <option value="Любая">Любая</option>
 </select>

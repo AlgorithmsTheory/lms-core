@@ -8,6 +8,7 @@
     {!! HTML::style('css/materialadmin.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     {!! HTML::style('css/materialadmin_demo.css') !!}
+    {!! HTML::style('css/createTest.css') !!}
     {!! HTML::script('js/jquery.js') !!}
 </head>
 <body>
@@ -90,54 +91,52 @@
             <div class="col-lg-offset-1 col-md-10 col-sm-1">
                 <div class="card">
                     <div class="card-body">
-                        <table class="table table-striped no-margin table-bordered">
+                        <table class="table table-striped no-margin table-bordered" id="question-table">
                             <thead>
                             <tr>
-                                <th style="width:30px">Количество вопросов</th>
-                                <th>Раздел</th>
-                                <th>Тема</th>
-                                <th>Тип</th>
-                                <th>Баллов от</th>
-                                <th>Баллов до</th>
+                                <th class="num-field">Количество вопросов</th>
+                                <th class="select-field">Раздел</th>
+                                <th class="select-field">Тема</th>
+                                <th class="select-field">Тип</th>
+                                <th class="num-field">Баллов от</th>
+                                <th class="num-field">Баллов до</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="row">
                             <tr>
-                                <td><input type="number" min="1" name="total" id="total" size="1" class="form-control" style="width:30px"></td>
-                                <td> <select name="section" id="select-section" class="form-control" size="1" style="width:300px">
+                                <td><input type="number" min="1" name="total[]" id="total" size="1" class="form-control"></td>
+                                <td> <select name="section[]" id="select-section" class="form-control select-section" size="1">
                                         <option value="$nbsp"></option>
                                         @foreach ($sections as $section)
                                         <option value="{{$section}}">{{$section}}</option>/td>
                                         @endforeach
+                                        <option value="Любой">Любой</option>
                                     </select></td>
                                 <td>
-                                        <div class="form-group" id="container"">
-                                            <select name="theme" id="select-theme" class="form-control" size="1">
-                                            <option value="&nbsp">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</option>
+                                        <div class="form-group cont" id="container">
+                                            <select name="theme[]" id="select-theme" class="form-control" size="1">
+
                                         <!-- контейнер для ajax -->
                                         </div>
                                 </td>
-                                <td> <select name="type" id="select-type" class="form-control" size="1">
+                                <td> <select name="type[]" id="select-type" class="form-control" size="1">
                                         <option value="$nbsp"></option>
                                         @foreach ($types as $type)
                                         <option value="{{$type}}">{{$type}}</option>/td>
                                         @endforeach
+                                        <option value="Любой">Любой</option>
                                     </select></td>
-                                <td><input type="number" min="1" name="points-from" id="points-from" size="1" class="form-control" style="width:30px"></td>
-                                <td><input type="number" min="1" name="points-till" id="points-till" size="1" class="form-control" style="width:30px"></td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>1</td>
+                                <td><input type="number" min="1" name="points-from[]" id="points-from" size="1" class="form-control"></td>
+                                <td><input type="number" min="1" name="points-till[]" id="points-till" size="1" class="form-control"></td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+            </div>
+            <div class="col-lg-offset-10 col-md-2 col-sm-6" id="add-del-buttons">
+                <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-row"><b>+</b>   </button>
+                <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-row"><b>-</b></button>
             </div>
             {!! HTML::script('js/testCreate.js') !!}
             {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
