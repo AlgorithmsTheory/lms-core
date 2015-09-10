@@ -5,9 +5,10 @@
  * Date: 30.05.15
  * Time: 17:21
  */
-
 namespace App\Qtypes;
-
+use App\Http\Controllers\QuestionController;
+use App\Question;
+use Illuminate\Http\Request;
 
 class YesNo extends QuestionType{
     const type_code = 5;
@@ -15,7 +16,19 @@ class YesNo extends QuestionType{
         parent::__construct($id_question);
     }
     public function  create(){
+    }
 
+    public function add(Request $request, $code){
+        for ($i=0; $i<count($request->input('variants')); $i++){
+            $title = $request->input('variants')[$i];
+            if (isset($request->input('answers')[$i])){
+                $answer = 'true';
+            }
+            else{
+                $answer = 'false';
+            }
+            Question::insert(array('code' => $code, 'title' => $title, 'variants' => '', 'answer' => $answer, 'points' => $request->input('points')));
+        }
     }
 
     public function show($count){

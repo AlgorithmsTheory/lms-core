@@ -5,9 +5,7 @@
  * Date: 05.04.15
  * Time: 16:15
  */
-
 namespace App\Http\Controllers;
-
 use Cookie;
 use View;
 use App\Result;
@@ -24,22 +22,17 @@ use App\Qtypes\MultiChoice;
 use App\Qtypes\FillGaps;
 use App\Qtypes\AccordanceTable;
 use App\Qtypes\YesNo;
-
-
 class QuestionController extends Controller{
     private $question;
-
     function __construct(Question $question){
         $this->question=$question;
     }
-
     private function setCode(Request $request){  //Установить код вопроса
         $codificator = new Codificator();
         //получаем необходимые данные из формы
         $section = $request->input('section');
         $theme = $request->input('theme');
         $type = $request->input('type');
-
         //с помощью кодификаторов составляем трехразрядный код вопроса
         $query1 = $codificator->whereCodificator_type('Раздел')->whereValue($section)->select('code')->first();
         $section_code = $query1->code;
@@ -48,10 +41,8 @@ class QuestionController extends Controller{
         $query3 = $codificator->whereCodificator_type('Тип')->whereValue($type)->select('code')->first();
         $type_code = $query3->code;
         $code = $section_code.'.'.$theme_code.'.'.$type_code;
-
         return $code;
     }
-
     private function getCode($id){        //декодирование вопроса в асс. массив
         $codificator = new Codificator();
         $question = $this->question;
@@ -67,10 +58,8 @@ class QuestionController extends Controller{
         $type = $query3->value;
         $decode = array('section' => $section, 'theme' => $theme, 'type' => $type,
             'section_code' => $array[0], 'theme_code' => $array[1], 'type_code' => $array[2]);
-
         return $decode;
     }
-
     private static function randomArray($array){
         $index = rand(0,count($array)-1);     //выбираем случайный вопрос
         $chosen = $array[$index];
@@ -78,7 +67,6 @@ class QuestionController extends Controller{
         $array[count($array)-1] = $chosen;
         return $array;                        //получаем тот же массив, где выбранный элемент стоит на последнем месте для удаления
     }
-
     public static function mixVariants($variants){
         $num_var = count($variants);
         $new_variants = [];
@@ -89,7 +77,6 @@ class QuestionController extends Controller{
         }
         return $new_variants;
     }
-
     private function destruct($id_test){
         $test = new Test();
         $query = $test->whereId_test($id_test)->select('structure')->first();
@@ -104,14 +91,12 @@ class QuestionController extends Controller{
         }
         return $array;
     }
-
     private function prepareTest($id_test){            //выборка вопросов
         $question = $this->question;
         $array = [];
         $k = 0;
         $temp_array = [];
         $destructured = $this->destruct($id_test);
-
         for ($i=0; $i<count($destructured); $i++){
             //echo $destructured[$i][1].'<br>';
             $query=$question->where('code', '=', $destructured[$i][1])->get();          //ищем всевозможные коды вопросов
@@ -129,7 +114,6 @@ class QuestionController extends Controller{
         }
         return $array;          //формируем массив из id вошедших в тест вопросов
     }
-
     private function chooseQuestion($id_test){
         @session_start();
         if (empty($_SESSION['test'.$_SESSION['username']])){                //генерируем тест, если еше не создан
@@ -152,56 +136,46 @@ class QuestionController extends Controller{
             return $choisen;
         }
     }
-
     private function showTest($id_question, $count){  //показать вопрос в тесте
         $decode = $this->getCode($id_question);
         $type = $decode['type'];
-
         switch($type){
             case 'Выбор одного из списка':                      //Стас
                 $one_choice = new OneChoice($id_question);
                 $array = $one_choice->show($count);
                 return $array;
                 break;
-
             case 'Выбор нескольких из списка':
                 $multi_choice = new MultiChoice($id_question);
                 $array = $multi_choice->show($count);
                 return $array;
                 break;
-
             case 'Текстовый вопрос':                            //Стас
                 $fill_gaps = new FillGaps($id_question);
                 $array = $fill_gaps->show($count);
                 return $array;
                 break;
-
             case 'Таблица соответствий':                        //Миша
                 $accordance_table = new AccordanceTable($id_question);
                 $array = $accordance_table->show($count);
                 return $array;
                 break;
-
             case 'Да/Нет':                                      //Миша
                 $yes_no = new YesNo($id_question);
                 $array = $yes_no->show($count);
                 return $array;
                 break;
-
             case 'Вопрос на вычисление':
                 echo 'Вопрос на вычисление';
                 break;
-
             case 'Вопрос на соответствие':
                 echo 'Вопрос на соответствие';
                 break;
-
             case 'Вид функции':
                 echo 'Вопрос на определение аналитического вида функции';
                 break;
         }
     }
-
     private function check($array){       //проверяет правильность вопроса и на выходе дает баллы за вопрос
         $question = $this->question;
         $id = $array[0];
@@ -223,45 +197,37 @@ class QuestionController extends Controller{
                 $data = $one_choice->check($array);
                 return $data;
                 break;
-
             case 'Выбор нескольких из списка':
                 $multi_choice = new MultiChoice($id);
                 $data = $multi_choice->check($array);
                 return $data;
                 break;
-
             case 'Текстовый вопрос':                            //Стас
                 $fill_gaps = new FillGaps($id);
                 $data = $fill_gaps->check($array);
                 return $data;
                 break;
-
             case 'Таблица соответствий':                        //Миша
                 $accordance_table = new AccordanceTable($id);
                 $data = $accordance_table->check($array);
                 return $data;
                 break;
-
             case 'Да/Нет':                                      //Миша
                 $yes_no = new YesNo($id);
                 $data = $yes_no->check($array);
                 return $data;
                 break;
-
             case 'Вопрос на вычисление':
                 echo 'Вопрос на вычисление';
                 break;
-
             case 'Вопрос на соответствие':
                 echo 'Вопрос на соответствие';
                 break;
-
             case 'Вид функции':
                 echo 'Вопрос на определение аналитического вида функции';
                 break;
         }
     }
-
     private function calcMarkBologna($max, $real){          //вычисляет оценку по Болонской системе
         if ($real < $max * 0.6){
             return 'F';
@@ -282,7 +248,6 @@ class QuestionController extends Controller{
             return 'A';
         }
     }
-
     private function calcMarkRus($max, $real){       //вычисляет оценку по обычной 5-тибалльной шкале
         if ($real < $max * 0.6){
             return '2';
@@ -297,13 +262,11 @@ class QuestionController extends Controller{
             return '5';
         }
     }
-
     /*public function result(){
         $score = Session::get('score');
         $total = Session::get('num');
         return view('welcome', compact('score', 'total'));
     }*/
-
     public function index(){
         //Дефолтная страница при разграничении прав
         /*if (Session::has('username')){
@@ -322,7 +285,6 @@ class QuestionController extends Controller{
         }
         return view('questions.teacher.index', compact('username'));
     }
-
     public function form(Request $request){
         $user = new Bruser();
         session_start();
@@ -335,17 +297,15 @@ class QuestionController extends Controller{
                 $_SESSION['username'] = $username;
             }
         }
-       if (empty($_SESSION['username'])){
+        if (empty($_SESSION['username'])){
             echo 'Неверный пароль';
         }
         else echo  $_SESSION['username'];
-       return redirect()->route('question_index');
+        return redirect()->route('question_index');
     }
-
     public function enter(){
         return view('questions.student.ty');
     }
-
     public function create(){             //переход на страницу формы добавления
         $codificator = new Codificator();
         $types = [];
@@ -355,7 +315,6 @@ class QuestionController extends Controller{
         }
         return view('questions.teacher.create', compact('types'));
     }
-
     public function getType(Request $request){
         if ($request->ajax()){
             $type = $request->input('choice');
@@ -371,7 +330,6 @@ class QuestionController extends Controller{
                     }
                     return (String) view('questions.teacher.create1', compact('sections'));
                     break;
-
                 case 'Выбор нескольких из списка':
                     $codificator = new Codificator();
                     $sections = [];
@@ -381,7 +339,6 @@ class QuestionController extends Controller{
                     }
                     return (String) view('questions.teacher.create2', compact('sections'));
                     break;
-
                 case 'Текстовый вопрос':                            //Стас
                     $codificator = new Codificator();
                     $sections = [];
@@ -391,34 +348,36 @@ class QuestionController extends Controller{
                     }
                     return (String) view('questions.teacher.create3', compact('sections'));
                     break;
-
                 case 'Таблица соответствий':                        //Миша
-                    $accordance_table = new AccordanceTable($id);
-                    $data = $accordance_table->check($array);
-                    return $data;
+                    $codificator = new Codificator();
+                    $sections = [];
+                    $query = $codificator->whereCodificator_type('Раздел')->select('value')->get();
+                    foreach ($query as $section){
+                        array_push($sections,$section->value);
+                    }
+                    return (String) view('questions.teacher.create5', compact('sections'));
                     break;
-
                 case 'Да/Нет':                                      //Миша
-                    $yes_no = new YesNo($id);
-                    $data = $yes_no->check($array);
-                    return $data;
+                    $codificator = new Codificator();
+                    $sections = [];
+                    $query = $codificator->whereCodificator_type('Раздел')->select('value')->get();
+                    foreach ($query as $section){
+                        array_push($sections,$section->value);
+                    }
+                    return (String) view('questions.teacher.create4', compact('sections'));
                     break;
-
                 case 'Вопрос на вычисление':
                     echo 'Вопрос на вычисление';
                     break;
-
                 case 'Вопрос на соответствие':
                     echo 'Вопрос на соответствие';
                     break;
-
                 case 'Вид функции':
                     echo 'Вопрос на определение аналитического вида функции';
                     break;
             }
         }
     }
-
     public function add(Request $request){  //обработка формы добавления
         $code = $this->setCode($request);
         $type = $request->input('type');
@@ -429,40 +388,35 @@ class QuestionController extends Controller{
                 $one_choice = new OneChoice($id);
                 $one_choice->add($request, $code);
                 break;
-
             case 'Выбор нескольких из списка':
                 $multi_choice = new MultiChoice($id);
                 $multi_choice->add($request, $code);
                 break;
-
             case 'Текстовый вопрос':                            //Стас
                 $fill_gaps = new FillGaps($id);
                 $fill_gaps->add($request, $code);
                 break;
-
             case 'Таблица соответствий':                        //Миша
-
+                $fill_gaps = new AccordanceTable($id);
+                $fill_gaps->add($request, $code);
                 break;
-
             case 'Да/Нет':                                      //Миша
-
+                $fill_gaps = new YesNo($id);
+                $fill_gaps->add($request, $code);
                 break;
-
+                break;
             case 'Вопрос на вычисление':
                 echo 'Вопрос на вычисление';
                 break;
-
             case 'Вопрос на соответствие':
                 echo 'Вопрос на соответствие';
                 break;
-
             case 'Вид функции':
                 echo 'Вопрос на определение аналитического вида функции';
                 break;
         }
         return redirect()->route('question_create');
     }
-
     public function getTheme(Request $request){
         if ($request->ajax()) {
             $themes = new Theme();
@@ -474,7 +428,6 @@ class QuestionController extends Controller{
             return (String) view('questions.student.getTheme', compact('themes_list'));
         }
     }
-
     public function showViews($id_test){
         //создаем строку в таблице пройденных тестов
         $test = new Test();
@@ -489,7 +442,6 @@ class QuestionController extends Controller{
         $amount = $query->amount;
         $result->amount = $amount;
         $result->save();
-
         $widgets = [];
         $saved_test = [];
         for ($i=0; $i<$amount; $i++){
@@ -537,7 +489,6 @@ class QuestionController extends Controller{
             $score = round($score,1);
         }
         else $score = $total;
-
         $mark_bologna = $this->calcMarkBologna($total, $score);    //оценки
         $mark_rus = $this->calcMarkRus($total, $score);
         $mark = $mark_bologna.';'.$mark_rus;
@@ -545,7 +496,6 @@ class QuestionController extends Controller{
         $current_test = Cookie::get('current_test');
         $number_of_wrong = count($mark);
         unset($_SESSION['test'.$_SESSION['username']]);
-
         if ($test_name[0] != 'Тренировочный'){
             $result->whereId_result($current_test)->update(['result' => $score, 'mark' => $mark]);
             return view('tests.ctrresults', compact('score', 'mark_bologna', 'mark_rus'));
@@ -568,5 +518,4 @@ class QuestionController extends Controller{
         print_r($array);
         echo '<br><br>';*/
     }
-
 } 

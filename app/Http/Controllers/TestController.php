@@ -5,7 +5,6 @@
  * Date: 19.04.15
  * Time: 16:49
  */
-
 namespace App\Http\Controllers;
 use App\Test;
 use App\Theme;
@@ -15,14 +14,11 @@ use App\Codificator;
 use PDOStatement;
 use  PDO;
 use Illuminate\Routing\Controller;
-
 class TestController extends Controller{
     private $test;
-
     function __construct(Test $test){
         $this->test=$test;
     }
-
     public function index(){
         $tr_tests = [];             //массив тренировочных тестов
         $ctr_tests = [];            //массив контрольных тестов
@@ -44,5 +40,4 @@ class TestController extends Controller{
         $ctr_amount = count($ctr_tests);
         return view('tests.index', compact('tr_tests', 'ctr_tests', 'tr_names', 'ctr_names', 'tr_amount', 'ctr_amount'));
     }
-
 }

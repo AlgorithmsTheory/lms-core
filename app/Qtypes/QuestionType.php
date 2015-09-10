@@ -5,11 +5,9 @@
  * Date: 30.05.15
  * Time: 15:11
  */
-
 namespace App\Qtypes;
 use App\Question;
 use Illuminate\Http\Request;
-
 abstract class QuestionType {
     public  $id_question;
     public  $text;
@@ -26,7 +24,6 @@ abstract class QuestionType {
         }
         $this->id_question = $id_question;
     }
-
     abstract function create();
     abstract function add(Request $request, $code);
     abstract function show($count);

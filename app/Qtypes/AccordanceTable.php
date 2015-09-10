@@ -5,9 +5,10 @@
  * Date: 30.05.15
  * Time: 22:12
  */
-
 namespace App\Qtypes;
-
+use App\Http\Controllers\QuestionController;
+use App\Question;
+use Illuminate\Http\Request;
 
 class AccordanceTable extends QuestionType {
     const type_code = 4;
@@ -15,7 +16,34 @@ class AccordanceTable extends QuestionType {
         parent::__construct($id_question);
     }
     public function  create(){
+    }
 
+    public function add(Request $request, $code){
+        $variants = $request->input('variants')[0];
+        $answer = '';
+        $flag = false;
+        for ($i=1; $i<count($request->input('variants')); $i++){
+            $variants = $variants.';'.$request->input('variants')[$i];
+        }
+        $title = $request->input('title')[0];
+        for ($i=1; $i<count($request->input('title')); $i++){
+            $title = $title.';'.$request->input('title')[$i];
+        }
+        $j = 0;
+        while ($flag != true && $j<count($request->input('answer'))){
+            if (isset($request->input('answer')[$j])){
+                $answer = $j + 1;
+                $j++;
+                break;
+            }
+            $j++;
+        }
+        for ($i=$j; $i<count($request->input('answer')); $i++){
+            if (isset($request->input('answer')[$i])){
+                $answer = $answer.';'.($i + 1);
+            }
+        }
+        Question::insert(array('code' => $code, 'title' => $title, 'variants' => $variants, 'answer' => $answer, 'points' => $request->input('points')));
     }
 
     public function show($count){
@@ -56,7 +84,6 @@ class AccordanceTable extends QuestionType {
         if ($score < 0){                                //если ушел в минус
             $score = 0;
         }
-
         if ($score == $this->points){
             $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points);
         }
