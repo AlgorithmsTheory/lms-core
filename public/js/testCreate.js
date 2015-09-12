@@ -2,10 +2,13 @@
  * Created by Станислав on 07.09.15.
  */
     count = 1;
-    //подгружаем данные в зависимости от выбранного типа вопроса
+
+/**
+ * подгружаем данные в зависимости от выбранного типа вопроса
+ */
 $('#question-table').on('change','.select-section', function(){
-    choice = $('.select-section option:selected').val();
-    alert (choice);
+    choice = $(this).val();
+    var tempCount = $(this).parent().parent().attr('id').substring(4);
     token = $('.form').children().eq(0).val();
     $.ajax({
         cache: false,
@@ -20,21 +23,32 @@ $('#question-table').on('change','.select-section', function(){
         },
         data: { choice: choice, token: 'token' },
         success: function(data){
-            $('.cont').html(data);
+            $('#container-'+tempCount).html(data);
         }
     });
     return false;
 });
 
+/**
+ * добавление строки в таблицу
+ */
 $('#add-row').click(function(){
-    $('#row').children().clone().appendTo('#question-table');
+    $('#row-1').clone().appendTo('#question-table');                                                                    //копируем первую строку и добавляем в конец таблицы
+    count++;
+    $('tr').last().attr('id', 'row-'+count);                                                                            //добавляем идентифицирующие id
+    $('tr').last().children().eq(2).children().attr('id','container-'+count);
 });
 
-$('#type_question_add').on('click','#del-var-1',function(){
-    if (count > 2){
-        lastelem = $('#variants').children().last().remove();
-        margin -= 74;
-        $('#add-del-buttons').attr('style','margin-top:'+margin+'px');
+/**
+ * удаление строки из таблицы
+ */
+$('#del-row').click(function(){
+    if (count > 1){
+        $('#row-'+count).remove();
         count--;
     }
+});
+
+$('.submit-test').click(function(){
+    $('#num-rows').val(count-1);
 });

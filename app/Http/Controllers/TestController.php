@@ -23,6 +23,26 @@ class TestController extends Controller{
         $this->test=$test;
     }
 
+    /**
+     * @param $amount
+     * @param $section
+     * @param $theme
+     * @param $type
+     * Из текстовых описаний вопроса, формирует структуру a-b.c.d
+     * @return string
+     */
+    private function struct($amount, $section, $theme, $type){
+        $codificator = new Codificator();
+        $struct = $amount.'-';
+        $query = $codificator->whereValue($section)->select('code')->first();
+        $struct .= $query->code.'.';
+        $query = $codificator->whereValue($theme)->select('code')->first();
+        $struct .= $query->code.'.';
+        $query = $codificator->whereValue($type)->select('code')->first();
+        $struct .= $query->code;
+        return $struct;
+    }
+
     public function index(){
         $tr_tests = [];             //массив тренировочных тестов
         $ctr_tests = [];            //массив контрольных тестов
@@ -71,5 +91,30 @@ class TestController extends Controller{
             return (String) view('tests.getTheme', compact('themes_list'));
         }
     }
+
+    public function add(Request $request){
+        if ($request->input('training')) {
+            $test_name = 'Тренировочный;'.$request->input('test-name');
+        }
+        else $test_name = $request->input('test-name');
+
+        $total = $request->input('total');
+        $test_time = $request->input('test-time');
+        $start = $request->input('start-date').' '.$request->input('start-time');
+        $end = $request->input('end-date').' '.$request->input('end-time');
+
+        $structure = '';
+        $amount = 0;
+        for ($i=0; $i<$request->input('num-rows'); $i++){
+            $structure .= $this->struct($request->input('num')[$i],$request->input('section')[$i],$request->input('theme')[$i],$request->input('type')[$i]).';';
+            $amount += $request->input('num')[$i];
+        }
+        $structure .= $this->struct($request->input('num')[$request->input('num-rows')],$request->input('section')[$request->input('num-rows')],$request->input('theme')[$request->input('num-rows')],$request->input('type')[$request->input('num-rows')]);
+        $amount += $request->input('num')[$request->input('num-rows')];
+        Test::insert(array('test_name' => $test_name, 'amount' => $amount, 'test_time' => $test_time, 'start' => $start, 'end' => $end, 'structure' => $structure, 'total' => $total));
+
+        return redirect()->route('test_create');
+    }
+
 
 }

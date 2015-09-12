@@ -13,9 +13,8 @@ th,td {
     text-align: center;
 }
 
-#total {
-     width: 50px;
-     margin-left: 20px;
+#total, #test-time {
+     width: 400px;
 }
 
 #points-from {
@@ -28,6 +27,10 @@ th,td {
     margin-left: 10px;
 }
 
-#select-type, #select-section, #select-theme {
+#select-type, .select-section, #select-theme {
     font-size: 12px;
+}
+
+#add-test{
+    margin-bottom: 20px;
 }
