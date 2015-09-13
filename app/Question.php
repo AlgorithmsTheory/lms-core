@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent|\App\Question  insert($array)
  * @method static \Illuminate\Database\Eloquent|\App\Question  table($array)
  * @method static \Illuminate\Database\Eloquent|\App\Question  max($array)
+ * @method static \Illuminate\Database\Eloquent|\App\Question  count()
  *
  */
 class Question extends Eloquent {

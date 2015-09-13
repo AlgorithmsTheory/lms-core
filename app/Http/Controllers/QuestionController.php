@@ -98,13 +98,14 @@ class QuestionController extends Controller{
         $temp_array = [];
         $destructured = $this->destruct($id_test);
         for ($i=0; $i<count($destructured); $i++){
-            //echo $destructured[$i][1].'<br>';
-            $query=$question->where('code', '=', $destructured[$i][1])->get();          //ищем всевозможные коды вопросов
+            $temp = preg_replace('~A~', '[[:digit:]]+', $destructured[$i][1] );                                         //заменям все A (All) на регулярное выражение, соответствующее любому набору цифр
+            $query = $question->where('code', 'regexp', $temp)->get();                                                  //ищем всевозможные коды вопросов
+            //$query=$question->where('code', '=', $destructured[$i][1])->get();
             //$query=$question->where('code', '=', '1.1.1')->get();
             foreach ($query as $id){
-                array_push($temp_array,$id->id_question);                               //для каждого кода создаем массив всех вопрососв с этим кодом
+                array_push($temp_array,$id->id_question);                                                               //для каждого кода создаем массив всех вопрососв с этим кодом
             }
-            for ($j=0; $j<$destructured[$i][0]; $j++){                                  //и выбираем заданное количество случайных
+            for ($j=0; $j<$destructured[$i][0]; $j++){                                                                  //и выбираем заданное количество случайных
                 $temp_array = $this->randomArray($temp_array);
                 $array[$k] = $temp_array[count($temp_array)-1];
                 array_pop($temp_array);
