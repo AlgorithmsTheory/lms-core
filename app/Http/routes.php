@@ -39,6 +39,7 @@ Route::get('questions/result', ['as' => 'question_result', 'uses' => 'QuestionCo
 Route::post('get-theme', array('as'=>'get_theme', 'uses'=>'QuestionController@getTheme'));
 Route::post('get-type', array('as'=>'get_type', 'uses'=>'QuestionController@getType'));
 Route::post('get-theme-for-test', array('as'=>'get_theme_for_test', 'uses'=>'TestController@getTheme'));
+Route::post('get-amount', array('as'=>'get_amount', 'uses'=>'TestController@getAmount'));
 Route::patch('questions/check', ['as' => 'question_checks', 'uses' => 'QuestionController@checks']);
 Route::patch('questions/check-test', ['as' => 'question_checktest', 'uses' => 'QuestionController@checkTest']);
 Route::get('tests', ['as' => 'tests', 'uses' => 'TestController@index']);

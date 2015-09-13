@@ -104,31 +104,32 @@
                                 <th class="select-field">Раздел</th>
                                 <th class="select-field">Тема</th>
                                 <th class="select-field">Тип</th>
+                                <th class="db-amount">Всего вопрососв такого типа</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr id="row-1">
-                                <td><input type="number" min="1" max="5" name="num[]" id="num" value="1" size="1" class="form-control"></td>
+                                <td><input type="number" min="1" name="num[]" id="num-1" value="1" size="1" class="form-control num"></td>
                                 <td> <select name="section[]" id="select-section-1" class="form-control select-section" size="1" required="">
-                                        <option value="$nbsp"></option>
-                                        @foreach ($sections as $section)
-                                        <option value="{{$section}}">{{$section}}</option>/td>
-                                        @endforeach
                                         <option value="Любой">Любой</option>
+                                        @foreach ($sections as $section)
+                                        <option value="{{$section}}">{{$section}}</option>
+                                        @endforeach
                                     </select></td>
                                 <td>
                                         <div class="form-group" id="container-1">
-                                            <select name="theme[]" id="select-theme" class="form-control" size="1" required="">
+                                            <select name="theme[]" id="select-theme" class="form-control select-theme" size="1" required="">
+                                                <option value="Любая">Любая</option>
                                         <!-- контейнер для ajax -->
                                         </div>
                                 </td>
-                                <td> <select name="type[]" id="select-type" class="form-control" size="1" required="">
-                                        <option value="$nbsp"></option>
-                                        @foreach ($types as $type)
-                                        <option value="{{$type}}">{{$type}}</option>/td>
-                                        @endforeach
+                                <td> <select name="type[]" id="select-type" class="form-control select-type" size="1" required="">
                                         <option value="Любой">Любой</option>
+                                        @foreach ($types as $type)
+                                        <option value="{{$type}}">{{$type}}</option>
+                                        @endforeach
                                     </select></td>
+                                <td id="amount-container-1"></td>
                             </tr>
                             </tbody>
                         </table>

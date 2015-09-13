@@ -33,13 +33,31 @@ class TestController extends Controller{
      */
     private function struct($amount, $section, $theme, $type){
         $codificator = new Codificator();
-        $struct = $amount.'-';
-        $query = $codificator->whereValue($section)->select('code')->first();
-        $struct .= $query->code.'.';
-        $query = $codificator->whereValue($theme)->select('code')->first();
-        $struct .= $query->code.'.';
-        $query = $codificator->whereValue($type)->select('code')->first();
-        $struct .= $query->code;
+        if ($amount != ''){
+            $struct = $amount.'-';
+        }
+        else $struct = '';
+        if ($section == 'Любой'){
+            $struct .= 'A.';
+        }
+        else {
+            $query = $codificator->whereValue($section)->select('code')->first();
+            $struct .= $query->code.'.';
+        }
+        if ($theme == 'Любая'){
+            $struct .= 'A.';
+        }
+        else {
+            $query = $codificator->whereValue($theme)->select('code')->first();
+            $struct .= $query->code.'.';
+        }
+        if ($type == 'Любой'){
+            $struct .= 'A';
+        }
+        else {
+            $query = $codificator->whereValue($type)->select('code')->first();
+            $struct .= $query->code;
+        }
         return $struct;
     }
 
@@ -89,6 +107,16 @@ class TestController extends Controller{
                 array_push($themes_list,$str->theme);
             }
             return (String) view('tests.getTheme', compact('themes_list'));
+        }
+    }
+
+    public function getAmount(Request $request){
+        if ($request->ajax()) {
+            $question = new Question();
+            $code = $this->struct('',$request->input('section'),$request->input('theme'),$request->input('type'));
+            $code = preg_replace('~A~', '[[:digit:]]+', $code );
+            $amount = $question->where('code', 'regexp', $code)->select('id_question')->count();
+            return (String) $amount;
         }
     }
 
