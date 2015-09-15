@@ -15,7 +15,6 @@
 <?php $i=1;?>
     @foreach($widgets as $widget)
     <tr>
-        <br id="form{{$i}}">
         <td>{!! $widget !!}</td>
         <td>{{$right_or_wrong[$i]}}</td>
     </tr>
