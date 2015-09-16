@@ -7,6 +7,11 @@
     {!! HTML::style('css/test_style.css') !!}
     {!! HTML::script('js/superForm.js') !!}
     {!! HTML::script('js/jquery.js') !!}
+    {!! HTML::style('css/bootstrap.css') !!}
+    {!! HTML::style('css/font-awesome.min.css') !!}
+    {!! HTML::style('css/materialadmin.css') !!}
+    {!! HTML::style('css/material-design-iconic-font.min.css') !!}
+    {!! HTML::style('css/materialadmin_demo.css') !!}
 
 
 </head>
@@ -18,7 +23,7 @@
             <li class="NotAnswered" id="{{$i}}"><a href="#form{{$i+1}}" class="SmoothScroll"> {{$i+1}} </a></li>
             @endfor
         </ul>
-        <span id="my_timer" class="timer" ">00:10:10</span>
+        <span id="my_timer" class="timer">00:10:10</span>
     </div>
 </nav>
 <br><br>

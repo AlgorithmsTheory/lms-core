@@ -18,7 +18,7 @@ class AccordanceTable extends QuestionType {
     public function  create(){
     }
 
-    public function add(Request $request, $code){
+    public function add(Request $request, $code){ //были изменения
         $variants = $request->input('variants')[0];
         $answer = '';
         $flag = false;
@@ -29,19 +29,18 @@ class AccordanceTable extends QuestionType {
         for ($i=1; $i<count($request->input('title')); $i++){
             $title = $title.';'.$request->input('title')[$i];
         }
-        $j = 0;
-        while ($flag != true && $j<count($request->input('answer'))){
-            if (isset($request->input('answer')[$j])){
-                $answer = $j + 1;
-                $j++;
-                break;
-            }
-            $j++;
-        }
-        for ($i=$j; $i<count($request->input('answer')); $i++){
-            if (isset($request->input('answer')[$i])){
-                $answer = $answer.';'.($i + 1);
-            }
+// $j = 0;
+// while ($flag != true && $j<count($request->input('answer'))){
+// if (isset($request->input('answer')[$j])){
+// $answer = $j + 1;
+// $j++;
+// break;
+// }
+// $j++;
+// }
+        $answer = $request->input('answer')[0];
+        for ($i=1; $i<count($request->input('answer')); $i++){
+            $answer = $answer.';'.$request->input('answer')[$i];
         }
         Question::insert(array('code' => $code, 'title' => $title, 'variants' => $variants, 'answer' => $answer, 'points' => $request->input('points')));
     }

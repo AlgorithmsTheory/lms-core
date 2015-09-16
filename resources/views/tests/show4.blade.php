@@ -4,9 +4,9 @@
 <h1>Вопрос {{ $count }}</h1>
 <input type="hidden" name="num" value="{{ $id }}">
 <input type="hidden" name="type" value="{{ $type }}">
-<table>
+<table class="table table-bordered">
     <tr>
-        <td></td>
+        <td>#</td>
         @foreach ($variants as $var)
         <td> {{ $var }} </td>
         @endforeach

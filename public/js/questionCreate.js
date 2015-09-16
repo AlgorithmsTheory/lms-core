@@ -176,8 +176,8 @@ $('#type_question_add').on('click','#add-var-4', function(){            //Я д�
     count++;
 });
 
-$('#type_question_add').on('click','#build-table', function(){  //построение таблицы
-    var tr_number=document.getElementById("table-tr").value;
+$('#type_question_add').on('click','#build-table', function(){ //построение таблицы
+    var tr_number=document.getElementById("table-tr").value; //были изменения
     var td_number=document.getElementById("table-td").value;
     var cols = parseInt(tr_number);
     var rows = parseInt(td_number);
@@ -201,8 +201,8 @@ $('#type_question_add').on('click','#build-table', function(){  //построе
     z.appendChild(t);
     document.getElementById("0").appendChild(z);
     for (k = 1; k <= rows; k++) {
-        var z = document.createElement("TD");
-        var t = document.createElement("INPUT");
+        z = document.createElement("TD");
+        t = document.createElement("INPUT");
         t.setAttribute("type", "text");
         t.setAttribute("style", "width: 80px;");
         t.setAttribute("placeholder", "Свойство");
@@ -211,11 +211,11 @@ $('#type_question_add').on('click','#build-table', function(){  //построе
         document.getElementById("0").appendChild(z);
     }
     for (i = 1; i <= cols; i++) {
-        var y = document.createElement("TR");
+        y = document.createElement("TR");
         y.setAttribute("id", i);
         document.getElementById("myBody").appendChild(y);
-        var z = document.createElement("TD");
-        var t = document.createElement("INPUT");
+        z = document.createElement("TD");
+        t = document.createElement("INPUT");
         t.setAttribute("type", "text");
         t.setAttribute("placeholder", "Объект");
         t.setAttribute("name", "title[]");
@@ -223,10 +223,11 @@ $('#type_question_add').on('click','#build-table', function(){  //построе
         z.appendChild(t);
         document.getElementById(i).appendChild(z);
         for (k = 1; k <= rows; k++) {
-            var z = document.createElement("TD");
-            var t = document.createElement("INPUT");
+            z = document.createElement("TD");
+            t = document.createElement("INPUT");
             t.setAttribute("type", "checkbox");
             t.setAttribute("name", "answer[]");
+            t.setAttribute("value", ((i-1)*rows + k));
             z.appendChild(t);
             document.getElementById(i).appendChild(z);
         }

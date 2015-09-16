@@ -6,7 +6,7 @@ $('.SmoothScroll').click(function(event) {
     event.preventDefault();
     var href=$(this).attr('href');
     var target=$(href);
-    var top=target.offset().top - 35;
+    var top=target.offset().top - 55;
     $('html,body').animate({
         scrollTop: top
     }, 1000);
