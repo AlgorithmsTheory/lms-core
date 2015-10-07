@@ -430,6 +430,7 @@ class QuestionController extends Controller{
         }
     }
     public function showViews($id_test){
+        @session_start();
         //создаем строку в таблице пройденных тестов
         $test = new Test();
         $result = new Result();
@@ -445,6 +446,7 @@ class QuestionController extends Controller{
         $result->save();
         $widgets = [];
         $saved_test = [];
+        unset($_SESSION['test'.@$_SESSION['username']]);
         for ($i=0; $i<$amount; $i++){
             $id = $this->chooseQuestion($id_test);
             $data = $this->showTest($id, $i+1);                  //должны получать название view и необходимые параметры

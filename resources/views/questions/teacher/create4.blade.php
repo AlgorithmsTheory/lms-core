@@ -1,10 +1,10 @@
 <div class="card-body">
-<!--    ДА/НЕТ-->
+    <!— ДА/НЕТ-->
     <h2>Поочередно добавляйте утверждения. Напротив верных отмечайте галочку.</h2>
     <br>
     <div id="variants" class="col-md-9 col-sm-6">
         <div class="form-group">
-            <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
+            <textarea name="variants[]" class="form-control textarea3" rows="1" placeholder="" required></textarea>
             <label for="textarea3">Утверждение 1</label>
         </div>
     </div>
@@ -22,7 +22,6 @@
     </div>
 </div>
 
-
 <div class="card-body">
     <div class="form-group">
         <select name="section" id="select-section" class="form-control" size="1">
@@ -35,7 +34,7 @@
     </div>
 
     <div class="form-group" id="container">
-        <!-- контейнер для ajax -->
+        <!— контейнер для ajax —>
     </div>
 
     <div class="form-group">

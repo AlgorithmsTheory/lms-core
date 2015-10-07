@@ -187,6 +187,7 @@ $('#type_question_add').on('click','#build-table', function(){ //построе�
     var x = document.createElement("TABLE");
     x.setAttribute("id", "myTable");
     x.setAttribute("class" , "table table-bordered");
+// x.setAttribute("style", "width: 100%;");
     document.getElementById("table-place").appendChild(x);
     var b = document.createElement("TBODY");
 
@@ -201,8 +202,8 @@ $('#type_question_add').on('click','#build-table', function(){ //построе�
     z.appendChild(t);
     document.getElementById("0").appendChild(z);
     for (k = 1; k <= rows; k++) {
-        z = document.createElement("TD");
-        t = document.createElement("INPUT");
+        var z = document.createElement("TD");
+        var t = document.createElement("INPUT");
         t.setAttribute("type", "text");
         t.setAttribute("style", "width: 80px;");
         t.setAttribute("placeholder", "Свойство");
@@ -211,20 +212,20 @@ $('#type_question_add').on('click','#build-table', function(){ //построе�
         document.getElementById("0").appendChild(z);
     }
     for (i = 1; i <= cols; i++) {
-        y = document.createElement("TR");
+        var y = document.createElement("TR");
         y.setAttribute("id", i);
         document.getElementById("myBody").appendChild(y);
-        z = document.createElement("TD");
-        t = document.createElement("INPUT");
-        t.setAttribute("type", "text");
+        var z = document.createElement("TD");
+        var t = document.createElement("TEXTAREA");
+// t.setAttribute("type", "text");
         t.setAttribute("placeholder", "Объект");
         t.setAttribute("name", "title[]");
-        t.setAttribute("style", "width: 80px;");
+// t.setAttribute("style", "width: 80px;");
         z.appendChild(t);
         document.getElementById(i).appendChild(z);
         for (k = 1; k <= rows; k++) {
-            z = document.createElement("TD");
-            t = document.createElement("INPUT");
+            var z = document.createElement("TD");
+            var t = document.createElement("INPUT");
             t.setAttribute("type", "checkbox");
             t.setAttribute("name", "answer[]");
             t.setAttribute("value", ((i-1)*rows + k));

@@ -1,4 +1,3 @@
-
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -13,7 +12,6 @@
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     {!! HTML::style('css/materialadmin_demo.css') !!}
 
-
 </head>
 <body onload="startTimer()">
 <nav class="fixed-nav">
@@ -23,10 +21,27 @@
             <li class="NotAnswered" id="{{$i}}"><a href="#form{{$i+1}}" class="SmoothScroll"> {{$i+1}} </a></li>
             @endfor
         </ul>
-        <span id="my_timer" class="timer">00:10:10</span>
-    </div>
+        <?php
+        // $date = date_create();
+        // date_add($date, date_interval_create_from_date_string('30 minutes'));
+        // $newDate = date_format($date, 'U') + 30 * 60;
+        // echo $newDate + " ";
+
+        $startDate = date_create();
+        // echo date_format($startDate, 'H:i:s') . "\n";
+        $newDate = date_format($startDate, 'U') + 30 * 60;
+        $endDate = date_create();
+        date_timestamp_set($endDate, $newDate);
+        // echo date_format($endDate, 'H:i:s') . "\n";
+        $restDate = date_create();
+        date_timestamp_set($restDate, (date_format($endDate, 'U') - date_format($startDate, 'U')));
+        // echo date_format($restDate, 'H:i:s') . "\n";
+
+        ?>
+
+        <span id="my_timer" class="timer" "><?php echo date_format($restDate, 'i'); ?>:<?php echo date_format($restDate, 's'); ?> </span> </div>
 </nav>
-<br><br>
+<br><br><br>
 <?php $i=1;?>
 @foreach($widgets as $widget)
 <br id="form{{$i}}">

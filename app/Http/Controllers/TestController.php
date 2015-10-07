@@ -45,7 +45,7 @@ class TestController extends Controller{
             $struct .= 'A.';
         }
         else {
-            $query = $codificator->whereValue($theme)->select('code')->first();
+            $query = $codificator->wherewhereValue($theme)->select('code')->first();
             $struct .= $query->code.'.';
         }
         if ($type == 'Любой'){
@@ -112,6 +112,7 @@ class TestController extends Controller{
             $question = new Question();
             $code = $this->struct('',$request->input('section'),$request->input('theme'),$request->input('type'));
             $code = preg_replace('~A~', '[[:digit:]]+', $code );
+            //dd($code);
             $amount = $question->where('code', 'regexp', $code)->select('id_question')->count();
             return (String) $amount;
         }

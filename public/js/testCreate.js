@@ -58,6 +58,9 @@ $('.submit-test').click(function(){
     $('#num-rows').val(count-1);
 });
 
+/**
+ * Определение количества вопросов по указанному фильтру (Раздел, Тема, Тип)
+ */
 $('#question-table').on('change','.select-type, .select-theme, .select-section', function(){
     if ($(this).attr('name') == 'section[]'){                                                                           //если изменили раздел
         section = $(this).val();
