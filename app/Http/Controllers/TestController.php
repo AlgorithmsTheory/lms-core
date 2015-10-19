@@ -45,7 +45,7 @@ class TestController extends Controller{
             $struct .= 'A.';
         }
         else {
-            $query = $codificator->wherewhereValue($theme)->select('code')->first();
+            $query = $codificator->whereValue($theme)->select('code')->first();
             $struct .= $query->code.'.';
         }
         if ($type == 'Любой'){

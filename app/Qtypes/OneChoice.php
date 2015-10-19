@@ -35,15 +35,15 @@ class OneChoice extends QuestionType {
     public function check($array){
         if ($array[0] == $this->answer){
             $score = $this->points;
-            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points);
+            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array[0]);
         }
         else {
             $score = 0;
-            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points);
+            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array[0]);
         }
         //echo $score.'<br>';
         if ($score != $this->points){
-            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points);
+            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array[0]);
         }
         //echo $score.'<br>';
         return $data;

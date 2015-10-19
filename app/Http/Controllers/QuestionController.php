@@ -185,8 +185,9 @@ class QuestionController extends Controller{
         $points = $query->points;
         $type = $this->getCode($id)['type'];
         if (count($array)==1){           //если не был отмечен ни один вариант
+            $choice = [];
             $score = 0;
-            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points);
+            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points, 'choice' => $choice);
             return $data;
         }
         for ($i=0; $i < count($array)-1; $i++){                                    //передвигаем массив, чтобы первый элемент оказался последним
@@ -433,11 +434,13 @@ class QuestionController extends Controller{
         //создаем строку в таблице пройденных тестов
         $test = new Test();
         $result = new Result();
+        $user = new Bruser();
         $query = Result::max('id_result');     //пример использования агрегатных функций!!!
         $current_result = $query+1;            //создаем новый результат
         $query = $test->whereId_test($id_test)->select('amount', 'test_name')->first();   //кол-во вопрососв в тесте
+        $query2 = $user->whereName(Cookie::get('username'))->select('id')->first();
         $result->id_result = $current_result;
-        $result->id_user = 1;        //пока без привзяки к таблице пользователей
+        $result->id_user = $query2->id;;        //пока без привзяки к таблице пользователей
         $result->id_test = $id_test;
         $result->test_name = $query->test_name;
         $amount = $query->amount;
@@ -469,7 +472,7 @@ class QuestionController extends Controller{
         $test_name = explode(";", $query->test_name);
         $score_sum = 0;
         $points_sum = 0;
-        $mark = [];
+        $choice = [];
         $j = 1;
         for ($i=0; $i<$amount; $i++){        //обрабатываем каждый вопрос
             $data = $request->input($i);
@@ -481,6 +484,7 @@ class QuestionController extends Controller{
                 $j++;
             }*/
             $right_or_wrong[$j] = $data['mark'];
+            $choice[$j] = $data['choice'];
             $j++;
             $score_sum += $data['score'];     //сумма набранных баллов
             $points_sum += $data['points'];   //сумма максимально возможных баллов
@@ -507,7 +511,7 @@ class QuestionController extends Controller{
             $saved_test = $query->result;
             $saved_test = unserialize($saved_test);
             for ($i=0; $i<$amount; $i++){
-                $widgets[] = View::make($saved_test[$i]['view'], $saved_test[$i]['arguments']);
+                $widgets[] = View::make($saved_test[$i]['view'].'T', $saved_test[$i]['arguments'])->with('choice', $choice[$i+1]);
             }
             $result->whereId_result($current_test)->update(['result' => $score, 'mark' => $mark]);
             $widgetListView = View::make('questions.student.training_test',compact('amount', 'id_test','score','right_or_wrong','number_of_wrong', 'mark_bologna', 'mark_rus'))->with('widgets', $widgets);
