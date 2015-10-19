@@ -8,6 +8,7 @@
 @foreach ($variants as $var)
 <input type="checkbox"  name="choice[]" value="{{ $var }}"> {{ $var }} <br>
 @endforeach
+<br><br>
 <input type="checkbox" name="seeLater" class="css-checkbox"><span class="css-checkbox">Вернуться позже</span>
 {!! Form::close() !!}
 <br>

@@ -7,6 +7,7 @@
  */
 namespace App\Http\Controllers;
 use Cookie;
+use Session;
 use View;
 use App\Result;
 use Illuminate\Http\Request;
@@ -117,15 +118,15 @@ class QuestionController extends Controller{
     }
     private function chooseQuestion($id_test){
         @session_start();
-        if (empty($_SESSION['test'.$_SESSION['username']])){                //генерируем тест, если еше не создан
+        if (empty($_SESSION['test'.Cookie::get('username')])){                //генерируем тест, если еше не создан
             $array = $this->prepareTest($id_test);
             $ser_array = serialize($array);
-            $_SESSION['test'.$_SESSION['username']] = $ser_array;         //в сессии храним массив вопросов
+            $_SESSION['test'.Cookie::get('username')] = $ser_array;         //в сессии храним массив вопросов
         }
-        $ser_array = $_SESSION['test'.$_SESSION['username']];
+        $ser_array = $_SESSION['test'.Cookie::get('username')];
         $array = unserialize($ser_array);
         if (empty($array)){               //если вопросы кончились, завершаем тест
-            unset($_SESSION['test'.$_SESSION['username']]);
+            unset($_SESSION['test'.Cookie::get('username')]);
             return -1;
         }
         else{
@@ -133,7 +134,7 @@ class QuestionController extends Controller{
             $choisen = $array[count($array)-1];
             array_pop($array);                   //удаляем его из списка
             $ser_array = serialize($array);
-            $_SESSION['test'.$_SESSION['username']] = $ser_array;
+            $_SESSION['test'.Cookie::get('username')] = $ser_array;
             return $choisen;
         }
     }
@@ -264,8 +265,8 @@ class QuestionController extends Controller{
         }
     }
     /*public function result(){
-        $score = Session::get('score');
-        $total = Session::get('num');
+        $score = Cookie::get('score');
+        $total = Cookie::get('num');
         return view('welcome', compact('score', 'total'));
     }*/
     public function index(){
@@ -279,31 +280,29 @@ class QuestionController extends Controller{
         //$questions = $this->question->get();
         //dd($questions);
         $username =  null;
-        session_start();
-        if (!empty($_SESSION['username'])){
-            unset($_SESSION['test'.$_SESSION['username']]);
-            $username =  $_SESSION['username'];
+        if (Cookie::has('username')){
+            $username =  Cookie::get('username');
         }
         return view('questions.teacher.index', compact('username'));
     }
+
     public function form(Request $request){
         $user = new Bruser();
-        session_start();
         $username = $request->input('username');
-        $query = $user->whereName($username)->select('password')->get();
+        $query = $user->whereName($username)->select('password', 'id')->get();
         foreach ($query as $password){
             $pass = $password->password;
-            //echo $pass.'=='.$request->input('password');
             if ($pass == $request->input('password')){
-                $_SESSION['username'] = $username;
+                Cookie::queue('username', $username);
+                return redirect()->route('question_index');
+            }
+            else  {
+                echo 'Неверный пароль';
+                return redirect()->route('question_index');
             }
         }
-        if (empty($_SESSION['username'])){
-            echo 'Неверный пароль';
-        }
-        else echo  $_SESSION['username'];
-        return redirect()->route('question_index');
     }
+    
     public function enter(){
         return view('questions.student.ty');
     }
@@ -446,7 +445,7 @@ class QuestionController extends Controller{
         $result->save();
         $widgets = [];
         $saved_test = [];
-        unset($_SESSION['test'.@$_SESSION['username']]);
+        unset($_SESSION['test'.Cookie::get('username')]);
         for ($i=0; $i<$amount; $i++){
             $id = $this->chooseQuestion($id_test);
             $data = $this->showTest($id, $i+1);                  //должны получать название view и необходимые параметры
@@ -455,12 +454,11 @@ class QuestionController extends Controller{
         }
         $saved_test = serialize($saved_test);
         Result::where('id_result', '=', $current_result)->update(['result' => $saved_test]);
+        Cookie::queue('current_test', $current_result);
         $widgetListView = View::make('questions.student.widget_list',compact('amount', 'id_test'))->with('widgets', $widgets);
         $response = new Response($widgetListView);
-        $response->withCookie(cookie('current_test', $current_result));
         return $response;
     }
-
     public function checkTest(Request $request){   //обработать ответ на вопрос
         @session_start();
         $amount = $request->input('amount');
@@ -498,7 +496,6 @@ class QuestionController extends Controller{
         $result = new Result();
         $current_test = Cookie::get('current_test');
         $number_of_wrong = count($mark);
-        unset($_SESSION['test'.$_SESSION['username']]);
         if ($test_name[0] != 'Тренировочный'){
             $result->whereId_result($current_test)->update(['result' => $score, 'mark' => $mark]);
             return view('tests.ctrresults', compact('score', 'mark_bologna', 'mark_rus'));
@@ -521,4 +518,4 @@ class QuestionController extends Controller{
         print_r($array);
         echo '<br><br>';*/
     }
-} 
+}
