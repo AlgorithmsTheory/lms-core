@@ -116,25 +116,14 @@ class QuestionController extends Controller{
         }
         return $array;          //формируем массив из id вошедших в тест вопросов
     }
-    private function chooseQuestion($id_test){
-        @session_start();
-        if (empty($_SESSION['test'.Cookie::get('username')])){                //генерируем тест, если еше не создан
-            $array = $this->prepareTest($id_test);
-            $ser_array = serialize($array);
-            $_SESSION['test'.Cookie::get('username')] = $ser_array;         //в сессии храним массив вопросов
-        }
-        $ser_array = $_SESSION['test'.Cookie::get('username')];
-        $array = unserialize($ser_array);
+    private function chooseQuestion(&$array){
         if (empty($array)){               //если вопросы кончились, завершаем тест
-            unset($_SESSION['test'.Cookie::get('username')]);
             return -1;
         }
         else{
             $array = $this->randomArray($array);
             $choisen = $array[count($array)-1];
             array_pop($array);                   //удаляем его из списка
-            $ser_array = serialize($array);
-            $_SESSION['test'.Cookie::get('username')] = $ser_array;
             return $choisen;
         }
     }
@@ -281,8 +270,11 @@ class QuestionController extends Controller{
         //$questions = $this->question->get();
         //dd($questions);
         $username =  null;
-        if (Cookie::has('username')){
-            $username =  Cookie::get('username');
+        /*if (Cookie::has('username')){
+            $username =  Session::get('username');
+        }*/
+        if (Session::has('username')){
+            $username = Session::get('username');
         }
         return view('questions.teacher.index', compact('username'));
     }
@@ -294,7 +286,7 @@ class QuestionController extends Controller{
         foreach ($query as $password){
             $pass = $password->password;
             if ($pass == $request->input('password')){
-                Cookie::queue('username', $username);
+                Session::put('username',$username);
                 return redirect()->route('question_index');
             }
             else  {
@@ -430,7 +422,6 @@ class QuestionController extends Controller{
         }
     }
     public function showViews($id_test){
-        @session_start();
         //создаем строку в таблице пройденных тестов
         $test = new Test();
         $result = new Result();
@@ -438,7 +429,7 @@ class QuestionController extends Controller{
         $query = Result::max('id_result');     //пример использования агрегатных функций!!!
         $current_result = $query+1;            //создаем новый результат
         $query = $test->whereId_test($id_test)->select('amount', 'test_name')->first();   //кол-во вопрососв в тесте
-        $query2 = $user->whereName(Cookie::get('username'))->select('id')->first();
+        $query2 = $user->whereName(Session::get('username'))->select('id')->first();
         $result->id_result = $current_result;
         $result->id_user = $query2->id;;        //пока без привзяки к таблице пользователей
         $result->id_test = $id_test;
@@ -448,9 +439,9 @@ class QuestionController extends Controller{
         $result->save();
         $widgets = [];
         $saved_test = [];
-        unset($_SESSION['test'.Cookie::get('username')]);
+        $ser_array = $this->prepareTest($id_test);
         for ($i=0; $i<$amount; $i++){
-            $id = $this->chooseQuestion($id_test);
+            $id = $this->chooseQuestion($ser_array);
             $data = $this->showTest($id, $i+1);                  //должны получать название view и необходимые параметры
             $saved_test[] = $data;
             $widgets[] = View::make($data['view'], $data['arguments']);
@@ -463,7 +454,6 @@ class QuestionController extends Controller{
         return $response;
     }
     public function checkTest(Request $request){   //обработать ответ на вопрос
-        @session_start();
         $amount = $request->input('amount');
         $id_test = $request->input('id_test');
         $test = new Test();
