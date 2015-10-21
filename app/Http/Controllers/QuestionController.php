@@ -426,34 +426,47 @@ class QuestionController extends Controller{
         $test = new Test();
         $result = new Result();
         $user = new Bruser();
-        $query = Result::max('id_result');     //пример использования агрегатных функций!!!
-        $current_result = $query+1;            //создаем новый результат
-        $query = $test->whereId_test($id_test)->select('amount', 'test_name')->first();   //кол-во вопрососв в тесте
-        $query2 = $user->whereName(Session::get('username'))->select('id')->first();
-        $result->id_result = $current_result;
-        $result->id_user = $query2->id;;        //пока без привзяки к таблице пользователей
-        $result->id_test = $id_test;
-        $result->test_name = $query->test_name;
-        $amount = $query->amount;
-        $result->amount = $amount;
-        $result->save();
         $widgets = [];
         $saved_test = [];
-        $ser_array = $this->prepareTest($id_test);
-        for ($i=0; $i<$amount; $i++){
-            $id = $this->chooseQuestion($ser_array);
-            $data = $this->showTest($id, $i+1);                  //должны получать название view и необходимые параметры
-            $saved_test[] = $data;
-            $widgets[] = View::make($data['view'], $data['arguments']);
+        $query = $test->whereId_test($id_test)->select('amount', 'test_name')->first();   //кол-во вопрососв в тесте
+        $amount = $query->amount;
+        $result->test_name = $query->test_name;
+        if (!Session::has('test')){
+            $query = Result::max('id_result');     //пример использования агрегатных функций!!!
+            $current_result = $query+1;            //создаем новый результат
+            $query2 = $user->whereName(Session::get('username'))->select('id')->first();
+            $result->id_result = $current_result;
+            $result->id_user = $query2->id;;        //пока без привзяки к таблице пользователей
+            $result->id_test = $id_test;
+            $result->amount = $amount;
+            $result->save();
+            $ser_array = $this->prepareTest($id_test);
+            for ($i=0; $i<$amount; $i++){
+                $id = $this->chooseQuestion($ser_array);
+                $data = $this->showTest($id, $i+1);                  //должны получать название view и необходимые параметры
+                $saved_test[] = $data;
+                $widgets[] = View::make($data['view'], $data['arguments']);
+            }
+            $saved_test = serialize($saved_test);
+            Result::where('id_result', '=', $current_result)->update(['result' => $saved_test]);
+            Session::put('test', $current_result);
         }
-        $saved_test = serialize($saved_test);
-        Result::where('id_result', '=', $current_result)->update(['result' => $saved_test]);
-        Cookie::queue('current_test', $current_result);
+        else {
+            $current_test = Session::get('test');
+            $query = $result->whereId_result($current_test)->first();
+            $saved_test = $query->result;
+            $saved_test = unserialize($saved_test);
+            for ($i=0; $i<$amount; $i++){
+                $widgets[] = View::make($saved_test[$i]['view'], $saved_test[$i]['arguments']);
+            }
+        }
         $widgetListView = View::make('questions.student.widget_list',compact('amount', 'id_test'))->with('widgets', $widgets);
         $response = new Response($widgetListView);
         return $response;
     }
     public function checkTest(Request $request){   //обработать ответ на вопрос
+        $current_test = Session::get('test');
+        Session::forget('test');
         $amount = $request->input('amount');
         $id_test = $request->input('id_test');
         $test = new Test();
@@ -488,7 +501,6 @@ class QuestionController extends Controller{
         $mark_rus = $this->calcMarkRus($total, $score);
         $mark = $mark_bologna.';'.$mark_rus;
         $result = new Result();
-        $current_test = Cookie::get('current_test');
         $number_of_wrong = count($mark);
         if ($test_name[0] != 'Тренировочный'){
             $result->whereId_result($current_test)->update(['result' => $score, 'mark' => $mark]);
