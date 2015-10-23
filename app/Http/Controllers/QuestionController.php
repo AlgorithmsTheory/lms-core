@@ -270,6 +270,7 @@ class QuestionController extends Controller{
         //$questions = $this->question->get();
         //dd($questions);
         $username =  null;
+        Session::forget('test');
         /*if (Cookie::has('username')){
             $username =  Session::get('username');
         }*/
@@ -428,10 +429,14 @@ class QuestionController extends Controller{
         $user = new Bruser();
         $widgets = [];
         $saved_test = [];
-        $query = $test->whereId_test($id_test)->select('amount', 'test_name')->first();   //кол-во вопрососв в тесте
+        $query = $test->whereId_test($id_test)->select('amount', 'test_name','test_time')->first();                     //кол-во вопрососв в тесте
         $amount = $query->amount;
         $result->test_name = $query->test_name;
+        $test_time = $query->test_time;
         if (!Session::has('test')){
+            $start_time = date_create();                                                                                //время начала
+            $int_end_time =  date_format($start_time,'U')+60*$test_time;                                                //время конца
+            Session::put('end_time',$int_end_time);
             $query = Result::max('id_result');     //пример использования агрегатных функций!!!
             $current_result = $query+1;            //создаем новый результат
             $query2 = $user->whereName(Session::get('username'))->select('id')->first();
@@ -443,7 +448,7 @@ class QuestionController extends Controller{
             $ser_array = $this->prepareTest($id_test);
             for ($i=0; $i<$amount; $i++){
                 $id = $this->chooseQuestion($ser_array);
-                $data = $this->showTest($id, $i+1);                  //должны получать название view и необходимые параметры
+                $data = $this->showTest($id, $i+1);                                                                     //должны получать название view и необходимые параметры
                 $saved_test[] = $data;
                 $widgets[] = View::make($data['view'], $data['arguments']);
             }
@@ -452,15 +457,21 @@ class QuestionController extends Controller{
             Session::put('test', $current_result);
         }
         else {
+            // обработать ошибку, если тест уже сгененрирован, то нельзя зайти в никакой другой, кроме как продолжить этот.
             $current_test = Session::get('test');
             $query = $result->whereId_result($current_test)->first();
+            $int_end_time = Session::get('end_time');                                                                   //время окончания теста
             $saved_test = $query->result;
             $saved_test = unserialize($saved_test);
             for ($i=0; $i<$amount; $i++){
                 $widgets[] = View::make($saved_test[$i]['view'], $saved_test[$i]['arguments']);
             }
         }
-        $widgetListView = View::make('questions.student.widget_list',compact('amount', 'id_test'))->with('widgets', $widgets);
+        $current_time = date_create();                                                                                  //текущее время
+        $int_left_time = $int_end_time - date_format($current_time, 'U');                                               //оставшееся время
+        $left_min =  floor($int_left_time/60);                                                                          //осталось минут
+        $left_sec = $int_left_time % 60;                                                                                //осталось секунд
+        $widgetListView = View::make('questions.student.widget_list',compact('amount', 'id_test','left_min', 'left_sec'))->with('widgets', $widgets);
         $response = new Response($widgetListView);
         return $response;
     }

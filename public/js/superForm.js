@@ -2,7 +2,7 @@
  * Created by Станислав on 22.05.15.
  */
 
-function sendForm(){
+function sendForm(status){
     var formsCount = document.forms.length - 1;
     var elementNumber;
     var flag = [true];
@@ -37,10 +37,13 @@ function sendForm(){
             }
         }
     }
-    for (index = 0; index < formsCount; ++index) {
-        if(flag[index]) {countChecked++;}
+    if (status == true){
+        for (index = 0; index < formsCount; ++index) {
+            if(flag[index]) {countChecked++;}
+        }
+        return confirm('Вы уверены, что хотите завершить тест? Вы ответили на ' + countChecked + ' вопросов из ' + formsCount + '.');
     }
-    return confirm('Вы уверены, что хотите завершить тест? Вы ответили на ' + countChecked + ' вопросов из ' + formsCount + '.');
+    else return alert("Время вышло");
 }
 
 function fillSuper(){

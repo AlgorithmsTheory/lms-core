@@ -75,11 +75,11 @@ function startTimer() {
     var m = arr[0];
     var s = arr[1];
     if (s <= 0) {
-        if (m <= 0) {
-            alert("Время вышло");
-            window.location.reload();
+        if (m <= 0) {                                                                                                   //если время вышло
+            fillSuper();                                                                                                //собираем все данные в супер-форму
+            $('#super-form').attr('onsubmit','return sendForm(false)');                                                 //меняем обработчик на false
+            $('#super-form').trigger('submit');                                                                         //генерируем событие submit
             return;
-            m = 0;
         }
         m--;
         if (m < 10) m = "0" + m;
