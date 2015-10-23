@@ -1,4 +1,3 @@
-4 lines (24 sloc)  779 Bytes
 <html>
 <body>
 {!! Form::open(['method' => 'PATCH', 'route' => 'question_checktest', 'class' => 'smart-blue']) !!}

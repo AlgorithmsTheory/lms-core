@@ -28,6 +28,8 @@ class QuestionController extends Controller{
     function __construct(Question $question){
         $this->question=$question;
     }
+
+    /** По входным данным формы section, theme, type определяет код вопроса a.b.c */
     private function setCode(Request $request){  //Установить код вопроса
         $codificator = new Codificator();
         //получаем необходимые данные из формы
@@ -44,6 +46,8 @@ class QuestionController extends Controller{
         $code = $section_code.'.'.$theme_code.'.'.$type_code;
         return $code;
     }
+
+    /** по id вопроса формирует массив из кодов и названий */
     private function getCode($id){        //декодирование вопроса в асс. массив
         $codificator = new Codificator();
         $question = $this->question;
@@ -61,17 +65,21 @@ class QuestionController extends Controller{
             'section_code' => $array[0], 'theme_code' => $array[1], 'type_code' => $array[2]);
         return $decode;
     }
+
+    /** из массива выбирает случайный элемент и ставит его в конец массива, меняя местами с последним элементом */
     private static function randomArray($array){
-        $index = rand(0,count($array)-1);     //выбираем случайный вопрос
+        $index = rand(0,count($array)-1);                                                                               //выбираем случайный вопрос
         $chosen = $array[$index];
         $array[$index]=$array[count($array)-1];
         $array[count($array)-1] = $chosen;
-        return $array;                        //получаем тот же массив, где выбранный элемент стоит на последнем месте для удаления
+        return $array;                                                                                                  //получаем тот же массив, где выбранный элемент стоит на последнем месте для удаления
     }
+
+    /** перемешивает элементы массива */
     public static function mixVariants($variants){
         $num_var = count($variants);
         $new_variants = [];
-        for ($i=0; $i<$num_var; $i++){                        //варианты в случайном порядке
+        for ($i=0; $i<$num_var; $i++){                                                                                  //варианты в случайном порядке
             $variants = QuestionController::randomArray($variants);
             $chosen = array_pop($variants);
             $new_variants[$i] = $chosen;
@@ -254,38 +262,23 @@ class QuestionController extends Controller{
             return '5';
         }
     }
-    /*public function result(){
-        $score = Cookie::get('score');
-        $total = Cookie::get('num');
-        return view('welcome', compact('score', 'total'));
-    }*/
+
+    /** главная страница модуля тестирования */
     public function index(){
-        //Дефолтная страница при разграничении прав
-        /*if (Session::has('username')){
-             return view('questions.student.index');
-        }
-        if (Session::has('teachername')){
-            return view('questions.teacher.index');
-        }*/
-        //$questions = $this->question->get();
-        //dd($questions);
         $username =  null;
-        Session::forget('test');
-        /*if (Cookie::has('username')){
-            $username =  Session::get('username');
-        }*/
+        //Session::forget('test');
         if (Session::has('username')){
             $username = Session::get('username');
         }
         return view('questions.teacher.index', compact('username'));
     }
 
+    /** временная авторизаия в модуле */
     public function form(Request $request){
         $user = new Bruser();
         $username = $request->input('username');
-        $query = $user->whereName($username)->select('password', 'id')->get();
-        foreach ($query as $password){
-            $pass = $password->password;
+        $query = $user->whereName($username)->select('password', 'id')->first();
+            $pass = $query->password;
             if ($pass == $request->input('password')){
                 Session::put('username',$username);
                 return redirect()->route('question_index');
@@ -294,13 +287,15 @@ class QuestionController extends Controller{
                 echo 'Неверный пароль';
                 return redirect()->route('question_index');
             }
-        }
     }
     
+   /**  вход на страницу временную страницу авторизации */
     public function enter(){
         return view('questions.student.ty');
     }
-    public function create(){             //переход на страницу формы добавления
+
+    /** переход на страницу формы добавления */
+    public function create(){
         $codificator = new Codificator();
         $types = [];
         $query = $codificator->whereCodificator_type('Тип')->select('value')->get();
@@ -309,6 +304,8 @@ class QuestionController extends Controller{
         }
         return view('questions.teacher.create', compact('types'));
     }
+
+    /** AJAX-метод: подгружает интерфейс создания нового вопроса в зависимости от выбранного типа вопроса */
     public function getType(Request $request){
         if ($request->ajax()){
             $type = $request->input('choice');
@@ -372,10 +369,12 @@ class QuestionController extends Controller{
             }
         }
     }
-    public function add(Request $request){  //обработка формы добавления
+
+    /** Обработка формы добавления вопроса */
+    public function add(Request $request){
         $code = $this->setCode($request);
         $type = $request->input('type');
-        $query = Question::max('id_question');     //пример использования агрегатных функций!!!
+        $query = Question::max('id_question');                                                                          //пример использования агрегатных функций!!!
         $id = $query+1;
         switch($type){
             case 'Выбор одного из списка':                      //Стас
@@ -411,6 +410,8 @@ class QuestionController extends Controller{
         }
         return redirect()->route('question_create');
     }
+
+    /** AJAX-метод: Формирует список тем, соответствующих выбранному разделу */
     public function getTheme(Request $request){
         if ($request->ajax()) {
             $themes = new Theme();
@@ -422,26 +423,29 @@ class QuestionController extends Controller{
             return (String) view('questions.student.getTheme', compact('themes_list'));
         }
     }
+
+    /** Главный метод: гененрирует полотно вопросов на странице тестов */
     public function showViews($id_test){
-        //создаем строку в таблице пройденных тестов
         $test = new Test();
         $result = new Result();
         $user = new Bruser();
         $widgets = [];
         $saved_test = [];
+
         $query = $test->whereId_test($id_test)->select('amount', 'test_name','test_time')->first();                     //кол-во вопрососв в тесте
         $amount = $query->amount;
         $result->test_name = $query->test_name;
         $test_time = $query->test_time;
-        if (!Session::has('test')){
+
+        if (!Session::has('test')){                                                                                     //если в тест зайдено первый раз
             $start_time = date_create();                                                                                //время начала
             $int_end_time =  date_format($start_time,'U')+60*$test_time;                                                //время конца
             Session::put('end_time',$int_end_time);
-            $query = Result::max('id_result');     //пример использования агрегатных функций!!!
-            $current_result = $query+1;            //создаем новый результат
+            $query = Result::max('id_result');                                                                          //пример использования агрегатных функций!!!
+            $current_result = $query+1;                                                                                 //создаем строку в таблице пройденных тестов
             $query2 = $user->whereName(Session::get('username'))->select('id')->first();
             $result->id_result = $current_result;
-            $result->id_user = $query2->id;;        //пока без привзяки к таблице пользователей
+            $result->id_user = $query2->id;;
             $result->id_test = $id_test;
             $result->amount = $amount;
             $result->save();
@@ -456,7 +460,7 @@ class QuestionController extends Controller{
             Result::where('id_result', '=', $current_result)->update(['result' => $saved_test]);
             Session::put('test', $current_result);
         }
-        else {
+        else {                                                                                                          //если была перезагружена страница теста или тест был покинут
             // обработать ошибку, если тест уже сгененрирован, то нельзя зайти в никакой другой, кроме как продолжить этот.
             $current_test = Session::get('test');
             $query = $result->whereId_result($current_test)->first();
@@ -467,72 +471,71 @@ class QuestionController extends Controller{
                 $widgets[] = View::make($saved_test[$i]['view'], $saved_test[$i]['arguments']);
             }
         }
+
         $current_time = date_create();                                                                                  //текущее время
         $int_left_time = $int_end_time - date_format($current_time, 'U');                                               //оставшееся время
         $left_min =  floor($int_left_time/60);                                                                          //осталось минут
         $left_sec = $int_left_time % 60;                                                                                //осталось секунд
+
         $widgetListView = View::make('questions.student.widget_list',compact('amount', 'id_test','left_min', 'left_sec'))->with('widgets', $widgets);
         $response = new Response($widgetListView);
         return $response;
     }
+
+    /** Проверка теста */
     public function checkTest(Request $request){   //обработать ответ на вопрос
-        $current_test = Session::get('test');
-        Session::forget('test');
+        $current_test = Session::get('test');                                                                           //определяем проверяемый тест
+        Session::forget('test');                                                                                        //тест считается честно пройденым
         $amount = $request->input('amount');
         $id_test = $request->input('id_test');
         $test = new Test();
+        $score_sum = 0;                                                                                                 //сумма набранных баллов
+        $points_sum = 0;                                                                                                //сумма максимально овзможных баллов
+        $choice = [];                                                                                                   //запоминаем выбранные варианты пользователя
+        $j = 1;
+
         $query = $test->whereId_test($id_test)->select('total', 'test_name', 'amount')->first();
         $total = $query->total;
         $test_name = explode(";", $query->test_name);
-        $score_sum = 0;
-        $points_sum = 0;
-        $choice = [];
-        $j = 1;
-        for ($i=0; $i<$amount; $i++){        //обрабатываем каждый вопрос
+        for ($i=0; $i<$amount; $i++){                                                                                   //обрабатываем каждый вопрос
             $data = $request->input($i);
             $array = json_decode($data);
-            //print_r($array);
             $data = $this->check($array);
-            /*if ($data['mark'] == 'Неверно'){
-                $mark[$j]= $data['mark'];      //массив неверных вопросов
-                $j++;
-            }*/
             $right_or_wrong[$j] = $data['mark'];
             $choice[$j] = $data['choice'];
             $j++;
-            $score_sum += $data['score'];     //сумма набранных баллов
-            $points_sum += $data['points'];   //сумма максимально возможных баллов
+            $score_sum += $data['score'];                                                                               //сумма набранных баллов
+            $points_sum += $data['points'];                                                                             //сумма максимально возможных баллов
         }
         if ($points_sum != 0){
             $score = $total*$score_sum/$points_sum;
             $score = round($score,1);
         }
         else $score = $total;
-        $mark_bologna = $this->calcMarkBologna($total, $score);    //оценки
+
+        $mark_bologna = $this->calcMarkBologna($total, $score);                                                         //оценки
         $mark_rus = $this->calcMarkRus($total, $score);
         $mark = $mark_bologna.';'.$mark_rus;
+
         $result = new Result();
-        $number_of_wrong = count($mark);
-        if ($test_name[0] != 'Тренировочный'){
+        if ($test_name[0] != 'Тренировочный'){                                                                          //если тест контрольный
             $result->whereId_result($current_test)->update(['result' => $score, 'mark' => $mark]);
             return view('tests.ctrresults', compact('score', 'mark_bologna', 'mark_rus'));
         }
-        else{
+        else{                                                                                                           //если тест тренировочный
             $amount = $query->amount;
+
             $widgets = [];
-            $query = $result->whereId_result($current_test)->first();
+            $query = $result->whereId_result($current_test)->first();                                                   //берем сохраненный тест из БД
             $saved_test = $query->result;
             $saved_test = unserialize($saved_test);
+
             for ($i=0; $i<$amount; $i++){
                 $widgets[] = View::make($saved_test[$i]['view'].'T', $saved_test[$i]['arguments'])->with('choice', $choice[$i+1]);
             }
             $result->whereId_result($current_test)->update(['result' => $score, 'mark' => $mark]);
-            $widgetListView = View::make('questions.student.training_test',compact('amount', 'id_test','score','right_or_wrong','number_of_wrong', 'mark_bologna', 'mark_rus'))->with('widgets', $widgets);
+            $widgetListView = View::make('questions.student.training_test',compact('score','right_or_wrong', 'mark_bologna', 'mark_rus'))->with('widgets', $widgets);
             return $widgetListView;
         }
-        /*print_r($data);
-        echo '<br>';
-        print_r($array);
-        echo '<br><br>';*/
     }
 }

@@ -22,7 +22,7 @@
     @endforeach
 </table>
 
-{!! Form::open(['class' => 'smart-blue']) !!}
-<button class="button-submit">{!! link_to_route('question_index', 'Вернуться на главную') !!}</button>
+{!! Form::open(['class' => 'smart-blue', 'method' => 'GET', 'route' => 'question_index']) !!}
+<button class="button-submit" type="submit">{!! link_to_route('question_index', 'Вернуться на главную') !!}</button>
 {!! Form::close() !!}
 </html>
