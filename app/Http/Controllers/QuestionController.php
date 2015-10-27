@@ -86,6 +86,11 @@ class QuestionController extends Controller{
         }
         return $new_variants;
     }
+
+    /**
+     * Декодирует кодовую структуру теста
+     * Возвращает двумерный массив, где по i идут различные струры вопросов, j=0 - количество вопросов данной структуры, j=1 - сам код вопроса
+     */
     private function destruct($id_test){
         $test = new Test();
         $query = $test->whereId_test($id_test)->select('structure')->first();
@@ -100,6 +105,8 @@ class QuestionController extends Controller{
         }
         return $array;
     }
+
+    /** По номеру теста возвращает список id вопросов, удовлетворяющих всем параметрам теста */
     private function prepareTest($id_test){            //выборка вопросов
         $question = $this->question;
         $array = [];
@@ -109,8 +116,6 @@ class QuestionController extends Controller{
         for ($i=0; $i<count($destructured); $i++){
             $temp = preg_replace('~A~', '[[:digit:]]+', $destructured[$i][1] );                                         //заменям все A (All) на регулярное выражение, соответствующее любому набору цифр
             $query = $question->where('code', 'regexp', $temp)->get();                                                  //ищем всевозможные коды вопросов
-            //$query=$question->where('code', '=', $destructured[$i][1])->get();
-            //$query=$question->where('code', '=', '1.1.1')->get();
             foreach ($query as $id){
                 array_push($temp_array,$id->id_question);                                                               //для каждого кода создаем массив всех вопрососв с этим кодом
             }
@@ -122,24 +127,28 @@ class QuestionController extends Controller{
             }
             $temp_array = [];
         }
-        return $array;          //формируем массив из id вошедших в тест вопросов
+        return $array;                                                                                                  //формируем массив из id вошедших в тест вопросов
     }
+
+    /** Из выбранного массива вопросов теста выбирает один */
     private function chooseQuestion(&$array){
-        if (empty($array)){               //если вопросы кончились, завершаем тест
+        if (empty($array)){                                                                                             //если вопросы кончились, завершаем тест
             return -1;
         }
         else{
             $array = $this->randomArray($array);
             $choisen = $array[count($array)-1];
-            array_pop($array);                   //удаляем его из списка
+            array_pop($array);                                                                                          //удаляем его из списка
             return $choisen;
         }
     }
-    private function showTest($id_question, $count){  //показать вопрос в тесте
+
+    /** Показывает вопрос согласно типу */
+    private function showTest($id_question, $count){
         $decode = $this->getCode($id_question);
         $type = $decode['type'];
         switch($type){
-            case 'Выбор одного из списка':                      //Стас
+            case 'Выбор одного из списка':
                 $one_choice = new OneChoice($id_question);
                 $array = $one_choice->show($count);
                 return $array;
@@ -149,17 +158,17 @@ class QuestionController extends Controller{
                 $array = $multi_choice->show($count);
                 return $array;
                 break;
-            case 'Текстовый вопрос':                            //Стас
+            case 'Текстовый вопрос':
                 $fill_gaps = new FillGaps($id_question);
                 $array = $fill_gaps->show($count);
                 return $array;
                 break;
-            case 'Таблица соответствий':                        //Миша
+            case 'Таблица соответствий':
                 $accordance_table = new AccordanceTable($id_question);
                 $array = $accordance_table->show($count);
                 return $array;
                 break;
-            case 'Да/Нет':                                      //Миша
+            case 'Да/Нет':
                 $yes_no = new YesNo($id_question);
                 $array = $yes_no->show($count);
                 return $array;
@@ -175,7 +184,9 @@ class QuestionController extends Controller{
                 break;
         }
     }
-    private function check($array){       //проверяет правильность вопроса и на выходе дает баллы за вопрос
+
+    /** Проверяет вопрос согласно типу и на выходе дает баллы за него */
+    private function check($array){
         $question = $this->question;
         $id = $array[0];
         $query = $question->whereId_question($id)->select('answer','points')->first();
@@ -228,7 +239,9 @@ class QuestionController extends Controller{
                 break;
         }
     }
-    private function calcMarkBologna($max, $real){          //вычисляет оценку по Болонской системе
+
+    /** вычисляет оценку по Болонской системе, если дан максимально возможный балл и реальный */
+    private function calcMarkBologna($max, $real){
         if ($real < $max * 0.6){
             return 'F';
         }
@@ -248,7 +261,9 @@ class QuestionController extends Controller{
             return 'A';
         }
     }
-    private function calcMarkRus($max, $real){       //вычисляет оценку по обычной 5-тибалльной шкале
+
+    /** вычисляет оценку по обычной 5-тибалльной шкале, если дан максимально возможный балл и реальный */
+    private function calcMarkRus($max, $real){
         if ($real < $max * 0.6){
             return '2';
         }

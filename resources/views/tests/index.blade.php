@@ -1,17 +1,77 @@
-<html>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta name="csrf_token" content="{{ csrf_token() }}" />
+    {!! HTML::style('css/bootstrap.css') !!}
+    {!! HTML::style('css/tests_list.css') !!}
+    {!! HTML::style('css/font-awesome.min.css') !!}
+    {!! HTML::style('css/materialadmin.css') !!}
+    {!! HTML::style('css/material-design-iconic-font.min.css') !!}
+    {!! HTML::style('css/materialadmin_demo.css') !!}
+    {!! HTML::style('css/nestable.css') !!}
+    {!! HTML::style('css/jquery-ui-theme.css') !!}
+    {!! HTML::style('css/createTest.css') !!}
+    {!! HTML::script('js/jquery.js') !!}
+</head>
 <body>
-<h1>Добро пожаловать в систему тестирования</h1>
-<h2>Контрольные тесты</h2>
-<ul>
-    @for ($i=0; $i<$ctr_amount; $i++)
-    <li>{!! link_to_route('question_showtest', $ctr_names[$i], [$ctr_tests[$i]]) !!}</li>
-    @endfor
-</ul>
-<h2>Тренировочные тесты</h2>
-<ul>
-    @for ($i=0; $i<$tr_amount; $i++)
-    <li>{!! link_to_route('question_showtest', $tr_names[$i], [$tr_tests[$i]]) !!}</li>
-    @endfor
-</ul>
+<section>
+    <div class="section-body">
+        <div class="col-md-12 col-sm-6 card style-primary">
+            <h1 class="text-default-bright">Выберите тест</h1>
+        </div>
+        <div class="col-lg-offset-1 col-md-10 col-sm-10 card style-gray">
+            <h2 class="text-default-bright">Контрольные тесты</h2>
+        </div>
+        <div class="col-lg-offset-1 col-md-10 col-sm-10">
+            <div class="card style-default-light">
+                <div class="card-body">
+                    @if ($ctr_amount == 0)
+                        <h3 class="none-tests">На данный момент не доступен ни один контрольный тест</h3>
+                    @else
+                    <ul class="list">
+                        @for ($i=0; $i<$ctr_amount; $i++)
+                        <li class="tile"><a href="{{ route('question_showtest', $ctr_tests[$i]) }}" class="tile-content inc-reaction"><div class="tile-text">{{$ctr_names[$i]}}</div></a></li>
+                        @endfor
+                    </ul>
+                    @endif
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-offset-1 col-md-10 col-sm-10 card style-gray">
+            <h2 class="text-default-bright">Тренировочные тесты</h2>
+        </div>
+            <div class="col-lg-offset-1 col-md-10 col-sm-10">
+                <div class="card style-default-light">
+                    <div class="card-body">
+                        @if ($tr_amount == 0)
+                            <h3 class="none-tests">На данный момент не доступен ни один тренировочный тест</h3>
+                        @else
+                            @for ($i=0; $i<$tr_amount; $i++)
+                            <div class="col-md-12 col-sm-12 card ">
+                                <a href="{{ route('question_showtest', $tr_tests[$i]) }}"><div class="tile-text">{{$tr_names[$i]}}</div></a>
+                            </div>
+                            @endfor
+                        @endif
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
+{!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
+{!! HTML::script('js/libs/bootstrap/bootstrap.min.js') !!}
+{!! HTML::script('js/libs/spin.js/spin.min.js') !!}
+{!! HTML::script('js/libs/autosize/jquery.autosize.min.js') !!}
+{!! HTML::script('js/libs/nestable/jquery.nestable.js') !!}
+{!! HTML::script('js/libs/nanoscroller/jquery.nanoscroller.min.js') !!}
+{!! HTML::script('js/core/source/App.js') !!}
+{!! HTML::script('js/core/source/AppNavigation.js') !!}
+{!! HTML::script('js/core/source/AppOffcanvas.js') !!}
+{!! HTML::script('js/core/source/AppCard.js') !!}
+{!! HTML::script('js/core/source/AppForm.js') !!}
+{!! HTML::script('js/core/source/AppNavSearch.js') !!}
+{!! HTML::script('js/core/source/AppVendor.js') !!}
+{!! HTML::script('js/core/demo/Demo.js') !!}
 </body>
 </html>

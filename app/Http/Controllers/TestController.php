@@ -38,41 +38,45 @@ class TestController extends Controller{
             $struct .= 'A.';
         }
         else {
-            $query = $codificator->whereValue($section)->select('code')->first();
+            $query = $codificator->whereCodificator_type('Раздел')->whereValue($section)->select('code')->first();
             $struct .= $query->code.'.';
         }
         if ($theme == 'Любая'){
             $struct .= 'A.';
         }
         else {
-            $query = $codificator->whereValue($theme)->select('code')->first();
+            $query = $codificator->whereCodificator_type('Тема')->whereValue($theme)->join('themes', 'themes.theme', '=', 'codificators.value')->where('themes.section', '=', $section)->select('code')->first();
             $struct .= $query->code.'.';
         }
         if ($type == 'Любой'){
             $struct .= 'A';
         }
         else {
-            $query = $codificator->whereValue($type)->select('code')->first();
+            $query = $codificator->whereCodificator_type('Тип')->whereValue($type)->select('code')->first();
             $struct .= $query->code;
         }
         return $struct;
     }
 
+    /** генерирует страницу со списком доступных тестов */
     public function index(){
-        $tr_tests = [];             //массив тренировочных тестов
-        $ctr_tests = [];            //массив контрольных тестов
-        $tr_names = [];
-        $ctr_names = [];
-        $query = $this->test->select('id_test', 'test_name')->get();
+        $tr_tests = [];                                                                                                 //массив id тренировочных тестов
+        $ctr_tests = [];                                                                                                //массив id контрольных тестов
+        $tr_names = [];                                                                                                 //массив названий тренировочных тестов
+        $ctr_names = [];                                                                                                //массив названий тренировочных тестов
+        $current_date = date('U');
+        $query = $this->test->select('id_test', 'test_name', 'start', 'end')->get();
         foreach ($query as $test){
-            $test_name = explode(";", $test->test_name);
-            if ($test_name[0] == 'Тренировочный'){
-                array_push($tr_tests, $test->id_test);          //название тренировочного теста состоит из слова "Тренировочный" и
-                array_push($tr_names, $test_name[1]);           //самого названия теста
-            }
-            else {
-                array_push($ctr_tests, $test->id_test);
-                array_push($ctr_names, $test->test_name);
+            if ($current_date >= strtotime($test->start) && $current_date <= strtotime($test->end)){                    //проверка, что тест открыт
+                $test_name = explode(";", $test->test_name);
+                if ($test_name[0] == 'Тренировочный'){
+                    array_push($tr_tests, $test->id_test);                                                              //название тренировочного теста состоит из слова "Тренировочный" и
+                    array_push($tr_names, $test_name[1]);                                                               //самого названия теста
+                }
+                else {
+                    array_push($ctr_tests, $test->id_test);
+                    array_push($ctr_names, $test->test_name);
+                }
             }
         }
         $tr_amount = count($tr_tests);
@@ -80,6 +84,7 @@ class TestController extends Controller{
         return view('tests.index', compact('tr_tests', 'ctr_tests', 'tr_names', 'ctr_names', 'tr_amount', 'ctr_amount'));
     }
 
+    /** генерирует страницу создания нового теста */
     public function create(){
         $codificator = new Codificator();
         $types = [];
@@ -95,6 +100,7 @@ class TestController extends Controller{
         return view('tests.create', compact('types', 'sections'));
     }
 
+    /** AJAX-метод: получает список тем раздела */
     public function getTheme(Request $request){
         if ($request->ajax()) {
             $themes = new Theme();
@@ -107,6 +113,7 @@ class TestController extends Controller{
         }
     }
 
+    /** AJAX-метод: по названию раздела, темы и типа вычисляет количество доступных вопросов в БД данной структуры */
     public function getAmount(Request $request){
         if ($request->ajax()) {
             $question = new Question();
@@ -118,6 +125,7 @@ class TestController extends Controller{
         }
     }
 
+    /** Добавляет новый тест в БД */
     public function add(Request $request){
         if ($request->input('training')) {
             $test_name = 'Тренировочный;'.$request->input('test-name');
