@@ -22,7 +22,7 @@
         <div class="col-lg-offset-1 col-md-10 col-sm-10 card style-gray">
             <h2 class="text-default-bright">Контрольные тесты</h2>
         </div>
-        <div class="col-lg-offset-1 col-md-10 col-sm-10">
+        <div class="col-lg-offset-1 col-md-10 col-sm-10 ">
             <div class="card style-default-light">
                 <div class="card-body">
                     @if ($ctr_amount == 0)
@@ -30,7 +30,9 @@
                     @else
                     <ul class="list">
                         @for ($i=0; $i<$ctr_amount; $i++)
-                        <li class="tile"><a href="{{ route('question_showtest', $ctr_tests[$i]) }}" class="tile-content inc-reaction"><div class="tile-text">{{$ctr_names[$i]}}</div></a></li>
+                        <div class="col-md-12 col-sm-12 card test-list">
+                            <a href="{{ route('question_showtest', $ctr_tests[$i]) }}"><div class="tile-text">{{$ctr_names[$i]}}</div></a>
+                        </div>
                         @endfor
                     </ul>
                     @endif
@@ -47,7 +49,7 @@
                             <h3 class="none-tests">На данный момент не доступен ни один тренировочный тест</h3>
                         @else
                             @for ($i=0; $i<$tr_amount; $i++)
-                            <div class="col-md-12 col-sm-12 card ">
+                            <div class="col-md-12 col-sm-12 card test-list">
                                 <a href="{{ route('question_showtest', $tr_tests[$i]) }}"><div class="tile-text">{{$tr_names[$i]}}</div></a>
                             </div>
                             @endfor

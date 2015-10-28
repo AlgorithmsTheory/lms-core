@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/html">
 <head>
     <meta name="csrf_token" content="{{ csrf_token() }}" />
+    <title>Создание теста</title>
     {!! HTML::style('css/bootstrap.css') !!}
     {!! HTML::style('css/test_style.css') !!}
     {!! HTML::style('css/font-awesome.min.css') !!}
@@ -36,7 +37,7 @@
                             <!-- тренировочный тест -->
                             <div class="checkbox checkbox-styled">
                                 <label>
-                                    <input type="checkbox" name="training">
+                                    <input type="checkbox" name="training" id="training">
                                     <span>Тренировочный тест</span>
                                 </label>
                             </div>

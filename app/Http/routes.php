@@ -43,3 +43,16 @@ Route::post('get-amount', array('as'=>'get_amount', 'uses'=>'TestController@getA
 Route::patch('questions/check', ['as' => 'question_checks', 'uses' => 'QuestionController@checks']);
 Route::patch('questions/check-test', ['as' => 'question_checktest', 'uses' => 'QuestionController@checkTest']);
 Route::get('tests', ['as' => 'tests', 'uses' => 'TestController@index']);
+
+Route::get('home', function(){
+    echo "Welcome Home!";
+});
+
+// Authentication routes...
+Route::get('auth/login', 'Auth\AuthController@getLogin');
+Route::post('auth/login', ['as' => 'login', 'uses' => 'Auth\AuthController@postLogin']);
+Route::get('auth/logout', 'Auth\AuthController@getLogout');
+
+// Registration routes...
+Route::get('auth/register', 'Auth\AuthController@getRegister');
+Route::post('auth/register', ['as' => 'register', 'uses' => 'Auth\AuthController@postRegister']);

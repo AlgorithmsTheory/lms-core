@@ -61,7 +61,11 @@ $('.submit-test').click(function(){
 /**
  * Определение количества вопросов по указанному фильтру (Раздел, Тема, Тип)
  */
-$('#question-table').on('change','.select-type, .select-theme, .select-section', function(){
+$('#question-table').on('change','.select-type, .select-theme, .select-section', '#training', function(){
+    if ($('#training').prop('checked')){
+        testType = 'Тренировочный';
+    }
+    else testType = 'Контрольный';
     if ($(this).attr('name') == 'section[]'){                                                                           //если изменили раздел
         section = $(this).val();
         theme = 'Любая';
@@ -93,7 +97,7 @@ $('#question-table').on('change','.select-type, .select-theme, .select-section',
                 return xhr.setRequestHeader('X-CSRF-TOKEN', token);
             }
         },
-        data: { section: section, theme: theme, type: type, token: 'token' },
+        data: { section: section, theme: theme, type: type, test_type: testType, token: 'token' },
         success: function(data){
             $('#amount-container-'+tempCount).html(data);
             $('#num-'+tempCount).attr('max', data);

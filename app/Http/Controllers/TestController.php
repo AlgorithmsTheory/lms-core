@@ -65,13 +65,13 @@ class TestController extends Controller{
         $tr_names = [];                                                                                                 //массив названий тренировочных тестов
         $ctr_names = [];                                                                                                //массив названий тренировочных тестов
         $current_date = date('U');
-        $query = $this->test->select('id_test', 'test_name', 'start', 'end')->get();
+        $query = $this->test->select('id_test', 'test_name', 'start', 'end', 'test_type')->get();
         foreach ($query as $test){
             if ($current_date >= strtotime($test->start) && $current_date <= strtotime($test->end)){                    //проверка, что тест открыт
-                $test_name = explode(";", $test->test_name);
-                if ($test_name[0] == 'Тренировочный'){
+                $test_type = $test->test_type;
+                if ($test_type == 'Тренировочный'){
                     array_push($tr_tests, $test->id_test);                                                              //название тренировочного теста состоит из слова "Тренировочный" и
-                    array_push($tr_names, $test_name[1]);                                                               //самого названия теста
+                    array_push($tr_names, $test->test_name);                                                               //самого названия теста
                 }
                 else {
                     array_push($ctr_tests, $test->id_test);
@@ -119,8 +119,10 @@ class TestController extends Controller{
             $question = new Question();
             $code = $this->struct('',$request->input('section'),$request->input('theme'),$request->input('type'));
             $code = preg_replace('~A~', '[[:digit:]]+', $code );
-            //dd($code);
-            $amount = $question->where('code', 'regexp', $code)->select('id_question')->count();
+            if ($request->input('test_type') == 'Тренировочный')
+                $amount = $question->where('code', 'regexp', $code)->whereControl(false)->select('id_question')->count();
+            else
+                $amount = $question->where('code', 'regexp', $code)->select('id_question')->count();
             return (String) $amount;
         }
     }
@@ -128,9 +130,9 @@ class TestController extends Controller{
     /** Добавляет новый тест в БД */
     public function add(Request $request){
         if ($request->input('training')) {
-            $test_name = 'Тренировочный;'.$request->input('test-name');
+            $test_type = 'Тренировочный';
         }
-        else $test_name = $request->input('test-name');
+        else $test_type = 'Контрольный';
 
         $total = $request->input('total');
         $test_time = $request->input('test-time');
@@ -145,7 +147,7 @@ class TestController extends Controller{
         }
         $structure .= $this->struct($request->input('num')[$request->input('num-rows')],$request->input('section')[$request->input('num-rows')],$request->input('theme')[$request->input('num-rows')],$request->input('type')[$request->input('num-rows')]);
         $amount += $request->input('num')[$request->input('num-rows')];
-        Test::insert(array('test_name' => $test_name, 'amount' => $amount, 'test_time' => $test_time, 'start' => $start, 'end' => $end, 'structure' => $structure, 'total' => $total));
+        Test::insert(array('test_name' => $request->input('test-name'), 'test_type' => $test_type, 'amount' => $amount, 'test_time' => $test_time, 'start' => $start, 'end' => $end, 'structure' => $structure, 'total' => $total));
 
         return redirect()->route('test_create');
     }

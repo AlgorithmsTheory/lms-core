@@ -15,6 +15,7 @@ class CraeteQuestionsTable extends Migration {
 		Schema::create('questions', function(Blueprint $table)
 		{
 			$table->increments('id_question');
+            $table->boolean('control'); //контрольный или неконтрольный вопрос (контрольный не доступен для тренировочных тестов_
             $table->string('code');  //идентификационный номер в дереве раздел->тема->тип 1.2.1
             $table->string('title');   //Текст вопроса
             $table->string('variants'); //варианты ответа, если есть

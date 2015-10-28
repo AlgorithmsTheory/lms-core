@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Query\Builder|\App\Question  whereType($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Question  wherePoints($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Question  whereCode($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Question  whereControl($value)
  * @method static \Illuminate\Database\Eloquent|\App\Question  get()
  * @method static \Illuminate\Database\Eloquent|\App\Question  where()
  * @method static \Illuminate\Database\Eloquent|\App\Question  orWhere()
