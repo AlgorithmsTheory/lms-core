@@ -23,7 +23,6 @@ Route::filter('csrf-ajax', function()
     }
 });
 
-Route::get('/', 'WelcomeController@index');
 Route::post('questions/create', ['as' => 'question_add', 'uses' => 'QuestionController@add']);
 Route::get('questions', ['as' => 'question_index', 'uses' => 'QuestionController@index']);
 Route::get('questions-enter', ['as' => 'question_enter', 'uses' => 'QuestionController@enter']);
@@ -44,8 +43,13 @@ Route::patch('questions/check', ['as' => 'question_checks', 'uses' => 'QuestionC
 Route::patch('questions/check-test', ['as' => 'question_checktest', 'uses' => 'QuestionController@checkTest']);
 Route::get('tests', ['as' => 'tests', 'uses' => 'TestController@index']);
 
-Route::get('home', function(){
-    echo "Welcome Home!";
+Route::get('home', function () {
+    if(Auth::check()) {
+        return view('main', ['first_name' => Auth::user()['first_name']]);
+    }
+    else {
+        return view('welcome');
+    }
 });
 
 // Authentication routes...
@@ -56,3 +60,5 @@ Route::get('auth/logout', 'Auth\AuthController@getLogout');
 // Registration routes...
 Route::get('auth/register', 'Auth\AuthController@getRegister');
 Route::post('auth/register', ['as' => 'register', 'uses' => 'Auth\AuthController@postRegister']);
+
+

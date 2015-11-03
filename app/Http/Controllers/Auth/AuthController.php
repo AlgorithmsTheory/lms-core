@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Auth;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -44,6 +45,7 @@ class AuthController extends Controller
         return Validator::make($data, [
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
+            'group' => 'required|numeric',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
         ]);
@@ -64,5 +66,13 @@ class AuthController extends Controller
             'group' => $data['group'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+    public function mainPage()
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            return view('auth/main', ['name' => $user['first_name']]);
+        }
     }
 }

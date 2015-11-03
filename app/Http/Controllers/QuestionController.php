@@ -306,6 +306,17 @@ class QuestionController extends Controller{
         return view('questions.teacher.index', compact('username'));
     }
 
+    /** переход на страницу формы добавления */
+    public function create(){             
+        $codificator = new Codificator();
+        $types = [];
+        $query = $codificator->whereCodificator_type('Тип')->select('value')->get();
+        foreach ($query as $type){
+            array_push($types,$type->value);
+        }
+        return view('questions.teacher.create', compact('types'));
+    }
+
     /** AJAX-метод: подгружает интерфейс создания нового вопроса в зависимости от выбранного типа вопроса */
     public function getType(Request $request){
         if ($request->ajax()){

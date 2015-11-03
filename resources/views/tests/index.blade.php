@@ -3,6 +3,7 @@
 <head>
     <meta name="csrf_token" content="{{ csrf_token() }}" />
     {!! HTML::style('css/bootstrap.css') !!}
+    {!! HTML::style('css/full.css') !!}
     {!! HTML::style('css/tests_list.css') !!}
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/materialadmin.css') !!}
@@ -13,7 +14,7 @@
     {!! HTML::style('css/createTest.css') !!}
     {!! HTML::script('js/jquery.js') !!}
 </head>
-<body>
+<body class="full-tests">
 <section>
     <div class="section-body">
         <div class="col-md-12 col-sm-6 card style-primary">

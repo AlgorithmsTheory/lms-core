@@ -14,7 +14,7 @@
 </head>
 <body>
 <section>
-    <div class="section-body">
+    <div class="section-body" id="page">
         <div class="col-md-12 col-sm-6 card style-primary">
             <h1 class="text-default-bright">Создать тест</h1>
         </div>

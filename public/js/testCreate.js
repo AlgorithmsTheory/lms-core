@@ -61,7 +61,7 @@ $('.submit-test').click(function(){
 /**
  * Определение количества вопросов по указанному фильтру (Раздел, Тема, Тип)
  */
-$('#question-table').on('change','.select-type, .select-theme, .select-section', '#training', function(){
+$('#question-table').on('change','.select-type, .select-theme, .select-section', function(){
     if ($('#training').prop('checked')){
         testType = 'Тренировочный';
     }
@@ -84,7 +84,8 @@ $('#question-table').on('change','.select-type, .select-theme, .select-section',
         type = $(this).val();
         tempCount = $(this).parent().parent().attr('id').substring(4);
     }
-    token = $('.form').children().eq(0).val();
+    //ОБРАБОТАТЬ, ЕСЛИ МЕНЯЕМ ТИП ТЕСТА
+        token = $('.form').children().eq(0).val();
 
     $.ajax({
         cache: false,
@@ -104,4 +105,14 @@ $('#question-table').on('change','.select-type, .select-theme, .select-section',
         }
     });
     return false;
+});
+
+$('body').on('change','#training', function(){
+    if ($('#training').prop('checked')){
+        testType = 'Тренировочный';
+    }
+    else testType = 'Контрольный';
+    if (){
+
+    }
 });
