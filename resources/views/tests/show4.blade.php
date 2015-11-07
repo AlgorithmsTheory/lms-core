@@ -1,6 +1,6 @@
 <html>
 <body>
-{!! Form::open(['method' => 'PATCH', 'route' => 'question_checktest', 'class' => 'smart-blue']) !!}
+{!! Form::open(['method' => 'PATCH', 'class' => 'smart-blue']) !!}
 <h1>Вопрос {{ $count }}</h1>
 <input type="hidden" name="num" value="{{ $id }}">
 <input type="hidden" name="type" value="{{ $type }}">
@@ -15,14 +15,11 @@
     @foreach ($text as $row)
     <tr>
         <td class="info">
-            <!— <textarea readonly style="resize: vertical" rows="5"> {{ $row }} </textarea>-->
             <div class="form-group">
                 <textarea readonly style="resize: vertical" class="form-control" rows="5">{{ $row }}</textarea>
             </div>
         </td>
         @for ($i = 1 ; $i <= $num_var; $i++)
-        <!— @foreach ($ans as $a)-->
-        <!— @endforeach-->
         <td>
             <div class="checkbox checkbox-inline checkbox-styled">
                 <label>

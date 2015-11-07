@@ -1,5 +1,6 @@
 <html>
 <body>
+<div class="col-md-12 col-sm-6">
 {!! Form::open(['method' => 'PATCH', 'route' => 'question_checktest', 'class' => 'smart-blue']) !!}
 <h1>Вопрос {{ $count }}</h1>
 <h2>{{ $text }}</h2>
@@ -12,8 +13,8 @@
 <input type="radio"  name="choice" value="{{ $var }}"> {{ $var }} <br>
 @endif
 @endforeach
-<input type="checkbox" name="seeLater" class="css-checkbox"><span class="css-checkbox">Вернуться позже</span>
 {!! Form::close() !!}
 <br>
+</div>
 </body>
 </html>

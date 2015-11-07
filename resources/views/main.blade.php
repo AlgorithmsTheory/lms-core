@@ -1,5 +1,6 @@
 <html xmlns="http://www.w3.org/1999/html" >
 <head>
+    <title>Главная</title>
     {!! HTML::style('css/bootstrap.css') !!}
     {!! HTML::style('css/full.css') !!}
     {!! HTML::style('css/tests_list.css') !!}
@@ -17,7 +18,6 @@
 
         <div class="col-lg-offset-2 col-md-8 col-sm-8 card style-default-light">
             <h3 class="lead">Вы находитесь на электронном ресурсе, посвященном курсу по "Теории алгоритмов". Здесь вы можете проходить разлиные тестирования, пользоваться ресурсами электронной библиотеки, пользоваться эмуляторами Машин Тьюринга и Алгоритмов Маркова. Скорее за работу!</h3>
-
         </div>
 
         <div class="row">

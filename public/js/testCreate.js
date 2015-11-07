@@ -107,7 +107,7 @@ $('#question-table').on('change','.select-type, .select-theme, .select-section',
     return false;
 });
 
-$('body').on('change','#training', function(){
+/*$('body').on('change','#training', function(){
     if ($('#training').prop('checked')){
         testType = 'Тренировочный';
     }
@@ -115,4 +115,4 @@ $('body').on('change','#training', function(){
     if (){
 
     }
-});
+});*/

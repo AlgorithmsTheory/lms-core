@@ -307,7 +307,7 @@ class QuestionController extends Controller{
     }
 
     /** переход на страницу формы добавления */
-    public function create(){             
+    public function create(){
         $codificator = new Codificator();
         $types = [];
         $query = $codificator->whereCodificator_type('Тип')->select('value')->get();
@@ -496,7 +496,10 @@ class QuestionController extends Controller{
 
     /** Проверка теста */
     public function checkTest(Request $request){   //обработать ответ на вопрос
-        $current_test = Session::get('test');                                                                           //определяем проверяемый тест
+        if (Session::has('test'))                                                                                       //проверяем повторность обращения к результатм
+            $current_test = Session::get('test');                                                                       //определяем проверяемый тест
+        else
+            return redirect('tests');
         Session::forget('test');                                                                                        //тест считается честно пройденым
         $amount = $request->input('amount');
         $id_test = $request->input('id_test');

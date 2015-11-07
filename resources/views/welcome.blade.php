@@ -9,7 +9,7 @@
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     {!! HTML::style('css/materialadmin_demo.css') !!}
     {!! HTML::script('js/jquery.js') !!}
-    <title>Laravel</title>
+    <title>Добро пожаловать</title>
 
     <script>
         $(function() {

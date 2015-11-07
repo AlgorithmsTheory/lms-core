@@ -260,3 +260,7 @@ a {
 #close-btn:visited {
     background-color: #f44336;
 }
+
+#result-table {
+    width: auto;
+}

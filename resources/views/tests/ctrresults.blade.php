@@ -1,13 +1,24 @@
 <html>
-{!! HTML::style('css/test_style.css') !!}
+<head>
+    <title>Результаты</title>
+    {!! HTML::style('css/test_style.css') !!}
+    {!! HTML::style('css/bootstrap.css') !!}
+    {!! HTML::style('css/materialadmin.css') !!}
+</head>
 <body>
-{!! Form::open(['class' => 'smart-blue']) !!}
-<h1>Ваши результаты!</h1>
-<h2>Вы набрали {{$score}} баллов из 100!</h2>
-<h2>Ваша оценка: {{$mark_bologna}}({{$mark_rus}})</h2>
+<section>
+    <div class="col-md-12 col-sm-6 card style-primary text-center">
+        <h1 class="text-default-bright">Ваши результаты</h1>
+    </div>
+    <div class="col-md-12 col-sm-6 card style-primary">
+        <h2 class="text-default-bright">Вы набрали {{$score}} баллов из 100!</h2>
+        <h2 class="text-default-bright">Ваша оценка: {{$mark_bologna}}({{$mark_rus}})</h2>
+    </div>
 
     <br>
-<button class="button-submit">{!! link_to_route('question_index', 'Вернуться на главную') !!}</button>
-{!! Form::close() !!}
+    <div class="row">
+        <a href="{{URL::route('tests')}}" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-primary" role="button">К списку тестов</a>
+    </div>
+</section>
 </body>
 </html>

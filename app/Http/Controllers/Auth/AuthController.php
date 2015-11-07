@@ -75,4 +75,9 @@ class AuthController extends Controller
             return view('auth/main', ['name' => $user['first_name']]);
         }
     }
+
+    /*public function Logout(){
+        Auth::logout();
+        return redirect('home');
+    }*/
 }

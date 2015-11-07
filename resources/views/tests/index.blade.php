@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
+    <title>Список тестов</title>
     <meta name="csrf_token" content="{{ csrf_token() }}" />
     {!! HTML::style('css/bootstrap.css') !!}
     {!! HTML::style('css/full.css') !!}
@@ -16,10 +17,10 @@
 </head>
 <body class="full-tests">
 <section>
+    <div class="col-md-12 col-sm-6 card style-primary text-center">
+        <h1 class="text-default-bright">Выберите тест</h1>
+    </div>
     <div class="section-body">
-        <div class="col-md-12 col-sm-6 card style-primary">
-            <h1 class="text-default-bright">Выберите тест</h1>
-        </div>
         <div class="col-lg-offset-1 col-md-10 col-sm-10 card style-gray">
             <h2 class="text-default-bright">Контрольные тесты</h2>
         </div>
