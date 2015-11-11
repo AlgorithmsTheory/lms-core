@@ -138,6 +138,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 		Illuminate\Html\HtmlServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+		Illuminate\Html\HtmlServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -159,8 +160,8 @@ return [
     |
     */
 
-    'aliases' => array(
 
+    'aliases' => [
         'App'       => Illuminate\Support\Facades\App::class,
         'Artisan'   => Illuminate\Support\Facades\Artisan::class,
         'Auth'      => Illuminate\Support\Facades\Auth::class,
@@ -196,7 +197,6 @@ return [
         'View'      => Illuminate\Support\Facades\View::class,
 		'Form'      => Illuminate\Html\FormFacade::class,
         'HTML'      => Illuminate\Html\HtmlFacade::class
-
-    ),
+    ]
 
 ];

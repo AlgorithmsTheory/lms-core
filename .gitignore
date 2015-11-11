@@ -1,5 +1,9 @@
 /vendor
 /node_modules
 Homestead.yaml
-Homestead.json
 .env
+.idea/workspace.xml
+/config
+composer.json
+composer.lock
+_ide_helper.php

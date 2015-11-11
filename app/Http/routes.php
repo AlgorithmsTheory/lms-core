@@ -60,9 +60,11 @@ Route::post('get-amount', array('as'=>'get_amount', 'uses'=>'TestController@getA
 Route::post('tests/create', ['as' => 'test_add', 'uses' => 'TestController@add']);
 
 
+
 Route::get('library', ['as' => 'library_index', 'uses' => 'LibraryController@index']);
 Route::get('library/definitions', ['as' => 'library_definitions', 'uses' => 'LibraryController@definitions']);
 Route::get('library/lecture/{index}', ['as' => 'lecture', 'uses' => 'LibraryController@lecture']);
+
 
 
 
