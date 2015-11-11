@@ -1,0 +1,726 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Алан Мэтисон Тьюринг</title>
+
+		<!-- BEGIN META -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="keywords" content="your,keywords">
+		<meta name="description" content="Short explanation about this website">
+		<!-- END META -->
+
+		<!-- BEGIN STYLESHEETS -->
+		<link href='http://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css'/>
+		<link type="text/css" rel="stylesheet" href="/laravel/resources/assets/css/theme-default/bootstrap.css?1422792965" />
+		<link type="text/css" rel="stylesheet" href="/laravel/resources/assets/css/theme-default/materialadmin.css?1425466319" />
+		<link type="text/css" rel="stylesheet" href="/laravel/resources/assets/css/theme-default/font-awesome.min.css?1422529194" />
+		<link type="text/css" rel="stylesheet" href="/laravel/resources/assets/css/theme-default/material-design-iconic-font.min.css?1421434286" />
+		<!-- END STYLESHEETS -->
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		<script type="text/javascript" src="/laravel/resources/assets/js/libs/utils/html5shiv.js?1403934957"></script>
+		<script type="text/javascript" src="/laravel/resources/assets/js/libs/utils/respond.min.js?1403934956"></script>
+		<![endif]-->
+		
+		
+	</head>
+	<body class="menubar-hoverable header-fixed menubar-pin ">
+
+		<!-- BEGIN HEADER-->
+		<header id="header" >
+			<div class="headerbar">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="headerbar-left">
+					<ul class="header-nav header-nav-options">
+						<li class="header-nav-brand" >
+							<div class="brand-holder">
+								<a href="/laravel/resources/html/dashboards/dashboard.html">
+									<span class="text-lg text-bold text-primary">MATERIAL ADMIN</span>
+								</a>
+							</div>
+						</li>
+						<li>
+							<a class="btn btn-icon-toggle menubar-toggle" data-toggle="menubar" href="javascript:void(0);">
+								<i class="fa fa-bars"></i>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="headerbar-right">
+					<ul class="header-nav header-nav-options">
+						<li>
+							<!-- Search form -->
+							<form class="navbar-search" role="search">
+								<div class="form-group">
+									<input type="text" class="form-control" name="headerSearch" placeholder="Enter your keyword">
+								</div>
+								<button type="submit" class="btn btn-icon-toggle ink-reaction"><i class="fa fa-search"></i></button>
+							</form>
+						</li>
+						<li class="dropdown hidden-xs">
+							<a href="javascript:void(0);" class="btn btn-icon-toggle btn-default" data-toggle="dropdown">
+								<i class="fa fa-bell"></i><sup class="badge style-danger">4</sup>
+							</a>
+							<ul class="dropdown-menu animation-expand">
+								<li class="dropdown-header">Today's messages</li>
+								<li>
+									<a class="alert alert-callout alert-warning" href="javascript:void(0);">
+										<img class="pull-right img-circle dropdown-avatar" src="/laravel/resources/assets/img/avatar2.jpg?1404026449" alt="" />
+										<strong>Alex Anistor</strong><br/>
+										<small>Testing functionality...</small>
+									</a>
+								</li>
+								<li>
+									<a class="alert alert-callout alert-info" href="javascript:void(0);">
+										<img class="pull-right img-circle dropdown-avatar" src="/laravel/resources/assets/img/avatar3.jpg?1404026799" alt="" />
+										<strong>Alicia Adell</strong><br/>
+										<small>Reviewing last changes...</small>
+									</a>
+								</li>
+								<li class="dropdown-header">Options</li>
+								<li><a href="/laravel/resources/html/pages/login.html">View all messages <span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
+								<li><a href="/laravel/resources/html/pages/login.html">Mark as read <span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
+							</ul><!--end .dropdown-menu -->
+						</li><!--end .dropdown -->
+						<li class="dropdown hidden-xs">
+							<a href="javascript:void(0);" class="btn btn-icon-toggle btn-default" data-toggle="dropdown">
+								<i class="fa fa-area-chart"></i>
+							</a>
+							<ul class="dropdown-menu animation-expand">
+								<li class="dropdown-header">Server load</li>
+								<li class="dropdown-progress">
+									<a href="javascript:void(0);">
+										<div class="dropdown-label">
+											<span class="text-light">Server load <strong>Today</strong></span>
+											<strong class="pull-right">93%</strong>
+										</div>
+										<div class="progress"><div class="progress-bar progress-bar-danger" style="width: 93%"></div></div>
+									</a>
+								</li><!--end .dropdown-progress -->
+								<li class="dropdown-progress">
+									<a href="javascript:void(0);">
+										<div class="dropdown-label">
+											<span class="text-light">Server load <strong>Yesterday</strong></span>
+											<strong class="pull-right">30%</strong>
+										</div>
+										<div class="progress"><div class="progress-bar progress-bar-success" style="width: 30%"></div></div>
+									</a>
+								</li><!--end .dropdown-progress -->
+								<li class="dropdown-progress">
+									<a href="javascript:void(0);">
+										<div class="dropdown-label">
+											<span class="text-light">Server load <strong>Lastweek</strong></span>
+											<strong class="pull-right">74%</strong>
+										</div>
+										<div class="progress"><div class="progress-bar progress-bar-warning" style="width: 74%"></div></div>
+									</a>
+								</li><!--end .dropdown-progress -->
+							</ul><!--end .dropdown-menu -->
+						</li><!--end .dropdown -->
+					</ul><!--end .header-nav-options -->
+					<ul class="header-nav header-nav-profile">
+						<li class="dropdown">
+							<a href="javascript:void(0);" class="dropdown-toggle ink-reaction" data-toggle="dropdown">
+								<img src="/laravel/resources/assets/img/avatar1.jpg?1403934956" alt="" />
+								<span class="profile-info">
+									Daniel Johnson
+									<small>Administrator</small>
+								</span>
+							</a>
+							<ul class="dropdown-menu animation-dock">
+								<li class="dropdown-header">Config</li>
+								<li><a href="/laravel/resources/html/pages/profile.html">My profile</a></li>
+								<li><a href="/laravel/resources/html/pages/blog/post.html">My blog <span class="badge style-danger pull-right">16</span></a></li>
+								<li><a href="/laravel/resources/html/pages/calendar.html">My appointments</a></li>
+								<li class="divider"></li>
+								<li><a href="/laravel/resources/html/pages/locked.html"><i class="fa fa-fw fa-lock"></i> Lock</a></li>
+								<li><a href="/laravel/resources/html/pages/login.html"><i class="fa fa-fw fa-power-off text-danger"></i> Logout</a></li>
+							</ul><!--end .dropdown-menu -->
+						</li><!--end .dropdown -->
+					</ul><!--end .header-nav-profile -->
+					<ul class="header-nav header-nav-toggle">
+						<li>
+							<a class="btn btn-icon-toggle btn-default" href="#offcanvas-search" data-toggle="offcanvas" data-backdrop="false">
+								<i class="fa fa-ellipsis-v"></i>
+							</a>
+						</li>
+					</ul><!--end .header-nav-toggle -->
+				</div><!--end #header-navbar-collapse -->
+			</div>
+		</header>
+		<!-- END HEADER-->
+
+		<!-- BEGIN BASE-->
+		<div id="base">
+
+			<!-- BEGIN OFFCANVAS LEFT -->
+			<div class="offcanvas">
+			</div><!--end .offcanvas-->
+			<!-- END OFFCANVAS LEFT -->
+
+			<!-- BEGIN CONTENT-->
+			<div id="content">
+
+				<!-- BEGIN BLANK SECTION -->
+				<section>
+					<div class="section-header">
+						<ol class="breadcrumb">
+							<li><a href="/laravel/resources/html/.html">home</a></li>
+							<li><a href="/laravel/public">Библиотека</a></li>
+							<li><a href="/laravel/public/person.html">Персоналии</a></li>
+							<li class="active">Алан Мэтисон Тьюринг</li>
+						</ol>
+					</div><!--end .section-header -->
+					<div class="section-body">
+					</div><!--end .section-body -->
+				</section>
+	<div class="card card-tiles style-default-light" style="margin-left:2%; margin-right:2%">
+	<article class="style-default-bright">
+		<div class="card-body"> 
+		<article style="margin-left:10%; margin-right:10%; text-align: justify">
+			
+<p><em>Алан Тьюринг &ndash; выдающийся английский математик, логик, криптограф, 
+оказавший существенное влияние на развитие информатики. Сегодня в память о выдающемся 
+ученом одна из ежегодных наград Ассоциации вычислительной техники называется Премия Тьюринга, 
+это самая престижная премия в информатике. </em></p>
+
+<p>&nbsp;</p>
+
+<p><img src="/laravel/public/persons/img/turing1.jpg" style="float:left; height:252px; width:301px" />Алан 
+Матисон Тьюринг родился в Лондоне 23 июня 1912 
+года в аристократической семье. Родители Алана 
+жили в индийском городе Чхатрапур. Отец&nbsp;&mdash; 
+Юлиус Мэтисон Тьюринг представитель старого шотландского 
+аристократического рода, работал в Имперской государственной службе. 
+Мать&nbsp;&mdash; Сара Этель, была протестанткой родом из Ирландии. 
+Когда она ждала ребёнка, супруги решили переехать в Англию, 
+чтобы он рос и воспитывался в Лондоне. Там Алан Тьюринг и 
+родился 23 июня 1912 года. У него был старший брат Джон. 
+Государственная служба Юлиуса Тьюринга продолжалась, и родителям 
+Алана приходилось часто путешествовать между Гастингсом и Индией, 
+оставляя двоих своих сыновей на попечение отставной армейской пары. 
+Признаки гениальности проявлялись у Тьюринга с раннего детства.</p>
+
+<p>В шесть лет Алан Тьюринг пошёл в школу святого Михаила в 
+Гастингсе, директор которой сразу отметила его одарённость. 
+В 1926 году, в возрасте 13 лет, Тьюринг пошёл в известную частную 
+школу Шерборн&nbsp;в городе Шерборн графства Дорсет. Его первый день 
+в школе совпал со Всеобщей забастовкой 1926 года. Поэтому Тьюрингу 
+пришлось преодолеть расстояние около 100&nbsp;км от Саутгемптона до 
+Шерборна на велосипеде, по пути он переночевал в гостинице.</p>
+
+<p>Шерборнская школа</p>
+
+<p><img src="/laravel/public/persons/img/turing2.jpg" style="float:left; height:272px; width:340px" />
+</a>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+Увлечение Тьюринга математикой не нашло особой поддержки 
+среди учителей Шерборнской школы, где уделяли больше внимания 
+гуманитарным наукам. Директор школы писал родителям: &laquo;&nbsp;
+Я надеюсь, что он не будет пытаться усидеть на двух стульях разом. 
+Если он намеревается остаться в частной школе, то он должен стремиться
+ к получению &bdquo;образования&ldquo;. Если же он собирается быть исключительно &bdquo;
+ научным специалистом&ldquo; то частная школа для него&nbsp;&mdash; пустая 
+ трата времени&raquo;. Тем не менее, в областях, интересовавших его, 
+ Тьюринг проявлял незаурядные способности. Он решал сложные математические 
+ задачи, несмотря на то, что ему не преподавали даже основ 
+ математического анализа. В 1928 году, в возрасте 16 лет, Тьюринг ознакомился с работой 
+ 
+ Эйнштейна, в которой ему удалось разобраться до такой степени, 
+ что он смог экстраполировать из текста сомнения Эйнштейна относительно выполнимости 
+  Законов Ньютона, которые не были высказаны в статье в явном виде.</p>
+
+<p>В Шерборне Тьюринг близко подружился с Кристофером Моркомом. 
+Когда эти отношения прервались в феврале 1930 года из-за смерти Моркома, 
+вызванной осложнением бычьего туберкулёза, которым Морком 
+заразился несколькими годами ранее, после употребления инфицированного 
+молока, религиозные верования Тьюринга пошатнулись и он стал 
+атеистом. Алан проникся идеей того, что все 
+феномены, в том числе и работа человеческого мозга, должны нести в себе 
+материалистическое начало, однако он по-прежнему верил в загробную жизнь души.</p>
+
+<p>В 1931 году в девятнадцатилетнем возрасте Тьюринг в 
+качестве математического стипендиата поступил в Королевский 
+колледж Кембриджского университета. Четырьмя годами позже защитил 
+диссертацию &ldquo;Центральная предельная теорема теории вероятности&rdquo; 
+(которую он самостоятельно! &ldquo;переоткрыл&rdquo;, не зная об аналогичной 
+предшествующей работе) и был избран членом Королевского научного общества. 
+Именно в 1935 году он впервые начал работать в области математической логики 
+и проводить исследования, которые уже через год привели к выдающимся результатам: 
+решению одной из проблем Д. Гильберта и изобретению умозрительной машины (машины Тьюринга), 
+по своему логическому устройству являющейся прообразом цифровых компьютеров, созданных 
+только спустя десять лет.</p>
+
+<p>Предыстория этого была следующей. В Париже в 1900 году на Международном математическом 
+конгрессе знаменитый математик Давид Гильберт представил список нерешенных проблем. В этом
+ списке второй значилась задача доказательства непротиворечивости системы аксиом обычной 
+ арифметики, формулировку которой в дальнейшем Гильберт уточнил как 
+ &ldquo;Entscheidungs problem&rdquo; (проблема разрешимости). 
+ Она заключалась в нахождении общего метода, который позволил бы 
+ определить, &ldquo;выполнимо ли данное высказывание на языке формальной 
+ логики, т. е. установить его истинность&rdquo;.</p>
+
+<p>Алан Тьюринг впервые услышал об этой проблеме на лекциях Макса Ньюмена 
+в Кембридже (он работал там преподавателем математики с 1924 года) и в 
+течение 1936 года получил ответ: проблема Гильберта оказалась неразрешимой.
+ Результаты работы он описал в своей знаменитой статье в 1936&mdash;1937 годах.
+ Но &ldquo;значение статьи, в которой Тьюринг изложил свой результат, &mdash;
+ писал Джон Хопкрофт, &mdash; простирается за рамки той задачи, по поводу 
+ которой статья была написана. Работая над проблемой Гильберта, Тьюрингу 
+ пришлось дать четкое определение самого понятия метода. Отталкиваясь от 
+ интуитивного представления о методе как о некоем алгоритме, т. е. процедуре, 
+ которая может быть выполнена механически (здесь, по-видимому, Тьюринг воспользовался
+ терминологией М. Ньюмена &mdash; &ldquo;чисто механический процесс&rdquo;, 
+ примененной на лекции, излагающей проблему Гильберта), без творческого вмешательства, 
+ он показал, как эту идею можно воплотить в виде подробной модели вычислительного процесса.</p>
+
+<p>Полученная модель вычислений, в которой каждый алгоритм разбивался на последовательность
+ простых, элементарных шагов, и была логической конструкцией, названной впоследствии машиной Тьюринга&rdquo;.</p>
+
+<p>В сентябре 1936 года Тьюринг покидает Кембридж и перебирается в Америку в Принстонский 
+университет, где работает куратором. Там в 1938 году он получает степень доктора философии. 
+В то время в Принстонском университете работали такие знаменитости, как Черч, Курант, Эйнштейн,
+ Харди, фон Нейман.</p>
+
+<p>Период жизни и деятельности Алана Тьюринга с 1939 по 1945 год долгое время был скрыт завесой
+ секретности. Мать Тьюринга, опубликовавшая в 1959 году воспоминания о сыне, скупо писала, что 
+ сразу же после объявления войны Тьюринга приняли на работу в качестве государственного служащего 
+ в управление связи Министерства иностранных дел. Вначале его местопребывание сохранялось в тайне, 
+ хотя позднее стало известно, что он работал в Блетчли-парке близ Лондона, где проводилась особо 
+ секретная работа по криптоанализу, где Алан Тьюринг принимал активное участие во взломе немецких шифров.</p>
+
+<p>С сентября 1938 года Тьюринг работал на полставки в британской организации, специализировавшейся 
+на взломе шифров. Совместно с Дили Нокс он занимался. Вскоре после встречи в Варшаве в июле 1939 года,
+ на которой польское 
+ Бюро шифров предоставило Великобритании и Франции подробные сведения о соединениях в  
+ 
+ роторах Энигмыи методе расшифровки сообщений, Тьюринг и Кнокс начали свою работу над более 
+ основательным способом решения проблемы. Польский метод основывался на недоработках 
+ 
+ методе перебора последовательностей исходного текста, для которого он разработал начальную функциональную спецификацию 
+
+ Bombe<a href="#_ftn2" name="_ftnref2" title="">[2]</a>.</p>
+
+<p>4 сентября 1939, на следующий день после того, как Великобритания объявила войну Германии</a>, 
+Тьюринг вернулся в Блетчли-парк, где в то время располагался Центр правительственной связи.</p>
+
+<p>Спецификация для &laquo;Бомбы&raquo; было только первым из пяти важнейших достижений 
+Тьюринга в области военного криптоанализа. Учёный также определил индикаторную процедуру 
+ВМФ Германии; разработал более эффективный способ использования Bombe, основанный на статистическом 
+анализе и названный 
+метод определения параметров колёс 
+ближе к концу войны Тьюринг разработал портативный шифратор речи Delilah<a href="#_ftn3" name="_ftnref3" title="">[3]</a>.</p>
+
+<p>В июле 1942 года Тьюринг принял участие в расшифровке кода &laquo;Лоренц&raquo;,
+ применявшегося немцами для передачи сообщений высшего командования. &laquo;Лоренц&raquo; 
+ был существенно сложнее &laquo;Энигмы&raquo; и не поддавался расшифровке существовавшими методами. 
+ Тьюринг предложил использовать в конструкции дешифратора электронные лампы и привел в 
+ команду Т. Флауэрса&nbsp;&mdash; опытного инженера-электронщика. В результате совместных 
+ усилий математиков и инженеров был разработан &laquo;Колосс&raquo;&nbsp;&mdash; одна из первых
+ в мире ЭВМ. К 1944 с помощью &laquo;Колосса&raquo; код &laquo;Лоренц&raquo; был взломан, что
+ позволило союзникам читать всю переписку высшего германского руководства. По некоторым оценкам, 
+ это приблизило поражение Германии на несколько лет. <strong>Colossus</strong> &mdash; секретный
+ британский компьютер, спроектированный и построенный в 1943 году, для расшифровки перехваченных 
+ немецких радиосообщений, зашифрованных с помощью системы Lorenz SZ. Компьютер состоял из 1500 
+ электронных ламп (2500 в Colossus Mark II), что делало Colossus самым большим компьютером того 
+ времени (ближайший конкурент имел всего 150 ламп). Создание и введение в строй в 1944 году позволило
+ сократить время расшифровки перехваченных сообщений с нескольких недель до нескольких часов. Модернизация
+ Colossus Mark II считается первым программируемым компьютером в истории ЭВМ.</p>
+
+<p>&nbsp;Статистический подход к оптимизации исследований различных вероятностей в процессе разгадывания
+ шифров, который использовал Тьюринг, был новым словом в науке. Тюринг написал две работы: &laquo;Доклад
+ о применимости вероятностного подхода в криптоанализе&raquo; &nbsp;и &laquo;Документ о статистике и
+ повторениях&raquo;, которые представляли для GCCS, а позже и для GCHQ 
+ (Government Communications Headquarters)
+ такую ценность, что не были предоставлены  
+ национальному архиву &nbsp;вплоть до апреля 2012 года, незадолго до празднования ста лет 
+ со дня рождения учёного. Один из сотрудников GCHQ заявил, что этот факт, говорит о беспрецедентной важности этих работ.</p>
+
+<p>В Блэтчли-парке у Тьюринга была репутация чудака. В кругу коллег он был известен, 
+как &laquo;Проф&raquo;, а его работу, посвященная &laquo;Энигме&raquo; называли &laquo;Книгой Профа&raquo;.</p>
+
+<p>В 1945 году Тьюринг был награждён орденом Британской империи королём Георгом VI
+ за свою военную службу, но этот факт оставался в секрете многие годы.</p>
+
+<p>19 февраля 1946 он представил работу, которую можно назвать первым детальным описанием компьютера 
+с хранимой в памяти программой.</p>
+
+<p>В сентябре 1948 года Тьюринг перешел на работу в Манчестерский университет, номинально заняв 
+должность заместителя директора лаборатории вычислительных машин. Там в 1949 году он стал директором
+ Компьютерной Лаборатории, где была сосредоточена работа по программированию Манчестерского Марка I.</p>
+
+<p>В 1952 году Тьюринг опубликовал работу под названием &laquo;Химические основы 
+морфогенеза&raquo; (The chemical basis of morphogenesis), где впервые математически
+ описывается процесс самоорганизации материи. Его основным интересом в этой области
+ было листорасположение Фибоначчи&nbsp;&mdash; наличие чисел Фибоначчи в структурах растений.
+ Поздние работы не были опубликованы вплоть до 1992 года, когда был выпущен сборник его трудов. 
+ Вклад Тьюринга в эту область считается основополагающим.</p>
+
+<p>В январе 1952 года Алан Тьюринг познакомился с девятнадцатилетним рабочим Арнольдом Мюрреем
+ недалеко от кинотеатра в Манчестере. После совместного ленча, Тьюринг предложил Мюррею провести
+ с ним выходные у него дома, последний принял предложение, но так и не появился. Пара снова встретилась 
+ в Манчестере в следующий понедельник, и Мюррей согласился проводить Тьюринга до дома. 
+ Несколькими неделями спустя юноша снова посетил дом учёного и провёл там ночь.</p>
+
+<p>После того как Мюррей с соучастником обворовали дом учёного, Тьюринг заявил об этом в
+ полицию и в процессе расследования признался в сексуальной связи с обвиняемым. 
+ Гомосексуальные половые акты являлись в те времена противозаконными в Соединённом Королевстве, 
+ и обоим было предъявлено обвинение в непристойном поведении в соответствии с Поправкой Лабушера. 
+ Тьюрингу был предложен выбор между тюремным заключением и гормональной терапией, призванной подавить либидо.
+ Учёный предпочёл инъекции стильбэстрола.</p>
+
+<p>Из-за обвинительного приговора он также лишился допуска к секретным материалам и был 
+вынужден прекратить исследования, продолжавшие работу, начавшуюся с создания алгоритмов 
+взлома шифров нацистской шифровальной машины &quot;Энигма&quot;.</p>
+
+<p>В июне 1954 года, в возрасте 41 года Тьюринг был найден мертвым со следами отравления 
+цианистым калием. Судебное дознание пришло к выводу, что причиной смерти стало самоубийство,
+ однако друзья и биографы ученого склоняются к версии несчастного случая.</p>
+
+<p>&nbsp;&nbsp;&nbsp; Помилование британской королевой Елизаветой II вступило в силу 24 
+декабря 2013 года. &quot;Тьюринг заслуживает того, чтобы его помнили, признавали его 
+необычайный вклад в победу в войне и его научное наследие. Помилование королевы явится
+ подобающей данью памяти этого необычайного человека&quot;.</p>
+
+<p>Немаловажным считается вклад Тьюринга в теорию алгоритмов:</p>
+
+<ul>
+	<li>Стал одним из основоположников теории алгоритмов, благодаря машине Тьюринга</li>
+	<li>Модель вычисления (алгоритм) &ndash; машина Тьюринга</li>
+	<li>Тезис Чёрча&nbsp;&mdash; Тьюринга и алгоритмически неразрешимые проблемы</li>
+</ul>
+
+<p>Тьюринг также считается одним из основоположников теории искусственного интеллекта: именно он сформулировал &quot;тест Тьюринга&quot; &ndash; если машина в состоянии поддерживать разговор с человеком, то она признается обладающей интеллектом.</p>
+
+<p><img alt="Алан Тьюринг - 1" src="/laravel/public/persons/img/turing3.jpg" style="float:left; height:218px; width:780px" /></p>
+
+<p>&nbsp;</p>
+
+<div>&nbsp;
+<hr />
+<div id="ftn1">
+<p><a href="#_ftnref1" name="_ftn1" title="">[1]</a> <strong>Криптоанализ &laquo;Энигмы&raquo;&nbsp;</strong>&mdash; криптоанализ немецкой шифровальной машины &laquo;Энигма&raquo; во время Второй мировой войны силами польских и британских спецслужб. Расшифровка сообщений внесла заметный вклад в поражение нацистской Германии.</p>
+</div>
+
+<div id="ftn2">
+<p><a href="#_ftnref2" name="_ftn2" title="">[2]</a> <strong>Turing Bombe</strong>&nbsp;&mdash; электронно-механическая машина для расшифровки кода &laquo;<a href="https://ru.wikipedia.org/wiki/%D0%AD%D0%BD%D0%B8%D0%B3%D0%BC%D0%B0" title="Энигма">Энигмы</a>&raquo;.</p>
+</div>
+
+<div id="ftn3">
+<p><a href="#_ftnref3" name="_ftn3" title="">[3]</a> Устройство не было приспособлено для работы с радиосистемами высокой дальности и было закончено слишком поздно, чтобы применяться в военные годы. Несмотря на успешную демонстрацию Тьюринга (была зашифрована и расшифрована речь Черчилля), Delilah не пошла в массовое производство. В шифраторе Тьюринга использовалось менее 30 электронных ламп, и превзойти его другие решения смогли лишь через 15 лет.</p>
+</div>
+</div>
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			</article></article>	</div></div>
+			
+				<!-- BEGIN BLANK SECTION -->
+			</div><!--end #content-->
+			<!-- END CONTENT -->
+
+			
+		
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			<!-- BEGIN MENUBAR-->
+			<div id="menubar" class="menubar-inverse ">
+				
+					<!-- END MAIN MENU -->
+
+					<div class="menubar-foot-panel">
+						<small class="no-linebreak hidden-folded">
+							<span class="opacity-75">Copyright &copy; 2015</span> <strong>НИЯУ МИФИ</strong>
+						</small>
+					</div>
+				</div><!--end .menubar-scroll-panel-->
+			</div><!--end #menubar-->
+			<!-- END MENUBAR -->
+
+			<!-- BEGIN OFFCANVAS RIGHT -->
+			<div class="offcanvas">
+
+				<!-- BEGIN OFFCANVAS SEARCH -->
+				<div id="offcanvas-search" class="offcanvas-pane width-8">
+					<div class="offcanvas-head">
+						<header class="text-primary">Search</header>
+						<div class="offcanvas-tools">
+							<a class="btn btn-icon-toggle btn-default-light pull-right" data-dismiss="offcanvas">
+								<i class="md md-close"></i>
+							</a>
+						</div>
+					</div>
+					<div class="offcanvas-body no-padding">
+						<ul class="list ">
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>A</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar4.jpg?1404026791" alt="" />
+									</div>
+									<div class="tile-text">
+										Alex Nelson
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar9.jpg?1404026744" alt="" />
+									</div>
+									<div class="tile-text">
+										Ann Laurens
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>J</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar2.jpg?1404026449" alt="" />
+									</div>
+									<div class="tile-text">
+										Jessica Cruise
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar8.jpg?1404026729" alt="" />
+									</div>
+									<div class="tile-text">
+										Jim Peters
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>M</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar5.jpg?1404026513" alt="" />
+									</div>
+									<div class="tile-text">
+										Mabel Logan
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar11.jpg?1404026774" alt="" />
+									</div>
+									<div class="tile-text">
+										Mary Peterson
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar3.jpg?1404026799" alt="" />
+									</div>
+									<div class="tile-text">
+										Mike Alba
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>N</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar6.jpg?1404026572" alt="" />
+									</div>
+									<div class="tile-text">
+										Nathan Peterson
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>P</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar7.jpg?1404026721" alt="" />
+									</div>
+									<div class="tile-text">
+										Philip Ericsson
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>S</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar10.jpg?1404026762" alt="" />
+									</div>
+									<div class="tile-text">
+										Samuel Parsons
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+						</ul>
+					</div><!--end .offcanvas-body -->
+				</div><!--end .offcanvas-pane -->
+				<!-- END OFFCANVAS SEARCH -->
+
+				<!-- BEGIN OFFCANVAS CHAT -->
+				<div id="offcanvas-chat" class="offcanvas-pane style-default-light width-12">
+					<div class="offcanvas-head style-default-bright">
+						<header class="text-primary">Chat with Ann Laurens</header>
+						<div class="offcanvas-tools">
+							<a class="btn btn-icon-toggle btn-default-light pull-right" data-dismiss="offcanvas">
+								<i class="md md-close"></i>
+							</a>
+							<a class="btn btn-icon-toggle btn-default-light pull-right" href="#offcanvas-search" data-toggle="offcanvas" data-backdrop="false">
+								<i class="md md-arrow-back"></i>
+							</a>
+						</div>
+						<form class="form">
+							<div class="form-group floating-label">
+								<textarea name="sidebarChatMessage" id="sidebarChatMessage" class="form-control autosize" rows="1"></textarea>
+								<label for="sidebarChatMessage">Leave a message</label>
+							</div>
+						</form>
+					</div>
+					<div class="offcanvas-body">
+						<ul class="list-chats">
+							<li>
+								<div class="chat">
+									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar1.jpg?1403934956" alt="" /></div>
+									<div class="chat-body">
+										Yes, it is indeed very beautiful.
+										<small>10:03 pm</small>
+									</div>
+								</div><!--end .chat -->
+							</li>
+							<li class="chat-left">
+								<div class="chat">
+									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar9.jpg?1404026744" alt="" /></div>
+									<div class="chat-body">
+										Did you see the changes?
+										<small>10:02 pm</small>
+									</div>
+								</div><!--end .chat -->
+							</li>
+							<li>
+								<div class="chat">
+									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar1.jpg?1403934956" alt="" /></div>
+									<div class="chat-body">
+										I just arrived at work, it was quite busy.
+										<small>06:44pm</small>
+									</div>
+									<div class="chat-body">
+										I will take look in a minute.
+										<small>06:45pm</small>
+									</div>
+								</div><!--end .chat -->
+							</li>
+							<li class="chat-left">
+								<div class="chat">
+									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar9.jpg?1404026744" alt="" /></div>
+									<div class="chat-body">
+										The colors are much better now.
+									</div>
+									<div class="chat-body">
+										The colors are brighter than before.
+										I have already sent an example.
+										This will make it look sharper.
+										<small>Mon</small>
+									</div>
+								</div><!--end .chat -->
+							</li>
+							<li>
+								<div class="chat">
+									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar1.jpg?1403934956" alt="" /></div>
+									<div class="chat-body">
+										Are the colors of the logo already adapted?
+										<small>Last week</small>
+									</div>
+								</div><!--end .chat -->
+							</li>
+						</ul>
+					</div><!--end .offcanvas-body -->
+				</div><!--end .offcanvas-pane -->
+				<!-- END OFFCANVAS CHAT -->
+
+			</div><!--end .offcanvas-->
+			<!-- END OFFCANVAS RIGHT -->
+
+		</div><!--end #base-->
+		<!-- END BASE -->
+
+		<!-- BEGIN JAVASCRIPT -->
+		<script src="/laravel/resources/assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
+		<script src="/laravel/resources/assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+		<script src="/laravel/resources/assets/js/libs/bootstrap/bootstrap.min.js"></script>
+		<script src="/laravel/resources/assets/js/libs/spin.js/spin.min.js"></script>
+		<script src="/laravel/resources/assets/js/libs/autosize/jquery.autosize.min.js"></script>
+		<script src="/laravel/resources/assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/App.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppNavigation.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppOffcanvas.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppCard.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppForm.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppNavSearch.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppVendor.js"></script>
+		<script src="/laravel/resources/assets/js/core/demo/Demo.js"></script>
+		<!-- END JAVASCRIPT -->
+
+	</body>
+</html>

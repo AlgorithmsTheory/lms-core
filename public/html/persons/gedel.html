@@ -1,0 +1,532 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Курт Фридрих Гёдель</title>
+
+		<!-- BEGIN META -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="keywords" content="your,keywords">
+		<meta name="description" content="Short explanation about this website">
+		<!-- END META -->
+
+		<!-- BEGIN STYLESHEETS -->
+		<link href='http://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css'/>
+		<link type="text/css" rel="stylesheet" href="/laravel/resources/assets/css/theme-default/bootstrap.css?1422792965" />
+		<link type="text/css" rel="stylesheet" href="/laravel/resources/assets/css/theme-default/materialadmin.css?1425466319" />
+		<link type="text/css" rel="stylesheet" href="/laravel/resources/assets/css/theme-default/font-awesome.min.css?1422529194" />
+		<link type="text/css" rel="stylesheet" href="/laravel/resources/assets/css/theme-default/material-design-iconic-font.min.css?1421434286" />
+		<!-- END STYLESHEETS -->
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		<script type="text/javascript" src="/laravel/resources/assets/js/libs/utils/html5shiv.js?1403934957"></script>
+		<script type="text/javascript" src="/laravel/resources/assets/js/libs/utils/respond.min.js?1403934956"></script>
+		<![endif]-->
+		
+		
+	</head>
+	<body class="menubar-hoverable header-fixed menubar-pin ">
+
+		<!-- BEGIN HEADER-->
+		<header id="header" >
+			<div class="headerbar">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="headerbar-left">
+					<ul class="header-nav header-nav-options">
+						<li class="header-nav-brand" >
+							<div class="brand-holder">
+								<a href="/laravel/resources/html/dashboards/dashboard.html">
+									<span class="text-lg text-bold text-primary">MATERIAL ADMIN</span>
+								</a>
+							</div>
+						</li>
+						<li>
+							<a class="btn btn-icon-toggle menubar-toggle" data-toggle="menubar" href="javascript:void(0);">
+								<i class="fa fa-bars"></i>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="headerbar-right">
+					<ul class="header-nav header-nav-options">
+						<li>
+							<!-- Search form -->
+							<form class="navbar-search" role="search">
+								<div class="form-group">
+									<input type="text" class="form-control" name="headerSearch" placeholder="Enter your keyword">
+								</div>
+								<button type="submit" class="btn btn-icon-toggle ink-reaction"><i class="fa fa-search"></i></button>
+							</form>
+						</li>
+						<li class="dropdown hidden-xs">
+							<a href="javascript:void(0);" class="btn btn-icon-toggle btn-default" data-toggle="dropdown">
+								<i class="fa fa-bell"></i><sup class="badge style-danger">4</sup>
+							</a>
+							<ul class="dropdown-menu animation-expand">
+								<li class="dropdown-header">Today's messages</li>
+								<li>
+									<a class="alert alert-callout alert-warning" href="javascript:void(0);">
+										<img class="pull-right img-circle dropdown-avatar" src="/laravel/resources/assets/img/avatar2.jpg?1404026449" alt="" />
+										<strong>Alex Anistor</strong><br/>
+										<small>Testing functionality...</small>
+									</a>
+								</li>
+								<li>
+									<a class="alert alert-callout alert-info" href="javascript:void(0);">
+										<img class="pull-right img-circle dropdown-avatar" src="/laravel/resources/assets/img/avatar3.jpg?1404026799" alt="" />
+										<strong>Alicia Adell</strong><br/>
+										<small>Reviewing last changes...</small>
+									</a>
+								</li>
+								<li class="dropdown-header">Options</li>
+								<li><a href="/laravel/resources/html/pages/login.html">View all messages <span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
+								<li><a href="/laravel/resources/html/pages/login.html">Mark as read <span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
+							</ul><!--end .dropdown-menu -->
+						</li><!--end .dropdown -->
+						<li class="dropdown hidden-xs">
+							<a href="javascript:void(0);" class="btn btn-icon-toggle btn-default" data-toggle="dropdown">
+								<i class="fa fa-area-chart"></i>
+							</a>
+							<ul class="dropdown-menu animation-expand">
+								<li class="dropdown-header">Server load</li>
+								<li class="dropdown-progress">
+									<a href="javascript:void(0);">
+										<div class="dropdown-label">
+											<span class="text-light">Server load <strong>Today</strong></span>
+											<strong class="pull-right">93%</strong>
+										</div>
+										<div class="progress"><div class="progress-bar progress-bar-danger" style="width: 93%"></div></div>
+									</a>
+								</li><!--end .dropdown-progress -->
+								<li class="dropdown-progress">
+									<a href="javascript:void(0);">
+										<div class="dropdown-label">
+											<span class="text-light">Server load <strong>Yesterday</strong></span>
+											<strong class="pull-right">30%</strong>
+										</div>
+										<div class="progress"><div class="progress-bar progress-bar-success" style="width: 30%"></div></div>
+									</a>
+								</li><!--end .dropdown-progress -->
+								<li class="dropdown-progress">
+									<a href="javascript:void(0);">
+										<div class="dropdown-label">
+											<span class="text-light">Server load <strong>Lastweek</strong></span>
+											<strong class="pull-right">74%</strong>
+										</div>
+										<div class="progress"><div class="progress-bar progress-bar-warning" style="width: 74%"></div></div>
+									</a>
+								</li><!--end .dropdown-progress -->
+							</ul><!--end .dropdown-menu -->
+						</li><!--end .dropdown -->
+					</ul><!--end .header-nav-options -->
+					<ul class="header-nav header-nav-profile">
+						<li class="dropdown">
+							<a href="javascript:void(0);" class="dropdown-toggle ink-reaction" data-toggle="dropdown">
+								<img src="/laravel/resources/assets/img/avatar1.jpg?1403934956" alt="" />
+								<span class="profile-info">
+									Daniel Johnson
+									<small>Administrator</small>
+								</span>
+							</a>
+							<ul class="dropdown-menu animation-dock">
+								<li class="dropdown-header">Config</li>
+								<li><a href="/laravel/resources/html/pages/profile.html">My profile</a></li>
+								<li><a href="/laravel/resources/html/pages/blog/post.html">My blog <span class="badge style-danger pull-right">16</span></a></li>
+								<li><a href="/laravel/resources/html/pages/calendar.html">My appointments</a></li>
+								<li class="divider"></li>
+								<li><a href="/laravel/resources/html/pages/locked.html"><i class="fa fa-fw fa-lock"></i> Lock</a></li>
+								<li><a href="/laravel/resources/html/pages/login.html"><i class="fa fa-fw fa-power-off text-danger"></i> Logout</a></li>
+							</ul><!--end .dropdown-menu -->
+						</li><!--end .dropdown -->
+					</ul><!--end .header-nav-profile -->
+					<ul class="header-nav header-nav-toggle">
+						<li>
+							<a class="btn btn-icon-toggle btn-default" href="#offcanvas-search" data-toggle="offcanvas" data-backdrop="false">
+								<i class="fa fa-ellipsis-v"></i>
+							</a>
+						</li>
+					</ul><!--end .header-nav-toggle -->
+				</div><!--end #header-navbar-collapse -->
+			</div>
+		</header>
+		<!-- END HEADER-->
+
+		<!-- BEGIN BASE-->
+		<div id="base">
+
+			<!-- BEGIN OFFCANVAS LEFT -->
+			<div class="offcanvas">
+			</div><!--end .offcanvas-->
+			<!-- END OFFCANVAS LEFT -->
+
+			<!-- BEGIN CONTENT-->
+			<div id="content">
+
+				<!-- BEGIN BLANK SECTION -->
+				<section>
+					<div class="section-header">
+						<ol class="breadcrumb">
+							<li><a href="/laravel/resources/html/.html">home</a></li>
+							<li><a href="/laravel/public">Библиотека</a></li>
+							<li><a href="/laravel/public/person.html">Персоналии</a></li>
+							<li class="active">Курт Фридрих Гёдель</li>
+						</ol>
+					</div><!--end .section-header -->
+					<div class="section-body">
+					</div><!--end .section-body -->
+				</section>
+	<div class="card card-tiles style-default-light" style="margin-left:2%; margin-right:2%">
+	<article class="style-default-bright">
+		<div class="card-body"> 
+		<article style="margin-left:10%; margin-right:10%; text-align: justify">
+			
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Курт Фри́дрих Гёдель</strong> &mdash; австрийский логик, математик и философ математики, наиболее известный сформулированной и доказанной им теоремой о неполноте.</p>
+
+<p><img alt="/laravel/public/persons/img/gedel1.jpg" src="/laravel/public/persons/img/gedel1.jpg" style="float:left; height:408px; width:328px" />Курт Гёдель родился 28 апреля 1906&nbsp;года в австро-венгерском (моравском) городе Брюнн (ныне Брно, Чехия), в немецкой семье. Его отец, австрийский немец Рудольф Гёдель, был владельцем крупнейшей текстильной фабрики в городе Брюнн (Брно). Мать Курта - Марианна Хандшу училась во Франции и получила гуманитарное образование.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Окончив школу в 1923 году, Курт поступил в Венский университет. Однако к тому времени он так и не решил, в какой области будет специализироваться, &ndash; в математике или теоретической физике. В университете он слушал лекции таких выдающихся профессоров математики, как Филипп Фуртвенглер, Ханс Хан, Вильгельм Виртингер, Карл Менгер и других. Особое влияние на юного Геделя оказали лекции Фуртвенглера, и он выбрал математику в качестве специализации. Тому было две причины: во-первых, Фуртвенглер был выдающимся математиком и преподавателем; во-вторых, он был парализован и читал лекции сидя на инвалидном кресле, в то время как его ассистент делал записи на доске. Это произвело на Геделя особенно сильное впечатление.</p>
+
+<p>В 1929 Курт Гёдель защитил докторскую диссертацию по математике, в которой доказал полноту исчисления предикатов первой ступени. В этом же году умер отец Гёделя. У него был хороший бизнес, поэтому после его смерти семья осталась финансово обеспечена. После смерти мужа мать Гёделя купила большую квартиру в Вене, где поселилась с двумя сыновьями. В 1930 году Гёдель стал преподавать в Венском университете, где принадлежал к школе логического позитивизма до 1938 года. Он был одним из главных участников Венского кружка &ndash; философского объединения, где были разработаны основы логического позитивизма. Кружок сложился еще в 1922 году вокруг австрийского физика М. Шлика &ndash; профессора Венского университета Шлика, семинары которого вызвали интерес Геделя к логике.</p>
+
+<p>Наиболее известное достижение Гёделя&nbsp;&mdash; это сформулированные и доказанные им теоремы о неполноте, опубликованные в 1931 году. Одна из них гласит, что любая эффективно аксиоматизируемая теория, в богатом языке, достаточном для определения натуральных чисел и операций сложения и умножения, является неполной либо противоречивой. Неполнота означает наличие высказываний, которые нельзя ни доказать, ни опровергнуть, исходя из аксиом этой теории. Для ее доказательства или опровержения требуются дополнительные аксиомы (усиление системы). Противоречивость&nbsp;&mdash; возможность доказать любое высказывание: как истинное, так и ложное. Эффективная аксиоматизируемость понимается как возможность алгоритмически решить, является ли данное утверждение аксиомой.</p>
+
+<p>В 1933-1938 - приват-доцент Венского университета.</p>
+
+<p>В 1934 году совершил поездку в США (Принстонский университет), где прочитал курс лекций &laquo;О неразрешимых теоремах формальных математических систем&raquo;. Впоследствии тезисы этих лекций были опубликованы. По возвращении в Европу вследствие интенсивной интеллектуальной деятельности Курт Гёдель начал страдать нервным расстройством. Несмотря на проблемы со здоровьем, Гедель продолжал свои исследования, в которых доказывал согласованность аксиомы выбора с другими аксиомами теории набора. Однако вскоре его ждал новый удар. Он был связан с внезапным убийством профессора Шлика.</p>
+
+<p>&ldquo;Это происшествие, несомненно, послужило причиной серьезного нервного расстройства брата, что вызвало беспокойство матери. Вскоре после выздоровления его пригласили работать в США&rdquo;, &ndash; писал его брат Рудольф.</p>
+
+<p>В марте 1938 года Австрия была присоединена к Германии, но Гёделя это не интересовало. Он во второй раз побывал в Принстоне, где работал в Институте высших исследований (the Institute for Advanced Study), а вторую часть учебного года провел во Франции, где прочел курс лекций. После присоединения Австрии к Германии большинство ученых, носивших степень приват-доцента, стали получать жалование за лекции. Гедель такого жалования не получал, так как многие полагали, что он еврей. Это было неправдой, хотя у Геделя действительно было много друзей евреев.</p>
+
+<p><img alt="/laravel/public/persons/img/gedel2.jpg" src="/laravel/public/persons/img/gedel2.jpg" style="float:right; height:340px; width:256px" />Летом 1938 года Гедель отправился в Геттинген, где читал лекции о своих исследованиях в области теории набора. Осенью того же года он вернулся в Вену и женился на Адель Поркерт, с которой познакомился еще в 1927 году в одном из венских ночных клубов. Она была на шесть лет старше и разведена с первым мужем. Родители Геделя, и особенно его отец, всегда были против этой свадьбы.</p>
+
+<p><img alt="http://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Pmdsgdbhxdfgb2.jpg/200px-Pmdsgdbhxdfgb2.jpg" src="/laravel/public/persons/img/gedel3.jpg" style="float:left; height:381px; width:242px" />Когда началась война, Гедель боялся, что его призовут в армию. Конечно, он был убежден, что слишком слаб здоровьем, чтобы служить, но если его по ошибке принимали за еврея, его также могли по ошибке принять за здорового человека. Он не хотел рисковать и после длительных переговоров о получении американской визы в 1940 году выехал в США вместе с женой. Причём из-за опасности пути через Атлантику во время войны поехал через СССР и Японию. В США он получил работу в знаменитом Институте перспективных исследований (Принстонский университет). Также Гедель продолжил свою научную работу в области теории набора, которая имела огромное значение. Его шедевр &ldquo;Согласованность аксиомы выбора и обобщенной континуум-гипотезы с аксиомами теории набора&rdquo; (1940) стал классикой современной математики. В этой работе он доказал, что если аксиоматическая система теории набора, построенная по типу, предложенному Расселом и Уайтхедом в &ldquo;Principia Mathematicа&rdquo;, последовательна, то она останется таковой в случае если аксиома выбора и обобщенная континуум-гипотеза будут добавлены к системе. В 1951 году Гёдель получил высшую научную награду США&nbsp;&mdash; Эйнштейновскую премию, а в 1974 году&nbsp;&mdash; Национальную медаль науки.</p>
+
+<p>С 1953 и до конца жизни - профессор Принстонского института перспективных исследований.</p>
+
+<p><img alt="http://www.molomo.ru/img/univer9.jpg" src="/laravel/public/persons/img/gedel4.jpg" style="height:563px; width:750px" /></p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ещё с 1930-х годов у Гёделя обнаруживались признаки психических проблем, которые обычно носили скрытый характер, проявляясь в частых беспокойствах и излишней подозрительности, но в периоды обострений принимали более явные, навязчивые формы. Так, в 1936 году у него развился параноидальный страх отравления. Опорой Гёделя в нелёгкое время была его жена Адель, кормившая его с ложки и буквально выходившая мужа. Из сохранившихся записей библиотечных запросов этого периода известно, что он изучал литературу по душевным расстройствам, фармакологии и токсикологии (особенно характерно неоднократное обращение к техническому справочнику по отравлениям угарным газом), что лишь осложняло впоследствии его лечение.</p>
+
+<p>Позже, в Принстоне (1941), несмотря на улучшение общего состояния, Гёдель по-прежнему испытывал дискомфорт от присутствия агрегатов, способных, по его мнению, испускать отравляющие газы. По этой причине он даже распорядился вынести из их с Аделью квартиры холодильник и радиатор. Его одержимость свежим воздухом и подозрения по поводу холодильника сохранялись до конца жизни, а периоды умеренного оздоровления и ухудшения душевного состояния сменяли друг друга. Последние, впрочем, происходили всё чаще и были тяжелее. Так, кризис 1970-го года оказался гораздо хуже такового в 1936-м и сопровождался галлюцинациями, параноидальным поведением по отношению к докторам и коллегам. Стремительно ухудшалось и состояние здоровья Адель, теперь она не могла ухаживать за ним так, как раньше, а он, в свою очередь,&nbsp;&mdash; за ней. Огромную поддержку оказывал друг Гёделя Оскар Моргенштерн.</p>
+
+<p><img alt="/laravel/public/persons/img/gedel5.jpg" src="/laravel/public/persons/img/gedel5.jpg" style="float:left; height:379px; width:284px" />В феврале 1976&nbsp;года паранойя Гёделя опять обострилась, начал снижаться вес, и его уговорили на госпитализацию. Однако уже через неделю, даже не выписавшись, он вернулся домой. Подозрения касались теперь и жены&nbsp;&mdash; Моргенштерну и другим людям он рассказывал, что та якобы раздала в его отсутствие все его деньги. В июне Адель была госпитализирована (до августа). Гёдель проводил с ней, по-видимому, достаточно много времени и плохо питался. Осенью он ненадолго снова попал в больницу, где, как он сообщил, его якобы пытались убить. После возвращения домой состояние не улучшалось. Несмотря на уговоры друзей, от очередной госпитализации он отказывался.</p>
+
+<p>В июле 1977&nbsp;года Адель вновь попала в больницу, где пробыла до декабря. 26 июля умер Моргенштерн. Это событие и отсутствие жены оказали решающее влияние на состояние Гёделя в последующие несколько месяцев&nbsp;&mdash; анорексия и паранойя прогрессировали всё активнее. 29 декабря, следуя настояниям жены, возвратившейся около недели до того, Гёдель согласился на госпитализацию. Однако врачи никакую существенную помощь оказать уже не могли. Учёный скончался от &laquo;недоедания и истощения&raquo;, индуцированных &laquo;расстройством личности&raquo;, 14 января 1978&nbsp;года в Принстоне, штат Нью-Джерси.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Гедель внес важный вклад в теорию множеств. Два принципа - аксиома выбора и континуум-гипотеза - на протяжении десятилетий не поддавались доказательству, но интерес к ним не ослабевал: слишком привлекательны были их логические следствия. Гедель доказал (1938), что присоединение этих принципов к обычным аксиомам теории множеств не приводит к противоречию. Его рассуждения ценны не только теми результатами, которые они позволяют получить; Гедель разработал конструкцию, которая улучшает понимание внутренних механизмов самой теории множеств.</p>
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			</article></article>	</div></div>
+			
+				<!-- BEGIN BLANK SECTION -->
+			</div><!--end #content-->
+			<!-- END CONTENT -->
+
+			
+		
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			<!-- BEGIN MENUBAR-->
+			<div id="menubar" class="menubar-inverse ">
+				
+					<!-- END MAIN MENU -->
+
+					<div class="menubar-foot-panel">
+						<small class="no-linebreak hidden-folded">
+							<span class="opacity-75">Copyright &copy; 2015</span> <strong>НИЯУ МИФИ</strong>
+						</small>
+					</div>
+				</div><!--end .menubar-scroll-panel-->
+			</div><!--end #menubar-->
+			<!-- END MENUBAR -->
+
+			<!-- BEGIN OFFCANVAS RIGHT -->
+			<div class="offcanvas">
+
+				<!-- BEGIN OFFCANVAS SEARCH -->
+				<div id="offcanvas-search" class="offcanvas-pane width-8">
+					<div class="offcanvas-head">
+						<header class="text-primary">Search</header>
+						<div class="offcanvas-tools">
+							<a class="btn btn-icon-toggle btn-default-light pull-right" data-dismiss="offcanvas">
+								<i class="md md-close"></i>
+							</a>
+						</div>
+					</div>
+					<div class="offcanvas-body no-padding">
+						<ul class="list ">
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>A</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar4.jpg?1404026791" alt="" />
+									</div>
+									<div class="tile-text">
+										Alex Nelson
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar9.jpg?1404026744" alt="" />
+									</div>
+									<div class="tile-text">
+										Ann Laurens
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>J</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar2.jpg?1404026449" alt="" />
+									</div>
+									<div class="tile-text">
+										Jessica Cruise
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar8.jpg?1404026729" alt="" />
+									</div>
+									<div class="tile-text">
+										Jim Peters
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>M</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar5.jpg?1404026513" alt="" />
+									</div>
+									<div class="tile-text">
+										Mabel Logan
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar11.jpg?1404026774" alt="" />
+									</div>
+									<div class="tile-text">
+										Mary Peterson
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar3.jpg?1404026799" alt="" />
+									</div>
+									<div class="tile-text">
+										Mike Alba
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>N</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar6.jpg?1404026572" alt="" />
+									</div>
+									<div class="tile-text">
+										Nathan Peterson
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>P</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar7.jpg?1404026721" alt="" />
+									</div>
+									<div class="tile-text">
+										Philip Ericsson
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>S</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar10.jpg?1404026762" alt="" />
+									</div>
+									<div class="tile-text">
+										Samuel Parsons
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+						</ul>
+					</div><!--end .offcanvas-body -->
+				</div><!--end .offcanvas-pane -->
+				<!-- END OFFCANVAS SEARCH -->
+
+				<!-- BEGIN OFFCANVAS CHAT -->
+				<div id="offcanvas-chat" class="offcanvas-pane style-default-light width-12">
+					<div class="offcanvas-head style-default-bright">
+						<header class="text-primary">Chat with Ann Laurens</header>
+						<div class="offcanvas-tools">
+							<a class="btn btn-icon-toggle btn-default-light pull-right" data-dismiss="offcanvas">
+								<i class="md md-close"></i>
+							</a>
+							<a class="btn btn-icon-toggle btn-default-light pull-right" href="#offcanvas-search" data-toggle="offcanvas" data-backdrop="false">
+								<i class="md md-arrow-back"></i>
+							</a>
+						</div>
+						<form class="form">
+							<div class="form-group floating-label">
+								<textarea name="sidebarChatMessage" id="sidebarChatMessage" class="form-control autosize" rows="1"></textarea>
+								<label for="sidebarChatMessage">Leave a message</label>
+							</div>
+						</form>
+					</div>
+					<div class="offcanvas-body">
+						<ul class="list-chats">
+							<li>
+								<div class="chat">
+									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar1.jpg?1403934956" alt="" /></div>
+									<div class="chat-body">
+										Yes, it is indeed very beautiful.
+										<small>10:03 pm</small>
+									</div>
+								</div><!--end .chat -->
+							</li>
+							<li class="chat-left">
+								<div class="chat">
+									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar9.jpg?1404026744" alt="" /></div>
+									<div class="chat-body">
+										Did you see the changes?
+										<small>10:02 pm</small>
+									</div>
+								</div><!--end .chat -->
+							</li>
+							<li>
+								<div class="chat">
+									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar1.jpg?1403934956" alt="" /></div>
+									<div class="chat-body">
+										I just arrived at work, it was quite busy.
+										<small>06:44pm</small>
+									</div>
+									<div class="chat-body">
+										I will take look in a minute.
+										<small>06:45pm</small>
+									</div>
+								</div><!--end .chat -->
+							</li>
+							<li class="chat-left">
+								<div class="chat">
+									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar9.jpg?1404026744" alt="" /></div>
+									<div class="chat-body">
+										The colors are much better now.
+									</div>
+									<div class="chat-body">
+										The colors are brighter than before.
+										I have already sent an example.
+										This will make it look sharper.
+										<small>Mon</small>
+									</div>
+								</div><!--end .chat -->
+							</li>
+							<li>
+								<div class="chat">
+									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar1.jpg?1403934956" alt="" /></div>
+									<div class="chat-body">
+										Are the colors of the logo already adapted?
+										<small>Last week</small>
+									</div>
+								</div><!--end .chat -->
+							</li>
+						</ul>
+					</div><!--end .offcanvas-body -->
+				</div><!--end .offcanvas-pane -->
+				<!-- END OFFCANVAS CHAT -->
+
+			</div><!--end .offcanvas-->
+			<!-- END OFFCANVAS RIGHT -->
+
+		</div><!--end #base-->
+		<!-- END BASE -->
+
+		<!-- BEGIN JAVASCRIPT -->
+		<script src="/laravel/resources/assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
+		<script src="/laravel/resources/assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+		<script src="/laravel/resources/assets/js/libs/bootstrap/bootstrap.min.js"></script>
+		<script src="/laravel/resources/assets/js/libs/spin.js/spin.min.js"></script>
+		<script src="/laravel/resources/assets/js/libs/autosize/jquery.autosize.min.js"></script>
+		<script src="/laravel/resources/assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/App.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppNavigation.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppOffcanvas.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppCard.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppForm.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppNavSearch.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppVendor.js"></script>
+		<script src="/laravel/resources/assets/js/core/demo/Demo.js"></script>
+		<!-- END JAVASCRIPT -->
+
+	</body>
+</html>

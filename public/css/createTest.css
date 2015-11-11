@@ -1,0 +1,36 @@
+.num-field {
+    width: 40px;
+    text-align: center;
+}
+
+
+.select-field {
+    width: 270px;
+    text-align: center;
+}
+
+th,td {
+    text-align: center;
+}
+
+#total, #test-time {
+     width: 400px;
+}
+
+#points-from {
+    width: 50px;
+    margin-left: 10px;
+}
+
+#points-till {
+    width: 50px;
+    margin-left: 10px;
+}
+
+#select-type, .select-section, #select-theme {
+    font-size: 12px;
+}
+
+#add-test{
+    margin-bottom: 20px;
+}

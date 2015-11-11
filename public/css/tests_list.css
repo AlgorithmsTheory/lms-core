@@ -1,0 +1,26 @@
+a:link, a:visited {
+    display: block;
+    font-size: 14px;
+    color: #0aa89e;
+    padding: 4px;
+    text-decoration: none;
+}
+
+a:hover {
+    display: block;
+    font-size: 14px;
+    color: #05585b;
+    padding: 4px;
+    text-decoration: none;
+}
+
+.none-tests {
+    color:#0aa89e;
+}
+
+.test-list:hover{
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+
+

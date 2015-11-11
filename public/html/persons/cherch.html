@@ -1,0 +1,545 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Алонзо Чёрч</title>
+
+		<!-- BEGIN META -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="keywords" content="your,keywords">
+		<meta name="description" content="Short explanation about this website">
+		<!-- END META -->
+
+		<!-- BEGIN STYLESHEETS -->
+		<link href='http://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css'/>
+		<link type="text/css" rel="stylesheet" href="/laravel/resources/assets/css/theme-default/bootstrap.css?1422792965" />
+		<link type="text/css" rel="stylesheet" href="/laravel/resources/assets/css/theme-default/materialadmin.css?1425466319" />
+		<link type="text/css" rel="stylesheet" href="/laravel/resources/assets/css/theme-default/font-awesome.min.css?1422529194" />
+		<link type="text/css" rel="stylesheet" href="/laravel/resources/assets/css/theme-default/material-design-iconic-font.min.css?1421434286" />
+		<!-- END STYLESHEETS -->
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		<script type="text/javascript" src="/laravel/resources/assets/js/libs/utils/html5shiv.js?1403934957"></script>
+		<script type="text/javascript" src="/laravel/resources/assets/js/libs/utils/respond.min.js?1403934956"></script>
+		<![endif]-->
+		
+		
+	</head>
+	<body class="menubar-hoverable header-fixed menubar-pin ">
+
+		<!-- BEGIN HEADER-->
+		<header id="header" >
+			<div class="headerbar">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="headerbar-left">
+					<ul class="header-nav header-nav-options">
+						<li class="header-nav-brand" >
+							<div class="brand-holder">
+								<a href="/laravel/resources/html/dashboards/dashboard.html">
+									<span class="text-lg text-bold text-primary">MATERIAL ADMIN</span>
+								</a>
+							</div>
+						</li>
+						<li>
+							<a class="btn btn-icon-toggle menubar-toggle" data-toggle="menubar" href="javascript:void(0);">
+								<i class="fa fa-bars"></i>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="headerbar-right">
+					<ul class="header-nav header-nav-options">
+						<li>
+							<!-- Search form -->
+							<form class="navbar-search" role="search">
+								<div class="form-group">
+									<input type="text" class="form-control" name="headerSearch" placeholder="Enter your keyword">
+								</div>
+								<button type="submit" class="btn btn-icon-toggle ink-reaction"><i class="fa fa-search"></i></button>
+							</form>
+						</li>
+						<li class="dropdown hidden-xs">
+							<a href="javascript:void(0);" class="btn btn-icon-toggle btn-default" data-toggle="dropdown">
+								<i class="fa fa-bell"></i><sup class="badge style-danger">4</sup>
+							</a>
+							<ul class="dropdown-menu animation-expand">
+								<li class="dropdown-header">Today's messages</li>
+								<li>
+									<a class="alert alert-callout alert-warning" href="javascript:void(0);">
+										<img class="pull-right img-circle dropdown-avatar" src="/laravel/resources/assets/img/avatar2.jpg?1404026449" alt="" />
+										<strong>Alex Anistor</strong><br/>
+										<small>Testing functionality...</small>
+									</a>
+								</li>
+								<li>
+									<a class="alert alert-callout alert-info" href="javascript:void(0);">
+										<img class="pull-right img-circle dropdown-avatar" src="/laravel/resources/assets/img/avatar3.jpg?1404026799" alt="" />
+										<strong>Alicia Adell</strong><br/>
+										<small>Reviewing last changes...</small>
+									</a>
+								</li>
+								<li class="dropdown-header">Options</li>
+								<li><a href="/laravel/resources/html/pages/login.html">View all messages <span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
+								<li><a href="/laravel/resources/html/pages/login.html">Mark as read <span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
+							</ul><!--end .dropdown-menu -->
+						</li><!--end .dropdown -->
+						<li class="dropdown hidden-xs">
+							<a href="javascript:void(0);" class="btn btn-icon-toggle btn-default" data-toggle="dropdown">
+								<i class="fa fa-area-chart"></i>
+							</a>
+							<ul class="dropdown-menu animation-expand">
+								<li class="dropdown-header">Server load</li>
+								<li class="dropdown-progress">
+									<a href="javascript:void(0);">
+										<div class="dropdown-label">
+											<span class="text-light">Server load <strong>Today</strong></span>
+											<strong class="pull-right">93%</strong>
+										</div>
+										<div class="progress"><div class="progress-bar progress-bar-danger" style="width: 93%"></div></div>
+									</a>
+								</li><!--end .dropdown-progress -->
+								<li class="dropdown-progress">
+									<a href="javascript:void(0);">
+										<div class="dropdown-label">
+											<span class="text-light">Server load <strong>Yesterday</strong></span>
+											<strong class="pull-right">30%</strong>
+										</div>
+										<div class="progress"><div class="progress-bar progress-bar-success" style="width: 30%"></div></div>
+									</a>
+								</li><!--end .dropdown-progress -->
+								<li class="dropdown-progress">
+									<a href="javascript:void(0);">
+										<div class="dropdown-label">
+											<span class="text-light">Server load <strong>Lastweek</strong></span>
+											<strong class="pull-right">74%</strong>
+										</div>
+										<div class="progress"><div class="progress-bar progress-bar-warning" style="width: 74%"></div></div>
+									</a>
+								</li><!--end .dropdown-progress -->
+							</ul><!--end .dropdown-menu -->
+						</li><!--end .dropdown -->
+					</ul><!--end .header-nav-options -->
+					<ul class="header-nav header-nav-profile">
+						<li class="dropdown">
+							<a href="javascript:void(0);" class="dropdown-toggle ink-reaction" data-toggle="dropdown">
+								<img src="/laravel/resources/assets/img/avatar1.jpg?1403934956" alt="" />
+								<span class="profile-info">
+									Daniel Johnson
+									<small>Administrator</small>
+								</span>
+							</a>
+							<ul class="dropdown-menu animation-dock">
+								<li class="dropdown-header">Config</li>
+								<li><a href="/laravel/resources/html/pages/profile.html">My profile</a></li>
+								<li><a href="/laravel/resources/html/pages/blog/post.html">My blog <span class="badge style-danger pull-right">16</span></a></li>
+								<li><a href="/laravel/resources/html/pages/calendar.html">My appointments</a></li>
+								<li class="divider"></li>
+								<li><a href="/laravel/resources/html/pages/locked.html"><i class="fa fa-fw fa-lock"></i> Lock</a></li>
+								<li><a href="/laravel/resources/html/pages/login.html"><i class="fa fa-fw fa-power-off text-danger"></i> Logout</a></li>
+							</ul><!--end .dropdown-menu -->
+						</li><!--end .dropdown -->
+					</ul><!--end .header-nav-profile -->
+					<ul class="header-nav header-nav-toggle">
+						<li>
+							<a class="btn btn-icon-toggle btn-default" href="#offcanvas-search" data-toggle="offcanvas" data-backdrop="false">
+								<i class="fa fa-ellipsis-v"></i>
+							</a>
+						</li>
+					</ul><!--end .header-nav-toggle -->
+				</div><!--end #header-navbar-collapse -->
+			</div>
+		</header>
+		<!-- END HEADER-->
+
+		<!-- BEGIN BASE-->
+		<div id="base">
+
+			<!-- BEGIN OFFCANVAS LEFT -->
+			<div class="offcanvas">
+			</div><!--end .offcanvas-->
+			<!-- END OFFCANVAS LEFT -->
+
+			<!-- BEGIN CONTENT-->
+			<div id="content">
+
+				<!-- BEGIN BLANK SECTION -->
+				<section>
+					<div class="section-header">
+						<ol class="breadcrumb">
+							<li><a href="/laravel/resources/html/.html">home</a></li>
+							<li><a href="/laravel/public">Библиотека</a></li>
+							<li><a href="/laravel/public/person.html">Персоналии</a></li>
+							<li class="active">Алонзо Чёрч</li>
+						</ol>
+					</div><!--end .section-header -->
+					<div class="section-body">
+					</div><!--end .section-body -->
+				</section>
+	<div class="card card-tiles style-default-light" style="margin-left:2%; margin-right:2%">
+	<article class="style-default-bright">
+		<div class="card-body"> 
+		<article style="margin-left:10%; margin-right:10%; text-align: justify">
+			
+<p><strong>Алонзо Черч</strong></p>
+
+<p><img src="/laravel/public/persons/img/cherch1.jpg" style="float:left; height:353px; width:264px" /><strong>Происхождение.</strong> Алонзо Чёрч родился 14 июня в 1903 году в Вашингтоне, федеральный округ Колумбия. Его отец, Самюэль Роббинс Чёрч, был судьей в муниципальном суде федерального округа Колумбия до тех пор, пока потеря зрения и слуха не вынудили его покинуть этот пост. Семья переехала в Вирджинию, где и выросли Алонзо Чёрч и его младший брат. Он был не первым выдающимся математиком в семье: его прадедушка, так же Алонзо Чёрч, был профессором математики и астрономии и президентом колледжа имени Франклина, ставшего в последствии Университетом Джорджии.</p>
+
+<p><strong>Образование.</strong> У Алонзо Чёрча был дядя, также Алонзо Чёрч, который помогал семье финансово, проявляя интерес к образованию детей. Благодаря дяде, Чёрч ходил в Риджфилдскую подготовительную школу (частную среднюю школу, которая готовит к поступлению в колледж) в Коннектикуте. Там с ним произошёл несчастный случай: в ходе какой-то странной истории с пневматической винтовкой, Чёрч остался слепым на один глаз.</p>
+
+<p>После окончания Риджфилдской школы Чёрч поступил в Принстон, где до этого так же учились трое его дядь, а впоследствии и его внук. Некоторое время ему пришлось работать на полставки в столовой, чтобы оплачивать своё проживание. Но это не помешало Чёрчу проявить свои выдающиеся способности, и, ещё студентом, он пишет свою первую научную работу. В 1924 году он получил степень бакалавра математики. Затем он продолжил обучение в Принстоне под руководством Освальда Веблена. Именно в это время Чёрч начинает интересоваться логикой. Как-то Освальд Веблен попросил его изучить работы Дэвида Гилберта, под предлогом, что сам он в них не разобрался и надеялся, что Чёрч ему всё объяснит.</p>
+
+<p><center><img src="/laravel/public/persons/img/cherch2.jpg" style="height:285px; width:570px" /></center></p>
+
+<p><strong>Жизнь</strong>. Будучи аспирантом, он женился в 1925 на Мэри Джулии Казински. Летом 1924 года Чёрч оступился на бордюре и был задет проезжавшим со стороны его слепого глаза трамваем; Мэри была стажером-медсестрой в больнице. Они были неразлучны последующие 51 год, до самой смерти Мэри в 1976. Мэри отлично готовила, и многие математики любили обедать в доме Чёрча. У него и Мэри было уже трое детей. Первая его дочь, Мэри Энн, родилась в 1933 (она позже вышла замуж за логика Джона Эддисона), а в 1938 вторая, которую он назвал в честь своей матери Милдред.</p>
+
+<p>Живя в Принстоне в 60-ые, Чёрч и его семья любили ездить на Багамы. Со временем Чёрч приобрел там собственность и построил два двухквартирных дома. Даже после переезда в Лос-Анджелес, Чёрч проводил лето на Багамах. Но он не проводил своё время, лежа на пляже, скорее это было место, где он просто мог от всего скрыться и, в то же время, где его внуки и правнуки могли собраться вместе.</p>
+
+<p>Чёрч умер в Гудзоне, Огайо, где жил его сын, 11 августа 1995, в возрасте 92 лет. Он был похоронен на Принстонском кладбище рядом со своей женой и родителями. Все бумаги, которые он оставил, были переданы библиотеке Принстонского университета.</p>
+
+<p><strong>Карьера.</strong> В 1927 году Чёрч защитил докторскую диссертацию, после чего ему была присуждена двухгодичная национальная научно-исследовательская стипендия, и, после работы преподавателем в Университете Чикаго летом 1927, он провел два года, посетив сначала Гарвард (1927-28), а затем Гёттинген и Амстердам (1928-29). В Европу Чёрч отправился вместе со своей женой, и в Амстердаме у них родился первый ребенок, Алонзо Чёрч младший. В этой поездке Чёрч познакомился со многими математиками. В частности, в Гёттингене он встретился с Дэвидом Гилбертом, а в Амстердаме он очень заинтересовался работами Брауэра.</p>
+
+<p><center><img src="/laravel/public/persons/img/cherch3.jpg" style="height:390px; width:500px" /></center></p>
+
+<p>В конце его срока как стипендиата научно-исследовательской стипендии он был приглашен вернуться на факультет математики в Принстон, чтобы начать здесь свою преподавательскую карьеру. Он был старшим преподавателем в 1929-39, доцентом в 1939-47 и профессором в 1947-67 (математики и философии в 1961-1967).</p>
+
+<p>В начале своей карьеры Чёрч привел Библиографию символической логики &ndash; полную, снабжённую комментариями и ссылками библиографию каждой публикации по символической логике того времени. Таким образом, будет преуменьшением сказать, что он был просто осведомлен о литературе: он читал, организовывал и индексировал по авторам и предмету эту литературу. Конечно, литература была на разных языках. Чёрч не только обладал широкими знаниями современных языков, но также изучал латынь и греческий. Кроме того, Чёрч регулярно читал научные журналы. Он не любил, когда авторы делали ошибки и, известно, что он несколько раз писал издателям.</p>
+
+<p>В 1930-ые Принстон был центром развития математической логики. Там был Чёрч вместе со своими студентами Россером и Клини, Джон фон Нейман, Алан Тьюринг, который думал над понятием эффективной вычислимости, приехал как выпускник университета в 1936 и остался для того, чтобы завершить докторскую диссертацию под руководством Чёрча. И Курт Гёдель, посетивший институт Расширенного обучения в 1933-34 (когда он читал лекции по своей теореме о неразрешимости) и 1935 перед тем, как в1940 переехать туда навсегда. С тех пор, как Чёрч побывал в Гёттингене и Амстердаме, он знал лично практически каждого логика.</p>
+
+<p><img src="/laravel/public/persons/img/cherch4.jpg" style="float:left; height:340px; width:254px" />В 1935 Чёрч был одним из основателей Ассоциации символической логики, а с 1936 редактором Журнала символической логики (The Journal of Symbolic Logic).</p>
+
+<p>Поводом для ухода Чёрча из Принстона послужил отказ университета поддерживать маленький коллектив JSL после официального выхода Чёрча на пенсию, тем временем как Калифорнийский университет обещал поддерживать журнал до тех пор, пока Чёрч будет там главным редактором.</p>
+
+<p>Так, Чёрч покинул Принстон в 1967 и переехал в Калифорнийский университет, где он был профессором математики и философии с 1967 по 1990год.</p>
+
+<p>В 1979 Чёрч уволился из JSL, проработав там 44 года. Преподавать в Калифорнийском университете он закончил в 1990, в возрасте 87 лет, завершив преподавательскую карьеру, начатую 63 года назад. Но свою научно-исследовательскую работу он продолжал до конца своих дней.</p>
+
+<p>В течение всей своей карьеры Чёрч руководил исследованиями аспирантов. 31 студент под его руководством защитили докторские диссертации, среди них Фостер, Тьюринг, Клини, Кемени, Бун и Смаллиан.</p>
+
+<p>Алонзо Чёрч имел вежливые манеры джентльмена, выросшего в Вирджинии. Он никогда не был груб, даже с теми, с кем имел сильные разногласия. Глубоко религиозный человек, всю жизнь он был прихожанином Пресвитерианской церкви.</p>
+
+<p><img src="/laravel/public/persons/img/cherch5.jpg" style="float:right; height:309px; width:210px" />По характеру Чёрч был аккуратным и неторопливым &ndash; очень аккуратным и очень неторопливым. Его студенты могли это заметить уже на первом занятии по тому, как он вытирает доску. Материалы к лекциям Чёрч никогда не печатал, а писал от руки, всегда используя чернила нескольких цветов. Наиболее известными курсами, которые читал Чёрч, являются, безусловно, математическая логика и &lambda;-исчисление. Материалы к этим курсам послужили основой для двух книг Чёрча, ставших классическими, это &laquo;Introduction to Mathematical Logic&raquo; (&laquo;Введение в математическую логику&raquo;) и &laquo;The Calculi of Lambda-Conversion&raquo; (&laquo;Исчисления лямбда-преобразования&raquo;).</p>
+
+<p>Чёрч принадлежал к большому количеству профессиональных организаций и получил много наград за свои достижения.</p>
+
+<p><strong>Наиболее значимые научные достижения.</strong></p>
+
+<p>Черч прославился разработкой таких работ, как &ldquo;Теорема Черча&rdquo; и &ldquo;Тезис Черча&rdquo;, которые впервые появились в печати в 1936 году. &ldquo;Теорема Черча&rdquo; предшествовала знаменитому исследованию&nbsp;Алана Тьюринга&nbsp;на тему&nbsp;проблемы остановки, в котором также было продемонстрировано существование задач, неразрешимых механическими способами и позже получила название &ldquo;Теорема Чёрча-Тьюринга&rdquo;. Эта &nbsp;теорема доказывает&nbsp;утверждение об отсутствии&nbsp;алгоритма, решающего&nbsp;проблему разрешения (Проблема разрешения&nbsp;(нем.&nbsp;<em>Entscheidungsproblem</em>)&nbsp;&mdash; задача из области&nbsp;оснований математики, сформулированная&nbsp;Давидом Гильбертом&nbsp;в&nbsp;1928 году: найти алгоритм, который бы принимал в качестве входных данных описание любой&nbsp;проблемы разрешимости&nbsp;(формального языка и математического утверждения <em>S</em> на этом языке), и после конечного числа шагов останавливался бы и выдавал один из двух ответов: &laquo;истина&raquo; или &laquo;ложь&raquo;, в зависимости от того, истинно или ложно утверждение <em>S</em>).</p>
+
+<p><img src="/laravel/public/persons/img/cherch6.jpg" style="float:left; height:245px; width:188px" />За теоремой &ldquo;Чёрча-Тюринга&rdquo; последовала разработка теории лямбда-исчислений. В 1941 году он опубликовал книгу &ldquo;The Calculi of Lambda-Conversion&rdquo; (&laquo;Исчисления лямбда-преобразования&raquo;) в Принстонском Университете. Она была переписана, и отредактированная версия лекций была отдана Чёрчем Принстонскому Университету для изучения лямбда-исчислений. Помимо прочего, его система&nbsp;лямбда-исчислений&nbsp;легла в основу&nbsp;функциональных языков программирования, в частности семейства&nbsp;Лисп.</p>
+
+<p>Впоследствии Чёрч и Тьюринг показали, что лямбда-исчисления и&nbsp;машина Тьюринга имели одинаковые свойства, таким образом доказывая, что различные &laquo;механические процессы вычислений&raquo; могли иметь одинаковые возможности. Эта работа была оформлена как&nbsp;тезис Чёрча &mdash; Тьюринга. В терминах вычислимости по Тьюрингу, тезис гласит, что для любой алгоритмически вычислимой функции существует вычисляющая её значения&nbsp;машина Тьюринга. (Тезис Чёрча &mdash; Тьюринга &mdash; Дойча:&nbsp;любой конечный физический процесс, не использующий аппарат, связанный с непрерывностью и бесконечностью, может быть вычислен физическим устройством.)</p>
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			</article></article>	</div></div>
+			
+				<!-- BEGIN BLANK SECTION -->
+			</div><!--end #content-->
+			<!-- END CONTENT -->
+
+			
+		
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			<!-- BEGIN MENUBAR-->
+			<div id="menubar" class="menubar-inverse ">
+				
+					<!-- END MAIN MENU -->
+
+					<div class="menubar-foot-panel">
+						<small class="no-linebreak hidden-folded">
+							<span class="opacity-75">Copyright &copy; 2015</span> <strong>НИЯУ МИФИ</strong>
+						</small>
+					</div>
+				</div><!--end .menubar-scroll-panel-->
+			</div><!--end #menubar-->
+			<!-- END MENUBAR -->
+
+			<!-- BEGIN OFFCANVAS RIGHT -->
+			<div class="offcanvas">
+
+				<!-- BEGIN OFFCANVAS SEARCH -->
+				<div id="offcanvas-search" class="offcanvas-pane width-8">
+					<div class="offcanvas-head">
+						<header class="text-primary">Search</header>
+						<div class="offcanvas-tools">
+							<a class="btn btn-icon-toggle btn-default-light pull-right" data-dismiss="offcanvas">
+								<i class="md md-close"></i>
+							</a>
+						</div>
+					</div>
+					<div class="offcanvas-body no-padding">
+						<ul class="list ">
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>A</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar4.jpg?1404026791" alt="" />
+									</div>
+									<div class="tile-text">
+										Alex Nelson
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar9.jpg?1404026744" alt="" />
+									</div>
+									<div class="tile-text">
+										Ann Laurens
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>J</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar2.jpg?1404026449" alt="" />
+									</div>
+									<div class="tile-text">
+										Jessica Cruise
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar8.jpg?1404026729" alt="" />
+									</div>
+									<div class="tile-text">
+										Jim Peters
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>M</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar5.jpg?1404026513" alt="" />
+									</div>
+									<div class="tile-text">
+										Mabel Logan
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar11.jpg?1404026774" alt="" />
+									</div>
+									<div class="tile-text">
+										Mary Peterson
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar3.jpg?1404026799" alt="" />
+									</div>
+									<div class="tile-text">
+										Mike Alba
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>N</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar6.jpg?1404026572" alt="" />
+									</div>
+									<div class="tile-text">
+										Nathan Peterson
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>P</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar7.jpg?1404026721" alt="" />
+									</div>
+									<div class="tile-text">
+										Philip Ericsson
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+							<li class="tile divider-full-bleed">
+								<div class="tile-content">
+									<div class="tile-text"><strong>S</strong></div>
+								</div>
+							</li>
+							<li class="tile">
+								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+									<div class="tile-icon">
+										<img src="/laravel/resources/assets/img/avatar10.jpg?1404026762" alt="" />
+									</div>
+									<div class="tile-text">
+										Samuel Parsons
+										<small>123-123-3210</small>
+									</div>
+								</a>
+							</li>
+						</ul>
+					</div><!--end .offcanvas-body -->
+				</div><!--end .offcanvas-pane -->
+				<!-- END OFFCANVAS SEARCH -->
+
+				<!-- BEGIN OFFCANVAS CHAT -->
+				<div id="offcanvas-chat" class="offcanvas-pane style-default-light width-12">
+					<div class="offcanvas-head style-default-bright">
+						<header class="text-primary">Chat with Ann Laurens</header>
+						<div class="offcanvas-tools">
+							<a class="btn btn-icon-toggle btn-default-light pull-right" data-dismiss="offcanvas">
+								<i class="md md-close"></i>
+							</a>
+							<a class="btn btn-icon-toggle btn-default-light pull-right" href="#offcanvas-search" data-toggle="offcanvas" data-backdrop="false">
+								<i class="md md-arrow-back"></i>
+							</a>
+						</div>
+						<form class="form">
+							<div class="form-group floating-label">
+								<textarea name="sidebarChatMessage" id="sidebarChatMessage" class="form-control autosize" rows="1"></textarea>
+								<label for="sidebarChatMessage">Leave a message</label>
+							</div>
+						</form>
+					</div>
+					<div class="offcanvas-body">
+						<ul class="list-chats">
+							<li>
+								<div class="chat">
+									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar1.jpg?1403934956" alt="" /></div>
+									<div class="chat-body">
+										Yes, it is indeed very beautiful.
+										<small>10:03 pm</small>
+									</div>
+								</div><!--end .chat -->
+							</li>
+							<li class="chat-left">
+								<div class="chat">
+									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar9.jpg?1404026744" alt="" /></div>
+									<div class="chat-body">
+										Did you see the changes?
+										<small>10:02 pm</small>
+									</div>
+								</div><!--end .chat -->
+							</li>
+							<li>
+								<div class="chat">
+									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar1.jpg?1403934956" alt="" /></div>
+									<div class="chat-body">
+										I just arrived at work, it was quite busy.
+										<small>06:44pm</small>
+									</div>
+									<div class="chat-body">
+										I will take look in a minute.
+										<small>06:45pm</small>
+									</div>
+								</div><!--end .chat -->
+							</li>
+							<li class="chat-left">
+								<div class="chat">
+									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar9.jpg?1404026744" alt="" /></div>
+									<div class="chat-body">
+										The colors are much better now.
+									</div>
+									<div class="chat-body">
+										The colors are brighter than before.
+										I have already sent an example.
+										This will make it look sharper.
+										<small>Mon</small>
+									</div>
+								</div><!--end .chat -->
+							</li>
+							<li>
+								<div class="chat">
+									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar1.jpg?1403934956" alt="" /></div>
+									<div class="chat-body">
+										Are the colors of the logo already adapted?
+										<small>Last week</small>
+									</div>
+								</div><!--end .chat -->
+							</li>
+						</ul>
+					</div><!--end .offcanvas-body -->
+				</div><!--end .offcanvas-pane -->
+				<!-- END OFFCANVAS CHAT -->
+
+			</div><!--end .offcanvas-->
+			<!-- END OFFCANVAS RIGHT -->
+
+		</div><!--end #base-->
+		<!-- END BASE -->
+
+		<!-- BEGIN JAVASCRIPT -->
+		<script src="/laravel/resources/assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
+		<script src="/laravel/resources/assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+		<script src="/laravel/resources/assets/js/libs/bootstrap/bootstrap.min.js"></script>
+		<script src="/laravel/resources/assets/js/libs/spin.js/spin.min.js"></script>
+		<script src="/laravel/resources/assets/js/libs/autosize/jquery.autosize.min.js"></script>
+		<script src="/laravel/resources/assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/App.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppNavigation.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppOffcanvas.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppCard.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppForm.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppNavSearch.js"></script>
+		<script src="/laravel/resources/assets/js/core/source/AppVendor.js"></script>
+		<script src="/laravel/resources/assets/js/core/demo/Demo.js"></script>
+		<!-- END JAVASCRIPT -->
+
+	</body>
+</html>
