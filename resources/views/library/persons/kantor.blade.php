@@ -1,187 +1,56 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Георг Кантор</title>
+<head>
+    <title>Кантор</title>
 
-		<!-- BEGIN META -->
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="keywords" content="your,keywords">
-		<meta name="description" content="Short explanation about this website">
-		<!-- END META -->
+    <!-- BEGIN META -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="your,keywords">
+    <meta name="description" content="Short explanation about this website">
+    <!-- END META -->
 
-		<!-- BEGIN STYLESHEETS -->
-		<link href='http://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css'/>
-		<link type="text/css" rel="stylesheet" href="/laravel/resources/assets/css/theme-default/bootstrap.css?1422792965" />
-		<link type="text/css" rel="stylesheet" href="/laravel/resources/assets/css/theme-default/materialadmin.css?1425466319" />
-		<link type="text/css" rel="stylesheet" href="/laravel/resources/assets/css/theme-default/font-awesome.min.css?1422529194" />
-		<link type="text/css" rel="stylesheet" href="/laravel/resources/assets/css/theme-default/material-design-iconic-font.min.css?1421434286" />
-		<!-- END STYLESHEETS -->
+    <!-- BEGIN STYLESHEETS -->
+    {!! HTML::style('css/bootstrap.css') !!}
+    {!! HTML::style('css/materialadmin.css') !!}
+    {!! HTML::style('css/font-awesome.min.css') !!}
+    {!! HTML::style('css/material-design-iconic-font.min.css') !!}
+    <!-- END STYLESHEETS -->
 
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		<script type="text/javascript" src="/laravel/resources/assets/js/libs/utils/html5shiv.js?1403934957"></script>
-		<script type="text/javascript" src="/laravel/resources/assets/js/libs/utils/respond.min.js?1403934956"></script>
-		<![endif]-->
-		
-		
-	</head>
-	<body class="menubar-hoverable header-fixed menubar-pin ">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    {!! HTML::script('js/libs/utils/html5shiv.js') !!}
+    {!! HTML::script('js/libs/utils/respond.min.js') !!}
+    <![endif]-->
 
-		<!-- BEGIN HEADER-->
-		<header id="header" >
-			<div class="headerbar">
-				<!-- Brand and toggle get grouped for better mobile display -->
-				<div class="headerbar-left">
-					<ul class="header-nav header-nav-options">
-						<li class="header-nav-brand" >
-							<div class="brand-holder">
-								<a href="/laravel/resources/html/dashboards/dashboard.html">
-									<span class="text-lg text-bold text-primary">MATERIAL ADMIN</span>
-								</a>
-							</div>
-						</li>
-						<li>
-							<a class="btn btn-icon-toggle menubar-toggle" data-toggle="menubar" href="javascript:void(0);">
-								<i class="fa fa-bars"></i>
-							</a>
-						</li>
-					</ul>
-				</div>
-				<!-- Collect the nav links, forms, and other content for toggling -->
-				<div class="headerbar-right">
-					<ul class="header-nav header-nav-options">
-						<li>
-							<!-- Search form -->
-							<form class="navbar-search" role="search">
-								<div class="form-group">
-									<input type="text" class="form-control" name="headerSearch" placeholder="Enter your keyword">
-								</div>
-								<button type="submit" class="btn btn-icon-toggle ink-reaction"><i class="fa fa-search"></i></button>
-							</form>
-						</li>
-						<li class="dropdown hidden-xs">
-							<a href="javascript:void(0);" class="btn btn-icon-toggle btn-default" data-toggle="dropdown">
-								<i class="fa fa-bell"></i><sup class="badge style-danger">4</sup>
-							</a>
-							<ul class="dropdown-menu animation-expand">
-								<li class="dropdown-header">Today's messages</li>
-								<li>
-									<a class="alert alert-callout alert-warning" href="javascript:void(0);">
-										<img class="pull-right img-circle dropdown-avatar" src="/laravel/resources/assets/img/avatar2.jpg?1404026449" alt="" />
-										<strong>Alex Anistor</strong><br/>
-										<small>Testing functionality...</small>
-									</a>
-								</li>
-								<li>
-									<a class="alert alert-callout alert-info" href="javascript:void(0);">
-										<img class="pull-right img-circle dropdown-avatar" src="/laravel/resources/assets/img/avatar3.jpg?1404026799" alt="" />
-										<strong>Alicia Adell</strong><br/>
-										<small>Reviewing last changes...</small>
-									</a>
-								</li>
-								<li class="dropdown-header">Options</li>
-								<li><a href="/laravel/resources/html/pages/login.html">View all messages <span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
-								<li><a href="/laravel/resources/html/pages/login.html">Mark as read <span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
-							</ul><!--end .dropdown-menu -->
-						</li><!--end .dropdown -->
-						<li class="dropdown hidden-xs">
-							<a href="javascript:void(0);" class="btn btn-icon-toggle btn-default" data-toggle="dropdown">
-								<i class="fa fa-area-chart"></i>
-							</a>
-							<ul class="dropdown-menu animation-expand">
-								<li class="dropdown-header">Server load</li>
-								<li class="dropdown-progress">
-									<a href="javascript:void(0);">
-										<div class="dropdown-label">
-											<span class="text-light">Server load <strong>Today</strong></span>
-											<strong class="pull-right">93%</strong>
-										</div>
-										<div class="progress"><div class="progress-bar progress-bar-danger" style="width: 93%"></div></div>
-									</a>
-								</li><!--end .dropdown-progress -->
-								<li class="dropdown-progress">
-									<a href="javascript:void(0);">
-										<div class="dropdown-label">
-											<span class="text-light">Server load <strong>Yesterday</strong></span>
-											<strong class="pull-right">30%</strong>
-										</div>
-										<div class="progress"><div class="progress-bar progress-bar-success" style="width: 30%"></div></div>
-									</a>
-								</li><!--end .dropdown-progress -->
-								<li class="dropdown-progress">
-									<a href="javascript:void(0);">
-										<div class="dropdown-label">
-											<span class="text-light">Server load <strong>Lastweek</strong></span>
-											<strong class="pull-right">74%</strong>
-										</div>
-										<div class="progress"><div class="progress-bar progress-bar-warning" style="width: 74%"></div></div>
-									</a>
-								</li><!--end .dropdown-progress -->
-							</ul><!--end .dropdown-menu -->
-						</li><!--end .dropdown -->
-					</ul><!--end .header-nav-options -->
-					<ul class="header-nav header-nav-profile">
-						<li class="dropdown">
-							<a href="javascript:void(0);" class="dropdown-toggle ink-reaction" data-toggle="dropdown">
-								<img src="/laravel/resources/assets/img/avatar1.jpg?1403934956" alt="" />
-								<span class="profile-info">
-									Daniel Johnson
-									<small>Administrator</small>
-								</span>
-							</a>
-							<ul class="dropdown-menu animation-dock">
-								<li class="dropdown-header">Config</li>
-								<li><a href="/laravel/resources/html/pages/profile.html">My profile</a></li>
-								<li><a href="/laravel/resources/html/pages/blog/post.html">My blog <span class="badge style-danger pull-right">16</span></a></li>
-								<li><a href="/laravel/resources/html/pages/calendar.html">My appointments</a></li>
-								<li class="divider"></li>
-								<li><a href="/laravel/resources/html/pages/locked.html"><i class="fa fa-fw fa-lock"></i> Lock</a></li>
-								<li><a href="/laravel/resources/html/pages/login.html"><i class="fa fa-fw fa-power-off text-danger"></i> Logout</a></li>
-							</ul><!--end .dropdown-menu -->
-						</li><!--end .dropdown -->
-					</ul><!--end .header-nav-profile -->
-					<ul class="header-nav header-nav-toggle">
-						<li>
-							<a class="btn btn-icon-toggle btn-default" href="#offcanvas-search" data-toggle="offcanvas" data-backdrop="false">
-								<i class="fa fa-ellipsis-v"></i>
-							</a>
-						</li>
-					</ul><!--end .header-nav-toggle -->
-				</div><!--end #header-navbar-collapse -->
-			</div>
-		</header>
-		<!-- END HEADER-->
 
-		<!-- BEGIN BASE-->
-		<div id="base">
+</head>
+<body>
+<section>
 
-			<!-- BEGIN OFFCANVAS LEFT -->
-			<div class="offcanvas">
-			</div><!--end .offcanvas-->
-			<!-- END OFFCANVAS LEFT -->
+<div class="col-md-12 col-sm-6 card style-primary text-center">
+    <h1 class="text-default-bright">Библиотека</h1>
+</div>
 
-			<!-- BEGIN CONTENT-->
-			<div id="content">
+<!-- BEGIN CONTENT-->
+<div id="content">
 
-				<!-- BEGIN BLANK SECTION -->
-				<section>
-					<div class="section-header">
-						<ol class="breadcrumb">
-							<li><a href="/laravel/resources/html/.html">home</a></li>
-							<li><a href="/laravel/public">Библиотека</a></li>
-							<li><a href="/laravel/public/person.html">Персоналии</a></li>
-							<li class="active">Георг Кантор</li>
-						</ol>
-					</div><!--end .section-header -->
-					<div class="section-body">
-					</div><!--end .section-body -->
-				</section>
-	<div class="card card-tiles style-default-light" style="margin-left:2%; margin-right:2%">
-	<article class="style-default-bright">
-		<div class="card-body"> 
+    <!-- BEGIN BLANK SECTION -->
+    <section>
+        <div class="section-header">
+            <ol class="breadcrumb">
+                <li>{!! HTML::linkRoute('home', 'Главная') !!}</li>
+                <li>{!! HTML::linkRoute('library_index', 'Библиотека') !!}</li>
+                <li>{!! HTML::linkRoute('library_persons', 'Персоналии') !!}</li>
+                <li class="active">Кантор</li>
+            </ol>
+        </div><!--end .section-header -->
+    </section>
+    <div class="card card-tiles style-default-light" style="margin-left:2%; margin-right:2%">
+        <article class="style-default-bright">
+            <div class="card-body">
 		<article style="margin-left:10%; margin-right:10%; text-align: justify">
-<p><img alt="/laravel/public/persons/img/kantor0.jpg" src="/laravel/public/persons/img/kantor0.jpg" style="float:left; height:288px; width:228px" /></p>			
+<p>{!! HTML::image('img/library/persons/kantor0.jpg', 'kantor', array('style' => 'float:left; height:288px; width:228px')) !!}</p>
 <p><strong>Георг Кантор.</strong></p>
 
 <p>Георг Кантор (нем.&nbsp;<em>Georg Ferdinand Ludwig Philipp Cantor</em>, 3 марта 1845, Санкт-Петербург&nbsp;&mdash; 6 января 1918, Галле (Заале))&nbsp;&mdash; немецкий математик. Он наиболее известен как создатель теории множеств, ставшей краеугольным камнем в математике. Кантор ввёл понятие взаимно-однозначного соответствия между элементами множеств, дал определения бесконечного и вполне&nbsp; упорядоченного множеств и доказал, что действительных чисел &laquo;больше&raquo;, чем натуральных. Теорема Кантора, фактически, утверждает существование &laquo;бесконечности бесконечностей&raquo;. Он определил понятия кардинальных и порядковых чисел и их арифметику. Его работа представляет большой философский интерес, о чём и сам Кантор прекрасно знал.</p>
@@ -193,7 +62,7 @@
 <p>Юные годы и учёба</p>
 
 <p>Кантор родился в 1845 году в Западной колонии торговцев в Санкт-Петербурге и рос там до 11-летнего возраста. Оба родителя были евреями: отец Георг-Вольдемар Кантор&nbsp;&mdash; португальский еврей и датский подданный, мать Марианна Бойм&nbsp;&mdash; племянница известного венгерско-российского скрипача Иосифа Бойма. Георг был старшим из шести детей. Он виртуозно играл на скрипке, унаследовав от своих родителей значительные художественные и музыкальные таланты. Отец семейства был членом Петербургской фондовой биржи. Когда он заболел, семья, рассчитывая на более мягкий климат, в 1856 году переехала в Германию: сначала в Висбаден, а потом во Франкфурт. В 1860 году Георг закончил с отличием реальное училище в Дармштадте; учителя отмечали его исключительные способности к математике, в частности, к тригонометрии. В 1862 году будущий знаменитый учёный поступил в Федеральный политехнический институт в Цюрихе (ныне&nbsp;&mdash; Швейцарская высшая техническая школа Цюриха). Через год умер его отец; получив солидное наследство, Георг переводится в Берлинский университет имени Гумбольдта, где начинает посещать лекции таких знаменитых учёных, как Леопольд Кронекер, Карл Вейерштрасс и Эрнст Куммер. Лето 1866 года он провёл в Гёттингенском университете, тогда, да и сейчас,&nbsp;&mdash; очень важного центра математической мысли. В 1867 году Берлинский университет присвоил ему степень доктора философии за работу по теории чисел <em>&laquo;De aequationibus secundi gradus indeterminatis&raquo;</em>.</p>
-<p><center><img src="/laravel/public/persons/img/kantor1.jpg" style="float:left; height:408px; width:328px"></center></p>
+<p><center>{!! HTML::image('img/library/persons/kantor1.jpg', 'kantor', array('style' => 'float:left; height:408px; width:328px')) !!}</center></p>
 
 
 <h3>Учёный и исследователь</h3>
@@ -231,7 +100,7 @@
 </ul>
 
 <p style="margin-left:36pt">Канторово множество (канторов дисконтинуум, канторова пыль)&nbsp;&mdash; один из простейших фракталов, подмножество единичного отрезка вещественной прямой, которое является классическим примером дисконтинуума в математическом анализе. Описано в 1883 году Кантором. Фрактал (лат.&nbsp;<em>fractus</em>&nbsp;&mdash; дроблёный, сломанный, разбитый)&nbsp;&mdash; математическое множество, обладающее свойством самоподобия, то есть однородности в различных шкалах измерения (любая часть фрактала подобна всему множеству целиком). В математике под фракталами понимают множества точек в евклидовом пространстве, имеющие дробную метрическую размерность (в смысле Минковского или Хаусдорфа), либо метрическую размерность, отличную от топологической, поэтому их следует отличать от прочих геометрических фигур, ограниченных конечным число звеньев.</p>
-<p><center><img alt="http://www.molomo.ru/img/univer9.jpg" src="/laravel/public/persons/img/kantor2.jpg" style="height:483px; width:650px" /></center></p>
+<p><center>{!! HTML::image('img/library/persons/kantor2.jpg', 'kantor', array('style' => 'float:left; height:483px; width:650px')) !!}</center></p>
 <ul>
 	<li>Функция Кантора (Канторова лестница);</li>
 </ul>
@@ -239,7 +108,7 @@
 <ul>
 	<li>Канторова лестница&nbsp;&mdash; пример непрерывной монотонной функции [0,1]&rarr;[0,1], которая не является константой, но при этом имеет производную, равную нулю в почти всех точках (сингулярной функции). Иногда называется &laquo;Чёртовой лестницей&raquo;.</li>
 </ul>
-<p><center><img alt="http://www.molomo.ru/img/univer9.jpg" src="/laravel/public/persons/img/kantor3.jpg" style="height:583px; width:500px" /></center></p>
+<p><center>{!! HTML::image('img/library/persons/kantor3.jpg', 'kantor', array('style' => 'float:left; height:583px; width:500px')) !!}</center></p>
 
 
 <ul>
@@ -283,314 +152,22 @@
 	<li>а также другие математические объекты.</li>
 </ul>
 
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			</article></article>	</div></div>
-			
-				<!-- BEGIN BLANK SECTION -->
-			</div><!--end #content-->
-			<!-- END CONTENT -->
-
-			
-		
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			<!-- BEGIN MENUBAR-->
-			<div id="menubar" class="menubar-inverse ">
-				
-					<!-- END MAIN MENU -->
-
-					<div class="menubar-foot-panel">
-						<small class="no-linebreak hidden-folded">
-							<span class="opacity-75">Copyright &copy; 2015</span> <strong>НИЯУ МИФИ</strong>
-						</small>
-					</div>
-				</div><!--end .menubar-scroll-panel-->
-			</div><!--end #menubar-->
-			<!-- END MENUBAR -->
-
-			<!-- BEGIN OFFCANVAS RIGHT -->
-			<div class="offcanvas">
-
-				<!-- BEGIN OFFCANVAS SEARCH -->
-				<div id="offcanvas-search" class="offcanvas-pane width-8">
-					<div class="offcanvas-head">
-						<header class="text-primary">Search</header>
-						<div class="offcanvas-tools">
-							<a class="btn btn-icon-toggle btn-default-light pull-right" data-dismiss="offcanvas">
-								<i class="md md-close"></i>
-							</a>
-						</div>
-					</div>
-					<div class="offcanvas-body no-padding">
-						<ul class="list ">
-							<li class="tile divider-full-bleed">
-								<div class="tile-content">
-									<div class="tile-text"><strong>A</strong></div>
-								</div>
-							</li>
-							<li class="tile">
-								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
-									<div class="tile-icon">
-										<img src="/laravel/resources/assets/img/avatar4.jpg?1404026791" alt="" />
-									</div>
-									<div class="tile-text">
-										Alex Nelson
-										<small>123-123-3210</small>
-									</div>
-								</a>
-							</li>
-							<li class="tile">
-								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
-									<div class="tile-icon">
-										<img src="/laravel/resources/assets/img/avatar9.jpg?1404026744" alt="" />
-									</div>
-									<div class="tile-text">
-										Ann Laurens
-										<small>123-123-3210</small>
-									</div>
-								</a>
-							</li>
-							<li class="tile divider-full-bleed">
-								<div class="tile-content">
-									<div class="tile-text"><strong>J</strong></div>
-								</div>
-							</li>
-							<li class="tile">
-								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
-									<div class="tile-icon">
-										<img src="/laravel/resources/assets/img/avatar2.jpg?1404026449" alt="" />
-									</div>
-									<div class="tile-text">
-										Jessica Cruise
-										<small>123-123-3210</small>
-									</div>
-								</a>
-							</li>
-							<li class="tile">
-								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
-									<div class="tile-icon">
-										<img src="/laravel/resources/assets/img/avatar8.jpg?1404026729" alt="" />
-									</div>
-									<div class="tile-text">
-										Jim Peters
-										<small>123-123-3210</small>
-									</div>
-								</a>
-							</li>
-							<li class="tile divider-full-bleed">
-								<div class="tile-content">
-									<div class="tile-text"><strong>M</strong></div>
-								</div>
-							</li>
-							<li class="tile">
-								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
-									<div class="tile-icon">
-										<img src="/laravel/resources/assets/img/avatar5.jpg?1404026513" alt="" />
-									</div>
-									<div class="tile-text">
-										Mabel Logan
-										<small>123-123-3210</small>
-									</div>
-								</a>
-							</li>
-							<li class="tile">
-								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
-									<div class="tile-icon">
-										<img src="/laravel/resources/assets/img/avatar11.jpg?1404026774" alt="" />
-									</div>
-									<div class="tile-text">
-										Mary Peterson
-										<small>123-123-3210</small>
-									</div>
-								</a>
-							</li>
-							<li class="tile">
-								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
-									<div class="tile-icon">
-										<img src="/laravel/resources/assets/img/avatar3.jpg?1404026799" alt="" />
-									</div>
-									<div class="tile-text">
-										Mike Alba
-										<small>123-123-3210</small>
-									</div>
-								</a>
-							</li>
-							<li class="tile divider-full-bleed">
-								<div class="tile-content">
-									<div class="tile-text"><strong>N</strong></div>
-								</div>
-							</li>
-							<li class="tile">
-								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
-									<div class="tile-icon">
-										<img src="/laravel/resources/assets/img/avatar6.jpg?1404026572" alt="" />
-									</div>
-									<div class="tile-text">
-										Nathan Peterson
-										<small>123-123-3210</small>
-									</div>
-								</a>
-							</li>
-							<li class="tile divider-full-bleed">
-								<div class="tile-content">
-									<div class="tile-text"><strong>P</strong></div>
-								</div>
-							</li>
-							<li class="tile">
-								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
-									<div class="tile-icon">
-										<img src="/laravel/resources/assets/img/avatar7.jpg?1404026721" alt="" />
-									</div>
-									<div class="tile-text">
-										Philip Ericsson
-										<small>123-123-3210</small>
-									</div>
-								</a>
-							</li>
-							<li class="tile divider-full-bleed">
-								<div class="tile-content">
-									<div class="tile-text"><strong>S</strong></div>
-								</div>
-							</li>
-							<li class="tile">
-								<a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
-									<div class="tile-icon">
-										<img src="/laravel/resources/assets/img/avatar10.jpg?1404026762" alt="" />
-									</div>
-									<div class="tile-text">
-										Samuel Parsons
-										<small>123-123-3210</small>
-									</div>
-								</a>
-							</li>
-						</ul>
-					</div><!--end .offcanvas-body -->
-				</div><!--end .offcanvas-pane -->
-				<!-- END OFFCANVAS SEARCH -->
-
-				<!-- BEGIN OFFCANVAS CHAT -->
-				<div id="offcanvas-chat" class="offcanvas-pane style-default-light width-12">
-					<div class="offcanvas-head style-default-bright">
-						<header class="text-primary">Chat with Ann Laurens</header>
-						<div class="offcanvas-tools">
-							<a class="btn btn-icon-toggle btn-default-light pull-right" data-dismiss="offcanvas">
-								<i class="md md-close"></i>
-							</a>
-							<a class="btn btn-icon-toggle btn-default-light pull-right" href="#offcanvas-search" data-toggle="offcanvas" data-backdrop="false">
-								<i class="md md-arrow-back"></i>
-							</a>
-						</div>
-						<form class="form">
-							<div class="form-group floating-label">
-								<textarea name="sidebarChatMessage" id="sidebarChatMessage" class="form-control autosize" rows="1"></textarea>
-								<label for="sidebarChatMessage">Leave a message</label>
-							</div>
-						</form>
-					</div>
-					<div class="offcanvas-body">
-						<ul class="list-chats">
-							<li>
-								<div class="chat">
-									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar1.jpg?1403934956" alt="" /></div>
-									<div class="chat-body">
-										Yes, it is indeed very beautiful.
-										<small>10:03 pm</small>
-									</div>
-								</div><!--end .chat -->
-							</li>
-							<li class="chat-left">
-								<div class="chat">
-									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar9.jpg?1404026744" alt="" /></div>
-									<div class="chat-body">
-										Did you see the changes?
-										<small>10:02 pm</small>
-									</div>
-								</div><!--end .chat -->
-							</li>
-							<li>
-								<div class="chat">
-									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar1.jpg?1403934956" alt="" /></div>
-									<div class="chat-body">
-										I just arrived at work, it was quite busy.
-										<small>06:44pm</small>
-									</div>
-									<div class="chat-body">
-										I will take look in a minute.
-										<small>06:45pm</small>
-									</div>
-								</div><!--end .chat -->
-							</li>
-							<li class="chat-left">
-								<div class="chat">
-									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar9.jpg?1404026744" alt="" /></div>
-									<div class="chat-body">
-										The colors are much better now.
-									</div>
-									<div class="chat-body">
-										The colors are brighter than before.
-										I have already sent an example.
-										This will make it look sharper.
-										<small>Mon</small>
-									</div>
-								</div><!--end .chat -->
-							</li>
-							<li>
-								<div class="chat">
-									<div class="chat-avatar"><img class="img-circle" src="/laravel/resources/assets/img/avatar1.jpg?1403934956" alt="" /></div>
-									<div class="chat-body">
-										Are the colors of the logo already adapted?
-										<small>Last week</small>
-									</div>
-								</div><!--end .chat -->
-							</li>
-						</ul>
-					</div><!--end .offcanvas-body -->
-				</div><!--end .offcanvas-pane -->
-				<!-- END OFFCANVAS CHAT -->
-
-			</div><!--end .offcanvas-->
-			<!-- END OFFCANVAS RIGHT -->
-
-		</div><!--end #base-->
-		<!-- END BASE -->
-
-		<!-- BEGIN JAVASCRIPT -->
-		<script src="/laravel/resources/assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
-		<script src="/laravel/resources/assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
-		<script src="/laravel/resources/assets/js/libs/bootstrap/bootstrap.min.js"></script>
-		<script src="/laravel/resources/assets/js/libs/spin.js/spin.min.js"></script>
-		<script src="/laravel/resources/assets/js/libs/autosize/jquery.autosize.min.js"></script>
-		<script src="/laravel/resources/assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script>
-		<script src="/laravel/resources/assets/js/core/source/App.js"></script>
-		<script src="/laravel/resources/assets/js/core/source/AppNavigation.js"></script>
-		<script src="/laravel/resources/assets/js/core/source/AppOffcanvas.js"></script>
-		<script src="/laravel/resources/assets/js/core/source/AppCard.js"></script>
-		<script src="/laravel/resources/assets/js/core/source/AppForm.js"></script>
-		<script src="/laravel/resources/assets/js/core/source/AppNavSearch.js"></script>
-		<script src="/laravel/resources/assets/js/core/source/AppVendor.js"></script>
-		<script src="/laravel/resources/assets/js/core/demo/Demo.js"></script>
-		<!-- END JAVASCRIPT -->
-
-	</body>
+    {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
+    {!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
+    {!! HTML::script('js/libs/bootstrap/bootstrap.min.js') !!}
+    {!! HTML::script('js/libs/spin.js/spin.min.js') !!}
+    {!! HTML::script('js/libs/autosize/jquery.autosize.min.js') !!}
+    {!! HTML::script('js/libs/nanoscroller/jquery.nanoscroller.min.js') !!}
+    {!! HTML::script('js/core/source/App.js') !!}
+    {!! HTML::script('js/core/source/AppNavigation.js') !!}
+    {!! HTML::script('js/core/source/AppOffcanvas.js') !!}
+    {!! HTML::script('js/core/source/AppCard.js') !!}
+    {!! HTML::script('js/core/source/AppForm.js') !!}
+    {!! HTML::script('js/core/source/AppNavSearch.js') !!}
+    {!! HTML::script('js/core/source/AppVendor.js') !!}
+    {!! HTML::script('js/core/demo/Demo.js') !!}
+    <!-- END JAVASCRIPT -->
+</section>
+</body>
 </html>

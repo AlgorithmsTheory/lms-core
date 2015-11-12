@@ -25,7 +25,7 @@
         </div>
         <br>
         <div class="row">
-            <a href="#" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-primary" role="button">Перейти к электронной библтотеке</a>
+            <a href="{{URL::route('library_index')}}" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-primary" role="button">Перейти к электронной библтотеке</a>
         </div>
         <br>
         <div class="row">

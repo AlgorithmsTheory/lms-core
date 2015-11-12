@@ -86,7 +86,7 @@
                     </button>
                     <ul class="dropdown-menu animation-expand" role="menu">
                         <li>{!! HTML::linkRoute('library_definitions', 'Определения') !!}</li>
-                        <li>{!! HTML::link('html/teoremy.html', 'Теоремы') !!}</li>
+                        <li>{!! HTML::linkRoute('library_theorems', 'Теоремы') !!}</li>
                         <li class="divider"></li>
                         <li>{!! HTML::link('download/SpisokOT.rar', 'Скачать всё') !!}</li>
                     </ul>
@@ -126,7 +126,7 @@
                 <a>&nbsp;&nbsp;&nbsp;</a>
                 <div class="btn-group">
                     <button type="button" class="btn ink-reaction btn-flat dropdown-toggle" >
-                        {!! HTML::link('html/persons/person.html', 'Персоналии') !!}
+                        {!! HTML::linkRoute('library_persons', 'Персоналии') !!}
                     </button>
 
                 </div>
@@ -134,7 +134,7 @@
                 <a>&nbsp;&nbsp;&nbsp;</a>
                 <div class="btn-group">
                     <button type="button" class="btn ink-reaction btn-flat dropdown-toggle" >
-                        {!! HTML::link('html/dop.html', 'Дополнительно') !!}
+                        {!! HTML::linkRoute('library_extra', 'Дополнительно') !!}
                     </button>
                 </div>
 
