@@ -57,6 +57,7 @@ class AccordanceTable extends QuestionType {
     }
 
     public function check($array){
+        $buf_array = $array;
         $score = 0;
         $answer_parse = explode(";" ,$this->answer);     //массив правильных ответов
         $step = $this->points/count($answer_parse);
@@ -84,9 +85,9 @@ class AccordanceTable extends QuestionType {
             $score = 0;
         }
         if ($score == $this->points){
-            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array);
+            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $buf_array);
         }
-        else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array);
+        else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $buf_array);
         //echo $score.'<br>';
         return $data;
     }

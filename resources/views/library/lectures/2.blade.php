@@ -1,6 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
+@extends('templates.base')
+@section('head')
 		<title>Лекция 2</title>
 
 		<!-- BEGIN META -->
@@ -24,16 +23,9 @@
         <![endif]-->
 
 
-    </head>
-    <body>
-    <section>
+@stop
+@section('content')
 
-    <div class="col-md-12 col-sm-6 card style-primary text-center">
-        <h1 class="text-default-bright">Библиотека</h1>
-    </div>
-
-			<!-- BEGIN CONTENT-->
-			<div id="content">
 
 				<!-- BEGIN BLANK SECTION -->
 				<section>
@@ -306,7 +298,8 @@
 
 
 			</article>	</article>	</div></div>
-
+@stop
+@section('js-down')
 		<!-- BEGIN JAVASCRIPT -->
     {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
     {!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
@@ -323,6 +316,4 @@
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
 		<!-- END JAVASCRIPT -->
-</section>
-	</body>
-</html>
+@stop

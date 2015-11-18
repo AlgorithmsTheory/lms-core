@@ -38,7 +38,14 @@
 @endfor
 <input id="amount" type="hidden" name="amount" value="{{ $amount }}">
 <input type="hidden" name="id_test" value="{{ $id_test }}">
-<input id="check" onClick="fillSuper()" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-primary" type="submit" name="check" value="Отправить">
+    <div class="col-sm-6">
+        <input id="check" onClick="fillSuper()" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-primary" type="submit" name="check" value="Отправить">
+    </div>
+@if ($test_type == 'Тренировочный')
+    <div class="col-sm-6">
+        <a href="{{URL::route('drop_test')}}" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-danger" role="button">Отказаться</a>
+    </div>
+    @endif
 {!! Form::close() !!}
 {!! HTML::script('js/toolbar.js') !!}
 <br>

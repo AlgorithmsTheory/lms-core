@@ -1,30 +1,46 @@
 <html>
 <body>
-<div class="col-md-12 col-sm-6">
-{!! Form::open(['method' => 'PATCH', 'route' => 'question_checktest', 'class' => 'smart-blue']) !!}
+{!! Form::open(['method' => 'PATCH', 'class' => 'smart-blue']) !!}
 <h1>Вопрос {{ $count }}</h1>
 <input type="hidden" name="num" value="{{ $id }}">
 <input type="hidden" name="type" value="{{ $type }}">
-<table>
-    <tr>
-        <td></td>
+<table class="table table-bordered no-margin">
+    <tr class="info">
+        <td>#</td>
         @foreach ($variants as $var)
-        <td> {{ $var }} </td>
+            <td> {{ $var }} </td>
         @endforeach
     </tr>
     <?php $num = 1; ?>
     @foreach ($text as $row)
-    <tr>
-        <td> {{ $row }} </td>
-
-        @for ($i = 1 ; $i <= $num_var; $i++)
-        <td> <input type='checkbox' name="{{($num-1)*$num_var+$i}}"> </td>
-        @endfor
-        <?php $num++; ?>
-    </tr>
+        <tr>
+            <td class="info">
+                <div class="form-group">
+                    <textarea readonly style="resize: vertical" class="form-control" rows="5">{{ $row }}</textarea>
+                </div>
+            </td>
+            @for ($i = 1 ; $i <= $num_var; $i++)
+                <td>
+                    <div class="checkbox checkbox-inline checkbox-styled">
+                        <label>
+                            <?php
+                                if (in_array( (($num-1)*$num_var+$i) ,$choice)) {
+                                   echo "<input type='checkbox' checked > ";
+                                }
+                                else {
+                                    echo "<input type='checkbox'> ";
+                                }
+                            ?>
+                            <span></span>
+                        </label>
+                    </div>
+                </td>
+            @endfor
+            <?php $num++; ?>
+        </tr>
     @endforeach
 </table>
+<input type="checkbox" name="seeLater" class="css-checkbox"><span class="css-checkbox">Вернуться позже</span>
 {!! Form::close() !!}
-</div>
 </body>
 </html>

@@ -12,15 +12,18 @@
 
     <!-- BEGIN STYLESHEETS -->
     {!! HTML::style('css/bootstrap.css') !!}
+    {!! HTML::style('css/full.css') !!}
     {!! HTML::style('css/materialadmin.css') !!}
-    {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
+    {!! HTML::style('css/materialadmin_demo.css') !!}
+    {!! HTML::script('js/jquery.js') !!}
     <!-- END STYLESHEETS -->
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     {!! HTML::script('js/libs/utils/html5shiv.js') !!}
     {!! HTML::script('js/libs/utils/respond.min.js') !!}
+    {!! HTML::style('css/materialadmin_demo.css') !!}
     <![endif]-->
 
 
@@ -28,9 +31,22 @@
 <body>
 <section>
 
-<div class="col-md-12 col-sm-6 card style-primary text-center">
-    <h1 class="text-default-bright">Библиотека</h1>
-</div>
+    <nav class="navbar navbar-fixed-top style-primary">
+        <div class="container">
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="{{URL::route('home')}}" class="btn">Главная</a></li>
+                    <li><a href="{{URL::route('tests')}}" class="btn">Система тестирования</a></li>
+                    <li><a href="{{URL::route('library_index')}}" class="btn">Библиотека</a></li>
+                    <li><a href="{{URL::route('in_process')}}" class="btn">Машины Тьюринга</a></li>
+                    <li><a href="{{URL::route('in_process')}}" class="btn">Алгоритмы маркова</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{{URL::route('logout')}}" class="btn">Выйти</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
 <!-- BEGIN CONTENT-->
 <div id="content">
@@ -49,13 +65,13 @@
         <article class="style-default-bright">
             <div class="card-body">
 		<article style="margin-left:10%; margin-right:10%; text-align: justify">
-			
+
 		<div class="card-body style-default-dark">
 		<h2>Трансфинитные числа</h2>
 		</div>
 		<blockquote>
 			<p>Трансфинитное число — число, обозначающее величину бесконечно большого множества в виде нижнего индекса. &alefsym;<sub>0</sub> представляет множество всех целых чисел, а &alefsym;<sub>1</sub> представляет размер множества всех реальных чисел. Хотя оба множества бесконечно большие, но множество действительных чисел в некотором смысле больше множества целых (можно показать, что не каждому действительному числу соответствует целое число).</p>
-	
+
 		</blockquote>
 
         {!! HTML::link('download/dop/Transfinitnie_chisla.pdf', 'Скачать', array('class' => 'btn btn-default')) !!}
@@ -127,8 +143,8 @@
 </i>
 		</blockquote>
             {!! HTML::link('download/dop/kontinuum-gipoteza.pdf', 'Скачать', array('class' => 'btn btn-default')) !!}
-		
-			
+
+
 			</article></article>	</div></div>
     {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
     {!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}

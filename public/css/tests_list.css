@@ -1,4 +1,4 @@
-a:link, a:visited {
+.test-list a:link, .test-list a:visited {
     display: block;
     font-size: 14px;
     color: #0aa89e;
@@ -6,7 +6,7 @@ a:link, a:visited {
     text-decoration: none;
 }
 
-a:hover {
+.test-list a:hover {
     display: block;
     font-size: 14px;
     color: #05585b;

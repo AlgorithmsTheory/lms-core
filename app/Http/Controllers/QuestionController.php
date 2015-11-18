@@ -49,7 +49,7 @@ class QuestionController extends Controller{
     }
 
     /** по id вопроса формирует массив из кодов и названий */
-    private function getCode($id){        //декодирование вопроса в асс. массив
+    public function getCode($id){        //декодирование вопроса в асс. массив
         $codificator = new Codificator();
         $question = $this->question;
         $query = $question->whereId_question($id)->select('code')->first();
@@ -88,33 +88,16 @@ class QuestionController extends Controller{
         return $new_variants;
     }
 
-    /**
-     * Декодирует кодовую структуру теста
-     * Возвращает двумерный массив, где по i идут различные струры вопросов, j=0 - количество вопросов данной структуры, j=1 - сам код вопроса
-     */
-    private function destruct($id_test){
-        $test = new Test();
-        $query = $test->whereId_test($id_test)->select('structure')->first();
-        $structure = $query->structure;
-        $destructured = explode(';', $structure);
-        $array = [];
-        for ($i=0; $i<count($destructured); $i++){
-            $temp_array = explode('-', $destructured[$i]);
-            for ($j=0; $j<=1; $j++){
-                $array[$i][$j] = $temp_array[$j];
-            }
-        }
-        return $array;
-    }
-
     /** По номеру теста возвращает список id вопросов, удовлетворяющих всем параметрам теста */
     private function prepareTest($id_test){            //выборка вопросов
+        $test = new Test();
+        $test_controller = new TestController($test);
         $question = $this->question;
         $array = [];
         $k = 0;
         $j = 0;
         $temp_array = [];
-        $destructured = $this->destruct($id_test);
+        $destructured = $test_controller->destruct($id_test);
         for ($i=0; $i<count($destructured); $i++){
             $temp = preg_replace('~A~', '[[:digit:]]+', $destructured[$i][1] );                                         //заменям все A (All) на регулярное выражение, соответствующее любому набору цифр
             $query = $question->where('code', 'regexp', $temp)->get();                                                  //ищем всевозможные коды вопросов
@@ -443,13 +426,31 @@ class QuestionController extends Controller{
         $user = new User();
         $widgets = [];
         $saved_test = [];
+        $current_date = date('U');
 
-        $query = $test->whereId_test($id_test)->select('amount', 'test_name','test_time')->first();                     //кол-во вопрососв в тесте
-        $amount = $query->amount;
+        $query = $test->whereId_test($id_test)->select('amount', 'test_name', 'test_time', 'start', 'end', 'test_type')->first();
+        if ($current_date < strtotime($query->start) || $current_date > strtotime($query->end)){                          //проверка открыт ли тест
+            return view('no_access');
+        }
+        $amount = $query->amount;                                                                                       //кол-во вопрососв в тесте
         $result->test_name = $query->test_name;
         $test_time = $query->test_time;
+        $test_type = $query->test_type;
 
         if (!Session::has('test')){                                                                                     //если в тест зайдено первый раз
+            $test = new Test();
+            $test_controller = new TestController($test);
+            $ser_array = $this->prepareTest($id_test);
+            for ($i=0; $i<$amount; $i++){
+                $id = $this->chooseQuestion($ser_array);
+                if (!$test_controller->rybaTest($id)){                                                                  //проверка на вопрос по рыбе
+                    return view('no_access');
+                };
+                $data = $this->showTest($id, $i+1);                                                                     //должны получать название view и необходимые параметры
+                $saved_test[] = $data;
+                $widgets[] = View::make($data['view'], $data['arguments']);
+            }
+
             $start_time = date_create();                                                                                //время начала
             $int_end_time =  date_format($start_time,'U')+60*$test_time;                                                //время конца
             Session::put('end_time',$int_end_time);
@@ -461,19 +462,11 @@ class QuestionController extends Controller{
             $result->id_test = $id_test;
             $result->amount = $amount;
             $result->save();
-            $ser_array = $this->prepareTest($id_test);
-            for ($i=0; $i<$amount; $i++){
-                $id = $this->chooseQuestion($ser_array);
-                $data = $this->showTest($id, $i+1);                                                                     //должны получать название view и необходимые параметры
-                $saved_test[] = $data;
-                $widgets[] = View::make($data['view'], $data['arguments']);
-            }
             $saved_test = serialize($saved_test);
             Result::where('id_result', '=', $current_result)->update(['saved_test' => $saved_test]);
             Session::put('test', $current_result);
         }
         else {                                                                                                          //если была перезагружена страница теста или тест был покинут
-            // обработать ошибку, если тест уже сгененрирован, то нельзя зайти в никакой другой, кроме как продолжить этот.
             $current_test = Session::get('test');
             $query = $result->whereId_result($current_test)->first();
             $int_end_time = Session::get('end_time');                                                                   //время окончания теста
@@ -489,18 +482,19 @@ class QuestionController extends Controller{
         $left_min =  floor($int_left_time/60);                                                                          //осталось минут
         $left_sec = $int_left_time % 60;                                                                                //осталось секунд
 
-        $widgetListView = View::make('questions.student.widget_list',compact('amount', 'id_test','left_min', 'left_sec'))->with('widgets', $widgets);
+        $widgetListView = View::make('questions.student.widget_list',compact('amount', 'id_test','left_min', 'left_sec', 'test_type'))->with('widgets', $widgets);
         $response = new Response($widgetListView);
         return $response;
     }
 
     /** Проверка теста */
     public function checkTest(Request $request){   //обработать ответ на вопрос
-        if (Session::has('test'))                                                                                       //проверяем повторность обращения к результатм
+        if (Session::has('test'))                                                                                       //проверяем повторность обращения к результам
             $current_test = Session::get('test');                                                                       //определяем проверяемый тест
         else
             return redirect('tests');
         Session::forget('test');                                                                                        //тест считается честно пройденым
+        Session::forget('end_time');
         $amount = $request->input('amount');
         $id_test = $request->input('id_test');
         $test = new Test();

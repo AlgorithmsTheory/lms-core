@@ -2,7 +2,7 @@
 /node_modules
 Homestead.yaml
 .env
-.idea/workspace.xml
+.idea/
 /config
 composer.json
 composer.lock

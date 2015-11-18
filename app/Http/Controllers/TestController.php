@@ -6,14 +6,18 @@
  * Time: 16:49
  */
 namespace App\Http\Controllers;
+use App\Result;
 use App\Test;
 use App\Theme;
+use Auth;
 use Illuminate\Http\Request;
 use App\Question;
 use App\Codificator;
 use PDOStatement;
 use  PDO;
 use Illuminate\Routing\Controller;
+use Session;
+
 class TestController extends Controller{
     private $test;
     function __construct(Test $test){
@@ -56,6 +60,36 @@ class TestController extends Controller{
             $struct .= $query->code;
         }
         return $struct;
+    }
+
+    /**
+     * Декодирует кодовую структуру теста
+     * Возвращает двумерный массив, где по i идут различные структуры вопросов, j=0 - количество вопросов данной структуры, j=1 - сам код вопроса
+     */
+    public function destruct($id_test){
+        $test = new Test();
+        $query = $test->whereId_test($id_test)->select('structure')->first();
+        $structure = $query->structure;
+        $destructured = explode(';', $structure);
+        $array = [];
+        for ($i=0; $i<count($destructured); $i++){
+            $temp_array = explode('-', $destructured[$i]);
+            for ($j=0; $j<=1; $j++){
+                $array[$i][$j] = $temp_array[$j];
+            }
+        }
+        return $array;
+    }
+    public function rybaTest($id_question){                                                                             //проверяет права доступа к рыбинским вопросам
+        $question = new Question();
+        $question_controller = new QuestionController($question);
+        if ($question_controller->getCode($id_question)['section_code'] == 10){
+            if (Auth::user()['role'] == 'Рыбинец' || Auth::user()['role'] == 'Админ'){
+                return true;
+            }
+        else return false;
+        }
+        else return true;
     }
 
     /** генерирует страницу со списком доступных тестов */
@@ -152,4 +186,14 @@ class TestController extends Controller{
         return redirect()->route('test_create');
     }
 
+    /** Пользователь отказался от прохождения теста */
+    public function dropTest(){
+        if (Session::has('test')){
+            $id_result = Session::get('test');
+            Session::forget('test');
+            Session::forget('end_time');
+            Result::whereId_result($id_result)->update(['result' => -1, 'mark' => -1]);                                 //Присваиваем результату и оценке значения -1
+        }
+        return redirect('tests');
+    }
 }

@@ -8,7 +8,7 @@ use Closure;
 class AuthMiddleware
 {
     /**
-     * Handle an incoming request.
+     * Обеспечивает допуск только авторизированным пользователям
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next

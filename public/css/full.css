@@ -38,6 +38,19 @@
     -o-background-size: cover;
 }
 
+.full-in_process {
+    background: url('../img/flower.JPG') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+.navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+    background-color: dimgrey;
+    color: white;
+}
+
 body {
     padding-top: 0px;
 }

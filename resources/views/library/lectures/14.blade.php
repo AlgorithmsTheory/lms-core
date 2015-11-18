@@ -1,6 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+@extends('templates.base')
+@section('head')
     <title>Лекция 14</title>
 
     <!-- BEGIN META -->
@@ -24,16 +23,9 @@
     <![endif]-->
 
 
-</head>
-<body>
-<section>
+@stop
+@section('content')
 
-<div class="col-md-12 col-sm-6 card style-primary text-center">
-    <h1 class="text-default-bright">Библиотека</h1>
-</div>
-
-<!-- BEGIN CONTENT-->
-<div id="content">
 
     <!-- BEGIN BLANK SECTION -->
     <section>
@@ -193,7 +185,8 @@
 <p>Множество частично рекурсивных функций &ndash; эффективно перечислимо, а значит к нему и к его подмножеству, соответствующему классу общерекурсивных функций, можно применить теорему Поста<strong>. </strong>Предположим противное, а именно, что рекурсивные функции поддаются&nbsp; эффективному распознаванию среди частично рекурсивных функций. Это означает, что возможно также эффективно перечислить как общерекурсивные функции, так и частично рекурсивные, но не общерекурсивные функции. Насчет второго ничего неизвестно, а вот первое явно противоречит доказанной ранее теореме 4.8.(3). &nbsp;Следовательно, общерекурсивные функции не распознаваемы эффективно среди частично рекурсивных функций, <strong>Q</strong><strong>.</strong><strong>E</strong><strong>.</strong><strong>D</strong><strong>.</strong></p>
 
 			</article></article>	</div></div>
-
+@stop
+@section('js-down')
     <!-- BEGIN JAVASCRIPT -->
     {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
     {!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
@@ -210,6 +203,4 @@
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
     <!-- END JAVASCRIPT -->
-</section>
-</body>
-</html>
+@stop

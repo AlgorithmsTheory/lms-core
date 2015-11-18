@@ -17,20 +17,26 @@
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     <!-- END STYLESHEETS -->
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    {!! HTML::script('js/libs/utils/html5shiv.js') !!}
-    {!! HTML::script('js/libs/utils/respond.min.js') !!}
-    <![endif]-->
-
-
 </head>
 <body>
 <section>
 
-<div class="col-md-12 col-sm-6 card style-primary text-center">
-    <h1 class="text-default-bright">Библиотека</h1>
-</div>
+<nav class="navbar navbar-fixed-top style-primary">
+    <div class="container">
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="{{URL::route('home')}}" class="btn">Главная</a></li>
+                <li><a href="{{URL::route('tests')}}" class="btn">Система тестирования</a></li>
+                <li><a href="{{URL::route('library_index')}}" class="btn">Библиотека</a></li>
+                <li><a href="{{URL::route('in_process')}}" class="btn">Машины Тьюринга</a></li>
+                <li><a href="{{URL::route('in_process')}}" class="btn">Алгоритмы маркова</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{{URL::route('logout')}}" class="btn">Выйти</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
 <!-- BEGIN CONTENT-->
 <div id="content">
@@ -102,7 +108,7 @@
   Законов Ньютона, которые не были высказаны в статье в явном виде.</p>
 
 <p>В Шерборне Тьюринг близко подружился с Кристофером Моркомом. 
-Когда эти отношения прервались в феврале 1930 года из-за смерти Моркома, 
+Когда эти отношения прервались в феврале 1930 года из-за смерти Моркома,
 вызванной осложнением бычьего туберкулёза, которым Морком 
 заразился несколькими годами ранее, после употребления инфицированного 
 молока, религиозные верования Тьюринга пошатнулись и он стал 

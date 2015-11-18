@@ -12,15 +12,16 @@
     </tr>
     <?php $i = 1;?>
     @foreach ($text as $row)
-    <tr>
-        <td> {{ $row }} </td>
-        <td><input type="radio"  name="{{$i}}" value="1"></td>
-        <td><input type="radio"  name="{{$i}}" value="0"></td>
-        <td><input style="display: none;" type="radio"  name="{{$i}}" value="2" checked></td>
-    </tr>
-    <?php $i++;?>
+        <tr>
+            <td> {{ $row }} </td>
+            <td><input type="radio"  name="{{$i}}" value="1"  <?php if($choice[$i] == "1") echo ("checked"); ?> ></td>
+            <td><input type="radio"  name="{{$i}}" value="0"  <?php if($choice[$i] == "0") echo ("checked"); ?>></td>
+            <td><input style="display: none;" type="radio"  name="{{$i}}" value="2" checked></td>
+        </tr>
+        <?php $i++;?>
     @endforeach
 </table>
+<input type="checkbox" name="seeLater" class="css-checkbox"><span class="css-checkbox">Вернуться позже</span>
 {!! Form::close() !!}
 </body>
 </html>
