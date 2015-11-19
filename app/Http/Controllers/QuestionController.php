@@ -104,26 +104,27 @@ class QuestionController extends Controller{
             foreach ($query as $id){
                 array_push($temp_array,$id->id_question);                                                               //для каждого кода создаем массив всех вопрососв с этим кодом
             }
-            //for ($j=0; $j<$destructured[$i][0]; $j++){                                                                  //и выбираем заданное количество случайных
-            $test_type = Test::whereId_test($id_test)->select('test_type')->first();
-            if ($test_type == 'Тренировочный'){
-                while ($j < $destructured[$i][0]){
-                    $temp_array = $this->randomArray($temp_array);
-                    $query = $question->whereId_question($temp_array[count($temp_array)-1])->first();
-                    if ($query->control == 0){                                                                          //Проверка, что вопрос не является скрытым
-                        $array[$k] = $temp_array[count($temp_array)-1];
-                        $k++;
+            for ($j=0; $j<$destructured[$i][0]; $j++){                                                                  //и выбираем заданное количество случайных
+                $query2 = Test::whereId_test($id_test)->select('test_type')->first();
+                if ($query2->test_type == 'Тренировочный'){
+                    while ($j < $destructured[$i][0]){
+                        $temp_array = $this->randomArray($temp_array);
+                        $query = $question->whereId_question($temp_array[count($temp_array)-1])->first();
+                        if ($query->control == 0){                                                                          //Проверка, что вопрос не является скрытым
+                            $array[$k] = $temp_array[count($temp_array)-1];
+                            $k++;
+                            $j++;
+                        }
+                        array_pop($temp_array);
+                    }
+                }
+                else {
+                    while ($j < $destructured[$i][0]){
+                        $temp_array = $this->randomArray($temp_array);
+                        $array[$j] = $temp_array[count($temp_array)-1];
+                        array_pop($temp_array);
                         $j++;
                     }
-                    array_pop($temp_array);
-                }
-            }
-            else {
-                while ($j < $destructured[$i][0]){
-                    $temp_array = $this->randomArray($temp_array);
-                    $array[$j] = $temp_array[count($temp_array)-1];
-                    array_pop($temp_array);
-                    $j++;
                 }
             }
             $temp_array = [];
