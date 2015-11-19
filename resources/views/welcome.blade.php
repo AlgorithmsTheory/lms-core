@@ -108,7 +108,7 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-6 col-sm-offset-3">
-                                            <input type="submit" tabindex="4" class="form-control btn btn-register" value="Заригистрироваться">
+                                            <input type="submit" tabindex="4" class="form-control btn btn-register" value="Зарегистрироваться">
                                         </div>
                                     </div>
                                 </div>

@@ -25,16 +25,16 @@
       <file leaf-file-name="routes.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="58" column="81" selection-start="1997" selection-end="1997" vertical-scroll-proportion="0.0" vertical-offset="1455" max-vertical-offset="2548">
+            <state line="31" column="23" selection-start="862" selection-end="862" vertical-scroll-proportion="0.0" vertical-offset="671" max-vertical-offset="2548">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="QuestionController.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="QuestionController.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/QuestionController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="110" column="70" selection-start="5454" selection-end="5454" vertical-scroll-proportion="0.33277312" vertical-offset="2742" max-vertical-offset="15428">
+            <state line="549" column="9" selection-start="27054" selection-end="27054" vertical-scroll-proportion="0.0" vertical-offset="14071" max-vertical-offset="15456">
               <folding>
                 <element signature="e#122#131#0" expanded="true" />
               </folding>
@@ -42,28 +42,19 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="welcome.blade.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/resources/views/welcome.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="115" column="30" selection-start="6827" selection-end="6827" vertical-scroll-proportion="0.5655058" vertical-offset="2879" max-vertical-offset="12740">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="TestController.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/TestController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="68" column="20" selection-start="1945" selection-end="1945" vertical-scroll-proportion="0.0" vertical-offset="1359" max-vertical-offset="5292">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="training_test.blade.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/views/questions/student/training_test.blade.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="37" column="145" selection-start="1327" selection-end="1464" vertical-scroll-proportion="0.0" vertical-offset="687" max-vertical-offset="1316">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="widget_list.blade.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/views/questions/student/widget_list.blade.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="45" column="85" selection-start="1766" selection-end="1766" vertical-scroll-proportion="0.0" vertical-offset="911" max-vertical-offset="1652">
+            <state line="193" column="36" selection-start="8511" selection-end="8511" vertical-scroll-proportion="0.0" vertical-offset="4671" max-vertical-offset="5320">
               <folding />
             </state>
           </provider>
@@ -123,7 +114,6 @@
         <option value="$PROJECT_DIR$/config/mail.php" />
         <option value="$PROJECT_DIR$/config/services.php" />
         <option value="$PROJECT_DIR$/app/Qtypes/AccordanceTable.php" />
-        <option value="$PROJECT_DIR$/resources/views/welcome.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/main.blade.php" />
         <option value="$PROJECT_DIR$/app/Http/Middleware/AdminMiddleware.php" />
         <option value="$PROJECT_DIR$/app/Http/Middleware/AuthMiddleware.php" />
@@ -134,18 +124,19 @@
         <option value="$PROJECT_DIR$/resources/views/in_process.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/no_access.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/questions/student/training_test.blade.php" />
-        <option value="$PROJECT_DIR$/app/Http/routes.php" />
         <option value="$PROJECT_DIR$/public/css/test_style.css" />
         <option value="$PROJECT_DIR$/resources/views/questions/student/widget_list.blade.php" />
+        <option value="$PROJECT_DIR$/app/Http/routes.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/TestController.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/QuestionController.php" />
+        <option value="$PROJECT_DIR$/resources/views/welcome.blade.php" />
       </list>
     </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
     <option name="width" value="1366" />
-    <option name="height" value="720" />
+    <option name="height" value="728" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -278,101 +269,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uir" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uir" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="css" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uir" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uir" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uir" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uir" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Http" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uir" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uir" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Http" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Middleware" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uir" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uir" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Http" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Controllers" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -442,7 +339,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1366" height="720" extended-state="1" />
+    <frame x="0" y="0" width="1366" height="728" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -611,7 +508,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/css/bootstrap.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1967" column="1" selection-start="38209" selection-end="38222" vertical-scroll-proportion="0.0" vertical-offset="55015" max-vertical-offset="207928" />
+        <state line="1967" column="1" selection-start="38209" selection-end="38222" vertical-scroll-proportion="0.0" vertical-offset="55015" max-vertical-offset="207928">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config/app.php">
@@ -675,11 +574,6 @@
         <state line="13" column="0" selection-start="440" selection-end="440" vertical-scroll-proportion="0.0" vertical-offset="252" max-vertical-offset="1316" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/welcome.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="85" selection-start="1299" selection-end="1299" vertical-scroll-proportion="0.0" vertical-offset="168" max-vertical-offset="12740" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/LibraryController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="37" column="35" selection-start="731" selection-end="731" vertical-scroll-proportion="0.0" vertical-offset="56" max-vertical-offset="1120" />
@@ -714,7 +608,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/main.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="0" selection-start="73" selection-end="95" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="756" />
+        <state line="4" column="0" selection-start="73" selection-end="95" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="756">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/in_process.blade.php">
@@ -762,24 +658,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="81" selection-start="1997" selection-end="1997" vertical-scroll-proportion="0.0" vertical-offset="1455" max-vertical-offset="2548">
+        <state line="31" column="23" selection-start="862" selection-end="862" vertical-scroll-proportion="0.0" vertical-offset="671" max-vertical-offset="2548">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/TestController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="68" column="20" selection-start="1945" selection-end="1945" vertical-scroll-proportion="0.0" vertical-offset="1863" max-vertical-offset="5292">
+        <state line="193" column="36" selection-start="8511" selection-end="8511" vertical-scroll-proportion="0.0" vertical-offset="4671" max-vertical-offset="5320">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/QuestionController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="110" column="70" selection-start="5454" selection-end="5454" vertical-scroll-proportion="0.33277312" vertical-offset="2742" max-vertical-offset="15428">
+        <state line="549" column="9" selection-start="27054" selection-end="27054" vertical-scroll-proportion="0.0" vertical-offset="14071" max-vertical-offset="15456">
           <folding>
             <element signature="e#122#131#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/welcome.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="115" column="30" selection-start="6827" selection-end="6827" vertical-scroll-proportion="0.5655058" vertical-offset="2879" max-vertical-offset="12740">
+          <folding />
         </state>
       </provider>
     </entry>

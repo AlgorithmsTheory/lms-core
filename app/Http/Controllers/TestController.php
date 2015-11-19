@@ -190,9 +190,10 @@ class TestController extends Controller{
     public function dropTest(){
         if (Session::has('test')){
             $id_result = Session::get('test');
+            $date = date('Y-m-d H:i:s', time());
             Session::forget('test');
             Session::forget('end_time');
-            Result::whereId_result($id_result)->update(['result' => -1, 'mark' => -1]);                                 //Присваиваем результату и оценке значения -1
+            Result::whereId_result($id_result)->update(['result_date' => $date, 'result' => -1, 'mark' => -1]);                                 //Присваиваем результату и оценке значения -1
         }
         return redirect('tests');
     }
