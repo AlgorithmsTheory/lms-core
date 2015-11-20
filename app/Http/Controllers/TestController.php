@@ -193,7 +193,7 @@ class TestController extends Controller{
             $date = date('Y-m-d H:i:s', time());
             Session::forget('test');
             Session::forget('end_time');
-            Result::whereId_result($id_result)->update(['result_date' => $date, 'result' => -1, 'mark' => -1]);                                 //Присваиваем результату и оценке значения -1
+            Result::whereId_result($id_result)->update(['result_date' => $date, 'result' => -1, 'mark_ru' => -1, 'mark_eu' => 'drop']);                                 //Присваиваем результату и оценке значения -1
         }
         return redirect('tests');
     }

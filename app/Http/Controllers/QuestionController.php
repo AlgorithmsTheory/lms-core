@@ -525,12 +525,11 @@ class QuestionController extends Controller{
 
         $mark_bologna = $this->calcMarkBologna($total, $score);                                                         //оценки
         $mark_rus = $this->calcMarkRus($total, $score);
-        $mark = $mark_bologna.';'.$mark_rus;
 
         $result = new Result();
         $date = date('Y-m-d H:i:s', time());                                                                            //текущее время
         if ($test_type != 'Тренировочный'){                                                                             //если тест контрольный
-            $result->whereId_result($current_test)->update(['result_date' => $date, 'result' => $score, 'mark' => $mark]);
+            $result->whereId_result($current_test)->update(['result_date' => $date, 'result' => $score, 'mark_ru' => $mark_rus, 'mark_eu' => $mark_bologna]);
             return view('tests.ctrresults', compact('score', 'mark_bologna', 'mark_rus'));
         }
         else{                                                                                                           //если тест тренировочный
@@ -544,7 +543,7 @@ class QuestionController extends Controller{
             for ($i=0; $i<$amount; $i++){
                 $widgets[] = View::make($saved_test[$i]['view'].'T', $saved_test[$i]['arguments'])->with('choice', $choice[$i+1]);
             }
-            $result->whereId_result($current_test)->update(['result_date' => $date, 'result' => $score, 'mark' => $mark]);
+            $result->whereId_result($current_test)->update(['result_date' => $date, 'result' => $score, 'mark_ru' => $mark_rus, 'mark_eu' => $mark_bologna]);
             $widgetListView = View::make('questions.student.training_test',compact('score','right_or_wrong', 'mark_bologna', 'mark_rus'))->with('widgets', $widgets);
             return $widgetListView;
         }
