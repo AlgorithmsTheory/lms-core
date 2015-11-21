@@ -21,7 +21,8 @@ class CreateResultsTable extends Migration {
             $table->integer('amount');       //количество вопросов берем из таблицы тестов
             $table->dateTime('result_date'); //время получения результата теста
             $table->integer('result');        //количество баллов, полученное за пройденный тест
-            $table->integer('mark');         //оценка за тест
+            $table->integer('mark_ru');         //оценка за тест
+            $table->string('mark_eu', 10);         //оценка за тест
             $table->string('saved_test', 50000);    //сериализованный текст теста
 		});
 	}

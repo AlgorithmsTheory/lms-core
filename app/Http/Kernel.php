@@ -30,6 +30,7 @@ class Kernel extends HttpKernel {
         'general_auth' => 'App\Http\Middleware\AuthMiddleware',
         'admin' => 'App\Http\Middleware\AdminMiddleware',
         'single_test' => 'App\Http\Middleware\SingleTest',
+        'fish' => 'App\Http\Middleware\FishMiddleware',
 	];
 
 }

@@ -80,7 +80,9 @@ class TestController extends Controller{
         }
         return $array;
     }
-    public function rybaTest($id_question){                                                                             //проверяет права доступа к рыбинским вопросам
+
+    /** проверяет права доступа к рыбинским вопросам */
+    public function rybaTest($id_question){
         $question = new Question();
         $question_controller = new QuestionController($question);
         if ($question_controller->getCode($id_question)['section_code'] == 10){
@@ -99,13 +101,13 @@ class TestController extends Controller{
         $tr_names = [];                                                                                                 //массив названий тренировочных тестов
         $ctr_names = [];                                                                                                //массив названий тренировочных тестов
         $current_date = date('U');
-        $query = $this->test->select('id_test', 'test_name', 'start', 'end', 'test_type')->get();
+        $query = $this->test->select('id_test', 'test_course', 'test_name', 'start', 'end', 'test_type')->get();
         foreach ($query as $test){
-            if ($current_date >= strtotime($test->start) && $current_date <= strtotime($test->end)){                    //проверка, что тест открыт
+            if ($current_date >= strtotime($test->start) && $current_date <= strtotime($test->end) && $test->test_course != 'Рыбина'){                    //проверка, что тест открыт и он не из Рыбинских
                 $test_type = $test->test_type;
                 if ($test_type == 'Тренировочный'){
                     array_push($tr_tests, $test->id_test);                                                              //название тренировочного теста состоит из слова "Тренировочный" и
-                    array_push($tr_names, $test->test_name);                                                               //самого названия теста
+                    array_push($tr_names, $test->test_name);                                                            //самого названия теста
                 }
                 else {
                     array_push($ctr_tests, $test->id_test);

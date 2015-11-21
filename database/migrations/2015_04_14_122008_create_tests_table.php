@@ -15,7 +15,8 @@ class CreateTestsTable extends Migration {
 		Schema::create('tests', function(Blueprint $table)
 		{
 			$table->increments('id_test');
-			$table->string('test_name');        //имя теста
+			$table->string('test_name');      //имя теста
+			$table->string('test_course');    //имя теста
             $table->string('test_type');     //Контрольный или тренировочный тест
 			$table->integer('amount');      //количество вопрососв в тесте
             $table->integer('test_time');  //время на выполнение теста
