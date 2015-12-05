@@ -15,7 +15,6 @@ use App\Question;
 use App\Codificator;
 use PDOStatement;
 use  PDO;
-use Illuminate\Routing\Controller;
 use Session;
 
 class TestController extends Controller{

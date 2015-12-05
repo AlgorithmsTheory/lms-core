@@ -17,7 +17,6 @@ use App\Codificator;
 use App\Test;
 use App\Theme;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
 use App\User;
 use App\Qtypes\OneChoice;
 use App\Qtypes\MultiChoice;
@@ -89,7 +88,7 @@ class QuestionController extends Controller{
     }
 
     /** По номеру теста возвращает список id вопросов, удовлетворяющих всем параметрам теста */
-    private function prepareTest($id_test){            //выборка вопросов
+    public function prepareTest($id_test){                                                                             //выборка вопросов
         $test = new Test();
         $test_controller = new TestController($test);
         $question = $this->question;
@@ -133,7 +132,7 @@ class QuestionController extends Controller{
     }
 
     /** Из выбранного массива вопросов теста выбирает один */
-    private function chooseQuestion(&$array){
+    public function chooseQuestion(&$array){
         if (empty($array)){                                                                                             //если вопросы кончились, завершаем тест
             return -1;
         }
