@@ -6,6 +6,7 @@
  * Time: 15:11
  */
 namespace App\Qtypes;
+use App\Mypdf;
 use App\Question;
 use Illuminate\Http\Request;
 abstract class QuestionType {
@@ -28,4 +29,5 @@ abstract class QuestionType {
     abstract function add(Request $request, $code);
     abstract function show($count);
     abstract function check($array);
+    abstract function pdf(Mypdf $fpdf, $count);
 }

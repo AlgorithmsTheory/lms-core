@@ -7,6 +7,7 @@
  */
 namespace App\Qtypes;
 use App\Http\Controllers\QuestionController;
+use App\Mypdf;
 use App\Question;
 use Illuminate\Http\Request;
 class FillGaps extends QuestionType {
@@ -85,5 +86,40 @@ class FillGaps extends QuestionType {
                else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array);
         //echo $score.'<br>';
         return $data;
+    }
+
+    public function pdf(Mypdf $fpdf, $count){
+        $text_parts = explode("<>", $this->text);                                                                       //части текста между селектами
+        $parse = explode("%", $this->variants);
+        $variants = explode("<>", $parse[0]);
+        $num_slot = count($variants);
+        $text = '';
+        for ($i = 1; $i <= $num_slot; $i++){
+            $text .= $text_parts[$i-1].$i.'_______________';                                                            //формируем текст вопроса
+        }
+        $parse_group_variants = [];
+        $group_variants = [];
+        $num_var = [];
+        for ($i=0; $i < count($variants); $i++){
+            $parse_group_variants[$i] = explode(";",$variants[$i]);                                                     //варинаты каждого селекта
+            $group_variants[$i] = QuestionController::mixVariants($parse_group_variants[$i]);                           //перемешиваем варианты
+            $num_var[$i] = count($group_variants[$i]);
+        }
+
+        $fpdf->SetFont('TimesNewRomanPSMT','U',12);
+        $fpdf->Cell(20,10,iconv('utf-8', 'windows-1251', 'Вопрос '.$count.'.'),0,0);
+        $fpdf->Cell(7,10,iconv('utf-8', 'windows-1251', 'Заполните пропуски в тексте'),0,1);
+
+        $fpdf->SetFont('TimesNewRomanPSMT','',12);
+        $fpdf->Write(5,iconv('utf-8', 'windows-1251', $text));                                                          // вывод текста
+        $fpdf->Ln(5);
+        for ($i = 1; $i <= $num_slot; $i++){                                                                            // вывод вариантов
+            $fpdf->Write(5,iconv('utf-8', 'windows-1251', $i.': '));
+            for ($j = 0; $j < $num_var[$i-1] - 1; $j++){
+                $fpdf->Write(5,iconv('utf-8', 'windows-1251', $group_variants[$i-1][$j].', '));
+            }
+            $fpdf->Write(5,iconv('utf-8', 'windows-1251', $group_variants[$i-1][$j].'.'));                              // вывод последнего варианта
+            $fpdf->Ln(5);
+        }
     }
 } 

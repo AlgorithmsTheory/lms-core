@@ -8,10 +8,7 @@
 
 namespace App;
 
-
-use Anouar\Fpdf\Fpdf;
-
-class Mypdf extends Fpdf{
+class Mypdf extends PDF_MC_Table{
     const MAX_COL = 15;
 
     /** шапка певого листа
@@ -44,6 +41,7 @@ class Mypdf extends Fpdf{
      @variant номер варианта
      */
     function info($variant){
+        $this->SetFont('TimesNewRomanPSMT','',12);
         $this->Cell(5);
         $this->Cell(80,10,iconv('utf-8', 'windows-1251', 'Фамилия'));                                                   // Фамилия
         $this->Cell(50,10,iconv('utf-8', 'windows-1251', 'Группа'));                                                    // Группа
@@ -56,18 +54,19 @@ class Mypdf extends Fpdf{
      @amount количество вопросов в тесте
      */
     function task_table($amount){
+        $this->SetFont('TimesNewRomanPSMT','',12);
         $div_amount = intval($amount / $this::MAX_COL);
         $mod_amount = $amount % $this::MAX_COL;
         $i = 1;
         for ($j = 1; $j <= $div_amount; $j++){                                                                          // циклы полных строчек в 15 вопросов
             $this->Cell(17,10,iconv('utf-8', 'windows-1251', 'Вопрос'),1,0);
-            for ($p = 1 ; $p <= $this::MAX_COL; $p++){                                                                        //вопросы
+            for ($p = 1 ; $p <= $this::MAX_COL; $p++){                                                                  //вопросы
                 $this->Cell(10,10,iconv('utf-8', 'windows-1251', $i),1,0);
                 $i++;
             }
             $this->Ln();
             $this->Cell(17,10,iconv('utf-8', 'windows-1251', 'Баллы'),1,0);
-            for ($k = 1 ; $k <= $this::MAX_COL; $k++){                                                                        //баллы
+            for ($k = 1 ; $k <= $this::MAX_COL; $k++){                                                                  //баллы
                 $this->Cell(10,10,iconv('utf-8', 'windows-1251', ''),1,0);
             }
             $this->Ln(12);
@@ -85,4 +84,7 @@ class Mypdf extends Fpdf{
         }
         $this->Cell(15,10,iconv('utf-8', 'windows-1251', ''),1,1);
     }
+
+
+
 } 

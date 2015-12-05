@@ -8,6 +8,7 @@
 
 namespace App\Qtypes;
 use App\Http\Controllers\QuestionController;
+use App\Mypdf;
 use App\Question;
 use Illuminate\Http\Request;
 
@@ -88,5 +89,23 @@ class MultiChoice extends QuestionType {
         else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array);
         //echo $score.'<br>';
         return $data;
+    }
+
+    public function pdf(Mypdf $fpdf, $count){
+        $parse = $this->variants;
+        $variants = explode(";", $parse);
+        $new_variants = QuestionController::mixVariants($variants);
+        $fpdf->SetFont('TimesNewRomanPSMT','U',12);
+        $fpdf->Cell(20,10,iconv('utf-8', 'windows-1251', 'Вопрос '.$count.'.'),0,0);
+        $fpdf->Cell(7,10,iconv('utf-8', 'windows-1251', 'Выберите один или несколько вариантов ответа'),0,1);
+
+        $fpdf->SetFont('TimesNewRomanPSMT','',12);
+        $fpdf->MultiCell(0,5,iconv('utf-8', 'windows-1251', $this->text),0,1);
+        $fpdf->Ln(2);
+        $fpdf->SetWidths(array('10','170'));
+        foreach ($new_variants as $var){
+            $fpdf->Row(array(iconv('utf-8', 'windows-1251', ''),iconv('utf-8', 'windows-1251', $var)));
+            $fpdf->Ln(0);
+        }
     }
 } 
