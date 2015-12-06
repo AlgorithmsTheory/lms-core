@@ -7,6 +7,7 @@
  */
 namespace App\Qtypes;
 use App\Http\Controllers\QuestionController;
+use App\Mypdf;
 use App\Question;
 use Illuminate\Http\Request;
 
@@ -90,5 +91,43 @@ class AccordanceTable extends QuestionType {
         else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $buf_array);
         //echo $score.'<br>';
         return $data;
+    }
+
+    public function pdf(Mypdf $fpdf, $count){
+        $text_parse = $this->text;
+        $parse = $this->variants;
+        $variants = explode(";", $parse);
+        $num_var = count($variants);
+        $text = explode(";" , $text_parse);
+        $num_text = count($text);
+        $rows = [];
+
+        $fpdf->SetFont('TimesNewRomanPSMT','U',12);
+        $fpdf->Cell(20,10,iconv('utf-8', 'windows-1251', 'Вопрос '.$count.'.'),0,0);
+        $fpdf->Cell(7,10,iconv('utf-8', 'windows-1251', 'Заполните таблицу соответствий'),0,1);
+
+        $fpdf->SetFont('TimesNewRomanPSMT','',12);
+        $coloumn_array = [];
+        $coloumn_array[0] = '30';
+        for ($i = 1; $i <= $num_var; $i++){                                                                             // вычисляем ширину столбцов
+            $coloumn_array[$i] = (string) intval(150/$num_var);
+        }
+        for ($i = $num_var; $i >= 1; $i--){                                                                              // формируем первую строку
+            $variants[$i] = iconv('utf-8', 'windows-1251',$variants[$i-1]);
+        }
+        $variants[0] = '';
+        for ($i = 0; $i < $num_text; $i++){                                                                             // формируем со второй по конечную строки
+            $rows[$i][0] = iconv('utf-8', 'windows-1251',$text[$i]);
+            for ($j = 1; $j <= $num_var; $j++){
+                $rows[$i][$j] = '';
+            }
+        }
+
+        $fpdf->SetWidths($coloumn_array);
+        $fpdf->Row($variants);
+        for ($i = 0; $i < $num_text; $i++){
+            $fpdf->Row($rows[$i]);
+            $fpdf->Ln(0);
+        }
     }
 } 

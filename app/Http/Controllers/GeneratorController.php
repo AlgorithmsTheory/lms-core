@@ -38,6 +38,10 @@ class GeneratorController extends Controller {
                 $fill_gaps = new FillGaps($id_question);
                 $fill_gaps->pdf($fpdf, $count);
                 break;
+            case 'Таблица соответствий':
+                $accordance_table = new AccordanceTable($id_question);
+                $accordance_table->pdf($fpdf, $count);
+                break;
         }
     }
 
@@ -49,7 +53,6 @@ class GeneratorController extends Controller {
     public function pdfTest($id_test){
         $question = new Question();
         $test = new Test();
-        $widgets = [];
         $query = $test->whereId_test($id_test)->select('amount', 'test_name')->first();
 
         $amount = $query->amount;                                                                                       // кол-во вопрососв в тесте
@@ -72,7 +75,7 @@ class GeneratorController extends Controller {
             if (!$test_controller->rybaTest($id)){                                                                      //проверка на вопрос по рыбе
                 return view('no_access');
             };
-            $this->pdfQuestion($fpdf, $id, $i+1);                                                                       //должны получать название view и необходимые параметры
+            $this->pdfQuestion($fpdf, $id, $i+1);
             $fpdf->Ln(10);
         }
         $fpdf->Output();
