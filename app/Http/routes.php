@@ -86,7 +86,7 @@ Route::get('library/extra', ['as' => 'library_extra', 'uses' => 'LibraryControll
 //модуль генерации вариантов
 Route::get('generator', ['as' => 'generator_index', 'uses' => 'GeneratorController@index']);
 Route::post('generator/pdf', ['as' => 'generator_pdf', 'uses' => 'GeneratorController@pdfTest']);
-//Route::get('generator/pdf', ['as' => 'generator_ex', 'uses' => 'GeneratorController@pdf']);
+Route::get('generator/pdf', ['as' => 'generator_ex', 'uses' => 'GeneratorController@pdf']);
 
 
 

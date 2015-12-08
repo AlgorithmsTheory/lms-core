@@ -25,7 +25,7 @@
       <file leaf-file-name="routes.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="86" column="28" selection-start="3964" selection-end="3964" vertical-scroll-proportion="0.0" vertical-offset="2087" max-vertical-offset="2772">
+            <state line="88" column="25" selection-start="4152" selection-end="4152" vertical-scroll-proportion="0.0" vertical-offset="1919" max-vertical-offset="2772">
               <folding />
             </state>
           </provider>
@@ -34,7 +34,7 @@
       <file leaf-file-name="GeneratorController.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/GeneratorController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="119" column="161" selection-start="4119" selection-end="4119" vertical-scroll-proportion="0.19872814" vertical-offset="3207" max-vertical-offset="4256">
+            <state line="144" column="39" selection-start="5967" selection-end="5967" vertical-scroll-proportion="0.59936404" vertical-offset="3655" max-vertical-offset="4480">
               <folding>
                 <element signature="e#6#89#0" expanded="true" />
                 <element signature="e#124#145#0" expanded="true" />
@@ -43,20 +43,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Fpdf.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vendor/anouar/fpdf/src/Anouar/Fpdf/Fpdf.php">
+      <file leaf-file-name="OneChoice.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Qtypes/OneChoice.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1018" column="52" selection-start="24950" selection-end="24950" vertical-scroll-proportion="0.0" vertical-offset="28295" max-vertical-offset="51856">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.blade.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/views/generator/index.blade.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="48" selection-start="1362" selection-end="1362" vertical-scroll-proportion="0.0" vertical-offset="351" max-vertical-offset="1176">
-              <folding />
+            <state line="78" column="64" selection-start="3541" selection-end="3541" vertical-scroll-proportion="0.0" vertical-offset="1583" max-vertical-offset="2436">
+              <folding>
+                <element signature="e#112#156#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -64,16 +57,27 @@
       <file leaf-file-name="MultiChoice.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Qtypes/MultiChoice.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="4" selection-start="195" selection-end="219" vertical-scroll-proportion="0.0" vertical-offset="336" max-vertical-offset="3108">
+            <state line="96" column="41" selection-start="3744" selection-end="3744" vertical-scroll-proportion="0.0" vertical-offset="3151" max-vertical-offset="3808">
+              <folding>
+                <element signature="e#113#157#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="QuestionController.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/QuestionController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="119" column="43" selection-start="5918" selection-end="5918" vertical-scroll-proportion="0.0" vertical-offset="2100" max-vertical-offset="14924">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Mypdf.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Mypdf.php">
+      <file leaf-file-name="TestController.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/TestController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="57" column="28" selection-start="2132" selection-end="2138" vertical-scroll-proportion="0.0" vertical-offset="1596" max-vertical-offset="2520">
+            <state line="67" column="20" selection-start="1910" selection-end="1910" vertical-scroll-proportion="0.0" vertical-offset="3172" max-vertical-offset="5376">
               <folding />
             </state>
           </provider>
@@ -89,7 +93,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/resources/views/library/lectures/12.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/library/dop.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/library/lectures/4.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/templates/base.blade.php" />
@@ -120,7 +123,6 @@
         <option value="$PROJECT_DIR$/resources/views/welcome.blade.php" />
         <option value="$PROJECT_DIR$/database/migrations/2015_04_14_122008_create_tests_table.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/RybaController.php" />
-        <option value="$PROJECT_DIR$/app/Http/Kernel.php" />
         <option value="$PROJECT_DIR$/app/Http/Middleware/FishMiddleware.php" />
         <option value="$PROJECT_DIR$/database/migrations/2015_04_14_133019_create_results_table.php" />
         <option value="$PROJECT_DIR$/resources/views/main.blade.php" />
@@ -128,17 +130,19 @@
         <option value="$PROJECT_DIR$/libraries/fpdf18/PDF.php" />
         <option value="$PROJECT_DIR$/libraries/fpdf18/Mypdf.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/TestController.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/QuestionController.php" />
-        <option value="$PROJECT_DIR$/app/Qtypes/QuestionType.php" />
-        <option value="$PROJECT_DIR$/app/Qtypes/OneChoice.php" />
         <option value="$PROJECT_DIR$/app/PDF_MC_Table.php" />
         <option value="$PROJECT_DIR$/app/Mypdf.php" />
-        <option value="$PROJECT_DIR$/app/Qtypes/FillGaps.php" />
-        <option value="$PROJECT_DIR$/app/Qtypes/MultiChoice.php" />
-        <option value="$PROJECT_DIR$/app/Qtypes/AccordanceTable.php" />
-        <option value="$PROJECT_DIR$/app/Http/routes.php" />
-        <option value="$PROJECT_DIR$/resources/views/generator/index.blade.php" />
         <option value="$PROJECT_DIR$/vendor/anouar/fpdf/src/Anouar/Fpdf/Fpdf.php" />
+        <option value="$PROJECT_DIR$/app/Http/routes.php" />
+        <option value="$PROJECT_DIR$/app/Qtypes/QuestionType.php" />
+        <option value="$PROJECT_DIR$/app/Qtypes/FillGaps.php" />
+        <option value="$PROJECT_DIR$/app/Qtypes/AccordanceTable.php" />
+        <option value="$PROJECT_DIR$/app/Qtypes/OneChoice.php" />
+        <option value="$PROJECT_DIR$/app/Qtypes/MultiChoice.php" />
+        <option value="$PROJECT_DIR$/app/Http/Kernel.php" />
+        <option value="$PROJECT_DIR$/resources/views/generator/index.blade.php" />
+        <option value="$PROJECT_DIR$/app/Http/Middleware/VerifyCsrfToken.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/QuestionController.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/GeneratorController.php" />
       </list>
     </option>
@@ -208,6 +212,76 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="uir" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="uir" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tests" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="uir" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="uir" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="questions" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="teacher" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="uir" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="uir" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="questions" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -316,6 +390,28 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="uir" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="uir" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Middleware" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -470,21 +566,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/resources/views/tests/show3T.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="29" selection-start="568" selection-end="574" vertical-scroll-proportion="0.0" vertical-offset="84" max-vertical-offset="1008" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/tests/show4T.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1428" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/templates/base.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="0" selection-start="440" selection-end="440" vertical-scroll-proportion="0.0" vertical-offset="252" max-vertical-offset="1316" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Middleware/AuthMiddleware.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="10" column="64" selection-start="158" selection-end="158" vertical-scroll-proportion="0.0" vertical-offset="84" max-vertical-offset="812" />
@@ -524,7 +605,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Result.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="6" selection-start="1587" selection-end="1587" vertical-scroll-proportion="0.5638629" vertical-offset="394" max-vertical-offset="1036" />
+        <state line="27" column="6" selection-start="1587" selection-end="1587" vertical-scroll-proportion="0.5638629" vertical-offset="394" max-vertical-offset="1036">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/questions/student/training_test.blade.php">
@@ -574,11 +657,6 @@
         <state line="18" column="83" selection-start="387" selection-end="387" vertical-scroll-proportion="0.47663552" vertical-offset="170" max-vertical-offset="812" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Kernel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="53" selection-start="1067" selection-end="1067" vertical-scroll-proportion="0.60747665" vertical-offset="506" max-vertical-offset="1176" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/LibraryController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="15" column="0" selection-start="242" selection-end="242" vertical-scroll-proportion="0.21495327" vertical-offset="142" max-vertical-offset="1120" />
@@ -611,27 +689,9 @@
         <state line="45" column="85" selection-start="1766" selection-end="1766" vertical-scroll-proportion="0.0" vertical-offset="672" max-vertical-offset="1652" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Qtypes/QuestionType.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="47" selection-start="969" selection-end="969" vertical-scroll-proportion="0.6823339" vertical-offset="307" max-vertical-offset="924">
-          <folding>
-            <element signature="e#112#126#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/tests/show1.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="617" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Qtypes/OneChoice.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="93" selection-start="2240" selection-end="2462" vertical-scroll-proportion="0.47847682" vertical-offset="1195" max-vertical-offset="1960">
-          <folding>
-            <element signature="e#112#156#0" expanded="false" />
-          </folding>
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/tests/show3.blade.php">
@@ -639,57 +699,14 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="90" max-vertical-offset="728" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Qtypes/FillGaps.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="120" column="55" selection-start="6000" selection-end="6000" vertical-scroll-proportion="0.6853933" vertical-offset="2709" max-vertical-offset="3416">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/PDF_MC_Table.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="36" selection-start="617" selection-end="617" vertical-scroll-proportion="0.0" vertical-offset="672" max-vertical-offset="3248">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create2.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-1.092683" vertical-offset="672" max-vertical-offset="2968" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Qtypes/AccordanceTable.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="95" column="0" selection-start="3510" selection-end="3510" vertical-scroll-proportion="-0.96511626" vertical-offset="3017" max-vertical-offset="3640">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/tests/show4.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="15" selection-start="684" selection-end="684" vertical-scroll-proportion="0.3836478" vertical-offset="344" max-vertical-offset="1232" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create3.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="24" column="10" selection-start="874" selection-end="1241" vertical-scroll-proportion="0.55813956" vertical-offset="336" max-vertical-offset="1680" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/TestController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="96" column="9" selection-start="2948" selection-end="2948" vertical-scroll-proportion="0.0" vertical-offset="2319" max-vertical-offset="5376" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/tests/create.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="138" column="18" selection-start="7389" selection-end="7389" vertical-scroll-proportion="0.0" vertical-offset="3696" max-vertical-offset="4900" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/QuestionController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="389" column="22" selection-start="17280" selection-end="17437" vertical-scroll-proportion="0.0" vertical-offset="9940" max-vertical-offset="14952">
-          <folding />
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/tests/index.blade.php">
@@ -716,37 +733,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="86" column="28" selection-start="3964" selection-end="3964" vertical-scroll-proportion="0.0" vertical-offset="2087" max-vertical-offset="2772">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Mypdf.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="57" column="28" selection-start="2132" selection-end="2138" vertical-scroll-proportion="0.0" vertical-offset="1309" max-vertical-offset="2520">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Qtypes/MultiChoice.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="4" selection-start="195" selection-end="219" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3108">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/anouar/fpdf/src/Anouar/Fpdf/Fpdf.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1018" column="52" selection-start="24950" selection-end="24950" vertical-scroll-proportion="0.0" vertical-offset="28295" max-vertical-offset="51856">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/generator/index.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="48" selection-start="1362" selection-end="1362" vertical-scroll-proportion="0.0" vertical-offset="519" max-vertical-offset="1176">
           <folding />
         </state>
       </provider>
@@ -758,9 +747,134 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/anouar/fpdf/src/Anouar/Fpdf/Fpdf.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="982" column="9" selection-start="24108" selection-end="24108" vertical-scroll-proportion="-0.3354531" vertical-offset="27707" max-vertical-offset="51856">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Qtypes/QuestionType.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="120" selection-start="474" selection-end="474" vertical-scroll-proportion="0.35526314" vertical-offset="148" max-vertical-offset="924">
+          <folding>
+            <element signature="e#112#126#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/PDF_MC_Table.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="22" selection-start="477" selection-end="477" vertical-scroll-proportion="-0.32087228" vertical-offset="906" max-vertical-offset="3248">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Qtypes/FillGaps.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="105" column="71" selection-start="5044" selection-end="5044" vertical-scroll-proportion="0.0" vertical-offset="2479" max-vertical-offset="3836">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/VerifyCsrfToken.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="126" column="23" selection-start="3231" selection-end="3231" vertical-scroll-proportion="2.8035426" vertical-offset="1675" max-vertical-offset="3724">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="59" selection-start="18" selection-end="73" vertical-scroll-proportion="0.09017713" vertical-offset="0" max-vertical-offset="1680">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/tests/show4.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="17" selection-start="1019" selection-end="1019" vertical-scroll-proportion="0.9470405" vertical-offset="260" max-vertical-offset="1232">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Qtypes/AccordanceTable.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="146" column="155" selection-start="6883" selection-end="6883" vertical-scroll-proportion="0.0" vertical-offset="3543" max-vertical-offset="4172">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create2.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2968">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Kernel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="33" selection-start="649" selection-end="649" vertical-scroll-proportion="0.0" vertical-offset="387" max-vertical-offset="1176">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="88" column="25" selection-start="4152" selection-end="4152" vertical-scroll-proportion="0.0" vertical-offset="1919" max-vertical-offset="2772">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Qtypes/OneChoice.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="78" column="64" selection-start="3541" selection-end="3541" vertical-scroll-proportion="0.0" vertical-offset="1583" max-vertical-offset="2436">
+          <folding>
+            <element signature="e#112#156#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Middleware/VerifyCsrfToken.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="22" selection-start="361" selection-end="361" vertical-scroll-proportion="0.56085527" vertical-offset="79" max-vertical-offset="812">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/generator/index.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="0" selection-start="44" selection-end="44" vertical-scroll-proportion="0.09210526" vertical-offset="0" max-vertical-offset="1204">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Qtypes/MultiChoice.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="96" column="41" selection-start="3744" selection-end="3744" vertical-scroll-proportion="0.0" vertical-offset="3151" max-vertical-offset="3808">
+          <folding>
+            <element signature="e#113#157#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/TestController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="67" column="20" selection-start="1910" selection-end="1910" vertical-scroll-proportion="0.0" vertical-offset="3172" max-vertical-offset="5376">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/QuestionController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="119" column="43" selection-start="5918" selection-end="5918" vertical-scroll-proportion="0.0" vertical-offset="2100" max-vertical-offset="14924">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/GeneratorController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="119" column="161" selection-start="4119" selection-end="4119" vertical-scroll-proportion="0.19872814" vertical-offset="3207" max-vertical-offset="4256">
+        <state line="144" column="39" selection-start="5967" selection-end="5967" vertical-scroll-proportion="0.59936404" vertical-offset="3655" max-vertical-offset="4480">
           <folding>
             <element signature="e#6#89#0" expanded="true" />
             <element signature="e#124#145#0" expanded="true" />

@@ -1,5 +1,6 @@
 @extends('templates.base')
 @section('head')
+
 <title>Генерация вариантов</title>
 @stop
 @section('content')
@@ -9,7 +10,7 @@
         </div>
 
         <form action="{{URL::route('generator_pdf')}}" method="POST" class="form">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
             <div class="col-lg-offset-1 col-md-10 col-sm-6">
                 <div class="card">
                     <div class="card-body">

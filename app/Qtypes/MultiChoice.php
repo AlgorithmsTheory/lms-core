@@ -11,6 +11,7 @@ use App\Http\Controllers\QuestionController;
 use App\Mypdf;
 use App\Question;
 use Illuminate\Http\Request;
+use Session;
 
 class MultiChoice extends QuestionType {
     const type_code = 2;
@@ -91,10 +92,9 @@ class MultiChoice extends QuestionType {
         return $data;
     }
 
-    public function pdf(Mypdf $fpdf, $count){
+    public function pdf(Mypdf $fpdf, $count, $answered=false){
         $parse = $this->variants;
         $variants = explode(";", $parse);
-        $new_variants = QuestionController::mixVariants($variants);
         $fpdf->SetFont('TimesNewRomanPSMT','U',12);
         $fpdf->Cell(20,10,iconv('utf-8', 'windows-1251', 'Вопрос '.$count.'.'),0,0);
         $fpdf->Cell(7,10,iconv('utf-8', 'windows-1251', 'Выберите один или несколько вариантов ответа'),0,1);
@@ -103,9 +103,34 @@ class MultiChoice extends QuestionType {
         $fpdf->MultiCell(0,5,iconv('utf-8', 'windows-1251', $this->text),0,1);
         $fpdf->Ln(2);
         $fpdf->SetWidths(array('10','170'));
-        foreach ($new_variants as $var){
-            $fpdf->Row(array(iconv('utf-8', 'windows-1251', ''),iconv('utf-8', 'windows-1251', $var)));
-            $fpdf->Ln(0);
+        if ($answered){                                                                                                 // пдф с ответами
+            $answers = explode(";", $this->answer);
+            $new_variants = Session::get('saved_variants_order');
+            for ($i = 0; $i < count($new_variants); $i++){                                                              // идем по всем вариантам
+                for ($j = 0; $j < count($answers); $j++){                                                               // идем по всем ответам
+                    if ($answers[$j] == $new_variants[$i]){                                                             // если вариант совпал с ответом
+                        $fpdf->Row(array('   +',iconv('utf-8', 'windows-1251', $new_variants[$i])));
+                        $fpdf->Ln(0);
+                        break;
+                    }
+                    else{
+                        if ($j == count($answers) - 1){                                                                 // проверяем, не все ли ответы просмотрены
+                            $fpdf->Row(array(iconv('utf-8', 'windows-1251', ''),iconv('utf-8', 'windows-1251', $new_variants[$i]))); // если так, то выводим строку без "+"
+                            $fpdf->Ln(0);
+                        }
+                        else continue;                                                                                  // иначе смотрим следующий ответ
+                    }
+                }
+            }
+            Session::forget('saved_variants_order');
+        }
+        else {                                                                                                          // без ответов
+            $new_variants = QuestionController::mixVariants($variants);
+            Session::put('saved_variants_order', $new_variants);
+            foreach ($new_variants as $var){
+                $fpdf->Row(array(iconv('utf-8', 'windows-1251', ''),iconv('utf-8', 'windows-1251', $var)));
+                $fpdf->Ln(0);
+            }
         }
     }
 } 

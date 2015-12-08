@@ -16,7 +16,7 @@ abstract class QuestionType {
     public  $answer;
     public  $points;
     function __construct($id_question){
-        if ($id_question != Question::max('id_question')+1){    //проверка не является ли вопрос новым
+        if ($id_question != Question::max('id_question')+1){                                                            //проверка не является ли вопрос новым
             $query = Question::whereId_question($id_question)->first();
             $this->text = $query->title;
             $this->variants = $query->variants;
@@ -29,5 +29,5 @@ abstract class QuestionType {
     abstract function add(Request $request, $code);
     abstract function show($count);
     abstract function check($array);
-    abstract function pdf(Mypdf $fpdf, $count);
+    abstract function pdf(Mypdf $fpdf, $count, $answered=false);
 }

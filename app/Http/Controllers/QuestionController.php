@@ -93,23 +93,22 @@ class QuestionController extends Controller{
         $test_controller = new TestController($test);
         $question = $this->question;
         $array = [];
-        $k = 0;
-        $j = 0;
         $temp_array = [];
+        $k = 0;
         $destructured = $test_controller->destruct($id_test);
         for ($i=0; $i<count($destructured); $i++){
+            $j = 0;
             $temp = preg_replace('~A~', '[[:digit:]]+', $destructured[$i][1] );                                         //заменям все A (All) на регулярное выражение, соответствующее любому набору цифр
             $query = $question->where('code', 'regexp', $temp)->get();                                                  //ищем всевозможные коды вопросов
             foreach ($query as $id){
                 array_push($temp_array,$id->id_question);                                                               //для каждого кода создаем массив всех вопрососв с этим кодом
             }
-            for ($j=0; $j<$destructured[$i][0]; $j++){                                                                  //и выбираем заданное количество случайных
                 $query2 = Test::whereId_test($id_test)->select('test_type')->first();
                 if ($query2->test_type == 'Тренировочный'){
                     while ($j < $destructured[$i][0]){
                         $temp_array = $this->randomArray($temp_array);
                         $query = $question->whereId_question($temp_array[count($temp_array)-1])->first();
-                        if ($query->control == 0){                                                                          //Проверка, что вопрос не является скрытым
+                        if ($query->control == 0){                                                                      //Проверка, что вопрос не является скрытым
                             $array[$k] = $temp_array[count($temp_array)-1];
                             $k++;
                             $j++;
@@ -120,12 +119,12 @@ class QuestionController extends Controller{
                 else {
                     while ($j < $destructured[$i][0]){
                         $temp_array = $this->randomArray($temp_array);
-                        $array[$j] = $temp_array[count($temp_array)-1];
+                        $array[$k] = $temp_array[count($temp_array)-1];
                         array_pop($temp_array);
                         $j++;
+                        $k++;
                     }
                 }
-            }
             $temp_array = [];
         }
         return $array;                                                                                                  //формируем массив из id вошедших в тест вопросов

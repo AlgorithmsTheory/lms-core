@@ -93,7 +93,7 @@ class AccordanceTable extends QuestionType {
         return $data;
     }
 
-    public function pdf(Mypdf $fpdf, $count){
+    public function pdf(Mypdf $fpdf, $count, $answered=false){
         $text_parse = $this->text;
         $parse = $this->variants;
         $variants = explode(";", $parse);
@@ -116,16 +116,35 @@ class AccordanceTable extends QuestionType {
             $variants[$i] = iconv('utf-8', 'windows-1251',$variants[$i-1]);
         }
         $variants[0] = '';
-        for ($i = 0; $i < $num_text; $i++){                                                                             // формируем со второй по конечную строки
-            $rows[$i][0] = iconv('utf-8', 'windows-1251',$text[$i]);
-            for ($j = 1; $j <= $num_var; $j++){
-                $rows[$i][$j] = '';
+
+        $fpdf->SetWidths($coloumn_array);                                                                               // устанавливаем ширину колонок
+        $fpdf->Row($variants);                                                                                          // чертим первую строку
+        if ($answered){                                                                                                 // пдф с ответами
+            $answers = explode(";", $this->answer);
+            $k = 0;
+            for ($i = 0; $i < $num_text; $i++){                                                                         // формируем со второй по конечную строки
+                $rows[$i][0] = iconv('utf-8', 'windows-1251',$text[$i]);                                                // в первом стобце всегда название объекта
+                for ($j = 1; $j <= $num_var; $j++){                                                                     // идем по колонкам
+                    if ($k < count($answers)){                                                                          // если еще не превысили размер массива ответов
+                        if ($i*$num_var + $j == $answers[$k]){                                                          // если номер ячейки совпадает с ответом
+                            $rows[$i][$j] = '  +  ';
+                            $k++;
+                        }
+                        else $rows[$i][$j] = '';
+                    }
+                    else $rows[$i][$j] = '';
+                }
             }
         }
-
-        $fpdf->SetWidths($coloumn_array);
-        $fpdf->Row($variants);
-        for ($i = 0; $i < $num_text; $i++){
+        else {                                                                                                          // без ответов
+            for ($i = 0; $i < $num_text; $i++){                                                                         // формируем со второй по конечную строки
+                $rows[$i][0] = iconv('utf-8', 'windows-1251',$text[$i]);
+                for ($j = 1; $j <= $num_var; $j++){
+                    $rows[$i][$j] = '';
+                }
+            }
+        }
+        for ($i = 0; $i < $num_text; $i++){                                                                             // выводим строки для обоих случаев
             $fpdf->Row($rows[$i]);
             $fpdf->Ln(0);
         }
