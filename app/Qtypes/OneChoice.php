@@ -55,11 +55,11 @@ class OneChoice extends QuestionType {
         $parse = $this->variants;
         $variants = explode(";", $parse);
         $fpdf->SetFont('TimesNewRomanPSMT','U',12);
-        $fpdf->Cell(20,10,iconv('utf-8', 'windows-1251', 'Вопрос '.$count.'.'),0,0);
-        $fpdf->Cell(7,10,iconv('utf-8', 'windows-1251', 'Выберите один вариант ответа'),0,1);
+        $fpdf->Cell(20,10,iconv('utf-8', 'windows-1251//TRANSLIT', 'Вопрос '.$count.'.'),0,0);
+        $fpdf->Cell(7,10,iconv('utf-8', 'windows-1251//TRANSLIT', 'Выберите один вариант ответа'),0,1);
 
         $fpdf->SetFont('TimesNewRomanPSMT','',12);
-        $fpdf->MultiCell(0,5,iconv('utf-8', 'windows-1251', $this->text),0,1);
+        $fpdf->MultiCell(0,5,iconv('utf-8', 'windows-1251//TRANSLIT', $this->text),0,1);
         $fpdf->Ln(2);
         $fpdf->SetWidths(array('10','170'));
         if ($answered){                                                                                                 // пдф с ответами
@@ -67,9 +67,9 @@ class OneChoice extends QuestionType {
             $new_variants = Session::get('saved_variants_order');
             foreach ($new_variants as $var){
                 if ($answer == $var)
-                    $fpdf->Row(array('   +',iconv('utf-8', 'windows-1251', $var)));
+                    $fpdf->Row(array('   +',iconv('utf-8', 'windows-1251//TRANSLIT', $var)));
                 else
-                    $fpdf->Row(array(iconv('utf-8', 'windows-1251', ''),iconv('utf-8', 'windows-1251', $var)));
+                    $fpdf->Row(array(iconv('utf-8', 'windows-1251//TRANSLIT', ''),iconv('utf-8', 'windows-1251', $var)));
                 $fpdf->Ln(0);
             }
             Session::forget('saved_variants_order');
@@ -78,7 +78,7 @@ class OneChoice extends QuestionType {
             $new_variants = QuestionController::mixVariants($variants);
             Session::put('saved_variants_order', $new_variants);
             foreach ($new_variants as $var){
-                $fpdf->Row(array(iconv('utf-8', 'windows-1251', ''),iconv('utf-8', 'windows-1251', $var)));
+                $fpdf->Row(array(iconv('utf-8', 'windows-1251//TRANSLIT', ''),iconv('utf-8', 'windows-1251//TRANSLIT', $var)));
                 $fpdf->Ln(0);
             }
         }

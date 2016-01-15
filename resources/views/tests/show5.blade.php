@@ -14,8 +14,8 @@
     @foreach ($text as $row)
     <tr>
         <td> {{ $row }} </td>
-        <td><input type="radio"  name="{{$i}}" value="1"></td>
-        <td><input type="radio"  name="{{$i}}" value="0"></td>
+        <td><input type="radio"  name="{{$i}}" value="true"></td>
+        <td><input type="radio"  name="{{$i}}" value="false"></td>
         <td><input style="display: none;" type="radio"  name="{{$i}}" value="2" checked></td>
     </tr>
     <?php $i++;?>

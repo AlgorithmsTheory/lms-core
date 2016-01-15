@@ -133,7 +133,7 @@ class GeneratorController extends Controller {
             $answered_fpdf = new Mypdf();
             $this->headOfPdf($fpdf, $test_name, $k, $amount);
             $this->headOfPdf($answered_fpdf, $test_name, $k, $amount);
-            $ser_array = $question_controller->prepareTest($id_test);                                                   // подготавливаем тест
+             $ser_array = $question_controller->prepareTest($id_test);                                                   // подготавливаем тест
             for ($i=0; $i<$amount; $i++){                                                                               // показываем каждый вопрос из теста
                 $id = $question_controller->chooseQuestion($ser_array);
                 if (!$test_controller->rybaTest($id)){                                                                  //проверка на вопрос по рыбе

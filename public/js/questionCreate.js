@@ -655,4 +655,3 @@ $('#type_question_add').on('click', '.submit-question', function(){
     }
 });
 
-

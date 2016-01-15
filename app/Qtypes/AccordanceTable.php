@@ -103,8 +103,8 @@ class AccordanceTable extends QuestionType {
         $rows = [];
 
         $fpdf->SetFont('TimesNewRomanPSMT','U',12);
-        $fpdf->Cell(20,10,iconv('utf-8', 'windows-1251', 'Вопрос '.$count.'.'),0,0);
-        $fpdf->Cell(7,10,iconv('utf-8', 'windows-1251', 'Заполните таблицу соответствий'),0,1);
+        $fpdf->Cell(20,10,iconv('utf-8', 'windows-1251//TRANSLIT', 'Вопрос '.$count.'.'),0,0);
+        $fpdf->Cell(7,10,iconv('utf-8', 'windows-1251//TRANSLIT', 'Заполните таблицу соответствий'),0,1);
 
         $fpdf->SetFont('TimesNewRomanPSMT','',12);
         $coloumn_array = [];
@@ -113,7 +113,8 @@ class AccordanceTable extends QuestionType {
             $coloumn_array[$i] = (string) intval(150/$num_var);
         }
         for ($i = $num_var; $i >= 1; $i--){                                                                              // формируем первую строку
-            $variants[$i] = iconv('utf-8', 'windows-1251',$variants[$i-1]);
+            $variants[$i] = iconv('utf-8', 'windows-1251//IGNORE',$variants[$i-1]);
+            //$variants[$i] = mb_convert_encoding($variants[$i-1], "UTF-8", "windows-1251");
         }
         $variants[0] = '';
 
@@ -123,7 +124,8 @@ class AccordanceTable extends QuestionType {
             $answers = explode(";", $this->answer);
             $k = 0;
             for ($i = 0; $i < $num_text; $i++){                                                                         // формируем со второй по конечную строки
-                $rows[$i][0] = iconv('utf-8', 'windows-1251',$text[$i]);                                                // в первом стобце всегда название объекта
+                $rows[$i][0] = iconv('utf-8', 'windows-1251//IGNORE',$text[$i]);                                                // в первом стобце всегда название объекта
+                //$rows[$i][0] = mb_convert_encoding($text[$i], "UTF-8", "windows-1251");
                 for ($j = 1; $j <= $num_var; $j++){                                                                     // идем по колонкам
                     if ($k < count($answers)){                                                                          // если еще не превысили размер массива ответов
                         if ($i*$num_var + $j == $answers[$k]){                                                          // если номер ячейки совпадает с ответом
@@ -138,7 +140,8 @@ class AccordanceTable extends QuestionType {
         }
         else {                                                                                                          // без ответов
             for ($i = 0; $i < $num_text; $i++){                                                                         // формируем со второй по конечную строки
-                $rows[$i][0] = iconv('utf-8', 'windows-1251',$text[$i]);
+                $rows[$i][0] = iconv('utf-8', 'windows-1251//IGNORE',$text[$i]);
+                //$rows[$i][0] = mb_convert_encoding($text[$i], "UTF-8", "windows-1251");
                 for ($j = 1; $j <= $num_var; $j++){
                     $rows[$i][$j] = '';
                 }

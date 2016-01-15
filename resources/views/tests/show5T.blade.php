@@ -1,5 +1,6 @@
 <html>
 <body>
+<div class="col-md-12 col-sm-6">
 {!! Form::open(['method' => 'PATCH', 'route' => 'question_checktest', 'class' => 'smart-blue']) !!}
 <h1>Вопрос {{ $count }}</h1>
 <input type="hidden" name="num" value="{{ $id }}">
@@ -10,18 +11,23 @@
         <td>Верно</td>
         <td>Неверно</td>
     </tr>
-    <?php $i = 1;?>
+    <?php $i = 0;?>
     @foreach ($text as $row)
         <tr>
             <td> {{ $row }} </td>
-            <td><input type="radio"  name="{{$i}}" value="1"  <?php if($choice[$i] == "1") echo ("checked"); ?> ></td>
-            <td><input type="radio"  name="{{$i}}" value="0"  <?php if($choice[$i] == "0") echo ("checked"); ?>></td>
+            @if ($choice[$i] == 'true')
+            <td><input type="radio"  value="true" checked></td>
+            <td><input type="radio"  value="false"></td>
+            @else
+            <td><input type="radio"  value="true"></td>
+            <td><input type="radio"  value="false" checked></td>
+            @endif
             <td><input style="display: none;" type="radio"  name="{{$i}}" value="2" checked></td>
         </tr>
         <?php $i++;?>
     @endforeach
 </table>
-<input type="checkbox" name="seeLater" class="css-checkbox"><span class="css-checkbox">Вернуться позже</span>
 {!! Form::close() !!}
+</div>
 </body>
 </html>

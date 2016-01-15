@@ -7,11 +7,14 @@
  */
 namespace App\Qtypes;
 use App\Http\Controllers\QuestionController;
+use App\Mypdf;
 use App\Question;
 use Illuminate\Http\Request;
 
 class YesNo extends QuestionType{
     const type_code = 5;
+    public $single = false;
+
     function __construct($id_question){
         parent::__construct($id_question);
     }
@@ -21,7 +24,7 @@ class YesNo extends QuestionType{
     public function add(Request $request, $code){
         for ($i=0; $i<count($request->input('variants')); $i++){
             $title = $request->input('variants')[$i];
-            if (isset($request->input('answers')[$i])){
+            if (in_array($i+1, $request->input('answers'))){
                 $answer = 'true';
             }
             else{
@@ -55,11 +58,15 @@ class YesNo extends QuestionType{
             $score = 0;
         }
         if ($score != $this->points) {
-            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points);
+            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array);
         }
         else {
-            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points);
+            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array);
         }
         return $data;
+    }
+
+    public function pdf(Mypdf $fpdf, $count, $answered=false){
+
     }
 } 

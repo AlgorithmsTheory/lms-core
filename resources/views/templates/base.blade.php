@@ -23,6 +23,7 @@
                     <li><a href="{{URL::route('in_process')}}" class="btn">Алгоритмы маркова</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{{URL::route('personal_account')}}" class="btn">Результаты</a></li>
                     <li><a href="{{URL::route('logout')}}" class="btn">Выйти</a></li>
                 </ul>
             </div>

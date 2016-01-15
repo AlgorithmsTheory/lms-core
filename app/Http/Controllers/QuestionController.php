@@ -6,6 +6,7 @@
  * Time: 16:15
  */
 namespace App\Http\Controllers;
+use App\Qtypes\Theorem;
 use Auth;
 use Cookie;
 use Session;
@@ -23,6 +24,9 @@ use App\Qtypes\MultiChoice;
 use App\Qtypes\FillGaps;
 use App\Qtypes\AccordanceTable;
 use App\Qtypes\YesNo;
+use App\Qtypes\Definition;
+use App\Qtypes\JustAnswer;
+
 class QuestionController extends Controller{
     private $question;
     function __construct(Question $question){
@@ -54,7 +58,7 @@ class QuestionController extends Controller{
         $query = $question->whereId_question($id)->select('code')->first();
         $code = $query->code;          //получили код вопроса
         $array = explode('.',$code);
-        // print_r($array);
+        //print_r($array);
         $query1 = $codificator->whereCodificator_type('Раздел')->whereCode($array[0])->select('value')->first();
         $section = $query1->value;
         $query2 = $codificator->whereCodificator_type('Тема')->whereCode($array[1])->join('themes', 'themes.theme', '=', 'codificators.value')->where('themes.section', '=', $section)->select('value')->first();
@@ -64,6 +68,15 @@ class QuestionController extends Controller{
         $decode = array('section' => $section, 'theme' => $theme, 'type' => $type,
             'section_code' => $array[0], 'theme_code' => $array[1], 'type_code' => $array[2]);
         return $decode;
+    }
+
+    /** Определяет одиночный вопрос (true) или может использоваться только в группе с такими же (false) */
+    private function getSingle($id){
+        $type = $this->getCode($id)['type'];
+        if ($type == 'Да/Нет'){
+            return false;
+        }
+        else return true;
     }
 
     /** из массива выбирает случайный элемент и ставит его в конец массива, меняя местами с последним элементом */
@@ -96,36 +109,72 @@ class QuestionController extends Controller{
         $temp_array = [];
         $k = 0;
         $destructured = $test_controller->destruct($id_test);
-        for ($i=0; $i<count($destructured); $i++){
+        for ($i=0; $i<count($destructured); $i++){                                                                      // идем по всем структурам
+            //echo 'мы в первом цикле'.'<br>';
             $j = 0;
             $temp = preg_replace('~A~', '[[:digit:]]+', $destructured[$i][1] );                                         //заменям все A (All) на регулярное выражение, соответствующее любому набору цифр
             $query = $question->where('code', 'regexp', $temp)->get();                                                  //ищем всевозможные коды вопросов
+            $test_query = Test::whereId_test($id_test)->select('test_type')->first();
             foreach ($query as $id){
-                array_push($temp_array,$id->id_question);                                                               //для каждого кода создаем массив всех вопрососв с этим кодом
+                if ($test_query->test_type == 'Тренировочный'){                                                         //если тест тренировочный
+                    if ($id->control == 1)                                                                              //если вопрос скрытый, то проходим мимо
+                        continue;
+                    array_push($temp_array,$id->id_question);                                                           //для каждого кода создаем массив всех вопрососв с этим кодом
+                }
+                else array_push($temp_array,$id->id_question);                                                          // если тест контрольный
             }
-                $query2 = Test::whereId_test($id_test)->select('test_type')->first();
-                if ($query2->test_type == 'Тренировочный'){
-                    while ($j < $destructured[$i][0]){
-                        $temp_array = $this->randomArray($temp_array);
-                        $query = $question->whereId_question($temp_array[count($temp_array)-1])->first();
-                        if ($query->control == 0){                                                                      //Проверка, что вопрос не является скрытым
-                            $array[$k] = $temp_array[count($temp_array)-1];
-                            $k++;
-                            $j++;
+            while ($j < $destructured[$i][0]){                                                                          //пока не закончатся вопросы этой структуры
+                //echo 'мы во втором цикле'.'<br>';
+                $temp_array = $this->randomArray($temp_array);                                                          //выбираем случайный вопрос
+                $temp_question = $temp_array[count($temp_array)-1];
+                if ($this->getSingle($temp_question)){                                                                  //если вопрос одиночный (то есть как и было ранее)
+                    //echo 'одиночный вопрос'.'<br>';
+                    //echo $temp_question;
+                    $array[$k] = $temp_question;                                                                        //добавляем вопрос в выходной массив
+                    $k++;
+                    $j++;
+                    array_pop($temp_array);
+                }
+                else {                                                                                                  //если вопрос может использоваться только в группе
+                    $query = $question->whereId_question($temp_question)->first();
+                    $base_question_type = $this->getCode($temp_question)['type_code'];                                  //получаем код типа базового вопроса, для которого будем создавать группу
+                    $max_id = Question::max('id_question');
+                    $new_id = $max_id+1;
+                    $new_title = $query->title;                                                                         //берем данные текущего вопроса
+                    $new_answer = $query->answer;
+                    array_pop($temp_array);                                                                             //и убираем его из массива
+                    $new_temp_array = [];
+                    for ($p=0; $p < count($temp_array); $p++){                                                          //создаем копию массива подходящих вопросов
+                        $new_temp_array[$p] = $temp_array[$p];
+                    }
+                    $l = 0;
+                    while ($l < 3) {                                                                                    //берем еще 3 вопроса этого типа
+                        $new_temp_array = $this->randomArray($new_temp_array);
+                        $temp_question_new = $new_temp_array[count($new_temp_array)-1];
+
+                        if ($this->getCode($temp_question_new)['type_code'] != $base_question_type){                    //если тип вопроса не совпадает с базовым
+                            array_pop($new_temp_array);                                                                 //удаляем его из новго массива и идем дальше
+                            continue;
                         }
-                        array_pop($temp_array);
-                    }
+
+                        $index_in_old_array = array_search($temp_question_new, $temp_array);                            //ищем в базовом массиве индекс нашего вопроса
+                        $chosen = $temp_array[$index_in_old_array];                                                     //и меняем его с последним элементом в этом массиве
+                        $temp_array[$index_in_old_array]=$temp_array[count($temp_array)-1];
+                        $temp_array[count($temp_array)-1] = $chosen;
+
+                        $query_new = $question->whereId_question($temp_question_new)->first();
+                        $new_title .= ';'.$query_new->title;                                                            //составляем составной вопрос
+                        $new_answer .= ';'.$query_new->answer;
+                        array_pop($temp_array);                                                                         //удаляем и из базовгго массива
+                        array_pop($new_temp_array);                                                                     //и из нового
+                        $l++;
+                        }
+                    Question::insert(array('control' => 0, 'code' => 'T.T.'.$base_question_type, 'title' => $new_title, 'variants' => '', 'answer' => $new_answer, 'points' => 1));    //вопрос про код и баллы
+                    $array[$k] = $new_id;                                                                               //добавляем сформированный вопрос в выходной массив
+                    $k++;
+                    $j++;
                 }
-                else {
-                    while ($j < $destructured[$i][0]){
-                        $temp_array = $this->randomArray($temp_array);
-                        $array[$k] = $temp_array[count($temp_array)-1];
-                        array_pop($temp_array);
-                        $j++;
-                        $k++;
-                    }
-                }
-            $temp_array = [];
+            }
         }
         return $array;                                                                                                  //формируем массив из id вошедших в тест вопросов
     }
@@ -173,14 +222,20 @@ class QuestionController extends Controller{
                 $array = $yes_no->show($count);
                 return $array;
                 break;
-            case 'Вопрос на вычисление':
-                echo 'Вопрос на вычисление';
+            case 'Определение':
+                $def = new Definition($id_question);
+                $array = $def->show($count);
+                return $array;
                 break;
-            case 'Вопрос на соответствие':
-                echo 'Вопрос на соответствие';
+            case 'Просто ответ':
+                $just = new JustAnswer($id_question);
+                $array = $just->show($count);
+                return $array;
                 break;
-            case 'Вид функции':
-                echo 'Вопрос на определение аналитического вида функции';
+            case 'Теорема':
+                $theorem = new Theorem($id_question);
+                $array = $theorem->show($count);
+                return $array;
                 break;
         }
     }
@@ -192,18 +247,18 @@ class QuestionController extends Controller{
         $query = $question->whereId_question($id)->select('answer','points')->first();
         $points = $query->points;
         $type = $this->getCode($id)['type'];
-        if (count($array)==1){           //если не был отмечен ни один вариант
+        if (count($array)==1){                                                                                          //если не был отмечен ни один вариант
             $choice = [];
             $score = 0;
             $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points, 'choice' => $choice);
             return $data;
         }
-        for ($i=0; $i < count($array)-1; $i++){                                    //передвигаем массив, чтобы первый элемент оказался последним
+        for ($i=0; $i < count($array)-1; $i++){                                                                         //передвигаем массив, чтобы первый элемент оказался последним
             $array[$i] = $array[$i+1];
         }
-        array_pop($array);                                             //убираем из входного массива id вопроса, чтобы остались лишь выбранные варианты ответа
+        array_pop($array);                                                                                              //убираем из входного массива id вопроса, чтобы остались лишь выбранные варианты ответа
         switch($type){
-            case 'Выбор одного из списка':                      //Стас
+            case 'Выбор одного из списка':
                 $one_choice = new OneChoice($id);
                 $data = $one_choice->check($array);
                 return $data;
@@ -213,17 +268,17 @@ class QuestionController extends Controller{
                 $data = $multi_choice->check($array);
                 return $data;
                 break;
-            case 'Текстовый вопрос':                            //Стас
+            case 'Текстовый вопрос':
                 $fill_gaps = new FillGaps($id);
                 $data = $fill_gaps->check($array);
                 return $data;
                 break;
-            case 'Таблица соответствий':                        //Миша
+            case 'Таблица соответствий':
                 $accordance_table = new AccordanceTable($id);
                 $data = $accordance_table->check($array);
                 return $data;
                 break;
-            case 'Да/Нет':                                      //Миша
+            case 'Да/Нет':
                 $yes_no = new YesNo($id);
                 $data = $yes_no->check($array);
                 return $data;
@@ -351,14 +406,32 @@ class QuestionController extends Controller{
                     }
                     return (String) view('questions.teacher.create4', compact('sections'));
                     break;
-                case 'Вопрос на вычисление':
-                    echo 'Вопрос на вычисление';
+                case 'Определение':
+                    $codificator = new Codificator();
+                    $sections = [];
+                    $query = $codificator->whereCodificator_type('Раздел')->select('value')->get();
+                    foreach ($query as $section){
+                        array_push($sections,$section->value);
+                    }
+                    return (String) view('questions.teacher.create7', compact('sections'));
                     break;
-                case 'Вопрос на соответствие':
-                    echo 'Вопрос на соответствие';
+                case 'Просто ответ':
+                    $codificator = new Codificator();
+                    $sections = [];
+                    $query = $codificator->whereCodificator_type('Раздел')->select('value')->get();
+                    foreach ($query as $section){
+                        array_push($sections,$section->value);
+                    }
+                    return (String) view('questions.teacher.create8', compact('sections'));
                     break;
-                case 'Вид функции':
-                    echo 'Вопрос на определение аналитического вида функции';
+                case 'Теорема':
+                    $codificator = new Codificator();
+                    $sections = [];
+                    $query = $codificator->whereCodificator_type('Раздел')->select('value')->get();
+                    foreach ($query as $section){
+                        array_push($sections,$section->value);
+                    }
+                    return (String) view('questions.teacher.create6', compact('sections'));
                     break;
             }
         }
@@ -391,15 +464,17 @@ class QuestionController extends Controller{
                 $fill_gaps = new YesNo($id);
                 $fill_gaps->add($request, $code);
                 break;
+            case 'Определение':
+                $definition = new Definition($id);
+                $definition->add($request, $code);
                 break;
-            case 'Вопрос на вычисление':
-                echo 'Вопрос на вычисление';
+            case 'Просто ответ':
+                $just = new JustAnswer($id);
+                $just->add($request, $code);
                 break;
-            case 'Вопрос на соответствие':
-                echo 'Вопрос на соответствие';
-                break;
-            case 'Вид функции':
-                echo 'Вопрос на определение аналитического вида функции';
+            case 'Теорема':
+                $theorem = new Theorem($id);
+                $theorem->add($request, $code);
                 break;
         }
         return redirect()->route('question_create');
@@ -508,6 +583,7 @@ class QuestionController extends Controller{
         for ($i=0; $i<$amount; $i++){                                                                                   //обрабатываем каждый вопрос
             $data = $request->input($i);
             $array = json_decode($data);
+            //print_r($array);
             $data = $this->check($array);
             $right_or_wrong[$j] = $data['mark'];
             $choice[$j] = $data['choice'];
