@@ -10,7 +10,8 @@
         "barryvdh/laravel-ide-helper": "^2.1",
         "illuminate/html": "^5.0",
         "guzzlehttp/guzzle": "^6.1",
-        "anouar/fpdf": "^1.0"
+        "anouar/fpdf": "^1.0",
+		"kendu/l5-mpdf" : "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

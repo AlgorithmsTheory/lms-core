@@ -2,8 +2,9 @@
 /node_modules
 Homestead.yaml
 .env
-.idea/
-/config
+/.idea/*
+/config/*
 composer.json
 composer.lock
 _ide_helper.php
+public/download/pdf_tests/*

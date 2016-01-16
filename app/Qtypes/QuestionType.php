@@ -10,6 +10,7 @@ use App\Mypdf;
 use App\Question;
 use Illuminate\Http\Request;
 abstract class QuestionType {
+    const PUBLIC_DIR = 'public/';
     public  $id_question;
     public  $text;
     public  $variants;
@@ -25,6 +26,10 @@ abstract class QuestionType {
         }
         $this->id_question = $id_question;
     }
+    /*public function toBladeImage($string){
+        //return preg_replace("/#img1#/", "{!! HTML::image('img/symbols/all.png') !!}", $string);
+        return $string;
+    }*/
     abstract function create();
     abstract function add(Request $request, $code);
     abstract function show($count);

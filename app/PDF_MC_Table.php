@@ -113,4 +113,4 @@ class PDF_MC_Table extends Fpdf {
         }
         return $nl;
     }
-} 
+}

@@ -18,6 +18,7 @@ use App\Qtypes\YesNo;
 use App\Question;
 use App\Test;
 use Illuminate\Http\Request;
+use mPDF;
 use ZipArchive;
 
 class GeneratorController extends Controller {
@@ -49,7 +50,7 @@ class GeneratorController extends Controller {
 
     private function headOfPdf(Mypdf $fpdf, $test_name, $variant, $num_tasks){
             $fpdf->AliasNbPages();                                                                                      // для вывода общего числа страниц
-            $fpdf->AddFont('TimesNewRomanPSMT','','times.php');
+            //$fpdf->AddFont('TimesNewRomanPSMT','','times.php');
             $fpdf->AddPage();
             $fpdf->Head($test_name);
             $fpdf->info($variant);                                                                                            // вывод информации о билете
@@ -108,6 +109,10 @@ class GeneratorController extends Controller {
             }
         }
         return view('generator.index', compact('tests'));
+        /*$mpdf=new mPDF();
+        $mpdf->WriteHTML('<p>Привет, мир! ∀</p>');
+        $mpdf->Output();
+        exit;*/
     }
 
     /** Генерирует pdf файлы с тестом с заданным количеством вариантов */
@@ -144,8 +149,8 @@ class GeneratorController extends Controller {
                 $fpdf->Ln(10);
                 $answered_fpdf->Ln(10);
             }
-            $fpdf->Output(iconv('utf-8', 'windows-1251', $dir.'/variant'.$k.'.pdf'), 'F');
-            $answered_fpdf->Output(iconv('utf-8', 'windows-1251', $dir.'/answered_variant'.$k.'.pdf'), 'F');
+            $fpdf->Output($dir.'/variant'.$k.'.pdf', 'F');
+            $answered_fpdf->Output($dir.'/answered_variant'.$k.'.pdf', 'F');
         }
 
         $zip = $this->pdfToZip($dir);                                                                                   // создаем архив

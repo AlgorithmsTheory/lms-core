@@ -54,23 +54,23 @@ class OneChoice extends QuestionType {
     public function pdf(Mypdf $fpdf, $count, $answered=false){
         $parse = $this->variants;
         $variants = explode(";", $parse);
-        $fpdf->SetFont('TimesNewRomanPSMT','U',12);
-        $fpdf->Cell(20,10,iconv('utf-8', 'windows-1251//TRANSLIT', 'Вопрос '.$count.'.'),0,0);
-        $fpdf->Cell(7,10,iconv('utf-8', 'windows-1251//TRANSLIT', 'Выберите один вариант ответа'),0,1);
+        //$fpdf->SetFont('DejaVuSansMono','U',12);
+        $html = '<p style="text-decoration: underline; font-size: 150%;">Вопрос '.$count.'</p>';
+        $html .= '<p style="text-decoration: underline; font-size: 150%;">Выберите один вариант ответа</p>';
 
-        $fpdf->SetFont('TimesNewRomanPSMT','',12);
-        $fpdf->MultiCell(0,5,iconv('utf-8', 'windows-1251//TRANSLIT', $this->text),0,1);
-        $fpdf->Ln(2);
-        $fpdf->SetWidths(array('10','170'));
+        $html .= '<br><table border="1" style="border-collapse: collapse;" width="100%">';
         if ($answered){                                                                                                 // пдф с ответами
             $answer = $this->answer;
             $new_variants = Session::get('saved_variants_order');
             foreach ($new_variants as $var){
+                $html .= '<tr>';
                 if ($answer == $var)
-                    $fpdf->Row(array('   +',iconv('utf-8', 'windows-1251//TRANSLIT', $var)));
+                    $html .= '<td width="5%">+</td><td width="80%">'.$var.'</td>';
+                    //$fpdf->Row(array('   +',iconv('utf-8', 'windows-1251//TRANSLIT', $var)));
                 else
-                    $fpdf->Row(array(iconv('utf-8', 'windows-1251//TRANSLIT', ''),iconv('utf-8', 'windows-1251', $var)));
-                $fpdf->Ln(0);
+                    //$fpdf->Row(array(iconv('utf-8', 'windows-1251//TRANSLIT', ''),iconv('utf-8', 'windows-1251', $var)));
+                    $html .= '<td width="5%"></td><td width="80%">'.$var.'</td>';
+                $html .= '</tr>';
             }
             Session::forget('saved_variants_order');
         }
@@ -78,10 +78,13 @@ class OneChoice extends QuestionType {
             $new_variants = QuestionController::mixVariants($variants);
             Session::put('saved_variants_order', $new_variants);
             foreach ($new_variants as $var){
-                $fpdf->Row(array(iconv('utf-8', 'windows-1251//TRANSLIT', ''),iconv('utf-8', 'windows-1251//TRANSLIT', $var)));
-                $fpdf->Ln(0);
+                $html .= '<tr>';
+                $html .= '<td width="5%"></td><td width="80%">'.$var.'</td>';
+                $html .= '</tr>';
             }
         }
+        $html .= '</table>';
+        $fpdf->WriteHTML($html);
     }
 
 } 

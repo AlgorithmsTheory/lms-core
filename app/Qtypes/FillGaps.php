@@ -37,7 +37,7 @@ class FillGaps extends QuestionType {
                 $answers = $answers.';'.explode('|',$request->input('variants-'.($i+1))[1])[0];
             }
             $arr_answers[$i] = $request->input('variants-'.($i+1))[1];
-            print_r($arr_answers);
+            //print_r($arr_answers);
         }
         $variants = $variants.'%'.$request->input('variants-1')[0];
         for ($i=2; $i<=$request->input('number_of_blocks'); $i++){

@@ -140,6 +140,7 @@ return [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 		Illuminate\Html\HtmlServiceProvider::class,
         Anouar\Fpdf\FpdfServiceProvider::class,
+        Kendu\Mpdf\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -199,6 +200,7 @@ return [
 		'Form'      => Illuminate\Html\FormFacade::class,
         'HTML'      => Illuminate\Html\HtmlFacade::class,
         'Fpdf'      => Anouar\Fpdf\Facades\Fpdf::class,
+        'PDF' =>    Kendu\Mpdf\Facades\Pdf::class,
     ]
 
 ];
