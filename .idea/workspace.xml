@@ -25,7 +25,7 @@
       <file leaf-file-name="QuestionController.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/QuestionController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="620" column="165" selection-start="32720" selection-end="32720" vertical-scroll-proportion="0.0" vertical-offset="16339" max-vertical-offset="16968">
+            <state line="620" column="165" selection-start="32720" selection-end="32720" vertical-scroll-proportion="0.0" vertical-offset="16340" max-vertical-offset="16968">
               <folding />
             </state>
           </provider>
@@ -34,7 +34,7 @@
       <file leaf-file-name="GeneratorController.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/GeneratorController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="54" column="21" selection-start="1862" selection-end="1862" vertical-scroll-proportion="0.0" vertical-offset="1136" max-vertical-offset="4480">
+            <state line="137" column="41" selection-start="5186" selection-end="5186" vertical-scroll-proportion="0.0" vertical-offset="3320" max-vertical-offset="4424">
               <folding>
                 <element signature="e#124#145#0" expanded="true" />
               </folding>
@@ -42,30 +42,35 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Mypdf.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Mypdf.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Mypdf.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="37" column="390" selection-start="1381" selection-end="1381" vertical-scroll-proportion="0.28821656" vertical-offset="855" max-vertical-offset="2408">
+            <state line="12" column="0" selection-start="158" selection-end="158" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2436">
               <folding>
                 <element signature="e#6#89#0" expanded="true" />
-                <marker date="1452979807273" expanded="true" signature="280:459" placeholder="..." />
-                <marker date="1452979807273" expanded="true" signature="933:960" placeholder="..." />
-                <marker date="1452979807273" expanded="true" signature="961:1683" placeholder="..." />
-                <marker date="1452979807273" expanded="true" signature="961:1560" placeholder="..." />
+                <marker date="1453029379142" expanded="false" signature="938:965" placeholder="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="OneChoice.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Qtypes/OneChoice.php">
+      <file leaf-file-name="MultiChoice.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Qtypes/MultiChoice.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="57" column="54" selection-start="2263" selection-end="2299" vertical-scroll-proportion="-4.8461537" vertical-offset="1358" max-vertical-offset="2548">
+            <state line="132" column="30" selection-start="6116" selection-end="6116" vertical-scroll-proportion="0.0" vertical-offset="2984" max-vertical-offset="3696">
               <folding>
-                <element signature="e#6#89#0" expanded="true" />
-                <marker date="1452978925298" expanded="true" signature="2370:2414" placeholder="..." />
-                <marker date="1452978925298" expanded="true" signature="2499:2525" placeholder="..." />
+                <marker date="1453029611315" expanded="true" signature="3950:4003" placeholder="..." />
+                <marker date="1453029611315" expanded="true" signature="4030:4056" placeholder="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FillGaps.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/Qtypes/FillGaps.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="99" column="0" selection-start="4681" selection-end="4681" vertical-scroll-proportion="0.42038217" vertical-offset="2284" max-vertical-offset="3836">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -80,7 +85,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/resources/views/library/persons/rassel.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/library/persons/markov.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/library/persons/kantor.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/library/persons/gilbert.blade.php" />
@@ -113,7 +117,6 @@
         <option value="$PROJECT_DIR$/vendor/anouar/fpdf/src/Anouar/Fpdf/Fpdf.php" />
         <option value="$PROJECT_DIR$/app/Http/Kernel.php" />
         <option value="$PROJECT_DIR$/app/Http/Middleware/VerifyCsrfToken.php" />
-        <option value="$PROJECT_DIR$/app/Qtypes/MultiChoice.php" />
         <option value="$PROJECT_DIR$/resources/views/templates/base.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/generator/index.blade.php" />
         <option value="$PROJECT_DIR$/app/Http/routes.php" />
@@ -121,16 +124,18 @@
         <option value="$PROJECT_DIR$/resources/views/tests/show5T.blade.php" />
         <option value="$PROJECT_DIR$/app/Qtypes/YesNo.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/QuestionController.php" />
-        <option value="$PROJECT_DIR$/app/Qtypes/FillGaps.php" />
         <option value="$PROJECT_DIR$/resources/views/questions/student/show1.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/tests/show1.blade.php" />
         <option value="$PROJECT_DIR$/app/Qtypes/QuestionType.php" />
         <option value="$PROJECT_DIR$/app/PDF_MC_Table.php" />
         <option value="$PROJECT_DIR$/config/app.php" />
         <option value="$PROJECT_DIR$/app/Qtypes/AccordanceTable.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/GeneratorController.php" />
-        <option value="$PROJECT_DIR$/app/Qtypes/OneChoice.php" />
         <option value="$PROJECT_DIR$/app/Mypdf.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/GeneratorController.php" />
+        <option value="$PROJECT_DIR$/vendor/mpdf/mpdf/mpdf.php" />
+        <option value="$PROJECT_DIR$/app/Qtypes/MultiChoice.php" />
+        <option value="$PROJECT_DIR$/app/Qtypes/OneChoice.php" />
+        <option value="$PROJECT_DIR$/app/Qtypes/FillGaps.php" />
       </list>
     </option>
   </component>
@@ -338,14 +343,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1366" height="727" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1874074" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1874074" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
@@ -356,8 +361,8 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32748538" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3987441" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
     <layout-to-restore>
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -375,9 +380,9 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1874074" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3987441" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3987441" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -551,16 +556,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Support/helpers.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="445" column="13" selection-start="10246" selection-end="10246" vertical-scroll-proportion="19.884058" vertical-offset="0" max-vertical-offset="22148">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Qtypes/MultiChoice.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="11" selection-start="820" selection-end="820" vertical-scroll-proportion="0.0" vertical-offset="568" max-vertical-offset="3696">
-          <folding />
-        </state>
+        <state line="445" column="13" selection-start="10246" selection-end="10246" vertical-scroll-proportion="19.884058" vertical-offset="0" max-vertical-offset="22148" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/tests/show2T.blade.php">
@@ -589,30 +585,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/library/index.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="51" column="102" selection-start="2156" selection-end="2230" vertical-scroll-proportion="-0.15103339" vertical-offset="1523" max-vertical-offset="11312">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/QuestionController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="620" column="165" selection-start="32720" selection-end="32720" vertical-scroll-proportion="0.0" vertical-offset="16199" max-vertical-offset="17500">
-          <folding />
-        </state>
+        <state line="51" column="102" selection-start="2156" selection-end="2230" vertical-scroll-proportion="-0.15103339" vertical-offset="1523" max-vertical-offset="11312" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/library/persons/gedel.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="65" column="51" selection-start="2664" selection-end="2712" vertical-scroll-proportion="0.0" vertical-offset="2184" max-vertical-offset="3472">
-          <folding />
-        </state>
+        <state line="65" column="51" selection-start="2664" selection-end="2712" vertical-scroll-proportion="0.0" vertical-offset="2184" max-vertical-offset="3472" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/questions/student/show1.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="18" selection-start="81" selection-end="81" vertical-scroll-proportion="0.13104524" vertical-offset="0" max-vertical-offset="641">
-          <folding />
-        </state>
+        <state line="3" column="18" selection-start="81" selection-end="81" vertical-scroll-proportion="0.13104524" vertical-offset="0" max-vertical-offset="641" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/vendor/anouar/fpdf/src/Anouar/Fpdf/Fpdf.php">
@@ -622,37 +605,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/PDF_MC_Table.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="29" selection-start="159" selection-end="159" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3388">
-          <folding>
-            <element signature="e#6#88#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Qtypes/FillGaps.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="13" selection-start="1317" selection-end="1317" vertical-scroll-proportion="0.29936305" vertical-offset="624" max-vertical-offset="3836">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/tests/show1.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="13" selection-start="156" selection-end="156" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="560">
-          <folding>
-            <marker date="1452949757171" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1452949757171" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
+        <state line="4" column="13" selection-start="156" selection-end="156" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="560" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config/app.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="205" column="2" selection-start="8600" selection-end="8600" vertical-scroll-proportion="0.0" vertical-offset="5292" max-vertical-offset="5936">
-          <folding />
-        </state>
+        <state line="205" column="2" selection-start="8600" selection-end="8600" vertical-scroll-proportion="0.0" vertical-offset="5292" max-vertical-offset="5936" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Qtypes/AccordanceTable.php">
@@ -669,27 +629,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/mpdf/mpdf/mpdf.php">
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/QuestionController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4355" column="9" selection-start="150319" selection-end="150319" vertical-scroll-proportion="-7.558917" vertical-offset="126407" max-vertical-offset="930468">
+        <state line="620" column="165" selection-start="32720" selection-end="32720" vertical-scroll-proportion="0.0" vertical-offset="16199" max-vertical-offset="17500">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Qtypes/OneChoice.php">
+    <entry file="file://$PROJECT_DIR$/vendor/mpdf/mpdf/mpdf.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="57" column="54" selection-start="2263" selection-end="2299" vertical-scroll-proportion="-4.8461537" vertical-offset="1358" max-vertical-offset="2548">
+        <state line="993" column="31" selection-start="27109" selection-end="27109" vertical-scroll-proportion="-7.6480894" vertical-offset="32327" max-vertical-offset="930468">
           <folding>
-            <element signature="e#6#89#0" expanded="true" />
-            <marker date="1452978925298" expanded="true" signature="2370:2414" placeholder="..." />
-            <marker date="1452978925298" expanded="true" signature="2499:2525" placeholder="..." />
+            <marker date="1453029496366" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1453029496366" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1453029496366" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1453029496366" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1453029496366" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1453029496366" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1453029496366" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1453029496366" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1453029496366" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1453029496366" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1453029496366" expanded="true" signature="-1:-1" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/GeneratorController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="21" selection-start="1862" selection-end="1862" vertical-scroll-proportion="0.0" vertical-offset="1052" max-vertical-offset="4480">
+        <state line="137" column="41" selection-start="5186" selection-end="5186" vertical-scroll-proportion="0.0" vertical-offset="3320" max-vertical-offset="4424">
           <folding>
             <element signature="e#124#145#0" expanded="true" />
           </folding>
@@ -698,14 +666,38 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Mypdf.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="390" selection-start="1381" selection-end="1381" vertical-scroll-proportion="0.28821656" vertical-offset="855" max-vertical-offset="2408">
+        <state line="12" column="0" selection-start="158" selection-end="158" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2436">
           <folding>
             <element signature="e#6#89#0" expanded="true" />
-            <marker date="1452979807273" expanded="true" signature="280:459" placeholder="..." />
-            <marker date="1452979807273" expanded="true" signature="933:960" placeholder="..." />
-            <marker date="1452979807273" expanded="true" signature="961:1683" placeholder="..." />
-            <marker date="1452979807273" expanded="true" signature="961:1560" placeholder="..." />
+            <marker date="1453029379142" expanded="false" signature="938:965" placeholder="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Qtypes/OneChoice.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="59" column="0" selection-start="2419" selection-end="2419" vertical-scroll-proportion="0.50955415" vertical-offset="1220" max-vertical-offset="2492">
+          <folding>
+            <element signature="e#6#89#0" expanded="true" />
+            <marker date="1453029710732" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Qtypes/MultiChoice.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="132" column="30" selection-start="6116" selection-end="6116" vertical-scroll-proportion="0.0" vertical-offset="2984" max-vertical-offset="3696">
+          <folding>
+            <marker date="1453029611315" expanded="true" signature="3950:4003" placeholder="..." />
+            <marker date="1453029611315" expanded="true" signature="4030:4056" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Qtypes/FillGaps.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="99" column="0" selection-start="4681" selection-end="4681" vertical-scroll-proportion="0.42038217" vertical-offset="2284" max-vertical-offset="3836">
+          <folding />
         </state>
       </provider>
     </entry>

@@ -54,21 +54,19 @@ class OneChoice extends QuestionType {
     public function pdf(Mypdf $fpdf, $count, $answered=false){
         $parse = $this->variants;
         $variants = explode(";", $parse);
-        //$fpdf->SetFont('DejaVuSansMono','U',12);
-        $html = '<p style="text-decoration: underline; font-size: 150%;">Вопрос '.$count.'</p>';
-        $html .= '<p style="text-decoration: underline; font-size: 150%;">Выберите один вариант ответа</p>';
+        $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
+        $html .= '  Выберите один вариант ответа</td></tr>';
+        $html .= '<tr><td>'.$this->text.'</td></tr></table>';
 
-        $html .= '<br><table border="1" style="border-collapse: collapse;" width="100%">';
+        $html .= '<table border="1" style="border-collapse: collapse;" width="100%">';
         if ($answered){                                                                                                 // пдф с ответами
             $answer = $this->answer;
             $new_variants = Session::get('saved_variants_order');
             foreach ($new_variants as $var){
                 $html .= '<tr>';
                 if ($answer == $var)
-                    $html .= '<td width="5%">+</td><td width="80%">'.$var.'</td>';
-                    //$fpdf->Row(array('   +',iconv('utf-8', 'windows-1251//TRANSLIT', $var)));
+                    $html .= '<td width="5%" align="center">+</td><td width="80%">'.$var.'</td>';
                 else
-                    //$fpdf->Row(array(iconv('utf-8', 'windows-1251//TRANSLIT', ''),iconv('utf-8', 'windows-1251', $var)));
                     $html .= '<td width="5%"></td><td width="80%">'.$var.'</td>';
                 $html .= '</tr>';
             }

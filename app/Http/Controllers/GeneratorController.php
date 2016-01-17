@@ -146,8 +146,6 @@ class GeneratorController extends Controller {
                 };
                 $this->pdfQuestion($fpdf, $id, $i+1);
                 $this->pdfQuestion($answered_fpdf, $id, $i+1, true);
-                $fpdf->Ln(10);
-                $answered_fpdf->Ln(10);
             }
             $fpdf->Output($dir.'/variant'.$k.'.pdf', 'F');
             $answered_fpdf->Output($dir.'/answered_variant'.$k.'.pdf', 'F');

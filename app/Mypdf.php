@@ -16,7 +16,7 @@ class Mypdf extends \mPDF{
      */
     function Head($name){
         $html = '<p align="center">Национальный исследовательский ядерный университет "МИФИ"</p>';
-        $html .= '<p align="center">'.$name. 'по курсу "ДМ-3: Теория алгоритмов и сложность вычислений"';
+        $html .= '<p align="center">'.$name. ' по курсу "ДМ-3: Теория алгоритмов и сложность вычислений"</p>';
         $this->WriteHTML($html);
     }
 
@@ -74,6 +74,7 @@ class Mypdf extends \mPDF{
             $this->Cell(10,10,'',1,0);
         }
         $this->Cell(15,10,'',1,1);
+        $this->Ln(4);
     }
 
 

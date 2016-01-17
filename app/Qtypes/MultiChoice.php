@@ -95,31 +95,28 @@ class MultiChoice extends QuestionType {
     public function pdf(Mypdf $fpdf, $count, $answered=false){
         $parse = $this->variants;
         $variants = explode(";", $parse);
-        $fpdf->SetFont('TimesNewRomanPSMT','U',12);
-        $fpdf->Cell(20,10,iconv('utf-8', 'windows-1251//TRANSLIT', 'Вопрос '.$count.'.'),0,0);
-        $fpdf->Cell(7,10,iconv('utf-8', 'windows-1251//TRANSLIT', 'Выберите один или несколько вариантов ответа'),0,1);
+        $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
+        $html .= '  Выберите один или несколько вариантов ответа</td></tr>';
+        $html .= '<tr><td>'.$this->text.'</td></tr></table>';
 
-        $fpdf->SetFont('TimesNewRomanPSMT','',12);
-        $fpdf->MultiCell(0,5,iconv('utf-8', 'windows-1251//TRANSLIT', $this->text),0,1);
-        $fpdf->Ln(2);
-        $fpdf->SetWidths(array('10','170'));
+        $html .= '<table border="1" style="border-collapse: collapse;" width="100%">';
         if ($answered){                                                                                                 // пдф с ответами
             $answers = explode(";", $this->answer);
             $new_variants = Session::get('saved_variants_order');
             for ($i = 0; $i < count($new_variants); $i++){                                                              // идем по всем вариантам
+                $html .= '<tr>';
                 for ($j = 0; $j < count($answers); $j++){                                                               // идем по всем ответам
                     if ($answers[$j] == $new_variants[$i]){                                                             // если вариант совпал с ответом
-                        $fpdf->Row(array('   +',iconv('utf-8', 'windows-1251//TRANSLIT', $new_variants[$i])));
-                        $fpdf->Ln(0);
+                        $html .= '<td width="5%" align="center">+</td><td width="80%">'.$new_variants[$i].'</td>';
                         break;
                     }
                     else{
                         if ($j == count($answers) - 1){                                                                 // проверяем, не все ли ответы просмотрены
-                            $fpdf->Row(array(iconv('utf-8', 'windows-1251//TRANSLIT', ''),iconv('utf-8', 'windows-1251//TRANSLIT', $new_variants[$i]))); // если так, то выводим строку без "+"
-                            $fpdf->Ln(0);
+                            $html .= '<td width="5%"></td><td width="80%">'.$new_variants[$i].'</td>';
                         }
                         else continue;                                                                                  // иначе смотрим следующий ответ
                     }
+                    $html .= '</tr>';
                 }
             }
             Session::forget('saved_variants_order');
@@ -128,9 +125,12 @@ class MultiChoice extends QuestionType {
             $new_variants = QuestionController::mixVariants($variants);
             Session::put('saved_variants_order', $new_variants);
             foreach ($new_variants as $var){
-                $fpdf->Row(array(iconv('utf-8', 'windows-1251', ''),iconv('utf-8', 'windows-1251', $var)));
-                $fpdf->Ln(0);
+                $html .= '<tr>';
+                $html .= '<td width="5%"></td><td width="80%">'.$var.'</td>';
+                $html .= '</tr>';
             }
         }
+        $html .= '</table><br>';
+        $fpdf->WriteHTML($html);
     }
 } 

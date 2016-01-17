@@ -95,22 +95,20 @@ class FillGaps extends QuestionType {
         $num_slot = count($variants);
         $text = '';
 
-        $fpdf->SetFont('TimesNewRomanPSMT','U',12);
-        $fpdf->Cell(20,10,iconv('utf-8', 'windows-1251//TRANSLIT', 'Вопрос '.$count.'.'),0,0);
-        $fpdf->Cell(7,10,iconv('utf-8', 'windows-1251//TRANSLIT', 'Заполните пропуски в тексте'),0,1);
+        $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
+        $html .= '  Заполните пропуски в тексте так, чтобы получилось верное определение или утверждение</td></tr></table>';
 
-        $fpdf->SetFont('TimesNewRomanPSMT','',12);
         if ($answered){                                                                                                 // пдф с ответами
             $answers = explode(";", $this->answer);
             for ($i = 1; $i <= $num_slot; $i++){
                 $text .= $text_parts[$i-1].'('.$i.' '.$answers[$i-1].') ';                                                   //формируем текст вопроса без пропущенных слов
             }
-            $fpdf->Write(5,iconv('utf-8', 'windows-1251//TRANSLIT', $text));                                                      // вывод текста
-            $fpdf->Ln(5);
+            $html .= '<p>'.$text.'</p>';
+            $html .= '<table>';
             for ($i = 1; $i <= $num_slot; $i++){                                                                        // вывод верных ответов
-                $fpdf->Write(5,iconv('utf-8', 'windows-1251//TRANSLIT', $i.': '.$answers[$i-1]));
-                $fpdf->Ln(5);
+                $html .= '<tr><td>'.$i.': '.$answers[$i-1].'</td></tr>';
             }
+            $html .= '</table>';
         }
         else{                                                                                                           // без ответов
             for ($i = 1; $i <= $num_slot; $i++){
@@ -125,16 +123,18 @@ class FillGaps extends QuestionType {
                 $num_var[$i] = count($group_variants[$i]);
             }
 
-            $fpdf->Write(5,iconv('utf-8', 'windows-1251//TRANSLIT', $text));                                                      // вывод текста
-            $fpdf->Ln(5);
+            $html .= '<p>'.$text.'</p>';
+            $html .= '<table>';
             for ($i = 1; $i <= $num_slot; $i++){                                                                        // вывод вариантов
-                $fpdf->Write(5,iconv('utf-8', 'windows-1251//TRANSLIT', $i.': '));
+                $html .= '<tr><td>'.$i.': ';
                 for ($j = 0; $j < $num_var[$i-1] - 1; $j++){
-                    $fpdf->Write(5,iconv('utf-8', 'windows-1251//TRANSLIT', $group_variants[$i-1][$j].', '));
+                    $html .= $group_variants[$i-1][$j].', ';
                 }
-                $fpdf->Write(5,iconv('utf-8', 'windows-1251//TRANSLIT', $group_variants[$i-1][$j].'.'));                          // вывод последнего варианта
-                $fpdf->Ln(5);
+                $html .= $group_variants[$i-1][$j].'.</td></tr>';
             }
+            $html .= '</table>';
         }
+        $html .= '<br>';
+        $fpdf->WriteHTML($html);
     }
 } 
