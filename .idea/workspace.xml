@@ -57,7 +57,7 @@
       <file leaf-file-name="MultiChoice.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Qtypes/MultiChoice.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="132" column="30" selection-start="6116" selection-end="6116" vertical-scroll-proportion="0.0" vertical-offset="2984" max-vertical-offset="3696">
+            <state line="109" column="63" selection-start="4855" selection-end="4869" vertical-scroll-proportion="0.0" vertical-offset="2564" max-vertical-offset="3696">
               <folding>
                 <marker date="1453029611315" expanded="true" signature="3950:4003" placeholder="..." />
                 <marker date="1453029611315" expanded="true" signature="4030:4056" placeholder="..." />
@@ -66,11 +66,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FillGaps.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="FillGaps.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Qtypes/FillGaps.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="99" column="0" selection-start="4681" selection-end="4681" vertical-scroll-proportion="0.42038217" vertical-offset="2284" max-vertical-offset="3836">
+            <state line="137" column="32" selection-start="6870" selection-end="6894" vertical-scroll-proportion="0.0" vertical-offset="3208" max-vertical-offset="3836">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AccordanceTable.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/Qtypes/AccordanceTable.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="111" column="0" selection-start="4324" selection-end="4324" vertical-scroll-proportion="-0.4713376" vertical-offset="3180" max-vertical-offset="3920">
+              <folding>
+                <marker date="1453076122938" expanded="true" signature="4017:4043" placeholder="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -129,13 +140,13 @@
         <option value="$PROJECT_DIR$/app/Qtypes/QuestionType.php" />
         <option value="$PROJECT_DIR$/app/PDF_MC_Table.php" />
         <option value="$PROJECT_DIR$/config/app.php" />
-        <option value="$PROJECT_DIR$/app/Qtypes/AccordanceTable.php" />
         <option value="$PROJECT_DIR$/app/Mypdf.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/GeneratorController.php" />
         <option value="$PROJECT_DIR$/vendor/mpdf/mpdf/mpdf.php" />
         <option value="$PROJECT_DIR$/app/Qtypes/MultiChoice.php" />
         <option value="$PROJECT_DIR$/app/Qtypes/OneChoice.php" />
         <option value="$PROJECT_DIR$/app/Qtypes/FillGaps.php" />
+        <option value="$PROJECT_DIR$/app/Qtypes/AccordanceTable.php" />
       </list>
     </option>
   </component>
@@ -343,14 +354,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1366" height="727" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1874074" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1874074" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
@@ -615,13 +626,6 @@
         <state line="205" column="2" selection-start="8600" selection-end="8600" vertical-scroll-proportion="0.0" vertical-offset="5292" max-vertical-offset="5936" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Qtypes/AccordanceTable.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="104" column="8" selection-start="3828" selection-end="3828" vertical-scroll-proportion="0.0" vertical-offset="2332" max-vertical-offset="4256">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Qtypes/QuestionType.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="31" column="7" selection-start="1029" selection-end="1029" vertical-scroll-proportion="0.0" vertical-offset="168" max-vertical-offset="1008">
@@ -664,16 +668,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Mypdf.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="0" selection-start="158" selection-end="158" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2436">
-          <folding>
-            <element signature="e#6#89#0" expanded="true" />
-            <marker date="1453029379142" expanded="false" signature="938:965" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Qtypes/OneChoice.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="59" column="0" selection-start="2419" selection-end="2419" vertical-scroll-proportion="0.50955415" vertical-offset="1220" max-vertical-offset="2492">
@@ -684,9 +678,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/Mypdf.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="0" selection-start="158" selection-end="158" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2436">
+          <folding>
+            <element signature="e#6#89#0" expanded="true" />
+            <marker date="1453029379142" expanded="false" signature="938:965" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Qtypes/FillGaps.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="137" column="32" selection-start="6870" selection-end="6894" vertical-scroll-proportion="0.0" vertical-offset="3208" max-vertical-offset="3836">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/Qtypes/MultiChoice.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="132" column="30" selection-start="6116" selection-end="6116" vertical-scroll-proportion="0.0" vertical-offset="2984" max-vertical-offset="3696">
+        <state line="109" column="63" selection-start="4855" selection-end="4869" vertical-scroll-proportion="0.0" vertical-offset="2564" max-vertical-offset="3696">
           <folding>
             <marker date="1453029611315" expanded="true" signature="3950:4003" placeholder="..." />
             <marker date="1453029611315" expanded="true" signature="4030:4056" placeholder="..." />
@@ -694,10 +705,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Qtypes/FillGaps.php">
+    <entry file="file://$PROJECT_DIR$/app/Qtypes/AccordanceTable.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="99" column="0" selection-start="4681" selection-end="4681" vertical-scroll-proportion="0.42038217" vertical-offset="2284" max-vertical-offset="3836">
-          <folding />
+        <state line="111" column="0" selection-start="4324" selection-end="4324" vertical-scroll-proportion="-0.4713376" vertical-offset="3180" max-vertical-offset="3920">
+          <folding>
+            <marker date="1453076122938" expanded="true" signature="4017:4043" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -100,56 +100,44 @@ class AccordanceTable extends QuestionType {
         $num_var = count($variants);
         $text = explode(";" , $text_parse);
         $num_text = count($text);
-        $rows = [];
 
-        $fpdf->SetFont('TimesNewRomanPSMT','U',12);
-        $fpdf->Cell(20,10,iconv('utf-8', 'windows-1251//TRANSLIT', 'Вопрос '.$count.'.'),0,0);
-        $fpdf->Cell(7,10,iconv('utf-8', 'windows-1251//TRANSLIT', 'Заполните таблицу соответствий'),0,1);
+        $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
+        $html .= '  Заполните таблицу соответствий</td></tr></table>';
 
-        $fpdf->SetFont('TimesNewRomanPSMT','',12);
-        $coloumn_array = [];
-        $coloumn_array[0] = '30';
-        for ($i = 1; $i <= $num_var; $i++){                                                                             // вычисляем ширину столбцов
-            $coloumn_array[$i] = (string) intval(150/$num_var);
+        $html .= '<table border="1" style="border-collapse: collapse;" width="100%"><tr><td align="center">#</td>';
+        for ($i = 0; $i < count($variants); $i++){                                                                      // формируем первую строку
+            $html .= '<td>'.$variants[$i].'</td>';
         }
-        for ($i = $num_var; $i >= 1; $i--){                                                                              // формируем первую строку
-            $variants[$i] = iconv('utf-8', 'windows-1251//IGNORE',$variants[$i-1]);
-            //$variants[$i] = mb_convert_encoding($variants[$i-1], "UTF-8", "windows-1251");
-        }
-        $variants[0] = '';
+        $html .= '</tr>';
 
-        $fpdf->SetWidths($coloumn_array);                                                                               // устанавливаем ширину колонок
-        $fpdf->Row($variants);                                                                                          // чертим первую строку
         if ($answered){                                                                                                 // пдф с ответами
             $answers = explode(";", $this->answer);
             $k = 0;
             for ($i = 0; $i < $num_text; $i++){                                                                         // формируем со второй по конечную строки
-                $rows[$i][0] = iconv('utf-8', 'windows-1251//IGNORE',$text[$i]);                                                // в первом стобце всегда название объекта
-                //$rows[$i][0] = mb_convert_encoding($text[$i], "UTF-8", "windows-1251");
+                $html .= '<tr><td>'.$text[$i].'</td>';                                                                               // в первом стобце всегда название объекта
                 for ($j = 1; $j <= $num_var; $j++){                                                                     // идем по колонкам
                     if ($k < count($answers)){                                                                          // если еще не превысили размер массива ответов
                         if ($i*$num_var + $j == $answers[$k]){                                                          // если номер ячейки совпадает с ответом
-                            $rows[$i][$j] = '  +  ';
+                            $html .= '<td align="center">+</td>';
                             $k++;
                         }
-                        else $rows[$i][$j] = '';
+                        else $html .= '<td></td>';
                     }
-                    else $rows[$i][$j] = '';
+                    else $html .= '<td></td>';
                 }
+                $html .= '</tr>';
             }
         }
         else {                                                                                                          // без ответов
             for ($i = 0; $i < $num_text; $i++){                                                                         // формируем со второй по конечную строки
-                $rows[$i][0] = iconv('utf-8', 'windows-1251//IGNORE',$text[$i]);
-                //$rows[$i][0] = mb_convert_encoding($text[$i], "UTF-8", "windows-1251");
+                $html .= '<tr><td>'.$text[$i].'</td>';
                 for ($j = 1; $j <= $num_var; $j++){
-                    $rows[$i][$j] = '';
+                    $html .= '<td></td>';
                 }
+                $html .= '</tr>';
             }
         }
-        for ($i = 0; $i < $num_text; $i++){                                                                             // выводим строки для обоих случаев
-            $fpdf->Row($rows[$i]);
-            $fpdf->Ln(0);
-        }
+        $html .= '</table><br>';
+        $fpdf->WriteHTML($html);
     }
 } 
