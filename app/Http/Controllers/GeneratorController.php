@@ -11,9 +11,12 @@ namespace App\Http\Controllers;
 use Anouar\Fpdf\Fpdf;
 use App\Mypdf;
 use App\Qtypes\AccordanceTable;
+use App\Qtypes\Definition;
 use App\Qtypes\FillGaps;
+use App\Qtypes\JustAnswer;
 use App\Qtypes\MultiChoice;
 use App\Qtypes\OneChoice;
+use App\Qtypes\Theorem;
 use App\Qtypes\YesNo;
 use App\Question;
 use App\Test;
@@ -44,6 +47,22 @@ class GeneratorController extends Controller {
             case 'Таблица соответствий':
                 $accordance_table = new AccordanceTable($id_question);
                 $accordance_table->pdf($fpdf, $count, $answered);
+                break;
+            case 'Да/Нет':
+                $yes_no = new YesNo($id_question);
+                $yes_no->pdf($fpdf, $count, $answered);
+                break;
+            case 'Определение':
+                $def = new Definition($id_question);
+                $def->pdf($fpdf, $count, $answered);
+                break;
+            case 'Просто ответ':
+                $just = new JustAnswer($id_question);
+                $just->pdf($fpdf, $count, $answered);
+                break;
+            case 'Теорема':
+                $theorem = new Theorem($id_question);
+                $theorem->pdf($fpdf, $count, $answered);
                 break;
         }
     }
@@ -109,10 +128,6 @@ class GeneratorController extends Controller {
             }
         }
         return view('generator.index', compact('tests'));
-        /*$mpdf=new mPDF();
-        $mpdf->WriteHTML('<p>Привет, мир! ∀</p>');
-        $mpdf->Output();
-        exit;*/
     }
 
     /** Генерирует pdf файлы с тестом с заданным количеством вариантов */
@@ -138,7 +153,7 @@ class GeneratorController extends Controller {
             $answered_fpdf = new Mypdf();
             $this->headOfPdf($fpdf, $test_name, $k, $amount);
             $this->headOfPdf($answered_fpdf, $test_name, $k, $amount);
-             $ser_array = $question_controller->prepareTest($id_test);                                                   // подготавливаем тест
+            $ser_array = $question_controller->prepareTest($id_test);                                                   // подготавливаем тест
             for ($i=0; $i<$amount; $i++){                                                                               // показываем каждый вопрос из теста
                 $id = $question_controller->chooseQuestion($ser_array);
                 if (!$test_controller->rybaTest($id)){                                                                  //проверка на вопрос по рыбе

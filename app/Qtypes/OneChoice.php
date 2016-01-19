@@ -81,7 +81,7 @@ class OneChoice extends QuestionType {
                 $html .= '</tr>';
             }
         }
-        $html .= '</table>';
+        $html .= '</table><br>';
         $fpdf->WriteHTML($html);
     }
 

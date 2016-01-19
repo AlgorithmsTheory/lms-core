@@ -15,8 +15,8 @@ class Mypdf extends \mPDF{
      @name название теста
      */
     function Head($name){
-        $html = '<p align="center">Национальный исследовательский ядерный университет "МИФИ"</p>';
-        $html .= '<p align="center">'.$name. ' по курсу "ДМ-3: Теория алгоритмов и сложность вычислений"</p>';
+        $html = '<table><tr><td align="center">Национальный исследовательский ядерный университет "МИФИ"</td></tr>';
+        $html .= '<tr><td align="center">'.$name. ' по курсу "ДМ-3: Теория алгоритмов и сложность вычислений"</td></tr></table>';
         $this->WriteHTML($html);
     }
 

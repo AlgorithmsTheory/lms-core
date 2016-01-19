@@ -15,8 +15,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="form-group">
-                            <select name="test" id="select-test" class="form-control" size="1">
-                                <option value="$nbsp"></option>
+                            <select name="test" id="select-test" class="form-control" size="1" required>
                                 @foreach ($tests as $test)
                                 <option value="{{$test}}">{{$test}}</option>/td>
                                 @endforeach

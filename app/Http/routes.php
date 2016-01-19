@@ -83,9 +83,9 @@ Route::get('library/persons/{person}', ['as' => 'person', 'uses' => 'LibraryCont
 Route::get('library/extra', ['as' => 'library_extra', 'uses' => 'LibraryController@extra']);
 
 //модуль генерации вариантов
-Route::get('generator', ['as' => 'generator_index', 'uses' => 'GeneratorController@index']);
-Route::post('generator/pdf', ['as' => 'generator_pdf', 'uses' => 'GeneratorController@pdfTest']);
-Route::get('generator/pdf', ['as' => 'generator_ex', 'uses' => 'GeneratorController@pdf']);
+Route::get('generator', ['as' => 'generator_index', 'uses' => 'GeneratorController@index', 'middleware' => ['general_auth', 'admin']]);
+Route::post('generator/pdf', ['as' => 'generator_pdf', 'uses' => 'GeneratorController@pdfTest', 'middleware' => ['general_auth', 'admin']]);
+Route::get('generator/pdf', ['as' => 'generator_ex', 'uses' => 'GeneratorController@pdf', 'middleware' => ['general_auth', 'admin']]);
 
 //личный кабинет
 Route::get('personal_account', ['as' => 'personal_account', 'uses' => 'PersonalAccount@showPA', 'middleware' => 'general_auth']);

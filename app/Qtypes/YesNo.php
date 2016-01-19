@@ -67,6 +67,36 @@ class YesNo extends QuestionType{
     }
 
     public function pdf(Mypdf $fpdf, $count, $answered=false){
+        $text_parse = $this->text;
+        $text = explode(";" , $text_parse);
+        $answers = explode(';', $this->answer);
 
+        $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
+        $html .= '  Укажите истинно или ложно утверждение</td></tr></table>';
+
+        $html .= '<table border="1" style="border-collapse: collapse;" width="100%">';                                  //чертим шапку
+        $html .= '<tr><td width="80%">Утверждение</td>
+                      <td width="10%">Верно</td>
+                      <td width="10%">Неверно</td></tr>';
+
+        for ($i = 0; $i < count($text); $i++){
+            $html .= '<tr><td>'.$text[$i].'</td>';                                                                      //утверждение
+            if ($answered){                                                                                             //пдф с ответами
+                if ($answers[$i] == 'true'){                                                                            //если истинно
+                    $html .= '<td>Да</td>
+                          <td></td></tr>';
+                }
+                else {                                                                                                  //если ложно
+                    $html .= '<td></td>
+                          <td>Нет</td></tr>';
+                }
+            }
+            else {                                                                                                      //пдф без ответов
+                $html .= '<td>Да</td>
+                          <td>Нет</td></tr>';
+            }
+        }
+        $html .= '</table><br>';
+        $fpdf->WriteHTML($html);
     }
 } 

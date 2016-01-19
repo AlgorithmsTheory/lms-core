@@ -1,10 +1,22 @@
 <div class="card-body">
-    <div class="form-group">
-        <textarea  name="title" id="textarea1" class="form-control" rows="3" placeholder="Введине назввание определения" required></textarea>
-        <label for="textarea1">Текст</label>
-    </div>
-
+        <div class="col-md-2 col-sm-2" id="variants">
+            <div class="form-group">
+                <textarea name="variants[]" class="form-control textarea3" rows="3" placeholder="" required></textarea>
+                <label for="textarea3">Определение</label>
+            </div>
+        </div>
+        <div class="col-md-8 col-sm-8" id="answers">
+            <div class="form-group">
+                <textarea name="answers[]" class="form-control textarea3" rows="3" placeholder="" required></textarea>
+                <label for="textarea3">Расшифровка</label>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-2" style="margin-top: 50px" id="add-del-buttons">
+            <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-var-7"><b>+</b>   </button>
+            <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-var-7"><b>-</b></button>
+        </div>
 </div>
+
 <div class="card-body">
     <div class="form-group">
         <select name="section" id="select-section" class="form-control" size="1">

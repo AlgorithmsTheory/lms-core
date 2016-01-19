@@ -11,14 +11,18 @@ use App\Mypdf;
 use App\Question;
 use Illuminate\Http\Request;
 class Definition extends QuestionType {
-    const type_code = 3;
+    const type_code = 7;
     function __construct($id_question){
         parent::__construct($id_question);
     }
     public function  create(){
     }
     public function add(Request $request, $code){
-        Question::insert(array('code' => $code, 'title' => $request->input('title'), 'variants' => '', 'answer' => '', 'points' => $request->input('points')));
+        for ($i=0; $i<count($request->input('variants')); $i++){
+            $title = $request->input('variants')[$i];
+            $answer = $request->input('answers')[$i];
+            Question::insert(array('code' => $code, 'title' => $title, 'variants' => '', 'answer' => $answer, 'points' => $request->input('points')));
+        }
     }
     public function show($count){
         $view = 'tests.show7';
@@ -48,5 +52,28 @@ class Definition extends QuestionType {
     }
 
     public function pdf(Mypdf $fpdf, $count, $answered=false){
+        $text_parse = $this->text;
+        $text = explode(";" , $text_parse);
+        $answers = explode(';', $this->answer);
+
+        $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
+        $html .= '  Запишите определения</td></tr></table>';
+
+        $html .= '<table border="1" style="border-collapse: collapse;" width="100%">';                                                          //чертим шапку
+        $html .= '<tr><td width="20%" align="center">Термин</td>
+                      <td width="80%" align="center">Определение</td></tr>';
+
+        for ($i = 0; $i < count($text); $i++){
+            $html .= '<tr><td>'.$text[$i].'</td>';                                                                      //утверждение
+            if ($answered){                                                                                             //пдф с ответами                                                                         //если истинно
+                    $html .= '<td>'.$answers[$i].'</td>';
+            }
+            else {                                                                                                      //пдф без ответов
+                $html .= '<td></td>';
+            }
+            $html .= '</tr>';
+        }
+        $html .= '</table><br>';
+        $fpdf->WriteHTML($html);
     }
 } 

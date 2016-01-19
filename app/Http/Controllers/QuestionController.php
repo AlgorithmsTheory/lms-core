@@ -73,7 +73,7 @@ class QuestionController extends Controller{
     /** Определяет одиночный вопрос (true) или может использоваться только в группе с такими же (false) */
     private function getSingle($id){
         $type = $this->getCode($id)['type'];
-        if ($type == 'Да/Нет'){
+        if ($type == 'Да/Нет' || $type == 'Определение' || $type == 'Просто ответ'){
             return false;
         }
         else return true;
@@ -110,26 +110,29 @@ class QuestionController extends Controller{
         $k = 0;
         $destructured = $test_controller->destruct($id_test);
         for ($i=0; $i<count($destructured); $i++){                                                                      // идем по всем структурам
-            //echo 'мы в первом цикле'.'<br>';
+            $temp_array = [];
             $j = 0;
-            $temp = preg_replace('~A~', '[[:digit:]]+', $destructured[$i][1] );                                         //заменям все A (All) на регулярное выражение, соответствующее любому набору цифр
-            $query = $question->where('code', 'regexp', $temp)->get();                                                  //ищем всевозможные коды вопросов
+            $temp = '"';
+            $temp .= preg_replace('~\.~', '\.', $destructured[$i][1]);
+            $temp = preg_replace('~A~', '[[:digit:]]+', $temp);                                         //заменям все A (All) на регулярное выражение, соответствующее любому набору цифр
+            $temp .= '"';
+            $query = $question->whereRaw("code REGEXP $temp")->get();                                                  //ищем всевозможные коды вопросов
+            $queryn = $question->whereRaw("code REGEXP $temp")->count();                                                  //ищем всевозможные коды вопросов
             $test_query = Test::whereId_test($id_test)->select('test_type')->first();
             foreach ($query as $id){
-                if ($test_query->test_type == 'Тренировочный'){                                                         //если тест тренировочный
-                    if ($id->control == 1)                                                                              //если вопрос скрытый, то проходим мимо
-                        continue;
-                    array_push($temp_array,$id->id_question);                                                           //для каждого кода создаем массив всех вопрососв с этим кодом
+                if ($this->getCode($id->code)['section_code'] != 'T'){                                                  //если вопрос не временный
+                    if ($test_query->test_type == 'Тренировочный'){                                                     //если тест тренировочный
+                        if ($id->control == 1)                                                                          //если вопрос скрытый, то проходим мимо
+                            continue;
+                        array_push($temp_array,$id->id_question);                                                       //для каждого кода создаем массив всех вопрососв с этим кодом
+                    }
+                    else array_push($temp_array,$id->id_question);                                                      // если тест контрольный
                 }
-                else array_push($temp_array,$id->id_question);                                                          // если тест контрольный
             }
             while ($j < $destructured[$i][0]){                                                                          //пока не закончатся вопросы этой структуры
-                //echo 'мы во втором цикле'.'<br>';
                 $temp_array = $this->randomArray($temp_array);                                                          //выбираем случайный вопрос
                 $temp_question = $temp_array[count($temp_array)-1];
                 if ($this->getSingle($temp_question)){                                                                  //если вопрос одиночный (то есть как и было ранее)
-                    //echo 'одиночный вопрос'.'<br>';
-                    //echo $temp_question;
                     $array[$k] = $temp_question;                                                                        //добавляем вопрос в выходной массив
                     $k++;
                     $j++;
@@ -148,7 +151,7 @@ class QuestionController extends Controller{
                         $new_temp_array[$p] = $temp_array[$p];
                     }
                     $l = 0;
-                    while ($l < 3) {                                                                                    //берем еще 3 вопроса этого типа
+                    while ($l < 3) {                                                                                    //берем еще 3 вопроса этого типа => в итоге получаем 4
                         $new_temp_array = $this->randomArray($new_temp_array);
                         $temp_question_new = $new_temp_array[count($new_temp_array)-1];
 

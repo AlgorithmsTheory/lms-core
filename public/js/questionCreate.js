@@ -107,7 +107,8 @@ $('#select-type').change(function(){
     return false;
 });
 
-//Добавление варианта
+/** Добавление варианта */
+/** Выбор одного из списка */
 $('#type_question_add').on('click','#add-var-1', function(){
     $('#variants').append('\
             <div class="form-group">\
@@ -120,6 +121,7 @@ $('#type_question_add').on('click','#add-var-1', function(){
     count++;
 });
 
+/** Выбор нескольких из списка */
 $('#type_question_add').on('click','#add-var-2', function(){
     $('#variants').append('\
             <div class="form-group">\
@@ -140,6 +142,7 @@ $('#type_question_add').on('click','#add-var-2', function(){
     count++;
 });
 
+/** текстовый вопрос */
 $('#type_question_add').on('click','.add-var-3', function(){
     var idButton = $(this).attr('id');
     var numButton;
@@ -156,6 +159,7 @@ $('#type_question_add').on('click','.add-var-3', function(){
     counts[numButton]++;
 });
 
+/** Да/нет */
 $('#type_question_add').on('click','#add-var-4', function(){            //Я добавил
     $('#variants').append('\
             <div class="form-group">\
@@ -176,7 +180,46 @@ $('#type_question_add').on('click','#add-var-4', function(){            //Я д�
     count++;
 });
 
-$('#type_question_add').on('click','#build-table', function(){ //построение таблицы
+/** Определения */
+$('#type_question_add').on('click','#add-var-7', function(){
+    $('#variants').append('\
+                    <div class="form-group"> \
+                        <textarea name="variants[]" class="form-control textarea3" rows="3" placeholder="" required></textarea> \
+                        <label for="textarea3">Определение</label> \
+                    </div> \
+                ');
+    $('#answers').append('\
+                    <div class="form-group"> \
+                        <textarea name="answers[]" class="form-control textarea3" rows="3" placeholder="" required></textarea> \
+                        <label for="textarea3">Расшифровка</label> \
+                    </div> \
+            ');
+    margin += 132;
+    $('#add-del-buttons').attr('style','margin-top:'+(margin-170)+'px');
+    count++;
+});
+
+/** Просто ответ */
+$('#type_question_add').on('click','#add-var-8', function(){
+    $('#variants').append('\
+                    <div class="form-group"> \
+                        <textarea name="variants[]" class="form-control textarea3" rows="3" placeholder="" required></textarea> \
+                        <label for="textarea3">Текст вопроса</label> \
+                    </div> \
+                ');
+    $('#answers').append('\
+                    <div class="form-group"> \
+                        <textarea name="answers[]" class="form-control textarea3" rows="3" placeholder="" required></textarea> \
+                        <label for="textarea3">Ответ</label> \
+                    </div> \
+            ');
+    margin += 132;
+    $('#add-del-buttons').attr('style','margin-top:'+(margin-170)+'px');
+    count++;
+});
+
+/** построение таблицы соответсвий */
+$('#type_question_add').on('click','#build-table', function(){
     var tr_number=document.getElementById("table-tr").value; //были изменения
     var td_number=document.getElementById("table-td").value;
     var cols = parseInt(tr_number);
@@ -235,7 +278,8 @@ $('#type_question_add').on('click','#build-table', function(){ //построе�
     }
 });
 
-//Удаление варианта
+/** Удаление варианта */
+/** Выбор одного варианта */
 $('#type_question_add').on('click','#del-var-1',function(){
     if (count > 2){
         lastelem = $('#variants').children().last().remove();
@@ -245,6 +289,7 @@ $('#type_question_add').on('click','#del-var-1',function(){
     }
 });
 
+/** выбор нескольких вариантов */
 $('#type_question_add').on('click','#del-var-2',function(){
     if (count > 2){
         lastelem = $('#variants').children().last().remove();
@@ -255,6 +300,7 @@ $('#type_question_add').on('click','#del-var-2',function(){
     }
 });
 
+/** текстовый */
 $('#type_question_add').on('click','.del-var-3',function(){
     var idButton = $(this).attr('id');
     var numButton;
@@ -267,12 +313,35 @@ $('#type_question_add').on('click','.del-var-3',function(){
     }
 });
 
+/** да/нет */
 $('#type_question_add').on('click','#del-var-4',function(){                 //Я добавил
     if (count > 5){
         lastelem = $('#variants').children().last().remove();
         $('.checkbox-styled').last().remove();
         margin -= 74;
         $('#add-del-buttons').attr('style','margin-top:'+(margin-120)+'px');
+        count--;
+    }
+});
+
+/** определения */
+$('#type_question_add').on('click','#del-var-7',function(){
+    if (count > 5){
+        lastvar = $('#variants').children().last().remove();
+        lastans = $('#answers').children().last().remove();
+        margin -= 132;
+        $('#add-del-buttons').attr('style','margin-top:'+(margin-170)+'px');
+        count--;
+    }
+});
+
+/** просто ответ */
+$('#type_question_add').on('click','#del-var-8',function(){
+    if (count > 5){
+        lastvar = $('#variants').children().last().remove();
+        lastans = $('#answers').children().last().remove();
+        margin -= 132;
+        $('#add-del-buttons').attr('style','margin-top:'+(margin-170)+'px');
         count--;
     }
 });

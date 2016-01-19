@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Query\Builder|\App\Question  whereControl($value)
  * @method static \Illuminate\Database\Eloquent|\App\Question  get()
  * @method static \Illuminate\Database\Eloquent|\App\Question  where()
+ * @method static \Illuminate\Database\Eloquent|\App\Question  whereRaw()
  * @method static \Illuminate\Database\Eloquent|\App\Question  orWhere()
  * @method static \Illuminate\Database\Eloquent|\App\Question  select()
  * @method static \Illuminate\Database\Eloquent|\App\Question  first()
@@ -27,6 +28,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent|\App\Question  table($array)
  * @method static \Illuminate\Database\Eloquent|\App\Question  max($array)
  * @method static \Illuminate\Database\Eloquent|\App\Question  count()
+ * @method static \Illuminate\Database\Eloquent|\App\Question  toSql()
  *
  */
 class Question extends Eloquent {

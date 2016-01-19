@@ -11,7 +11,7 @@ use App\Mypdf;
 use App\Question;
 use Illuminate\Http\Request;
 class Theorem extends QuestionType {
-    const type_code = 3;
+    const type_code = 6;
     function __construct($id_question){
         parent::__construct($id_question);
     }
@@ -48,5 +48,17 @@ class Theorem extends QuestionType {
     }
 
     public function pdf(Mypdf $fpdf, $count, $answered=false){
+        $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
+        $html .= '  Напишите или продолжите формулировку и приведите доказательство теоремы</td></tr>';
+        $html .= '<tr><td>'.$this->text.'</td></tr></table>';
+
+        $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                          //чертим шапку
+                    <tr><td height="80px"></td></tr>
+                  </table>';
+        $html .= '<p>Доказательство:</p>';
+        $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                          //чертим шапку
+                    <tr><td height="250px"></td></tr>
+                  </table><br>';
+        $fpdf->WriteHTML($html);
     }
 } 
