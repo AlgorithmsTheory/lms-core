@@ -16,7 +16,7 @@
             </label>
         </div>
     </div>
-    <div class="col-md-2 col-sm-6" style="margin-top: 100px" id="add-del-buttons">
+    <div class="col-md-2 col-sm-6" style="margin-top: 25px" id="add-del-buttons">
         <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-var-4"><b>+</b></button>
         <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-var-4"><b>-</b></button>
     </div>
@@ -61,3 +61,5 @@
     </div>
 </div>
 </div>
+
+{!! HTML::script('js/question_create/yesNo.js') !!}

@@ -1,27 +1,52 @@
 /**
- * Created by Станислав on 28.07.15.
+ * Created by Станислав on 22.01.16.
  */
 
-
-//var count_yesno = 1; //Счетчик числа вариантов для Да/Нет
-
-
-var count = 5;                                                                                                      //счетчик числа вариантов
-var margin = 220;                                                                                                   //расстояние верхней границы кнопок доавления и удаления
 var margins = [];                                                                                                   //расстояние верхней границы кнопок добавления и удаления для текстового вопроса
-for (k=0; k<50; k++){
-    margins[k] = 294;
-}
 var counts = [];                                                                                                    //счетчики числа вариантов для текстового вопроса
-for (k=0; k<50; k++){
-    counts[k] = 5;
-}
 var word_number = 1;                                                                                                //номер вставляемого слова для текстового вопроса (всегда на 1 больше, чем блоков на самом деле)
 var spanLast = 0;                                                                                                   //номер последнего спана в тексте
 var spanEdge = 0;                                                                                                   //крайний правый спан (здесь только спаны с одиночными словами)
 var startSpan = 0, endSpan = 10000;                                                                                 //номера крайних выделенных спанов
 
-//по номеру блока удаляет необходимый блок и сдвигает все индексы у нижестоящих блоков
+for (k=0; k<50; k++){
+    margins[k] = 294;
+}
+for (k=0; k<50; k++){
+    counts[k] = 5;
+}
+
+/** Добавление варианта */
+$('#type_question_add').on('click','.add-var-3', function(){
+    var idButton = $(this).attr('id');
+    var numButton;
+    numButton = idButton.substring(15);
+    //alert(numButton);
+    $('#column-'+numButton).append('\
+                <div class="form-group">\
+                    <textarea  name="variants-'+numButton+'[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>\
+                    <label for="textarea3">Вариант ' + counts[numButton] + '</label>\
+                </div>\
+                ');
+    margins[numButton] += 74;
+    $('#add-del-buttons-'+numButton).attr('style','margin-top:'+ margins[numButton]+'px');
+    counts[numButton]++;
+});
+
+/** Удаление последнего варианта */
+$('#type_question_add').on('click','.del-var-3',function(){
+    var idButton = $(this).attr('id');
+    var numButton;
+    numButton = idButton.substring(15);
+    if (counts[numButton] > 2){
+        $('#column-'+numButton).children().last().remove();
+        margins[numButton] -= 74;
+        $('#add-del-buttons-'+numButton).attr('style','margin-top:'+margins[numButton]+'px');
+        counts[numButton]--;
+    }
+});
+
+/** по номеру блока удаляет необходимый блок и сдвигает все индексы у нижестоящих блоков */
 function removeBlock(blockNum){
     var j;
     $('#card-body-'+blockNum).remove();                                                                             //удаляем этот блок
@@ -36,7 +61,7 @@ function removeBlock(blockNum){
     word_number--;
 }
 
-//Добавляет блок. На вход принимает строку вида span-x, где x - номер спана в тексте и текст спана для автозаполнения им первого варианта блока
+/** Добавляет блок. На вход принимает строку вида span-x, где x - номер спана в тексте и текст спана для автозаполнения им первого варианта блока */
 function addBlock(numSpan, firstVar){
     $('#word-variants').append('\
                 <div class="card-body '+numSpan+'" id="card-body-'+word_number+'">\
@@ -71,7 +96,7 @@ function addBlock(numSpan, firstVar){
     word_number++;
 }
 
-//проверка, не принадлежит ли слово другой области (true - belong, false - doesn't belong)
+/** проверка, не принадлежит ли слово другой области (true - belong, false - doesn't belong) */
 function belongSelection(numSpan) {
     if ($('#text-part-'+numSpan).hasClass('inside') == true){
         alert ('Недопустимо соприкосновение с другой выделенной областью!');
@@ -82,294 +107,7 @@ function belongSelection(numSpan) {
     }
 }
 
-//подгружаем данные в зависимости от выбранного типа вопроса
-$('#select-type').change(function(){
-    count = 5;
-    margin = 220;
-    choice = $('#select-type option:selected').val();
-    token = $('.form').children().eq(0).val();
-    $.ajax({
-        cache: false,
-        type: 'POST',
-        url:   '/uir/public/get-type',
-        beforeSend: function (xhr) {
-            var token = $('meta[name="csrf_token"]').attr('content');
-
-            if (token) {
-                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-            }
-        },
-        data: { choice: choice, token: 'token' },
-        success: function(data){
-            $('#type_question_add').html(data);
-        }
-    });
-    return false;
-});
-
-/** Добавление варианта */
-/** Выбор одного из списка */
-$('#type_question_add').on('click','#add-var-1', function(){
-    $('#variants').append('\
-            <div class="form-group">\
-                <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>\
-                <label for="textarea3">Вариант ' + count + '</label>\
-            </div>\
-            ');
-    margin += 74;
-    $('#add-del-buttons').attr('style','margin-top:'+margin+'px');
-    count++;
-});
-
-/** Выбор нескольких из списка */
-$('#type_question_add').on('click','#add-var-2', function(){
-    $('#variants').append('\
-            <div class="form-group">\
-                <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>\
-                <label for="textarea3">Вариант ' + count + '</label>\
-            </div>\
-            ');
-    $('#answers').append('\
-            <div class="checkbox checkbox-styled" style="margin-top:49px">\
-                <label>\
-                    <input type="checkbox" name="answers[]" value="'+ count + '">\
-                    <span></span>\
-                </label>\
-            </div>\
-            ');
-    margin += 74;
-    $('#add-del-buttons').attr('style','margin-top:'+margin+'px');
-    count++;
-});
-
-/** текстовый вопрос */
-$('#type_question_add').on('click','.add-var-3', function(){
-    var idButton = $(this).attr('id');
-    var numButton;
-    numButton = idButton.substring(15);
-    //alert(numButton);
-    $('#column-'+numButton).append('\
-                <div class="form-group">\
-                    <textarea  name="variants-'+numButton+'[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>\
-                    <label for="textarea3">Вариант ' + counts[numButton] + '</label>\
-                </div>\
-                ');
-    margins[numButton] += 74;
-    $('#add-del-buttons-'+numButton).attr('style','margin-top:'+ margins[numButton]+'px');
-    counts[numButton]++;
-});
-
-/** Да/нет */
-$('#type_question_add').on('click','#add-var-4', function(){            //Я добавил
-    $('#variants').append('\
-            <div class="form-group">\
-                <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>\
-                <label for="textarea3">Утверждение ' + (count-3) + '</label>\
-            </div>\
-            ');
-    $('#answers').append('\
-            <div class="checkbox checkbox-styled" style="margin-top:49px">\
-                <label>\
-                    <input type="checkbox" name="answers[]" value="'+ (count-3) + '">\
-                    <span></span>\
-                </label>\
-            </div>\
-            ');
-    margin += 74;
-    $('#add-del-buttons').attr('style','margin-top:'+(margin-120)+'px');
-    count++;
-});
-
-/** Определения */
-$('#type_question_add').on('click','#add-var-7', function(){
-    $('#variants').append('\
-                    <div class="form-group"> \
-                        <textarea name="variants[]" class="form-control textarea3" rows="3" placeholder="" required></textarea> \
-                        <label for="textarea3">Определение</label> \
-                    </div> \
-                ');
-    $('#answers').append('\
-                    <div class="form-group"> \
-                        <textarea name="answers[]" class="form-control textarea3" rows="3" placeholder="" required></textarea> \
-                        <label for="textarea3">Расшифровка</label> \
-                    </div> \
-            ');
-    margin += 132;
-    $('#add-del-buttons').attr('style','margin-top:'+(margin-170)+'px');
-    count++;
-});
-
-/** Просто ответ */
-$('#type_question_add').on('click','#add-var-8', function(){
-    $('#variants').append('\
-                    <div class="form-group"> \
-                        <textarea name="variants[]" class="form-control textarea3" rows="3" placeholder="" required></textarea> \
-                        <label for="textarea3">Текст вопроса</label> \
-                    </div> \
-                ');
-    $('#answers').append('\
-                    <div class="form-group"> \
-                        <textarea name="answers[]" class="form-control textarea3" rows="3" placeholder="" required></textarea> \
-                        <label for="textarea3">Ответ</label> \
-                    </div> \
-            ');
-    margin += 132;
-    $('#add-del-buttons').attr('style','margin-top:'+(margin-170)+'px');
-    count++;
-});
-
-/** построение таблицы соответсвий */
-$('#type_question_add').on('click','#build-table', function(){
-    var tr_number=document.getElementById("table-tr").value; //были изменения
-    var td_number=document.getElementById("table-td").value;
-    var cols = parseInt(tr_number);
-    var rows = parseInt(td_number);
-    var but = document.getElementById('build-table');
-    but.disabled = true;
-
-    var x = document.createElement("TABLE");
-    x.setAttribute("id", "myTable");
-    x.setAttribute("class" , "table table-bordered");
-// x.setAttribute("style", "width: 100%;");
-    document.getElementById("table-place").appendChild(x);
-    var b = document.createElement("TBODY");
-
-    b.setAttribute("id", "myBody");
-    document.getElementById("myTable").appendChild(b);
-
-    var y = document.createElement("TR");
-    y.setAttribute("id", "0");
-    document.getElementById("myBody").appendChild(y);
-    var z = document.createElement("TD");
-    var t = document.createTextNode("#");
-    z.appendChild(t);
-    document.getElementById("0").appendChild(z);
-    for (k = 1; k <= rows; k++) {
-        var z = document.createElement("TD");
-        var t = document.createElement("INPUT");
-        t.setAttribute("type", "text");
-        t.setAttribute("style", "width: 80px;");
-        t.setAttribute("placeholder", "Свойство");
-        t.setAttribute("name", "variants[]");
-        z.appendChild(t);
-        document.getElementById("0").appendChild(z);
-    }
-    for (i = 1; i <= cols; i++) {
-        var y = document.createElement("TR");
-        y.setAttribute("id", i);
-        document.getElementById("myBody").appendChild(y);
-        var z = document.createElement("TD");
-        var t = document.createElement("TEXTAREA");
-// t.setAttribute("type", "text");
-        t.setAttribute("placeholder", "Объект");
-        t.setAttribute("name", "title[]");
-// t.setAttribute("style", "width: 80px;");
-        z.appendChild(t);
-        document.getElementById(i).appendChild(z);
-        for (k = 1; k <= rows; k++) {
-            var z = document.createElement("TD");
-            var t = document.createElement("INPUT");
-            t.setAttribute("type", "checkbox");
-            t.setAttribute("name", "answer[]");
-            t.setAttribute("value", ((i-1)*rows + k));
-            z.appendChild(t);
-            document.getElementById(i).appendChild(z);
-        }
-    }
-});
-
-/** Удаление варианта */
-/** Выбор одного варианта */
-$('#type_question_add').on('click','#del-var-1',function(){
-    if (count > 2){
-        lastelem = $('#variants').children().last().remove();
-        margin -= 74;
-        $('#add-del-buttons').attr('style','margin-top:'+margin+'px');
-        count--;
-    }
-});
-
-/** выбор нескольких вариантов */
-$('#type_question_add').on('click','#del-var-2',function(){
-    if (count > 2){
-        lastelem = $('#variants').children().last().remove();
-        $('.checkbox-styled').last().remove();
-        margin -= 74;
-        $('#add-del-buttons').attr('style','margin-top:'+margin+'px');
-        count--;
-    }
-});
-
-/** текстовый */
-$('#type_question_add').on('click','.del-var-3',function(){
-    var idButton = $(this).attr('id');
-    var numButton;
-    numButton = idButton.substring(15);
-    if (counts[numButton] > 2){
-        $('#column-'+numButton).children().last().remove();
-        margins[numButton] -= 74;
-        $('#add-del-buttons-'+numButton).attr('style','margin-top:'+margins[numButton]+'px');
-        counts[numButton]--;
-    }
-});
-
-/** да/нет */
-$('#type_question_add').on('click','#del-var-4',function(){                 //Я добавил
-    if (count > 5){
-        lastelem = $('#variants').children().last().remove();
-        $('.checkbox-styled').last().remove();
-        margin -= 74;
-        $('#add-del-buttons').attr('style','margin-top:'+(margin-120)+'px');
-        count--;
-    }
-});
-
-/** определения */
-$('#type_question_add').on('click','#del-var-7',function(){
-    if (count > 5){
-        lastvar = $('#variants').children().last().remove();
-        lastans = $('#answers').children().last().remove();
-        margin -= 132;
-        $('#add-del-buttons').attr('style','margin-top:'+(margin-170)+'px');
-        count--;
-    }
-});
-
-/** просто ответ */
-$('#type_question_add').on('click','#del-var-8',function(){
-    if (count > 5){
-        lastvar = $('#variants').children().last().remove();
-        lastans = $('#answers').children().last().remove();
-        margin -= 132;
-        $('#add-del-buttons').attr('style','margin-top:'+(margin-170)+'px');
-        count--;
-    }
-});
-
-//Формирование списка тем, соответствующих выбранному разделу
-$('#type_question_add').on('change','#select-section', function(){
-    choice = $('#select-section option:selected').val();
-    token = $('.form').children().eq(0).val();
-    $.ajax({
-        cache: false,
-        type: 'POST',
-        url:   '/uir/public/get-theme',
-        beforeSend: function (xhr) {
-            var token = $('meta[name="csrf_token"]').attr('content');
-
-            if (token) {
-                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-            }
-        },
-        data: { choice: choice, token: 'token' },
-        success: function(data){
-            $('#container').html(data);
-        }
-    });
-    return false;
-});
-
-//Работа с текстовым полем для занесения текстового вопроса
+/** Работа с текстовым полем для занесения текстового вопроса */
 $('#type_question_add').on('click','#finish-edit', function(){
     var text;
     var text_part = "";
@@ -425,7 +163,7 @@ $('#type_question_add').on('click','#finish-edit', function(){
     }
 });
 
-//возвращение в режим набора текста вопроса
+/** возвращение в режим набора текста вопроса */
 $('#type_question_add').on('click','#edit', function(){
     $('#button-title').text('Завершить редактирование текста');                                                     //меняем текст кнопки
     $('#edit-text').css({'display' : 'block'});                                                                     //вновь показываем поле формы с текстом вопроса
@@ -436,7 +174,7 @@ $('#type_question_add').on('click','#edit', function(){
     $('#general-text').text('');
 });
 
-//работа со спанами при кликании на них
+/** работа со спанами при кликании на них */
 $('#type_question_add').on('click','.text-part', function(){
     if ($('#union').text() == 'Перейти в режим объединения слов'){                                                  //если не включен режим объединения в компакты
         var i, j, p, index;
@@ -544,7 +282,7 @@ $('#type_question_add').on('click','.text-part', function(){
     }
 });
 
-//обработка внесения изменений в первый вариант(ответ) блока
+/** обработка внесения изменений в первый вариант(ответ) блока */
 $('#type_question_add').on('blur', '.text-answer', function(){
     var prevText = $(this).text();                                                                                  //текст до изменения
     var prevSpan =  $(this).parents('.card-body').attr('class').substring(15);                                      //номер спана, совпадавшего с полем до изменения
@@ -567,7 +305,7 @@ $('#type_question_add').on('blur', '.text-answer', function(){
     }
 });
 
-//режим объединения слов в компакты
+/** режим объединения слов в компакты */
 $('#type_question_add').on('click', '#union', function(){
     if ($('#edit').attr('id') == 'edit'){                                                                           //если включен режим выделения слов
         $('#edit').attr('disabled', 'disabled');                                                                    //отключаем кнопку "Венуться к редактированию"
@@ -624,7 +362,7 @@ $('#type_question_add').on('click', '#union', function(){
     }
 });
 
-//сбросить выделение
+/** сбросить выделение */
 $('#type_question_add').on('click', '#cancel-selection', function(){
     $('.wrapped').unwrap();                                                                                        //убираем область
     $('#general-text span').removeClass('wrapped');                                                                //а вместе с ней и классы
@@ -632,95 +370,3 @@ $('#type_question_add').on('click', '#cancel-selection', function(){
     startSpan = 0;
     endSpan = 10000;
 });
-
-//заполнение preview в зависимсти от типа вопроса
-$('#type_question_add').on('click', '#preview-btn', function(){
-    $('#preview-text').text($('#textarea1').val());                                                                  //вписываем текст вопроса
-    var i;
-    var str = '';
-    var type = $('#select-type').val();
-    switch (type) {                                                                                                  //для каждого типа вопроса заполняем варианты
-        case 'Выбор одного из списка':
-            $('.textarea3').each(function(){
-                $('#preview-container').append('<input type="radio" value="'+$(this).val()+'"> '+$(this).val()+'<br>');
-            });
-            break;
-        case 'Выбор нескольких из списка':
-            $('.textarea3').each(function(){
-                $('#preview-container').append('<input type="checkbox" value="'+$(this).val()+'"> '+$(this).val()+'<br>');
-            });
-            break;
-        case 'Текстовый вопрос':
-            //$('#preview-container').append($('#general-text').text());
-            $('#general-text').clone().appendTo('#preview-container');                                               //клонируем в превью весь текст
-            for (i=1; i<word_number; i++){                                                                           //идем по всем пропущенным словам
-                str = '<span><select>\
-                       <option disabled selected>Вставьте пропущенное слово</option>';
-                $("#card-body-"+i+" textarea").each(function(){                                                      //составляем строку с вариантами для каждого пропущенного слова
-                    if ($(this).next().text() != 'Стоимость'){
-                        str += '<option value="'+$(this).val()+'">'+$(this).val()+'</option>';
-                    }
-                });
-                str +=  '</select></span>';
-                $('#preview-container #text-part-'+$('#card-body-'+i).attr('class').substring(15)).html(str);        //вставляем строку вместо пропущенного слова
-            }
-            $('#preview-container #general-text').children().removeAttr('id');                                       //удаляем ненужные атрибуты
-            $('#preview-container #general-text').children().removeAttr('style');
-            $('#preview-container #general-text').children().removeAttr('class');
-            $('#preview-container #general-text').removeAttr('class');
-            $('#preview-container #general-text').removeAttr('id');
-            break;
-        case 'Да/Нет':
-            var trig_show = true;
-            $('.textarea3').each(function(){
-                if(trig_show){
-                    $('#preview-container').append('<table class="table table-striped" id="prw-table"><tbody><tr><td>#</td><td>Верно</td><td>Неверно</td></tr></tbody></table>');
-                }
-                $('#prw-table').append('<tr><td>'+$(this).val()+'</td><td><input type="checkbox"></td><td><input type="checkbox"></td>');
-                trig_show = false;
-            });
-            break;
-    }
-});
-
-$('#type_question_add').on('click', '#close-btn', function(){
-    $('#preview-container').empty();
-});
-
-//действия при сабмите формы
-$('#type_question_add').on('click', '.submit-question', function(){
-    if ($('#select-section').val() == '$nbsp'){                                                                     //если не выбрали раздел
-        alert('Вы не выбрали раздел и тему!');
-        return false;
-    }
-    if ($('#select-theme').val() == '$nbsp'){                                                                       //если не выбрали тему
-        alert('Вы не выбрали тему!');
-        return false;
-    }
-    if ($('#select-type').val() == 'Текстовый вопрос'){
-        if (word_number == 1){                                                                                          //если не выделили ни одного слова
-            alert('Вы не выделили ни одного слова!');
-            return false;
-        }
-        $('#number-of-blocks').val(word_number-1);                                                                      //заносим в форму информацию о количестве пропущенных слов
-        var i;
-        var sumCost = 0;
-        var costStting = '';
-        for (i=1; i<word_number; i++){
-            $('#column-'+i+' textarea').first().val($('#column-'+i+' textarea').first().val().replace(/,/g, '.'));  //меняем в стоимости запятую на точку для правильной обработки на сервере
-            sumCost += Number($('#column-'+i+' textarea').first().val());                                           //считаем сумму всех стоимостей
-            costStting += $('#column-'+i+' textarea').eq(1).val()+': '+$('#column-'+i+' textarea').eq(0).val()+'\n';//создаем строку вида "слово: стоимость"
-        }
-        //alert($('#edit-text').val());
-        if (sumCost.toFixed(2) != '1.00'){                                                                          //не сабмитим, если стоимости не равны 1 в сумме
-            alert('Сумма стоимостей должна быть равна единице!\n' + costStting);
-            return false;
-        }
-        for (i=1; i<word_number; i++){
-            $('#text-part-'+$('#card-body-'+i).attr('class').substring(15)).text($('#text-part-'+$('#card-body-'+i).attr('class').substring(15)).text().replace($('#text-part-'+$('#card-body-'+i).attr('class').substring(15)).text(), $('#text-part-'+$('#card-body-'+i).attr('class').substring(15)).text()+'|'+i));     //ко всем выделенным словам добавляем маркер вида |x, где x - номер пропущенного слова
-            $('#edit-text').val($('#general-text').text());                                                         //записываем измененный текст в поле формы с текстом для отправки на сервер
-            $('#column-'+i+' textarea').eq(1).val($('#column-'+i+' textarea').eq(1).val()+'|'+i);                   //верный вариант ответа также заменяем на него же с маркером
-        }
-    }
-});
-

@@ -53,3 +53,5 @@
     </div>
 </div>
 </div>
+
+{!! HTML::script('js/question_create/fillGaps.js') !!}

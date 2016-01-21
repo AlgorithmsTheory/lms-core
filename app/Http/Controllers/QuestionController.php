@@ -106,7 +106,6 @@ class QuestionController extends Controller{
         $test_controller = new TestController($test);
         $question = $this->question;
         $array = [];
-        $temp_array = [];
         $k = 0;
         $destructured = $test_controller->destruct($id_test);
         for ($i=0; $i<count($destructured); $i++){                                                                      // идем по всем структурам
@@ -117,10 +116,9 @@ class QuestionController extends Controller{
             $temp = preg_replace('~A~', '[[:digit:]]+', $temp);                                         //заменям все A (All) на регулярное выражение, соответствующее любому набору цифр
             $temp .= '"';
             $query = $question->whereRaw("code REGEXP $temp")->get();                                                  //ищем всевозможные коды вопросов
-            $queryn = $question->whereRaw("code REGEXP $temp")->count();                                                  //ищем всевозможные коды вопросов
             $test_query = Test::whereId_test($id_test)->select('test_type')->first();
             foreach ($query as $id){
-                if ($this->getCode($id->code)['section_code'] != 'T'){                                                  //если вопрос не временный
+                if ($this->getCode($id->id_question)['section_code'] != 'T'){                                                  //если вопрос не временный
                     if ($test_query->test_type == 'Тренировочный'){                                                     //если тест тренировочный
                         if ($id->control == 1)                                                                          //если вопрос скрытый, то проходим мимо
                             continue;
@@ -151,7 +149,7 @@ class QuestionController extends Controller{
                         $new_temp_array[$p] = $temp_array[$p];
                     }
                     $l = 0;
-                    while ($l < 3) {                                                                                    //берем еще 3 вопроса этого типа => в итоге получаем 4
+                    while ($l < 12) {                                                                                    //берем еще 3 вопроса этого типа => в итоге получаем 4
                         $new_temp_array = $this->randomArray($new_temp_array);
                         $temp_question_new = $new_temp_array[count($new_temp_array)-1];
 

@@ -2,13 +2,13 @@
         <div class="col-md-2 col-sm-2" id="variants">
             <div class="form-group">
                 <textarea name="variants[]" class="form-control textarea3" rows="3" placeholder="" required></textarea>
-                <label for="textarea3">Определение</label>
+                <label for="textarea3">Определение 1</label>
             </div>
         </div>
         <div class="col-md-8 col-sm-8" id="answers">
             <div class="form-group">
                 <textarea name="answers[]" class="form-control textarea3" rows="3" placeholder="" required></textarea>
-                <label for="textarea3">Расшифровка</label>
+                <label for="textarea3">Расшифровка 1</label>
             </div>
         </div>
         <div class="col-md-2 col-sm-2" style="margin-top: 50px" id="add-del-buttons">
@@ -38,7 +38,7 @@
     </div>
 
     <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>
-    <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
+    <!-- <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a> -->
 </div>
 </div>
 </div>
@@ -56,3 +56,5 @@
     </div>
 </div>
 </div>
+
+{!! HTML::script('js/question_create/definition.js') !!}

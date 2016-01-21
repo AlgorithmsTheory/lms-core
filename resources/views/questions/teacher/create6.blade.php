@@ -26,7 +26,7 @@
     </div>
 
     <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>
-    <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
+    <!-- <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a> -->
 </div>
 </div>
 </div>
@@ -44,3 +44,5 @@
     </div>
 </div>
 </div>
+
+{!! HTML::script('js/question_create/theorem.js') !!}

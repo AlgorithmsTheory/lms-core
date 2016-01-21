@@ -4,7 +4,7 @@
 <h1>Вопрос {{ $count }}</h1>
 <input type="hidden" name="num" value="{{ $id }}">
 <input type="hidden" name="type" value="{{ $type }}">
-<table>
+<table class="table table-bordered no-margin">
     <tr>
         <td>Утверждение</td>
         <td>Верно</td>

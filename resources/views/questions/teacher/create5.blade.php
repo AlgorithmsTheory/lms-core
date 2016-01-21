@@ -49,3 +49,6 @@
     </div>
 </div>
 </div>
+
+
+{!! HTML::script('js/question_create/accordanceTable.js') !!}

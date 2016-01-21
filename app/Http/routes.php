@@ -89,7 +89,7 @@ Route::get('generator/pdf', ['as' => 'generator_ex', 'uses' => 'GeneratorControl
 
 //личный кабинет
 Route::get('personal_account', ['as' => 'personal_account', 'uses' => 'PersonalAccount@showPA', 'middleware' => 'general_auth']);
-//Route::get('teacher_account', ['as' => 'teacher_account', 'uses' => 'PersonalAccount@showTeacherPA', 'middleware' => 'general_auth']);
+Route::get('teacher_account', ['as' => 'teacher_account', 'uses' => 'PersonalAccount@showTeacherPA', 'middleware' => 'general_auth']);
 
 
 
