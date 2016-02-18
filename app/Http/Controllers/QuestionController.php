@@ -149,7 +149,7 @@ class QuestionController extends Controller{
                         $new_temp_array[$p] = $temp_array[$p];
                     }
                     $l = 0;
-                    while ($l < 12) {                                                                                    //берем еще 3 вопроса этого типа => в итоге получаем 4
+                    while ($l < 3) {                                                                                    //берем еще 3 вопроса этого типа => в итоге получаем 4
                         $new_temp_array = $this->randomArray($new_temp_array);
                         $temp_question_new = $new_temp_array[count($new_temp_array)-1];
 
@@ -576,6 +576,7 @@ class QuestionController extends Controller{
         $score_sum = 0;                                                                                                 //сумма набранных баллов
         $points_sum = 0;                                                                                                //сумма максимально овзможных баллов
         $choice = [];                                                                                                   //запоминаем выбранные варианты пользователя
+        $right_percent = [];                                                                                            //Процент правильности ответа на неверный вопрос
         $j = 1;
 
         $query = $test->whereId_test($id_test)->select('total', 'test_name', 'amount', 'test_type')->first();
@@ -588,6 +589,7 @@ class QuestionController extends Controller{
             $data = $this->check($array);
             $right_or_wrong[$j] = $data['mark'];
             $choice[$j] = $data['choice'];
+            $right_percent[$j] = $data['right_percent'];
             $j++;
             $score_sum += $data['score'];                                                                               //сумма набранных баллов
             $points_sum += $data['points'];                                                                             //сумма максимально возможных баллов
@@ -619,7 +621,7 @@ class QuestionController extends Controller{
                 $widgets[] = View::make($saved_test[$i]['view'].'T', $saved_test[$i]['arguments'])->with('choice', $choice[$i+1]);
             }
             $result->whereId_result($current_test)->update(['result_date' => $date, 'result' => $score, 'mark_ru' => $mark_rus, 'mark_eu' => $mark_bologna]);
-            $widgetListView = View::make('questions.student.training_test',compact('score','right_or_wrong', 'mark_bologna', 'mark_rus'))->with('widgets', $widgets);
+            $widgetListView = View::make('questions.student.training_test',compact('score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent'))->with('widgets', $widgets);
             return $widgetListView;
         }
     }

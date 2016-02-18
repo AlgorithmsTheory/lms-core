@@ -22,32 +22,42 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="questionCreate.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/question_create/questionCreate.js">
+      <file leaf-file-name="QuestionController.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/QuestionController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="96" column="18" selection-start="4584" selection-end="4584" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4116">
+            <state line="151" column="33" selection-start="8520" selection-end="8520" vertical-scroll-proportion="0.7133758" vertical-offset="3108" max-vertical-offset="17052">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="training_test.blade.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/questions/student/training_test.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="28" column="46" selection-start="1161" selection-end="1161" vertical-scroll-proportion="0.0" vertical-offset="504" max-vertical-offset="1372">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MultiChoice.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Qtypes/MultiChoice.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="88" column="135" selection-start="3895" selection-end="3928" vertical-scroll-proportion="0.0" vertical-offset="1764" max-vertical-offset="3724">
               <folding>
-                <element signature="n#!!doc" expanded="true" />
-                <marker date="1453417851616" expanded="true" signature="2882:2976" placeholder="..." />
-                <marker date="1453417851616" expanded="true" signature="2890:2976" placeholder="..." />
+                <marker date="1455831939687" expanded="false" signature="4598:4624" placeholder="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fillGaps.js" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/public/js/question_create/fillGaps.js">
+      <file leaf-file-name="YesNo.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Qtypes/YesNo.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="94" selection-start="866" selection-end="866" vertical-scroll-proportion="0.26751593" vertical-offset="0" max-vertical-offset="10528">
+            <state line="65" column="168" selection-start="2374" selection-end="2374" vertical-scroll-proportion="0.0" vertical-offset="588" max-vertical-offset="2828">
               <folding>
-                <element signature="e#0#44#0" expanded="false" />
-                <marker date="1453419240964" expanded="true" signature="1481:1529" placeholder="..." />
-                <marker date="1453419240964" expanded="true" signature="3667:3723" placeholder="..." />
-                <marker date="1453419240964" expanded="true" signature="3970:4026" placeholder="..." />
-                <marker date="1453419240964" expanded="true" signature="4294:4350" placeholder="..." />
-                <marker date="1453419240964" expanded="true" signature="4597:4654" placeholder="..." />
-                <marker date="1453419240964" expanded="true" signature="4901:4957" placeholder="..." />
-                <marker date="1453419240964" expanded="false" signature="5243:5260" placeholder="..." />
+                <marker date="1455833089940" expanded="false" signature="2831:2857" placeholder="..." />
+                <marker date="1455833089940" expanded="true" signature="2944:3081" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -63,7 +73,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/database/migrations/2015_04_14_133019_create_results_table.php" />
         <option value="$PROJECT_DIR$/resources/views/main.blade.php" />
         <option value="$PROJECT_DIR$/libraries/fpdf18/PDF.php" />
         <option value="$PROJECT_DIR$/libraries/fpdf18/Mypdf.php" />
@@ -77,24 +86,16 @@
         <option value="$PROJECT_DIR$/app/PDF_MC_Table.php" />
         <option value="$PROJECT_DIR$/config/app.php" />
         <option value="$PROJECT_DIR$/vendor/mpdf/mpdf/mpdf.php" />
-        <option value="$PROJECT_DIR$/app/Qtypes/MultiChoice.php" />
-        <option value="$PROJECT_DIR$/app/Qtypes/FillGaps.php" />
-        <option value="$PROJECT_DIR$/app/Qtypes/YesNo.php" />
         <option value="$PROJECT_DIR$/app/Qtypes/Definition.php" />
         <option value="$PROJECT_DIR$/app/Qtypes/JustAnswer.php" />
         <option value="$PROJECT_DIR$/app/Qtypes/Theorem.php" />
         <option value="$PROJECT_DIR$/resources/views/generator/index.blade.php" />
-        <option value="$PROJECT_DIR$/app/Qtypes/OneChoice.php" />
         <option value="$PROJECT_DIR$/app/Question.php" />
         <option value="$PROJECT_DIR$/app/Mypdf.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/GeneratorController.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/QuestionController.php" />
         <option value="$PROJECT_DIR$/resources/views/tests/show5.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/tests/show5T.blade.php" />
-        <option value="$PROJECT_DIR$/app/Http/routes.php" />
         <option value="$PROJECT_DIR$/config/session.php" />
-        <option value="$PROJECT_DIR$/app/Qtypes/AccordanceTable.php" />
-        <option value="$PROJECT_DIR$/app/Http/Kernel.php" />
         <option value="$PROJECT_DIR$/public/js/questionCreate.js" />
         <option value="$PROJECT_DIR$/public/js/question_create/theorem.js" />
         <option value="$PROJECT_DIR$/public/js/question_create/accordanceTable.js" />
@@ -114,6 +115,15 @@
         <option value="$PROJECT_DIR$/resources/views/questions/teacher/create7.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/questions/teacher/create6.blade.php" />
         <option value="$PROJECT_DIR$/public/js/question_create/fillGaps.js" />
+        <option value="$PROJECT_DIR$/app/Http/Kernel.php" />
+        <option value="$PROJECT_DIR$/app/Http/routes.php" />
+        <option value="$PROJECT_DIR$/app/Qtypes/OneChoice.php" />
+        <option value="$PROJECT_DIR$/resources/views/questions/student/training_test.blade.php" />
+        <option value="$PROJECT_DIR$/app/Qtypes/MultiChoice.php" />
+        <option value="$PROJECT_DIR$/app/Qtypes/FillGaps.php" />
+        <option value="$PROJECT_DIR$/app/Qtypes/AccordanceTable.php" />
+        <option value="$PROJECT_DIR$/app/Qtypes/YesNo.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/QuestionController.php" />
       </list>
     </option>
   </component>
@@ -148,6 +158,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -237,10 +248,6 @@
               <option name="myItemId" value="questions" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="teacher" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -263,6 +270,10 @@
               <option name="myItemId" value="questions" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="student" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -275,60 +286,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uir" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uir" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uir" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uir" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uir" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uir" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="question_create" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -406,7 +363,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -534,48 +490,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/resources/views/tests/show7.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="641" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Qtypes/JustAnswer.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="64" column="0" selection-start="2745" selection-end="2745" vertical-scroll-proportion="0.24203822" vertical-offset="1416" max-vertical-offset="2128" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/tests/show6.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="4" selection-start="298" selection-end="298" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="672" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Qtypes/Definition.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="59" selection-start="2453" selection-end="2453" vertical-scroll-proportion="0.0" vertical-offset="1164" max-vertical-offset="2128" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Qtypes/Theorem.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="32" selection-start="2813" selection-end="2813" vertical-scroll-proportion="0.0" vertical-offset="408" max-vertical-offset="1708" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/generator/index.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="104" selection-start="669" selection-end="669" vertical-scroll-proportion="0.0" vertical-offset="140" max-vertical-offset="1176" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="194" column="24" selection-start="3541" selection-end="3547" vertical-scroll-proportion="0.74308944" vertical-offset="4639" max-vertical-offset="58660" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Mypdf.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="127" selection-start="490" selection-end="490" vertical-scroll-proportion="0.0" vertical-offset="99" max-vertical-offset="2296">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Question.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="30" column="68" selection-start="1667" selection-end="1667" vertical-scroll-proportion="0.650546" vertical-offset="283" max-vertical-offset="1064">
@@ -638,13 +552,6 @@
         <state line="202" column="41" selection-start="8581" selection-end="8581" vertical-scroll-proportion="6.7269893" vertical-offset="1344" max-vertical-offset="5936" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/QuestionController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="606" column="43" selection-start="31701" selection-end="31701" vertical-scroll-proportion="-0.11464968" vertical-offset="16368" max-vertical-offset="16996">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Codificator.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="784" />
@@ -652,314 +559,246 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/library/persons/gilbert.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="18" selection-start="2404" selection-end="2415" vertical-scroll-proportion="0.0" vertical-offset="1260" max-vertical-offset="3332">
+        <state line="61" column="18" selection-start="2404" selection-end="2415" vertical-scroll-proportion="0.0" vertical-offset="1260" max-vertical-offset="3332" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/library/index.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="46" column="85" selection-start="1730" selection-end="1787" vertical-scroll-proportion="0.0" vertical-offset="1008" max-vertical-offset="11312" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/LibraryController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="37" selection-start="390" selection-end="390" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1120" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="80" selection-start="1668" selection-end="1728" vertical-scroll-proportion="0.0" vertical-offset="892" max-vertical-offset="1680" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create2.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="101" column="48" selection-start="4110" selection-end="4110" vertical-scroll-proportion="0.0" vertical-offset="2348" max-vertical-offset="3024" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create3.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="56" column="45" selection-start="2442" selection-end="2442" vertical-scroll-proportion="0.0" vertical-offset="1073" max-vertical-offset="1736" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/question_create/multiChoice.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="16" selection-start="1492" selection-end="1492" vertical-scroll-proportion="1.4713376" vertical-offset="0" max-vertical-offset="1148" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create1.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="42" selection-start="1428" selection-end="1428" vertical-scroll-proportion="0.34235668" vertical-offset="597" max-vertical-offset="2268" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/question_create/accordanceTable.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="0" selection-start="46" selection-end="83" vertical-scroll-proportion="0.0873635" vertical-offset="0" max-vertical-offset="1848" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/question_create/yesNo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="66" selection-start="726" selection-end="741" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1148" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/question_create/justAnswer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="12" selection-start="461" selection-end="461" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1092" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create8.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="104" selection-start="1813" selection-end="1813" vertical-scroll-proportion="0.698908" vertical-offset="672" max-vertical-offset="1820" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create4.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="56" selection-start="732" selection-end="732" vertical-scroll-proportion="0.5419355" vertical-offset="168" max-vertical-offset="1960" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create5.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="53" column="52" selection-start="1796" selection-end="1796" vertical-scroll-proportion="1.0903226" vertical-offset="808" max-vertical-offset="1652" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create6.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="104" selection-start="1172" selection-end="1172" vertical-scroll-proportion="0.43152866" vertical-offset="513" max-vertical-offset="1484" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create7.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="104" selection-start="1885" selection-end="1885" vertical-scroll-proportion="0.30109206" vertical-offset="927" max-vertical-offset="1820" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/question_create/definition.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="74" selection-start="727" selection-end="742" vertical-scroll-proportion="0.49044585" vertical-offset="0" max-vertical-offset="1092" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/question_create/theorem.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="641" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/question_create/oneChoice.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="0" selection-start="46" selection-end="360" vertical-scroll-proportion="0.089171976" vertical-offset="0" max-vertical-offset="896" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/personalAccount.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-2.0967238" vertical-offset="1344" max-vertical-offset="2324" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/question_create/fillGaps.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="24" selection-start="1218" selection-end="1218" vertical-scroll-proportion="0.7133758" vertical-offset="0" max-vertical-offset="10528" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Kernel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="16" selection-start="996" selection-end="996" vertical-scroll-proportion="0.0" vertical-offset="367" max-vertical-offset="1176" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/question_create/questionCreate.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="96" column="18" selection-start="4584" selection-end="4584" vertical-scroll-proportion="-0.089171976" vertical-offset="2688" max-vertical-offset="4060" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Result.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1036">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="106" selection-start="3401" selection-end="3409" vertical-scroll-proportion="0.0" vertical-offset="1864" max-vertical-offset="2828">
+        <state line="96" column="142" selection-start="5206" selection-end="5206" vertical-scroll-proportion="1.044586" vertical-offset="2032" max-vertical-offset="3220">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/library/index.blade.php">
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/BooksController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="46" column="85" selection-start="1730" selection-end="1787" vertical-scroll-proportion="0.0" vertical-offset="1008" max-vertical-offset="11312">
+        <state line="45" column="4" selection-start="1749" selection-end="1749" vertical-scroll-proportion="1.9617834" vertical-offset="0" max-vertical-offset="3864">
+          <folding>
+            <marker date="1455047194444" expanded="true" signature="-1:-1" placeholder="SELECT id, c..book..." />
+            <marker date="1455047194444" expanded="true" signature="-1:-1" placeholder="SELECT id, c..." />
+            <marker date="1455047194444" expanded="true" signature="-1:-1" placeholder="SELECT lecti..." />
+            <marker date="1455047194444" expanded="true" signature="-1:-1" placeholder="SELECT * FRO..ebook..." />
+            <marker date="1455047194444" expanded="true" signature="-1:-1" placeholder="SELECT * FRO..." />
+            <marker date="1455047194444" expanded="true" signature="-1:-1" placeholder="INSERT INTO ..." />
+            <marker date="1455047194444" expanded="true" signature="-1:-1" placeholder="SELECT lecti..." />
+            <marker date="1455047194444" expanded="true" signature="-1:-1" placeholder="SELECT `orde..." />
+            <marker date="1455047194444" expanded="true" signature="-1:-1" placeholder="SELECT `orde..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/migrations/2015_04_05_111343_craete_questions_table.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="84" max-vertical-offset="1204">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/LibraryController.php">
+    <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Contracts/View/View.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="37" selection-start="390" selection-end="390" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1120">
+        <state line="22" column="20" selection-start="402" selection-end="402" vertical-scroll-proportion="0.9609984" vertical-offset="0" max-vertical-offset="840">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Qtypes/OneChoice.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="84" column="32" selection-start="3726" selection-end="3726" vertical-scroll-proportion="0.0" vertical-offset="1724" max-vertical-offset="2352">
+        <state line="40" column="171" selection-start="1610" selection-end="1643" vertical-scroll-proportion="0.0" vertical-offset="715" max-vertical-offset="2436">
           <folding>
-            <marker date="1453155981797" expanded="false" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Qtypes/MultiChoice.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="132" column="30" selection-start="6116" selection-end="6116" vertical-scroll-proportion="0.0" vertical-offset="3052" max-vertical-offset="3696">
-          <folding>
-            <marker date="1453029611315" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1455830495828" expanded="false" signature="-1:-1" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Qtypes/FillGaps.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="137" column="32" selection-start="6870" selection-end="6894" vertical-scroll-proportion="0.0" vertical-offset="3208" max-vertical-offset="3836">
+        <state line="69" column="120" selection-start="3332" selection-end="3332" vertical-scroll-proportion="-0.15923567" vertical-offset="1808" max-vertical-offset="3948">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Qtypes/AccordanceTable.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="104" column="60" selection-start="3962" selection-end="3962" vertical-scroll-proportion="0.0" vertical-offset="2912" max-vertical-offset="3920">
+        <state line="92" column="175" selection-start="3577" selection-end="3577" vertical-scroll-proportion="0.0" vertical-offset="1932" max-vertical-offset="3976">
           <folding>
-            <marker date="1453371684908" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1455833089968" expanded="false" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Qtypes/Definition.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="29" selection-start="2071" selection-end="2071" vertical-scroll-proportion="1.0254776" vertical-offset="504" max-vertical-offset="2128">
+          <folding>
+            <marker date="1453150891170" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1453150891170" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Qtypes/QuestionType.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.4713376" vertical-offset="296" max-vertical-offset="1008">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Qtypes/JustAnswer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.93630576" vertical-offset="588" max-vertical-offset="2128">
+          <folding>
+            <marker date="1453153037289" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1453153037289" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/questions/student/training_test.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="46" selection-start="1161" selection-end="1161" vertical-scroll-proportion="0.0" vertical-offset="504" max-vertical-offset="1372">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Qtypes/MultiChoice.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="88" column="135" selection-start="3895" selection-end="3928" vertical-scroll-proportion="0.0" vertical-offset="1764" max-vertical-offset="3724">
+          <folding>
+            <marker date="1455831939687" expanded="false" signature="4598:4624" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Qtypes/YesNo.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="51" column="19" selection-start="1581" selection-end="1581" vertical-scroll-proportion="0.0" vertical-offset="1596" max-vertical-offset="2772">
+        <state line="65" column="168" selection-start="2374" selection-end="2374" vertical-scroll-proportion="0.0" vertical-offset="588" max-vertical-offset="2828">
           <folding>
-            <marker date="1453117811134" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1453117811134" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1455833089940" expanded="false" signature="2831:2857" placeholder="..." />
+            <marker date="1455833089940" expanded="true" signature="2944:3081" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Kernel.php">
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/QuestionController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="63" selection-start="567" selection-end="567" vertical-scroll-proportion="0.43213728" vertical-offset="199" max-vertical-offset="1176">
+        <state line="151" column="33" selection-start="8520" selection-end="8520" vertical-scroll-proportion="0.7133758" vertical-offset="3108" max-vertical-offset="17052">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="80" selection-start="1668" selection-end="1728" vertical-scroll-proportion="0.0" vertical-offset="892" max-vertical-offset="1680">
-          <folding>
-            <marker date="1453417481369" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481369" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481369" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481369" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481369" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481369" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481369" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481369" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481369" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481369" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481369" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481369" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create2.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="101" column="48" selection-start="4110" selection-end="4110" vertical-scroll-proportion="0.0" vertical-offset="2348" max-vertical-offset="3024">
-          <folding>
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481324" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create3.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="56" column="45" selection-start="2442" selection-end="2442" vertical-scroll-proportion="0.0" vertical-offset="1073" max-vertical-offset="1736">
-          <folding>
-            <marker date="1453417481375" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481375" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481375" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481375" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481375" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481375" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481375" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481375" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481375" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481375" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481375" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453417481375" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/question_create/multiChoice.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="16" selection-start="1492" selection-end="1492" vertical-scroll-proportion="1.4713376" vertical-offset="0" max-vertical-offset="1148">
-          <folding>
-            <element signature="e#0#44#0" expanded="false" />
-            <marker date="1453418331016" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453418331016" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1453418331016" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453418331016" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create1.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="42" selection-start="1428" selection-end="1428" vertical-scroll-proportion="0.34235668" vertical-offset="597" max-vertical-offset="2268">
-          <folding>
-            <element signature="n#style#0;n#div#2;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/question_create/accordanceTable.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="0" selection-start="46" selection-end="83" vertical-scroll-proportion="0.0873635" vertical-offset="0" max-vertical-offset="1848">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/question_create/yesNo.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="66" selection-start="726" selection-end="741" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1148">
-          <folding>
-            <element signature="e#0#44#0" expanded="false" />
-            <marker date="1453418572019" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453418572019" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1453418572019" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453418572019" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/question_create/justAnswer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="12" selection-start="461" selection-end="461" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1092">
-          <folding>
-            <element signature="e#0#44#0" expanded="false" />
-            <marker date="1453418917962" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453418917962" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453418917962" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453418917962" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create8.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="104" selection-start="1813" selection-end="1813" vertical-scroll-proportion="0.698908" vertical-offset="672" max-vertical-offset="1820">
-          <folding>
-            <element signature="n#style#0;n#div#2;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create4.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="56" selection-start="732" selection-end="732" vertical-scroll-proportion="0.5419355" vertical-offset="168" max-vertical-offset="1960">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create5.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="53" column="52" selection-start="1796" selection-end="1796" vertical-scroll-proportion="1.0903226" vertical-offset="808" max-vertical-offset="1652">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create6.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="104" selection-start="1172" selection-end="1172" vertical-scroll-proportion="0.43152866" vertical-offset="513" max-vertical-offset="1484">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/questions/teacher/create7.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="104" selection-start="1885" selection-end="1885" vertical-scroll-proportion="0.30109206" vertical-offset="927" max-vertical-offset="1820">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/question_create/definition.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="74" selection-start="727" selection-end="742" vertical-scroll-proportion="0.49044585" vertical-offset="0" max-vertical-offset="1092">
-          <folding>
-            <element signature="e#0#44#0" expanded="false" />
-            <marker date="1453418802127" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453418802127" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453418802127" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453418802127" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/question_create/theorem.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="641">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/question_create/oneChoice.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="0" selection-start="46" selection-end="360" vertical-scroll-proportion="0.089171976" vertical-offset="0" max-vertical-offset="896">
-          <folding>
-            <element signature="e#0#44#0" expanded="false" />
-            <marker date="1453418056851" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/personalAccount.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-2.0967238" vertical-offset="1344" max-vertical-offset="2324">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/question_create/questionCreate.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="96" column="18" selection-start="4584" selection-end="4584" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4116">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <marker date="1453417851616" expanded="true" signature="2882:2976" placeholder="..." />
-            <marker date="1453417851616" expanded="true" signature="2890:2976" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/question_create/fillGaps.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="94" selection-start="866" selection-end="866" vertical-scroll-proportion="0.26751593" vertical-offset="0" max-vertical-offset="10528">
-          <folding>
-            <element signature="e#0#44#0" expanded="false" />
-            <marker date="1453419240964" expanded="true" signature="1481:1529" placeholder="..." />
-            <marker date="1453419240964" expanded="true" signature="3667:3723" placeholder="..." />
-            <marker date="1453419240964" expanded="true" signature="3970:4026" placeholder="..." />
-            <marker date="1453419240964" expanded="true" signature="4294:4350" placeholder="..." />
-            <marker date="1453419240964" expanded="true" signature="4597:4654" placeholder="..." />
-            <marker date="1453419240964" expanded="true" signature="4901:4957" placeholder="..." />
-            <marker date="1453419240964" expanded="false" signature="5243:5260" placeholder="..." />
-          </folding>
         </state>
       </provider>
     </entry>

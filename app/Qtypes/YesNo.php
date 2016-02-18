@@ -57,11 +57,13 @@ class YesNo extends QuestionType{
         if ($score < 0){                          //если ушел в минус
             $score = 0;
         }
+
+        $right_percent = round($score/$this->points*100);
         if ($score != $this->points) {
-            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array);
+            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array, 'right_percent' => $right_percent);
         }
         else {
-            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array);
+            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array, 'right_percent' => $right_percent);
         }
         return $data;
     }

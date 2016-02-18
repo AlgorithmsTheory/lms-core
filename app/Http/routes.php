@@ -82,6 +82,20 @@ Route::get('library/persons', ['as' => 'library_persons', 'uses' => 'LibraryCont
 Route::get('library/persons/{person}', ['as' => 'person', 'uses' => 'LibraryController@person']);
 Route::get('library/extra', ['as' => 'library_extra', 'uses' => 'LibraryController@extra']);
 
+//модуль books библиотеки
+/*Route::get('library/books', ['as' => 'books', 'uses' => 'BooksController@index']);
+Route::post('library/books/search', ['as' => 'library_search', 'uses' => 'BooksController@search']);
+Route::get('library/book/{id}', ['as' => 'book', 'uses' => 'BooksController@getBook']);
+Route::get('library/lection/{id}', ['as' => 'lection', 'uses' => 'BooksController@lection']);
+Route::get('library/ebooks', ['as' => 'ebooks', 'uses' => 'BooksController@ebookindex']);
+Route::post('library/ebooks/search', ['as' => 'library_esearch', 'uses' => 'BooksController@esearch']);
+Route::post('library/book/{book_id}/order', ['as' => 'book_order', 'uses' => 'BooksController@order']);
+// TODO: Мише и Стасу: Перенести в секцию админки и добавить авторизацию (админка библиотеки)
+Route::get('teacher_account/library_calendar', ['as' => 'library_calendar', 'uses' => 'BooksController@library_calendar']);
+Route::post('teacher_account/date_create', ['as' => 'library_date_create', 'uses' => 'BooksController@create_date']);
+Route::get('teacher_account/library_order_list', ['as' => 'library_order_list', 'uses' => 'BooksController@library_order_list']);
+Route::post('teacher_account/library_order_list_elem_delete', ['as' => 'order_list_delete', 'uses' => 'BooksController@order_list_delete']);*/
+
 //модуль генерации вариантов
 Route::get('generator', ['as' => 'generator_index', 'uses' => 'GeneratorController@index', 'middleware' => ['general_auth', 'admin']]);
 Route::post('generator/pdf', ['as' => 'generator_pdf', 'uses' => 'GeneratorController@pdfTest', 'middleware' => ['general_auth', 'admin']]);

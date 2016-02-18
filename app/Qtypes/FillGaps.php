@@ -50,7 +50,7 @@ class FillGaps extends QuestionType {
         Question::insert(array('code' => $code, 'title' => $wet_text, 'variants' => $variants, 'answer' => $answers, 'points' => $request->input('points')));
     }
     public function show($count){
-        $text_parts = explode("<>", $this->text);                         //части текста между селектами
+        $text_parts = explode("<>", $this->text);                                                                       //части текста между селектами
         $parse = explode("%", $this->variants);
         $variants = explode("<>", $parse[0]);
         $num_slot = count($variants);
@@ -58,8 +58,8 @@ class FillGaps extends QuestionType {
         $group_variants = [];
         $num_var = [];
         for ($i=0; $i < count($variants); $i++){
-            $parse_group_variants[$i] = explode(";",$variants[$i]);                //варинаты каждого селекта
-            $group_variants[$i] = QuestionController::mixVariants($parse_group_variants[$i]);   //перемешиваем варианты
+            $parse_group_variants[$i] = explode(";",$variants[$i]);                                                     //варинаты каждого селекта
+            $group_variants[$i] = QuestionController::mixVariants($parse_group_variants[$i]);                           //перемешиваем варианты
             $num_var[$i] = count($group_variants[$i]);
         }
         $view = 'tests.show3';
@@ -67,13 +67,13 @@ class FillGaps extends QuestionType {
         return $array;
     }
     public function check($array){
-        $parse = explode("%", $this->variants);    //первый элемент - все варианты через <>, второй - стоимости через ;
+        $parse = explode("%", $this->variants);                                                                         //первый элемент - все варианты через <>, второй - стоимости через ;
         $variants = explode("<>", $parse[0]);
         $values = explode (";", $parse[1]);
         $parse_answer = $this->answer;
         $answer = explode(";", $parse_answer);
         $score = 0;
-        $p = 0;                          //счетчик правильных ответов
+        $p = 0;                                                                                                         //счетчик правильных ответов
         for ($i=0; $i < count($variants); $i++){
             $step = $this->points * $values[$i];
             if ($array[$i] == $answer[$i]){
@@ -81,9 +81,11 @@ class FillGaps extends QuestionType {
                 $p++;
             }
         }
+
+        $right_percent = round($score/$this->points*100);
         if($p == count($variants))
-            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array);
-               else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array);
+            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array, 'right_percent' => $right_percent);
+               else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array, 'right_percent' => $right_percent);
         //echo $score.'<br>';
         return $data;
     }
@@ -101,8 +103,9 @@ class FillGaps extends QuestionType {
         if ($answered){                                                                                                 // пдф с ответами
             $answers = explode(";", $this->answer);
             for ($i = 1; $i <= $num_slot; $i++){
-                $text .= $text_parts[$i-1].'('.$i.' '.$answers[$i-1].') ';                                                   //формируем текст вопроса без пропущенных слов
+                $text .= $text_parts[$i-1].'('.$i.' '.$answers[$i-1].') ';                                              //формируем текст вопроса без пропущенных слов
             }
+            $text .= $text_parts[$num_slot];
             $html .= '<p>'.$text.'</p>';
             $html .= '<table>';
             for ($i = 1; $i <= $num_slot; $i++){                                                                        // вывод верных ответов
@@ -114,6 +117,7 @@ class FillGaps extends QuestionType {
             for ($i = 1; $i <= $num_slot; $i++){
                 $text .= $text_parts[$i-1].$i.'_______________';                                                        //формируем текст вопроса
             }
+            $text .= $text_parts[$num_slot];
             $parse_group_variants = [];
             $group_variants = [];
             $num_var = [];

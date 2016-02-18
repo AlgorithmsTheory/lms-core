@@ -60,34 +60,35 @@ class MultiChoice extends QuestionType {
         $answers = explode(';', $this->answer);
         $score = 0;
         $step = $this->points/count($answers);
-        for ($i=0; $i<count($answers); $i++ ){        //сравниваем каждый правильный ответ
-            for ($j=0; $j<count($choices); $j++){      // с каждым выбранным
+        for ($i=0; $i<count($answers); $i++ ){                                                                          //сравниваем каждый правильный ответ
+            for ($j=0; $j<count($choices); $j++){                                                                       // с каждым выбранным
                 if ($answers[$i] == $choices[$j]){
                     $buf = $choices[$j];
-                    $choices[$j] = $choices[count($choices)-1];     //меняем местами правильный ответ с последним для удаления
+                    $choices[$j] = $choices[count($choices)-1];                                                         //меняем местами правильный ответ с последним для удаления
                     $choices[count($choices)-1] =  $buf;
-                    array_pop($choices);                         //удаляем правильный проверенный вариант из массива выбранных ответов
+                    array_pop($choices);                                                                                //удаляем правильный проверенный вариант из массива выбранных ответов
                     $score += $step;
                     break;
                 }
             }
         }
-        if (!(empty($choices))){                    //если выбраны лишние варианты
+        if (!(empty($choices))){                                                                                        //если выбраны лишние варианты
             for ($i=0; $i<count($choices); $i++){
                 $score -= $step;
             }
         }
-        if ($score > $this->points){                    //если при округлении получилось больше максимального числа баллов
+        if ($score > $this->points){                                                                                    //если при округлении получилось больше максимального числа баллов
             $score = $this->points;
         }
-        if ($score < 0){                          //если ушел в минус
+        if ($score < 0){                                                                                                //если ушел в минус
             $score = 0;
         }
 
+        $right_percent = round($score/$this->points*100);
         if ($score == $this->points){
-            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array);
+            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array, 'right_percent' => $right_percent);
         }
-        else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array);
+        else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array, 'right_percent' => $right_percent);
         //echo $score.'<br>';
         return $data;
     }

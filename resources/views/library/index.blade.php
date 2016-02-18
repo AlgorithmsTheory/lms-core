@@ -14,7 +14,7 @@
     {!! HTML::style('css/materialadmin.css') !!}
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
-    <!-- END STYLESHEETS -->
+            <!-- END STYLESHEETS -->
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -58,10 +58,8 @@
                         Книги по ТА <i class="fa fa-caret-down text-default-light"></i>
                     </button>
                     <ul class="dropdown-menu animation-expand" >
-                        <li>{!! HTML::link('download/book/TeorMnozh.pdf', 'Н.К.Верещагин, А.Шень "Начала теории множеств') !!}</li>
-                        <li>{!! HTML::link('download/book/MSU.pdf', 'В.Н. Пильщиков, В.Г. Абрамов и др. "Машина Тьюринга и алгоритмы Маркова.Решение задач') !!}</li>
-                        <li class="divider"></li>
-                        <li>{!! HTML::link('download/book/TA_books.rar', 'Скачать все книги') !!}</li>
+                        <li>{!! HTML::linkRoute('books', 'Бронирование печатных изданий') !!}</li>
+                        <li>{!! HTML::linkRoute('ebooks', 'Электронные книги') !!}</li>
                     </ul>
                 </div>
                 <a>&nbsp;&nbsp;&nbsp;</a>
@@ -103,7 +101,6 @@
                     <ul class="dropdown-menu animation-expand" >
                         <li>{!! HTML::link('download/AM_MT/zadachi_AM.doc', 'Алгоритмы Маркова') !!}</li>
                         <li>{!! HTML::link('download/AM_MT/zadachi_MT.doc', 'Машины Тьюринга') !!}</li>
-                        <li>{!! HTML::link('download/AM_MT/recurs.doc', 'Рекурсии') !!}</li>
                         <li class="divider"></li>
                         <li>{!! HTML::link('download/AM_MT/AM_MT.rar', 'Скачать всё') !!}</li>
                     </ul>

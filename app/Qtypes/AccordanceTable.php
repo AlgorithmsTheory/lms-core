@@ -85,10 +85,12 @@ class AccordanceTable extends QuestionType {
         if ($score < 0){                                //если ушел в минус
             $score = 0;
         }
+
+        $right_percent = round($score/$this->points*100);
         if ($score == $this->points){
-            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $buf_array);
+            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $buf_array, 'right_percent' => $right_percent);
         }
-        else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $buf_array);
+        else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $buf_array, 'right_percent' => $right_percent);
         //echo $score.'<br>';
         return $data;
     }
