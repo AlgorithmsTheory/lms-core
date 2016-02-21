@@ -22,8 +22,8 @@ class LibraryController extends Controller {
         return view('library.teoremy');
     }
 
-    public function lecture($index){
-        return view('library.lectures.'.$index);
+    public function lecture($index, $anchor = null){
+        return view('library.lectures.'.$index.$anchor);
     }
 
     public function persons(){

@@ -16,6 +16,9 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent|\App\Theme  where()
  * @method static \Illuminate\Database\Eloquent|\App\Theme  select()
  * @method static \Illuminate\Database\Eloquent|\App\Theme  first()
+ * @method static \Illuminate\Database\Eloquent|\App\Theme  join()
+ * @method static \Illuminate\Database\Eloquent|\App\Theme  on()
+ * @method static \Illuminate\Database\Eloquent|\App\Theme  toSql()
  *
  */
 class Theme extends Eloquent {

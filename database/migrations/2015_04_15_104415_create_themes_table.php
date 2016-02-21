@@ -18,6 +18,7 @@ class CreateThemesTable extends Migration {
 			$table->string('section');          //название раздела
 			$table->string('theme');            //наименование темы (уникально)
 		});
+
 	}
 
 	/**

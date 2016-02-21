@@ -6,6 +6,7 @@
  * Time: 16:15
  */
 namespace App\Http\Controllers;
+use App\Lecture;
 use App\Qtypes\Theorem;
 use Auth;
 use Cookie;
@@ -52,7 +53,7 @@ class QuestionController extends Controller{
     }
 
     /** по id вопроса формирует массив из кодов и названий */
-    public function getCode($id){        //декодирование вопроса в асс. массив
+    public function getCode($id){                                                                                       //декодирование вопроса в асс. массив
         $codificator = new Codificator();
         $question = $this->question;
         $query = $question->whereId_question($id)->select('code')->first();
@@ -251,7 +252,7 @@ class QuestionController extends Controller{
         if (count($array)==1){                                                                                          //если не был отмечен ни один вариант
             $choice = [];
             $score = 0;
-            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points, 'choice' => $choice);
+            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points, 'choice' => $choice, 'right_percent' => 0);
             return $data;
         }
         for ($i=0; $i < count($array)-1; $i++){                                                                         //передвигаем массив, чтобы первый элемент оказался последним
@@ -332,6 +333,22 @@ class QuestionController extends Controller{
         if ($real >= 0.9){
             return '5';
         }
+    }
+
+    /** По id вопроса возвращает массив, где первый элемент - номер лекции, второй - <раздел.тема> */
+    private function linkToLecture($id_question){
+        $array = [];
+        $theme = $this->getCode($id_question)['theme'];
+        $query_theme = Theme::whereTheme($theme)
+                        ->join('codificators', 'themes.theme', '=', 'codificators.value')
+                        ->where('codificators.codificator_type', '=', 'Тема')
+                        ->first();
+        $lecture_id = $query_theme->lecture_id;
+        $query_lec = Lecture::whereId_lecture($lecture_id)->first();
+        $lection_number = $query_lec->lecture_number;
+        array_push($array, $lection_number);
+        array_push($array, '#'.$this->getCode($id_question)['section_code'].'.'.$this->getCode($id_question)['theme_code']);
+        return $array;
     }
 
     /** главная страница модуля тестирования */
@@ -585,6 +602,7 @@ class QuestionController extends Controller{
         for ($i=0; $i<$amount; $i++){                                                                                   //обрабатываем каждый вопрос
             $data = $request->input($i);
             $array = json_decode($data);
+            $link_to_lecture[$j] = $this->linkToLecture($array[0]);
             //print_r($array);
             $data = $this->check($array);
             $right_or_wrong[$j] = $data['mark'];
@@ -621,7 +639,7 @@ class QuestionController extends Controller{
                 $widgets[] = View::make($saved_test[$i]['view'].'T', $saved_test[$i]['arguments'])->with('choice', $choice[$i+1]);
             }
             $result->whereId_result($current_test)->update(['result_date' => $date, 'result' => $score, 'mark_ru' => $mark_rus, 'mark_eu' => $mark_bologna]);
-            $widgetListView = View::make('questions.student.training_test',compact('score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent'))->with('widgets', $widgets);
+            $widgetListView = View::make('questions.student.training_test',compact('score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'link_to_lecture'))->with('widgets', $widgets);
             return $widgetListView;
         }
     }

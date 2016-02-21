@@ -4,7 +4,8 @@
 
      {!! link_to_route('question_create', 'Добавить новый вопрос') !!} <br>
      {!! link_to_route('test_create', 'Добавить новый тест') !!} <br>
-    {!! link_to_route('tests', 'Перейти на страницу тестов') !!}
+     {!! link_to_route('lecture', 'Перейти на страницу тестов', array(3, '#3.1'))!!} <br>
+     {!! HTML::link('library/lecture/3') !!}
 
 </body>
 </html>
