@@ -29,7 +29,7 @@ class OneChoice extends QuestionType {
     public function show($count){
         $parse = $this->variants;
         $variants = explode(";", $parse);
-        $new_variants = QuestionController::mixVariants($variants);
+        $new_variants = $this->question->mixVariants($variants);
         $view = 'tests.show1';
         $array = array('view' => $view, 'arguments' => array('text' => $this->text, "variants" => $new_variants, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
         return $array;
@@ -76,7 +76,7 @@ class OneChoice extends QuestionType {
             Session::forget('saved_variants_order');
         }
         else {                                                                                                          // без ответов
-            $new_variants = QuestionController::mixVariants($variants);
+            $new_variants = $this->question->mixVariants($variants);
             Session::put('saved_variants_order', $new_variants);
             foreach ($new_variants as $var){
                 $html .= '<tr>';

@@ -11,6 +11,7 @@ use App\Question;
 use Illuminate\Http\Request;
 abstract class QuestionType {
     const PUBLIC_DIR = 'public/';
+    public $question;
     public  $id_question;
     public  $text;
     public  $variants;
@@ -18,6 +19,7 @@ abstract class QuestionType {
     public  $points;
     function __construct($id_question){
         if ($id_question != Question::max('id_question')+1){                                                            //проверка не является ли вопрос новым
+            $this->question = new Question();
             $query = Question::whereId_question($id_question)->first();
             $this->text = $query->title;
             $this->variants = $query->variants;

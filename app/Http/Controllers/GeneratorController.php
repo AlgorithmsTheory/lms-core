@@ -28,8 +28,7 @@ class GeneratorController extends Controller {
 
     private function pdfQuestion(Mypdf $fpdf, $id_question, $count, $answered=false){
         $question = new Question();
-        $question_controller = new QuestionController($question);
-        $decode = $question_controller->getCode($id_question);
+        $decode = $question->getCode($id_question);
         $type = $decode['type'];
         switch($type){
             case 'Выбор одного из списка':
@@ -134,8 +133,6 @@ class GeneratorController extends Controller {
     public function pdfTest(Request $request){
         $question = new Question();
         $test = new Test();
-        $test_controller = new TestController($test);
-        $question_controller = new QuestionController($question);
 
         $test_name = $request->input('test');
         $num_var = $request->input('num-variants');
@@ -153,10 +150,10 @@ class GeneratorController extends Controller {
             $answered_fpdf = new Mypdf();
             $this->headOfPdf($fpdf, $test_name, $k, $amount);
             $this->headOfPdf($answered_fpdf, $test_name, $k, $amount);
-            $ser_array = $question_controller->prepareTest($id_test);                                                   // подготавливаем тест
+            $ser_array = $test->prepareTest($id_test);                                                   // подготавливаем тест
             for ($i=0; $i<$amount; $i++){                                                                               // показываем каждый вопрос из теста
-                $id = $question_controller->chooseQuestion($ser_array);
-                if (!$test_controller->rybaTest($id)){                                                                  //проверка на вопрос по рыбе
+                $id = $question->chooseQuestion($ser_array);
+                if (!$test->rybaTest($id)){                                                                  //проверка на вопрос по рыбе
                     return view('no_access');
                 };
                 $this->pdfQuestion($fpdf, $id, $i+1);

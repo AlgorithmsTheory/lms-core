@@ -49,7 +49,7 @@ class MultiChoice extends QuestionType {
     public function show($count){
         $parse = $this->variants;
         $variants = explode(";", $parse);
-        $new_variants = QuestionController::mixVariants($variants);
+        $new_variants = $this->question->mixVariants($variants);
         $view = 'tests.show2';
         $array = array('view' => $view, 'arguments' => array('text' => $this->text, "variants" => $new_variants, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
         return $array;

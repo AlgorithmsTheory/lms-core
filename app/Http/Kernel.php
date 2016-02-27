@@ -15,7 +15,7 @@ class Kernel extends HttpKernel {
 		'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
 		'Illuminate\Session\Middleware\StartSession',
 		'Illuminate\View\Middleware\ShareErrorsFromSession',
-       // 'Illuminate\Foundation\Http\Middleware\VerifyCsrfToken'
+        'Illuminate\Foundation\Http\Middleware\VerifyCsrfToken'
 	];
 
 	/**
@@ -31,6 +31,7 @@ class Kernel extends HttpKernel {
         'admin' => 'App\Http\Middleware\AdminMiddleware',
         'single_test' => 'App\Http\Middleware\SingleTest',
         'fish' => 'App\Http\Middleware\FishMiddleware',
+        'have_attempts' => 'App\Http\Middleware\ControlTestAccess'
 	];
 
 }

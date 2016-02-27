@@ -6,7 +6,6 @@
  * Time: 16:07
  */
 namespace App\Qtypes;
-use App\Http\Controllers\QuestionController;
 use App\Mypdf;
 use App\Question;
 use Illuminate\Http\Request;
@@ -59,7 +58,7 @@ class FillGaps extends QuestionType {
         $num_var = [];
         for ($i=0; $i < count($variants); $i++){
             $parse_group_variants[$i] = explode(";",$variants[$i]);                                                     //варинаты каждого селекта
-            $group_variants[$i] = QuestionController::mixVariants($parse_group_variants[$i]);                           //перемешиваем варианты
+            $group_variants[$i] = $this->question->mixVariants($parse_group_variants[$i]);                           //перемешиваем варианты
             $num_var[$i] = count($group_variants[$i]);
         }
         $view = 'tests.show3';
@@ -123,7 +122,7 @@ class FillGaps extends QuestionType {
             $num_var = [];
             for ($i=0; $i < count($variants); $i++){
                 $parse_group_variants[$i] = explode(";",$variants[$i]);                                                 //варинаты каждого селекта
-                $group_variants[$i] = QuestionController::mixVariants($parse_group_variants[$i]);                       //перемешиваем варианты
+                $group_variants[$i] = $this->question->mixVariants($parse_group_variants[$i]);                       //перемешиваем варианты
                 $num_var[$i] = count($group_variants[$i]);
             }
 
