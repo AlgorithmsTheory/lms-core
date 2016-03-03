@@ -1,17 +1,20 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Ebook;
+use App\Lecture;
+use Auth;
 use Request;
 use DateTime;
-
+use App\Book;
+use App\Order;
+use DB;
 class BooksController extends Controller {
     
     
     public function index(){
-        $link = mysqli_connect('localhost','root','root','libr'); 
-        $link->query("SET CHARACTER SET utf8");
-	    $query = "SELECT id, coverImg, title, author, format FROM book" ; 
-	    $result = $link->query($query);
+        $book = Book::select();
+	    $result = $book->get();
         $searchquery = ""; 
         return view("library.books", compact('result','searchquery'));
     }
@@ -19,62 +22,82 @@ class BooksController extends Controller {
     
     public function search(){
         $search = Request::input('search');
-        $link = mysqli_connect('localhost','root','root','libr'); 
-        $link->query("SET CHARACTER SET utf8");
-	    $query = "SELECT id, coverImg, title, author, format FROM `book` WHERE UPPER(`title`) LIKE UPPER('%$search%') OR UPPER(`author`) LIKE UPPER('%$search%')"; 
-	    $result = $link->query($query);
+        $book = Book::where('title', 'like', "%$search%");
+        $book->orWhere('author', 'like', "%$search%");
+	    //$query = "SELECT id, coverImg, title, author, format FROM `book` WHERE UPPER(`title`) LIKE UPPER('%$search%') OR UPPER(`author`) LIKE UPPER('%$search%')";
+	    $result = $book->get();
         $searchquery = $search;
         return view("library.books", compact('result','searchquery'));
     }
     
     public function getBook($id){
-        $link = mysqli_connect('localhost','root','root','libr'); // соединяюсь
-	   $link->query("SET CHARACTER SET utf8");
-        $query = "SELECT * FROM book WHERE book.id = ".$id;
-	   $result = $link->query($query);
-	   $row = mysqli_fetch_array($result);
+        $book = Book::where('id', '=', "$id");
+        $row = $book->first();
         return view("library.book", compact('id','row'));
     }
-    
+
+    public function getvalues($arr) {
+        return $arr['date'];
+         }
+
      public function lection($id){
        $book_id = $id;
-       $link = mysqli_connect('localhost','root','root','libr'); // соединяюсь
-	   $link->query("SET CHARACTER SET utf8");
-	   $query1 = "SELECT lection.id, lection.date FROM `lection` where lection.date not in (SELECT date FROM `order` where order.book_id ='$book_id')";
-	   $result1 = $link->query($query1);
+       $ordered = Order::where('book_id', '=', $book_id);
+         $ordered->select('date');
+         $arr = $ordered->get()->toArray();
+         $arr_processed = [];
+         foreach($arr as $elem){
+             $arr_processed[] = $elem['date'];
+         }
+       $result1 = Lecture::whereNotIn('date', $arr_processed)->get();
+ 	   //$query1 = "SELECT lection.id, lection.date FROM `lection` where lection.date not in (SELECT date FROM `order` where order.book_id ='$book_id')";
        $success = false;
     return view("library.lection", compact('book_id','result1', 'success'));
      }
 
     public function ebookindex(){
-        $link = mysqli_connect('localhost','root','root','libr');
-        $link->query("SET CHARACTER SET utf8");
-        $results = array();
+        $ebook=Ebook::select();
+        $results=$ebook->get();
+        /*$link = mysqli_connect('localhost','root','root','libr');
+        $link->query("SET CHARACTER SET utf8");*/
+        //$results = array();
         for ($i = 0; $i < 5; $i++){
-            $query = "SELECT * FROM ebook WHERE section=$i";
-            $results[$i] = $link->query($query);
+            //$query = "SELECT * FROM ebook WHERE section=$i";
+            $query=Ebook::where('section', '=', "$i");
+            $results[$i] = $query->get();
         }
         $searchquery = "";
         return view("library.ebooks", compact('results','searchquery'));
     }
     public function esearch(){
         $search = Request::input('search');
-        $link = mysqli_connect('localhost','root','root','libr');
-        $link->query("SET CHARACTER SET utf8");
-        $query = "SELECT * FROM `ebook` WHERE UPPER(`title`) LIKE UPPER('%$search%') OR UPPER(`author`) LIKE UPPER('%$search%')";
-        $results = $link->query($query);
+        $ebook=Ebook::where('title', 'like', "%$search%");
+        $ebook->orWhere('author', 'like', "%$search%");
+        //$query = "SELECT * FROM `ebook` WHERE UPPER(`title`) LIKE UPPER('%$search%') OR UPPER(`author`) LIKE UPPER('%$search%')";
+        //$results = $link->query($query);
+        $results= $ebook->get();
         $searchquery = $search;
         return view("library.ebooks", compact('results','searchquery'));
     }
 
     public function order($book_id){
         $date = Request::input('date');
-        $link = mysqli_connect('localhost','root','root','libr'); // соединяюсь
-        $link->query("SET CHARACTER SET utf8");
-        $query2 = "INSERT INTO `order` (`id`, `book_id`, `student_id`, `date` ) VALUES ( NULL, '$book_id', \"vasya\", '$date')";
-        $result1 = $link->query($query2);
-        $query1 = "SELECT lection.id, lection.date FROM `lection` where lection.date not in (SELECT date FROM `order` where order.book_id ='$book_id')";
-        $result1 = $link->query($query1);
+
+        $order = new Order;
+        $order->id = NULL;
+        $order->book_id = "$book_id";
+        $order->student_id = Auth::user()['id'];
+        $order->date = "$date";
+        $order->save();
+        $ordered = Order::where('book_id', '=', $book_id);
+        $ordered->select('date');
+        $arr = $ordered->get()->toArray();
+        $arr_processed = [];
+        foreach($arr as $elem){
+            $arr_processed[] = $elem['date'];
+        }
+        $result1 = Lecture::whereNotIn('date', $arr_processed)->get();
+
         $success = true;
         return view("library.lection", compact('book_id','result1', 'success'));
     }
@@ -84,50 +107,43 @@ class BooksController extends Controller {
     }
 
     public function create_date(){
-        $datapicker = Request::input('datapicker');
-        $link = mysqli_connect('localhost','root','root','libr');
-        $link->query("SET CHARACTER SET utf8");
-
-        //if(isset($_POST['data_picker'])) {
-           // $datapicker = $_POST['data_picker'];
-            $query1 = "TRUNCATE TABLE `lection`";
-            $result = $link->query($query1);
+        $datapicker = Request::input('data_picker');
+        //fuck the ORM
+        DB::delete("TRUNCATE TABLE `lection`");
             $date = new DateTime($datapicker);
-            $query = "INSERT INTO `lection`(`id`, `date`) VALUES(NULL,'".$date->format('Y-m-d')."')";
-            $result = $link->query($query);
+            //$query = DB::insert("INSERT INTO `lection`(`id`, `date`) VALUES(NULL,'".$date->format('Y-m-d')."')");
+            //$result = $link->query($query);
 
             for ($j=0; $j<16; $j++) {
-                $query = "INSERT INTO `lection`(`id`, `date`) VALUES(NULL,'".$date->format('Y-m-d')."')";
+                DB::insert("INSERT INTO `lection`(`id`, `date`) VALUES(NULL,'".$date->format('Y-m-d')."')");
                 $date->modify('+7 day');
-                //$datapicker = $date->format('Y-m-d');
-                $link->query($query);
             }
-            $link->close();
         $success = true;
         return view("personal_account.library_calendar", compact('success'));
     }
 
     public function library_order_list(){
-        $link = mysqli_connect('localhost','root','root','libr');
-        $link->query("SET CHARACTER SET utf8");
-        $query = "SELECT `order`.`id`, `order`.`student_id`, `order`.`date`, `order`.`book_id`, `book`.`title`, `book`.`author` FROM `order` INNER JOIN `book` ON book.id=order.book_id ORDER BY date";
-        $result = $link->query($query);
-
+        $result = DB::Select("SELECT `order`.`id`, `order`.`student_id`, `order`.`date`, `order`.`book_id`, `book`.`title`, `book`.`author` FROM `order` INNER JOIN `book` ON book.id=order.book_id ORDER BY date");
+        $result = json_decode(json_encode($result), true);
         return view("personal_account.library_order_list", compact('result'));
     }
 
     public function order_list_delete(){
-        $link = mysqli_connect('localhost','root','root','libr');
-        $link->query("SET CHARACTER SET utf8");
+      //  $link = mysqli_connect('localhost','root','root','libr');
+      // $link->query("SET CHARACTER SET utf8");
         $return = Request::input('return');
         if (count($return) > 0){
             foreach ($return as $id) {
-                $query = "DELETE FROM `order` WHERE order.id=".$id;
-                $result = $link->query($query);
+                //$query = DB::delete ("DELETE FROM `order` WHERE order.id=".$id);
+                $result = DB::delete ("DELETE FROM `order` WHERE order.id=".$id);
+                $result = json_decode(json_encode($result), true);
+               // $result = $link->query($query);
             }
         }
-        $query = "SELECT `order`.`id`, `order`.`student_id`, `order`.`date`, `order`.`book_id`, `book`.`title`, `book`.`author` FROM `order` INNER JOIN `book` ON book.id=order.book_id ORDER BY date";
-        $result = $link->query($query);
+        //$query = DB:: Select("SELECT `order`.`id`, `order`.`student_id`, `order`.`date`, `order`.`book_id`, `book`.`title`, `book`.`author` FROM `order` INNER JOIN `book` ON book.id=order.book_id ORDER BY date");
+        $result = DB:: Select("SELECT `order`.`id`, `order`.`student_id`, `order`.`date`, `order`.`book_id`, `book`.`title`, `book`.`author` FROM `order` INNER JOIN `book` ON book.id=order.book_id ORDER BY date");
+        $result = json_decode(json_encode($result), true);
+        // $result = $link->query($query);
 
         return view("personal_account.library_order_list", compact('result'));
     }

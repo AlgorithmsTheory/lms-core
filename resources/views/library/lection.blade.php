@@ -63,11 +63,14 @@
 											}
 											echo '<h3>Доступные даты для заказа:</h3>';
 											$today = date("Y-m-d");
-										
-											while($row = mysqli_fetch_array($result1)) 
-											if ($today <= $row["date"])  
-												echo '<div><p><input type="radio" required name="date" value='.$row["date"].' />'.$row["date"].'</p></div>';
-											echo "<input type=\"submit\" class=\"btn ink-reaction btn-primary\" value=\"Заказать\" /><br>"; 
+											$counter = count($result1);
+										    $i = 0;
+											while($i < $counter){
+												$row = $result1[$i++];
+												if ($today <= $row["date"])
+													echo '<div><p><input type="radio" required name="date" value='.$row["date"].' />'.$row["date"].'</p></div>';
+											}
+											echo "<input type=\"submit\" class=\"btn ink-reaction btn-primary\" value=\"Заказать\" /><br>";
 
 										?>
 										

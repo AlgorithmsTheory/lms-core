@@ -39,7 +39,7 @@
 	</section>
 	<div class="card card-tiles style-default-light" style="margin-left:2%; margin-right:2%">
 	<article class="style-default-bright">
-		<div class="card-body"> 
+		<div class="card-body">
 		<article style="margin-left:10%; margin-right:10%; text-align: justify">
 
 		<table cellpadding="5" ><tbody>
@@ -53,44 +53,44 @@
 			</td>
       <td style="text-align: left;" rowspan="2" colspan="1"><font size="4" style="font-weight: bold;"> <?php print $row["title"] ?></font>
 	  <font size="3" style="text-decoration: underline;">
-	  <?php 
-		print "			
+	  <?php
+		print "
 			<p>".$row["author"]."</p>";?>
 	  </font>
 	  <font size="2" style="font-style: italic;"><br></font><font size="2" style="color: rgb(102, 102, 102);">Издательство:</font>
 	  <font size="2" style="font-style: italic; color: rgb(102, 102, 102);">
-	  <?php 
-		print "			
+	  <?php
+		print "
 			".$row["publisher"]."</p>";?>
 	  </font>
 	  <font size="2" style="color: rgb(102, 102, 102);">Формат:</font> <font size="2" style="font-style: italic;">
 	  <span style="color: rgb(102, 102, 102);">
-	  <?php 
-		print "			
+	  <?php
+		print "
 			".$row["format"]."</p>";?>
 	  </span></font>
 	  <font size="2" style="color: rgb(102, 102, 102);">
 
 		<button class="btn ink-reaction btn-primary" onclick='location.href="{{ URL::route('lection', array('id' => $row['id']))}}"'>Заказать</button>
 	 </td>
-     
+
     </tr>
-  
+
     </tbody>
   </table>
   <br></br>
   <p><b>Аннотация</b></p>
-  <p><?php 
-		print "			
+  <p><?php
+		print "
 			<p>".$row["description"]."</p>";
-			
-			?></p>
-		
-	
 
-		
+			?></p>
+
+
+
+
 			</article></article>	</div></div>
-			
+
 				<!-- BEGIN BLANK SECTION -->
 			</div><!--end #content-->
 			<!-- END CONTENT -->

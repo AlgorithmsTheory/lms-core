@@ -28,11 +28,6 @@
 			<!-- BEGIN HEADER-->
 
 	<div id="base">
-
-
-		<div class="offcanvas">
-		</div><!--end .offcanvas-->
-
 		<div id="content">
 			<section>
 				<div class="section-header">
@@ -42,19 +37,8 @@
 					</ol>
 				</div>
 				<div class="section-body contain-lg">
-
 					<div class="row">
-
-						<div class="col-lg-offset-1 col-md-8">
-						</div><!--end .col -->
-
-
-						<div class="col-lg-3 col-md-4">
-
-						</div><!--end .col -->
-
 						<div class="card">
-
 							<div class="card-body">
 								<center>
 									<form class="form" action="{{URL::route('library_esearch')}}"  method="post">
@@ -83,21 +67,14 @@
 
 
 								?>
-
-					</div><!--end .card -->
-				</div><!--end .col -->
-
-				<!--end .row -->
-		</div><!--end .section-body -->
-
-		</section>
-	</div><!--end #content-->
-
-
+					        </div><!--end .card -->
+                        </div><!--end .col -->
+		            </div><!--end .section-body -->
+                </div>
+		    </section>
+	    </div><!--end #content-->
 	</div><!--end .offcanvas-->
 
-	</div><!--end #base-->
-	<!-- END BASE -->
 	@stop
 
 	@section('js-down')

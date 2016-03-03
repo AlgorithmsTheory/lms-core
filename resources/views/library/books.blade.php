@@ -60,27 +60,25 @@
 				<table border="0" cellpadding="0" cellspacing="0">
 					<tbody >
 					<?php
-					$rows = mysqli_num_rows($result);
+					$rows = count($result);
 					$c_row = 0;
 					while($c_row < $rows) {
-						$row = mysqli_fetch_array($result);
+						$row = $result[$c_row++];
 						echo '<tr style="padding:20px; margin-top:20px">';
 						// left book
 						echo view('library.books.book', compact('row'));
 						echo '<td style="width:155px">';
 						echo '<p>&nbsp;</p>';
 						echo '</td>';
-						$c_row += 1;
 						// right book
-						$row = mysqli_fetch_array($result);
 						if ($c_row < $rows){
-							echo view('library.books.book', compact('row'));
-						}else{ //right
-							echo '<td style="width:155px; padding: 5px"/>';
-							echo '<td style="width:154px"/>';
-						}
-						echo '</tr>';
-						$c_row += 1;
+                            $row = $result[$c_row++];
+                            echo view('library.books.book', compact('row'));
+                        }else{ //right
+                            echo '<td style="width:155px; padding: 5px"/>';
+                            echo '<td style="width:154px"/>';
+                        }
+                        echo '</tr>';
 					}
 					?>
 
