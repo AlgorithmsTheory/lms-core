@@ -42,7 +42,7 @@
         <article class="style-default-bright">
             <div class="card-body">
                 <article style="margin-left:10%; margin-right:10%; text-align: justify">
-	
+                    <a name="2.4"></a>
 <p><strong style="line-height:1.6em">&sect; 9.1. </strong><strong style="line-height:1.6em">Теорема Кантора</strong></p>
 
 <p><strong style="line-height:1.6em"><u>Т.9.1. (1) Теорема Кантора</u></strong></p>

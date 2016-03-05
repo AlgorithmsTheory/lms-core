@@ -72,13 +72,13 @@
 						echo '</td>';
 						// right book
 						if ($c_row < $rows){
-                            $row = $result[$c_row++];
-                            echo view('library.books.book', compact('row'));
-                        }else{ //right
-                            echo '<td style="width:155px; padding: 5px"/>';
-                            echo '<td style="width:154px"/>';
-                        }
-                        echo '</tr>';
+							$row = $result[$c_row++];
+							echo view('library.books.book', compact('row'));
+						}else{ //right
+							echo '<td style="width:155px; padding: 5px"/>';
+							echo '<td style="width:154px"/>';
+						}
+						echo '</tr>';
 					}
 					?>
 

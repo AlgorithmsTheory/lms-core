@@ -42,7 +42,7 @@
 <article class="style-default-bright">
 <div class="card-body">
 <article style="margin-left:10%; margin-right:10%; text-align: justify">
-			
+    <a name="2.7"></a>
 
 <p><span style="line-height:1.2em">&sect; 11.1. &nbsp;Частичные арифметические функции</span></p>
 

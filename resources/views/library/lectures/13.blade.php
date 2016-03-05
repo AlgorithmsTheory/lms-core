@@ -42,7 +42,7 @@
 <article class="style-default-bright">
 <div class="card-body">
 <article style="margin-left:10%; margin-right:10%; text-align: justify">
-
+	<a name="3.2"></a>
 <h3><a name="_Toc209497028">&sect; 13.1. Общерекурсивные функции</a></h3>
 
 <p>&nbsp;Операция минимизации, введенная ранее, ставит в соответствие любой заданной функции <em>f</em> определенную частичную функцию <em>Mf</em><em>.</em> Введем еще одну операцию, которую будем обозначать символом <em>M<sup>l</sup>f</em> и называть <strong>слабой минимизацией</strong>.</p>

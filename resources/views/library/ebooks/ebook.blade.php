@@ -6,13 +6,11 @@
 
     <?php
     $i = 0;
-    $rows = mysqli_num_rows($result);
+    $rows = count($result);
     while ($i < $rows)
     {
-        $i++;
         echo '<tr style="padding:20px; margin-top:20px">';
-        $row = mysqli_fetch_array($result);
-        $i++;
+        $row = $result[$i++];
         echo view('library.ebooks.book', compact('row'));
         //view
         echo '<td style="width:100px">';
@@ -20,9 +18,8 @@
         echo '</td>';
 
         if ($i < $rows){
-            $row = mysqli_fetch_array($result);
+            $row = $result[$i++];
             echo view('library.ebooks.book', compact('row'));
-            $i++;
         }else{
             echo '<td style="width:200px">';
         }
@@ -32,9 +29,8 @@
         echo '</td>';
 
         if ($i < $rows){
-            $row = mysqli_fetch_array($result);
+            $row = $result[$i++];
             echo view('library.ebooks.book', compact('row'));
-            $i++;
         }else{
             echo '<td style="width:200px">';
         }

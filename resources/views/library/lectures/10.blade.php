@@ -43,7 +43,8 @@
         <article class="style-default-bright">
             <div class="card-body">
                 <article style="margin-left:10%; margin-right:10%; text-align: justify">
-			
+                    <a name="2.6"></a>
+                    <a name="2.8"></a>
 		<p>Лекция 10. Арифметические функции.</p>
 
 <p><strong style="line-height:1.6em">&sect; 10.1.</strong><strong style="line-height:1.6em"> Арифметические функции</strong></p>

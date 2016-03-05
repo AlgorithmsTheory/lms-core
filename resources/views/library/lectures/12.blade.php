@@ -42,8 +42,8 @@
 <article class="style-default-bright">
 <div class="card-body">
 <article style="margin-left:10%; margin-right:10%; text-align: justify">
-		
 
+    <a name="3.1"></a>
 
 <h3>&sect; 12.1. Роль рекурсивных функций</h3>
 

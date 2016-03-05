@@ -42,8 +42,10 @@
 <article class="style-default-bright">
 <div class="card-body">
 <article style="margin-left:10%; margin-right:10%; text-align: justify">
-		
 
+	<a name="1.6"></a>
+	<a name="1.7"></a>
+	<a name="1.8"></a>
 <p><span style="line-height:1.2em">Эффективные перечислимость и распознаваемость</span></p>
 
 <p style="margin-left:36.0pt"><strong><em><a name="EPM">Эффективно перечислимым множеством </a></em></strong><em>называется множество, элементы которого можно перечислить по алгоритму (пронумеровать натуральным рядом без пропусков и повторений).</em></p>

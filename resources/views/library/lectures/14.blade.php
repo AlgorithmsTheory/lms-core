@@ -43,9 +43,9 @@
         <article class="style-default-bright">
             <div class="card-body">
                 <article style="margin-left:10%; margin-right:10%; text-align: justify">
-			
-		
 
+
+                    <a name="3.4"></a>
 		
 
 <h3>&sect; 14.1. Эффективная перечислимость рекурсивных функций</h3>

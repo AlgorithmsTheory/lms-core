@@ -80,9 +80,12 @@
                                             <h4>Выбрать</h4>
                                         </td>
                                     </tr>
-                                    <?php $index = 1;
-                                    $row = mysqli_fetch_array($result);
-                                    while($row) { ?>
+                                    <?php $index = 0;
+
+                                    $r_c = count($result);
+                                    while($index < $r_c) {
+                                    $row= $result[$index++];
+                                    ?>
                                     <tr style="padding:20px; margin-top:20px">
                                         <td style="width:55px;padding: 5px">
                                             <p><?php echo $index ?></p>
@@ -101,10 +104,10 @@
                                         </td>
                                         <td style="width:15px">
                                             <input type="checkbox"  name="return[]" value="<?php echo $row["id"];
-                                            $row = mysqli_fetch_array($result) ?>" />
+                                            ?>" />
                                         </td>
                                     </tr>
-                                    <?php $index++; } ?>
+                                    <?php  } ?>
                                     </tbody>
                                 </table>
                                 <br>

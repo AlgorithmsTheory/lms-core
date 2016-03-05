@@ -12,7 +12,7 @@ use DB;
 class BooksController extends Controller {
     
     
-    public function index(){
+    public function index(){ //ок
         $book = Book::select();
 	    $result = $book->get();
         $searchquery = ""; 
@@ -20,7 +20,7 @@ class BooksController extends Controller {
     }
     
     
-    public function search(){
+    public function search(){ //ок
         $search = Request::input('search');
         $book = Book::where('title', 'like', "%$search%");
         $book->orWhere('author', 'like', "%$search%");
@@ -30,7 +30,7 @@ class BooksController extends Controller {
         return view("library.books", compact('result','searchquery'));
     }
     
-    public function getBook($id){
+    public function getBook($id){ //ок
         $book = Book::where('id', '=', "$id");
         $row = $book->first();
         return view("library.book", compact('id','row'));
@@ -40,7 +40,7 @@ class BooksController extends Controller {
         return $arr['date'];
          }
 
-     public function lection($id){
+     public function lection($id){ //ок
        $book_id = $id;
        $ordered = Order::where('book_id', '=', $book_id);
          $ordered->select('date');
@@ -55,7 +55,7 @@ class BooksController extends Controller {
     return view("library.lection", compact('book_id','result1', 'success'));
      }
 
-    public function ebookindex(){
+    public function ebookindex(){ //ок
         $ebook=Ebook::select();
         $results=$ebook->get();
         /*$link = mysqli_connect('localhost','root','root','libr');
@@ -69,7 +69,7 @@ class BooksController extends Controller {
         $searchquery = "";
         return view("library.ebooks", compact('results','searchquery'));
     }
-    public function esearch(){
+    public function esearch(){ //ок
         $search = Request::input('search');
         $ebook=Ebook::where('title', 'like', "%$search%");
         $ebook->orWhere('author', 'like', "%$search%");
@@ -80,13 +80,13 @@ class BooksController extends Controller {
         return view("library.ebooks", compact('results','searchquery'));
     }
 
-    public function order($book_id){
+    public function order($book_id){ //ок
         $date = Request::input('date');
 
         $order = new Order;
         $order->id = NULL;
         $order->book_id = "$book_id";
-        $order->student_id = Auth::user()['id'];
+        $order->student_id = Auth::user()['first_name'];
         $order->date = "$date";
         $order->save();
         $ordered = Order::where('book_id', '=', $book_id);
@@ -109,26 +109,25 @@ class BooksController extends Controller {
     public function create_date(){
         $datapicker = Request::input('data_picker');
         //fuck the ORM
-        DB::delete("TRUNCATE TABLE `lection`");
             $date = new DateTime($datapicker);
             //$query = DB::insert("INSERT INTO `lection`(`id`, `date`) VALUES(NULL,'".$date->format('Y-m-d')."')");
             //$result = $link->query($query);
 
             for ($j=0; $j<16; $j++) {
-                DB::insert("INSERT INTO `lection`(`id`, `date`) VALUES(NULL,'".$date->format('Y-m-d')."')");
+                Lecture::whereLecture_number($j+1)->update(['date' => $date->format('Y-m-d')]);
                 $date->modify('+7 day');
             }
         $success = true;
         return view("personal_account.library_calendar", compact('success'));
     }
 
-    public function library_order_list(){
+    public function library_order_list(){ //ок
         $result = DB::Select("SELECT `order`.`id`, `order`.`student_id`, `order`.`date`, `order`.`book_id`, `book`.`title`, `book`.`author` FROM `order` INNER JOIN `book` ON book.id=order.book_id ORDER BY date");
         $result = json_decode(json_encode($result), true);
         return view("personal_account.library_order_list", compact('result'));
     }
 
-    public function order_list_delete(){
+    public function order_list_delete(){ //ок
       //  $link = mysqli_connect('localhost','root','root','libr');
       // $link->query("SET CHARACTER SET utf8");
         $return = Request::input('return');

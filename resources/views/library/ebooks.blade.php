@@ -28,7 +28,6 @@
 			<!-- BEGIN HEADER-->
 
 	<div id="base">
-		<div id="content">
 			<section>
 				<div class="section-header">
 					<ol class="breadcrumb">
@@ -37,8 +36,19 @@
 					</ol>
 				</div>
 				<div class="section-body contain-lg">
+
 					<div class="row">
+
+						<div class="col-lg-offset-1 col-md-8">
+						</div><!--end .col -->
+
+
+						<div class="col-lg-3 col-md-4">
+
+						</div><!--end .col -->
+
 						<div class="card">
+
 							<div class="card-body">
 								<center>
 									<form class="form" action="{{URL::route('library_esearch')}}"  method="post">
@@ -68,12 +78,11 @@
 
 								?>
 					        </div><!--end .card -->
-                        </div><!--end .col -->
+				        </div><!--end .col -->
 		            </div><!--end .section-body -->
                 </div>
 		    </section>
 	    </div><!--end #content-->
-	</div><!--end .offcanvas-->
 
 	@stop
 

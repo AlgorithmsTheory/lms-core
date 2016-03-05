@@ -41,7 +41,8 @@
 				</section>
 	<div class="card card-tiles style-default-light" style="margin-left:2%; margin-right:2%">
 	<article class="style-default-bright">
-		<div class="card-body"> 
+		<div class="card-body">
+			<a name="1.2"></a>
 		<article style="margin-left:10%; margin-right:10%; text-align: justify">
 			
 <p><strong>Многоленточные машины Тьюринга</strong></p>
