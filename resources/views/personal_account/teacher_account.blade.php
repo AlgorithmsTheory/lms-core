@@ -29,7 +29,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <textarea  class="form-control textarea3" rows="1" id="regexp2" placeholder="" required></textarea>
-                        <label for="textarea3">Фаимилия студета</label>
+                        <label for="textarea3">Фамилия студета</label>
                     </div>
                     <div class="form-group col-md-6">
                         <textarea  class="form-control textarea3" id="regexp" rows="1" placeholder="" required></textarea>

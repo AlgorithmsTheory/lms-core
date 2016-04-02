@@ -71,7 +71,11 @@ Route::get('tests/create', ['as' => 'test_create', 'uses' => 'TestController@cre
 Route::post('get-theme-for-test', array('as'=>'get_theme_for_test', 'uses'=>'TestController@getTheme'));
 Route::post('get-amount', array('as'=>'get_amount', 'uses'=>'TestController@getAmount'));
 Route::post('tests/create', ['as' => 'test_add', 'uses' => 'TestController@add']);
-
+Route::get('retest', ['as' => 'retest_index', 'uses' => 'TeacherRetestController@index']);
+Route::post('retest', ['as' => 'retest_change', 'uses' => 'TeacherRetestController@change']);
+Route::get('tests/edit', ['as' => 'tests_list', 'uses' => 'TestController@editList']);
+Route::post('tests/dates/finish', ['as' => 'finish_test', 'uses' => 'TeacherRetestController@finishTest']);
+Route::post('tests/dates/prolong', ['as' => 'prolong_test', 'uses' => 'TeacherRetestController@prolongTest']);
 
 //электронная библиотека
 Route::get('library', ['as' => 'library_index', 'uses' => 'LibraryController@index']);

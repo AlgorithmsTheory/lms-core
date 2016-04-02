@@ -14,12 +14,14 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Query\Builder|\App\Test whereId_test($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Test  whereTest_name($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Test  whereAmount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Test  whereTest_type($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Test  whereTest_time($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Test  whereStart($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Test  whereEnd($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Test  whereStructure($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Test  whereTotal($value)
  * @method static \Illuminate\Database\Eloquent|\App\Test  get()
+ * @method static \Illuminate\Database\Eloquent|\App\Test  distinct()
  * @method static \Illuminate\Database\Eloquent|\App\Test  where()
  * @method static \Illuminate\Database\Eloquent|\App\Test  select()
  * @method static \Illuminate\Database\Eloquent|\App\Test  first()
@@ -217,4 +219,9 @@ class Test extends Eloquent {
         }
         return $array;                                                                                                  //формируем массив из id вошедших в тест вопросов
     }
+
+    //TODO: дописать в Test функцию, которая будет всем ставить access = 0 для просроченного контрольного теста
+   public function missTest(){
+
+   }
 } 

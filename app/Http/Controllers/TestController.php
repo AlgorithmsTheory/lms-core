@@ -67,6 +67,21 @@ class TestController extends Controller{
         return view('tests.create', compact('types', 'sections'));
     }
 
+    /** Список всех тестов для их редактирования и завершения */
+    public function editList(){
+        $ctr_tests = [];
+        $tr_tests = [];
+        $query_ctr = $this->test->whereTest_type('Контрольный')->select()->get();
+        foreach ($query_ctr as $control_test){
+            array_push($ctr_tests, $control_test);
+        }
+        $query_tr = $this->test->whereTest_type('Тренировочный')->select()->get();
+        foreach ($query_tr as $training_test){
+            array_push($tr_tests, $training_test);
+        }
+        return view ('personal_account.test_list', compact('ctr_tests', 'tr_tests'));
+    }
+
     /** AJAX-метод: получает список тем раздела */
     public function getTheme(Request $request){
         if ($request->ajax()) {
@@ -195,7 +210,6 @@ class TestController extends Controller{
         Session::forget('end_time');
         $amount = $request->input('amount');
         $id_test = $request->input('id_test');
-        $test = new Test();
         $score_sum = 0;                                                                                                 //сумма набранных баллов
         $points_sum = 0;                                                                                                //сумма максимально овзможных баллов
         $choice = [];                                                                                                   //запоминаем выбранные варианты пользователя
@@ -203,7 +217,7 @@ class TestController extends Controller{
         $j = 1;
         $question = new Question();
 
-        $query = $test->whereId_test($id_test)->select('total', 'test_name', 'amount', 'test_type')->first();
+        $query = $this->test->whereId_test($id_test)->select('total', 'test_name', 'amount', 'test_type')->first();
         $total = $query->total;
         $test_type = $query->test_type;
         for ($i=0; $i<$amount; $i++){                                                                                   //обрабатываем каждый вопрос

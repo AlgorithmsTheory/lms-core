@@ -7,7 +7,6 @@
  */
 
 namespace App;
-use Auth;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 
@@ -24,6 +23,8 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent|\App\Fine  insert($array)
  * @method static \Illuminate\Database\Eloquent|\App\Fine  table($array)
  * @method static \Illuminate\Database\Eloquent|\App\Fine  max($array)
+ * @method static \Illuminate\Database\Eloquent|\App\Theme  join()
+ * @method static \Illuminate\Database\Eloquent|\App\Theme  on()
  *
  */
 
@@ -61,5 +62,21 @@ class Fine extends Eloquent{
     public function countFactor($fine){
         $factor = 1 - $fine/10;
         return $factor;
+    }
+
+    /** Преобразует уровень штрафа в максимальный процент */
+    public static function levelToPercent($fine){
+        if ($fine != 0)
+            $percent = 90 - ($fine-1)*5;
+        else $percent = 100;
+        return $percent;
+    }
+
+    /** Преобразует процент в уровень штрафа */
+    public static function percentToLevel($percent){
+        if ($percent != 100)
+            $fine = 19 - $percent/5;
+        else $fine = 0;
+        return $fine;
     }
 } 

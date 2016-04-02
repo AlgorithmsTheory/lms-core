@@ -122,6 +122,7 @@ class BooksController extends Controller {
     }
 
     public function library_order_list(){ //ок
+        //TODO: сделать, чтобы подцеплялась фамилия студента join(user,order,book)
         $result = DB::Select("SELECT `order`.`id`, `order`.`student_id`, `order`.`date`, `order`.`book_id`, `book`.`title`, `book`.`author` FROM `order` INNER JOIN `book` ON book.id=order.book_id ORDER BY date");
         $result = json_decode(json_encode($result), true);
         return view("personal_account.library_order_list", compact('result'));

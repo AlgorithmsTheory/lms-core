@@ -136,7 +136,7 @@
             <div class="col-sm-3">
                 <div class="btn-group">
                     <h3 class="text-light" title="Формальные описания алгоритмов">1 раздел</h3>
-                    <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 1', array(1)) !!}</button>
+                    <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 1', array(1), array('target' => '_blank')) !!}</button>
                     <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" >
                         <i class="fa fa-caret-down"></i>
                     </button>
@@ -150,7 +150,7 @@
             <div class="col-sm-3">
                 <div class="btn-group">
                     <h3 class="text-light" title="Числовые множества и арифметические вычисления">2 раздел</h3>
-                    <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 6', array(6)) !!}</a></button>
+                    <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 6', array(6), array('target' => '_blank')) !!}</a></button>
                     <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
                     <ul class="dropdown-menu animation-expand" >
                         <li>{!! HTML::link('download/ppt/TA_lec6.ppt', 'ppt') !!}</li>
@@ -162,7 +162,7 @@
             <div class="col-sm-3">
                 <div class="btn-group">
                     <h3 class="text-light" title="Рекурсивные функции">3 раздел</h3>
-                    <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 12', array(12)) !!}</button>
+                    <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 12', array(12), array('target' => '_blank')) !!}</button>
                     <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
                     <ul class="dropdown-menu animation-expand" >
                         <li>{!! HTML::link('download/ppt/TA_lec12.ppt', 'ppt') !!}</li>
@@ -176,7 +176,7 @@
 
                     <h3 class="text-light" title="Сложность вычислений">4 раздел </h3>
 
-                    <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 16', array(16)) !!}</button>
+                    <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 16', array(16), array('target' => '_blank')) !!}</button>
                     <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
                     <ul class="dropdown-menu animation-expand" >
                         <li>{!! HTML::link('download/ppt/TA_lec16.ppt', 'ppt') !!}</li>
@@ -197,7 +197,7 @@
     <div class="row">
         <div class="col-sm-3">
             <div class="btn-group">
-                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 2', array(2)) !!}</button>
+                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 2', array(2), array('target' => '_blank')) !!}</button>
                 <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
                 <ul class="dropdown-menu animation-expand" >
                     <li>{!! HTML::link('download/ppt/TA_lec2.ppt', 'ppt') !!}</li>
@@ -208,7 +208,7 @@
         </div><!--end .col -->
         <div class="col-sm-3">
             <div class="btn-group">
-                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 7', array(7)) !!}</button>
+                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 7', array(7), array('target' => '_blank')) !!}</button>
 
                 <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
                 <ul class="dropdown-menu animation-expand" >
@@ -220,7 +220,7 @@
         </div><!--end .col -->
         <div class="col-sm-3">
             <div class="btn-group">
-                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 13', array(13)) !!}</button>
+                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 13', array(13), array('target' => '_blank')) !!}</button>
                 <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
                 <ul class="dropdown-menu animation-expand" >
                     <li>{!! HTML::link('download/ppt/TA_lec13.ppt', 'ppt') !!}</li>
@@ -241,7 +241,7 @@
     <div class="row">
         <div class="col-sm-3">
             <div class="btn-group">
-                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 3', array(3)) !!}</button>
+                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 3', array(3), array('target' => '_blank')) !!}</button>
                 <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
                 <ul class="dropdown-menu animation-expand" >
                     <li>{!! HTML::link('download/ppt/TA_lec3.ppt', 'ppt') !!}</li>
@@ -252,7 +252,7 @@
         </div><!--end .col -->
         <div class="col-sm-3">
             <div class="btn-group">
-                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 8', array(8)) !!}</button>
+                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 8', array(8), array('target' => '_blank')) !!}</button>
                 <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
                 <ul class="dropdown-menu animation-expand" >
                     <li>{!! HTML::link('download/ppt/TA_lec8.ppt', 'ppt') !!}</li>
@@ -263,7 +263,7 @@
         </div><!--end .col -->
         <div class="col-sm-3">
             <div class="btn-group">
-                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 14', array(14)) !!}</button>
+                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 14', array(14), array('target' => '_blank')) !!}</button>
                 <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
                 <ul class="dropdown-menu animation-expand" >
                     <li>{!! HTML::link('download/ppt/TA_lec14.ppt', 'ppt') !!}</li>
@@ -284,7 +284,7 @@
     <div class="row">
         <div class="col-sm-3">
             <div class="btn-group">
-                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 4', array(4)) !!}</button>
+                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 4', array(4), array('target' => '_blank')) !!}</button>
                 <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
                 <ul class="dropdown-menu animation-expand" >
                     <li>{!! HTML::link('download/ppt/TA_lec4.ppt', 'ppt') !!}</li>
@@ -295,7 +295,7 @@
         </div><!--end .col -->
         <div class="col-sm-3">
             <div class="btn-group">
-                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 9', array(9)) !!}</button>
+                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 9', array(9), array('target' => '_blank')) !!}</button>
                 <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
                 <ul class="dropdown-menu animation-expand" >
                     <li>{!! HTML::link('download/ppt/TA_lec9.ppt', 'ppt') !!}</li>
@@ -306,7 +306,7 @@
         </div><!--end .col -->
         <div class="col-sm-3">
             <div class="btn-group">
-                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 15', array(15)) !!}</button>
+                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 15', array(15), array('target' => '_blank')) !!}</button>
                 <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
                 <ul class="dropdown-menu animation-expand" >
                     <li>{!! HTML::link('download/ppt/TA_lec15.ppt', 'ppt') !!}</li>
@@ -326,7 +326,7 @@
     <div class="row">
         <div class="col-sm-3">
             <div class="btn-group">
-                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 5', array(5)) !!}</button>
+                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 5', array(5), array('target' => '_blank')) !!}</button>
                 <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
                 <ul class="dropdown-menu animation-expand" >
                     <li>{!! HTML::link('download/ppt/TA_lec5.ppt', 'ppt') !!}</li>
@@ -337,7 +337,7 @@
         </div><!--end .col -->
         <div class="col-sm-3">
             <div class="btn-group">
-                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 10', array(10)) !!}</button>
+                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 10', array(10), array('target' => '_blank')) !!}</button>
                 <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
                 <ul class="dropdown-menu animation-expand" >
                     <li>{!! HTML::link('download/ppt/TA_lec10.ppt', 'ppt') !!}</li>
@@ -362,7 +362,7 @@
         </div><!--end .col -->
         <div class="col-sm-3">
             <div class="btn-group dropup">
-                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 11', array(11)) !!}</button>
+                <button type="button" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 11', array(11), array('target' => '_blank')) !!}</button>
                 <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
 
                 <ul class="dropdown-menu animation-expand" >
