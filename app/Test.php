@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent|\App\Test  insert($array)
  * @method static \Illuminate\Database\Eloquent|\App\Test  table($array)
  * @method static \Illuminate\Database\Eloquent|\App\Test  max($array)
+ * @method static \Illuminate\Database\Eloquent|\App\Test  toSql()
  *
  */
 class Test extends Eloquent {

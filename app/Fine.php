@@ -34,7 +34,7 @@ class Fine extends Eloquent{
     public $timestamps = false;
 
     /** Следит, чтобы штраф не стал больше максимально возможного уровня */
-    private function maxFine($fine){
+    public function maxFine($fine){
         if ($fine > $this::MAX_FINE){
             return $this::MAX_FINE;
         }

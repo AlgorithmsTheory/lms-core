@@ -69,17 +69,59 @@ class TestController extends Controller{
 
     /** Список всех тестов для их редактирования и завершения */
     public function editList(){
-        $ctr_tests = [];
-        $tr_tests = [];
-        $query_ctr = $this->test->whereTest_type('Контрольный')->select()->get();
+        $current_ctr_tests = [];
+        $current_tr_tests = [];
+        $past_ctr_tests = [];
+        $past_tr_tests = [];
+        $future_ctr_tests = [];
+        $future_tr_tests = [];
+
+        $current_date = date("Y-m-d H:i:s");                                                                            //текущая дата в mySlq формате DATETIME
+        $query_ctr = $this->test->whereTest_type('Контрольный')                                                         //формируем текущие тесты
+                    ->where('start', '<', $current_date)
+                    ->where('end', '>', $current_date)
+                    ->select()
+                    ->get();
         foreach ($query_ctr as $control_test){
-            array_push($ctr_tests, $control_test);
+            array_push($current_ctr_tests, $control_test);
         }
-        $query_tr = $this->test->whereTest_type('Тренировочный')->select()->get();
+        $query_tr = $this->test->whereTest_type('Тренировочный')
+                    ->where('start', '<', $current_date)
+                    ->where('end', '>', $current_date)
+                    ->select()
+                    ->get();
         foreach ($query_tr as $training_test){
-            array_push($tr_tests, $training_test);
+            array_push($current_tr_tests, $training_test);
         }
-        return view ('personal_account.test_list', compact('ctr_tests', 'tr_tests'));
+        $query_ctr = $this->test->whereTest_type('Контрольный')                                                         //формируем прошлые тесты
+            ->where('start', '>', $current_date)
+            ->select()
+            ->get();
+        foreach ($query_ctr as $control_test){
+            array_push($past_ctr_tests, $control_test);
+        }
+        $query_tr = $this->test->whereTest_type('Тренировочный')
+            ->where('start', '>', $current_date)
+            ->select()
+            ->get();
+        foreach ($query_tr as $training_test){
+            array_push($past_tr_tests, $training_test);
+        }
+        $query_ctr = $this->test->whereTest_type('Контрольный')                                                         //формируем будущие тесты
+            ->where('end', '<', $current_date)
+            ->select()
+            ->get();
+        foreach ($query_ctr as $control_test){
+            array_push($future_ctr_tests, $control_test);
+        }
+        $query_tr = $this->test->whereTest_type('Тренировочный')
+            ->where('end', '<', $current_date)
+            ->select()
+            ->get();
+        foreach ($query_tr as $training_test){
+            array_push($future_tr_tests, $training_test);
+        }
+        return view ('personal_account.test_list', compact('current_ctr_tests', 'current_tr_tests', 'past_ctr_tests', 'past_tr_tests', 'future_ctr_tests', 'future_tr_tests'));
     }
 
     /** AJAX-метод: получает список тем раздела */

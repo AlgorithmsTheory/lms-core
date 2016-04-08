@@ -12,89 +12,267 @@ full
 @stop
 
 @section('content')
-<div class="col-lg-offset-1 col-md-10 col-sm-6">
-    <div class="card">
+<div class="col-lg-offset-0 col-md-12 col-sm-6">
+    <div class="card" id="edit-list">
         <div class="card-body">
-            <nav class="navbar col-md-4 col-md-offset-4 style-primary">
-                <h3 class="text-center">Список всех тестов</h3>
-            </nav>
-            <br>
-            <br>
-            <br>
-            <div class="col-lg-offset-1 col-md-10 col-sm-10 card style-gray">
-                <h2 class="text-default-bright">Контрольные тесты</h2>
+            <div class="col-lg-offset-1 col-md-3 col-sm-3">
+                <button class="btn btn-warning btn-raised btn-lg submit-test btn-period"
+                        id="current-btn" type="submit">Текущие
+                </button>
             </div>
-            <form action="{{URL::route('finish_test')}}" method="POST" class="form">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <table class="table table-condensed" id="out-of-date-test-table">
-                    <tr>
-                        <th>Название теста</th>
-                        <th class="text-center">Время открытия теста</th>
-                        <th class="text-center">Время закрытия теста</th>
-                        <th class="text-center">Завершить тест</th>
-                        <th class="text-center">Редактировать тест</th>
-                    </tr>
-                    @foreach ($ctr_tests as $test)
-                    <input type="hidden" name="id-test[]" value="{{$test['id_test']}}">
-                    <tr>
-                        <td>{{$test['test_name']}}</td>
-                        <td class="text-center">{{$test['start']}}</td>
-                        <td class="text-center">{{$test['end']}}</td>
-                        <td class="text-center"> <div class="checkbox checkbox-styled">
-                                <label>
-                                    <input type="checkbox" class="flag" name="finished[]">
-                                    <span></span>
-                                </label>
-                            </div>
-                        </td>
-                        <td class="text-center">
-                            <a href="{{URL::route('in_process')}}" class="btn btn-primary" role="button">
-                                    <span class="demo-icon-hover">
-                                        <i class="md md-create"></i>
-                                    </span>
-                            </a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </table>
-                <div class="col-lg-offset-8"  id="finish-chosen">
-                    <button class="btn btn-primary btn-raised submit-test" type="submit">Завершить выбранные тесты</button>
+            <div class="col-lg-offset-1 col-md-3 col-sm-3">
+                <button class="btn btn-primary btn-raised btn-lg submit-test btn-period"
+                        id="past-btn" type="submit">Прошлые
+                </button>
+            </div>
+            <div class="col-lg-offset-1 col-md-3 col-sm-3">
+                <button class="btn btn-primary btn-raised btn-lg submit-test btn-period"
+                        id="future-btn" type="submit">Будущие
+                </button>
+            </div>
+            <br>
+            <br>
+            <br>
+            <!-- Блок с текущими тестами -->
+            <div id="container-current" class="container-list" style="display: block;">
+                <div class="col-lg-offset-0 col-md-12 col-sm-12 card style-gray">
+                    <h2 class="text-default-bright">Контрольные тесты</h2>
                 </div>
-            </form>
-            <br>
-            <div class="col-lg-offset-1 col-md-10 col-sm-10 card style-gray">
-                <h2 class="text-default-bright">Тренировочные тесты</h2>
+                <form action="{{URL::route('finish_test')}}" method="POST" class="form">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <table class="table table-condensed" id="out-of-date-test-table">
+                        <tr>
+                            <th>Название теста</th>
+                            <th class="text-center">Время открытия теста</th>
+                            <th class="text-center">Время закрытия теста</th>
+                            <th class="text-center">Количество вопросов</th>
+                            <th class="text-center">Время прохождения, мин</th>
+                            <th class="text-center">Завершить тест</th>
+                            <th class="text-center">Редактировать тест</th>
+                        </tr>
+                        @foreach ($current_ctr_tests as $test)
+                        <input type="hidden" name="id-test[]" value="{{$test['id_test']}}">
+                        <tr>
+                            <td>{{$test['test_name']}}</td>
+                            <td class="text-center">{{$test['start']}}</td>
+                            <td class="text-center">{{$test['end']}}</td>
+                            <td class="text-center">{{$test['amount']}}</td>
+                            <td class="text-center">{{$test['test_time']}}</td>
+                            <td class="text-center"> <div class="checkbox checkbox-styled">
+                                    <label>
+                                        <input type="hidden" name="changes[]" value="">
+                                        <input type="checkbox" class="flag finish-checkbox" name="finished[]" value="true">
+                                        <span></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <a href="{{URL::route('in_process')}}" class="btn btn-primary" role="button">
+                                        <span class="demo-icon-hover">
+                                            <i class="md md-create"></i>
+                                        </span>
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </table>
+                    <div class="col-lg-offset-9" >
+                        <button class="btn btn-primary btn-raised submit-test" type="submit" id="finish-chosen">Завершить выбранные тесты</button>
+                    </div>
+                </form>
+                <br>
+                <div class="col-lg-offset-0 col-md-12 col-sm-12 card style-gray">
+                    <h2 class="text-default-bright">Тренировочные тесты</h2>
+                </div>
+                <form action="{{URL::route('finish_test')}}" method="POST" class="form">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <table class="table table-condensed" id="out-of-date-test-table">
+                        <tr>
+                            <th>Название теста</th>
+                            <th class="text-center">Время открытия теста</th>
+                            <th class="text-center">Время закрытия теста</th>
+                            <th class="text-center">Количество вопросов</th>
+                            <th class="text-center">Время прохождения, мин</th>
+                            <th class="text-center">Редактировать тест</th>
+                        </tr>
+                        @foreach ($current_tr_tests as $test)
+                        <input type="hidden" name="id-test[]" value="{{$test['id_test']}}">
+                        <tr>
+                            <td>{{$test['test_name']}}</td>
+                            <td class="text-center">{{$test['start']}}</td>
+                            <td class="text-center">{{$test['end']}}</td>
+                            <td class="text-center">{{$test['amount']}}</td>
+                            <td class="text-center">{{$test['test_time']}}</td>
+                            <td class="text-center" >
+                                <a href="{{URL::route('in_process')}}" class="btn btn-primary" role="button">
+                                        <span class="demo-icon-hover">
+                                            <i class="md md-create"></i>
+                                        </span>
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </table>
+                </form>
             </div>
-            <form action="{{URL::route('finish_test')}}" method="POST" class="form">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <table class="table table-condensed" id="out-of-date-test-table">
-                    <tr>
-                        <th>Название теста</th>
-                        <th class="text-center">Время открытия теста</th>
-                        <th class="text-center">Время закрытия теста</th>
-                        <th class="text-center">Редактировать тест</th>
-                    </tr>
-                    @foreach ($tr_tests as $test)
-                    <input type="hidden" name="id-test[]" value="{{$test['id_test']}}">
-                    <tr>
-                        <td>{{$test['test_name']}}</td>
-                        <td class="text-center">{{$test['start']}}</td>
-                        <td class="text-center">{{$test['end']}}</td>
-                        <td class="text-center" >
-                            <a href="{{URL::route('in_process')}}" class="btn btn-primary" role="button">
-                                    <span class="demo-icon-hover">
-                                        <i class="md md-create"></i>
-                                    </span>
-                            </a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </table>
-            </form>
+
+            <!-- Блок с прошедшими тестами -->
+            <div id="container-past" class="container-list" style="display: none;">
+                <div class="col-lg-offset-0 col-md-12 col-sm-12 card style-gray">
+                    <h2 class="text-default-bright">Контрольные тесты</h2>
+                </div>
+                <form action="{{URL::route('finish_test')}}" method="POST" class="form">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <table class="table table-condensed" id="out-of-date-test-table">
+                        <tr>
+                            <th>Название теста</th>
+                            <th class="text-center">Время открытия теста</th>
+                            <th class="text-center">Время закрытия теста</th>
+                            <th class="text-center">Количество вопросов</th>
+                            <th class="text-center">Время прохождения, мин</th>
+                            <th class="text-center">Завершить тест</th>
+                            <th class="text-center">Редактировать тест</th>
+                        </tr>
+                        @foreach ($past_ctr_tests as $test)
+                        <input type="hidden" name="id-test[]" value="{{$test['id_test']}}">
+                        <tr>
+                            <td>{{$test['test_name']}}</td>
+                            <td class="text-center">{{$test['start']}}</td>
+                            <td class="text-center">{{$test['end']}}</td>
+                            <td class="text-center">{{$test['amount']}}</td>
+                            <td class="text-center">{{$test['test_time']}}</td>
+                            <td class="text-center"> <div class="checkbox checkbox-styled">
+                                    <label>
+                                        <input type="hidden" name="changes[]" value="">
+                                        <input type="checkbox" class="flag finish-checkbox" name="finished[]" value="true">
+                                        <span></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <a href="{{URL::route('in_process')}}" class="btn btn-primary" role="button">
+                                            <span class="demo-icon-hover">
+                                                <i class="md md-create"></i>
+                                            </span>
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </table>
+                    <div class="col-lg-offset-9"  id="finish-chosen">
+                        <button class="btn btn-primary btn-raised submit-test" type="submit">Завершить выбранные тесты</button>
+                    </div>
+                </form>
+                <br>
+                <div class="col-lg-offset-0 col-md-12 col-sm-12 card style-gray">
+                    <h2 class="text-default-bright">Тренировочные тесты</h2>
+                </div>
+                <form action="{{URL::route('finish_test')}}" method="POST" class="form">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <table class="table table-condensed" id="out-of-date-test-table">
+                        <tr>
+                            <th>Название теста</th>
+                            <th class="text-center">Время открытия теста</th>
+                            <th class="text-center">Время закрытия теста</th>
+                            <th class="text-center">Количество вопросов</th>
+                            <th class="text-center">Время прохождения, мин</th>
+                            <th class="text-center">Редактировать тест</th>
+                        </tr>
+                        @foreach ($past_tr_tests as $test)
+                        <input type="hidden" name="id-test[]" value="{{$test['id_test']}}">
+                        <tr>
+                            <td>{{$test['test_name']}}</td>
+                            <td class="text-center">{{$test['start']}}</td>
+                            <td class="text-center">{{$test['end']}}</td>
+                            <td class="text-center">{{$test['amount']}}</td>
+                            <td class="text-center">{{$test['test_time']}}</td>
+                            <td class="text-center" >
+                                <a href="{{URL::route('in_process')}}" class="btn btn-primary" role="button">
+                                            <span class="demo-icon-hover">
+                                                <i class="md md-create"></i>
+                                            </span>
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </table>
+                </form>
+            </div>
+
+            <!-- Блок с будущими тестами -->
+            <div id="container-future" class="container-list" style="display: none;">
+                <div class="col-lg-offset-0 col-md-12 col-sm-12 card style-gray">
+                    <h2 class="text-default-bright">Контрольные тесты</h2>
+                </div>
+                <form action="{{URL::route('finish_test')}}" method="POST" class="form">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <table class="table table-condensed" id="out-of-date-test-table">
+                        <tr>
+                            <th>Название теста</th>
+                            <th class="text-center">Время открытия теста</th>
+                            <th class="text-center">Время закрытия теста</th>
+                            <th class="text-center">Количество вопросов</th>
+                            <th class="text-center">Время прохождения, мин</th>
+                            <th class="text-center">Редактировать тест</th>
+                        </tr>
+                        @foreach ($future_ctr_tests as $test)
+                        <input type="hidden" name="id-test[]" value="{{$test['id_test']}}">
+                        <tr>
+                            <td>{{$test['test_name']}}</td>
+                            <td class="text-center">{{$test['start']}}</td>
+                            <td class="text-center">{{$test['end']}}</td>
+                            <td class="text-center">{{$test['amount']}}</td>
+                            <td class="text-center">{{$test['test_time']}}</td>
+                            <td class="text-center">
+                                <a href="{{URL::route('in_process')}}" class="btn btn-primary" role="button">
+                                        <span class="demo-icon-hover">
+                                            <i class="md md-create"></i>
+                                        </span>
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </table>
+                </form>
+                <br>
+                <div class="col-lg-offset-0 col-md-12 col-sm-12 card style-gray">
+                    <h2 class="text-default-bright">Тренировочные тесты</h2>
+                </div>
+                <form action="{{URL::route('finish_test')}}" method="POST" class="form">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <table class="table table-condensed" id="out-of-date-test-table">
+                        <tr>
+                            <th>Название теста</th>
+                            <th class="text-center">Время открытия теста</th>
+                            <th class="text-center">Время закрытия теста</th>
+                            <th class="text-center">Количество вопросов</th>
+                            <th class="text-center">Время прохождения, мин</th>
+                            <th class="text-center">Редактировать тест</th>
+                        </tr>
+                        @foreach ($future_tr_tests as $test)
+                        <input type="hidden" name="id-test[]" value="{{$test['id_test']}}">
+                        <tr>
+                            <td>{{$test['test_name']}}</td>
+                            <td class="text-center">{{$test['start']}}</td>
+                            <td class="text-center">{{$test['end']}}</td>
+                            <td class="text-center">{{$test['amount']}}</td>
+                            <td class="text-center">{{$test['test_time']}}</td>
+                            <td class="text-center" >
+                                <a href="{{URL::route('in_process')}}" class="btn btn-primary" role="button">
+                                        <span class="demo-icon-hover">
+                                            <i class="md md-create"></i>
+                                        </span>
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </table>
+                </form>
+            </div>
         </div>
     </div>
 
 </div>
-{!! HTML::script('js/retest.js') !!}
+{!! HTML::script('js/testList.js') !!}
 
 @stop

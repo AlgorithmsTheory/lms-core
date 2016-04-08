@@ -96,7 +96,7 @@ function checkStep(value){
 }
 
 /** Устанавливает шаг штрафа в зависимости от значения поля */
-$('#tetest-form').on('load', '.fine-level', function(){
+$('#retest-form').on('load', '.fine-level', function(){
     $(this).attr('step', checkStep($(this).val()));
 });
 

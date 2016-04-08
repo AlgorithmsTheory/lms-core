@@ -8,8 +8,10 @@
 
 namespace App\Http\Controllers;
 use App\Fine;
+use App\Result;
 use App\Test;
 use App\User;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -26,8 +28,9 @@ class TeacherRetestController extends Controller {
         $users = [];
         $distinct_groups = [];
 
-        // TODO: добавить фильтр по текущему году для отбора действующих студентов
+        $current_year = date('Y');
         $users_query = User::join('fines', 'users.id', '=', 'fines.id_user')
+            ->where('year', '=', $current_year)
             ->orderBy('last_name', 'asc')
             ->distinct()
             ->select('first_name', 'last_name')->get();
@@ -36,6 +39,7 @@ class TeacherRetestController extends Controller {
         }
 
         $groups_query = User::join('fines', 'users.id', '=', 'fines.id_user')
+            ->where('year', '=', $current_year)
             ->orderBy('group', 'asc')
             ->distinct()
             ->select('group')
@@ -47,8 +51,7 @@ class TeacherRetestController extends Controller {
         $fine_table = Fine::get();
         foreach ($fine_table as $row){
             array_push($id, $row->id_fine);
-            // TODO: добавить фильтр по текущему году для отбора действующих студентов
-            $user = User::whereId($row->id_user)->select('first_name', 'last_name', 'group')->first();
+            $user = User::whereId($row->id_user)->where('year', '=', $current_year)->select('first_name', 'last_name', 'group')->first();
             array_push($student_names, $user->last_name.' '.$user->first_name);
             $test = Test::whereId_test($row->id_test)->select('test_name')->first();
             array_push($groups, $user->group);
@@ -95,7 +98,35 @@ class TeacherRetestController extends Controller {
      возможно, добавить записи user-test в таблицу штрафов
      */
     public function finishTest(Request $request){
+        //найти всех студентов текущего года
+        //а скорее искать тех, кого нет в таблице результатов по данному тесту в указанный интервал времени
+        $absents = [];                                                                                                  //отсутствующие на тесте
+        $current_year = date('Y');
+        for ($i=0; $i < count($request->input('changes')); $i++){
+            if ($request->input('changes')[$i] == true){                                                                //если тест был выбран для завершения
+                $id_test = $request->input('id-test')[$i];
+                $user_query = User::where('year', '=', $current_year)                                                   //пример сырого запроса
+                            ->whereRaw("not exists (select `id_user` from `results`
+                                        where results.id_user = users.id
+                                        and `results`.`id_test` = ".$id_test. "
+                                        and `results`.`result_date` between '".Test::whereId_test($id_test)->select('start')->first()->start."' and '".Test::whereId_test($id_test)->select('end')->first()->end."'
+                                        )")
+                            ->distinct()
+                            ->select()
+                            ->get();
+                foreach ($user_query as $user){
+                    array_push($absents, $user->id);
+//                  /*Fine::insert(['id_user' => $user->id, 'id_test' => $request->input('id-test')[$i],
+//                                  'fine' => 1, ])*/
+                }
+                dd($absents);
+                //добавить их в таблицу штрафов, записав им первый уровень штрафа
 
+
+            //добавить их в таблицу результатов, записав в качестве результатов -1 -1 absence
+            //в таблице штрафов присвоить всем по этому тесту досутп 0, у кого досутп есть
+            }
+        }
     }
 
     /** продлевает все просроченные тесты на 4 месяца */

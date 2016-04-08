@@ -13,7 +13,11 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 /**
  * @method static \Illuminate\Database\Query\Builder|\App\User whereEmail($value)
  * @method static \Illuminate\Database\Query\Builder|\App\User whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\User whereYear($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\User whereNull($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\User where($value)
  * @method static \Illuminate\Database\Query\Builder|\App\User  join()
+ * @method static \Illuminate\Database\Query\Builder|\App\User  leftJoin()
  * @method static \Illuminate\Database\Query\Builder|\App\User  on()
  * @method static \Illuminate\Database\Query\Builder|\App\User  distinct()
  * @method static \Illuminate\Database\Query\Builder|\App\User  orderBy($column, $sc)
