@@ -221,8 +221,4 @@ class Test extends Eloquent {
         return $array;                                                                                                  //формируем массив из id вошедших в тест вопросов
     }
 
-    //TODO: дописать в Test функцию, которая будет всем ставить access = 0 для просроченного контрольного теста
-   public function missTest(){
-
-   }
 } 

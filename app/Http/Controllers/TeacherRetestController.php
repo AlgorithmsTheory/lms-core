@@ -101,32 +101,50 @@ class TeacherRetestController extends Controller {
         //найти всех студентов текущего года
         //а скорее искать тех, кого нет в таблице результатов по данному тесту в указанный интервал времени
         $absents = [];                                                                                                  //отсутствующие на тесте
+        $fine = new Fine();
         $current_year = date('Y');
         for ($i=0; $i < count($request->input('changes')); $i++){
             if ($request->input('changes')[$i] == true){                                                                //если тест был выбран для завершения
                 $id_test = $request->input('id-test')[$i];
                 $user_query = User::where('year', '=', $current_year)                                                   //пример сырого запроса
+                            //->whereRole('Студент')
                             ->whereRaw("not exists (select `id_user` from `results`
                                         where results.id_user = users.id
                                         and `results`.`id_test` = ".$id_test. "
-                                        and `results`.`result_date` between '".Test::whereId_test($id_test)->select('start')->first()->start."' and '".Test::whereId_test($id_test)->select('end')->first()->end."'
+                                        and `results`.`result_date` between '".Test::whereId_test($id_test)->select('start')->first()->start."'
+                                        and '".Test::whereId_test($id_test)->select('end')->first()->end."'
                                         )")
                             ->distinct()
                             ->select()
                             ->get();
                 foreach ($user_query as $user){
                     array_push($absents, $user->id);
-//                  /*Fine::insert(['id_user' => $user->id, 'id_test' => $request->input('id-test')[$i],
-//                                  'fine' => 1, ])*/
+                    //добавить их в таблицу штрафов, записав им первый уровень штрафа
+                    //в таблице штрафов присвоить всем по этому тесту досутп 0, у кого досутп есть
+                   /* $fine_query = Fine::whereId_user($user->id)->whereId_test($id_test)->select('id_fine')->first();
+                    if (is_null($fine_query))
+                        Fine::insert(['id_user' => $user->id, 'id_test' => $request->input('id-test')[$i],
+                            'fine' => 1, 'access' => 0]);
+                    else Fine::whereId_user($user->id)->whereId_test($id_test)
+                            ->update(['fine' => $fine->maxFine($fine_query->fine + 1), 'access' => 0]);
+
+                    //добавить их в таблицу результатов, записав в качестве результатов -2 -2 absence
+                    Result::insert(['id_user' => $user->id, 'id_test' => $id_test,
+                    'test_name' => Test::whereId_test($id_test)->select('test_name')->first()->test_name,
+                    'amount' => Test::whereId_test($id_test)->select('amount')->first()->amount,
+                    'result_date' => date("Y-m-d H:i:s"),
+                    'result' => -2, 'mark_ru' => -2, 'mark_eu' => 'absent', 'saved_test' => null]);*/
                 }
                 dd($absents);
-                //добавить их в таблицу штрафов, записав им первый уровень штрафа
-
-
-            //добавить их в таблицу результатов, записав в качестве результатов -1 -1 absence
-            //в таблице штрафов присвоить всем по этому тесту досутп 0, у кого досутп есть
+                //если тест является текущим, то сделать время его закрытия текущим временем (чтобы он попал в прошлые)
+                if (Test::whereId_test($id_test)->select('start')->first()->start < date("Y-m-d H:i:s") &&
+                    Test::whereId_test($id_test)->select('end')->first()->end > date("Y-m-d H:i:s")){
+                    Test::whereId_test($id_test)->update(['end' => date("Y-m-d H:i:s")]);
+                }
+                //нельзя ставить дату открытия раньше сегодняшнего числа!
             }
         }
+        return redirect()->back();
     }
 
     /** продлевает все просроченные тесты на 4 месяца */
