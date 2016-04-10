@@ -24,9 +24,12 @@ class TeacherRetestController extends Controller {
         $groups = [];
         $accesses = [];
         $fines = [];
+        $attempts = [];
+        $last_marks = [];
         $all_tests = [];
         $users = [];
         $distinct_groups = [];
+        $marks = [];
 
         $current_year = date('Y');
         $users_query = User::join('fines', 'users.id', '=', 'fines.id_user')
@@ -58,13 +61,19 @@ class TeacherRetestController extends Controller {
             array_push($test_names, $test->test_name);
             array_push($accesses, $row->access);
             array_push($fines, Fine::levelToPercent($row->fine));
+            array_push($attempts, Result::whereId_test($row->id_test)->whereId_user($row->id_user)->where('mark_ru', '>=', 0)->count());
+            //dd(Result::whereId_test($row->id_test)->whereId_user($row->id_user)->select('mark_eu')->orderBy('id_result', 'desc')->first()->mark_eu);
+            $result = Result::whereId_test($row->id_test)->whereId_user($row->id_user)->select('mark_eu')->orderBy('id_result', 'desc')->first()->mark_eu;
+            array_push($last_marks, preg_replace('/^absent$/', 'Отсутствие', $result));
         }
+
+        $marks = ['A', 'B', 'C', 'D', 'E', 'F'];
 
         $tests = Test::distinct()->select('test_name')->get();
         foreach($tests as $test){
             array_push($all_tests, $test->test_name);
         }
-        return view('personal_account.retest', compact('id','student_names', 'test_names', 'groups', 'accesses', 'fines', 'all_tests', 'users', 'distinct_groups'));
+        return view('personal_account.retest', compact('id','student_names', 'test_names', 'groups', 'attempts', 'last_marks', 'accesses', 'fines', 'all_tests', 'users', 'distinct_groups', 'marks'));
     }
 
    /** Применение изменений на странице переписывания тестов (возможность прохождения и уровень штрафа) */
@@ -121,7 +130,7 @@ class TeacherRetestController extends Controller {
                     array_push($absents, $user->id);
                     //добавить их в таблицу штрафов, записав им первый уровень штрафа
                     //в таблице штрафов присвоить всем по этому тесту досутп 0, у кого досутп есть
-                   /* $fine_query = Fine::whereId_user($user->id)->whereId_test($id_test)->select('id_fine')->first();
+                    $fine_query = Fine::whereId_user($user->id)->whereId_test($id_test)->select('id_fine')->first();
                     if (is_null($fine_query))
                         Fine::insert(['id_user' => $user->id, 'id_test' => $request->input('id-test')[$i],
                             'fine' => 1, 'access' => 0]);
@@ -129,13 +138,18 @@ class TeacherRetestController extends Controller {
                             ->update(['fine' => $fine->maxFine($fine_query->fine + 1), 'access' => 0]);
 
                     //добавить их в таблицу результатов, записав в качестве результатов -2 -2 absence
+                    //если тест прошедший, то время результата должно быть на 5 секунд меньше, чем время завершения теста
+                    if (Test::whereId_test($id_test)->select('end')->first()->end < date("Y-m-d H:i:s")){
+                        $result_date = date("Y-m-d H:i:s",strtotime(Test::whereId_test($id_test)->select('end')->first()->end) - 5);
+                    }
+                    else $result_date = date("Y-m-d H:i:s");
                     Result::insert(['id_user' => $user->id, 'id_test' => $id_test,
                     'test_name' => Test::whereId_test($id_test)->select('test_name')->first()->test_name,
                     'amount' => Test::whereId_test($id_test)->select('amount')->first()->amount,
-                    'result_date' => date("Y-m-d H:i:s"),
-                    'result' => -2, 'mark_ru' => -2, 'mark_eu' => 'absent', 'saved_test' => null]);*/
+                    'result_date' => $result_date,
+                    'result' => -2, 'mark_ru' => -2, 'mark_eu' => 'absent', 'saved_test' => null]);
+
                 }
-                dd($absents);
                 //если тест является текущим, то сделать время его закрытия текущим временем (чтобы он попал в прошлые)
                 if (Test::whereId_test($id_test)->select('start')->first()->start < date("Y-m-d H:i:s") &&
                     Test::whereId_test($id_test)->select('end')->first()->end > date("Y-m-d H:i:s")){

@@ -72,6 +72,7 @@ class TestController extends Controller{
         $current_ctr_tests = [];
         $current_tr_tests = [];
         $past_ctr_tests = [];
+        $finish_opportunity = [];
         $past_tr_tests = [];
         $future_ctr_tests = [];
         $future_tr_tests = [];
@@ -85,6 +86,7 @@ class TestController extends Controller{
         foreach ($query_ctr as $control_test){
             array_push($current_ctr_tests, $control_test);
         }
+
         $query_tr = $this->test->whereTest_type('Тренировочный')
                     ->where('start', '<', $current_date)
                     ->where('end', '>', $current_date)
@@ -93,35 +95,57 @@ class TestController extends Controller{
         foreach ($query_tr as $training_test){
             array_push($current_tr_tests, $training_test);
         }
+
         $query_ctr = $this->test->whereTest_type('Контрольный')                                                         //формируем прошлые тесты
-            ->where('start', '>', $current_date)
+            ->where('end', '<', $current_date)
             ->select()
             ->get();
         foreach ($query_ctr as $control_test){
-            array_push($past_ctr_tests, $control_test);
+            //ищем среди студентов тех, кто не проходил данный тест в заданный промежуток времени
+            $id_test = Test::whereId_test($control_test->id_test)->select('id_test')->first()->id_test;
+            $user_query = User::where('year', '=', date('Y'))                                                           //пример сырого запроса
+                //->whereRole('Студент')
+                ->whereRaw("not exists (select `id_user` from `results`
+                                        where results.id_user = users.id
+                                        and `results`.`id_test` = ".$id_test. "
+                                        and `results`.`result_date` between '".Test::whereId_test($id_test)->select('start')->first()->start."'
+                                        and '".Test::whereId_test($id_test)->select('end')->first()->end."'
+                                        )")
+                ->distinct()
+                ->select()
+                ->get();
+            if (sizeof($user_query) == 0)                                                                               //если таких студентов нет, то такой тест завршить нельзя
+                $control_test['finish_opportunity'] = 0;
+            else                                                                                                        //иначе можно
+                $control_test['finish_opportunity'] = 1;
         }
+        array_push($past_ctr_tests, $control_test);
+
         $query_tr = $this->test->whereTest_type('Тренировочный')
-            ->where('start', '>', $current_date)
+            ->where('end', '<', $current_date)
             ->select()
             ->get();
         foreach ($query_tr as $training_test){
             array_push($past_tr_tests, $training_test);
         }
+
         $query_ctr = $this->test->whereTest_type('Контрольный')                                                         //формируем будущие тесты
-            ->where('end', '<', $current_date)
+            ->where('start', '>', $current_date)
             ->select()
             ->get();
         foreach ($query_ctr as $control_test){
             array_push($future_ctr_tests, $control_test);
         }
+
         $query_tr = $this->test->whereTest_type('Тренировочный')
-            ->where('end', '<', $current_date)
+            ->where('start', '>', $current_date)
             ->select()
             ->get();
         foreach ($query_tr as $training_test){
             array_push($future_tr_tests, $training_test);
         }
-        return view ('personal_account.test_list', compact('current_ctr_tests', 'current_tr_tests', 'past_ctr_tests', 'past_tr_tests', 'future_ctr_tests', 'future_tr_tests'));
+
+        return view ('personal_account.test_list', compact('current_ctr_tests', 'current_tr_tests', 'past_ctr_tests', 'finish_opportunity', 'past_tr_tests', 'future_ctr_tests', 'future_tr_tests'));
     }
 
     /** AJAX-метод: получает список тем раздела */

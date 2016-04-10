@@ -77,6 +77,7 @@ filterTable(
         0: document.getElementById("selected-student"),
         1: document.getElementById("selected-group"),
         2: document.getElementById("selected-test")
+        //4: document.getElementById("selected-mark")
     }
 );
 
@@ -111,4 +112,31 @@ $('#retest-form').on('focusout', '.fine-level', function(){
         (this).focus();
     }
 });
+
+/** Фильтр по оценке */
+$('#retest-form').on('change', '#selected-mark', function(){
+    var mark = $(this).val();                                                                                           //выбранная оценка
+    $('.last-marks').each(function(){
+        switch (mark) {
+            case 'F':                                                                                                   //если выбрана F, то включаем туда
+                if ($(this).text() != mark && $(this).text() != 'Отсутствие'){                                              //еще и отсутствующих
+                    $(this).parent().css('display', 'none')
+                }
+                else
+                    $(this).parent().css('display', '');
+                break;
+            case 'All':                                                                                                 //если выбран параметр "Все"
+                $(this).parent().css('display', '');
+                break;
+            default:                                                                                                    //иначе ищем точное совпадение
+                if ($(this).text() != mark){
+                    $(this).parent().css('display', 'none')
+                }
+                else
+                    $(this).parent().css('display', '');
+                break;
+        }
+    });
+});
+
 

@@ -141,6 +141,7 @@ full
                             <td class="text-center">{{$test['end']}}</td>
                             <td class="text-center">{{$test['amount']}}</td>
                             <td class="text-center">{{$test['test_time']}}</td>
+                            @if ($test['finish_opportunity'] == 1)
                             <td class="text-center"> <div class="checkbox checkbox-styled">
                                     <label>
                                         <input type="hidden" name="changes[]" value="">
@@ -149,6 +150,13 @@ full
                                     </label>
                                 </div>
                             </td>
+                            @else
+                            <td class="text-center" title="Тест уже завершен">
+                                <span class="demo-icon-hover">
+                                    <i class="md md-done" style="font-size: 24px;"></i>
+                                </span>
+                            </td>
+                            @endif
                             <td class="text-center">
                                 <a href="{{URL::route('in_process')}}" class="btn btn-primary" role="button">
                                             <span class="demo-icon-hover">
