@@ -303,6 +303,7 @@ class TestController extends Controller{
             $score = round($score,1);
         }
         else $score = $total;
+        //TODO: учесть коэффициент штрафа
 
         $mark_bologna = $this->test->calcMarkBologna($total, $score);                                                         //оценки
         $mark_rus = $this->test->calcMarkRus($total, $score);

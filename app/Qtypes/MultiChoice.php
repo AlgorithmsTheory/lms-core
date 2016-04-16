@@ -12,6 +12,7 @@ use App\Mypdf;
 use App\Question;
 use Illuminate\Http\Request;
 use Session;
+use Input;
 
 class MultiChoice extends QuestionType {
     const type_code = 2;
@@ -23,14 +24,29 @@ class MultiChoice extends QuestionType {
     }
 
     public function add(Request $request, $code){
-        $variants = $request->input('variants')[0];
-        $answers = '';
-        $flag = false;
-        $j = 0;
+        $parse_text = preg_split('/\[\[|\]\]/', $request->input('title'));
+        $destinationPath = 'img/questions/title/';
+        $input_images = Input::file();
+        for ($i = 1; $i < count($input_images['text-images']); $i++){
+            $extension = $input_images['text-images'][$i-1]->getClientOriginalExtension();
+            $fileName = rand(11111, 99999) . '.' . $extension;
+            $input_images['text-images'][$i-1]->move($destinationPath, $fileName);
+            $parse_text[2*$i-1] = '::'.$destinationPath.$fileName.'::';
+        }
+        $title = '';
+        foreach ($parse_text as $part){
+            $title .= $part;
+        }
+
+        $variants = $request->input('variants')[0];                                                                     //формирование вариантов
         for ($i=1; $i<count($request->input('variants')); $i++){
             $variants = $variants.';'.$request->input('variants')[$i];
         }
-        while ($flag != true && $j<count($request->input('answers'))){
+
+        $answers = '';
+        $flag = false;
+        $j = 0;
+        while ($flag != true && $j<count($request->input('answers'))){                                                  //формирование ответов
             if (isset($request->input('answers')[$j])){
                 $answers = $request->input('variants')[$request->input('answers')[$j]-1];
                 $j++;
@@ -43,7 +59,7 @@ class MultiChoice extends QuestionType {
                 $answers = $answers.';'.$request->input('variants')[$request->input('answers')[$i]-1];
             }
         }
-        Question::insert(array('code' => $code, 'title' => $request->input('title'), 'variants' => $variants, 'answer' => $answers, 'points' => $request->input('points')));
+        Question::insert(array('code' => $code, 'title' => $title, 'variants' => $variants, 'answer' => $answers, 'points' => $request->input('points')));
     }
 
     public function show($count){
@@ -51,7 +67,7 @@ class MultiChoice extends QuestionType {
         $variants = explode(";", $parse);
         $new_variants = $this->question->mixVariants($variants);
         $view = 'tests.show2';
-        $array = array('view' => $view, 'arguments' => array('text' => $this->text, "variants" => $new_variants, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
+        $array = array('view' => $view, 'arguments' => array('text' => explode('::',$this->text), "variants" => $new_variants, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
         return $array;
     }
 
@@ -123,10 +139,12 @@ class MultiChoice extends QuestionType {
             Session::forget('saved_variants_order');
         }
         else {                                                                                                          // без ответов
-            $new_variants = QuestionController::mixVariants($variants);
+            $question = new Question();
+            $new_variants = $question->mixVariants($variants);
             Session::put('saved_variants_order', $new_variants);
             foreach ($new_variants as $var){
                 $html .= '<tr>';
+                $var = 'A < B';
                 $html .= '<td width="5%"></td><td width="80%">'.$var.'</td>';
                 $html .= '</tr>';
             }

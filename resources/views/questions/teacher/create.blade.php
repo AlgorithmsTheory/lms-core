@@ -15,7 +15,7 @@
         <div class="col-md-12 col-sm-6 card style-primary">
             <h1 class="text-default-bright">Создать новый вопрос</h1>
         </div>
-        <form action="{{URL::route('question_add')}}" method="POST" class="form">
+        <form action="{{URL::route('question_add')}}" method="POST" class="form" enctype="multipart/form-data">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="q-type" value="">
             <div class="col-lg-offset-1 col-md-10 col-sm-6">

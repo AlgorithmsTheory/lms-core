@@ -6,6 +6,13 @@
      {!! link_to_route('test_create', 'Добавить новый тест') !!} <br>
      {!! link_to_route('lecture', 'Перейти на страницу тестов', array(3, '#3.1'))!!} <br>
      {!! HTML::link('library/lecture/3') !!}
+     {!! HTML::image($image) !!}
+     <form action="" method="post">
+         <input type="file" name="filename" id="file">
+         <input type="submit" value="Загрузить">
+     </form>
+
+
 
 </body>
 </html>

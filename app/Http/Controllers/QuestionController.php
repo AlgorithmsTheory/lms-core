@@ -35,7 +35,8 @@ class QuestionController extends Controller{
         if (Auth::check()){
             $username = Auth::user()['first_name'];
         }
-        return view('questions.teacher.index', compact('username'));
+        $image = 'img/library/Pic/2.jpeg';
+        return view('questions.teacher.index', compact('username', 'image'));
     }
 
     /** переход на страницу формы добавления */
