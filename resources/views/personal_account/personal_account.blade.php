@@ -21,6 +21,7 @@
                             <ul class="nav navbar-nav">
                                 {{--<li><a href="{{URL::route('personal_account')}}" class="btn">Результаты прохождения тестов</a></li>--}}
                                 <li><h3>Результаты прохождения тестов</h3></li>
+
                             </ul>
                             {{--<ul class="nav navbar-nav navbar-right">--}}
                                 {{--<li><a href="{{URL::route('in_process')}}" class="btn">Личные данные</a></li>--}}
@@ -68,6 +69,6 @@
         </div>
 
     </div>
-        {!! HTML::script('js/personalAccount.js') !!}
+        {!! HTML::script('js/personal_account/personalAccount.js') !!}
 
 @stop

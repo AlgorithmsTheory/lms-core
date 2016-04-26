@@ -16,6 +16,10 @@
             $('#login-form-link').click(function(e) {
                 $("#login-form").delay(100).fadeIn(100);
                 $("#register-form").fadeOut(100);
+
+                $("#reset-form").fadeOut(100);
+                $('#reset-form-link').removeClass('active');
+
                 $('#register-form-link').removeClass('active');
                 $(this).addClass('active');
                 e.preventDefault();
@@ -23,6 +27,19 @@
             $('#register-form-link').click(function(e) {
                 $("#register-form").delay(100).fadeIn(100);
                 $("#login-form").fadeOut(100);
+
+                $("#reset-form").fadeOut(100);
+                $('#reset-form-link').removeClass('active');
+
+                $('#login-form-link').removeClass('active');
+                $(this).addClass('active');
+                e.preventDefault();
+            });
+            $('#reset-form-link').click(function(e) {
+                $("#reset-form").delay(100).fadeIn(100);
+                $("#login-form").fadeOut(100);
+                $("#register-form").fadeOut(100);
+                $('#register-form-link').removeClass('active');
                 $('#login-form-link').removeClass('active');
                 $(this).addClass('active');
                 e.preventDefault();
@@ -43,11 +60,14 @@
             <div class="panel panel-login">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-xs-6">
+                        <div class="col-xs-4">
                             <a href="#" class="active" id="login-form-link">Авторизация</a>
                         </div>
-                        <div class="col-xs-6">
+                        <div class="col-xs-4">
                             <a href="#" id="register-form-link">Регистрация</a>
+                        </div>
+                        <div class="col-xs-4">
+                            <a href="#" id="reset-form-link">Восстановить пароль</a>
                         </div>
                     </div>
                     <hr>
@@ -57,11 +77,20 @@
                         <div class="col-lg-12">
                             <form id="login-form" action="{{URL::route('login')}}" method="post" data-toggle="validator" role="form" style="display: block;">
                                  {!! csrf_field() !!}
+
+                                @if (count($errors) > 0)
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+
                                 <div class="form-group">
                                     <input type="email" name="email" value="{{ old('email') }}" id="email" tabindex="1" class="form-control" placeholder="Email">
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
+                                    <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Пароль">
                                 </div>
                                 <div class="form-group">
                                     <div class="row">
@@ -73,6 +102,15 @@
                             </form>
                             <form id="register-form" action="{{URL::route('register')}}" method="post" data-toggle="validator" role="form" style="display: none;">
                                  {!! csrf_field() !!}
+
+                                @if (count($errors) > 0)
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+
                                 <div class="form-group">
                                     <input type="text" name="first_name" pattern="^[а-яА-Я][а-яА-Я0-9-_\.]{1,20}$" data-error="Введите корректное имя" value="{{ old('first_name') }}" id="username" tabindex="1" class="form-control" placeholder="Имя">
                                     <br>
@@ -94,14 +132,13 @@
                                     <div class="help-block with-errors"></div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" data-minlength="6" name="password" tabindex="2" id="inputPassword" class="form-control" required placeholder="Password">
+                                    <input type="password" data-minlength="6" name="password" tabindex="2" id="inputPassword" class="form-control" required placeholder="Пароль">
                                     <br>
                                     <div class="help-block with-errors"></div>
                                 </div>
                                 <div class="form-group">
                                     <input type="password" name="password_confirmation" data-match-error="Пароли не совпадают" data-match="#inputPassword" required tabindex="2" class="form-control"
-                                    00:08:39
-                                    placeholder="Confirm Password">
+                                    placeholder="Подтверждение пароля">
                                     <br>
                                     <div class="help-block with-errors"></div>
                                 </div>
@@ -109,6 +146,33 @@
                                     <div class="row">
                                         <div class="col-sm-6 col-sm-offset-3">
                                             <input type="submit" tabindex="4" class="form-control btn btn-register" value="Зарегистрироваться">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <form id="reset-form" method="POST" action="{{URL::route('passEmailPost')}}" data-toggle="validator" style="display: none;">
+                                {!! csrf_field() !!}
+
+                                @if (count($errors) > 0)
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+
+                                <div class="form-group">
+                                    <input type="email" name="email" value="{{ old('email') }}" id="email" data-error="Введите корректный email!" tabindex="1" class="form-control" placeholder="Email">
+                                    <br>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-sm-offset-3">
+                                            <button type="submit" class="form-control btn btn-register" value="Зарегистрироваться">
+                                                Отправить письмо
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

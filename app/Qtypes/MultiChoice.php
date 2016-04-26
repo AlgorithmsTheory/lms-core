@@ -24,17 +24,17 @@ class MultiChoice extends QuestionType {
     }
 
     public function add(Request $request, $code){
-        $parse_text = preg_split('/\[\[|\]\]/', $request->input('title'));
-        $destinationPath = 'img/questions/title/';
+        $parse_text = preg_split('/\[\[|\]\]/', $request->input('title'));                                              //части текста вопроса без [[ ]]
+        $destinationPath = 'img/questions/title/';                                                                      //путь для картинки
         $input_images = Input::file();
         for ($i = 1; $i < count($input_images['text-images']); $i++){
-            $extension = $input_images['text-images'][$i-1]->getClientOriginalExtension();
-            $fileName = rand(11111, 99999) . '.' . $extension;
-            $input_images['text-images'][$i-1]->move($destinationPath, $fileName);
-            $parse_text[2*$i-1] = '::'.$destinationPath.$fileName.'::';
+            $extension = $input_images['text-images'][$i-1]->getClientOriginalExtension();                              //получаем расширение файла
+            $fileName = rand(11111, 99999) . '.' . $extension;                                                          //случайное имя картинки
+            $input_images['text-images'][$i-1]->move($destinationPath, $fileName);                                      //перемещаем картинку
+            $parse_text[2*$i-1] = '::'.$destinationPath.$fileName.'::';                                                 //заменить каждуый старый файл на новый
         }
         $title = '';
-        foreach ($parse_text as $part){
+        foreach ($parse_text as $part){                                                                                 //собираем все в строку
             $title .= $part;
         }
 
@@ -99,22 +99,31 @@ class MultiChoice extends QuestionType {
         if ($score < 0){                                                                                                //если ушел в минус
             $score = 0;
         }
-
         $right_percent = round($score/$this->points*100);
-        if ($score == $this->points){
+        if (round($score,4) == $this->points){
             $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array, 'right_percent' => $right_percent);
         }
         else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array, 'right_percent' => $right_percent);
         //echo $score.'<br>';
+        dd($data['mark']);
         return $data;
     }
 
     public function pdf(Mypdf $fpdf, $count, $answered=false){
+        $text_parse = explode('::', $this->text);
+        $text = "";
+        for ($i=0; $i < count($text_parse); $i++){                                                                      //обработка картинки в тексте вопроса
+            if ($i % 2 == 1){
+                $text_parse[$i] = '<img src="'.$text_parse[$i].'">';
+            }
+            $text .= $text_parse[$i];
+        }
+
         $parse = $this->variants;
         $variants = explode(";", $parse);
         $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
         $html .= '  Выберите один или несколько вариантов ответа</td></tr>';
-        $html .= '<tr><td>'.$this->text.'</td></tr></table>';
+        $html .= '<tr><td>'.$text.'</td></tr></table>';
 
         $html .= '<table border="1" style="border-collapse: collapse;" width="100%">';
         if ($answered){                                                                                                 // пдф с ответами
@@ -144,7 +153,6 @@ class MultiChoice extends QuestionType {
             Session::put('saved_variants_order', $new_variants);
             foreach ($new_variants as $var){
                 $html .= '<tr>';
-                $var = 'A < B';
                 $html .= '<td width="5%"></td><td width="80%">'.$var.'</td>';
                 $html .= '</tr>';
             }

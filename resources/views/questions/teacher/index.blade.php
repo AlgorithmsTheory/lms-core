@@ -7,10 +7,7 @@
      {!! link_to_route('lecture', 'Перейти на страницу тестов', array(3, '#3.1'))!!} <br>
      {!! HTML::link('library/lecture/3') !!}
      {!! HTML::image($image) !!}
-     <form action="" method="post">
-         <input type="file" name="filename" id="file">
-         <input type="submit" value="Загрузить">
-     </form>
+     <img src="img/questions/title/94213.jpg">
 
 
 

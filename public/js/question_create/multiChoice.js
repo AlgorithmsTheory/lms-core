@@ -83,5 +83,7 @@ $('#type_question_add').on('click', '.submit-question', function(){
         }
         else j++;
     }
+
+    //TODO: добавить проверку, чтобы не сабмиталось, если не выбрано ни одного верного варианта
 });
 

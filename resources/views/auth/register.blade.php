@@ -1,6 +1,6 @@
 <!— resources/views/auth/register.blade.php —>
 
-<form method="POST" action="{{URL::route('register')}}">
+<form method="POST" action="/auth/register">
     {!! csrf_field() !!}
 
     <div>
@@ -37,3 +37,5 @@
         <button type="submit">Register</button>
     </div>
 </form>
+
+

@@ -9,12 +9,12 @@
     {!! HTML::style('css/materialadmin_demo.css') !!}
     {!! HTML::script('js/jquery.js') !!}
 </head>
-<body class="@yield('background', '')">
-<div id="base">
-    <div class="offcanvas">
-        @yield('left-off-canvas')
-    </div>
-    <section>
+<body class="menubar-hoverable header-fixed" >
+    <div id="base">
+        <div class="offcanvas">
+            </div>
+<section>
+
     <nav class="navbar navbar-fixed-top style-primary">
         <div class="container">
             <div id="navbar" class="collapse navbar-collapse">
@@ -37,11 +37,6 @@
 @yield('content')
 </div>
 </section>
-    <div class="offcanvas">
-        @yield('right-off-canvas')
-    </div>
-</div>
-
 
 @yield('js-down')
 {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}

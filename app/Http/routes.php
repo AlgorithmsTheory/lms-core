@@ -52,6 +52,12 @@ Route::get('auth/logout', ['as' => 'logout', 'uses' => 'Auth\AuthController@getL
 // Регистрация
 Route::post('auth/register', ['as' => 'register', 'uses' => 'Auth\AuthController@postRegister']);
 
+// Восстановление пароля
+Route::get('password/email', 'Auth\PasswordController@getEmail');
+Route::post('password/email', ['as' => 'passEmailPost', 'uses' => 'Auth\PasswordController@postEmail']);
+Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
+Route::post('password/reset',['as' => 'passReset', 'uses' => 'Auth\PasswordController@postReset']);
+
 //модуль тестирования для студентов
 Route::get('tests', ['as' => 'tests', 'uses' => 'TestController@index', 'middleware' => 'general_auth']);
 Route::get('questions/show-test/{id_test}', ['as' => 'question_showtest', 'uses' => 'TestController@showViews', 'middleware' => ['general_auth', 'single_test', 'have_attempts']]);
@@ -100,6 +106,30 @@ Route::post('teacher_account/date_create', ['as' => 'library_date_create', 'uses
 Route::get('teacher_account/library_order_list', ['as' => 'library_order_list', 'uses' => 'BooksController@library_order_list']);
 Route::post('teacher_account/library_order_list_elem_delete', ['as' => 'order_list_delete', 'uses' => 'BooksController@order_list_delete']);
 
+//модуль маркова - задачи и работа с ними
+Route::get('main', ['as' => 'main_menu', 'uses' => 'TasksController@main']);
+Route::get('alltasks', ['as' => 'alltasks', 'uses' => 'TasksController@index']);
+//Route::get('alltasksmt', ['as' => 'alltasks_MT', 'uses' => 'TasksController@index']);
+Route::get('delete/{id}', ['as' => 'delete', 'uses' => 'TasksController@deleteTask']);
+Route::get('algorithm/addtask', ['as' => 'addtask', 'uses' => 'TasksController@addtask']);
+Route::get('algorithm/{sequense_id}/edit', ['as' => 'edit', 'uses' => 'TasksController@edit']);
+Route::post('algorithm/{sequense_id}/editTask', ['as' => 'editTask', 'uses' => 'TasksController@editTask']);
+Route::post('algorithm/addind', ['as' => 'adding', 'uses' => 'TasksController@adding']);
+
+// модуль МТ
+Route::get('alltasksmt', ['as' => 'alltasksmt', 'uses' => 'TasksController@alltasksmt']);
+Route::get('algorithm/addtaskmt', ['as' => 'addtaskmt', 'uses' => 'TasksController@addtaskmt']);
+Route::post('algorithm/addingmt', ['as' => 'addingmt', 'uses' => 'TasksController@addingmt']);
+Route::get('deletemt/{id}', ['as' => 'deletemt', 'uses' => 'TasksController@deletemtTask']);
+Route::get('algorithm/{id_sequence}/editmt', ['as' => 'editmt', 'uses' => 'TasksController@editmt']);
+Route::post('algorithm/{id_sequence}/editmtTask', ['as' => 'editmtTask', 'uses' => 'TasksController@editmtTask']);
+
+//эмуляторы
+Route::get('algorithm/MT', ['as' => 'MT', 'uses' => 'EmulatorController@MT']);
+Route::get('algorithm/HAM', ['as' => 'HAM', 'uses' => 'EmulatorController@HAM']);
+Route::post('get-MT', array('as'=>'get_MT', 'uses'=>'EmulatorController@MTPOST'));
+Route::post('get-HAM', array('as'=>'get_HAM', 'uses'=>'EmulatorController@HAMPOST'));
+
 //модуль генерации вариантов
 Route::get('generator', ['as' => 'generator_index', 'uses' => 'GeneratorController@index', 'middleware' => ['general_auth', 'admin']]);
 Route::post('generator/pdf', ['as' => 'generator_pdf', 'uses' => 'GeneratorController@pdfTest', 'middleware' => ['general_auth', 'admin']]);
@@ -109,5 +139,34 @@ Route::get('generator/pdf', ['as' => 'generator_ex', 'uses' => 'GeneratorControl
 Route::get('personal_account', ['as' => 'personal_account', 'uses' => 'PersonalAccount@showPA', 'middleware' => 'general_auth']);
 Route::get('teacher_account', ['as' => 'teacher_account', 'uses' => 'PersonalAccount@showTeacherPA', 'middleware' => 'general_auth']);
 
+//ведомости
+Route::get('statements', ['as' => 'statements', 'uses' => 'PersonalAccount@statements', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/get-lectures', ['as' => 'get_lectures', 'uses' => 'PersonalAccount@get_lectures', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/get-seminars', ['as' => 'get_seminars', 'uses' => 'PersonalAccount@get_seminars', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/get-classwork', ['as' => 'get_classwork', 'uses' => 'PersonalAccount@get_classwork', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/get-controls', ['as' => 'get_controls', 'uses' => 'PersonalAccount@get_controls', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/get-resulting', ['as' => 'get_resulting', 'uses' => 'PersonalAccount@get_resulting', 'middleware' => ['general_auth', 'admin']]);
+
+Route::post('statements/lecture/was', ['as' => 'lecture_was', 'uses' => 'PersonalAccount@lecture_was', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/lecture/wasnot', ['as' => 'lecture_wasnot', 'uses' => 'PersonalAccount@lecture_wasnot', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/seminar/was', ['as' => 'seminar_was', 'uses' => 'PersonalAccount@seminar_was', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/seminar/wasnot', ['as' => 'seminar_wasnot', 'uses' => 'PersonalAccount@seminar_wasnot', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/classwork/change', ['as' => 'classwork_change', 'uses' => 'PersonalAccount@classwork_change', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/controls/change', ['as' => 'controls_change', 'uses' => 'PersonalAccount@controls_change', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/resulting/change', ['as' => 'resulting_change', 'uses' => 'PersonalAccount@resulting_change', 'middleware' => ['general_auth', 'admin']]);
+
+//расчет итогов за раздел
+Route::post('statements/resulting/calc_first', ['as' => 'resulting_calc_first', 'uses' => 'PersonalAccount@calc_first', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/resulting/calc_second', ['as' => 'resulting_calc_second', 'uses' => 'PersonalAccount@calc_second', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/resulting/calc_third', ['as' => 'resulting_calc_third', 'uses' => 'PersonalAccount@calc_third', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/resulting/calc_fourth', ['as' => 'resulting_calc_fourth', 'uses' => 'PersonalAccount@calc_fourth', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/resulting/calc_term', ['as' => 'resulting_calc_term', 'uses' => 'PersonalAccount@calc_term', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/resulting/calc_final', ['as' => 'resulting_calc_final', 'uses' => 'PersonalAccount@calc_final', 'middleware' => ['general_auth', 'admin']]);
+
+//верификация новых студентов
+Route::get('verify_students', ['as' => 'verify_students', 'uses' => 'PersonalAccount@verify', 'middleware' => ['general_auth', 'admin']]);
+Route::post('verify_students/student', ['as' => 'add_student', 'uses' => 'PersonalAccount@add_student', 'middleware' => ['general_auth', 'admin']]);
+Route::post('verify_students/admin', ['as' => 'add_student', 'uses' => 'PersonalAccount@add_admin', 'middleware' => ['general_auth', 'admin']]);
+Route::post('verify_students/average', ['as' => 'add_student', 'uses' => 'PersonalAccount@add_average', 'middleware' => ['general_auth', 'admin']]);
 
 
