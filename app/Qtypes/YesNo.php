@@ -6,9 +6,8 @@
  * Time: 17:21
  */
 namespace App\Qtypes;
-use App\Http\Controllers\QuestionController;
 use App\Mypdf;
-use App\Question;
+use App\Testing\Question;
 use Illuminate\Http\Request;
 
 class YesNo extends QuestionType{
@@ -21,7 +20,8 @@ class YesNo extends QuestionType{
     public function  create(){
     }
 
-    public function add(Request $request, $code){
+    public function add(Request $request){
+        $options = $this->getOptions($request);
         for ($i=0; $i<count($request->input('variants')); $i++){
             $title = $request->input('variants')[$i];
             if (in_array($i+1, $request->input('answers'))){
@@ -30,7 +30,10 @@ class YesNo extends QuestionType{
             else{
                 $answer = 'false';
             }
-            Question::insert(array('code' => $code, 'title' => $title, 'variants' => '', 'answer' => $answer, 'points' => $request->input('points')));
+            Question::insert(array('title' => $title, 'variants' => '',
+                'answer' => $answer, 'points' => $request->input('points'),
+                'control' => $options['control'], 'section_code' => $options['section'],
+                'theme_code' => $options['theme'], 'type_code' => $options['type']));
         }
     }
 

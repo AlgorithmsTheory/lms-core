@@ -7,9 +7,8 @@
  */
 
 namespace App\Qtypes;
-use App\Http\Controllers\QuestionController;
 use App\Mypdf;
-use App\Question;
+use App\Testing\Question;
 use Illuminate\Http\Request;
 use Session;
 use Input;
@@ -23,7 +22,8 @@ class MultiChoice extends QuestionType {
 
     }
 
-    public function add(Request $request, $code){
+    public function add(Request $request){
+        $options = $this->getOptions($request);
         $parse_text = preg_split('/\[\[|\]\]/', $request->input('title'));                                              //части текста вопроса без [[ ]]
         $destinationPath = 'img/questions/title/';                                                                      //путь для картинки
         $input_images = Input::file();
@@ -59,7 +59,10 @@ class MultiChoice extends QuestionType {
                 $answers = $answers.';'.$request->input('variants')[$request->input('answers')[$i]-1];
             }
         }
-        Question::insert(array('code' => $code, 'title' => $title, 'variants' => $variants, 'answer' => $answers, 'points' => $request->input('points')));
+        Question::insert(array('title' => $title, 'variants' => $variants,
+            'answer' => $answers, 'points' => $request->input('points'),
+            'control' => $options['control'], 'section_code' => $options['section'],
+            'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
 
     public function show($count){

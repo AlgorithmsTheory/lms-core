@@ -26,14 +26,14 @@
                             <select name="type" id="select-type" class="form-control" size="1">
                                 <option value="$nbsp"></option>
                                 @foreach ($types as $type)
-                                <option value="{{$type}}">{{$type}}</option>/td>
+                                <option value="{{$type['type_name']}}">{{$type['type_name']}}</option>/td>
                                 @endforeach
                             </select>
                             <label for="select-type">Тип</label>
                         </div>
-                    </div>
 
-                    <div id="type_question_add"></div>
+
+                        <div id="type_question_add"></div>
 
 
 

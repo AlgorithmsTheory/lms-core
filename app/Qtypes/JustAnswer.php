@@ -6,10 +6,10 @@
  * Time: 16:07
  */
 namespace App\Qtypes;
-use App\Http\Controllers\QuestionController;
 use App\Mypdf;
-use App\Question;
+use App\Testing\Question;
 use Illuminate\Http\Request;
+
 class JustAnswer extends QuestionType {
     const type_code = 8;
     function __construct($id_question){
@@ -17,11 +17,15 @@ class JustAnswer extends QuestionType {
     }
     public function  create(){
     }
-    public function add(Request $request, $code){
+    public function add(Request $request){
+        $options = $this->getOptions($request);
         for ($i=0; $i<count($request->input('variants')); $i++){
             $title = $request->input('variants')[$i];
             $answer = $request->input('answers')[$i];
-            Question::insert(array('code' => $code, 'title' => $title, 'variants' => '', 'answer' => $answer, 'points' => $request->input('points')));
+            Question::insert(array('title' => $title, 'variants' => '',
+                'answer' => $answer, 'points' => $request->input('points'),
+                'control' => $options['control'], 'section_code' => $options['section'],
+                'theme_code' => $options['theme'], 'type_code' => $options['type']));
         }
     }
     public function show($count){

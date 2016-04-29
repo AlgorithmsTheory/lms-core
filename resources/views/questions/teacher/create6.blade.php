@@ -1,32 +1,37 @@
-<div class="card-body">
+    <div class="checkbox checkbox-styled">
+        <label>
+            <input type="checkbox" name="control" id="control">
+            <span>Только для контрольных тестов</span>
+        </label>
+    </div>
     <div class="form-group">
         <textarea  name="title" id="textarea1" class="form-control" rows="3" placeholder="Введине название или неполную формулировку теоремы" required></textarea>
         <label for="textarea1">Текст</label>
     </div>
 
-</div>
-<div class="card-body">
-    <div class="form-group">
-        <select name="section" id="select-section" class="form-control" size="1">
-            <option value="$nbsp"></option>
-            @foreach ($sections as $section)
-                <option value="{{$section}}">{{$section}}</option>/td>
-            @endforeach
-        </select>
-        <label for="select-section">Раздел</label>
-    </div>
+    <div id="other-options" class="col-md-10 col-sm-6">
+        <div class="form-group">
+            <select name="section" id="select-section" class="form-control" size="1">
+                <option value="$nbsp"></option>
+                @foreach ($sections as $section)
+                    <option value="{{$section['section_name']}}">{{$section['section_name']}}</option>/td>
+                @endforeach
+            </select>
+            <label for="select-section">Раздел</label>
+        </div>
 
-    <div class="form-group" id="container">
-        <!-- контейнер для ajax -->
-    </div>
+        <div class="form-group" id="container">
+            <!-- контейнер для ajax -->
+        </div>
 
-    <div class="form-group">
-        <input type="number" min="1" name="points" id="points" class="form-control" value="1">
-        <label for="points">Баллы за верный ответ</label>
-    </div>
+        <div class="form-group">
+            <input type="number" min="1" name="points" id="points" class="form-control" value="1">
+            <label for="points">Баллы за верный ответ</label>
+        </div>
 
-    <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>
-    <!-- <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a> -->
+        <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>
+        <!-- <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a> -->
+    </div>
 </div>
 </div>
 </div>

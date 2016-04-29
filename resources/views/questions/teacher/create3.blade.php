@@ -1,4 +1,9 @@
-<div class="card-body">
+    <div class="checkbox checkbox-styled">
+        <label>
+            <input type="checkbox" name="control" id="control">
+            <span>Только для контрольных тестов</span>
+        </label>
+    </div>
     <div class="form-group">
         <textarea class="form-control" name="title" id="edit-text" rows="3" placeholder="Введите текст вопроса, нажмите кнопку завершения редактирования, затем выделите пропущенные слова"></textarea>
         <p class="lead" id="general-text"></p>
@@ -8,33 +13,33 @@
     <button class="btn btn-primary btn-raised" type="button" value="finish" id="finish-edit"><span id="button-title">Завершить редактирование текста</span></button>
     <button class="btn btn-primary btn-raised" type="button" id="union">Перейти в режим объединения слов</button>
     <button class="btn btn-primary btn-raised" type="button" id="cancel-selection" style="display:none">Сбросить выделение</button>
-</div>
-
 <div id="word-variants">
 
 </div>
-<div class="card-body">
-    <div class="form-group">
-        <select name="section" id="select-section" class="form-control" size="1">
-            <option value="$nbsp"></option>
-            @foreach ($sections as $section)
-            <option value="{{$section}}">{{$section}}</option>/td>
-            @endforeach
-        </select>
-        <label for="select-section">Раздел</label>
-    </div>
+    <br><br>
+    <div id="other-options" class="col-md-10 col-sm-6">
+        <div class="form-group">
+            <select name="section" id="select-section" class="form-control" size="1">
+                <option value="$nbsp"></option>
+                @foreach ($sections as $section)
+                <option value="{{$section['section_name']}}">{{$section['section_name']}}</option>/td>
+                @endforeach
+            </select>
+            <label for="select-section">Раздел</label>
+        </div>
 
-    <div class="form-group" id="container">
-        <!-- контейнер для ajax -->
-    </div>
+        <div class="form-group" id="container">
+            <!-- контейнер для ajax -->
+        </div>
 
-    <div class="form-group">
-        <input type="number" min="1" name="points" id="points" class="form-control" value="1">
-        <label for="points">Баллы за верный ответ</label>
-    </div>
+        <div class="form-group">
+            <input type="number" min="1" name="points" id="points" class="form-control" value="1">
+            <label for="points">Баллы за верный ответ</label>
+        </div>
 
-    <button class="btn btn-primary btn-raised submit-question" type="submit" id="submit-text">Добавить вопрос</button>
-    <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
+        <button class="btn btn-primary btn-raised submit-question" type="submit" id="submit-text">Добавить вопрос</button>
+        <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
+    </div>
 </div>
 </div>
 </div>
