@@ -74,6 +74,13 @@ class Test extends Eloquent {
         return $struct;
     }
 
+    public function optionAny($option){
+        if ($option == 'Любой' || $option == 'Любая' || $option == 'Любое' || $option == "Любые"){
+            return true;
+        }
+        else return false;
+    }
+
     /**
      * Декодирует кодовую структуру теста
      * Возвращает двумерный массив, где по i идут различные структуры вопросов, j=0 - количество вопросов данной структуры, j=1 - сам код вопроса

@@ -9,7 +9,7 @@
 namespace App\Http\Controllers;
 
 
-use App\Test;
+use App\Testing\Test;
 
 class FishController extends Controller {
     /** генерирует страницу со списком доступных тестов */
