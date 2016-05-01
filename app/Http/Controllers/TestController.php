@@ -10,6 +10,7 @@ use App\Testing\Fine;
 use App\Testing\Result;
 use App\Testing\Section;
 use App\Testing\Test;
+use App\Testing\TestStructure;
 use App\Testing\Theme;
 use App\Testing\Type;
 use App\User;
@@ -226,22 +227,27 @@ class TestController extends Controller{
             $test_type = 'Тренировочный';
         }
         else $test_type = 'Контрольный';
-
         $total = $request->input('total');
         $test_time = $request->input('test-time');
         $start = $request->input('start-date').' '.$request->input('start-time');
         $end = $request->input('end-date').' '.$request->input('end-time');
-
-        $structure = '';
-        $amount = 0;
-        for ($i=0; $i<$request->input('num-rows'); $i++){
-            $structure .= $this->test->struct($request->input('num')[$i],$request->input('section')[$i],$request->input('theme')[$i],$request->input('type')[$i]).';';
-            $amount += $request->input('num')[$i];
+        Test::insert(array('test_name' => $request->input('test-name'), 'test_type' => $test_type,
+            'test_time' => $test_time,
+            'start' => $start, 'end' => $end, 'total' => $total));
+        $id_test = Test::max('id_test');
+        for ($i=0; $i<=$request->input('num-rows'); $i++){
+            if ($request->input('section')[$i] != 'Любой')
+                $section = Section::whereSection_name($request->input('section')[$i])->select('section_code')->first()->section_code;
+            else $section = 'Любой';
+            if ($request->input('theme')[$i] != 'Любая')
+                $theme = Theme::whereTheme_name($request->input('theme')[$i])->select('theme_code')->first()->theme_code;
+            else $theme = 'Любая';
+            if ($request->input('type')[$i] != 'Любой')
+                $type = Type::whereType_name($request->input('type')[$i])->select('type_code')->first()->type_code;
+            else $type = 'Любой';
+            $amount = $request->input('num')[$i];
+            TestStructure::add($id_test, $amount, $section, $theme, $type);
         }
-        $structure .= $this->test->struct($request->input('num')[$request->input('num-rows')],$request->input('section')[$request->input('num-rows')],$request->input('theme')[$request->input('num-rows')],$request->input('type')[$request->input('num-rows')]);
-        $amount += $request->input('num')[$request->input('num-rows')];
-        Test::insert(array('test_name' => $request->input('test-name'), 'test_type' => $test_type, 'amount' => $amount, 'test_time' => $test_time, 'start' => $start, 'end' => $end, 'structure' => $structure, 'total' => $total));
-
         return redirect()->route('test_create');
     }
 

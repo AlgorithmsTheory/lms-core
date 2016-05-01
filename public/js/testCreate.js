@@ -84,7 +84,7 @@ $('#question-table').on('change','.select-type, .select-theme, .select-section',
         type = $(this).val();
         tempCount = $(this).parent().parent().attr('id').substring(4);
     }
-    //ОБРАБОТАТЬ, ЕСЛИ МЕНЯЕМ ТИП ТЕСТА
+    //TODO: ОБРАБОТАТЬ, ЕСЛИ МЕНЯЕМ ТИП ТЕСТА
         token = $('.form').children().eq(0).val();
 
     $.ajax({

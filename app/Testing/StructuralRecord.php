@@ -32,4 +32,75 @@ class StructuralRecord extends Eloquent{
     protected $table = 'structural_records';
     public $timestamps = false;
     protected $fillable = [];
+
+    public static function add($id_test, $id_structure, $request_section, $request_theme, $request_type){
+        $sections = Section::select('section_code')->get();
+        $themes = Theme::select('theme_code')->get();
+        $types = Type::select('type_code')->get();
+
+        if ($request_section == 'Любой'){
+            if ($request_type == 'Любой'){                                                                              // любой раздел, любая тема, любой тип (AAA)
+                foreach ($sections as $section){
+                    foreach ($themes as $theme){
+                        if (Theme::belongsToSection($section['section_code'], $theme['theme_code'])){
+                            foreach ($types as $type){
+                                StructuralRecord::insert(array('theme_code' => $theme['theme_code'],
+                                                'section_code' => $section['section_code'], 'type_code' => $type['type_code'],
+                                                'id_test' => $id_test, 'id_structure' => $id_structure));
+                            }
+                        }
+                    }
+                }
+            }
+            else {                                                                                                      // любой раздел, любая тема (AA1)
+                foreach ($sections as $section){
+                    foreach ($themes as $theme){
+                        if (Theme::belongsToSection($section['section_code'], $theme['theme_code'])){
+                            StructuralRecord::insert(array('theme_code' => $theme['theme_code'],
+                                'section_code' => $section['section_code'], 'type_code' => $request_type,
+                                'id_test' => $id_test, 'id_structure' => $id_structure));
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            if ($request_theme == 'Любая'){
+                if ($request_type == 'Любой'){                                                                          // любая тема, любой тип (1AA)
+                    foreach ($themes as $theme){
+                        if (Theme::belongsToSection($request_section, $theme['theme_code'])){
+                            foreach ($types as $type){
+                                StructuralRecord::insert(array('theme_code' => $theme['theme_code'],
+                                    'section_code' => $request_section, 'type_code' => $type['type_code'],
+                                    'id_test' => $id_test, 'id_structure' => $id_structure));
+                            }
+                        }
+                    }
+                }
+                else {                                                                                                  // любая тема (1A1)
+                    foreach ($themes as $theme){
+                        if (Theme::belongsToSection($request_section, $theme['theme_code'])){
+                            StructuralRecord::insert(array('theme_code' => $theme['theme_code'],
+                                'section_code' => $request_section, 'type_code' => $request_type,
+                                'id_test' => $id_test, 'id_structure' => $id_structure));
+                        }
+                    }
+                }
+            }
+            else {
+                if ($request_type == 'Любой'){                                                                          // любой тип (11A)
+                    foreach ($types as $type){
+                        StructuralRecord::insert(array('theme_code' => $request_theme,
+                            'section_code' => $request_section, 'type_code' => $type['type_code'],
+                            'id_test' => $id_test, 'id_structure' => $id_structure));
+                    }
+                }
+                else {                                                                                                  // (111)
+                    StructuralRecord::insert(array('theme_code' => $request_theme,
+                        'section_code' => $request_section, 'type_code' => $request_type,
+                        'id_test' => $id_test, 'id_structure' => $id_structure));
+                }
+            }
+        }
+    }
 } 

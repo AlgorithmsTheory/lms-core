@@ -28,4 +28,11 @@ class Theme extends Eloquent {
     protected $table = 'themes';
     public $timestamps = false;
     protected $fillable = ['section_code', 'theme_code'];
+
+    /** Определяет принадлженость заданной темы к заданному разделу */
+    public static function belongsToSection($section, $theme){
+        if (is_null(Theme::whereTheme_code($theme)->whereSection_code($section)->first()))
+            return false;
+        else return true;
+    }
 } 
