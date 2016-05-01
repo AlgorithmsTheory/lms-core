@@ -169,4 +169,5 @@ Route::post('verify_students/student', ['as' => 'add_student', 'uses' => 'Person
 Route::post('verify_students/admin', ['as' => 'add_student', 'uses' => 'PersonalAccount@add_admin', 'middleware' => ['general_auth', 'admin']]);
 Route::post('verify_students/average', ['as' => 'add_student', 'uses' => 'PersonalAccount@add_average', 'middleware' => ['general_auth', 'admin']]);
 
-
+//модуль рекурсивных функций
+Route::get('recursion', ['as' => 'recursion_index', 'uses' => 'RecursionController@index']);
