@@ -32,48 +32,12 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  *
  */
 class Test extends Eloquent {
+    const GROUP_AMOUNT = 3;                                                                                             // число вопросов в групповых вопросах
     protected $tests = 'tests';
     public $timestamps = false;
     protected $fillable = ['test_name', 'amount', 'test_time', 'start', 'end', 'structure', 'total'];
 
-    /**
-     * @param $amount
-     * @param $section
-     * @param $theme
-     * @param $type
-     * Из текстовых описаний вопроса, формирует структуру a-b.c.d
-     * @return string
-     */
-    public function struct($amount, $section, $theme, $type){
-        $codificator = new Codificator();
-        if ($amount != ''){
-            $struct = $amount.'-';
-        }
-        else $struct = '';
-        if ($section == 'Любой'){
-            $struct .= 'A.';
-        }
-        else {
-            $query = $codificator->whereCodificator_type('Раздел')->whereValue($section)->select('code')->first();
-            $struct .= $query->code.'.';
-        }
-        if ($theme == 'Любая'){
-            $struct .= 'A.';
-        }
-        else {
-            $query = $codificator->whereCodificator_type('Тема')->whereValue($theme)->join('themes', 'themes.theme', '=', 'codificators.value')->where('themes.section', '=', $section)->select('code')->first();
-            $struct .= $query->code.'.';
-        }
-        if ($type == 'Любой'){
-            $struct .= 'A';
-        }
-        else {
-            $query = $codificator->whereCodificator_type('Тип')->whereValue($type)->select('code')->first();
-            $struct .= $query->code;
-        }
-        return $struct;
-    }
-
+    /** Проверяет, что установлена опция any в интерфейсе занесения теста */
     public function optionAny($option){
         if ($option == 'Любой' || $option == 'Любая' || $option == 'Любое' || $option == "Любые"){
             return true;
@@ -81,29 +45,14 @@ class Test extends Eloquent {
         else return false;
     }
 
-    /**
-     * Декодирует кодовую структуру теста
-     * Возвращает двумерный массив, где по i идут различные структуры вопросов, j=0 - количество вопросов данной структуры, j=1 - сам код вопроса
-     */
-    public function destruct($id_test){
-        $test = new Test();
-        $query = $test->whereId_test($id_test)->select('structure')->first();
-        $structure = $query->structure;
-        $destructured = explode(';', $structure);
-        $array = [];
-        for ($i=0; $i<count($destructured); $i++){
-            $temp_array = explode('-', $destructured[$i]);
-            for ($j=0; $j<=1; $j++){
-                $array[$i][$j] = $temp_array[$j];
-            }
-        }
-        return $array;
+    public function getAmount($id_test){
+        return TestStructure::whereId_test($id_test)->sum('amount');
     }
 
     /** проверяет права доступа к рыбинским вопросам */
     public function rybaTest($id_question){
         $question = new Question();
-        if ($question->getCode($id_question)['section_code'] == 10){
+        if (Question::whereId_question($id_question)->select('section_code')->first()->section_code == 10){
             if (Auth::user()['role'] == 'Рыбинец' || Auth::user()['role'] == 'Админ'){
                 return true;
             }
@@ -135,7 +84,7 @@ class Test extends Eloquent {
     }
 
     /** вычисляет оценку по обычной 5-тибалльной шкале, если дан максимально возможный балл и реальный */
-    public  function calcMarkRus($max, $real){
+    public function calcMarkRus($max, $real){
         if ($real < $max * 0.6){
             return '2';
         }
@@ -151,77 +100,84 @@ class Test extends Eloquent {
     }
 
     /** По номеру теста возвращает список id вопросов, удовлетворяющих всем параметрам теста */
-    public function prepareTest($id_test){                                                                             //выборка вопросов
-        $question = new Question();
+    public function prepareTest($id_test){                                                                              //выборка вопросов
         $array = [];
         $k = 0;
-        $destructured = $this->destruct($id_test);
-        for ($i=0; $i<count($destructured); $i++){                                                                      // идем по всем структурам
+        $structures = TestStructure::whereId_test($id_test)->select('id_structure')->get();
+        foreach ($structures as $structure){                                                                            // идем по всем структурам теста
             $temp_array = [];
-            $j = 0;
-            $temp = '"';
-            $temp .= preg_replace('~\.~', '\.', $destructured[$i][1]);
-            $temp = preg_replace('~A~', '[[:digit:]]+', $temp);                                                         //заменям все A (All) на регулярное выражение, соответствующее любому набору цифр
-            $temp .= '"';
-            $query = Question::whereRaw("code REGEXP $temp")->get();                                                  //ищем всевозможные коды вопросов
-            $test_query = $this->whereId_test($id_test)->select('test_type')->first();
-            foreach ($query as $id){
-                if ($question->getCode($id->id_question)['section_code'] != 'T'){                                                  //если вопрос не временный
-                    if ($test_query->test_type == 'Тренировочный'){                                                     //если тест тренировочный
-                        if ($id->control == 1)                                                                          //если вопрос скрытый, то проходим мимо
-                            continue;
-                        array_push($temp_array,$id->id_question);                                                       //для каждого кода создаем массив всех вопрососв с этим кодом
-                    }
-                    else array_push($temp_array,$id->id_question);                                                      // если тест контрольный
+            $records = StructuralRecord::whereId_structure($structure['id_structure'])->get();
+            foreach ($records as $record){                                                                              // идем по всем записям структуры
+                $questions = Question::whereSection_code($record['section_code'])                                       // заносим все подходящие вопросы во временный массив
+                            ->whereTheme_code($record['theme_code'])->whereType_code($record['type_code'])
+                            ->get();
+                foreach ($questions as $question){
+                    if (array_search($question['id_question'], $array) == false)                                        // проверяем, что вопрос уже не в выходном массиве
+                        array_push($temp_array, $question['id_question']);
                 }
             }
-            while ($j < $destructured[$i][0]){                                                                          //пока не закончатся вопросы этой структуры
-                $temp_array = $question->randomArray($temp_array);                                                          //выбираем случайный вопрос
+
+            $amount = $this->getAmount($id_test);
+            while ($amount > 0){                                                                                        //пока не выбрали нужное количество вопросов данной структуры
+                $temp_array = Question::randomArray($temp_array);                                                       //выбираем случайный вопрос
                 $temp_question = $temp_array[count($temp_array)-1];
-                if ($question->getSingle($temp_question)){                                                                  //если вопрос одиночный (то есть как и было ранее)
+
+                if (Question::getSingle($temp_question)){                                                               //если вопрос одиночный (то есть как и было ранее)
                     $array[$k] = $temp_question;                                                                        //добавляем вопрос в выходной массив
                     $k++;
-                    $j++;
+                    $amount--;
                     array_pop($temp_array);
                 }
                 else {                                                                                                  //если вопрос может использоваться только в группе
-                    $query = $question->whereId_question($temp_question)->first();
-                    $base_question_type = $question->getCode($temp_question)['type_code'];                                  //получаем код типа базового вопроса, для которого будем создавать группу
+                    $query = Question::whereId_question($temp_question)->first();
+                    $base_question_type = $query->type_code;                                                            //получаем код типа базового вопроса, для которого будем создавать группу
                     $max_id = Question::max('id_question');
                     $new_id = $max_id+1;
                     $new_title = $query->title;                                                                         //берем данные текущего вопроса
                     $new_answer = $query->answer;
                     array_pop($temp_array);                                                                             //и убираем его из массива
-                    $new_temp_array = [];
-                    for ($p=0; $p < count($temp_array); $p++){                                                          //создаем копию массива подходящих вопросов
-                        $new_temp_array[$p] = $temp_array[$p];
-                    }
-                    $l = 0;
-                    while ($l < 3) {                                                                                    //берем еще 3 вопроса этого типа => в итоге получаем 4
-                        $new_temp_array = $question->randomArray($new_temp_array);
-                        $temp_question_new = $new_temp_array[count($new_temp_array)-1];
 
-                        if ($question->getCode($temp_question_new)['type_code'] != $base_question_type){                    //если тип вопроса не совпадает с базовым
-                            array_pop($new_temp_array);                                                                 //удаляем его из новго массива и идем дальше
-                            continue;
+                    $new_temp_array = [];
+                    foreach ($temp_array as $temp_question){                                                            // создаем массив из подходящих групповых вопросов
+                        if (Question::whereId_question($temp_question)->first()->type_code == $base_question_type){
+                            array_push($new_temp_array, $temp_question);
                         }
+                    }
+
+                    if (count($new_temp_array) < $this::GROUP_AMOUNT - 1){                                              // если нужных вопросов заведомо не хватит для составления группового вопроса
+                        foreach ($new_temp_array as $question_for_remove){                                              // удаляем их из temp_array
+                            $index_in_old_array = array_search($question_for_remove, $temp_array);                      //ищем в базовом массиве индекс нашего вопроса
+                            $chosen = $temp_array[$index_in_old_array];                                                 //и меняем его с последним элементом в этом массиве
+                            $temp_array[$index_in_old_array]=$temp_array[count($temp_array)-1];
+                            $temp_array[count($temp_array)-1] = $chosen;
+                            array_pop($temp_array);
+                        }
+                        continue;                                                                                       // продолжаем выбирать вопросы для этой структуры
+                    }
+
+                    $l = 1;
+                    while ($l < $this::GROUP_AMOUNT) {                                                                  //берем 3 вопроса
+                        $new_temp_array = Question::randomArray($new_temp_array);
+                        $temp_question_new = $new_temp_array[count($new_temp_array)-1];
 
                         $index_in_old_array = array_search($temp_question_new, $temp_array);                            //ищем в базовом массиве индекс нашего вопроса
                         $chosen = $temp_array[$index_in_old_array];                                                     //и меняем его с последним элементом в этом массиве
                         $temp_array[$index_in_old_array]=$temp_array[count($temp_array)-1];
                         $temp_array[count($temp_array)-1] = $chosen;
 
-                        $query_new = $question->whereId_question($temp_question_new)->first();
+                        $query_new = Question::whereId_question($temp_question_new)->first();
                         $new_title .= ';'.$query_new->title;                                                            //составляем составной вопрос
                         $new_answer .= ';'.$query_new->answer;
-                        array_pop($temp_array);                                                                         //удаляем и из базовгго массива
+                        array_pop($temp_array);                                                                         //удаляем и из базового массива
                         array_pop($new_temp_array);                                                                     //и из нового
                         $l++;
                     }
-                    Question::insert(array('control' => 0, 'code' => 'T.T.'.$base_question_type, 'title' => $new_title, 'variants' => '', 'answer' => $new_answer, 'points' => 1));    //вопрос про код и баллы
+                    Question::insert(array('title' => $new_title, 'variants' => '', 'answer' => $new_answer,            //вопрос про код и баллы
+                                            'points' => 1, 'control' => 0, 'theme_code' => -1,
+                                            'section_code' => -1, 'type_code' => $base_question_type));
                     $array[$k] = $new_id;                                                                               //добавляем сформированный вопрос в выходной массив
                     $k++;
-                    $j++;
+                    $amount--;
                 }
             }
         }

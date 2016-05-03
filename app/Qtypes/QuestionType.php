@@ -20,6 +20,10 @@ abstract class QuestionType {
     public  $variants;
     public  $answer;
     public  $points;
+    public  $control;
+    public  $theme_code;
+    public  $section_code;
+    public  $type_code;
     function __construct($id_question){
         if ($id_question != Question::max('id_question')+1){                                                            //проверка не является ли вопрос новым
             $this->question = new Question();
@@ -28,6 +32,10 @@ abstract class QuestionType {
             $this->variants = $query->variants;
             $this->answer = $query->answer;
             $this->points = $query->points;
+            $this->control = $query->control;
+            $this->section_code = $query->section_code;
+            $this->theme_code = $query->theme_code;
+            $this->type_code = $query->type_code;
         }
         $this->id_question = $id_question;
     }

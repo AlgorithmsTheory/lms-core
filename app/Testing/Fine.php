@@ -44,7 +44,7 @@ class Fine extends Eloquent{
 
     /** вносим изменнеия в таблицу штрафов при отправлении контрольного теста */
     public function updateFine($user, $test, $mark){
-        $query_fine = $this->whereId_user($user)->whereId_test($test)->first();
+        $query_fine = $this->whereId($user)->whereId_test($test)->first();
         if (is_null($query_fine)){                                                                                      //если в таблице штрафов еще не зафиксировано прохождение данного контрольного теста данным студентом
             if ($mark > 2) {                                                                                            //если оценка положительная
                 Fine::insert(array('id_user' => $user, 'id_test' => $test, 'fine' => 0, 'access' => false));            //штраф не начисляется

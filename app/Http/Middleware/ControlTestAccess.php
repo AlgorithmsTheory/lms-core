@@ -9,8 +9,8 @@
 namespace App\Http\Middleware;
 
 
-use App\Fine;
-use App\Test;
+use App\Testing\Fine;
+use App\Testing\Test;
 use Auth;
 use Closure;
 use Illuminate\Http\Request;
@@ -23,7 +23,7 @@ class ControlTestAccess {
         $id_test = strrev(explode('/',strrev($request->url()))[0]);
         $query_test = Test::whereId_test($id_test)->first();
         if ($query_test->test_type == 'Контрольный'){
-            $query = Fine::whereId_test($id_test)->whereId_user(Auth::user()['id'])->select('fine','access')->first();
+            $query = Fine::whereId_test($id_test)->whereId(Auth::user()['id'])->select('fine','access')->first();
             if (!$query->access && !is_null($query)){                                                                                   // если попытки нет
                 $fine = $query->fine;
                 $factor = $fine_class->countFactor($fine);

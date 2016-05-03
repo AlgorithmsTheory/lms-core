@@ -260,20 +260,20 @@ class TestController extends Controller{
         $saved_test = [];
         $current_date = date('U');
 
-        $query = $this->test->whereId_test($id_test)->select('amount', 'test_name', 'test_time', 'start', 'end', 'test_type')->first();
+        $query = $this->test->whereId_test($id_test)->select('test_name', 'test_time', 'start', 'end', 'test_type')->first();
         if ($current_date < strtotime($query->start) || $current_date > strtotime($query->end)){                          //проверка открыт ли тест
             return view('no_access');
         }
-        $amount = $query->amount;                                                                                       //кол-во вопрососв в тесте
-        $result->test_name = $query->test_name;
+        $amount = $this->test->getAmount($id_test);
         $test_time = $query->test_time;
         $test_type = $query->test_type;
 
         if (!Session::has('test')){                                                                                     //если в тест зайдено первый раз
             $ser_array = $this->test->prepareTest($id_test);
+            //dd($ser_array);
             for ($i=0; $i<$amount; $i++){
                 $id = $question->chooseQuestion($ser_array);
-                if (!$this->test->rybaTest($id)){                                                                  //проверка на вопрос по рыбе
+                if (!$this->test->rybaTest($id)){                                                                       //проверка на вопрос по рыбе
                     return view('no_access');
                 };
                 $data = $question->show($id, $i+1);                                                                     //должны получать название view и необходимые параметры
@@ -288,9 +288,8 @@ class TestController extends Controller{
             $current_result = $query+1;                                                                                 //создаем строку в таблице пройденных тестов
             $query2 = $user->whereEmail(Auth::user()['email'])->select('id')->first();
             $result->id_result = $current_result;
-            $result->id_user = $query2->id;;
+            $result->id = $query2->id;;
             $result->id_test = $id_test;
-            $result->amount = $amount;
             $result->save();
             $saved_test = serialize($saved_test);
             Result::where('id_result', '=', $current_result)->update(['saved_test' => $saved_test]);
@@ -334,7 +333,7 @@ class TestController extends Controller{
         $j = 1;
         $question = new Question();
 
-        $query = $this->test->whereId_test($id_test)->select('total', 'test_name', 'amount', 'test_type')->first();
+        $query = $this->test->whereId_test($id_test)->select('total', 'test_name', 'test_type')->first();
         $total = $query->total;
         $test_type = $query->test_type;
         for ($i=0; $i<$amount; $i++){                                                                                   //обрабатываем каждый вопрос
@@ -362,7 +361,6 @@ class TestController extends Controller{
         $result = new Result();
         $date = date('Y-m-d H:i:s', time());                                                                            //текущее время
                                                                                                                         //если тест тренировочный
-        $amount = $query->amount;
         $widgets = [];
         $query = $result->whereId_result($current_test)->first();                                                       //берем сохраненный тест из БД
         $saved_test = $query->saved_test;

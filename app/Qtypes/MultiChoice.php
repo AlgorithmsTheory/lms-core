@@ -108,7 +108,6 @@ class MultiChoice extends QuestionType {
         }
         else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array, 'right_percent' => $right_percent);
         //echo $score.'<br>';
-        dd($data['mark']);
         return $data;
     }
 

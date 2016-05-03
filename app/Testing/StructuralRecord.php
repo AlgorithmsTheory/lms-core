@@ -34,8 +34,8 @@ class StructuralRecord extends Eloquent{
     protected $fillable = [];
 
     public static function add($id_test, $id_structure, $request_section, $request_theme, $request_type){
-        $sections = Section::select('section_code')->get();
-        $themes = Theme::select('theme_code')->get();
+        $sections = Section::select('section_code')->where('section_code', '>', 0)->get();
+        $themes = Theme::select('theme_code')->where('theme_code', '>', 0)->get();
         $types = Type::select('type_code')->get();
 
         if ($request_section == 'Любой'){

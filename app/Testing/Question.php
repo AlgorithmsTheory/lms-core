@@ -46,42 +46,11 @@ class Question extends Eloquent {
     protected $table = 'questions';
     public $timestamps = false;
 
-    /** По входным данным формы section, theme, type определяет код вопроса a.b.c */
-    public function setCode(Request $request){
-        $codificator = new Codificator();
-        $section = $request->input('section');                                                                          //получаем необходимые данные из формы
-        $theme = $request->input('theme');
-        $type = $request->input('type');
-        $query1 = $codificator->whereCodificator_type('Раздел')->whereValue($section)->select('code')->first();         //с помощью кодификаторов составляем трехразрядный код вопроса
-        $section_code = $query1->code;
-        $query2 = $codificator->whereCodificator_type('Тема')->whereValue($theme)->select('code')->first();
-        $theme_code = $query2->code;
-        $query3 = $codificator->whereCodificator_type('Тип')->whereValue($type)->select('code')->first();
-        $type_code = $query3->code;
-        $code = $section_code.'.'.$theme_code.'.'.$type_code;
-        return $code;
-    }
-
-    /** по id вопроса формирует массив из кодов и названий */
-    public function getCode($id){                                                                                       //декодирование вопроса в асс. массив
-        $codificator = new Codificator();
-        $query = $this->whereId_question($id)->select('code')->first();
-        $code = $query->code;          //получили код вопроса
-        $array = explode('.',$code);
-        $query1 = $codificator->whereCodificator_type('Раздел')->whereCode($array[0])->select('value')->first();
-        $section = $query1->value;
-        $query2 = $codificator->whereCodificator_type('Тема')->whereCode($array[1])->join('themes', 'themes.theme', '=', 'codificators.value')->where('themes.section', '=', $section)->select('value')->first();
-        $theme = $query2->value;
-        $query3 = $codificator->whereCodificator_type('Тип')->whereCode($array[2])->select('value')->first();
-        $type = $query3->value;
-        $decode = array('section' => $section, 'theme' => $theme, 'type' => $type,
-            'section_code' => $array[0], 'theme_code' => $array[1], 'type_code' => $array[2]);
-        return $decode;
-    }
 
     /** Определяет одиночный вопрос (true) или может использоваться только в группе с такими же (false) */
-    public function getSingle($id){
-        $type = $this->getCode($id)['type'];
+    public static function getSingle($id){
+        $type_code = Question::whereId_question($id)->select('type_code')->first()->type_code;
+        $type = Type::whereType_code($type_code)->select('type_name')->first()->type_name;
         if ($type == 'Да/Нет' || $type == 'Определение' || $type == 'Просто ответ'){
             return false;
         }
@@ -89,7 +58,7 @@ class Question extends Eloquent {
     }
 
     /** из массива выбирает случайный элемент и ставит его в конец массива, меняя местами с последним элементом */
-    public function randomArray($array){
+    public static function randomArray($array){
         $index = rand(0,count($array)-1);                                                                               //выбираем случайный вопрос
         $chosen = $array[$index];
         $array[$index]=$array[count($array)-1];
@@ -124,8 +93,8 @@ class Question extends Eloquent {
 
     /** Показывает вопрос согласно типу */
     public function show($id_question, $count){
-        $decode = $this->getCode($id_question);
-        $type = $decode['type'];
+        $type = Question::whereId_question($id_question)->join('types', 'questions.type_code', '=', 'types.type_code')
+                ->first()->type_name;
         switch($type){
             case 'Выбор одного из списка':
                 $one_choice = new OneChoice($id_question);
@@ -173,9 +142,10 @@ class Question extends Eloquent {
     /** Проверяет вопрос согласно типу и на выходе дает баллы за него */
     public function check($array){
         $id = $array[0];
-        $query = $this->whereId_question($id)->select('answer','points')->first();
+        $query = $this->whereId_question($id)->select('answer','points', 'type_code')->first();
         $points = $query->points;
-        $type = $this->getCode($id)['type'];
+        $type = Type::whereType_code($query['type_code'])->select('type_name')->first()->type_name;
+        //dd($array);
         if (count($array)==1){                                                                                          //если не был отмечен ни один вариант
             $choice = [];
             $score = 0;
@@ -227,16 +197,13 @@ class Question extends Eloquent {
     /** По id вопроса возвращает массив, где первый элемент - номер лекции, второй - <раздел.тема> */
     public function linkToLecture($id_question){
         $array = [];
-        $theme = $this->getCode($id_question)['theme'];
-        $query_theme = Theme::whereTheme($theme)
-            ->join('codificators', 'themes.theme', '=', 'codificators.value')
-            ->where('codificators.codificator_type', '=', 'Тема')
-            ->first();
-        $lecture_id = $query_theme->lecture_id;
-        $query_lec = Lecture::whereId_lecture($lecture_id)->first();
-        $lection_number = $query_lec->lecture_number;
-        array_push($array, $lection_number);
-        array_push($array, '#'.$this->getCode($id_question)['section_code'].'.'.$this->getCode($id_question)['theme_code']);
+        $id_lecture = Question::whereId_question($id_question)
+                ->join('themes', 'questions.theme_code', '=', 'themes.theme_code')
+                ->first()->id_lecture;
+        $lecture_number = Lecture::whereId_lecture($id_lecture)->select('lecture_number')->first()->lecture_number;
+        array_push($array, $lecture_number);
+        array_push($array, '#'.Question::whereId_question($id_question)->select('section_code')->first()->section_code.
+                   '.'.Question::whereId_question($id_question)->select('theme_code')->first()->theme_code);
         return $array;
     }
 } 

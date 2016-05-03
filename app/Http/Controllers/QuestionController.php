@@ -89,35 +89,35 @@ class QuestionController extends Controller{
         switch($type){
             case 'Выбор одного из списка':
                 $one_choice = new OneChoice($id);
-                $one_choice->add($request, $section_code, $theme_code, $type_code);
+                $one_choice->add($request);
                 break;
             case 'Выбор нескольких из списка':
                 $multi_choice = new MultiChoice($id);
-                $multi_choice->add($request, $section_code, $theme_code, $type_code);
+                $multi_choice->add($request);
                 break;
             case 'Текстовый вопрос':
                 $fill_gaps = new FillGaps($id);
-                $fill_gaps->add($request, $section_code, $theme_code, $type_code);
+                $fill_gaps->add($request);
                 break;
             case 'Таблица соответствий':
                 $fill_gaps = new AccordanceTable($id);
-                $fill_gaps->add($request, $section_code, $theme_code, $type_code);
+                $fill_gaps->add($request);
                 break;
             case 'Да/Нет':
                 $fill_gaps = new YesNo($id);
-                $fill_gaps->add($request, $section_code, $theme_code, $type_code);
+                $fill_gaps->add($request);
                 break;
             case 'Определение':
                 $definition = new Definition($id);
-                $definition->add($request, $section_code, $theme_code, $type_code);
+                $definition->add($request);
                 break;
             case 'Просто ответ':
                 $just = new JustAnswer($id);
-                $just->add($request, $section_code, $theme_code, $type_code);
+                $just->add($request);
                 break;
             case 'Теорема':
                 $theorem = new Theorem($id);
-                $theorem->add($request, $section_code, $theme_code, $type_code);
+                $theorem->add($request);
                 break;
         }
         return redirect()->route('question_create');
