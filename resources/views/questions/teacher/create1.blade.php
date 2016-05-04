@@ -8,7 +8,10 @@
         <textarea  name="title" id="textarea1" class="form-control" rows="3" placeholder="" required></textarea>
         <label for="textarea1">Текст</label>
     </div>
-
+    <div id="text-images-container">
+        <input type="file" name="text-images[]" id="text-image-input-1" class="text-image-input">
+    </div>
+    <br>
     <!--<div class="form-group">
         <textarea  name="answer" id="textarea2" class="form-control" rows="3" placeholder=""></textarea>
         <label for="textarea2">Ответ</label>
@@ -79,3 +82,4 @@
 </div>
 
 {!! HTML::script('js/question_create/oneChoice.js') !!}
+{!! HTML::script('js/question_create/imageInTitle.js') !!}

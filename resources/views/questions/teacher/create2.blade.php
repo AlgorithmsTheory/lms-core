@@ -110,3 +110,4 @@
 </div>
 
 {!! HTML::script('js/question_create/multiChoice.js') !!}
+{!! HTML::script('js/question_create/imageInTitle.js') !!}

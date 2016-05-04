@@ -10,6 +10,7 @@ use App\Http\Controllers\QuestionController;
 use App\Mypdf;
 use App\Testing\Question;
 use Illuminate\Http\Request;
+use Input;
 use Session;
 class OneChoice extends QuestionType {
     const type_code = 1;
@@ -20,12 +21,26 @@ class OneChoice extends QuestionType {
     }
     public  function add(Request $request){
         $options = $this->getOptions($request);
+        $parse_text = preg_split('/\[\[|\]\]/', $request->input('title'));                                              //части текста вопроса без [[ ]]
+        $destinationPath = 'img/questions/title/';                                                                      //путь для картинки
+        $input_images = Input::file();
+        for ($i = 1; $i < count($input_images['text-images']); $i++){
+            $extension = $input_images['text-images'][$i-1]->getClientOriginalExtension();                              //получаем расширение файла
+            $fileName = rand(11111, 99999) . '.' . $extension;                                                          //случайное имя картинки
+            $input_images['text-images'][$i-1]->move($destinationPath, $fileName);                                      //перемещаем картинку
+            $parse_text[2*$i-1] = '::'.$destinationPath.$fileName.'::';                                                 //заменить каждуый старый файл на новый
+        }
+        $title = '';
+        foreach ($parse_text as $part){                                                                                 //собираем все в строку
+            $title .= $part;
+        }
+
         $variants = $request->input('variants')[0];
         for ($i=1; $i<count($request->input('variants')); $i++){
             $variants = $variants.';'.$request->input('variants')[$i];
         }
         $answer = $request->input('variants')[0];
-        Question::insert(array('title' => $request->input('title'), 'variants' => $variants,
+        Question::insert(array('title' => $title, 'variants' => $variants,
                         'answer' => $answer, 'points' => $request->input('points'),
                         'control' => $options['control'], 'section_code' => $options['section'],
                         'theme_code' => $options['theme'], 'type_code' => $options['type']));
@@ -35,7 +50,7 @@ class OneChoice extends QuestionType {
         $variants = explode(";", $parse);
         $new_variants = $this->question->mixVariants($variants);
         $view = 'tests.show1';
-        $array = array('view' => $view, 'arguments' => array('text' => $this->text, "variants" => $new_variants, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
+        $array = array('view' => $view, 'arguments' => array('text' => explode('::',$this->text), "variants" => $new_variants, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
         return $array;
     }
     public function check($array){
