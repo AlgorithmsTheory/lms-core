@@ -7,8 +7,9 @@
  */
 namespace App\Qtypes;
 use App\Mypdf;
-use App\Question;
+use App\Testing\Question;
 use Illuminate\Http\Request;
+
 class FillGaps extends QuestionType {
     const type_code = 3;
     function __construct($id_question){
@@ -16,7 +17,8 @@ class FillGaps extends QuestionType {
     }
     public function  create(){
     }
-    public function add(Request $request, $code){
+    public function add(Request $request){
+        $options = $this->getOptions($request);
         $variants = '';
         $arr_answers = [];
         $answers = explode('|',$request->input('variants-1')[1])[0];
@@ -46,7 +48,10 @@ class FillGaps extends QuestionType {
         for ($i=0; $i<count($arr_answers); $i++){
             $wet_text = preg_replace('~'.explode('|',$arr_answers[$i])[0].'\|'.explode('|',$arr_answers[$i])[1].'~', '<>' , $wet_text);
         }
-        Question::insert(array('code' => $code, 'title' => $wet_text, 'variants' => $variants, 'answer' => $answers, 'points' => $request->input('points')));
+        Question::insert(array('title' => $wet_text, 'variants' => $variants,
+            'answer' => $answers, 'points' => $request->input('points'),
+            'control' => $options['control'], 'section_code' => $options['section'],
+            'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
     public function show($count){
         $text_parts = explode("<>", $this->text);                                                                       //части текста между селектами

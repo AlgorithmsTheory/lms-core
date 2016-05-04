@@ -18,8 +18,10 @@ use App\Qtypes\MultiChoice;
 use App\Qtypes\OneChoice;
 use App\Qtypes\Theorem;
 use App\Qtypes\YesNo;
-use App\Question;
-use App\Test;
+use App\Testing\Question;
+use App\Testing\Test;
+use App\Testing\TestStructure;
+use App\Testing\Type;
 use Illuminate\Http\Request;
 use mPDF;
 use ZipArchive;
@@ -27,9 +29,8 @@ use ZipArchive;
 class GeneratorController extends Controller {
 
     private function pdfQuestion(Mypdf $fpdf, $id_question, $count, $answered=false){
-        $question = new Question();
-        $decode = $question->getCode($id_question);
-        $type = $decode['type'];
+        $type = Question::whereId_question($id_question)->join('types', 'questions.type_code', '=', 'types.type_code')
+                ->first()->type_name;
         switch($type){
             case 'Выбор одного из списка':
                 $one_choice = new OneChoice($id_question);
@@ -136,9 +137,8 @@ class GeneratorController extends Controller {
 
         $test_name = $request->input('test');
         $num_var = $request->input('num-variants');
-        $query = Test::whereTest_name($test_name)->select('amount', 'id_test')->first();
-        $id_test = $query->id_test;
-        $amount = $query->amount;                                                                                       // кол-во вопрососв в тесте
+        $id_test = Test::whereTest_name($test_name)->select('id_test')->first()->id_test;
+        $amount = $test->getAmount($id_test);                                                                                // кол-во вопрососв в тесте
 
         $today =  date("Y-m-d H-i-s");
         $dir = 'download/pdf_tests/'.$today;
@@ -150,10 +150,10 @@ class GeneratorController extends Controller {
             $answered_fpdf = new Mypdf();
             $this->headOfPdf($fpdf, $test_name, $k, $amount);
             $this->headOfPdf($answered_fpdf, $test_name, $k, $amount);
-            $ser_array = $test->prepareTest($id_test);                                                   // подготавливаем тест
+            $ser_array = $test->prepareTest($id_test);                                                                  // подготавливаем тест
             for ($i=0; $i<$amount; $i++){                                                                               // показываем каждый вопрос из теста
                 $id = $question->chooseQuestion($ser_array);
-                if (!$test->rybaTest($id)){                                                                  //проверка на вопрос по рыбе
+                if (!$test->rybaTest($id)){                                                                             //проверка на вопрос по рыбе
                     return view('no_access');
                 };
                 $this->pdfQuestion($fpdf, $id, $i+1);

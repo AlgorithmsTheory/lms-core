@@ -6,25 +6,26 @@
  * Time: 19:43
  */
 
-namespace App;
+namespace App\Testing;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 
 /**
- * @method static \Illuminate\Database\Query\Builder|\App\Fine whereId_fine($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Fine  whereId_user($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Fine  whereId_test($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Fine  whereFine($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Fine  whereAccess($value)
- * @method static \Illuminate\Database\Eloquent|\App\Fine  get()
- * @method static \Illuminate\Database\Eloquent|\App\Fine  where()
- * @method static \Illuminate\Database\Eloquent|\App\Fine  select()
- * @method static \Illuminate\Database\Eloquent|\App\Fine  first()
- * @method static \Illuminate\Database\Eloquent|\App\Fine  insert($array)
- * @method static \Illuminate\Database\Eloquent|\App\Fine  table($array)
- * @method static \Illuminate\Database\Eloquent|\App\Fine  max($array)
- * @method static \Illuminate\Database\Eloquent|\App\Theme  join()
- * @method static \Illuminate\Database\Eloquent|\App\Theme  on()
+ * @method static \Illuminate\Database\Query\Builder|\App\Testing\Fine whereId_fine($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Testing\Fine  whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Testing\Fine  whereId_test($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Testing\Fine  whereFine($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Testing\Fine  whereAccess($value)
+ *
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\Fine  get()
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\Fine  where()
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\Fine  select()
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\Fine  first()
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\Fine  insert($array)
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\Fine  table($array)
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\Fine  max($array)
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\Theme  join()
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\Theme  on()
  *
  */
 
@@ -43,7 +44,7 @@ class Fine extends Eloquent{
 
     /** вносим изменнеия в таблицу штрафов при отправлении контрольного теста */
     public function updateFine($user, $test, $mark){
-        $query_fine = $this->whereId_user($user)->whereId_test($test)->first();
+        $query_fine = $this->whereId($user)->whereId_test($test)->first();
         if (is_null($query_fine)){                                                                                      //если в таблице штрафов еще не зафиксировано прохождение данного контрольного теста данным студентом
             if ($mark > 2) {                                                                                            //если оценка положительная
                 Fine::insert(array('id_user' => $user, 'id_test' => $test, 'fine' => 0, 'access' => false));            //штраф не начисляется

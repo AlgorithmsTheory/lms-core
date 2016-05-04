@@ -1,4 +1,9 @@
-<div class="card-body">
+    <div class="checkbox checkbox-styled">
+        <label>
+            <input type="checkbox" name="control" id="control">
+            <span>Только для контрольных тестов</span>
+        </label>
+    </div>
     <!— ДА/НЕТ-->
     <h2>Поочередно добавляйте утверждения. Напротив верных отмечайте галочку.</h2>
     <br>
@@ -20,30 +25,30 @@
         <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-var-4"><b>+</b></button>
         <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-var-4"><b>-</b></button>
     </div>
-</div>
 
-<div class="card-body">
-    <div class="form-group">
-        <select name="section" id="select-section" class="form-control" size="1">
-            <option value="$nbsp"></option>
-            @foreach ($sections as $section)
-            <option value="{{$section}}">{{$section}}</option>/td>
-            @endforeach
-        </select>
-        <label for="select-section">Раздел</label>
+    <div id="other-options" class="col-md-10 col-sm-6">
+        <div class="form-group">
+            <select name="section" id="select-section" class="form-control" size="1">
+                <option value="$nbsp"></option>
+                @foreach ($sections as $section)
+                <option value="{{$section['section_name']}}">{{$section['section_name']}}</option>/td>
+                @endforeach
+            </select>
+            <label for="select-section">Раздел</label>
+        </div>
+
+        <div class="form-group" id="container">
+            <!— контейнер для ajax —>
+        </div>
+
+        <div class="form-group">
+            <input type="number" min="1" name="points" id="points" class="form-control" value="1">
+            <label for="points">Баллы за верный ответ</label>
+        </div>
+
+        <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>
+        <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
     </div>
-
-    <div class="form-group" id="container">
-        <!— контейнер для ajax —>
-    </div>
-
-    <div class="form-group">
-        <input type="number" min="1" name="points" id="points" class="form-control" value="1">
-        <label for="points">Баллы за верный ответ</label>
-    </div>
-
-    <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>
-    <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
 </div>
 </div>
 </div>

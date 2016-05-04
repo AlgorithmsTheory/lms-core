@@ -8,7 +8,7 @@
 namespace App\Qtypes;
 use App\Http\Controllers\QuestionController;
 use App\Mypdf;
-use App\Question;
+use App\Testing\Question;
 use Illuminate\Http\Request;
 use Session;
 class OneChoice extends QuestionType {
@@ -18,13 +18,17 @@ class OneChoice extends QuestionType {
     }
     public function  create(){
     }
-    public  function add(Request $request, $code){
+    public  function add(Request $request){
+        $options = $this->getOptions($request);
         $variants = $request->input('variants')[0];
         for ($i=1; $i<count($request->input('variants')); $i++){
             $variants = $variants.';'.$request->input('variants')[$i];
         }
         $answer = $request->input('variants')[0];
-        Question::insert(array('code' => $code, 'title' => $request->input('title'), 'variants' => $variants, 'answer' => $answer, 'points' => $request->input('points')));
+        Question::insert(array('title' => $request->input('title'), 'variants' => $variants,
+                        'answer' => $answer, 'points' => $request->input('points'),
+                        'control' => $options['control'], 'section_code' => $options['section'],
+                        'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
     public function show($count){
         $parse = $this->variants;

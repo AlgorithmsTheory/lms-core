@@ -6,15 +6,17 @@
  * Time: 16:49
  */
 namespace App\Http\Controllers;
-use App\Fine;
-use App\Result;
-use App\Test;
-use App\Theme;
+use App\Testing\Fine;
+use App\Testing\Result;
+use App\Testing\Section;
+use App\Testing\Test;
+use App\Testing\TestStructure;
+use App\Testing\Theme;
+use App\Testing\Type;
 use App\User;
 use Auth;
 use Illuminate\Http\Request;
-use App\Question;
-use App\Codificator;
+use App\Testing\Question;
 use Illuminate\Http\Response;
 use Session;
 use View;
@@ -53,16 +55,15 @@ class TestController extends Controller{
 
     /** генерирует страницу создания нового теста */
     public function create(){
-        $codificator = new Codificator();
         $types = [];
         $sections = [];
-        $query = $codificator->whereCodificator_type('Тип')->select('value')->get();                                    //формируем массив типов
+        $query = Type::select('type_name')->get();                                                                      //формируем массив типов
         foreach ($query as $type){
-            array_push($types,$type->value);
+            array_push($types,$type->type_name);
         }
-        $query = $codificator->whereCodificator_type('Раздел')->select('value')->get();                                 //формируем массив разделов
+        $query = Section::select('section_name')->get();                                                                //формируем массив разделов
         foreach ($query as $section){
-            array_push($sections, $section->value);
+            array_push($sections, $section->section_name);
         }
         return view('tests.create', compact('types', 'sections'));
     }
@@ -151,11 +152,12 @@ class TestController extends Controller{
     /** AJAX-метод: получает список тем раздела */
     public function getTheme(Request $request){
         if ($request->ajax()) {
-            $themes = new Theme();
             $themes_list = [];
-            $query = $themes->whereSection($request->input('choice'))->select('theme')->get();
+            $section = $request->input('choice');
+            $section_code = Section::whereSection_name($section)->first()->section_code;
+            $query = Theme::whereSection_code($section_code)->select('theme_name')->get();
             foreach ($query as $str){
-                array_push($themes_list,$str->theme);
+                array_push($themes_list,$str->theme_name);
             }
             return (String) view('tests.getTheme', compact('themes_list'));
         }
@@ -164,13 +166,57 @@ class TestController extends Controller{
     /** AJAX-метод: по названию раздела, темы и типа вычисляет количество доступных вопросов в БД данной структуры */
     public function getAmount(Request $request){
         if ($request->ajax()) {
-            $question = new Question();
-            $code = $this->test->struct('',$request->input('section'),$request->input('theme'),$request->input('type'));
-            $code = preg_replace('~A~', '[[:digit:]]+', $code );
-            if ($request->input('test_type') == 'Тренировочный')
-                $amount = $question->where('code', 'regexp', $code)->whereControl(false)->select('id_question')->count();
-            else
-                $amount = $question->where('code', 'regexp', $code)->select('id_question')->count();
+            if ($request->input('section') != 'Любой')
+                $section = Section::whereSection_name($request->input('section'))->select('section_code')->first()->section_code;
+            else $section = 'Любой';
+            if ($request->input('theme') != 'Любая')
+                $theme = Theme::whereTheme_name($request->input('theme'))->select('theme_code')->first()->theme_code;
+            else $theme = 'Любая';
+            if ($request->input('type') != 'Любой')
+                $type = Type::whereType_name($request->input('type'))->select('type_code')->first()->type_code;
+            else $type = 'Любой';
+
+            if ($section == 'Любой'){
+                if ($type == 'Любой'){
+                    if ($request->input('test_type') == 'Тренировочный')                                                // любой раздел, любая тема, любой тип, тренировочный тест
+                        $amount = Question::whereControl(0)->select('id_question')->count();
+                    else $amount = Question::select('id_question')->count();                                            // любой раздел, любая тема, любой тип, контрольный тест
+                }
+                else {
+                    if ($request->input('test_type') == 'Тренировочный')                                                // любой раздел, любая тема, тренировочный тест
+                        $amount = Question::whereControl(0)->whereType_code($type)->select('id_question')->count();
+                    else $amount = Question::whereType_code($type)->select('id_question')->count();                     // любой раздел, любая тема, контрольный тест
+                }
+            }
+            else {
+                if ($theme == 'Любая'){
+                    if ($type == 'Любой'){
+                        if ($request->input('test_type') == 'Тренировочный')                                            //любая тема, любой тип, тренировочный тест
+                            $amount = Question::whereControl(0)->whereSection_code($section)->select('id_question')->count();
+                        else $amount = Question::whereSection_code($section)->select('id_question')->count();           // любая тема, любой тип, контрольный тест
+                    }
+                    else {
+                        if ($request->input('test_type') == 'Тренировочный')                                            //любая тема, тренировочный тест
+                            $amount = Question::whereControl(0)->whereSection_code($section)->whereType_code($type)->select('id_question')->count();
+                        else                                                                                            // любая тема, контрольный тест
+                            $amount = Question::whereSection_code($section)->whereType_code($type)->select('id_question')->count();
+                    }
+                }
+                else {
+                    if ($type == 'Любой'){
+                        if ($request->input('test_type') == 'Тренировочный')                                            // любой тип, тренировочный тест
+                            $amount = Question::whereControl(0)->whereSection_code($section)->whereTheme_code($theme)->select('id_question')->count();
+                        else                                                                                            // любой тип, контрольный тест
+                            $amount = Question::whereSection_code($section)->whereTheme_code($theme)->select('id_question')->count();
+                    }
+                    else {
+                        if ($request->input('test_type') == 'Тренировочный')                                            // тренировочный тест
+                            $amount = Question::whereControl(0)->whereSection_code($section)->whereTheme_code($theme)->whereType_code($type)->select('id_question')->count();
+                        else                                                                                            // контрольный тест
+                            $amount = Question::whereSection_code($section)->whereTheme_code($theme)->whereType_code($type)->select('id_question')->count();
+                    }
+                }
+            }
             return (String) $amount;
         }
     }
@@ -181,22 +227,27 @@ class TestController extends Controller{
             $test_type = 'Тренировочный';
         }
         else $test_type = 'Контрольный';
-
         $total = $request->input('total');
         $test_time = $request->input('test-time');
         $start = $request->input('start-date').' '.$request->input('start-time');
         $end = $request->input('end-date').' '.$request->input('end-time');
-
-        $structure = '';
-        $amount = 0;
-        for ($i=0; $i<$request->input('num-rows'); $i++){
-            $structure .= $this->test->struct($request->input('num')[$i],$request->input('section')[$i],$request->input('theme')[$i],$request->input('type')[$i]).';';
-            $amount += $request->input('num')[$i];
+        Test::insert(array('test_name' => $request->input('test-name'), 'test_type' => $test_type,
+            'test_time' => $test_time,
+            'start' => $start, 'end' => $end, 'total' => $total));
+        $id_test = Test::max('id_test');
+        for ($i=0; $i<=$request->input('num-rows'); $i++){
+            if ($request->input('section')[$i] != 'Любой')
+                $section = Section::whereSection_name($request->input('section')[$i])->select('section_code')->first()->section_code;
+            else $section = 'Любой';
+            if ($request->input('theme')[$i] != 'Любая')
+                $theme = Theme::whereTheme_name($request->input('theme')[$i])->select('theme_code')->first()->theme_code;
+            else $theme = 'Любая';
+            if ($request->input('type')[$i] != 'Любой')
+                $type = Type::whereType_name($request->input('type')[$i])->select('type_code')->first()->type_code;
+            else $type = 'Любой';
+            $amount = $request->input('num')[$i];
+            TestStructure::add($id_test, $amount, $section, $theme, $type);
         }
-        $structure .= $this->test->struct($request->input('num')[$request->input('num-rows')],$request->input('section')[$request->input('num-rows')],$request->input('theme')[$request->input('num-rows')],$request->input('type')[$request->input('num-rows')]);
-        $amount += $request->input('num')[$request->input('num-rows')];
-        Test::insert(array('test_name' => $request->input('test-name'), 'test_type' => $test_type, 'amount' => $amount, 'test_time' => $test_time, 'start' => $start, 'end' => $end, 'structure' => $structure, 'total' => $total));
-
         return redirect()->route('test_create');
     }
 
@@ -209,20 +260,20 @@ class TestController extends Controller{
         $saved_test = [];
         $current_date = date('U');
 
-        $query = $this->test->whereId_test($id_test)->select('amount', 'test_name', 'test_time', 'start', 'end', 'test_type')->first();
+        $query = $this->test->whereId_test($id_test)->select('test_name', 'test_time', 'start', 'end', 'test_type')->first();
         if ($current_date < strtotime($query->start) || $current_date > strtotime($query->end)){                          //проверка открыт ли тест
             return view('no_access');
         }
-        $amount = $query->amount;                                                                                       //кол-во вопрососв в тесте
-        $result->test_name = $query->test_name;
+        $amount = $this->test->getAmount($id_test);
         $test_time = $query->test_time;
         $test_type = $query->test_type;
 
         if (!Session::has('test')){                                                                                     //если в тест зайдено первый раз
             $ser_array = $this->test->prepareTest($id_test);
+            //dd($ser_array);
             for ($i=0; $i<$amount; $i++){
                 $id = $question->chooseQuestion($ser_array);
-                if (!$this->test->rybaTest($id)){                                                                  //проверка на вопрос по рыбе
+                if (!$this->test->rybaTest($id)){                                                                       //проверка на вопрос по рыбе
                     return view('no_access');
                 };
                 $data = $question->show($id, $i+1);                                                                     //должны получать название view и необходимые параметры
@@ -237,9 +288,8 @@ class TestController extends Controller{
             $current_result = $query+1;                                                                                 //создаем строку в таблице пройденных тестов
             $query2 = $user->whereEmail(Auth::user()['email'])->select('id')->first();
             $result->id_result = $current_result;
-            $result->id_user = $query2->id;;
+            $result->id = $query2->id;;
             $result->id_test = $id_test;
-            $result->amount = $amount;
             $result->save();
             $saved_test = serialize($saved_test);
             Result::where('id_result', '=', $current_result)->update(['saved_test' => $saved_test]);
@@ -283,7 +333,7 @@ class TestController extends Controller{
         $j = 1;
         $question = new Question();
 
-        $query = $this->test->whereId_test($id_test)->select('total', 'test_name', 'amount', 'test_type')->first();
+        $query = $this->test->whereId_test($id_test)->select('total', 'test_name', 'test_type')->first();
         $total = $query->total;
         $test_type = $query->test_type;
         for ($i=0; $i<$amount; $i++){                                                                                   //обрабатываем каждый вопрос
@@ -311,7 +361,6 @@ class TestController extends Controller{
         $result = new Result();
         $date = date('Y-m-d H:i:s', time());                                                                            //текущее время
                                                                                                                         //если тест тренировочный
-        $amount = $query->amount;
         $widgets = [];
         $query = $result->whereId_result($current_test)->first();                                                       //берем сохраненный тест из БД
         $saved_test = $query->saved_test;

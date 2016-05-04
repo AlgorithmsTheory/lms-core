@@ -6,10 +6,10 @@
  * Time: 16:07
  */
 namespace App\Qtypes;
-use App\Http\Controllers\QuestionController;
 use App\Mypdf;
-use App\Question;
+use App\Testing\Question;
 use Illuminate\Http\Request;
+
 class Theorem extends QuestionType {
     const type_code = 6;
     function __construct($id_question){
@@ -17,8 +17,12 @@ class Theorem extends QuestionType {
     }
     public function  create(){
     }
-    public function add(Request $request, $code){
-        Question::insert(array('code' => $code, 'title' => $request->input('title'), 'variants' => '', 'answer' => '', 'points' => $request->input('points')));
+    public function add(Request $request){
+        $options = $this->getOptions($request);
+        Question::insert(array('title' => $request->input('title'), 'variants' => '',
+            'answer' => '', 'points' => $request->input('points'),
+            'control' => $options['control'], 'section_code' => $options['section'],
+            'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
     public function show($count){
         $view = 'tests.show6';

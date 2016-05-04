@@ -6,9 +6,8 @@
  * Time: 22:12
  */
 namespace App\Qtypes;
-use App\Http\Controllers\QuestionController;
 use App\Mypdf;
-use App\Question;
+use App\Testing\Question;
 use Illuminate\Http\Request;
 
 class AccordanceTable extends QuestionType {
@@ -19,7 +18,8 @@ class AccordanceTable extends QuestionType {
     public function  create(){
     }
 
-    public function add(Request $request, $code){ //были изменения
+    public function add(Request $request){
+        $options = $this->getOptions($request);
         $variants = $request->input('variants')[0];
         $answer = '';
         $flag = false;
@@ -43,7 +43,10 @@ class AccordanceTable extends QuestionType {
         for ($i=1; $i<count($request->input('answer')); $i++){
             $answer = $answer.';'.$request->input('answer')[$i];
         }
-        Question::insert(array('code' => $code, 'title' => $title, 'variants' => $variants, 'answer' => $answer, 'points' => $request->input('points')));
+        Question::insert(array('title' => $title, 'variants' => $variants,
+            'answer' => $answer, 'points' => $request->input('points'),
+            'control' => $options['control'], 'section_code' => $options['section'],
+            'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
 
     public function show($count){
