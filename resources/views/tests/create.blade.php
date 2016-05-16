@@ -25,13 +25,13 @@
         </div>
         <form action="{{URL::route('test_add')}}" method="POST" class="form">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <input type="hidden" id="num-rows" name="num-rows" value="">
+            <input type="hidden" id="num-rows" name="num-rows" value="1">
             <div class="col-lg-offset-1 col-md-10 col-sm-6">
                 <div class="card">
                     <div class="card-body">
                             <!-- название теста -->
                             <div class="form-group floating-label">
-                                <textarea  name="test-name" class="form-control textarea1" rows="1" placeholder="" required></textarea>
+                                <textarea  name="test-name" class="form-control textarea1" rows="1" placeholder=""  required></textarea>
                                 <label for="textarea1">Название теста</label>
                             </div>
                             <!-- тренировочный тест -->
@@ -49,7 +49,7 @@
                         <!-- Время на прохождение теста -->
                         <div class="form-group floating-label">
                             <input type="number" min="1" name="test-time" id="test-time" class="form-control" required>
-                            <label for="total">Время на прохождение теста в минутах</label>
+                            <label for="test-time">Время на прохождение теста в минутах</label>
                         </div>
                      </div>
                 </div>
@@ -59,14 +59,14 @@
                     <div class="card-body">
                         <!-- дата открытия теста -->
                             <label>
-                                <input type="date" name="start-date" value="2015-09-01">
+                                <input type="date" name="start-date" id="start-date" value="2015-09-01">
                                 <span>&nbsp Дата открытия теста</span>
                             </label>
                     </div>
                     <div class="card-body">
                         <!-- дата закрытия теста -->
                         <label>
-                            <input type="date" name="end-date" value="2016-08-01">
+                            <input type="date" name="end-date" id="end-date" value="2016-08-01">
                             <span>&nbsp Дата закрытия теста</span>
                         </label>
                     </div>
@@ -143,6 +143,7 @@
             </div>
             <div class="col-lg-offset-1 col-md-2 col-sm-6" id="add-test">
                 <button class="btn btn-primary btn-raised submit-test" type="submit">Добавить тест</button>
+                <br><br>
             </div>
         </form>
     </div>

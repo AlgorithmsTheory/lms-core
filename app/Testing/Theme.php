@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Theme  join()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Theme  on()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Theme  toSql()
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\Theme  count()
  *
  */
 class Theme extends Eloquent {

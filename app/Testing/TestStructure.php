@@ -35,6 +35,6 @@ class TestStructure extends Eloquent{
     public static function add($id_test, $amount, $section, $theme, $type){
         $id_structure = TestStructure::max('id_structure')+1;
         TestStructure::insert(array('id_structure' => $id_structure, 'id_test' => $id_test, 'amount' => $amount));
-        StructuralRecord::add($id_test, $id_structure, $section, $theme, $type);
+        StructuralRecord::add($id_structure, $section, $theme, $type);
     }
 } 

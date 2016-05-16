@@ -9,6 +9,7 @@ namespace App\Http\Controllers;
 use App\Testing\Fine;
 use App\Testing\Result;
 use App\Testing\Section;
+use App\Testing\StructuralRecord;
 use App\Testing\Test;
 use App\Testing\TestStructure;
 use App\Testing\Theme;
@@ -68,159 +69,6 @@ class TestController extends Controller{
         return view('tests.create', compact('types', 'sections'));
     }
 
-    /** Список всех тестов для их редактирования и завершения */
-    public function editList(){
-        $current_ctr_tests = [];
-        $current_tr_tests = [];
-        $past_ctr_tests = [];
-        $finish_opportunity = [];
-        $past_tr_tests = [];
-        $future_ctr_tests = [];
-        $future_tr_tests = [];
-
-        $current_date = date("Y-m-d H:i:s");                                                                            //текущая дата в mySlq формате DATETIME
-        $query_ctr = $this->test->whereTest_type('Контрольный')                                                         //формируем текущие тесты
-                    ->where('start', '<', $current_date)
-                    ->where('end', '>', $current_date)
-                    ->select()
-                    ->get();
-        foreach ($query_ctr as $control_test){
-            array_push($current_ctr_tests, $control_test);
-        }
-
-        $query_tr = $this->test->whereTest_type('Тренировочный')
-                    ->where('start', '<', $current_date)
-                    ->where('end', '>', $current_date)
-                    ->select()
-                    ->get();
-        foreach ($query_tr as $training_test){
-            array_push($current_tr_tests, $training_test);
-        }
-
-        $query_ctr = $this->test->whereTest_type('Контрольный')                                                         //формируем прошлые тесты
-            ->where('end', '<', $current_date)
-            ->select()
-            ->get();
-        foreach ($query_ctr as $control_test){
-            //ищем среди студентов тех, кто не проходил данный тест в заданный промежуток времени
-            $id_test = Test::whereId_test($control_test->id_test)->select('id_test')->first()->id_test;
-            $user_query = User::where('year', '=', date('Y'))                                                           //пример сырого запроса
-                //->whereRole('Студент')
-                ->whereRaw("not exists (select `id_user` from `results`
-                                        where results.id_user = users.id
-                                        and `results`.`id_test` = ".$id_test. "
-                                        and `results`.`result_date` between '".Test::whereId_test($id_test)->select('start')->first()->start."'
-                                        and '".Test::whereId_test($id_test)->select('end')->first()->end."'
-                                        )")
-                ->distinct()
-                ->select()
-                ->get();
-            if (sizeof($user_query) == 0)                                                                               //если таких студентов нет, то такой тест завршить нельзя
-                $control_test['finish_opportunity'] = 0;
-            else                                                                                                        //иначе можно
-                $control_test['finish_opportunity'] = 1;
-        }
-        array_push($past_ctr_tests, $control_test);
-
-        $query_tr = $this->test->whereTest_type('Тренировочный')
-            ->where('end', '<', $current_date)
-            ->select()
-            ->get();
-        foreach ($query_tr as $training_test){
-            array_push($past_tr_tests, $training_test);
-        }
-
-        $query_ctr = $this->test->whereTest_type('Контрольный')                                                         //формируем будущие тесты
-            ->where('start', '>', $current_date)
-            ->select()
-            ->get();
-        foreach ($query_ctr as $control_test){
-            array_push($future_ctr_tests, $control_test);
-        }
-
-        $query_tr = $this->test->whereTest_type('Тренировочный')
-            ->where('start', '>', $current_date)
-            ->select()
-            ->get();
-        foreach ($query_tr as $training_test){
-            array_push($future_tr_tests, $training_test);
-        }
-
-        return view ('personal_account.test_list', compact('current_ctr_tests', 'current_tr_tests', 'past_ctr_tests', 'finish_opportunity', 'past_tr_tests', 'future_ctr_tests', 'future_tr_tests'));
-    }
-
-    /** AJAX-метод: получает список тем раздела */
-    public function getTheme(Request $request){
-        if ($request->ajax()) {
-            $themes_list = [];
-            $section = $request->input('choice');
-            $section_code = Section::whereSection_name($section)->first()->section_code;
-            $query = Theme::whereSection_code($section_code)->select('theme_name')->get();
-            foreach ($query as $str){
-                array_push($themes_list,$str->theme_name);
-            }
-            return (String) view('tests.getTheme', compact('themes_list'));
-        }
-    }
-
-    /** AJAX-метод: по названию раздела, темы и типа вычисляет количество доступных вопросов в БД данной структуры */
-    public function getAmount(Request $request){
-        if ($request->ajax()) {
-            if ($request->input('section') != 'Любой')
-                $section = Section::whereSection_name($request->input('section'))->select('section_code')->first()->section_code;
-            else $section = 'Любой';
-            if ($request->input('theme') != 'Любая')
-                $theme = Theme::whereTheme_name($request->input('theme'))->select('theme_code')->first()->theme_code;
-            else $theme = 'Любая';
-            if ($request->input('type') != 'Любой')
-                $type = Type::whereType_name($request->input('type'))->select('type_code')->first()->type_code;
-            else $type = 'Любой';
-
-            if ($section == 'Любой'){
-                if ($type == 'Любой'){
-                    if ($request->input('test_type') == 'Тренировочный')                                                // любой раздел, любая тема, любой тип, тренировочный тест
-                        $amount = Question::whereControl(0)->select('id_question')->count();
-                    else $amount = Question::select('id_question')->count();                                            // любой раздел, любая тема, любой тип, контрольный тест
-                }
-                else {
-                    if ($request->input('test_type') == 'Тренировочный')                                                // любой раздел, любая тема, тренировочный тест
-                        $amount = Question::whereControl(0)->whereType_code($type)->select('id_question')->count();
-                    else $amount = Question::whereType_code($type)->select('id_question')->count();                     // любой раздел, любая тема, контрольный тест
-                }
-            }
-            else {
-                if ($theme == 'Любая'){
-                    if ($type == 'Любой'){
-                        if ($request->input('test_type') == 'Тренировочный')                                            //любая тема, любой тип, тренировочный тест
-                            $amount = Question::whereControl(0)->whereSection_code($section)->select('id_question')->count();
-                        else $amount = Question::whereSection_code($section)->select('id_question')->count();           // любая тема, любой тип, контрольный тест
-                    }
-                    else {
-                        if ($request->input('test_type') == 'Тренировочный')                                            //любая тема, тренировочный тест
-                            $amount = Question::whereControl(0)->whereSection_code($section)->whereType_code($type)->select('id_question')->count();
-                        else                                                                                            // любая тема, контрольный тест
-                            $amount = Question::whereSection_code($section)->whereType_code($type)->select('id_question')->count();
-                    }
-                }
-                else {
-                    if ($type == 'Любой'){
-                        if ($request->input('test_type') == 'Тренировочный')                                            // любой тип, тренировочный тест
-                            $amount = Question::whereControl(0)->whereSection_code($section)->whereTheme_code($theme)->select('id_question')->count();
-                        else                                                                                            // любой тип, контрольный тест
-                            $amount = Question::whereSection_code($section)->whereTheme_code($theme)->select('id_question')->count();
-                    }
-                    else {
-                        if ($request->input('test_type') == 'Тренировочный')                                            // тренировочный тест
-                            $amount = Question::whereControl(0)->whereSection_code($section)->whereTheme_code($theme)->whereType_code($type)->select('id_question')->count();
-                        else                                                                                            // контрольный тест
-                            $amount = Question::whereSection_code($section)->whereTheme_code($theme)->whereType_code($type)->select('id_question')->count();
-                    }
-                }
-            }
-            return (String) $amount;
-        }
-    }
-
     /** Добавляет новый тест в БД */
     public function add(Request $request){
         if ($request->input('training')) {
@@ -249,6 +97,190 @@ class TestController extends Controller{
             TestStructure::add($id_test, $amount, $section, $theme, $type);
         }
         return redirect()->route('test_create');
+    }
+
+    /** Список всех тестов для их редактирования и завершения */
+    public function editList(){
+        $current_date = date("Y-m-d H:i:s");                                                                            //текущая дата в mySlq формате DATETIME
+        $current_ctr_tests = $this->test->whereTest_type('Контрольный')                                                         //формируем текущие тесты
+                    ->where('start', '<', $current_date)
+                    ->where('end', '>', $current_date)
+                    ->select()
+                    ->get();
+        foreach ($current_ctr_tests as $test){
+            $test['amount'] = Test::getAmount($test['id_test']);
+        }
+
+        $current_tr_tests = $this->test->whereTest_type('Тренировочный')
+                    ->where('start', '<', $current_date)
+                    ->where('end', '>', $current_date)
+                    ->select()
+                    ->get();
+        foreach ($current_tr_tests as $test){
+            $test['amount'] = Test::getAmount($test['id_test']);
+        }
+
+        $past_ctr_tests = $this->test->whereTest_type('Контрольный')                                                         //формируем прошлые тесты
+            ->where('end', '<', $current_date)
+            ->select()
+            ->get();
+        foreach ($past_ctr_tests as $test){
+            $test['amount'] = Test::getAmount($test['id_test']);
+            if (Test::isFinished($test->id_test))                                                               //если таких студентов нет, то такой тест завршить нельзя
+                $test['finish_opportunity'] = 0;
+            else                                                                                                        //иначе можно
+                $test['finish_opportunity'] = 1;
+        }
+
+        $past_tr_tests = $this->test->whereTest_type('Тренировочный')
+            ->where('end', '<', $current_date)
+            ->select()
+            ->get();
+        foreach ($past_tr_tests as $test){
+            $test['amount'] = Test::getAmount($test['id_test']);
+        }
+
+        $future_ctr_tests = $this->test->whereTest_type('Контрольный')                                                         //формируем будущие тесты
+            ->where('start', '>', $current_date)
+            ->select()
+            ->get();
+        foreach ($future_ctr_tests as $test){
+            $test['amount'] = Test::getAmount($test['id_test']);
+        }
+
+        $future_tr_tests = $this->test->whereTest_type('Тренировочный')
+            ->where('start', '>', $current_date)
+            ->select()
+            ->get();
+        foreach ($future_tr_tests as $test){
+            $test['amount'] = Test::getAmount($test['id_test']);
+        }
+
+        return view ('personal_account.test_list', compact('current_ctr_tests', 'current_tr_tests', 'past_ctr_tests', 'past_tr_tests', 'future_ctr_tests', 'future_tr_tests'));
+    }
+
+    /** Редактирование выбранного теста */
+    public function edit($id_test){
+        $test = Test::whereId_test($id_test)->first();
+        $sections = Section::where('section_code', '>', '0')->get();
+        $types = Type::where('type_code', '>', '0')->get();
+        $test['time_zone'] = Test::getTimeZone($id_test);
+
+        $number_of_sections = Section::where('section_code', '>', '0')->count();                                        //число разделов
+        $number_of_types = Type::where('type_code', '>', '0')->count();                                                 //число типов
+        $structures = TestStructure::whereId_test($id_test)->get();
+        foreach ($structures as $structure){
+            if (StructuralRecord::whereId_structure($structure['id_structure'])->distinct()->select('section_code')
+                                    ->count('section_code') == $number_of_sections) {
+                $structure['section'] = 'Любой';
+                $structure['theme'] = 'Любая';
+                $structure['themes'] = [];
+            }
+            else {
+               $structure['section'] = StructuralRecord::whereId_structure($structure['id_structure'])
+                                       ->join('sections', 'structural_records.section_code', '=', 'sections.section_code')
+                                       ->select('section_name')->first()->section_name;
+
+                $section_code = StructuralRecord::whereId_structure($structure['id_structure'])                                  //число тем данного раздела
+                                    ->select('section_code')->first()->section_code;
+                $number_of_themes = Theme::whereSection_code($section_code)->select()->count();
+                if (StructuralRecord::whereId_structure($structure['id_structure'])->distinct()->select('theme_code')
+                                        ->count('theme_code') == $number_of_themes){
+                    $structure['theme'] = 'Любая';
+                    $structure['themes'] = [];
+                }
+                else {
+                    $structure['theme'] = StructuralRecord::whereId_structure($structure['id_structure'])
+                        ->join('themes', 'structural_records.theme_code', '=', 'themes.theme_code')
+                        ->select('theme_name')->first()->theme_name;
+                    $structure['themes'] = Theme::whereSection_code($section_code)->select('theme_name')->get();
+                }
+            }
+
+            if (StructuralRecord::whereId_structure($structure['id_structure'])->distinct()->select('type_code')
+                                    ->count('type_code') == $number_of_types)
+                $structure['type'] = 'Любой';
+            else
+                $structure['type'] = StructuralRecord::whereId_structure($structure['id_structure'])
+                    ->join('types', 'structural_records.type_code', '=', 'types.type_code')
+                    ->select('type_name')->first()->type_name;
+            $structure['db-amount'] = Question::getAmount($structure['section'], $structure['theme'],                      //число вопросов в БД заданной структуры
+                                    $structure['type'], $test->test_type);
+        }
+        return view ('tests.edit', compact('test', 'sections', 'types', 'structures'));
+    }
+
+    /** Применение изменений после редактирования теста */
+    public function update(Request $request){
+        if ($request->input('training')) {
+            $test_type = 'Тренировочный';
+        }
+        else $test_type = 'Контрольный';
+        $total = $request->input('total');
+        $test_time = $request->input('test-time');
+        $start = $request->input('start-date').' '.$request->input('start-time');
+        $end = $request->input('end-date').' '.$request->input('end-time');
+        Test::whereId_test($request->input('id-test'))->update(array('test_name' => $request->input('test-name'), 'test_type' => $test_type,
+            'test_time' => $test_time,
+            'start' => $start, 'end' => $end, 'total' => $total));
+
+        $id_test = $request->input('id-test');                                                                          //удаляем старые записи и структуры
+        $old_structures = TestStructure::whereId_test($id_test)->get();
+        foreach ($old_structures as $structure){
+            StructuralRecord::whereId_structure($structure['id_structure'])->delete();
+        }
+        TestStructure::whereId_test($id_test)->delete();
+
+        for ($i=0; $i<=$request->input('num-rows'); $i++){
+            if ($request->input('section')[$i] != 'Любой')
+                $section = Section::whereSection_name($request->input('section')[$i])->select('section_code')->first()->section_code;
+            else $section = 'Любой';
+            if ($request->input('theme')[$i] != 'Любая')
+                $theme = Theme::whereTheme_name($request->input('theme')[$i])->select('theme_code')->first()->theme_code;
+            else $theme = 'Любая';
+            if ($request->input('type')[$i] != 'Любой')
+                $type = Type::whereType_name($request->input('type')[$i])->select('type_code')->first()->type_code;
+            else $type = 'Любой';
+            $amount = $request->input('num')[$i];
+            TestStructure::add($id_test, $amount, $section, $theme, $type);
+        }
+        return redirect()->route('tests_list');
+    }
+
+    public function remove($id_test){
+        $structures = TestStructure::whereId_test($id_test)->get();
+        foreach ($structures as $structure){
+            StructuralRecord::whereId_structure($structure['id_structure'])->delete();
+        }
+        TestStructure::whereId_test($id_test)->delete();
+        Test::whereId_test($id_test)->delete();
+        return redirect()->route('tests_list');
+    }
+
+    /** AJAX-метод: получает список тем раздела */
+    public function getTheme(Request $request){
+        if ($request->ajax()) {
+            $themes_list = [];
+            $section = $request->input('choice');
+            $section_code = Section::whereSection_name($section)->first()->section_code;
+            $query = Theme::whereSection_code($section_code)->select('theme_name')->get();
+            foreach ($query as $str){
+                array_push($themes_list,$str->theme_name);
+            }
+            return (String) view('tests.getTheme', compact('themes_list'));
+        }
+    }
+
+    /** AJAX-метод: по названию раздела, темы и типа вычисляет количество доступных вопросов в БД данной структуры */
+    public function getAmount(Request $request){
+        if ($request->ajax()) {
+            if ($request->input('training')) {
+                $test_type = 'Тренировочный';
+            }
+            else $test_type = 'Контрольный';
+            $amount = Question::getAmount($request->input('section'), $request->input('theme'), $request->input('type'), $test_type);
+            return (String) $amount;
+        }
     }
 
     /** Главный метод: гененрирует полотно вопросов на странице тестов */

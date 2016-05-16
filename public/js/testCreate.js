@@ -1,7 +1,7 @@
 /**
  * Created by Станислав on 07.09.15.
  */
-    count = 1;
+    count = $('#num-rows').val();
 function sleepTheme(arg){
     return arg.parent().next().children().children().val();
 }
@@ -54,9 +54,6 @@ $('#del-row').click(function(){
     }
 });
 
-$('.submit-test').click(function(){
-    $('#num-rows').val(count-1);
-});
 
 /**
  * Определение количества вопросов по указанному фильтру (Раздел, Тема, Тип)
@@ -105,6 +102,27 @@ $('#question-table').on('change','.select-type, .select-theme, .select-section',
         }
     });
     return false;
+});
+
+/** Действия по сабмиту */
+$('.submit-test').click(function(){
+    $('#num-rows').val(count-1);
+
+    var now = Date.now();
+    var start = Date.parse($('#start-date').val() + $('#start-time').val());
+    var end = Date.parse($('#end-date').val() + $('#end-time').val());
+    if (start <= now + 3600000){                                                                                        //если между началом и текущим временем меньше часа разницы
+        alert('Открытие теста должно быть хотя бы на час больше текущего времени');
+        $('#start-date').focus();
+        return false;
+    }
+
+    if (end <= start + 3600000){                                                                                        //если между началом и концом менее часа разницы
+        alert('Окончание теста должно быть хотя бы на час больше времени открытия');
+        $('#end-date').focus();
+        return false;
+    }
+
 });
 
 /*$('body').on('change','#training', function(){

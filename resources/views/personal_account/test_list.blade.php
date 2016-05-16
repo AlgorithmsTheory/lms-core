@@ -49,6 +49,7 @@ full
                             <th class="text-center">Время прохождения, мин</th>
                             <th class="text-center">Завершить тест</th>
                             <th class="text-center">Редактировать тест</th>
+                            <th class="text-center">Удалить тест</th>
                         </tr>
                         @foreach ($current_ctr_tests as $test)
                         <input type="hidden" name="id-test[]" value="{{$test['id_test']}}">
@@ -67,9 +68,16 @@ full
                                 </div>
                             </td>
                             <td class="text-center">
-                                <a href="{{URL::route('in_process')}}" class="btn btn-primary" role="button">
+                                <a href="{{URL::route('test_edit', $test['id_test'])}}" class="btn btn-primary" role="button">
                                         <span class="demo-icon-hover">
                                             <i class="md md-create"></i>
+                                        </span>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="{{URL::route('test_remove', $test['id_test'])}}" class="btn btn-danger" role="button">
+                                        <span class="demo-icon-hover">
+                                            <i class="md md-remove-circle"></i>
                                         </span>
                                 </a>
                             </td>
@@ -94,6 +102,7 @@ full
                             <th class="text-center">Количество вопросов</th>
                             <th class="text-center">Время прохождения, мин</th>
                             <th class="text-center">Редактировать тест</th>
+                            <th class="text-center">Удалить тест</th>
                         </tr>
                         @foreach ($current_tr_tests as $test)
                         <input type="hidden" name="id-test[]" value="{{$test['id_test']}}">
@@ -104,9 +113,16 @@ full
                             <td class="text-center">{{$test['amount']}}</td>
                             <td class="text-center">{{$test['test_time']}}</td>
                             <td class="text-center" >
-                                <a href="{{URL::route('in_process')}}" class="btn btn-primary" role="button">
+                                <a href="{{URL::route('test_edit', $test['id_test'])}}" class="btn btn-primary" role="button">
                                         <span class="demo-icon-hover">
                                             <i class="md md-create"></i>
+                                        </span>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="{{URL::route('test_remove', $test['id_test'])}}" class="btn btn-danger" role="button">
+                                        <span class="demo-icon-hover">
+                                            <i class="md md-remove-circle"></i>
                                         </span>
                                 </a>
                             </td>
@@ -132,6 +148,7 @@ full
                             <th class="text-center">Время прохождения, мин</th>
                             <th class="text-center">Завершить тест</th>
                             <th class="text-center">Редактировать тест</th>
+                            <th class="text-center">Удалить тест</th>
                         </tr>
                         @foreach ($past_ctr_tests as $test)
                         <input type="hidden" name="id-test[]" value="{{$test['id_test']}}">
@@ -150,20 +167,37 @@ full
                                     </label>
                                 </div>
                             </td>
+                            <td class="text-center">
+                                <a href="{{URL::route('test_edit', $test['id_test'])}}" class="btn btn-primary" role="button">
+                                            <span class="demo-icon-hover">
+                                                <i class="md md-create"></i>
+                                            </span>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="{{URL::route('test_remove', $test['id_test'])}}" class="btn btn-danger" role="button">
+                                        <span class="demo-icon-hover">
+                                            <i class="md md-remove-circle"></i>
+                                        </span>
+                                </a>
+                            </td>
                             @else
                             <td class="text-center" title="Тест уже завершен">
                                 <span class="demo-icon-hover">
                                     <i class="md md-done" style="font-size: 24px;"></i>
                                 </span>
                             </td>
-                            @endif
                             <td class="text-center">
-                                <a href="{{URL::route('in_process')}}" class="btn btn-primary" role="button">
-                                            <span class="demo-icon-hover">
-                                                <i class="md md-create"></i>
-                                            </span>
-                                </a>
+                                 <span class="demo-icon-hover">
+                                    <i class="md md-block" style="font-size: 24px;"></i>
+                                </span>
                             </td>
+                            <td class="text-center">
+                                 <span class="demo-icon-hover">
+                                    <i class="md md-block" style="font-size: 24px;"></i>
+                                </span>
+                            </td>
+                            @endif
                         </tr>
                         @endforeach
                     </table>
@@ -185,6 +219,7 @@ full
                             <th class="text-center">Количество вопросов</th>
                             <th class="text-center">Время прохождения, мин</th>
                             <th class="text-center">Редактировать тест</th>
+                            <th class="text-center">Удалить тест</th>
                         </tr>
                         @foreach ($past_tr_tests as $test)
                         <input type="hidden" name="id-test[]" value="{{$test['id_test']}}">
@@ -195,10 +230,17 @@ full
                             <td class="text-center">{{$test['amount']}}</td>
                             <td class="text-center">{{$test['test_time']}}</td>
                             <td class="text-center" >
-                                <a href="{{URL::route('in_process')}}" class="btn btn-primary" role="button">
+                                <a href="{{URL::route('test_edit', $test['id_test'])}}" class="btn btn-primary" role="button">
                                             <span class="demo-icon-hover">
                                                 <i class="md md-create"></i>
                                             </span>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="{{URL::route('test_remove', $test['id_test'])}}" class="btn btn-danger" role="button">
+                                        <span class="demo-icon-hover">
+                                            <i class="md md-remove-circle"></i>
+                                        </span>
                                 </a>
                             </td>
                         </tr>
@@ -222,6 +264,7 @@ full
                             <th class="text-center">Количество вопросов</th>
                             <th class="text-center">Время прохождения, мин</th>
                             <th class="text-center">Редактировать тест</th>
+                            <th class="text-center">Удалить тест</th>
                         </tr>
                         @foreach ($future_ctr_tests as $test)
                         <input type="hidden" name="id-test[]" value="{{$test['id_test']}}">
@@ -232,9 +275,16 @@ full
                             <td class="text-center">{{$test['amount']}}</td>
                             <td class="text-center">{{$test['test_time']}}</td>
                             <td class="text-center">
-                                <a href="{{URL::route('in_process')}}" class="btn btn-primary" role="button">
+                                <a href="{{URL::route('test_edit', $test['id_test'])}}" class="btn btn-primary" role="button">
                                         <span class="demo-icon-hover">
                                             <i class="md md-create"></i>
+                                        </span>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="{{URL::route('test_remove', $test['id_test'])}}" class="btn btn-danger" role="button">
+                                        <span class="demo-icon-hover">
+                                            <i class="md md-remove-circle"></i>
                                         </span>
                                 </a>
                             </td>
@@ -256,6 +306,7 @@ full
                             <th class="text-center">Количество вопросов</th>
                             <th class="text-center">Время прохождения, мин</th>
                             <th class="text-center">Редактировать тест</th>
+                            <th class="text-center">Удалить тест</th>
                         </tr>
                         @foreach ($future_tr_tests as $test)
                         <input type="hidden" name="id-test[]" value="{{$test['id_test']}}">
@@ -266,9 +317,16 @@ full
                             <td class="text-center">{{$test['amount']}}</td>
                             <td class="text-center">{{$test['test_time']}}</td>
                             <td class="text-center" >
-                                <a href="{{URL::route('in_process')}}" class="btn btn-primary" role="button">
+                                <a href="{{URL::route('test_edit', $test['id_test'])}}" class="btn btn-primary" role="button">
                                         <span class="demo-icon-hover">
                                             <i class="md md-create"></i>
+                                        </span>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="{{URL::route('test_remove', $test['id_test'])}}" class="btn btn-danger" role="button">
+                                        <span class="demo-icon-hover">
+                                            <i class="md md-remove-circle"></i>
                                         </span>
                                 </a>
                             </td>

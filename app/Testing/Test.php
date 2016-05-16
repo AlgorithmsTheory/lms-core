@@ -7,6 +7,7 @@
  */
 
 namespace App\Testing;
+use App\User;
 use Auth;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
@@ -26,6 +27,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Test  select()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Test  first()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Test  insert($array)
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\Test  update($array)
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Test  table($array)
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Test  max($array)
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Test  toSql()
@@ -45,8 +47,42 @@ class Test extends Eloquent {
         else return false;
     }
 
-    public function getAmount($id_test){
+    public static function getAmount($id_test){
         return TestStructure::whereId_test($id_test)->sum('amount');
+    }
+
+    /** Проверяет, завершен ли тест */
+    public static function isFinished($id_test){
+        //ищем среди студентов тех, кто не проходил данный тест в заданный промежуток времени
+        $user_query = User::where('year', '=', date('Y'))                                                               //пример сырого запроса
+            //->whereRole('Студент')
+            ->whereRaw("not exists (select `id` from `results`
+                                        where results.id = users.id
+                                        and `results`.`id_test` = ".$id_test. "
+                                        and `results`.`result_date` between '".Test::whereId_test($id_test)->select('start')->first()->start."'
+                                        and '".Test::whereId_test($id_test)->select('end')->first()->end."'
+                                        )")
+            ->distinct()
+            ->select()
+            ->get();
+        if (sizeof($user_query) == 0)                                                                                   //если таких студентов нет, то тест завершен
+            return true;
+        else                                                                                                            //иначе не завершен
+            return false;
+    }
+
+    /** Если тест прошлый возвращает -1, текущий 0, будущий 1 */
+    public static function getTimeZone($id_test){
+        $current_date = date("U");
+        $test = Test::whereId_test($id_test)->first();
+        $start = strtotime($test->start);
+        $end = strtotime(($test->end));
+        if ($start < $current_date && $end > $current_date)
+            return 0;
+        if ($end < $current_date)
+            return -1;
+        if ($start > $current_date)
+            return 1;
     }
 
     /** проверяет права доступа к рыбинским вопросам */

@@ -80,8 +80,11 @@ Route::post('tests/create', ['as' => 'test_add', 'uses' => 'TestController@add']
 Route::get('retest', ['as' => 'retest_index', 'uses' => 'TeacherRetestController@index']);
 Route::post('retest', ['as' => 'retest_change', 'uses' => 'TeacherRetestController@change']);
 Route::get('tests/edit', ['as' => 'tests_list', 'uses' => 'TestController@editList']);
+Route::post('tests/edit', ['as' => 'test_update', 'uses' => 'TestController@update']);
+Route::get('tests/remove/{id_test}', ['as' => 'test_remove', 'uses' => 'TestController@remove']);
+Route::get('tests/edit/{id_test}', ['as' => 'test_edit', 'uses' => 'TestController@edit']);
 Route::post('tests/dates/finish', ['as' => 'finish_test', 'uses' => 'TeacherRetestController@finishTest']);
-Route::post('tests/dates/prolong', ['as' => 'prolong_test', 'uses' => 'TeacherRetestController@prolongTest']);
+
 
 //электронная библиотека
 Route::get('library', ['as' => 'library_index', 'uses' => 'LibraryController@index']);

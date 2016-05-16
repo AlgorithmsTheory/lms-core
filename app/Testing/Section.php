@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Section  join()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Section  on()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Section  toSql()
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\Section  count()
  *
  */
 

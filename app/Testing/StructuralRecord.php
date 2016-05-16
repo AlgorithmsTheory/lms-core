@@ -22,9 +22,11 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent|\App\Testing\StructuralRecord  select()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\StructuralRecord  first()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\StructuralRecord  insert($array)
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\StructuralRecord  delete()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\StructuralRecord  table($array)
  * @method static \Illuminate\Database\Eloquent|\App\Testing\StructuralRecord  max($array)
  * @method static \Illuminate\Database\Eloquent|\App\Testing\StructuralRecord  toSql()
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\StructuralRecord  count()
  *
  */
 
@@ -33,7 +35,8 @@ class StructuralRecord extends Eloquent{
     public $timestamps = false;
     protected $fillable = [];
 
-    public static function add($id_test, $id_structure, $request_section, $request_theme, $request_type){
+    public static function add($id_structure, $request_section, $request_theme, $request_type){
+        $id_test = TestStructure::whereId_structure($id_structure)->select('id_test')->first()->id_test;
         $sections = Section::select('section_code')->where('section_code', '>', 0)->get();
         $themes = Theme::select('theme_code')->where('theme_code', '>', 0)->get();
         $types = Type::select('type_code')->get();

@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Type  join()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Type  on()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Type  toSql()
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\Type  count()
  *
  */
 

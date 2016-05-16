@@ -7,9 +7,9 @@
  */
 
 namespace App\Http\Controllers;
-use App\Fine;
-use App\Result;
-use App\Test;
+use App\Testing\Fine;
+use App\Testing\Result;
+use App\Testing\Test;
 use App\User;
 use DB;
 use Illuminate\Http\Request;
@@ -29,10 +29,9 @@ class TeacherRetestController extends Controller {
         $all_tests = [];
         $users = [];
         $distinct_groups = [];
-        $marks = [];
 
         $current_year = date('Y');
-        $users_query = User::join('fines', 'users.id', '=', 'fines.id_user')
+        $users_query = User::join('fines', 'users.id', '=', 'fines.id')
             ->where('year', '=', $current_year)
             ->orderBy('last_name', 'asc')
             ->distinct()
@@ -41,7 +40,7 @@ class TeacherRetestController extends Controller {
             array_push($users, $user);
         }
 
-        $groups_query = User::join('fines', 'users.id', '=', 'fines.id_user')
+        $groups_query = User::join('fines', 'users.id', '=', 'fines.id')
             ->where('year', '=', $current_year)
             ->orderBy('group', 'asc')
             ->distinct()
@@ -61,9 +60,9 @@ class TeacherRetestController extends Controller {
             array_push($test_names, $test->test_name);
             array_push($accesses, $row->access);
             array_push($fines, Fine::levelToPercent($row->fine));
-            array_push($attempts, Result::whereId_test($row->id_test)->whereId_user($row->id_user)->where('mark_ru', '>=', 0)->count());
+            array_push($attempts, Result::whereId_test($row->id_test)->whereId($row->id_user)->where('mark_ru', '>=', 0)->count());
             //dd(Result::whereId_test($row->id_test)->whereId_user($row->id_user)->select('mark_eu')->orderBy('id_result', 'desc')->first()->mark_eu);
-            $result = Result::whereId_test($row->id_test)->whereId_user($row->id_user)->select('mark_eu')->orderBy('id_result', 'desc')->first()->mark_eu;
+            $result = Result::whereId_test($row->id_test)->whereId($row->id_user)->select('mark_eu')->orderBy('id_result', 'desc')->first()->mark_eu;
             array_push($last_marks, preg_replace('/^absent$/', 'Отсутствие', $result));
         }
 
@@ -85,23 +84,6 @@ class TeacherRetestController extends Controller {
        return redirect()->back();
     }
 
-   public function outOfDateTests(){
-       $out_of_date_control_tests = [];
-       $out_of_date_training_tests = [];
-       $current_date = date('U');
-       $test = Test::whereTest_type('Контрольный')->select()->get();
-       foreach ($test as $row)
-       if ($current_date >= strtotime($row->start) && $current_date <= strtotime($row->end) && $row->test_course != 'Рыбина'){
-           array_push($out_of_date_control_tests, $row);
-       }
-       $test = Test::whereTest_type('Тренировочный')->select()->get();
-       foreach ($test as $row)
-           if ($current_date >= strtotime($row->start) && $current_date <= strtotime($row->end) && $row->test_course != 'Рыбина'){
-               array_push($out_of_date_training_tests, $row);
-           }
-       return view('personal_account.out_of_date_tests', compact('out_of_date_control_tests', 'out_of_date_training_tests'));
-   }
-
     /** Завершает выбранные просроченные тесты
      * Завершить тест - Отнять у всех текущих студентов попытку прохождения теста и,
      возможно, добавить записи user-test в таблицу штрафов
@@ -117,8 +99,8 @@ class TeacherRetestController extends Controller {
                 $id_test = $request->input('id-test')[$i];
                 $user_query = User::where('year', '=', $current_year)                                                   //пример сырого запроса
                             //->whereRole('Студент')
-                            ->whereRaw("not exists (select `id_user` from `results`
-                                        where results.id_user = users.id
+                            ->whereRaw("not exists (select `id` from `results`
+                                        where results.id = users.id
                                         and `results`.`id_test` = ".$id_test. "
                                         and `results`.`result_date` between '".Test::whereId_test($id_test)->select('start')->first()->start."'
                                         and '".Test::whereId_test($id_test)->select('end')->first()->end."'
@@ -130,11 +112,11 @@ class TeacherRetestController extends Controller {
                     array_push($absents, $user->id);
                     //добавить их в таблицу штрафов, записав им первый уровень штрафа
                     //в таблице штрафов присвоить всем по этому тесту досутп 0, у кого досутп есть
-                    $fine_query = Fine::whereId_user($user->id)->whereId_test($id_test)->select('id_fine')->first();
+                    $fine_query = Fine::whereId($user->id)->whereId_test($id_test)->select('id_fine')->first();
                     if (is_null($fine_query))
-                        Fine::insert(['id_user' => $user->id, 'id_test' => $request->input('id-test')[$i],
+                        Fine::insert(['id' => $user->id, 'id_test' => $request->input('id-test')[$i],
                             'fine' => 1, 'access' => 0]);
-                    else Fine::whereId_user($user->id)->whereId_test($id_test)
+                    else Fine::whereId($user->id)->whereId_test($id_test)
                             ->update(['fine' => $fine->maxFine($fine_query->fine + 1), 'access' => 0]);
 
                     //добавить их в таблицу результатов, записав в качестве результатов -2 -2 absence
@@ -143,9 +125,7 @@ class TeacherRetestController extends Controller {
                         $result_date = date("Y-m-d H:i:s",strtotime(Test::whereId_test($id_test)->select('end')->first()->end) - 5);
                     }
                     else $result_date = date("Y-m-d H:i:s");
-                    Result::insert(['id_user' => $user->id, 'id_test' => $id_test,
-                    'test_name' => Test::whereId_test($id_test)->select('test_name')->first()->test_name,
-                    'amount' => Test::whereId_test($id_test)->select('amount')->first()->amount,
+                    Result::insert(['id' => $user->id, 'id_test' => $id_test,
                     'result_date' => $result_date,
                     'result' => -2, 'mark_ru' => -2, 'mark_eu' => 'absent', 'saved_test' => null]);
 
