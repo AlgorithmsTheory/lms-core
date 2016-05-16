@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html" >
 <head>
-    @yield('head')
     {!! HTML::style('css/bootstrap.css') !!}
     {!! HTML::style('css/full.css') !!}
     {!! HTML::style('css/materialadmin.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     {!! HTML::style('css/materialadmin_demo.css') !!}
     {!! HTML::script('js/jquery.js') !!}
+    @yield('head')
 </head>
 <body class="@yield('background', '')">
 <div id="base">

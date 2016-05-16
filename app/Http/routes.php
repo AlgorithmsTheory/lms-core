@@ -174,3 +174,7 @@ Route::post('verify_students/average', ['as' => 'add_student', 'uses' => 'Person
 
 //модуль рекурсивных функций
 Route::get('recursion', ['as' => 'recursion_index', 'uses' => 'RecursionController@index']);
+
+//архивный модуль
+Route::get('storage', ['as' => 'archive_index', 'uses' => 'ArchiveController@index']);
+Route::post('storage/{folder}', ['as' => 'archive_folder', 'uses' => 'ArchiveController@folder']);

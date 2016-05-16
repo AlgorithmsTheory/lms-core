@@ -1,0 +1,13 @@
+a:hover{
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.table-archive td, th {
+    width: 10%;
+}
+
+.card:hover{
+    opacity: 0.7;
+    cursor: pointer;
+}
