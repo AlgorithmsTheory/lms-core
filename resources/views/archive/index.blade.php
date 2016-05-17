@@ -21,133 +21,261 @@
 <br>
 @endif
 
-<table class="table table-condensed table-archive">
-    @for ($i = 0; $i <= intval(count($folders) / 4); $i++)
-        <tr>
-            <td>
-                @if (!is_null($folders[4*$i + 0]))
-                    <form action="{{ URL::route('archive_folder', [$folders[4*$i + 0]]) }}" method="POST" class="form">
-                        <input type="hidden" name="path" value="{{ $path }}">
-                        <a class="folder-panel">
-                            <div class="card style-accent">
-                                <div class="card-body text-xl">
-                                    {{ $folders[4*$i + 0]}}
+@if (!empty($folders))
+    <table class="table table-condensed table-archive" id="folder-table">
+        @for ($i = 0; $i <= intval(count($folders) / 4); $i++)
+            <tr>
+                <td>
+                    @if (!is_null($folders[4*$i + 0]))
+                        <form action="{{ URL::route('archive_folder', [$folders[4*$i + 0]]) }}" method="POST" class="form">
+                            <input type="hidden" name="path" value="{{ $path }}">
+                            <a class="folder-panel">
+                                <div class="card card-bordered style-accent">
+                                    <div class="card-head">
+                                        <header>
+                                            <span class="demo-icon-hover text-medium">
+                                                <i class="md md-folder"> Папка </i>
+                                            </span>
+                                        </header>
+                                    </div>
+                                    <div class="card-body style-default-bright">
+                                        <p class="text-xl">{{ $folders[4*$i + 0] }}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </form>
-                @endif
-            </td>
-            <td>
-                @if (!is_null($folders[4*$i + 1]))
-                    <form action="{{ URL::route('archive_folder', [$folders[4*$i + 1]]) }}" method="POST" class="form">
-                        <input type="hidden" name="path" value="{{ $path }}">
-                        <a class="folder-panel">
-                            <div class="card style-accent">
-                                <div class="card-body text-xl">
-                                    {{ $folders[4*$i + 1] }}
+                            </a>
+                        </form>
+                    @endif
+                </td>
+                <td>
+                    @if (!is_null($folders[4*$i + 1]))
+                        <form action="{{ URL::route('archive_folder', [$folders[4*$i + 1]]) }}" method="POST" class="form">
+                            <input type="hidden" name="path" value="{{ $path }}">
+                            <a class="folder-panel">
+                                <div class="card card-bordered style-accent">
+                                    <div class="card-head">
+                                        <header>
+                                            <span class="demo-icon-hover text-medium">
+                                                <i class="md md-folder"> Папка </i>
+                                            </span>
+                                        </header>
+                                    </div>
+                                    <div class="card-body style-default-bright">
+                                        <p class="text-xl">{{ $folders[4*$i + 1] }}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </form>
-                @endif
-            </td>
-            <td>
-                @if (!is_null($folders[4*$i + 2]))
-                    <form action="{{ URL::route('archive_folder', [$folders[4*$i + 2]]) }}" method="POST" class="form">
-                        <input type="hidden" name="path" value="{{ $path }}">
-                        <a class="folder-panel">
-                            <div class="card style-accent">
-                                <div class="card-body text-xl">
-                                    {{ $folders[4*$i + 2] }}
+                            </a>
+                        </form>
+                    @endif
+                </td>
+                <td>
+                    @if (!is_null($folders[4*$i + 2]))
+                        <form action="{{ URL::route('archive_folder', [$folders[4*$i + 2]]) }}" method="POST" class="form">
+                            <input type="hidden" name="path" value="{{ $path }}">
+                            <a class="folder-panel">
+                                <div class="card card-bordered style-accent">
+                                    <div class="card-head">
+                                        <header>
+                                            <span class="demo-icon-hover text-medium">
+                                                <i class="md md-folder"> Папка </i>
+                                            </span>
+                                        </header>
+                                    </div>
+                                    <div class="card-body style-default-bright">
+                                        <p class="text-xl">{{ $folders[4*$i + 2] }}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </form>
-                @endif
-            </td>
-            <td>
-                @if (!is_null($folders[4*$i + 3]))
-                    <form action="{{ URL::route('archive_folder', [$folders[4*$i + 3]]) }}" method="POST" class="form">
-                        <input type="hidden" name="path" value="{{ $path }}">
-                        <a class="folder-panel">
-                            <div class="card style-accent">
-                                <div class="card-body text-xl">
-                                    {{ $folders[4*$i + 3] }}
-                                </div>
-                            </div>
-                        </a>
-                    </form>
-                @endif
-            </td>
-        </tr>
-    @endfor
-</table>
+                            </a>
+                        </form>
+                    @endif
+                </td>
+                <td>
+                    @if (!is_null($folders[4*$i + 3]))
+                            <form action="{{ URL::route('archive_folder', [$folders[4*$i + 3]]) }}" method="POST" class="form">
+                                <input type="hidden" name="path" value="{{ $path }}">
+                                <a class="folder-panel">
+                                    <div class="card card-bordered style-accent">
+                                        <div class="card-head">
+                                            <header>
+                                                <span class="demo-icon-hover text-medium">
+                                                    <i class="md md-folder"> Папка </i>
+                                                </span>
+                                            </header>
+                                        </div>
+                                        <div class="card-body style-default-bright">
+                                            <p class="text-xl">{{ $folders[4*$i + 3] }}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </form>
+                    @endif
+                </td>
+            </tr>
+        @endfor
+    </table>
+@endif
 
 <hr>
 
-<table class="table table-condensed table-archive">
-    @for ($i = 0; $i <= intval(count($files) / 4); $i++)
-    <tr>
-        <td>
-            @if (!is_null($files[4*$i + 0]))
-                <form action="{{ URL::route('archive_folder', [$files[4*$i + 0]]) }}" method="POST" class="form">
-                    <input type="hidden" name="path" value="{{ $path }}">
-                    <a class="folder-panel">
-                        <div class="card style-primary">
-                            <div class="card-body text-xl">
-                                {{ $files[4*$i + 0]}}
+@if (!empty($files))
+    <table class="table table-condensed table-archive" id="file-table">
+        @for ($i = 0; $i <= intval(count($files) / 4); $i++)
+        <tr>
+            <td>
+                @if (!is_null($files[4*$i + 0]))
+                    <div class="card card-bordered style-primary">
+                        <div class="card-head">
+                            <div class="tools">
+                                <div class="btn-group">
+                                    <form action="{{ URL::route('archive_download') }}" method="POST" class="download-form" style="margin-left: 0">
+                                        <input type="hidden" name="file-path" value="{{ $path.$files[4*$i + 0] }}">
+                                        <a class="folder-panel btn btn-icon-toggle">
+                                            <span class="demo-icon-hover text-medium">
+                                                <i class="md md-file-download"></i>
+                                            </span>
+                                        </a>
+                                    </form>
+                                    <form action="{{ URL::route('archive_delete') }}" method="POST" class="delete-form" style="margin-left: 0">
+                                        <input type="hidden" name="file-path" value="{{ $path.$files[4*$i + 0] }}">
+                                        <a class="folder-panel btn btn-icon-toggle remove-btn">
+                                            <span class="demo-icon-hover text-medium">
+                                                <i class="md md-delete"></i>
+                                            </span>
+                                        </a>
+                                    </form>
+                                </div>
                             </div>
+                            <header>
+                                <a class="file-panel">
+                                    <span class="demo-icon-hover text-medium">
+                                        <i class="md md-attachment"> Файл </i>
+                                    </span>
+                                </a>
+                            </header>
                         </div>
-                    </a>
-                </form>
-            @endif
-        </td>
-        <td>
-            @if (!is_null($files[4*$i + 1]))
-                <form action="{{ URL::route('archive_folder', [$files[4*$i + 1]]) }}" method="POST" class="form">
-                    <input type="hidden" name="path" value="{{ $path }}">
-                    <a class="folder-panel">
-                        <div class="card style-primary">
-                            <div class="card-body text-xl">
-                                {{ $files[4*$i + 1] }}
+                        <div class="card-body style-default-bright">
+                            <p class="text-xl">{{ $files[4*$i + 0] }}</p>
+                        </div>
+                    </div>
+                @endif
+            </td>
+            <td>
+                @if (!is_null($files[4*$i + 1]))
+                    <div class="card card-bordered style-primary">
+                        <div class="card-head">
+                            <div class="tools">
+                                <div class="btn-group">
+                                    <form action="{{ URL::route('archive_download') }}" method="POST" class="download-form" style="margin-left: 0">
+                                        <input type="hidden" name="file-path" value="{{ $path.$files[4*$i + 1] }}">
+                                        <a class="folder-panel btn btn-icon-toggle">
+                                            <span class="demo-icon-hover text-medium">
+                                                <i class="md md-file-download"></i>
+                                            </span>
+                                        </a>
+                                    </form>
+                                    <form action="{{ URL::route('archive_delete') }}" method="POST" class="delete-form" style="margin-left: 0">
+                                        <input type="hidden" name="file-path" value="{{ $path.$files[4*$i + 1] }}">
+                                        <a class="folder-panel btn btn-icon-toggle remove-btn">
+                                            <span class="demo-icon-hover text-medium">
+                                                <i class="md md-delete"></i>
+                                            </span>
+                                        </a>
+                                    </form>
+                                </div>
                             </div>
+                            <header>
+                                <a class="file-panel">
+                                    <span class="demo-icon-hover text-medium">
+                                        <i class="md md-attachment"> Файл </i>
+                                    </span>
+                                </a>
+                            </header>
                         </div>
-                    </a>
-                </form>
-            @endif
-        </td>
-        <td>
-            @if (!is_null($files[4*$i + 2]))
-                <form action="{{ URL::route('archive_folder', [$files[4*$i + 2]]) }}" method="POST" class="form">
-                    <input type="hidden" name="path" value="{{ $path }}">
-                    <a class="folder-panel">
-                        <div class="card style-primary">
-                            <div class="card-body text-xl">
-                                {{ $files[4*$i + 2] }}
+                        <div class="card-body style-default-bright">
+                            <p class="text-xl">{{ $files[4*$i + 1] }}</p>
+                        </div>
+                </div>
+                @endif
+            </td>
+            <td>
+                @if (!is_null($files[4*$i + 2]))
+                    <div class="card card-bordered style-primary">
+                        <div class="card-head">
+                            <div class="tools">
+                                <div class="btn-group">
+                                    <form action="{{ URL::route('archive_download') }}" method="POST" class="download-form" style="margin-left: 0">
+                                        <input type="hidden" name="file-path" value="{{ $path.$files[4*$i + 2] }}">
+                                        <a class="folder-panel btn btn-icon-toggle">
+                                            <span class="demo-icon-hover text-medium">
+                                                <i class="md md-file-download"></i>
+                                            </span>
+                                        </a>
+                                    </form>
+                                    <form action="{{ URL::route('archive_delete') }}" method="POST" class="delete-form" style="margin-left: 0">
+                                        <input type="hidden" name="file-path" value="{{ $path.$files[4*$i + 2] }}">
+                                        <a class="folder-panel btn btn-icon-toggle remove-btn">
+                                            <span class="demo-icon-hover text-medium">
+                                                <i class="md md-delete"></i>
+                                            </span>
+                                        </a>
+                                    </form>
+                                </div>
                             </div>
+                            <header>
+                                <a class="file-panel">
+                                    <span class="demo-icon-hover text-medium">
+                                        <i class="md md-attachment"> Файл </i>
+                                    </span>
+                                </a>
+                            </header>
                         </div>
-                    </a>
-                </form>
-            @endif
-        </td>
-        <td>
-            @if (!is_null($files[4*$i + 3]))
-                <form action="{{ URL::route('archive_folder', [$files[4*$i + 3]]) }}" method="POST" class="form">
-                    <input type="hidden" name="path" value="{{ $path }}">
-                    <a class="folder-panel">
-                        <div class="card style-primary">
-                            <div class="card-body text-xl">
-                                {{ $files[4*$i + 3] }}
+                        <div class="card-body style-default-bright">
+                            <p class="text-xl">{{ $files[4*$i + 2] }}</p>
+                        </div>
+                    </div>
+                @endif
+            </td>
+            <td>
+                @if (!is_null($files[4*$i + 3]))
+                    <div class="card card-bordered style-primary">
+                        <div class="card-head">
+                            <div class="tools">
+                                <div class="btn-group">
+                                    <form action="{{ URL::route('archive_download') }}" method="POST" class="download-form" style="margin-left: 0">
+                                        <input type="hidden" name="file-path" value="{{ $path.$files[4*$i + 3] }}">
+                                        <a class="folder-panel btn btn-icon-toggle">
+                                            <span class="demo-icon-hover text-medium">
+                                                <i class="md md-file-download"></i>
+                                            </span>
+                                        </a>
+                                    </form>
+                                    <form action="{{ URL::route('archive_delete') }}" method="POST" class="delete-form" style="margin-left: 0">
+                                        <input type="hidden" name="file-path" value="{{ $path.$files[4*$i + 3] }}">
+                                        <a class="folder-panel btn btn-icon-toggle remove-btn">
+                                            <span class="demo-icon-hover text-medium">
+                                                <i class="md md-delete"></i>
+                                            </span>
+                                        </a>
+                                    </form>
+                                </div>
                             </div>
+                            <header>
+                                <a class="file-panel">
+                                    <span class="demo-icon-hover text-medium">
+                                        <i class="md md-attachment"> Файл </i>
+                                    </span>
+                                </a>
+                            </header>
                         </div>
-                    </a>
-                </form>
-            @endif
-        </td>
-    </tr>
-    @endfor
-</table>
+                        <div class="card-body style-default-bright">
+                            <p class="text-xl">{{ $files[4*$i + 3] }}</p>
+                        </div>
+                    </div>
+                @endif
+            </td>
+        </tr>
+        @endfor
+    </table>
+@endif
 @stop
 
 @section('js-down')

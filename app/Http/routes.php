@@ -178,3 +178,5 @@ Route::get('recursion', ['as' => 'recursion_index', 'uses' => 'RecursionControll
 //архивный модуль
 Route::get('storage', ['as' => 'archive_index', 'uses' => 'ArchiveController@index']);
 Route::post('storage/{folder}', ['as' => 'archive_folder', 'uses' => 'ArchiveController@folder']);
+Route::post('storage', ['as' => 'archive_download', 'uses' => 'ArchiveController@download']);
+Route::post('storage/delete/file', ['as' => 'archive_delete', 'uses' => 'ArchiveController@delete']);

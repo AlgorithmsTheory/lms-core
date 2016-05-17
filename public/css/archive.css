@@ -7,7 +7,14 @@ a:hover{
     width: 10%;
 }
 
-.card:hover{
+.style-accent:hover{
     opacity: 0.7;
-    cursor: pointer;
+}
+
+.file-panel:hover{
+    cursor: default;
+}
+
+.delete-form, .download-form{
+    display: inline;
 }

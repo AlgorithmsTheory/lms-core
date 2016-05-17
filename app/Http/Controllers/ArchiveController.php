@@ -32,6 +32,7 @@ class ArchiveController extends Controller {
                 array_pop($folders);
             }
         }
+
         $path = $this::ARCHIVE_PATH;
         $nodes[0] = $this::ARCHIVE_PATH;
         return view ('archive.index', compact('folders', 'files', 'path', 'nodes'));
@@ -56,6 +57,7 @@ class ArchiveController extends Controller {
                 array_pop($folders);
             }
         }
+
         $nodes = explode('/', $path);
         $prev_folder = $nodes[count($nodes)-3];
         $prev_path = '';
@@ -63,5 +65,23 @@ class ArchiveController extends Controller {
             $prev_path .= $nodes[$i].'/';
         }
         return view ('archive.index', compact('folders', 'files', 'path', 'nodes', 'prev_path', 'prev_folder'));
+    }
+
+    public function download(Request $request){
+        $nodes = explode('/', $request->input('file-path'));
+        $filename = $nodes[count($nodes) - 1];
+        header("HTTP/1.1 200 OK");
+        header("Connection: close");
+        header("Content-Transfer-Encoding: binary");
+        header("Content-Type: application/zip");
+        header("Content-Length: ".filesize($request->input('file-path')));
+        header("Content-Disposition: attachment; filename=".$filename);
+        readfile($request->input('file-path'));
+    }
+
+    public function delete(Request $request){
+        unlink($request->input('file-path'));
+        return redirect('storage');
+
     }
 } 
