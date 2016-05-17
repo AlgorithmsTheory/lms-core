@@ -118,7 +118,7 @@ full
 @stop
 
 @section('right-off-canvas')
-    <div id="offcanvas-demo-right" class="offcanvas-pane width-6">
+    <div id="offcanvas-demo-right" class="offcanvas-pane width-12">
         <div class="offcanvas-head">
             <header class="text-center">Модуль переписывания</header>
             <div class="offcanvas-tools">

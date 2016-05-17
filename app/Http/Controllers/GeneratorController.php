@@ -108,6 +108,35 @@ class GeneratorController extends Controller {
         rmdir($dir);
     }
 
+    private function translit($string){
+        $translit = array(
+            'а' => 'a',   'б' => 'b',   'в' => 'v',
+            'г' => 'g',   'д' => 'd',   'е' => 'e',
+            'ё' => 'yo',   'ж' => 'zh',  'з' => 'z',
+            'и' => 'i',   'й' => 'j',   'к' => 'k',
+            'л' => 'l',   'м' => 'm',   'н' => 'n',
+            'о' => 'o',   'п' => 'p',   'р' => 'r',
+            'с' => 's',   'т' => 't',   'у' => 'u',
+            'ф' => 'f',   'х' => 'x',   'ц' => 'c',
+            'ч' => 'ch',  'ш' => 'sh',  'щ' => 'shh',
+            'ь' => '\'',  'ы' => 'y',   'ъ' => '\'\'',
+            'э' => 'e\'',   'ю' => 'yu',  'я' => 'ya',
+            'А' => 'A',   'Б' => 'B',   'В' => 'V',
+            'Г' => 'G',   'Д' => 'D',   'Е' => 'E',
+            'Ё' => 'YO',   'Ж' => 'Zh',  'З' => 'Z',
+            'И' => 'I',   'Й' => 'J',   'К' => 'K',
+            'Л' => 'L',   'М' => 'M',   'Н' => 'N',
+            'О' => 'O',   'П' => 'P',   'Р' => 'R',
+            'С' => 'S',   'Т' => 'T',   'У' => 'U',
+            'Ф' => 'F',   'Х' => 'X',   'Ц' => 'C',
+            'Ч' => 'CH',  'Ш' => 'SH',  'Щ' => 'SHH',
+            'Ь' => '\'',  'Ы' => 'Y\'',   'Ъ' => '\'\'',
+            'Э' => 'E\'',   'Ю' => 'YU',  'Я' => 'YA',
+        );
+        $translit_string = strtr($string, $translit);
+        return $translit_string;
+    }
+
     /** Скачивание файла */
     private function download($filename){
         header("HTTP/1.1 200 OK");
@@ -115,7 +144,7 @@ class GeneratorController extends Controller {
         header("Content-Transfer-Encoding: binary");
         header("Content-Type: application/zip");
         header("Content-Length: ".filesize($filename));
-        header("Content-Disposition: attachment; filename=test.zip");
+        header("Content-Disposition: attachment; filename=".$filename);
         readfile($filename);
     }
 
@@ -141,7 +170,7 @@ class GeneratorController extends Controller {
         $amount = $test->getAmount($id_test);                                                                                // кол-во вопрососв в тесте
 
         $today =  date("Y-m-d H-i-s");
-        $dir = 'download/pdf_tests/'.$today;
+        $dir = 'archive/pdf_tests/'.$this->translit($test_name).' '.$today;
         mkdir($dir);
 
         define('FPDF_FONTPATH','C:\wamp\www\uir\public\fonts');

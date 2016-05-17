@@ -50,9 +50,6 @@ full-tests
         </div>
     </div>
 </section>
-    {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
-    {!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
-    {!! HTML::script('js/libs/bootstrap/bootstrap.min.js') !!}
     {!! HTML::script('js/libs/spin.js/spin.min.js') !!}
     {!! HTML::script('js/libs/autosize/jquery.autosize.min.js') !!}
     {!! HTML::script('js/libs/nestable/jquery.nestable.js') !!}

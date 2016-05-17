@@ -2,9 +2,6 @@
 @section('head')
 <meta name="csrf_token" content="{{ csrf_token() }}" />
 <title>Список всех тестов</title>
-{!! HTML::style('css/materialadmin.css') !!}
-{!! HTML::style('css/full.css') !!}
-{!! HTML::style('css/bootstrap.css') !!}
 @stop
 
 @section('background')
