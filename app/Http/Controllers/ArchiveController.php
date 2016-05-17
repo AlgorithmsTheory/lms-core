@@ -80,8 +80,7 @@ class ArchiveController extends Controller {
     }
 
     public function delete(Request $request){
-        unlink($request->input('file-path'));
-        return redirect('storage');
-
+        unlink($request->input('file_path'));
+        return;
     }
 } 

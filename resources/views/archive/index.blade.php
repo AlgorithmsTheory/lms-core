@@ -1,10 +1,14 @@
 @extends('templates.base')
 @section('head')
+<meta name="csrf_token" content="{{ csrf_token() }}" />
 <title>Архив</title>
 {!! HTML::style('css/archive.css') !!}
 @stop
 
 @section('content')
+<div class="col-md-12 col-sm-6 card style-primary">
+    <h1 class="text-default-bright">Архив</h1>
+</div>
 @if (!is_null($prev_folder))
     @if ($prev_folder == 'archive')
         <form action="{{ URL::route('archive_index') }}" method="GET" class="form">
@@ -134,9 +138,10 @@
                                             </span>
                                         </a>
                                     </form>
-                                    <form action="{{ URL::route('archive_delete') }}" method="POST" class="delete-form" style="margin-left: 0">
-                                        <input type="hidden" name="file-path" value="{{ $path.$files[4*$i + 0] }}">
-                                        <a class="folder-panel btn btn-icon-toggle remove-btn">
+                                    <form action="" method="POST" class="delete-form" style="margin-left: 0">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <input type="hidden" name="file-path" class="file-path-input" value="{{ $path.$files[4*$i + 0] }}">
+                                        <a class="btn btn-icon-toggle remove-btn">
                                             <span class="demo-icon-hover text-medium">
                                                 <i class="md md-delete"></i>
                                             </span>
@@ -172,9 +177,10 @@
                                             </span>
                                         </a>
                                     </form>
-                                    <form action="{{ URL::route('archive_delete') }}" method="POST" class="delete-form" style="margin-left: 0">
-                                        <input type="hidden" name="file-path" value="{{ $path.$files[4*$i + 1] }}">
-                                        <a class="folder-panel btn btn-icon-toggle remove-btn">
+                                    <form action="" method="POST" class="delete-form" style="margin-left: 0">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <input type="hidden" name="file-path" class="file-path-input" value="{{ $path.$files[4*$i + 1] }}">
+                                        <a class="btn btn-icon-toggle remove-btn">
                                             <span class="demo-icon-hover text-medium">
                                                 <i class="md md-delete"></i>
                                             </span>
@@ -210,9 +216,10 @@
                                             </span>
                                         </a>
                                     </form>
-                                    <form action="{{ URL::route('archive_delete') }}" method="POST" class="delete-form" style="margin-left: 0">
-                                        <input type="hidden" name="file-path" value="{{ $path.$files[4*$i + 2] }}">
-                                        <a class="folder-panel btn btn-icon-toggle remove-btn">
+                                    <form action="" method="POST" class="delete-form" style="margin-left: 0">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <input type="hidden" name="file-path" class="file-path-input" value="{{ $path.$files[4*$i + 2] }}">
+                                        <a class="btn btn-icon-toggle remove-btn">
                                             <span class="demo-icon-hover text-medium">
                                                 <i class="md md-delete"></i>
                                             </span>
@@ -248,9 +255,10 @@
                                             </span>
                                         </a>
                                     </form>
-                                    <form action="{{ URL::route('archive_delete') }}" method="POST" class="delete-form" style="margin-left: 0">
-                                        <input type="hidden" name="file-path" value="{{ $path.$files[4*$i + 3] }}">
-                                        <a class="folder-panel btn btn-icon-toggle remove-btn">
+                                    <form action="" method="POST" class="delete-form" style="margin-left: 0">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <input type="hidden" name="file-path" class="file-path-input" value="{{ $path.$files[4*$i + 3] }}">
+                                        <a class="btn btn-icon-toggle remove-btn">
                                             <span class="demo-icon-hover text-medium">
                                                 <i class="md md-delete"></i>
                                             </span>

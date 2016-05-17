@@ -6,6 +6,8 @@ $('.folder-panel').click(function(){
 });
 
 $('#file-table').on('click', '.remove-btn', function(){
+    filePath = $(this).parents('form').children('.file-path-input').val();
+    object = $(this);
     $.ajax({
         cache: false,
         type: 'POST',
@@ -17,10 +19,9 @@ $('#file-table').on('click', '.remove-btn', function(){
                 return xhr.setRequestHeader('X-CSRF-TOKEN', token);
             }
         },
-        data: { section: section, theme: theme, type: type, test_type: testType, token: 'token' },
-        success: function(data){
-            $('#amount-container-'+tempCount).html(data);
-            $('#num-'+tempCount).attr('max', data);
+        data: { file_path: filePath, token: 'token' },
+        success: function(){
+            object.parents('.card-bordered').remove();
         }
     });
     return false;
