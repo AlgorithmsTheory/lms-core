@@ -8,8 +8,6 @@
 
 namespace App\Protocols;
 
-
-use App\Mypdf;
 use App\Testing\Test;
 
 class TestProtocol extends Protocol {
@@ -19,9 +17,7 @@ class TestProtocol extends Protocol {
         $this->test = Test::whereId_test($id_test)->select('test_name')->first()->test_name;
     }
 
-    public function setFilename(){
-        $now =  date("Y-m-d H-i-s");
-        $file = Mypdf::translit($this->test).' '.Mypdf::translit($this->user).' '.$now.'.pdf';
-        $this->filename = $this::PROTOCOL_PATH.$this::TEST_PROTOCOL_DIR.$file;
+    public function setBaseDir(){
+        return $this::PROTOCOL_PATH.$this::TEST_PROTOCOL_DIR;
     }
 } 
