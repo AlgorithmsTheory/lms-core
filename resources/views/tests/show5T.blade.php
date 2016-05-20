@@ -5,7 +5,7 @@
 <h1>Вопрос {{ $count }}</h1>
 <input type="hidden" name="num" value="{{ $id }}">
 <input type="hidden" name="type" value="{{ $type }}">
-<table class="table table-bordered no-margin">
+<table class="table table-bordered no-margin text-lg">
     <tr>
         <td>Утверждение</td>
         <td>Верно</td>
@@ -16,14 +16,56 @@
         <tr>
             <td> {{ $row }} </td>
             @if ($choice[$i] == 'true')
-            <td><input type="radio"  value="true" checked></td>
-            <td><input type="radio"  value="false"></td>
+            <td>
+                <div class="radio radio-styled">
+                    <label>
+                        <input type="radio"  value="true" checked>
+                        <span class="text-lg"></span>
+                    </label>
+                </div>
+            </td>
+            <td>
+                <div class="radio radio-styled">
+                    <label>
+                        <input type="radio"  value="false">
+                        <span class="text-lg"></span>
+                    </label>
+                </div>
+            </td>
             @elseif ($choice[$i] == 'false')
-            <td><input type="radio"  value="true"></td>
-            <td><input type="radio"  value="false" checked></td>
+            <td>
+                <div class="radio radio-styled">
+                    <label>
+                        <input type="radio"  value="true">
+                        <span class="text-lg"></span>
+                    </label>
+                </div>
+            </td>
+            <td>
+                <div class="radio radio-styled">
+                    <label>
+                        <input type="radio"  value="false" checked>
+                        <span class="text-lg"></span>
+                    </label>
+                </div>
+            </td>
             @else
-            <td><input type="radio"  value="true"></td>
-            <td><input type="radio"  value="false"></td>
+            <td>
+                <div class="radio radio-styled">
+                    <label>
+                        <input type="radio"  value="true">
+                        <span class="text-lg"></span>
+                    </label>
+                </div>
+            </td>
+            <td>
+                <div class="radio radio-styled">
+                    <label>
+                        <input type="radio"  value="false">
+                        <span class="text-lg"></span>
+                    </label>
+                </div>
+            </td>
             @endif
         </tr>
         <?php $i++;?>

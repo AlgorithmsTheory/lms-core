@@ -12,10 +12,20 @@
 <input type="hidden" name="num" value="{{ $id }}">
 <input type="hidden" name="type" value="{{ $type }}">
 @foreach ($variants as $var)
-<input type="checkbox"  name="choice[]" value="{{ $var }}"> {{ $var }} <br>
+<div class="checkbox checkbox-styled">
+    <label>
+        <input type="checkbox"  name="choice[]" value="{{ $var }}">
+        <span class="text-lg"> {{ $var }}</span>
+    </label>
+</div>
 @endforeach
 <br><br>
-<input type="checkbox" name="seeLater" class="css-checkbox"><span class="css-checkbox">Вернуться позже</span>
+<div class="checkbox checkbox-styled checkbox-warning">
+    <label>
+        <input type="checkbox" name="seeLater" class="css-checkbox">
+        <span class="css-checkbox text-lg">Вернуться позже</span>
+    </label>
+</div>
 {!! Form::close() !!}
 <br>
 </body>

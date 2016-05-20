@@ -54,7 +54,7 @@ li {
     font-size: 14px;
     /*font-weight: bold;*/
     color: #FFFFFF;
-    background-color: #e2e129;
+    background-color: rgb(239, 151, 23);
     text-align: center;
     padding: 4px;
     text-decoration: none;
@@ -174,14 +174,6 @@ li {
     box-shadow: 0 5px 15px
     15:27:59
 rgba(0,0,0,0.5);
-}
-.css-checkbox{
-    font-size: 15px;
-    border-radius:4px;
-    /*position: relative;*/
-    right:-800px;
-    width:19px;
-    height:19px;
 }
 
 a {

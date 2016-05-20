@@ -6,6 +6,8 @@
  * Time: 16:49
  */
 namespace App\Http\Controllers;
+use App\Mypdf;
+use App\Protocols\TestProtocol;
 use App\Testing\Fine;
 use App\Testing\Result;
 use App\Testing\Section;
@@ -253,6 +255,8 @@ class TestController extends Controller{
             StructuralRecord::whereId_structure($structure['id_structure'])->delete();
         }
         TestStructure::whereId_test($id_test)->delete();
+        Result::whereId_test($id_test)->delete();
+        Fine::whereId_test($id_test)->delete();
         Test::whereId_test($id_test)->delete();
         return redirect()->route('tests_list');
     }
@@ -280,6 +284,15 @@ class TestController extends Controller{
             else $test_type = 'Контрольный';
             $amount = Question::getAmount($request->input('section'), $request->input('theme'), $request->input('type'), $test_type);
             return (String) $amount;
+        }
+    }
+
+    /** В фоновом режиме создание протокола по контрольному тесту */
+    public function getProtocol(Request $request){
+        if ($request->ajax()) {
+            $protocol = new TestProtocol($request->input('id_test'), $request->input('id_user'), $request->input('html_text'));
+            $protocol->create();
+            return;
         }
     }
 
@@ -368,6 +381,10 @@ class TestController extends Controller{
         $query = $this->test->whereId_test($id_test)->select('total', 'test_name', 'test_type')->first();
         $total = $query->total;
         $test_type = $query->test_type;
+
+        $id_user = Result::whereId_test($id_test)
+                        ->join('users', 'results.id', '=', 'users.id')->select('users.id')->first()->id;
+
         for ($i=0; $i<$amount; $i++){                                                                                   //обрабатываем каждый вопрос
             $data = $request->input($i);
             $array = json_decode($data);
@@ -403,7 +420,7 @@ class TestController extends Controller{
         }
 
         if ($test_type != 'Тренировочный'){                                                                             //тест контрольный
-            $widgetListView = View::make('tests.ctrresults',compact('score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent'))->with('widgets', $widgets);
+            $widgetListView = View::make('tests.ctrresults',compact('score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'id_test', 'id_user'))->with('widgets', $widgets);
             $fine = new Fine();
             $fine->updateFine(Auth::user()['id'], $id_test, $mark_rus);                                                 //вносим в таблицу штрафов необходимую инфу
         }

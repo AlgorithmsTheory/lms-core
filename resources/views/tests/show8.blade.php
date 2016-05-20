@@ -8,7 +8,12 @@
 <div class="form-group">
     <textarea style="resize: vertical" name="choice" class="form-control" rows="5">Напишите ответ</textarea>
 </div>
-<input type="checkbox" name="seeLater" class="css-checkbox"><span class="css-checkbox">Вернуться позже</span>
+<div class="checkbox checkbox-styled checkbox-warning">
+    <label>
+        <input type="checkbox" name="seeLater" class="css-checkbox">
+        <span class="css-checkbox text-lg">Вернуться позже</span>
+    </label>
+</div>
 {!! Form::close() !!}
 <br>
 </body>

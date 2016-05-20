@@ -4,7 +4,7 @@
 <h1>Вопрос {{ $count }}</h1>
 <input type="hidden" name="num" value="{{ $id }}">
 <input type="hidden" name="type" value="{{ $type }}">
-<table class="table table-bordered no-margin">
+<table class="table table-bordered no-margin" >
     <tr class="info">
         <td>#</td>
         @foreach ($variants as $var)
@@ -33,7 +33,12 @@
     </tr>
     @endforeach
 </table>
-<input type="checkbox" name="seeLater" class="css-checkbox"><span class="css-checkbox">Вернуться позже</span>
+<div class="checkbox checkbox-styled checkbox-warning">
+    <label>
+        <input type="checkbox" name="seeLater" class="css-checkbox">
+        <span class="css-checkbox text-lg">Вернуться позже</span>
+    </label>
+</div>
 {!! Form::close() !!}
 </body>
 </html>

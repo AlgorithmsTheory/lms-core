@@ -10,13 +10,23 @@
         @endif
     @endfor
 </h2>
-<input type="hidden" name="num" value="{{ $id }}">
-<input type="hidden" name="type" value="{{ $type }}">
+<input type="hidden" name="num" value="{{ $id }}" />
+<input type="hidden" name="type" value="{{ $type }}" />
 @foreach ($variants as $var)
 @if ($var == @$choice)
-<input type="radio"  name="choice" value="{{ $var }}" checked> {{ $var }} <br>
+    <div class="radio radio-styled">
+        <label>
+            <input type="radio" name="choice" value="{{ $var }}" checked>
+            <span class="text-lg"> {{ $var }} </span>
+        </label>
+    </div>
 @else
-<input type="radio"  name="choice" value="{{ $var }}"> {{ $var }} <br>
+    <div class="radio radio-styled">
+        <label>
+            <input type="radio" name="choice" value="{{ $var }}">
+            <span class="text-lg"> {{ $var }} </span>
+        </label>
+    </div>
 @endif
 @endforeach
 {!! Form::close() !!}

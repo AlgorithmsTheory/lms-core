@@ -4,7 +4,7 @@
 <h1>Вопрос {{ $count }}</h1>
 <input type="hidden" name="num" value="{{ $id }}">
 <input type="hidden" name="type" value="{{ $type }}">
-<table class="table table-bordered no-margin">
+<table class="table table-bordered no-margin text-lg">
     <tr>
         <td>Утверждение</td>
         <td>Верно</td>
@@ -14,14 +14,35 @@
     @foreach ($text as $row)
     <tr>
         <td> {{ $row }} </td>
-        <td><input type="radio"  name="{{$i}}" value="true"></td>
-        <td><input type="radio"  name="{{$i}}" value="false"></td>
-        <td><input style="display: none;" type="radio"  name="{{$i}}" value="2" checked></td>
+        <td>
+            <div class="radio radio-styled">
+                <label>
+                    <input type="radio"  name="{{$i}}" value="true">
+                    <span class="text-lg"></span>
+                </label>
+            </div>
+        </td>
+        <td>
+            <div class="radio radio-styled">
+                <label>
+                    <input type="radio"  name="{{$i}}" value="false">
+                    <span class="text-lg"></span>
+                </label>
+            </div>
+        </td>
+        <td>
+            <input style="display: none;" type="radio"  name="{{$i}}" value="2" checked>
+        </td>
     </tr>
     <?php $i++;?>
     @endforeach
 </table>
-<input type="checkbox" name="seeLater" class="css-checkbox"><span class="css-checkbox">Вернуться позже</span>
+<div class="checkbox checkbox-styled checkbox-warning">
+    <label>
+        <input type="checkbox" name="seeLater" class="css-checkbox">
+        <span class="css-checkbox text-lg">Вернуться позже</span>
+    </label>
+</div>
 {!! Form::close() !!}
 </body>
 </html>

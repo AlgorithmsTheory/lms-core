@@ -16,12 +16,22 @@
 <?php $flag = false; ?>
 @foreach ($choice as $ch)
 @if ($var == $ch)
-<input type="checkbox"  name="choice[]" value="{{ $var }}" checked> {{ $var }} <br>
+    <div class="checkbox checkbox-styled">
+        <label>
+            <input type="checkbox"  name="choice[]" value="{{ $var }}" checked>
+            <span class="text-lg"> {{ $var }}</span>
+        </label>
+    </div>
 <?php $flag = true;?>
 @endif
 @endforeach
 @if ($flag == false)
-<input type="checkbox"  name="choice[]" value="{{ $var }}"> {{ $var }} <br>
+    <div class="checkbox checkbox-styled">
+        <label>
+            <input type="checkbox"  name="choice[]" value="{{ $var }}">
+            <span class="text-lg"> {{ $var }}</span>
+        </label>
+    </div>
 @endif
 @endforeach
 {!! Form::close() !!}

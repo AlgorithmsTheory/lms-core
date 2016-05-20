@@ -40,7 +40,6 @@
         </tr>
     @endforeach
 </table>
-<input type="checkbox" name="seeLater" class="css-checkbox"><span class="css-checkbox">Вернуться позже</span>
 {!! Form::close() !!}
 </body>
 </html>

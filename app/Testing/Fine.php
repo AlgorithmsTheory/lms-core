@@ -47,15 +47,15 @@ class Fine extends Eloquent{
         $query_fine = $this->whereId($user)->whereId_test($test)->first();
         if (is_null($query_fine)){                                                                                      //если в таблице штрафов еще не зафиксировано прохождение данного контрольного теста данным студентом
             if ($mark > 2) {                                                                                            //если оценка положительная
-                Fine::insert(array('id_user' => $user, 'id_test' => $test, 'fine' => 0, 'access' => false));            //штраф не начисляется
+                Fine::insert(array('id' => $user, 'id_test' => $test, 'fine' => 0, 'access' => false));            //штраф не начисляется
             }
-            else Fine::insert(array('id_user' => $user, 'id_test' => $test, 'fine' => 1, 'access' => false));           //штраф начисляется
+            else Fine::insert(array('id' => $user, 'id_test' => $test, 'fine' => 1, 'access' => false));           //штраф начисляется
         }
         else {
             if ($mark > 2) {                                                                                            //если оценка положительная
                 Fine::whereId_fine($query_fine->id_fine)->update(array('access' => false));                                                                 //штраф не начисляется
             }
-            else Fine::whereId_fine($query_fine->id_fine)->update(array('id_user' => $user, 'id_test' => $test, 'fine' => $this->maxFine($query_fine->fine + 1), 'access' => false));   //штраф начисляется
+            else Fine::whereId_fine($query_fine->id_fine)->update(array('id' => $user, 'id_test' => $test, 'fine' => $this->maxFine($query_fine->fine + 1), 'access' => false));   //штраф начисляется
         }
     }
 

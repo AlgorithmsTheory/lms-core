@@ -6,6 +6,7 @@
  * Time: 16:15
  */
 namespace App\Http\Controllers;
+use App\Protocols\TestProtocol;
 use App\Testing\Lecture;
 use App\Qtypes\Theorem;
 use App\Testing\Section;
@@ -36,6 +37,8 @@ class QuestionController extends Controller{
         if (Auth::check()){
             $username = Auth::user()['first_name'];
         }
+        $protocol = new TestProtocol(161, 83, '');
+        $protocol->create();
         $image = 'img/library/Pic/2.jpeg';
         return view('questions.teacher.index', compact('username', 'image'));
     }
