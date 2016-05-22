@@ -1,22 +1,21 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/html">
-<head>
-    <meta name="csrf_token" content="{{ csrf_token() }}" />
-    <title>Создание теста</title>
-    {!! HTML::style('css/bootstrap.css') !!}
-    {!! HTML::style('css/test_style.css') !!}
-    {!! HTML::style('css/font-awesome.min.css') !!}
-    {!! HTML::style('css/materialadmin.css') !!}
-    {!! HTML::style('css/material-design-iconic-font.min.css') !!}
-    {!! HTML::style('css/materialadmin_demo.css') !!}
-    {!! HTML::style('css/createTest.css') !!}
-    {!! HTML::script('js/jquery.js') !!}
-</head>
-<body>
-<section>
+@extends('templates.base')
+@section('head')
+<meta name="csrf_token" content="{{ csrf_token() }}" />
+<title>Создание теста</title>
+{!! HTML::style('css/bootstrap.css') !!}
+{!! HTML::style('css/test_style.css') !!}
+{!! HTML::style('css/font-awesome.min.css') !!}
+{!! HTML::style('css/materialadmin.css') !!}
+{!! HTML::style('css/material-design-iconic-font.min.css') !!}
+{!! HTML::style('css/materialadmin_demo.css') !!}
+{!! HTML::style('css/createTest.css') !!}
+{!! HTML::script('js/jquery.js') !!}
+@stop
+
+@section('content')
     <div class="section-body" id="page">
-        <div class="col-md-12 col-sm-6 card style-primary">
-            <h1 class="text-default-bright">Создать тест</h1>
+        <div class="col-md-12 col-sm-6 card style-primary text-center">
+            <h1 class="">Создать тест</h1>
         </div>
 
         <!-- модуль задания основных настроек теста -->
@@ -147,7 +146,9 @@
             </div>
         </form>
     </div>
-</section>
+@stop
+
+@section('js-down')
     {!! HTML::script('js/testCreate.js') !!}
     {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
     {!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
@@ -164,7 +165,6 @@
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
-</body>
-</html>
+@stop
 
 

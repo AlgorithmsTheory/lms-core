@@ -12,6 +12,7 @@ use App\Qtypes\Theorem;
 use App\Testing\Section;
 use App\Testing\Type;
 use Auth;
+use Illuminate\Http\Response;
 use Session;
 use Illuminate\Http\Request;
 use App\Testing\Question;
@@ -23,6 +24,7 @@ use App\Qtypes\AccordanceTable;
 use App\Qtypes\YesNo;
 use App\Qtypes\Definition;
 use App\Qtypes\JustAnswer;
+use View;
 
 class QuestionController extends Controller{
     private $question;
@@ -134,5 +136,33 @@ class QuestionController extends Controller{
             $themes_list = Theme::whereSection_code($section_code)->select('theme_name')->get();
             return (String) view('questions.student.getTheme', compact('themes_list'));
         }
+    }
+
+    public function editList(){
+        $questions = Question::where('section_code', '>', 0)
+                                ->where('section_code', '<', 2)
+                                ->where('theme_code', '>', 0)
+                                ->where('theme_code', '<', 2)->paginate(10);
+        $widgets = [];
+        foreach ($questions as $question){
+            $data = $this->question->show($question['id_question'], '');
+            $widgets[] =  View::make($data['view'], $data['arguments']);
+            $question['section'] = Section::whereSection_code($question['section_code'])->select('section_name')
+                                    ->first()->section_name;
+            $question['theme'] = Theme::whereTheme_code($question['theme_code'])->select('theme_name')
+                                    ->first()->theme_name;
+            $question['type'] = Type::whereType_code($question['type_code'])->select('type_name')
+                                    ->first()->type_name;
+        }
+        $sections = Section::where('section_code', '>', 0)->select('section_name')->get();
+        $themes = Theme::where('theme_code', '>', 0)->select('theme_name')->get();
+        $types = Type::where('type_code', '>', 0)->select('type_name')->get();
+        $widgetListView = View::make('questions.teacher.question_list', compact('questions', 'sections', 'themes', 'types'))->with('widgets', $widgets);
+        $response = new Response($widgetListView);
+        return $response;
+    }
+
+    public function find(Request $request){
+
     }
 }

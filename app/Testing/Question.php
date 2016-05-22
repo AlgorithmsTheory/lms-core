@@ -40,6 +40,7 @@ use Illuminate\Http\Request;
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  max($array)
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  count()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  toSql()
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  paginate($value)
  *
  */
 class Question extends Eloquent {

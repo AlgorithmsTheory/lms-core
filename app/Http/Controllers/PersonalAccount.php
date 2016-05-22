@@ -4,16 +4,16 @@ use App\Classwork;
 use App\Control_test_dictionary;
 use App\Controls;
 use App\Lectures;
-use App\Result;
+use App\Testing\Result;
 use App\Seminars;
-use App\Test;
-use App\Theme;
+use App\Testing\Test;
+use App\Testing\Theme;
 use App\Totalresults;
 use App\User;
 use Auth;
 use Illuminate\Http\Request;
-use App\Question;
-use App\Codificator;
+use App\Testing\Question;
+use App\Testing\Codificator;
 use PDOStatement;
 use  PDO;
 use Session;
@@ -36,7 +36,7 @@ class PersonalAccount extends Controller{
         }
         $amount = count($tests);
         $user = Auth::user();
-        $results = Result::whereId_user($user['id'])->get();
+        $results = Result::whereId($user['id'])->get();
         return view('personal_account/personal_account', compact('results', 'amount', 'tests', 'names'));
     }
 

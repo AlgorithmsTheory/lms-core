@@ -6,6 +6,7 @@
     {!! HTML::style('css/materialadmin.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     {!! HTML::style('css/materialadmin_demo.css') !!}
+    {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::script('js/jquery.js') !!}
     @yield('head')
 </head>

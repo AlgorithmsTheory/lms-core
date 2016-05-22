@@ -4,11 +4,11 @@
 <title>Список всех тестов</title>
 @stop
 
-@section('background')
-full
-@stop
-
 @section('content')
+<div class="col-md-12 col-sm-6 card style-primary text-center">
+    <h1 class="">Список тестов</h1>
+</div>
+
 <div class="col-lg-offset-0 col-md-12 col-sm-6">
     <div class="card" id="edit-list">
         <div class="card-body">

@@ -1,23 +1,22 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/html">
-<head>
-    <meta name="csrf_token" content="{{ csrf_token() }}" />
-    <title>Редактирование теста "{{ $test['test_name'] }}"</title>
-    {!! HTML::style('css/bootstrap.css') !!}
-    {!! HTML::style('css/test_style.css') !!}
-    {!! HTML::style('css/font-awesome.min.css') !!}
-    {!! HTML::style('css/materialadmin.css') !!}
-    {!! HTML::style('css/material-design-iconic-font.min.css') !!}
-    {!! HTML::style('css/materialadmin_demo.css') !!}
-    {!! HTML::style('css/createTest.css') !!}
-    {!! HTML::script('js/jquery.js') !!}
-</head>
-<body>
-<section>
-    <div class="section-body" id="page">
-        <div class="col-md-12 col-sm-6 card style-primary">
-            <h1 class="text-default-bright">Редактировать тест "{{ $test['test_name'] }}"</h1>
-        </div>
+@extends('templates.base')
+@section('head')
+<meta name="csrf_token" content="{{ csrf_token() }}" />
+<title>Редактирование теста "{{ $test['test_name'] }}"</title>
+{!! HTML::style('css/bootstrap.css') !!}
+{!! HTML::style('css/test_style.css') !!}
+{!! HTML::style('css/font-awesome.min.css') !!}
+{!! HTML::style('css/materialadmin.css') !!}
+{!! HTML::style('css/material-design-iconic-font.min.css') !!}
+{!! HTML::style('css/materialadmin_demo.css') !!}
+{!! HTML::style('css/createTest.css') !!}
+{!! HTML::script('js/jquery.js') !!}
+@stop
+
+@section('content')
+<div class="section-body" id="page">
+    <div class="col-md-12 col-sm-6 card style-primary text-center">
+        <h1 class="">Редактировать тест "{{ $test['test_name'] }}"</h1>
+    </div>
 
         <!-- модуль задания основных настроек теста -->
         <div class="col-lg-offset-1 col-md-10 col-sm-10 card style-gray">
@@ -34,7 +33,7 @@
                     <div class="card-body">
                         <!-- название теста -->
                         <div class="form-group floating-label">
-                            <textarea  name="test-name" class="form-control textarea1" rows="1" placeholder=""  required>{{$test['test_name'] }}</textarea>
+                            <textarea  name="test-name" class="form-control textarea1" rows="1" placeholder=""  required>{{ $test['test_name'] }}</textarea>
                             <label for="textarea1">Название теста</label>
                         </div>
                         <!-- тренировочный тест -->
@@ -175,7 +174,8 @@
             </div>
         </form>
     </div>
-</section>
+@stop
+@section ('js-down')
 {!! HTML::script('js/testCreate.js') !!}
 {!! HTML::script('js/testEdit.js') !!}
 {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
@@ -193,7 +193,6 @@
 {!! HTML::script('js/core/source/AppVendor.js') !!}
 {!! HTML::script('js/core/source/AppVendor.js') !!}
 {!! HTML::script('js/core/demo/Demo.js') !!}
-</body>
-</html>
+@stop
 
 

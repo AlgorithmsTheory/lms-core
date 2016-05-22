@@ -6,7 +6,7 @@
 @stop
 
 @section('content')
-<div class="col-md-12 col-sm-6 card style-primary">
+<div class="col-md-12 col-sm-6 card style-primary text-center">
     <h1 class="text-default-bright">Архив</h1>
 </div>
 
@@ -26,14 +26,20 @@
     </form>
     </div>
 <br>
+<div class="col-sm-6">
+    <form action="{{ URL::route('archive_download_folder') }}" method="POST">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="folder-path" value="{{ $path }}" id="current-folder">
+        <a class="folder-panel btn btn-warning btn-lg col-md-5 col-md-offset-7 style-primary" id="download-folder">Скачать всю папку</a>
+    </form>
+</div>
+@else
+<form action="{{ URL::route('archive_download_folder') }}" method="POST">
+    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="folder-path" value="{{ $path }}" id="current-folder">
+    <a class="folder-panel btn btn-warning btn-lg col-md-3 col-md-offset-9 style-primary" id="download-folder">Скачать всю папку</a>
+</form>
 @endif
-    <div class="col-sm-6">
-        <form action="{{ URL::route('archive_download_folder') }}" method="POST">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <input type="hidden" name="folder-path" value="{{ $path }}" id="current-folder">
-            <a class="folder-panel btn btn-warning btn-lg col-md-5 col-md-offset-7 style-primary" id="download-folder">Скачать всю папку</a>
-        </form>
-    </div>
 
 @if (!empty($folders))
     <table class="table table-condensed table-archive" id="folder-table">

@@ -1,20 +1,21 @@
-<html>
-<head>
-    <meta name="csrf_token" content="{{ csrf_token() }}" />
-    {!! HTML::style('css/bootstrap.css') !!}
-    {!! HTML::style('css/test_style.css') !!}
-    {!! HTML::style('css/font-awesome.min.css') !!}
-    {!! HTML::style('css/materialadmin.css') !!}
-    {!! HTML::style('css/material-design-iconic-font.min.css') !!}
-    {!! HTML::style('css/materialadmin_demo.css') !!}
-    {!! HTML::script('js/jquery.js') !!}
-</head>
-<body>
-<section>
-    <div class="section-body">
-        <div class="col-md-12 col-sm-6 card style-primary">
-            <h1 class="text-default-bright">Создать новый вопрос</h1>
-        </div>
+@extends('templates.base')
+@section('head')
+<meta name="csrf_token" content="{{ csrf_token() }}" />
+<title>Создание вопроса</title>
+{!! HTML::style('css/bootstrap.css') !!}
+{!! HTML::style('css/test_style.css') !!}
+{!! HTML::style('css/font-awesome.min.css') !!}
+{!! HTML::style('css/materialadmin.css') !!}
+{!! HTML::style('css/material-design-iconic-font.min.css') !!}
+{!! HTML::style('css/materialadmin_demo.css') !!}
+{!! HTML::script('js/jquery.js') !!}
+@stop
+
+@section('content')
+<div class="section-body" id="page">
+    <div class="col-md-12 col-sm-6 card style-primary text-center">
+        <h1 class="">Создать новый вопрос</h1>
+    </div>
         <form action="{{URL::route('question_add')}}" method="POST" class="form" enctype="multipart/form-data">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="q-type" value="">
@@ -22,7 +23,7 @@
                 <div class="card">
                     <div class="card-body">
                         <!-- Выбор типа вопроса -->
-                        <div class="form-group">
+                        <div class="form-group ">
                             <select name="type" id="select-type" class="form-control" size="1">
                                 <option value="$nbsp"></option>
                                 @foreach ($types as $type)
@@ -34,9 +35,8 @@
 
 
                         <div id="type_question_add"></div>
-
-
-
+@stop
+@section('js-down')
                     {!! HTML::script('js/question_create/questionCreate.js') !!}
                     {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
                     {!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
@@ -53,3 +53,4 @@
                     {!! HTML::script('js/core/source/AppVendor.js') !!}
                     {!! HTML::script('js/core/source/AppVendor.js') !!}
                     {!! HTML::script('js/core/demo/Demo.js') !!}
+@stop
