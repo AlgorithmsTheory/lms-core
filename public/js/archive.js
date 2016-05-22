@@ -26,3 +26,24 @@ $('#file-table').on('click', '.remove-btn', function(){
     });
     return false;
 });
+
+/*$('#base').on('click', '#download-folder', function(){
+    folderPath = $('#current-folder').val();
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url:   '/uir/public/storage/download-folder/folder',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        data: { folder_path: folderPath, token: 'token' },
+        success: function(data){
+            alert(data);
+        }
+    });
+    return false;
+});*/

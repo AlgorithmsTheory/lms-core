@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Mypdf;
 use Illuminate\Http\Request;
 
 class ArchiveController extends Controller {
@@ -77,6 +78,23 @@ class ArchiveController extends Controller {
         header("Content-Length: ".filesize($request->input('file-path')));
         header("Content-Disposition: attachment; filename=".$filename);
         readfile($request->input('file-path'));
+    }
+
+    public function downloadFolder(Request $request){
+        $zip = Mypdf::pdfToZip(substr($request->input('folder-path'), 0, -1));
+        $nodes = explode('/', $zip);
+        $folder_name = $nodes[count($nodes) - 1];
+
+        header("HTTP/1.1 200 OK");
+        header("Connection: close");
+        header("Content-Transfer-Encoding: binary");
+        header("Content-Type: application/zip");
+        header("Content-Length: ".filesize($zip));
+        header("Content-Disposition: attachment; filename=".$folder_name);
+        readfile($zip);
+
+        unlink($zip);
+        return redirect('storage');
     }
 
     public function delete(Request $request){

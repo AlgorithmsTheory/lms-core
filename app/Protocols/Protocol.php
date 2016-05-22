@@ -31,7 +31,8 @@ abstract class Protocol {
 
     /** Шапка протокола */
     private function header(Mypdf $pdf){
-        $html = '<table style="margin: auto;"><tr><td>Национальный исследовательский ядерный университет "МИФИ"</td></tr>';
+        $html = '<table style="margin: auto;"><tr><td style="text-align: center;">Национальный исследовательский ядерный университет "МИФИ"</td></tr>';
+        $html .= '<tr><td style="text-align: center;">ДМ: Теория алгоритмов и сложность вычислений</td></tr>';
         $html .= '<tr><td style="text-align: center;">Протокол</td></tr></table>';
         $html .= '<p>ФИО студента: '.$this->user.'</p>';
         $html .= '<p>Группа: '.$this->group.'</p>';

@@ -9,21 +9,31 @@
 <div class="col-md-12 col-sm-6 card style-primary">
     <h1 class="text-default-bright">Архив</h1>
 </div>
+
 @if (!is_null($prev_folder))
+    <div class="col-sm-6">
     @if ($prev_folder == 'archive')
         <form action="{{ URL::route('archive_index') }}" method="GET" class="form">
     @else
         <form action="{{ URL::route('archive_folder', [$prev_folder]) }}" method="POST" class="form">
     @endif
         <input type="hidden" name="path" value="{{ $prev_path }}">
-        <a class="folder-panel">
-            <span class="demo-icon-hover text-xl">
+        <a class="folder-panel btn-warning style-primary btn btn-lg ">
+            <span class="demo-icon-hover">
                 <i class="md md-reply"> Назад </i>
             </span>
         </a>
     </form>
+    </div>
 <br>
 @endif
+    <div class="col-sm-6">
+        <form action="{{ URL::route('archive_download_folder') }}" method="POST">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="folder-path" value="{{ $path }}" id="current-folder">
+            <a class="folder-panel btn btn-warning btn-lg col-md-5 col-md-offset-7 style-primary" id="download-folder">Скачать всю папку</a>
+        </form>
+    </div>
 
 @if (!empty($folders))
     <table class="table table-condensed table-archive" id="folder-table">

@@ -382,7 +382,7 @@ class TestController extends Controller{
         $total = $query->total;
         $test_type = $query->test_type;
 
-        $id_user = Result::whereId_test($id_test)
+        $id_user = Result::whereId_result($current_test)
                         ->join('users', 'results.id', '=', 'users.id')->select('users.id')->first()->id;
 
         for ($i=0; $i<$amount; $i++){                                                                                   //обрабатываем каждый вопрос

@@ -139,7 +139,7 @@ class Test extends Eloquent {
     public function prepareTest($id_test){                                                                              //выборка вопросов
         $array = [];
         $k = 0;
-        $structures = TestStructure::whereId_test($id_test)->select('id_structure')->get();
+        $structures = TestStructure::whereId_test($id_test)->select('id_structure', 'amount')->get();
         foreach ($structures as $structure){                                                                            // идем по всем структурам теста
             $temp_array = [];
             $records = StructuralRecord::whereId_structure($structure['id_structure'])->get();
@@ -153,7 +153,7 @@ class Test extends Eloquent {
                 }
             }
 
-            $amount = $this->getAmount($id_test);
+            $amount = $structure->amount;
             while ($amount > 0){                                                                                        //пока не выбрали нужное количество вопросов данной структуры
                 $temp_array = Question::randomArray($temp_array);                                                       //выбираем случайный вопрос
                 $temp_question = $temp_array[count($temp_array)-1];

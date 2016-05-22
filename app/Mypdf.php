@@ -8,6 +8,8 @@
 
 namespace App;
 
+use ZipArchive;
+
 class Mypdf extends \mPDF{
     const MAX_COL = 15;
 
@@ -106,5 +108,36 @@ class Mypdf extends \mPDF{
         return $translit_string;
     }
 
-
+    /** должна упаковывать полученную папку в архив и отправлять пользователю, затем стирать папку и наверное оставлять архив
+     * @param $dir
+     * директория, в которой лежат файлы этого теста без слеша
+     * @return bool возвращает true, если архив удачно создан
+     */
+    public static function pdfToZip($dir){
+        $zip = new ZipArchive;
+        $temp_zips = [];
+        if ($zip -> open($dir.'.zip', ZipArchive::CREATE) === TRUE)
+        {
+            $temp = opendir( $dir );
+            while(false !== ($d = readdir( $temp )) ){
+                if ($d != '.' && $d != '..'){
+                    if (!is_file($dir.'/'.$d)){
+                        $temp_zip = Mypdf::pdfToZip($dir.'/'.$d);
+                        $nodes = explode('/', $temp_zip);
+                        $zip_name = $nodes[count($nodes) - 1];
+                        $zip->addFile($temp_zip, $zip_name);
+                        array_push($temp_zips, $temp_zip);
+                    }
+                    else
+                        $zip->addFile($dir.'/'.$d, $d);
+                }
+            }
+            $zip -> close();
+            foreach ($temp_zips as $zip){
+                unlink($zip);
+            }
+            return $dir.'.zip';
+        }
+        else return false;
+    }
 } 

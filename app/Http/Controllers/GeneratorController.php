@@ -76,27 +76,6 @@ class GeneratorController extends Controller {
             $fpdf->task_table($num_tasks);                                                                                 // вывод таблицы результатов
     }
 
-    /** должна упаковывать полученную папку в архив и отправлять пользователю, затем стирать папку и наверное оставлять архив
-     * @param $dir
-     * директория, в которой лежат файлы этого теста без слеша
-     * @return bool возвращает true, если архив удачно создан
-     */
-    private function pdfToZip($dir){
-        $zip = new ZipArchive;
-        if ($zip -> open($dir.'.zip', ZipArchive::CREATE) === TRUE)
-        {
-            $temp = opendir( $dir );
-            while( $d = readdir( $temp ) ){
-                if ($d != '.' && $d != '..'){
-                    $zip->addFile( $dir.'/'.$d, $d);
-                }
-            }
-            $zip -> close();
-            return $dir.'.zip';
-        }
-        else return false;
-    }
-
     /** удаляет директорию вместе с файлами */
     private function delPdf($dir){
         $temp = opendir( $dir );
@@ -163,7 +142,7 @@ class GeneratorController extends Controller {
             $answered_fpdf->Output($dir.'/answered_variant'.$k.'.pdf', 'F');
         }
 
-        $zip = $this->pdfToZip($dir);                                                                                   // создаем архив
+        $zip = Mypdf::pdfToZip($dir);                                                                                   // создаем архив
         $this->delPdf($dir);                                                                                            // удаляем созданную папку с тестами
         $this->download($zip);                                                                                          // скачать архив
     }
