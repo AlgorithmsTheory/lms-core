@@ -1,5 +1,9 @@
 <?php namespace App\Http\Controllers;
 
+use App\News;
+use Auth;
+
+
 class HomeController extends Controller {
 
 	/*
@@ -31,6 +35,17 @@ class HomeController extends Controller {
 	public function index()
 	{
 		return view('home');
+	}
+
+	public function get_home()
+	{
+		if(Auth::check()) {
+			$news = News::get();
+			return view('main', compact('news'));
+		}
+		else {
+			return view('welcome');
+		}
 	}
 
 }

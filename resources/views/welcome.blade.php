@@ -3,7 +3,7 @@
 <head>
     {!! HTML::style('css/bootstrap.css') !!}
     {!! HTML::style('css/full.css') !!}
-    {!! HTML::style('css/tests_list.css') !!}
+{{--    {!! HTML::style('css/tests_list.css') !!}--}}
     {!! HTML::style('css/materialadmin.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     {!! HTML::style('css/materialadmin_demo.css') !!}
@@ -38,8 +38,10 @@
             $('#reset-form-link').click(function(e) {
                 $("#reset-form").delay(100).fadeIn(100);
                 $("#login-form").fadeOut(100);
+
                 $("#register-form").fadeOut(100);
                 $('#register-form-link').removeClass('active');
+
                 $('#login-form-link').removeClass('active');
                 $(this).addClass('active');
                 e.preventDefault();
@@ -54,28 +56,20 @@
     <h1 class="text-default-bright">Справочно-обучающая система по курсу ДМ (ТА и СВ)</h1>
 </div>
 <div class="container">
-
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <div class="panel panel-login">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <a href="#" class="active" id="login-form-link">Авторизация</a>
-                        </div>
-                        <div class="col-xs-4">
-                            <a href="#" id="register-form-link">Регистрация</a>
-                        </div>
-                        <div class="col-xs-4">
-                            <a href="#" id="reset-form-link">Восстановить пароль</a>
-                        </div>
-                    </div>
-                    <hr>
+            <div class="card">
+                <div class="card-head">
+                    <ul class="nav nav-tabs nav-justified" data-toggle="tabs">
+                        <li id="login-form-link" class="active"><a href="#" id="">Авторизация</a></li>
+                        <li id="register-form-link"><a href="#" id="">Регистрация</a></li>
+                        <li id="reset-form-link"><a href="#" id="">Восстановление</a></li>
+                    </ul>
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
-                            <form id="login-form" action="{{URL::route('login')}}" method="post" data-toggle="validator" role="form" style="display: block;">
+                            <form id="login-form" action="{{URL::route('login')}}" method="post" data-toggle="validator" class="form" role="form" >
                                  {!! csrf_field() !!}
 
                                 @if (count($errors) > 0)
@@ -87,20 +81,22 @@
                                 @endif
 
                                 <div class="form-group">
-                                    <input type="email" name="email" value="{{ old('email') }}" id="email" tabindex="1" class="form-control" placeholder="Email">
+                                    <input type="email" name="email" value="{{ old('email') }}" id="email" tabindex="1" class="form-control" required>
+                                    <label for="email">Email</label>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Пароль">
+                                    <input type="password" name="password" id="password" tabindex="2" class="form-control" required>
+                                    <label for="password">Пароль</label>
                                 </div>
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-6 col-sm-offset-3">
-                                            <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Авторизоваться">
+                                            <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-primary" value="Авторизоваться">
                                         </div>
                                     </div>
                                 </div>
                             </form>
-                            <form id="register-form" action="{{URL::route('register')}}" method="post" data-toggle="validator" role="form" style="display: none;">
+                            <form id="register-form" action="{{URL::route('register')}}" method="post" data-toggle="validator" role="form" class="form" style="display: none;">
                                  {!! csrf_field() !!}
 
                                 @if (count($errors) > 0)
@@ -112,45 +108,45 @@
                                 @endif
 
                                 <div class="form-group">
-                                    <input type="text" name="first_name" pattern="^[а-яА-Я][а-яА-Я0-9-_\.]{1,20}$" data-error="Введите корректное имя" value="{{ old('first_name') }}" id="username" tabindex="1" class="form-control" placeholder="Имя">
-                                    <br>
+                                    <input type="text" name="first_name" pattern="^[а-яА-Я][а-яА-Я0-9-_\.]{1,20}$" data-error="Введите корректное имя" value="{{ old('first_name') }}" id="first_name" tabindex="1" class="form-control" required>
+                                    <label for="first_name">Имя</label>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="text" name="last_name" pattern="^[а-яА-Я[а-яА-Я0-9-_\.]{1,20}$" data-error="Введите корректную фамилию" value="{{ old('last_name') }}" id="last_name" tabindex="1" class="form-control" required>
+                                    <label for="last_name">Фамилия</label>
                                     <div class="help-block with-errors"></div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" name="last_name" pattern="^[а-яА-Я[а-яА-Я0-9-_\.]{1,20}$" data-error="Введите корректную фамилию" value="{{ old('last_name') }}" id="username" tabindex="1" class="form-control" placeholder="Фамилия">
-                                    <br>
+                                    <input type="email" name="email" value="{{ old('email') }}" id="email" data-error="Введите корректный email" tabindex="1" class="form-control" required>
+                                    <label for="email">Email</label>
                                     <div class="help-block with-errors"></div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" name="email" value="{{ old('email') }}" id="email" data-error="Введите корректный email!" tabindex="1" class="form-control" placeholder="Email">
-                                    <br>
+                                    <input type="number" name="group" data-minlength="3" max="999" value="{{ old('group') }}" id="group" tabindex="1" data-error="Нужно три последние цифры!" class="form-control">
+                                    <label for="group">Группа (только три последние цифры, например 221)</label>
                                     <div class="help-block with-errors"></div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="number" name="group" data-minlength="3" max="999" value="{{ old('group') }}" id="group" tabindex="1" data-error="Нужно три последние цифры!" class="form-control" placeholder="Группа (только три последние цифры, пример 221)">
-                                    <br>
+                                    <input type="password" data-minlength="6" name="password" tabindex="2" id="inputPassword" class="form-control" required data-error="Введите корректный пароль">
+                                    <label for="inputPassword">Пароль</label>
                                     <div class="help-block with-errors"></div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" data-minlength="6" name="password" tabindex="2" id="inputPassword" class="form-control" required placeholder="Пароль">
-                                    <br>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" name="password_confirmation" data-match-error="Пароли не совпадают" data-match="#inputPassword" required tabindex="2" class="form-control"
-                                    placeholder="Подтверждение пароля">
-                                    <br>
+                                    <input type="password" name="password_confirmation" data-match-error="Пароли не совпадают" data-match="#inputPassword" required tabindex="2" class="form-control" id="confirm" data-error="Введите подтверждение пароля">
+                                    <label for="confirm">Подтверждение пароля</label>
                                     <div class="help-block with-errors"></div>
                                 </div>
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-6 col-sm-offset-3">
-                                            <input type="submit" tabindex="4" class="form-control btn btn-register" value="Зарегистрироваться">
+                                            <input type="submit" tabindex="4" class="form-control btn btn-primary" value="Зарегистрироваться">
                                         </div>
                                     </div>
                                 </div>
                             </form>
-                            <form id="reset-form" method="POST" action="{{URL::route('passEmailPost')}}" data-toggle="validator" style="display: none;">
+                            <form id="reset-form" method="POST" action="{{URL::route('passEmailPost')}}" data-toggle="validator" role="form" class="form"  style="display: none;">
                                 {!! csrf_field() !!}
 
                                 @if (count($errors) > 0)
@@ -162,15 +158,15 @@
                                 @endif
 
                                 <div class="form-group">
-                                    <input type="email" name="email" value="{{ old('email') }}" id="email" data-error="Введите корректный email!" tabindex="1" class="form-control" placeholder="Email">
-                                    <br>
+                                    <input type="email" name="email" value="{{ old('email') }}" id="email" data-error="Введите корректный email!" tabindex="1" class="form-control" required>
+                                    <label for="email">Email</label>
                                     <div class="help-block with-errors"></div>
                                 </div>
 
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-6 col-sm-offset-3">
-                                            <button type="submit" class="form-control btn btn-register" value="Зарегистрироваться">
+                                            <button type="submit" class="form-control btn btn-primary" value="Зарегистрироваться">
                                                 Отправить письмо
                                             </button>
                                         </div>
@@ -193,7 +189,6 @@
  * The MIT License (MIT)
  *
  * Copyright (c) 2015 Cina Saffary.
- * Made by @1000hz in the style of Bootstrap 3 era @fat
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -256,8 +251,8 @@
         disable: true,
         custom: {},
         errors: {
-            match: 'Does not match',
-            minlength: 'Сликом короткий'
+            match: 'Не соответствуют',
+            minlength: 'Слишком короткий'
         },
         feedback: {
             success: 'glyphicon-ok',
@@ -369,9 +364,9 @@
 
             if (!errors.length) return
 
-            errors = $('<ul/>')
-                .addClass('list-unstyled')
-                .append($.map(errors, function (error) { return $('<li/>')[method](error) }))
+            errors = $('<span/>')
+//                .addClass('list-unstyled')
+                .append($.map(errors, function (error) { return $('<span/>')[method](error) }))
 
             $block.data('bs.validator.originalContent') === undefined && $block.data('bs.validator.originalContent', $block.html())
             $block.empty().append(errors)

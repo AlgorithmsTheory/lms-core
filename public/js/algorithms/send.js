@@ -7,13 +7,28 @@ function drop_sup(x) {
 	}
 	return rs
 }
-function run_all_normal(){
+
+function debag(resp){
+	//$('td[id=input1]').text(resp.logs[0]);
+	//$('td[id=input2]').text(resp.logs[1]);
+	for (var i = 0; i < resp.logs.length; i++) {
+		row = $('<tr>');
+		col = $('<td>').text(i+1);
+		col2 = $('<td>').text(resp.logs[i]);
+		row.append(col, col2);
+		$('#debug');
+		$('#debug').append(row);
+	}
+}
+
+function run_all_normal(j){
+	var step = j;
 	var task = new Object()
 	task.rule = new Array()
-
 	task.str = $('textarea[name=textarea_src]').val()
 	var src = $('input[name=start]').toArray()
 	var dst = $('input[name=end]').toArray()
+	$("td").remove();
 
 	for ( var i = 0; i < src.length; i++) {
 		tmp = new Object()
@@ -23,6 +38,7 @@ function run_all_normal(){
 			task.rule.push(tmp)
 		}
 	}
+
 	token = $('#forma').children().eq(0).val();
 	$.ajax({
 		cache: false,
@@ -41,15 +57,22 @@ function run_all_normal(){
 			if ( resp.error != 'ok' ) {
 				alert("Программа зациклилась!");
 				$('input[id=disabled6]').val("Ошибка!");
+				if (step == true){
+					debag(resp);
+				}
 			} else {
 				$('input[id=disabled6]').val(resp.result);
+				if (step == true){
+					debag(resp);
+				}
 			}
 		}
 	});
 	return false;
 }
 
-function run_all_turing(){
+function run_all_turing(j){
+	var step = j;
 	var task = new Object()
 	task.rule = new Array()
 
@@ -66,7 +89,9 @@ function run_all_turing(){
 		}
 	}
 
+
 	token = $('#forma').children().eq(0).val();
+	alert(task.str);
 	$.ajax({
 		cache: false,
 		type: 'POST',
@@ -84,8 +109,14 @@ function run_all_turing(){
 			if ( resp.error != 'ok' ) {
 				alert("Программа зациклилась!");
 				$('input[id=disabled6]').val("Ошибка!");
+				if (step == true){
+					debag(resp);
+				}
 			} else {
 				$('input[id=disabled6]').val(resp.result);
+				if (step == true){
+					debag(resp);
+				}
 			}
 		}
 	});

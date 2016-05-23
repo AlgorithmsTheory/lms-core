@@ -79,7 +79,14 @@ filterTable(
             /* Будем вызывать валидацию по событию onkeyup фильтра */
             "onkeyup"
         ),
+        1: new filterTable.Filter(document.getElementById("regexp2"),
+            /* Коллбэк ф-ция валидации */
+            function (value, filters, i) {
+                return value.indexOf(filters[i].value) === 0;
+            },
+            /* Будем вызывать валидацию по событию onkeyup фильтра */
+            "onkeyup"
+        ),
+        3: document.getElementById("tests"),
     }
 );
-
-

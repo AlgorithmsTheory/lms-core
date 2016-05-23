@@ -15,23 +15,7 @@
     <div class="col-lg-offset-1 col-md-10 col-sm-6">
         <div class="card">
             <div class="card-body">
-                <nav class="navbar col-md-4 col-md-offset-4 style-primary">
-                    <div class="container-fluid">
-                        <div id="navbar" class="collapse navbar-collapse">
-                            <ul class="nav navbar-nav">
-                                {{--<li><a href="{{URL::route('personal_account')}}" class="btn">Результаты прохождения тестов</a></li>--}}
-                                <li><h3>Результаты прохождения тестов</h3></li>
-
-                            </ul>
-                            {{--<ul class="nav navbar-nav navbar-right">--}}
-                                {{--<li><a href="{{URL::route('in_process')}}" class="btn">Личные данные</a></li>--}}
-                            {{--</ul>--}}
-                        </div>
-                    </div><!-- /.container-fluid -->
-                </nav>
-                <br>
-                <br>
-                <br>
+                <h2 class="text-center">Результаты прохождения тестов</h2>
                 <div class="form">
                     <div class="form-group">
                         <select name="type" id="tests" class="form-control" size="1">

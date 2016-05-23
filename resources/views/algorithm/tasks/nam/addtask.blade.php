@@ -112,6 +112,22 @@
 												<label for="level">Уровень сложности</label>
 												<p class="help-block">1 - легкий, 2 - сложный</p>
 											</div>
+											<div class="form-group">
+												<select id="variant_number" name="variant_number" class="form-control" required="" aria-required="true">
+													<option value="">&nbsp;</option>
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+												
+												</select>
+												<label for="variant_number">Номер варианта</label>
+												<p class="help-block">В каждом варианте должно быть 4 задачи!</p>
+											</div>
 										
 										<h4>Тестовые последовательности:</h4>
 										<div class="input-group">

@@ -1,0 +1,64 @@
+.blur   {
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(5px);
+    -o-filter: blur(5px);
+    -ms-filter: blur(5px);
+}
+#overlay    {
+    /*position: fixed;*/
+    display: none;
+    /*left: 500px;*/
+    /*top: 500px;*/
+    /*right: 0px;*/
+    /*bottom: 0px;*/
+    /*background: rgba(255,255,255,.8);*/
+    position: absolute;
+    /*top: 50%;*/
+    left: 50%;
+    /*margin: auto;*/
+    z-index: 999;
+}
+
+@-webkit-keyframes pulse {
+    50% {
+        background: #009999;
+    }
+}
+@keyframes pulse {
+    50% {
+        background: #009999;
+    }
+}
+
+.loading-pulse {
+    position: relative;
+    width: 12px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.2);
+    -webkit-animation: pulse 750ms infinite;
+    animation: pulse 750ms infinite;
+    -webkit-animation-delay: 250ms;
+    animation-delay: 250ms;
+}
+.loading-pulse:before, .loading-pulse:after {
+    content: '';
+    position: absolute;
+    display: block;
+    height: 24px;
+    width: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    -webkit-animation: pulse 750ms infinite;
+    animation: pulse 750ms infinite;
+}
+.loading-pulse:before {
+    left: -18px;
+}
+.loading-pulse:after {
+    left: 18px;
+    -webkit-animation-delay: 500ms;
+    animation-delay: 500ms;
+}

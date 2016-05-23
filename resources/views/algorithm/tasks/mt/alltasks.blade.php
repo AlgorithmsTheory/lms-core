@@ -54,8 +54,11 @@
 									</p>
 								</article>
 								</div>
-								<div class="col-lg-6">
+								<div class="col-lg-2">
 								<button type="button" class="btn ink-reaction btn-raised btn-primary"> {!! HTML::linkRoute('addtaskmt', '+ Добавить задачу') !!} </button>
+								</div>
+								<div class="col-lg-2">
+								<button type="button" class="btn ink-reaction btn-raised btn-primary"> {!! HTML::linkRoute('edit_coef_mt', 'Изменить коэффициенты оценивания') !!} </button>
 								</div>
 							</div><!--end .col -->
 							
@@ -70,8 +73,12 @@
 	<table class=\"table table-bordered no-margin\">
 	<tr>
 	<th class=\"text-right\">Удалить задачу</th>
+	<th>Мин. число сторк</th>
+	<th>Мин. число тактов</th>
+	<th>Симв+сост</th>
+	
 	<th>Текст задачи</th>
-    <th>Максимальный балл</th>
+    <th>Макс. балл</th>
 	<th>Сложность (1 - легкий, 2 - сложный)</th>
 	<th>Номер задачи</th>
     <th>Тестовая последовательность входная</th>
@@ -96,7 +103,11 @@
 			<td rowspan=\"5\">";
 			echo HTML::linkRoute('deletemt', 'Удалить', array("id" => $row['id_task']));
 			echo '</td>';
-			print "<td rowspan=\"5\">".$row["task"]."</td>
+			print "<td rowspan=\"5\">".$row["rows"]."</td>
+			<td rowspan=\"5\">".$row["cycle"]."</td>
+			<td rowspan=\"5\">".$row["sum"]."</td>
+			
+			<td rowspan=\"5\">".$row["task"]."</td>
 			<td rowspan=\"5\">".$row["mark"]."</td>
 			<td rowspan=\"5\">".$row["level"]."</td>
 			<td rowspan=\"5\">".$row["number"]."</td>";

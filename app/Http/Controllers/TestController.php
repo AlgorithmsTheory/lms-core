@@ -6,7 +6,7 @@
  * Time: 16:49
  */
 namespace App\Http\Controllers;
-use App\Mypdf;
+use App\Controls;
 use App\Protocols\TestProtocol;
 use App\Testing\Fine;
 use App\Testing\Result;
@@ -23,6 +23,9 @@ use App\Testing\Question;
 use Illuminate\Http\Response;
 use Session;
 use View;
+use App\Control_test_dictionary;
+
+
 
 class TestController extends Controller{
     private $test;
@@ -420,13 +423,13 @@ class TestController extends Controller{
         }
 
         if ($test_type != 'Тренировочный'){                                                                             //тест контрольный
-            $widgetListView = View::make('tests.ctrresults',compact('score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'id_test', 'id_user'))->with('widgets', $widgets);
+            $widgetListView = View::make('tests.ctrresults',compact('total','score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'id_test', 'id_user'))->with('widgets', $widgets);
             $fine = new Fine();
             $fine->updateFine(Auth::user()['id'], $id_test, $mark_rus);                                                 //вносим в таблицу штрафов необходимую инфу
+            StatementsController::add_to_statements($id_test, $id_user, $score);
         }
         else {                                                                                                          //тест тренировочный
             $widgetListView = View::make('questions.student.training_test',compact('score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'link_to_lecture'))->with('widgets', $widgets);
-            //TODO: Генерация протокола по странице результата контрольного теста. Скорее всего нажать кнопку "Создать протокол и выйти". Проблема возникает с тем, что можно просто перейти на другой адрес. Поэтому стоит это дело запретить?
         }
         $result->whereId_result($current_test)->update(['result_date' => $date, 'result' => $score, 'mark_ru' => $mark_rus, 'mark_eu' => $mark_bologna]);
         return $widgetListView;

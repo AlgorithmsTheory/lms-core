@@ -3,6 +3,7 @@ $('.resulting').on('change', function() {
     var column = String(this.id);
     var value = $( this ).val();
     token = $('#forma').children().eq(0).val();
+    myBlurFunction(1);
     $.ajax({
         cache: false,
         type: 'POST',
@@ -16,133 +17,26 @@ $('.resulting').on('change', function() {
         },
         data: { id: userID, column: column, value: value, token: 'token' },
         success: function(data){
+            myBlurFunction(0);
         }
     });
     return false;
 });
 
-$('#calc1').click(function(){
-    token = $('#forma').children().eq(0).val();
-    $.ajax({
-        cache: false,
-        type: 'POST',
-        url:   '/uir/public/statements/resulting/calc_first',
-        beforeSend: function (xhr) {
-            var token = $('meta[name="csrf_token"]').attr('content');
+var myBlurFunction = function(state) {
+    /* state can be 1 or 0 */
+    var containerElement = document.getElementById('main_container');
+    var overlayEle = document.getElementById('overlay');
 
-            if (token) {
-                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-            }
-        },
-        data: {token: 'token' },
-        success: function(data){
-            alert('OK');
-        }
-    });
-    return false;
-});
+    if (state) {
+        var winHeight = $(window).height()/2 - 24;
+        winHeight = winHeight.toString()
 
-$('#calc2').click(function(){
-    token = $('#forma').children().eq(0).val();
-    $.ajax({
-        cache: false,
-        type: 'POST',
-        url:   '/uir/public/statements/resulting/calc_second',
-        beforeSend: function (xhr) {
-            var token = $('meta[name="csrf_token"]').attr('content');
-
-            if (token) {
-                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-            }
-        },
-        data: {token: 'token' },
-        success: function(data){
-            alert('OK');
-        }
-    });
-    return false;
-});
-
-$('#calc3').click(function(){
-    token = $('#forma').children().eq(0).val();
-    $.ajax({
-        cache: false,
-        type: 'POST',
-        url:   '/uir/public/statements/resulting/calc_third',
-        beforeSend: function (xhr) {
-            var token = $('meta[name="csrf_token"]').attr('content');
-
-            if (token) {
-                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-            }
-        },
-        data: {token: 'token' },
-        success: function(data){
-            alert('OK');
-        }
-    });
-    return false;
-});
-
-$('#calc4').click(function(){
-    token = $('#forma').children().eq(0).val();
-    $.ajax({
-        cache: false,
-        type: 'POST',
-        url:   '/uir/public/statements/resulting/calc_fourth',
-        beforeSend: function (xhr) {
-            var token = $('meta[name="csrf_token"]').attr('content');
-
-            if (token) {
-                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-            }
-        },
-        data: {token: 'token' },
-        success: function(data){
-            alert('OK');
-        }
-    });
-    return false;
-});
-
-$('#calc5').click(function(){
-    token = $('#forma').children().eq(0).val();
-    $.ajax({
-        cache: false,
-        type: 'POST',
-        url:   '/uir/public/statements/resulting/calc_term',
-        beforeSend: function (xhr) {
-            var token = $('meta[name="csrf_token"]').attr('content');
-
-            if (token) {
-                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-            }
-        },
-        data: {token: 'token' },
-        success: function(data){
-            alert('OK');
-        }
-    });
-    return false;
-});
-
-$('#calc6').click(function(){
-    token = $('#forma').children().eq(0).val();
-    $.ajax({
-        cache: false,
-        type: 'POST',
-        url:   '/uir/public/statements/resulting/calc_final',
-        beforeSend: function (xhr) {
-            var token = $('meta[name="csrf_token"]').attr('content');
-
-            if (token) {
-                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-            }
-        },
-        data: {token: 'token' },
-        success: function(data){
-            alert('OK');
-        }
-    });
-    return false;
-});
+        overlayEle.style.display = 'block';
+        overlayEle.style.top = winHeight.concat('px');
+        containerElement.setAttribute('class', 'blur');
+    } else {
+        overlayEle.style.display = 'none';
+        containerElement.setAttribute('class', null);
+    }
+};

@@ -6,6 +6,7 @@ $('#show').click(function(){
     var group = $("#group_num").val();
     var type = $('#select-type option:selected').val();
     var token = $('.form').children().eq(0).val();
+    myBlurFunction(1);
     //alert(type);
     switch (type) {
         case 'lectures':
@@ -21,6 +22,7 @@ $('#show').click(function(){
                 },
                 data: { group: group, token: 'token' },
                 success: function(data){
+                    myBlurFunction(0);
                     $('#statement').html(data);
                 }
             });
@@ -38,6 +40,7 @@ $('#show').click(function(){
                 },
                 data: { group: group, token: 'token' },
                 success: function(data){
+                    myBlurFunction(0);
                     $('#statement').html(data);
                 }
             });
@@ -55,6 +58,7 @@ $('#show').click(function(){
                 },
                 data: { group: group, token: 'token' },
                 success: function(data){
+                    myBlurFunction(0);
                     $('#statement').html(data);
                 }
             });
@@ -72,6 +76,7 @@ $('#show').click(function(){
                 },
                 data: { group: group, token: 'token' },
                 success: function(data){
+                    myBlurFunction(0);
                     $('#statement').html(data);
                 }
             });
@@ -89,6 +94,7 @@ $('#show').click(function(){
                 },
                 data: { group: group, token: 'token' },
                 success: function(data){
+                    myBlurFunction(0);
                     $('#statement').html(data);
                 }
             });
@@ -96,3 +102,21 @@ $('#show').click(function(){
     }
     return false;
 });
+
+var myBlurFunction = function(state) {
+    /* state can be 1 or 0 */
+    var containerElement = document.getElementById('main_container');
+    var overlayEle = document.getElementById('overlay');
+
+    if (state) {
+        var winHeight = $(window).height()/2 - 24;
+        winHeight = winHeight.toString()
+
+        overlayEle.style.display = 'block';
+        overlayEle.style.top = winHeight.concat('px');
+        containerElement.setAttribute('class', 'blur');
+    } else {
+        overlayEle.style.display = 'none';
+        containerElement.setAttribute('class', null);
+    }
+};

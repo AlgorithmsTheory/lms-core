@@ -2,18 +2,40 @@
 <br>
 <table class="table table-condensed table-bordered">
     <tr class="info">
-        <td>Группа</td>
-        <td>Имя</td>
-        <td>Фамилия</td>
-        <td>Раздел 1</td>
-        <td>Раздел 2</td>
-        <td>Раздел 3</td>
-        <td>Раздел 4</td>
-        <td>Итог за семестр</td>
-        <td>Экзамен</td>
-        <td>Суммарный итог</td>
-        <td>Оценка(A-F)</td>
-        <td>Оценка(2-5)</td>
+        <td rowspan="2">Группа</td>
+        <td rowspan="2">Имя</td>
+        <td rowspan="2">Фамилия</td>
+        <td colspan="2">Раздел 1</td>
+        <td colspan="2">Раздел 2</td>
+        <td colspan="2">Раздел 3</td>
+        <td colspan="2">Раздел 4</td>
+        <td colspan="2">Итог за семестр</td>
+        <td colspan="2">Экзамен</td>
+        <td colspan="2">Суммарный итог</td>
+        <td rowspan="2">Оценка(A-F)</td>
+        <td rowspan="2">Оценка(2-5)</td>
+    </tr>
+    <tr class="active">
+        <td>min 13</td>
+        <td>max 22</td>
+
+        <td>min 7</td>
+        <td>max 12</td>
+
+        <td>min 10</td>
+        <td>max 16</td>
+
+        <td>min 6</td>
+        <td>max 10</td>
+
+        <td>min 36</td>
+        <td>max 60</td>
+
+        <td>min 24</td>
+        <td>max 40</td>
+
+        <td>min 60</td>
+        <td>max 100</td>
     </tr>
     <tbody id="target">
     <?php
@@ -30,21 +52,20 @@
             <td>
                 {{ $last_names[$count] }}
             </td>
-            <td class="
-                @if ($state['section1'] < 13)
+            <td colspan="2" class="
+                @if ($progress[$count]['section1'] == 0)
                     danger
                 @else
                     success
                 @endif
             ">
                 <div>
-
-                    {{ $state['section1'] }}
+                   {{ $state['section1'] }}
                 </div>
 {{--                <input type="number" value="{{ $state['section1'] }}" name="{{ $state['userID'] }}" id="section1" class="resulting" style="width: 50px;">--}}
             </td>
-            <td class="
-                @if ($state['section2'] < 7)
+            <td colspan="2" class="
+                @if ($progress[$count]['section2'] == 0)
                     danger
                 @else
                     success
@@ -55,8 +76,8 @@
                 </div>
 {{--                <input type="number" value="{{ $state['section2'] }}" name="{{ $state['userID'] }}" id="section2" class="resulting" style="width: 50px;">--}}
             </td>
-            <td class="
-                @if ($state['section3'] < 9)
+            <td colspan="2" class="
+                @if ($progress[$count]['section3'] == 0)
                     danger
                 @else
                     success
@@ -67,8 +88,8 @@
                 </div>
 {{--                <input type="number" value="{{ $state['section3'] }}" name="{{ $state['userID'] }}" id="section3" class="resulting" style="width: 50px;">--}}
             </td>
-            <td class="
-                @if ($state['section4'] < 6)
+            <td colspan="2" class="
+                @if ($progress[$count]['section4'] == 0)
                     danger
                 @else
                     success
@@ -79,8 +100,8 @@
                 </div>
 {{--                <input type="number" value="{{ $state['section4'] }}" name="{{ $state['userID'] }}" id="section4" class="resulting" style="width: 50px;">--}}
             </td>
-            <td class="
-                @if (($state['section4'] < 6) || ($state['section3'] < 9) || ($state['section2'] < 7) || ($state['section1'] < 13))
+            <td colspan="2" class="
+                @if (($progress[$count]['section4'] == 0) || ($progress[$count]['section3'] == 0) || ($progress[$count]['section2'] == 0) || ($progress[$count]['section1'] == 0))
                     danger
                 @else
                     success
@@ -91,7 +112,7 @@
                 </div>
                 {{--<input type="number" value="{{ $state['termResult'] }}" name="{{ $state['userID'] }}" id="termResult" class="resulting" style="width: 50px;">--}}
             </td>
-            <td class="
+            <td colspan="2" class="
                 @if ($state['exam'] < 24)
                     danger
                 @else
@@ -100,7 +121,7 @@
             ">
                 <input type="number" value="{{ $state['exam'] }}" name="{{ $state['userID'] }}" id="exam" class="resulting" style="width: 50px;">
             </td>
-            <td class="
+            <td colspan="2" class="
                 @if ($state['finalResult'] < 60)
                     danger
                 @else

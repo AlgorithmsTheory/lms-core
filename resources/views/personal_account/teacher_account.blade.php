@@ -15,8 +15,7 @@
     <div class="col-lg-offset-1 col-md-10 col-sm-6">
         <div class="card">
             <div class="card-body">
-                <br>
-                <br>
+                <h2 class="text-center">Результаты тестов всех пользователей</h2>
                 <div class="form">
                     <div class="form-group">
                         <select name="type" id="tests" class="form-control" size="1">

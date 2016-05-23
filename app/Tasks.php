@@ -34,5 +34,5 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 class Tasks extends Eloquent {
     protected $table = 'tasks';
     public $timestamps = false;
-    protected $fillable = ['id', 'variant_number', 'task_number', 'task_text','level', 'max_mark'];
+    protected $fillable = ['id_task', 'variant', 'number','level', 'mark', 'task', 'rows_coef', 'time_coef_a', 'time_coef_b', 'cycle_coef', 'sum_coef', 'rows', 'cycle', 'sum'];
 } 

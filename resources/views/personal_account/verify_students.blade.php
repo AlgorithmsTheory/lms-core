@@ -19,8 +19,7 @@
 <div class="col-lg-offset-1 col-md-10 col-sm-6">
     <div class="card">
         <div class="card-body">
-            <br>
-            <br>
+            <h2 class="text-center">Отметить студентов</h2>
             <div class="form">
                 <div class="form-group">
                     <textarea  class="form-control textarea3" id="regexp" rows="1" placeholder="Номер группы" required></textarea>
@@ -30,28 +29,32 @@
             <br>
             <br>
             <form method="" action="" class="form" id="forma">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <table class="table table-condensed">
-                    <tr>
+                    <tr class="info">
                         <td>Группа</td>
                         <td>Фамилия</td>
                         <td>Имя</td>
                         <td>email</td>
                         <td>Студент</td>
+                        @if(Auth::user()['role'] == 'Админ')
                         <td>Админ</td>
+                        @endif
                         <td>Обычный пользователь</td>
+                        @if(Auth::user()['role'] == 'Админ')
+                        <td>Преподаватель</td>
+                        @endif
                     </tr>
                     <tbody id="target">
                     @foreach($query as $user)
                     <tr id="{{ $user['id'] }}">
                         <td>
-                            {{ $user['group'] }}
-                        </td>
-                        <td>
-                            {{ $user['first_name'] }}
+                           {{ $user['group'] }}
                         </td>
                         <td>
                             {{ $user['last_name'] }}
+                        </td>
+                        <td>
+                            {{ $user['first_name'] }}
                         </td>
                         <td>
                             {{ $user['email'] }}
@@ -59,12 +62,19 @@
                         <td>
                             <button type="button" class="student btn btn-primary" name="{{ $user['id'] }}">Студент</button>
                         </td>
+                        @if(Auth::user()['role'] == 'Админ')
                         <td>
-                            <button type="button" class="admin btn btn-danger" name="{{ $user['id'] }}">Преподаватель</button>
+                            <button type="button" class="admin btn btn-danger" name="{{ $user['id'] }}">Админ</button>
                         </td>
+                        @endif
                         <td>
                             <button type="button" class="average btn" name="{{ $user['id'] }}">Обычный пользователь</button>
                         </td>
+                        @if(Auth::user()['role'] == 'Админ')
+                        <td>
+                            <button type="button" class="tutor btn btn-accent-bright" name="{{ $user['id'] }}">Преподаватель</button>
+                        </td>
+                        @endif
                     </tr>
                     @endforeach
                     </tbody>
@@ -75,6 +85,6 @@
 </div>
 
 {!! HTML::script('js/personal_account/add_student.js') !!}
-{!! HTML::script('js/personal_account/teacherAccount.js') !!}
+{!! HTML::script('js/personal_account/verify_students_filter.js') !!}
 
 @stop

@@ -54,8 +54,8 @@
 					<div class="card">
 						<div class="card-head style-primary">
 <div class="card-body">
-							{!! link_to_route('alltasksmt', 'Работа с материалами по теме "Эмулятор машины Тьюринга"') !!} <br>
-    						{!! link_to_route('alltasks', 'Работа с материалами по теме "Нормальные алгоритмы Маркова"') !!} <br>
+							<h3>{!! link_to_route('alltasksmt', 'Работа с материалами по теме "Эмулятор машины Тьюринга"') !!}</h3> <br>
+    						<h3>{!! link_to_route('alltasks', 'Работа с материалами по теме "Нормальные алгоритмы Маркова"') !!}</h3> <br>
     </div>
 
 						</div>

@@ -54,8 +54,11 @@
 									</p>
 								</article>
 								</div>
-								<div class="col-lg-6">
+								<div class="col-lg-2">
 								<button type="button" class="btn ink-reaction btn-raised btn-primary"> {!! HTML::linkRoute('addtask', '+ Добавить задачу') !!} </button>
+								</div>
+								<div class="col-lg-2">
+								<button type="button" class="btn ink-reaction btn-raised btn-primary"> {!! HTML::linkRoute('edit_coef', 'Изменить коэффициенты оценивания') !!} </button>
 								</div>
 							</div><!--end .col -->
 							
@@ -70,12 +73,15 @@
 	<table class=\"table table-bordered no-margin\">
 	<tr>
 	<th class=\"text-right\">Удалить задачу</th>
+	<th>Мин. время</th>
+	
 	<th>Текст задачи</th>
     <th>Максимальный балл</th>
 	<th>Сложность (1 - легкий, 2 - сложный)</th>
 	<th>Номер задачи</th>
     <th>Тестовая последовательность входная</th>
 	<th>Тестовая последовательность выходная</th>
+	<th>Количество итераций</th>
 
 	
 	<th class=\"text-right\">Изменить</th>
@@ -96,7 +102,9 @@
 			<td rowspan=\"5\">";
 			echo HTML::linkRoute('delete', 'Удалить', array("id" => $row['id']));
 			echo '</td>';
-			print "<td rowspan=\"5\">".$row["task_text"]."</td>
+			print "<td rowspan=\"5\">".$row["min_time"]."</td>
+			
+			<td rowspan=\"5\">".$row["task_text"]."</td>
 			<td rowspan=\"5\">".$row["max_mark"]."</td>
 			<td rowspan=\"5\">".$row["level"]."</td>
 			<td rowspan=\"5\">".$row["task_number"]."</td>";
@@ -104,6 +112,7 @@
 			print "
 			<td>".$row["input_word"]."</td>
 			<td>".$row["output_word"]."</td>
+			<td>".$row["iteration_num"]."</td>
 
 			
 			<td>";
