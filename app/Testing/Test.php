@@ -7,6 +7,8 @@
  */
 
 namespace App\Testing;
+use App\Control_test_dictionary;
+use App\Controls;
 use App\User;
 use Auth;
 use Illuminate\Database\Eloquent\Model as Eloquent;
@@ -218,6 +220,30 @@ class Test extends Eloquent {
             }
         }
         return $array;                                                                                                  //формируем массив из id вошедших в тест вопросов
+    }
+
+    /**  метод, проверяющий, является ли тест одним из контрольных. В случаи если является, добавляет его результат в ведомость. */
+    public static function add_to_statements($id_test, $id_user, $score){
+        $dictionary = Control_test_dictionary::where('id', 1)->first();
+        if($id_test == $dictionary['test1']){
+            Controls::where('userID', $id_user)->update(['test1' => $score]);
+        }
+        if($id_test == $dictionary['test2']){
+            Controls::where('userID', $id_user)->update(['test2' => $score]);
+        }
+        if($id_test == $dictionary['test3']){
+            Controls::where('userID', $id_user)->update(['test3' => $score]);
+        }
+        return 0;
+    }
+
+    public static function isControlTestAccess($id_user){
+        $role = User::whereId($id_user)->select('role')->first()->role;
+        if ($role == '' || $role == 'Обычный'){
+            return false;
+        }
+        else
+            return true;
     }
 
 } 

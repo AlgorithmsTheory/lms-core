@@ -48,17 +48,20 @@
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="form">
                     <div class="form-group">
-                        <input type="number" min="0" max="999" name="group" id="group" class="form-control" value="0">
-                        <label for="points">Напишите номер группы</label>
+                        <select name="group" id="group" class="form-control" size="1">
+                            @foreach($group_set as $g)
+                                <option value="{{ $g['number'] }}">{{ $g['number'] }}</option>/td>
+                            @endforeach
+                        </select>
+                        <label for="select-type">Выберите группу</label>
                     </div>
                     <div class="form-group">
                         <select name="teacher" id="select-teacher" class="form-control" size="1">
-                            <option value="">Выбрать</option>
                             @foreach($teachers as $teacher)
                                 <option value="{{ $teacher['id'] }}">{{ $teacher['last_name']." ".$teacher['first_name'] }}</option>/td>
                             @endforeach
                         </select>
-                        <label for="select-type">Преподаватель</label>
+                        <label for="select-type">Выберите преподавателя</label>
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить группу</button>

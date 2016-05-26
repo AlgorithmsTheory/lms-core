@@ -16,7 +16,7 @@
 
 
 @section('content')
-<div class="col-lg-offset-1 col-md-10 col-sm-6">
+<div class="col-md-12 col-sm-12">
     <div class="card">
         <div class="card-body">
             <h2 class="text-center">Отметить студентов</h2>
@@ -39,7 +39,7 @@
                         @if(Auth::user()['role'] == 'Админ')
                         <td>Админ</td>
                         @endif
-                        <td>Обычный пользователь</td>
+                        <td>Обычный</td>
                         @if(Auth::user()['role'] == 'Админ')
                         <td>Преподаватель</td>
                         @endif
@@ -68,7 +68,7 @@
                         </td>
                         @endif
                         <td>
-                            <button type="button" class="average btn" name="{{ $user['id'] }}">Обычный пользователь</button>
+                            <button type="button" class="average btn" name="{{ $user['id'] }}">Обычный</button>
                         </td>
                         @if(Auth::user()['role'] == 'Админ')
                         <td>

@@ -36,54 +36,45 @@
     @stop
 
     @section('content')
-<!-- BEGIN HEADER-->
+            <!-- BEGIN HEADER-->
 
 
-<div id="base">
+    <div id="base">
 
 
-          <section>
+        <section>
             <div class="section-header">
                 <ol class="breadcrumb">
                     <li class="active">Список заказов</li>
                 </ol>
             </div>
-            </section>
-            <div class="section-body contain-lg-12">
+        </section>
+        <div class="section-body contain-lg-12">
 
-                <div class="row">
+            <div class="row">
 
 
-                    <div class="card">
-                        <div class="card-body">
-                            <form action="{{URL::route('order_list_delete')}}" method="POST">
+                <div class="card">
+                    <div class="card-body">
+                            <form action="{{URL::route('student_order_delete')}}" method="POST">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                                 <table class="spc table no-margin table-hover" border="0" cellpadding="0" cellspacing="0">
                                     <tbody align ="center">
                                     <tr style="padding:20px; margin-top:20px">
-                                        <td class="thd" onclick="sort(this)"  title="Нажмите на заголовок, чтобы отсортировать колонку">
+                                        <td class="thd" onclick="sort(this)" title="Нажмите на заголовок, чтобы отсортировать колонку">
                                             <h4>#</h4>
-                                        </td>
-                                        <td  class="thd" onclick="sort(this)" title="Нажмите на заголовок, чтобы отсортировать колонку">
-                                            <h4>ФИО студента</h4>
-                                        </td>
-                                        <td class="thd" onclick="sort(this)"  title="Нажмите на заголовок, чтобы отсортировать колонку">
-                                            <h4>Автор книги</h4>
                                         </td>
                                         <td class="thd" onclick="sort(this)"  title="Нажмите на заголовок, чтобы отсортировать колонку">
                                             <h4>Название книги</h4>
                                         </td>
                                         <td class="thd" onclick="sort(this)" title="Нажмите на заголовок, чтобы отсортировать колонку">
-                                            <h4>ГГГГ-ММ-ДД</h4>
+                                            <h4>Автор книги</h4>
+                                        </td>
+                                        <td class="thd" onclick="sort(this)" title="Нажмите на заголовок, чтобы отсортировать колонку">
+                                            <h4 >ГГГГ-ММ-ДД</h4>
                                         </td>
                                         <td class="thd" onclick="sort(this)" title="Нажмите на заголовок, чтобы отсортировать колонку">
                                             <h4>Статус</h4>
-                                        </td>
-                                        <td>
-                                            <h4>Изменить статус</h4>
-                                        </td>
-                                        <td >
-                                            <h4>Выбрать</h4>
                                         </td>
                                     </tr>
                                     <?php $index = 0;
@@ -92,66 +83,51 @@
                                     $row = $result[$index++];
                                     ?>
                                     <tr style="padding:20px; margin-top:20px">
-                                        <td >
+                                        <td style="width:15px;padding: 5px">
                                             <p><?php echo $index; ?></p>
                                         </td>
-                                        <td >
-                                            <p><?php echo $row["student_id"]; ?></p>
-                                        </td>
-                                        <td >
-                                            <p><?php echo $row["author"]; ?></p>
-                                        </td>
-                                        <td >
+                                        <td style="width:450px">
                                             <p><?php echo $row["title"]; ?></p>
                                         </td>
-                                        <td >
+                                        <td style="width:250px">
+                                            <p><?php echo $row["author"]; ?></p>
+                                        </td>
+                                        <td style="width:105px">
                                             <p><?php echo $row["date"]; ?></p>
                                         </td>
-                                        <td >
+                                        <td style="width:105px">
                                             <p><?php
                                                 if ($row["status"]==0)
-                                                    echo 'В библиотеке';
+                                                echo 'Сдано';
                                                 else echo 'На руках'; ?></p>
-                                        </td>
-                                        <td> <p><?php
-                                               if ($row["status"]==0)
-                                               echo HTML::linkRoute('edit_order_status0', '✎', array("order_id" => $row['id']));
-                                               else echo HTML::linkRoute('edit_order_status1', '✎', array("order_id" => $row['id']));
-                                                ?>
-                                            </p>
-                                        </td>
-                                        <td style="width:15px">
-                                            <input type="checkbox"  name="return[]" value="<?php echo $row["id"];
-                                            ?>" />
                                         </td>
                                     </tr>
                                     <?php  } ?>
                                     </tbody>
                                 </table>
-                                <br><center>
-                                <input type="submit" class="btn ink-reaction btn-primary" value="Удалить из списка">
-                                    </center>
-                             </form>
+                                <br>
+                                <center><button class="btn ink-reaction btn-default-light" >{!! HTML::linkRoute('student_lib_account', 'Текущие заказы') !!}</button></center>
+                            </form>
+<i>*не забудьте вернуть все книги со стутусом "На руках" преподавтелю</i>
+                    </div><!--end .card -->
+                </div><!--end .col -->
 
-                        </div><!--end .card -->
-                    </div><!--end .col -->
-
-                </div><!--end .row -->
-            </div><!--end .section-body -->
-
-
-  <!--end #content-->
+            </div><!--end .row -->
+        </div><!--end .section-body -->
 
 
-</div><!--end .offcanvas-->
+        <!--end #content-->
 
-</div><!--end #base-->
-<!-- END BASE -->
+
+    </div><!--end .offcanvas-->
+
+    </div><!--end #base-->
+    <!-- END BASE -->
     @stop
     @section('js-down')
 
             <!-- BEGIN JAVASCRIPT -->
-            {!! HTML::script('js/library/sort.js') !!}
+    {!! HTML::script('js/library/sort.js') !!}
     {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
     {!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
     {!! HTML::script('js/libs/jquery-ui/jquery-ui.min.js') !!}

@@ -10,9 +10,13 @@ use App\Statements_progress;
 use App\TeacherHasGroup;
 use App\Pass_plan;
 use App\Testing\Result;
+use App\Group;
 use App\User;
 use Auth;
 use Illuminate\Http\Request;
+use App\Question;
+use App\Codificator;
+use Session;
 
 class StatementsController extends Controller{
 
@@ -20,7 +24,8 @@ class StatementsController extends Controller{
     public function statements(){
         $user = Auth::user();
         $groups = TeacherHasGroup::where('user_id', $user['id'])->get();
-        return view('personal_account/statements', compact('groups', 'user'));
+        $group_set = Group::get();
+        return view('personal_account/statements', compact('groups', 'user', 'group_set'));
     }
 
     public function showPersonalAccount()
@@ -43,18 +48,12 @@ class StatementsController extends Controller{
     public function showStudentInfo()
     {   //показывает личный кабинет студента, вкладку со статистикой
         $user = Auth::user();
-                        $this->calc_first(0, $user['id'], false);
-                        $this->calc_second(0, $user['id'], false);
-                        $this->calc_third(0, $user['id'], false);
-                        $this->calc_fourth(0, $user['id'], false);
-                        $this->calc_term(0, $user['id'], false);
-                        $this->calc_final(0, $user['id'], false);
-//                $this->calc_first(0, 7, false);
-//                $this->calc_second(0, 7, false);
-//                $this->calc_third(0, 7, false);
-//                $this->calc_fourth(0, 7, false);
-//                $this->calc_term(0, 7, false);
-//                $this->calc_final(0, 7, false);
+                $this->calc_first(0, $user['id'], false);
+                $this->calc_second(0, $user['id'], false);
+                $this->calc_third(0, $user['id'], false);
+                $this->calc_fourth(0, $user['id'], false);
+                $this->calc_term(0, $user['id'], false);
+                $this->calc_final(0, $user['id'], false);
                 $lectures = Lectures::where('userID', $user['id'])->first();
                 $seminars = Seminars::where('userID', $user['id'])->first();
                 $classwork = Classwork::where('userID', $user['id'])->first();
@@ -62,28 +61,33 @@ class StatementsController extends Controller{
                 $results = Totalresults::where('userID', $user['id'])->first();
                 $progress = Statements_progress::where('userID', $user['id'])->first();
                 $dictionary = Control_test_dictionary::where('id', $user['id'])->first();
-                $plan = Pass_plan::where('id', 1)->first();
+                $plan = Pass_plan::where('group', $user['group'])->first();
                 $test1 = Result::where('id_test', $dictionary['test1'])->where('id', $user['id'])->orderBy('id_result', 'desc')->first();
                 $test2 = Result::where('id_test', $dictionary['test2'])->where('id', $user['id'])->orderBy('id_result', 'desc')->first();
                 $test3 = Result::where('id_test', $dictionary['test3'])->where('id', $user['id'])->orderBy('id_result', 'desc')->first();
-
-
                 return view('personal_account/student_account', compact('lectures', 'seminars', 'classwork', 'controls', 'results', 'progress', 'test1', 'test2', 'test3', 'plan'));
     }
 
     public function manage_plan(Request $request){
-        $plan = Pass_plan::where('id', 1)->first();
-        return view('personal_account/manage_plan', compact('plan'));
+        $user = Auth::user();
+        if($user['role'] == 'Админ') {
+            $plans = Pass_plan::get();
+        } else {
+            $plans = TeacherHasGroup::join('pass_plan', 'teacher_has_group.group', '=', 'pass_plan.group')->where('teacher_has_group.user_id', $user['id'])->get();
+        }
+        return view('personal_account/manage_plan', compact('plans'));
     }
 
     public function plan_is(Request $request){
         $column = $request->input('column');
-        $lecture = Pass_plan::where('id', 1)->update([$column => 1]);
+        $group = $request->input('group');
+        Pass_plan::where('group', $group)->update([$column => 1]);
         return 0;
     }
     public function plan_is_not(Request $request){
         $column = $request->input('column');
-        $lecture = Pass_plan::where('id', 1)->update([$column => 0]);
+        $group = $request->input('group');
+        Pass_plan::where('group', $group)->update([$column => 0]);
         return 0;
     }
 
@@ -163,13 +167,13 @@ class StatementsController extends Controller{
     public function lecture_was(Request $request){
         $id = json_decode($request->input('id'),true);
         $column = $request->input('column');
-        $lecture = Lectures::where('userID', $id)->update([$column => 1]);
+        Lectures::where('userID', $id)->update([$column => 1]);
         return 0;
     }
     public function lecture_wasnot(Request $request){
         $id = json_decode($request->input('id'),true);
         $column = $request->input('column');
-        $lecture = Lectures::where('userID', $id)->update([$column => 0]);
+        Lectures::where('userID', $id)->update([$column => 0]);
         return 0;
     }
 
@@ -177,13 +181,13 @@ class StatementsController extends Controller{
     public function seminar_was(Request $request){
         $id = json_decode($request->input('id'),true);
         $column = $request->input('column');
-        $lecture = Seminars::where('userID', $id)->update([$column => 1]);
+        Seminars::where('userID', $id)->update([$column => 1]);
         return 0;
     }
     public function seminar_wasnot(Request $request){
         $id = json_decode($request->input('id'),true);
         $column = $request->input('column');
-        $lecture = Seminars::where('userID', $id)->update([$column => 0]);
+        Seminars::where('userID', $id)->update([$column => 0]);
         return 0;
     }
     //Изменяет балл студента за работу на семинаре
@@ -191,7 +195,7 @@ class StatementsController extends Controller{
         $id = json_decode($request->input('id'),true);
         $column = $request->input('column');
         $value = $request->input('value');
-        $lecture = Classwork::where('userID', $id)->update([$column => $value]);
+        Classwork::where('userID', $id)->update([$column => $value]);
         return 0;
     }
 
@@ -200,7 +204,7 @@ class StatementsController extends Controller{
         $id = json_decode($request->input('id'),true);
         $column = $request->input('column');
         $value = $request->input('value');
-        $lecture = Controls::where('userID', $id)->update([$column => $value]);
+        Controls::where('userID', $id)->update([$column => $value]);
         return 0;
     }
 
@@ -209,14 +213,13 @@ class StatementsController extends Controller{
         $id = json_decode($request->input('id'),true);
         $column = $request->input('column');
         $value = $request->input('value');
-        $lecture = Totalresults::where('userID', $id)->update([$column => $value]);
+        Totalresults::where('userID', $id)->update([$column => $value]);
         return 0;
     }
 
     //метод, подсчитывающий итоги за первый раздел
     //1 раздел = КР1 + КР2 + Тест1Авт + Тест1Письм + 7 недель(каждый тип кроме работы в классе делится на 7)
     public function calc_first($group, $user_id, $flag){
-//        $results = Totalresults::all();
         if ($flag == true) {
             $results = Totalresults::whereGroup($group)->get();
         }
@@ -239,39 +242,37 @@ class StatementsController extends Controller{
             $score += $classwork['col1'] + $classwork['col2'] + $classwork['col3'] + $classwork['col4'] + $classwork['col5'] + $classwork['col6'] + $classwork['col7'];
             $score += ($seminar['col1'] + $seminar['col2'] + $seminar['col3'] + $seminar['col4'] + $seminar['col5'] + $seminar['col6'] + $seminar['col7']) / $k_sem;
             if ($score > $max_score) $score = $max_score;
-            $res = Totalresults::where('userID', $id)->update(['section1' => round($score)]);
-
-
+            Totalresults::where('userID', $id)->update(['section1' => round($score)]);
             //отмечаем в програссе, преодолели ли проходной балл
             if ($control['control1'] >= 4.2){
-                $progress = Statements_progress::where('userID', $id)->update(['control1' => 1]);
+                Statements_progress::where('userID', $id)->update(['control1' => 1]);
             }
             else {
-                $progress = Statements_progress::where('userID', $id)->update(['control1' => 0]);
+                Statements_progress::where('userID', $id)->update(['control1' => 0]);
             }
             if ($control['control2'] >= 4.2){
-                $progress = Statements_progress::where('userID', $id)->update(['control2' => 1]);
+                Statements_progress::where('userID', $id)->update(['control2' => 1]);
             }
             else {
-                $progress = Statements_progress::where('userID', $id)->update(['control2' => 0]);
+                Statements_progress::where('userID', $id)->update(['control2' => 0]);
             }
             if ($control['test1'] >= 1.8){
-                $progress = Statements_progress::where('userID', $id)->update(['test1' => 1]);
+                Statements_progress::where('userID', $id)->update(['test1' => 1]);
             }
             else {
-                $progress = Statements_progress::where('userID', $id)->update(['test1' => 0]);
+                Statements_progress::where('userID', $id)->update(['test1' => 0]);
             }
             if ($control['test1quiz'] >= 1.2){
-                $progress = Statements_progress::where('userID', $id)->update(['test1quiz' => 1]);
+                Statements_progress::where('userID', $id)->update(['test1quiz' => 1]);
             }
             else {
-                $progress = Statements_progress::where('userID', $id)->update(['test1quiz' => 0]);
+                Statements_progress::where('userID', $id)->update(['test1quiz' => 0]);
             }
             if (($control['test1'] >= 1.8) and ($control['test1quiz'] >= 1.2) and ($control['control2'] >= 4.2) and ($control['control1'] >= 4.2) and (round($score) >= 13)){
-                $progress = Statements_progress::where('userID', $id)->update(['section1' => 1]);
+                Statements_progress::where('userID', $id)->update(['section1' => 1]);
             }
             else {
-                $progress = Statements_progress::where('userID', $id)->update(['section1' => 0]);
+                Statements_progress::where('userID', $id)->update(['section1' => 0]);
             }
         }
         return 0;
@@ -301,27 +302,25 @@ class StatementsController extends Controller{
             $score += $classwork['col8'] + $classwork['col9'] + $classwork['col10'] + $classwork['col11'];
             $score += ($seminar['col8'] + $seminar['col9'] + $seminar['col10'] + $seminar['col11']) / $k_sem;
             if ($score > $max_score) $score = $max_score;
-            $res = Totalresults::where('userID', $id)->update(['section2' => round($score)]);
-
-
+            Totalresults::where('userID', $id)->update(['section2' => round($score)]);
             //отмечаем в програссе, преодолели ли проходной балл
             if ($control['test2'] >= 3){
-                $progress = Statements_progress::where('userID', $id)->update(['test2' => 1]);
+                Statements_progress::where('userID', $id)->update(['test2' => 1]);
             }
             else {
-                $progress = Statements_progress::where('userID', $id)->update(['test2' => 0]);
+                Statements_progress::where('userID', $id)->update(['test2' => 0]);
             }
             if ($control['test2quiz'] >= 2.4){
-                $progress = Statements_progress::where('userID', $id)->update(['test2quiz' => 1]);
+                Statements_progress::where('userID', $id)->update(['test2quiz' => 1]);
             }
             else {
-                $progress = Statements_progress::where('userID', $id)->update(['test2quiz' => 0]);
+                Statements_progress::where('userID', $id)->update(['test2quiz' => 0]);
             }
             if (($control['test2'] >= 3) and ($control['test2quiz'] >= 2.4) and (round($score) >= 7)){
-                $progress = Statements_progress::where('userID', $id)->update(['section2' => 1]);
+                Statements_progress::where('userID', $id)->update(['section2' => 1]);
             }
             else {
-                $progress = Statements_progress::where('userID', $id)->update(['section2' => 0]);
+                Statements_progress::where('userID', $id)->update(['section2' => 0]);
             }
         }
         return 0;
@@ -351,38 +350,37 @@ class StatementsController extends Controller{
             $score += $classwork['col12'] + $classwork['col13'] + $classwork['col14'] + $classwork['col15'];
             $score += ($seminar['col12'] + $seminar['col13'] + $seminar['col14'] + $seminar['col15']) / $k_sem;
             if ($score > $max_score) $score = $max_score;
-            $res = Totalresults::where('userID', $id)->update(['section3' => round($score)]);
-
+            Totalresults::where('userID', $id)->update(['section3' => round($score)]);
             //отмечаем в програссе, преодолели ли проходной балл
             if ($control['control3'] >= 2.4){
-                $progress = Statements_progress::where('userID', $id)->update(['control3' => 1]);
+                Statements_progress::where('userID', $id)->update(['control3' => 1]);
             }
             else {
-                $progress = Statements_progress::where('userID', $id)->update(['control3' => 0]);
+                Statements_progress::where('userID', $id)->update(['control3' => 0]);
             }
             if ($control['control3quiz'] >= 1.8){
-                $progress = Statements_progress::where('userID', $id)->update(['control3quiz' => 1]);
+                Statements_progress::where('userID', $id)->update(['control3quiz' => 1]);
             }
             else {
-                $progress = Statements_progress::where('userID', $id)->update(['control3quiz' => 0]);
+                Statements_progress::where('userID', $id)->update(['control3quiz' => 0]);
             }
             if ($control['test3'] >= 1.8){
-                $progress = Statements_progress::where('userID', $id)->update(['test3' => 1]);
+                Statements_progress::where('userID', $id)->update(['test3' => 1]);
             }
             else {
-                $progress = Statements_progress::where('userID', $id)->update(['test3' => 0]);
+                Statements_progress::where('userID', $id)->update(['test3' => 0]);
             }
             if ($control['tes3quiz'] >= 1.8){
-                $progress = Statements_progress::where('userID', $id)->update(['test3quiz' => 1]);
+                Statements_progress::where('userID', $id)->update(['test3quiz' => 1]);
             }
             else {
-                $progress = Statements_progress::where('userID', $id)->update(['test3quiz' => 0]);
+                Statements_progress::where('userID', $id)->update(['test3quiz' => 0]);
             }
             if (($control['control3'] >= 2.4) and ($control['control3quiz'] >= 1.8) and ($control['test3'] >= 1.8) and ($control['tes3quiz'] >= 1.8) and (round($score) >= 10)){
-                $progress = Statements_progress::where('userID', $id)->update(['section3' => 1]);
+                Statements_progress::where('userID', $id)->update(['section3' => 1]);
             }
             else {
-                $progress = Statements_progress::where('userID', $id)->update(['section3' => 0]);
+                Statements_progress::where('userID', $id)->update(['section3' => 0]);
             }
         }
         return 0;
@@ -467,8 +465,6 @@ class StatementsController extends Controller{
         }
         return 0;
     }
-
-
     // вычисляет оценку по Болонской системе, если дан максимально возможный балл и реальный */
     private function calcMarkBologna($max, $real){
         if ($real < $max * 0.6){
@@ -490,7 +486,6 @@ class StatementsController extends Controller{
             return 'A';
         }
     }
-
     // вычисляет оценку по обычной 5-тибалльной шкале, если дан максимально возможный балл и реальный */
     private function calcMarkRus($max, $real){
         if ($real < $max * 0.6){
@@ -505,21 +500,5 @@ class StatementsController extends Controller{
         if ($real >= 0.9){
             return '5';
         }
-    }
-
-
-    //метод, проверяющий, является ли тест одним из контрольных. В случаи если является, добавляет его результат в ведомость.
-    public static function add_to_statements($id_test, $id_user, $score){
-        $dictionary = Control_test_dictionary::where('id', 1)->first();
-        if($id_test == $dictionary['test1']){
-            Controls::where('userID', $id_user)->update(['test1' => $score]);
-        }
-        if($id_test == $dictionary['test2']){
-            Controls::where('userID', $id_user)->update(['test2' => $score]);
-        }
-        if($id_test == $dictionary['test3']){
-            Controls::where('userID', $id_user)->update(['test3' => $score]);
-        }
-        return 0;
     }
 }

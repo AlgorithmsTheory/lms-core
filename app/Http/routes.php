@@ -12,11 +12,6 @@ use Illuminate\Http\Request;
 |
 */
 
-/*Route::bind('questions', function($id_question){
-    return \App\Question::whereId_question($id_question)->first();
-});*/
-
-
 Route::filter('csrf-ajax', function()
 {
     if (Session::token() != Request::header('x-csrf-token'))
@@ -37,9 +32,6 @@ Route::get('in-process', ['as' => 'in_process', function() {
 
 // Авторизация
 Route::post('auth/login', ['as' => 'login', 'uses' => 'Auth\AuthController@postLogin']);
-Route::get('auth/login', ['as' => 'login', function(){
-    return view('welcome');
-}]);
 Route::get('auth/logout', ['as' => 'logout', 'uses' => 'Auth\AuthController@getLogout']);
 
 // Регистрация
@@ -81,7 +73,6 @@ Route::get('tests/remove/{id_test}', ['as' => 'test_remove', 'uses' => 'TestCont
 Route::get('tests/edit/{id_test}', ['as' => 'test_edit', 'uses' => 'TestController@edit']);
 Route::post('tests/dates/finish', ['as' => 'finish_test', 'uses' => 'TeacherRetestController@finishTest']);
 
-
 //электронная библиотека
 Route::get('library', ['as' => 'library_index', 'uses' => 'LibraryController@index']);
 Route::get('library/definitions', ['as' => 'library_definitions', 'uses' => 'LibraryController@definitions']);
@@ -104,6 +95,11 @@ Route::get('teacher_account/library_calendar', ['as' => 'library_calendar', 'use
 Route::post('teacher_account/date_create', ['as' => 'library_date_create', 'uses' => 'BooksController@create_date']);
 Route::get('teacher_account/library_order_list', ['as' => 'library_order_list', 'uses' => 'BooksController@library_order_list']);
 Route::post('teacher_account/library_order_list_elem_delete', ['as' => 'order_list_delete', 'uses' => 'BooksController@order_list_delete']);
+Route::get('student_lib_account', ['as' => 'student_lib_account', 'uses' => 'BooksController@student_lib_account']);
+Route::post('student_lib_account/student_order_delete', ['as' => 'student_order_delete', 'uses' => 'BooksController@student_order_delete']);
+Route::get('student_lib_account2', ['as' => 'student_lib_account2', 'uses' => 'BooksController@student_lib_account2']);
+Route::get('teacher_account/library_order_list/{order_id}/edit_order_status0', ['as' => 'edit_order_status0', 'uses' => 'BooksController@edit_order_status0']);
+Route::get('teacher_account/library_order_list/{order_id}/edit_order_status1', ['as' => 'edit_order_status1', 'uses' => 'BooksController@edit_order_status1']);
 
 //модуль маркова - задачи и работа с ними
 Route::get('emulator/administration', ['as' => 'main_menu', 'uses' => 'TasksController@main']);
@@ -117,7 +113,6 @@ Route::post('algorithm/{sequense_id}/editTask', ['as' => 'editTask', 'uses' => '
 Route::post('algorithm/addind', ['as' => 'adding', 'uses' => 'TasksController@adding']);
 
 // модуль МТ
-
 Route::get('alltasksmt', ['as' => 'alltasksmt', 'uses' => 'TasksController@alltasksmt']);
 Route::get('algorithm/addtaskmt', ['as' => 'addtaskmt', 'uses' => 'TasksController@addtaskmt']);
 Route::post('algorithm/addingmt', ['as' => 'addingmt', 'uses' => 'TasksController@addingmt']);
@@ -139,6 +134,7 @@ Route::post('algorithm/{id}edit_all_coef', ['as' => 'editAllCoef', 'uses' => 'Ta
 // новое для коэффициентов МТ
 Route::get('algorithm/edit_coef_mt', ['as' => 'edit_coef_mt', 'uses' => 'TasksController@editCoefMt']);
 Route::post('algorithm/{id_task}edit_all_coef_mt', ['as' => 'editAllCoefMt', 'uses' => 'TasksController@editAllCoefMt']);
+Route::post('get_MT_protocol', array('as'=>'get_MT_protocol', 'uses'=>'EmulatorController@get_MT_protocol'));
 
 //контрольный режим эмуляторов
 Route::get('algorithm/kontrMT', ['as' => 'kontrMT', 'uses' => 'EmulatorController@kontrMT']);
@@ -187,12 +183,17 @@ Route::post('manage_groups/delete_group', ['as' => 'delete_group', 'uses' => 'Ad
 
 Route::get('manage_news', ['as' => 'manage_news', 'uses' => 'AdministrationController@manage_news', 'middleware' => ['general_auth', 'admin']]);
 Route::post('manage_news/add_news', ['as' => 'add_news', 'uses' => 'AdministrationController@add_news', 'middleware' => ['general_auth', 'admin']]);
-Route::post('manage_news/delete', ['as' => 'delete_group', 'uses' => 'AdministrationController@delete_news', 'middleware' => ['general_auth', 'admin']]);
+Route::post('manage_news/delete', ['as' => 'delete_news', 'uses' => 'AdministrationController@delete_news', 'middleware' => ['general_auth', 'admin']]);
+Route::post('manage_news/hide', ['as' => 'hide_news', 'uses' => 'AdministrationController@hide_news', 'middleware' => ['general_auth', 'admin']]);
 
 Route::get('manage_plan', ['as' => 'manage_plan', 'uses' => 'StatementsController@manage_plan', 'middleware' => ['general_auth', 'admin']]);
 Route::post('manage_plan/is', ['as' => 'change_plan', 'uses' => 'StatementsController@plan_is', 'middleware' => ['general_auth', 'admin']]);
 Route::post('manage_plan/is_not', ['as' => 'change_plan', 'uses' => 'StatementsController@plan_is_not', 'middleware' => ['general_auth', 'admin']]);
 Route::get('pashalka', ['as' => 'pashalka', 'uses' => 'AdministrationController@pashalka']);
+
+Route::get('manage_groups/group_set', ['as' => 'group_set', 'uses' => 'AdministrationController@add_groups', 'middleware' => ['general_auth', 'admin']]);
+Route::post('manage_groups/group_set/add', ['as' => 'add_group_to_set', 'uses' => 'AdministrationController@add_group_to_set', 'middleware' => ['general_auth', 'admin']]);
+Route::post('manage_groups/group_set/delete', ['as' => 'delete_group_from_set', 'uses' => 'AdministrationController@delete_group_from_set', 'middleware' => ['general_auth', 'admin']]);
 
 //модуль рекурсивных функций
 Route::get('recursion', ['as' => 'recursion_index', 'uses' => 'RecursionController@index']);

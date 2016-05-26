@@ -4,6 +4,7 @@
 
 $('.plan').on('change', function() {
     if (this.checked) {
+        var group = this.name;
         var column = String(this.id);
         token = $('#forma').children().eq(0).val();
         $.ajax({
@@ -17,13 +18,14 @@ $('.plan').on('change', function() {
                     return xhr.setRequestHeader('X-CSRF-TOKEN', token);
                 }
             },
-            data: { column: column, token: 'token' },
+            data: { column: column, group: group, token: 'token' },
             success: function(data){
             }
         });
         return false;
     }
     else{
+        var group = this.name;
         var column = String(this.id);
         token = $('#forma').children().eq(0).val();
         $.ajax({
@@ -37,7 +39,7 @@ $('.plan').on('change', function() {
                     return xhr.setRequestHeader('X-CSRF-TOKEN', token);
                 }
             },
-            data: { column: column, token: 'token' },
+            data: { column: column, group: group, token: 'token' },
             success: function(data){
             }
         });

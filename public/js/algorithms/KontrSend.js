@@ -90,7 +90,8 @@ function run_all_normal(){
 }
 
 function show_result(task_number, resp){
-    $('input[id=result' + (task_number + 1) + ']').val(resp.result); // записываем ответ
+    //$('input[id=result' + (task_number + 1) + ']').val(resp.result); // записываем ответ
+    $('#result' + (task_number + 1)).text('Ваш балл: ' + resp.result);
     for (var i = 1; i <= 5; ++i) {     //выводим последовательности
         field_number = i + task_number * 5;
         $('td[id=output' + field_number + ']').text(resp.conv[i - 1]);
@@ -98,14 +99,14 @@ function show_result(task_number, resp){
         $('td[id=field' + field_number + ']').text(resp.ksuha[i - 1]);
 
     }
+    protocol();
 }
 
 function run_all_turing(i){
-    alert(task_id_map['#light1']);
+    //protocol();
     var number = i;
-    alert(i);
-    var key = '#' + $('.pull-right > li.active > a')[i].href.split('#')[1];  // for example = #light1
-    var $max_mark;
+    var key = '#' + $('div.active *> li.active > a')[0].href.split('#')[1];  // for example = #light1     var $max_mark;
+    alert(key);
     var task = new Object();
     task.id = task_id_map[key]; // get id task
     task.rule = new Array();
@@ -113,8 +114,12 @@ function run_all_turing(i){
     task.str = $('textarea[name=textarea_src]').val();
     var src = $('input[name=start]').toArray();
     var dst = $('input[name=end]').toArray();
-    alert (task.duration);
-
+    if(i == 0) {
+        document.getElementById("send_one").disabled = true;
+    }
+    else {
+        document.getElementById("send_two").disabled = true;
+    }
     for ( var i = 0; i < src.length; i++) {
         tmp = new Object();
         tmp.src = drop_sup(src[i].value);
@@ -123,17 +128,6 @@ function run_all_turing(i){
             task.rule.push(tmp)
         }
     }
-
-    //$.post("/laravel/public/Turing.php", JSON.stringify(task)).done(
-    //    function(data){
-    //        resp = $.parseJSON(data);
-    //        show_result(number, resp);
-    //        if ( resp.error != 'ok' ) {
-    //            alert("Программа зациклилась!");
-    //        }
-    //    });
-
-
     token = $('#forma').children().eq(0).val();
     $.ajax({
         cache: false,
@@ -150,7 +144,7 @@ function run_all_turing(i){
         success: function(data){
             var resp = data;
             //resp = $.parseJSON(data);
-            alert(data);
+            //alert(data);
             show_result(number, resp);
             if ( resp.error != 'ok' ) {
                 alert("Программа зациклилась!");
@@ -158,8 +152,31 @@ function run_all_turing(i){
         }
     });
     return false;
+}
+
+function protocol(){
+    html_text = $('#MT-result').html();
+    token = $('#forma').children().eq(0).val();
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url: '/uir/public/get_MT_protocol',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        data: { html_text: html_text, token: 'token' },
+        success: function(data){
+
+        }
+    });
+    return false;
 
 }
+
 
 function get_tasks(){
     var token = $('#forma').children().eq(0).val();

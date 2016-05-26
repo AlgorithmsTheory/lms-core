@@ -3,7 +3,6 @@
 		<title>Эмулятор машины Тьюринга</title>
 
 		<!-- BEGIN META -->
-		<meta name="csrf_token" content="{{ csrf_token() }}" />
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="keywords" content="your,keywords">
@@ -273,30 +272,26 @@
 									<header>Спецсимволы:</header>
 									</div>
 									<div class="card-body">
-										<!--<div class="btn-group">
+										<div class="btn-group">
 											<button type="button" class="btn ink-reaction btn-default-bright" id="zero">#</button>
 											<button type="button" class="btn ink-reaction btn-default-bright" id="one">Õ</button>
 											<button type="button" class="btn ink-reaction btn-default-bright" id="lambda">&lambda;</button>
 											<button type="button" class="btn ink-reaction btn-default-bright" id="bull">&bull;</button>
 											
 																						
-										</div> -->
+										</div>
 									</div><!--end .card-body -->
 									</div>
-									
-								</div>
-								<div class="col-sm-6">
-								
 									<div class="card">
 									
 									<div class="card-body">
 										
-										<button type="button" style="top:-15px; left: 30px" class="btn ink-reaction btn-primary" onClick="run_all_turing()">Отправить</button>	
+										<button type="button" style="top:-15px; left: 30px" class="btn ink-reaction btn-primary" id="send_one" onClick="run_all_normal(0)">Отправить</button>
 																		
 										<form class="form" role="form">
 											<div class="form-group floating-label">
 												<input type="text" class="form-control" id="result1" disabled>
-												<label for="result1" style="top:-15px; left:40px">Результат: </label>
+												<label for="result1" style="top:-5px; left: 40px">Ваш балл:</label>
 											</div>
 											
 									</form>
@@ -304,7 +299,40 @@
 									</div>
 									
 									</div>
-								</div>	
+								</div>
+								
+								<div class="col-sm-6">
+									<div class="card">
+									<div class="card-head card-head-xs">
+									<header>Отладка:</header>
+									<div class="tools">
+											<a class="btn btn-icon-toggle" data-container="body" data-toggle="popover" data-placement="top" data-content="В режиме предотладки вы можете один раз проверить свой алгоритм на произвольном входном слове, которое можно ввести в соответствующее поле ниже" data-original-title="" title="" aria-describedby="popover665976"><i class="md md-help"></i></a>
+										</div>
+									</div>
+										<div class="card-body">
+											<form class="form" role="form">
+												<div class="form-group floating-label">
+													<textarea name="textarea_src" id="textarea2" class="form-control" rows="1" placeholder="" value="∂λ"></textarea>
+													<label for="textarea2" style="top:-15px">Входное слово:</label>
+
+												</div>
+
+											</form>
+											<button type="button" id="onerun2" class="btn ink-reaction btn-primary" style="left: 40px" onClick="run_all_normal(false)">Запуск</button>
+										<!--end .card-body -->
+																					
+											<form class="form" role="form">
+												<div class="form-group floating-label">
+													<input type="text" class="form-control" id="disabled6" disabled>
+													<label for="disabled6" style="top: -1px; left: 40px" >Результат:</label>
+												</div>
+												
+											</form>
+									
+										</div>
+									</div>
+									
+								</div>
 								<div class="col-lg-12">
 								<div class="card">
 									<div class="card-body">
@@ -586,30 +614,26 @@
 									<header>Спецсимволы:</header>
 									</div>
 									<div class="card-body">
-										<!--<div class="btn-group">
+										<div class="btn-group">
 											<button type="button" class="btn ink-reaction btn-default-bright" id="zero">#</button>
 											<button type="button" class="btn ink-reaction btn-default-bright" id="one">Õ</button>
 											<button type="button" class="btn ink-reaction btn-default-bright" id="lambda">&lambda;</button>
 											<button type="button" class="btn ink-reaction btn-default-bright" id="bull">&bull;</button>
 											
 																						
-										</div> -->
+										</div> 
 									</div><!--end .card-body --><!--end .card-body -->
 									</div>
-									
-								</div>
-								<div class="col-sm-6">
-								
 									<div class="card">
 									
 									<div class="card-body">
 										
-										<button type="button" style="top:-15px; left: 30px" class="btn ink-reaction btn-primary" onClick="run_all_turing()">Отправить</button>	
+										<button type="button" style="top:-15px; left: 30px" class="btn ink-reaction btn-primary" id="send_two" onClick="run_all_normal(1)">Отправить</button>
 																		
 										<form class="form" role="form">
 											<div class="form-group floating-label">
 												<input type="text" class="form-control" id="result2" disabled>
-												<label for="result2" style="top:-15px; left:40px">Результат: </label>
+												<label for="result2" style="top:-5px; left: 40px">Ваш балл:</label>
 											</div>
 											
 									</form>
@@ -617,6 +641,39 @@
 									</div>
 									
 									</div>
+								</div>
+								
+								<div class="col-sm-6">
+									<div class="card">
+									<div class="card-head card-head-xs">
+									<header>Отладка:</header>
+									<div class="tools">
+											<a class="btn btn-icon-toggle" data-container="body" data-toggle="popover" data-placement="top" data-content="В режиме предотладки вы можете один раз проверить свой алгоритм на произвольном входном слове, которое можно ввести в соответствующее поле ниже" data-original-title="" title="" aria-describedby="popover665976"><i class="md md-help"></i></a>
+										</div>
+									</div>
+										<div class="card-body">
+											<form class="form" role="form">
+												<div class="form-group floating-label">
+													<textarea name="textarea_src" id="textarea2" class="form-control" rows="1" placeholder="" value="∂λ"></textarea>
+													<label for="textarea2" style="top:-15px">Входное слово:</label>
+
+												</div>
+
+											</form>
+											<button type="button" id="onerun" class="btn ink-reaction btn-primary" style="left: 40px" onClick="run_all_normal(false)">Запуск</button>
+										<!--end .card-body -->
+																					
+											<form class="form" role="form">
+												<div class="form-group floating-label">
+													<input type="text" class="form-control" id="disabled6" disabled>
+													<label for="disabled6" style="top: -1px; left: 40px" >Результат:</label>
+												</div>
+												
+											</form>
+									
+										</div>
+									</div>
+									
 								</div>	
 								<div class="col-lg-12">
 								<div class="card">
@@ -714,7 +771,6 @@
 </div>		
 				</section>
 
-
 			<!--end #content-->
 @stop		
 
@@ -722,12 +778,12 @@
 		<!-- END BASE -->
 @section('js-down')
 		<!-- BEGIN JAVASCRIPT -->
+		{!! HTML::script('js/algorithms/onerun.js') !!}
 		{!! HTML::script('js/algorithms/jquery-1.4.3.min.js') !!}
 		{!! HTML::script('js/algorithms/jquery-1.10.2.js') !!}
 		{!! HTML::script('js/algorithms/symbols.js') !!}
 		{!! HTML::script('js/algorithms/adding.js') !!}
 		{!! HTML::script('js/algorithms/superScript.js') !!}
-		{!! HTML::script('js/algorithms/KontrSend.js') !!}
 		{!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
 		{!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
 		{!! HTML::script('js/libs/jquery-ui/jquery-ui.min.js') !!}
@@ -749,7 +805,9 @@
 		{!! HTML::script('js/core/demo/DemoUILists.js') !!}
 		{!! HTML::script('js/core/demo/DemoUIMessages.js') !!}
 		{!! HTML::script('js/libs/toastr/toastr.js') !!}
-		<!-- END JAVASCRIPT -->
+		{!! HTML::script('js/algorithms/KontrSend_HAM.js') !!}
+
+				<!-- END JAVASCRIPT -->
 @stop
 
 

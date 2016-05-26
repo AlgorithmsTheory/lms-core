@@ -15,7 +15,7 @@
 
 @section('content')
     <div id="main_container">
-        <div class="card">
+        <div class="card col-lg-12 col-md-12">
             <div class="card-body">
                 <h2 class="text-center">Просмотр и редактирование веломостей</h2>
                 <form action="" method="" class="form" id="forma">
@@ -23,8 +23,16 @@
 
                     @if($user['role'] == 'Админ')
                     <div class="form-group">
-                        <textarea  class="form-control textarea3" id="group_num" rows="1" placeholder="Номер группы" required></textarea>
-                        <label for="textarea3">Напишите номер группы</label>
+                        {{--<textarea  class="form-control textarea3" id="group_num" rows="1" placeholder="Номер группы" required></textarea>--}}
+                        {{--<label for="textarea3">Напишите номер группы</label>--}}
+
+                        <select name="group" id="group_num" class="form-control textarea3" size="1" required>
+                            @foreach($group_set as $g)
+                                <option value="{{ $g['number'] }}">{{ $g['number'] }}</option>/td>
+                            @endforeach
+                        </select>
+                        <label for="group_num">Выберите группу</label>
+
                     </div>
                     @else
 

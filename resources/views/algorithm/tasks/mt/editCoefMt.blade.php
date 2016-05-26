@@ -61,6 +61,55 @@
 <div class="card">
 			
 			<form class="form form-validate floating-label" novalidate="novalidate" method="post"  action="{{URL::route('editAllCoefMt', array('id_task'=> "1"))}}">
+				
+				<div class="modal-body">
+<label >Параметры учета времени:</label>
+					<div class="input-group">
+						<div class="input-group-content">
+							
+							<input type="text" id="old_time_a" class="form-control" name="old_time_a"  value="A = <?php echo $result['time_coef_a']; ?>" disabled/>
+						</div>
+						<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+						<div class="input-group-content">
+							<input type="hidden" name="_token" value="{{ csrf_token() }}" />
+							<div class="form-group">
+							<input type="text" id="new_time_a" class="form-control" placeholder="Новое значение A" data-rule-number="true" aria-required="true" name="new_time_a"  / >
+						
+						</div>
+						</div>
+					</div>	
+					<div class="input-group">
+						<div class="input-group-content">
+							
+							<input type="text" id="old_time_b" class="form-control" name="old_time_b"  value="B = <?php echo $result['time_coef_b']; ?>" disabled/>
+						</div>
+						<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+						<div class="input-group-content">
+							<input type="hidden" name="_token" value="{{ csrf_token() }}" />
+							<div class="form-group">
+							<input type="text" id="new_time_b" class="form-control" placeholder="Новое значение B" data-rule-number="true" aria-required="true" name="new_time_b"  / >
+						
+						</div>
+						</div>
+						
+					</div>
+					<div class="input-group">
+						<div class="input-group-content">
+							
+							<input type="text" id="old_delta" class="form-control" name="old_delta"  value="Δ = <?php echo $result['delta']; ?>" disabled/>
+						</div>
+						<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+						<div class="input-group-content">
+							<input type="hidden" name="_token" value="{{ csrf_token() }}" />
+							<div class="form-group">
+							<input type="text" id="new_delta" class="form-control time-mask" placeholder="00:00:00"  name="new_delta"  / >
+						
+						</div>
+						</div>
+						
+					</div>
+
+</div>
 				<div class="modal-body">
 					<div class="input-group">
 						<div class="input-group-content">
@@ -75,43 +124,6 @@
 							<input type="text" id="new_rows" class="form-control" placeholder="Новое значение R" data-rule-number="true" aria-required="true" name="new_rows"  / >
 							</div>
 						</div>
-					</div>
-					
-				</div>
-				<div class="modal-body">
-
-					<div class="input-group">
-						<div class="input-group-content">
-							<label for="amount9">Параметр учета времени:</label>
-							<input type="text" id="old_time" class="form-control" name="old_time"  value="B = <?php echo $result['time_coef_b']; ?>" disabled/>
-						</div>
-						<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
-						<div class="input-group-content">
-							<input type="hidden" name="_token" value="{{ csrf_token() }}" />
-							<div class="form-group">
-							<input type="text" id="new_time_b" class="form-control" placeholder="Новое значение B" data-rule-number="true" aria-required="true" name="new_time_b"  / >
-						
-						</div>
-						</div>
-
-					</div>
-
-</div>
-<div class="modal-body">
-					<div class="input-group">
-						<div class="input-group-content">
-							<label for="amount9">Параметр учета балла:</label>
-							<input type="text" id="old_time" class="form-control" name="old_time"  value="A = <?php echo $result['time_coef_a']; ?>" disabled/>
-						</div>
-						<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
-						<div class="input-group-content">
-							<input type="hidden" name="_token" value="{{ csrf_token() }}" />
-							<div class="form-group">
-							<input type="text" id="new_time_a" class="form-control" placeholder="Новое значение A" data-rule-number="true" aria-required="true" name="new_time_a"  / >
-						
-						</div>
-						</div>
-						
 					</div>
 					
 				</div>
@@ -214,6 +226,9 @@
 		{!! HTML::script('js/libs/utils/send.js') !!}
 		{!! HTML::script('js/core/demo/DemoUIMessages.js') !!}
 		{!! HTML::script('js/libs/toastr/toastr.js') !!}
+		{!! HTML::script('js/libs/inputmask/jquery.inputmask.bundle.min.js') !!}
+
+		
 		<!-- END JAVASCRIPT -->
 @stop
 

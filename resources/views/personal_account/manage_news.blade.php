@@ -1,7 +1,7 @@
 @extends('templates.base')
 @section('head')
     <meta name="csrf_token" content="{{ csrf_token() }}" />
-    <title>Назначить группы</title>
+    <title>Новости</title>
     {!! HTML::style('css/bootstrap.css') !!}
     {!! HTML::style('css/materialadmin.css') !!}
     {!! HTML::style('css/full.css') !!}
@@ -17,10 +17,13 @@
             <div class="card-body">
                 <h2 class="text-center">Добавить или удалить новость</h2>
                 @foreach($news as $post)
-                    <div class="card card-bordered style-warning" id="{{ $post['id'] }}">
+                    <div class="card card-bordered {{ $post['is_visible'] == 1 ? 'style-warning' : 'style-gray-bright' }}" id="{{ $post['id'] }}">
                         <div class="card-head">
                             <header><i class="fa fa-fw fa-tag"></i>{{ $post['title'] }}</header>
                             <div class="tools">
+                                <div class="btn-group">
+                                    <a class="btn btn-icon-toggle btn-close show" name="{{ $post['id'] }}"><i class="md md-remove-red-eye"></i></a>
+                                </div>
                                 <div class="btn-group ">
                                     <a class="btn btn-icon-toggle btn-close delete" name="{{ $post['id'] }}"><i class="md md-close"></i></a>
                                 </div>

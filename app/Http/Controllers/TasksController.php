@@ -75,8 +75,10 @@ public function editCoef(){
 public function editAllCoef($id){
 
        $new_effic = Request::input("new_effic");
-       $new_time = Request::input("new_time");
-       $query3 = DB::update("UPDATE tasks_nam SET efficiency_coef='$new_effic', time_coef='$new_time'");
+       $new_time_a = Request::input("new_time_a");
+       $new_time_b = Request::input("new_time_b");
+       $new_delta = Request::input("new_delta");
+       $query3 = DB::update("UPDATE tasks_nam SET efficiency_coef='$new_effic', time_coef_a='$new_time_a', time_coef_b='$new_time_b', delta='$new_delta'");
        $query3 = TasksController::magic($query3);
        $tasks_and_sequences = DB::select("SELECT * FROM `testsequence_nam` i LEFT JOIN `tasks_nam` u ON u.id = i.task_id");
        $tasks_and_sequences = TasksController::magic($tasks_and_sequences);
@@ -212,7 +214,8 @@ public function editAllCoefMt($id_task){
        $new_time_b = Request::input("new_time_b");
        $new_cycle = Request::input("new_cycle");
        $new_sum = Request::input("new_sum");
-       $query3 = DB::update("UPDATE tasks SET rows_coef='$new_rows', time_coef_a='$new_time_a', time_coef_b='$new_time_b', cycle_coef='$new_cycle', sum_coef='$new_sum'");
+       $new_delta = Request::input("new_delta");
+       $query3 = DB::update("UPDATE tasks SET rows_coef='$new_rows', time_coef_a='$new_time_a', time_coef_b='$new_time_b', cycle_coef='$new_cycle', sum_coef='$new_sum', delta='$new_delta'");
        $query3 = TasksController::magic($query3);
        $tasks_and_sequences = DB::select("SELECT * FROM `testsequence` i LEFT JOIN `tasks` u ON u.id_task = i.task_id");
         $tasks_and_sequences = TasksController::magic($tasks_and_sequences);

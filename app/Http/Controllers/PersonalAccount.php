@@ -4,7 +4,7 @@ use App\Testing\Result;
 use App\Testing\Test;
 use App\User;
 use Auth;
-
+use Session;
 class PersonalAccount extends Controller{
     private $test;
     function __construct(Test $test){
@@ -48,7 +48,7 @@ class PersonalAccount extends Controller{
         }
         $amount = count($tests);
         $c = 0;
-        $resultsQuery = Result::select('id', 'test_name', 'result_date', 'result', 'mark_eu')->get();
+        $resultsQuery = Result::select('id', 'result_date', 'result', 'mark_eu')->get();
         foreach ($resultsQuery as $res){
             $user = User::whereId($res->id_user)->get();
 //            $c = $c + count($user);

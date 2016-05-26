@@ -233,6 +233,10 @@
                                             {{ $classwork['col7'] }}
                                         </td>
                                     </tr>
+                                    </tbody>
+                                </table>
+                            <table class="table table-condensed table-bordered">
+                                <tbody>
                                 <tr>
                                     <td class="info">
                                         <div class="dropdown">
@@ -479,6 +483,10 @@
                                         {{ $classwork['col11'] }}
                                     </td>
                                 </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-condensed table-bordered">
+                                <tbody>
                                 <tr>
                                     <td class="info">
                                         <div class="dropdown">
@@ -689,6 +697,10 @@
                                         {{ $classwork['col15'] }}
                                     </td>
                                 </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-condensed table-bordered">
+                                <tbody>
                                 <tr>
                                     <td class="info">
                                         <div class="dropdown">
@@ -884,7 +896,6 @@
                                 </tbody>
                             </table>
                         </div>
-
 
                     <div class="col-md-12 col-sm-12 style-gray">
                         <h3 class="text-default-bright">Итоги</h3>

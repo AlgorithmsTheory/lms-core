@@ -30,7 +30,7 @@
                 <br>
                 <br>
                 <table class="table table-condensed">
-                    <tr>
+                    <tr class="info">
                         <td>Название теста</td>
                         <td>Результат</td>
                         <td>Оценка</td>

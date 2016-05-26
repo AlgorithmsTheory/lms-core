@@ -124,9 +124,20 @@
                                     <div class="help-block with-errors"></div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="number" name="group" data-minlength="3" max="999" value="{{ old('group') }}" id="group" tabindex="1" data-error="Нужно три последние цифры!" class="form-control">
-                                    <label for="group">Группа (только три последние цифры, например 221)</label>
-                                    <div class="help-block with-errors"></div>
+
+                                    <select name="group" id="group" class="form-control" size="1">
+                                        <option value="0"></option>
+                                        <option value="0">Простой пользователь</option>
+                                        <option value="0">Преподаватель</option>
+                                        @foreach($groups as $group)
+                                            <option value="{{ $group['number'] }}">{{ "Студент группы ".$group['number'] }}</option>/td>
+                                        @endforeach
+                                    </select>
+                                    <label for="select-type">Выберите</label>
+
+                                    {{--<input type="number" name="group" data-minlength="3" max="999" value="{{ old('group') }}" id="group" tabindex="1" data-error="Нужно три последние цифры!" class="form-control">--}}
+                                    {{--<label for="group">Группа (только три последние цифры, например 221)</label>--}}
+                                    {{--<div class="help-block with-errors"></div>--}}
                                 </div>
                                 <div class="form-group">
                                     <input type="password" data-minlength="6" name="password" tabindex="2" id="inputPassword" class="form-control" required data-error="Введите корректный пароль">
@@ -159,7 +170,7 @@
 
                                 <div class="form-group">
                                     <input type="email" name="email" value="{{ old('email') }}" id="email" data-error="Введите корректный email!" tabindex="1" class="form-control" required>
-                                    <label for="email">Email</label>
+                                    <label for="email">Emaol</label>
                                     <div class="help-block with-errors"></div>
                                 </div>
 

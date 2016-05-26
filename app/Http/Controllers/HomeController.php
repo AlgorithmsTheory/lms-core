@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Group;
 use App\News;
 use Auth;
 
@@ -40,11 +41,12 @@ class HomeController extends Controller {
 	public function get_home()
 	{
 		if(Auth::check()) {
-			$news = News::get();
+			$news = News::where('is_visible', 1)->get();
 			return view('main', compact('news'));
 		}
 		else {
-			return view('welcome');
+			$groups = Group::get();
+			return view('welcome', compact('groups'));
 		}
 	}
 

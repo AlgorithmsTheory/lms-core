@@ -29,6 +29,7 @@ class Kernel extends HttpKernel {
 		'guest' => 'App\Http\Middleware\RedirectIfAuthenticated',
         'general_auth' => 'App\Http\Middleware\AuthMiddleware',
         'admin' => 'App\Http\Middleware\AdminMiddleware',
+        'student' => 'App\Http\Middleware\StudentMiddleware',
         'single_test' => 'App\Http\Middleware\SingleTest',
         'fish' => 'App\Http\Middleware\FishMiddleware',
         'have_attempts' => 'App\Http\Middleware\ControlTestAccess'

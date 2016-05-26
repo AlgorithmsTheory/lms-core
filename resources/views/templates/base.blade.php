@@ -17,9 +17,22 @@
     <section>
         <nav class="navbar navbar-fixed-top style-primary">
             <div class="container">
+
+                <div class="navbar-header">
+                    {{--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">--}}
+                        {{--<span class="sr-only">Toggle navigation</span>--}}
+                        {{--<span class="icon-bar"></span>--}}
+                        {{--<span class="icon-bar"></span>--}}
+                        {{--<span class="icon-bar"></span>--}}
+                    {{--</button>--}}
+                    <a class="" href="{{URL::route('home')}}">
+                        <img src="{{URL::asset('/img/AT2.png')}}" width="60px" alt="Главная" style=" padding-right: 10px;">
+                    </a>
+                </div>
+
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="{{URL::route('home')}}" class="btn">Главная</a></li>
+{{--                        <li><a href="{{URL::route('home')}}" class="btn">Главная</a></li>--}}
                         <li><a href="{{URL::route('tests')}}" class="btn">Тестирование</a></li>
                         <li><a href="{{URL::route('library_index')}}" class="btn">Библиотека</a></li>
                         <li><a href="{{URL::route('MT')}}" class="btn">Тьюринг</a></li>

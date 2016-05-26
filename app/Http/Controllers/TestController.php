@@ -6,7 +6,6 @@
  * Time: 16:49
  */
 namespace App\Http\Controllers;
-use App\Controls;
 use App\Protocols\TestProtocol;
 use App\Testing\Fine;
 use App\Testing\Result;
@@ -23,9 +22,6 @@ use App\Testing\Question;
 use Illuminate\Http\Response;
 use Session;
 use View;
-use App\Control_test_dictionary;
-
-
 
 class TestController extends Controller{
     private $test;
@@ -56,7 +52,13 @@ class TestController extends Controller{
         }
         $tr_amount = count($tr_tests);
         $ctr_amount = count($ctr_tests);
-        return view('tests.index', compact('tr_tests', 'ctr_tests', 'tr_names', 'ctr_names', 'tr_amount', 'ctr_amount'));
+
+        $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
+        if ($role == '' || $role == 'Обычный'){                                                                         // Обычным пользователям не доступны контрольные тесты
+            return view('tests.index', compact('tr_tests', 'tr_names', 'tr_amount'));
+        }
+        else
+            return view('tests.index', compact('tr_tests', 'ctr_tests', 'tr_names', 'ctr_names', 'tr_amount', 'ctr_amount'));
     }
 
     /** генерирует страницу создания нового теста */
@@ -315,7 +317,6 @@ class TestController extends Controller{
         $amount = $this->test->getAmount($id_test);
         $test_time = $query->test_time;
         $test_type = $query->test_type;
-
         if (!Session::has('test')){                                                                                     //если в тест зайдено первый раз
             $ser_array = $this->test->prepareTest($id_test);
             //dd($ser_array);
@@ -361,6 +362,7 @@ class TestController extends Controller{
 
         $widgetListView = View::make('questions.student.widget_list',compact('amount', 'id_test','left_min', 'left_sec', 'test_type'))->with('widgets', $widgets);
         $response = new Response($widgetListView);
+        //dd('1');
         return $response;
     }
 
@@ -426,7 +428,7 @@ class TestController extends Controller{
             $widgetListView = View::make('tests.ctrresults',compact('total','score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'id_test', 'id_user'))->with('widgets', $widgets);
             $fine = new Fine();
             $fine->updateFine(Auth::user()['id'], $id_test, $mark_rus);                                                 //вносим в таблицу штрафов необходимую инфу
-            StatementsController::add_to_statements($id_test, $id_user, $score);
+            Test::add_to_statements($id_test, $id_user, $score);                                        //занесение балла в ведомость
         }
         else {                                                                                                          //тест тренировочный
             $widgetListView = View::make('questions.student.training_test',compact('score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'link_to_lecture'))->with('widgets', $widgets);

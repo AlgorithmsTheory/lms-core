@@ -7,7 +7,8 @@ full
 @stop
 
 @section('content')
-    <div class="col-lg-offset-2 col-md-8 col-sm-8 card style-default-light">
+    <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-2 col-md-8 col-sm-8 card style-default-light">
+        <img src="{{URL::asset('/img/AT3.png')}}" width="250px" class="center-block">
         <h1 class="text-default-dark text-center">Добро пожаловать, {{ Auth::user()['first_name'] }}!</h1>
         <h4 class="lead">Система находится в стадии первичного тестирования. Описание возникающих при работе проблем, а также замечания и предложения, просим направлять по нашему электронному адресу <b>algorithms.theory@yandex.ru</b></h4>
         <h4 class="lead"> На данный момент в различной степени готовности доступны следующие модули: </h4>
@@ -22,14 +23,16 @@ full
             <h2 class="text-default-dark text-center">Новости</h2>
         @endif
         @foreach($news as $post)
-        <div class="card card-bordered style-warning">
-            <div class="card-head">
-                <header><i class="fa fa-fw fa-tag"></i>{{ $post['title'] }}</header>
-            </div><!--end .card-head -->
-            <div class="card-body style-default-bright">
-                <p>{{ $post['body'] }}</p>
-            </div><!--end .card-body -->
-        </div>
+            @if( $post['is_visible'] == 1)
+                <div class="card card-bordered style-warning">
+                    <div class="card-head">
+                        <header><i class="fa fa-fw fa-tag"></i>{{ $post['title'] }}</header>
+                    </div><!--end .card-head -->
+                    <div class="card-body style-default-bright">
+                        <p>{{ $post['body'] }}</p>
+                    </div><!--end .card-body -->
+                </div>
+            @endif
         @endforeach
     </div>
 @stop
