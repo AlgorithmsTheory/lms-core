@@ -1,18 +1,15 @@
 .test-list a:link, .test-list a:visited {
     display: block;
-    font-size: 14px;
-    color: #0aa89e;
-    padding: 4px;
+    color: #000000;
     text-decoration: none;
 }
 
 .test-list a:hover {
     display: block;
-    font-size: 14px;
     color: #05585b;
-    padding: 4px;
     text-decoration: none;
 }
+
 
 .none-tests {
     color:#0aa89e;

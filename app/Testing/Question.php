@@ -202,7 +202,6 @@ class Question extends Eloquent {
         $query = $this->whereId_question($id)->select('answer','points', 'type_code')->first();
         $points = $query->points;
         $type = Type::whereType_code($query['type_code'])->select('type_name')->first()->type_name;
-        //dd($array);
         if (count($array)==1){                                                                                          //если не был отмечен ни один вариант
             $choice = [];
             $score = 0;
@@ -257,10 +256,12 @@ class Question extends Eloquent {
         $id_lecture = Question::whereId_question($id_question)
                 ->join('themes', 'questions.theme_code', '=', 'themes.theme_code')
                 ->first()->id_lecture;
-        $lecture_number = Lecture::whereId_lecture($id_lecture)->select('lecture_number')->first()->lecture_number;
-        array_push($array, $lecture_number);
-        array_push($array, '#'.Question::whereId_question($id_question)->select('section_code')->first()->section_code.
-                   '.'.Question::whereId_question($id_question)->select('theme_code')->first()->theme_code);
+        if (!is_null($id_lecture)){
+            $lecture_number = Lecture::whereId_lecture($id_lecture)->select('lecture_number')->first()->lecture_number;
+            array_push($array, $lecture_number);
+            array_push($array, '#'.Question::whereId_question($id_question)->select('section_code')->first()->section_code.
+                       '.'.Question::whereId_question($id_question)->select('theme_code')->first()->theme_code);
+        }
         return $array;
     }
 } 

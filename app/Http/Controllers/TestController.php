@@ -31,34 +31,31 @@ class TestController extends Controller{
 
     /** генерирует страницу со списком доступных тестов */
     public function index(){
-        $tr_tests = [];                                                                                                 //массив id тренировочных тестов
-        $ctr_tests = [];                                                                                                //массив id контрольных тестов
-        $tr_names = [];                                                                                                 //массив названий тренировочных тестов
-        $ctr_names = [];                                                                                                //массив названий тренировочных тестов
+        $tr_tests = [];                                                                                                 //массив тренировочных тестов
+        $ctr_tests = [];                                                                                                //массив контрольных тестов
         $current_date = date('U');
-        $query = $this->test->select('id_test', 'test_course', 'test_name', 'start', 'end', 'test_type')->get();
+        $query = $this->test->get();
         foreach ($query as $test){
-            if ($current_date >= strtotime($test->start) && $current_date <= strtotime($test->end) && $test->test_course != 'Рыбина'){                    //проверка, что тест открыт и он не из Рыбинских
-                $test_type = $test->test_type;
-                if ($test_type == 'Тренировочный'){
-                    array_push($tr_tests, $test->id_test);                                                              //название тренировочного теста состоит из слова "Тренировочный" и
-                    array_push($tr_names, $test->test_name);                                                            //самого названия теста
+            if ($test->test_course != 'Рыбина' && $test->visibility == 1 && $test->year == date("Y")) {                 //проверка, что тест не из Рыбинских, он видим и он текущего года
+                if ($test->test_type == 'Тренировочный'){
+                    array_push($tr_tests, $test);
                 }
                 else {
-                    array_push($ctr_tests, $test->id_test);
-                    array_push($ctr_names, $test->test_name);
+                    array_push($ctr_tests, $test);
                 }
+                if ($current_date >= strtotime($test->start) && $current_date <= strtotime($test->end))                 //разделение на текущие и недоступные
+                    $test['current'] = 1;
+                else
+                    $test['current'] = 0;
             }
         }
-        $tr_amount = count($tr_tests);
-        $ctr_amount = count($ctr_tests);
 
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
         if ($role == '' || $role == 'Обычный'){                                                                         // Обычным пользователям не доступны контрольные тесты
-            return view('tests.index', compact('tr_tests', 'tr_names', 'tr_amount'));
+            return view('tests.index', compact('tr_tests'));
         }
         else
-            return view('tests.index', compact('tr_tests', 'ctr_tests', 'tr_names', 'ctr_names', 'tr_amount', 'ctr_amount'));
+            return view('tests.index', compact('tr_tests', 'ctr_tests'));
     }
 
     /** генерирует страницу создания нового теста */
@@ -310,20 +307,25 @@ class TestController extends Controller{
         $saved_test = [];
         $current_date = date('U');
 
-        $query = $this->test->whereId_test($id_test)->select('test_name', 'test_time', 'start', 'end', 'test_type')->first();
-        if ($current_date < strtotime($query->start) || $current_date > strtotime($query->end)){                          //проверка открыт ли тест
-            return view('no_access');
+        $query = $this->test->whereId_test($id_test)->first();
+        if ($current_date < strtotime($query->start) || $current_date > strtotime($query->end) || $query->year != date("Y")){                        //проверка открыт ли тест
+            $message = 'Тест не открыт в настоящий момент';
+            return view('no_access', compact('message'));
+        }
+        if ($query->visibility == 0){
+            $message = 'Тест не доступен в данный момент';
+            return view('no_access', compact('message'));
         }
         $amount = $this->test->getAmount($id_test);
         $test_time = $query->test_time;
         $test_type = $query->test_type;
         if (!Session::has('test')){                                                                                     //если в тест зайдено первый раз
             $ser_array = $this->test->prepareTest($id_test);
-            //dd($ser_array);
             for ($i=0; $i<$amount; $i++){
                 $id = $question->chooseQuestion($ser_array);
                 if (!$this->test->rybaTest($id)){                                                                       //проверка на вопрос по рыбе
-                    return view('no_access');
+                    $message = 'Тест не предназначен для общего пользования';
+                    return view('no_access', $message);
                 };
                 $data = $question->show($id, $i+1);                                                                     //должны получать название view и необходимые параметры
                 $saved_test[] = $data;

@@ -32,7 +32,7 @@ class Kernel extends HttpKernel {
         'student' => 'App\Http\Middleware\StudentMiddleware',
         'single_test' => 'App\Http\Middleware\SingleTest',
         'fish' => 'App\Http\Middleware\FishMiddleware',
-        'have_attempts' => 'App\Http\Middleware\ControlTestAccess'
+        'have_attempts' => 'App\Http\Middleware\ControlTestAccess',
 	];
 
 }

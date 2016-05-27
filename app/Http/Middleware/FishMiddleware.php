@@ -19,6 +19,9 @@ class FishMiddleware
         if (Auth::user()['role'] == 'Админ' || (Auth::user()['role'] == 'Рыбинец')){
             return $next($request);
         }
-        else return view('no_access');
+        else {
+            $message = 'Страница не доступна пользователю с вашими правами';
+            return view('no_access', compact('message'));
+        }
     }
 }

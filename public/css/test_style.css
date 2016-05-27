@@ -257,6 +257,13 @@ a {
     width: auto;
 }
 
+.non-current-test{
+    background-color: #fad7d4;
+}
+.current-test {
+    background-color: #d4fad6;
+}
+
 /*#check {
     display:inline-block;
 }*/

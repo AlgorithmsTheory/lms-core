@@ -24,11 +24,12 @@ class ControlTestAccess {
         $query_test = Test::whereId_test($id_test)->first();
         if ($query_test->test_type == 'Контрольный'){
             $query = Fine::whereId_test($id_test)->whereId(Auth::user()['id'])->select('fine','access')->first();
-            if (!$query->access && !is_null($query)){                                                                                   // если попытки нет
+            $total = $query_test->total;
+            if (!is_null($query) && !$query->access){                                                                                   // если попытки нет
                 $fine = $query->fine;
                 $factor = $fine_class->countFactor($fine);
                 $max_test_points = $factor * $query_test->total;                                                        //наибольшее число баллов за этот тест при следующей попытке
-                return view('tests.no_attempts', compact('max_test_points'));
+                return view('tests.no_attempts', compact('max_test_points', 'total'));
             }
         }
         return $next($request);

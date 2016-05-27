@@ -89,7 +89,6 @@ class Test extends Eloquent {
 
     /** проверяет права доступа к рыбинским вопросам */
     public function rybaTest($id_question){
-        $question = new Question();
         if (Question::whereId_question($id_question)->select('section_code')->first()->section_code == 10){
             if (Auth::user()['role'] == 'Рыбинец' || Auth::user()['role'] == 'Админ'){
                 return true;
