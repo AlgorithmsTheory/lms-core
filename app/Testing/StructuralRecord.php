@@ -39,7 +39,7 @@ class StructuralRecord extends Eloquent{
         $id_test = TestStructure::whereId_structure($id_structure)->select('id_test')->first()->id_test;
         $sections = Section::select('section_code')->where('section_code', '>', 0)->get();
         $themes = Theme::select('theme_code')->where('theme_code', '>', 0)->get();
-        $types = Type::select('type_code')->get();
+        $types = Type::select('type_code')->where('type_code', '<', 6)->get();
 
         if ($request_section == 'Любой'){
             if ($request_type == 'Любой'){                                                                              // любой раздел, любая тема, любой тип (AAA)

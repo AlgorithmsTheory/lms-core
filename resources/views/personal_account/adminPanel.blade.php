@@ -154,10 +154,17 @@
                 <div class="card-body no-padding">
                     <ul class="list divider-full-bleed">
                         <li class="tile">
-                            <a href="{{ route('in_process')}}" class="tile-content ink-reaction">
-                            <div class="tile-text">
-
-                            </div>
+                            <a href="{{ route('library_calendar')}}" class="tile-content ink-reaction">
+                                <div class="tile-text">
+                                    Задать даты лекций
+                                </div>
+                            </a>
+                        </li>
+                        <li class="tile">
+                            <a href="{{ route('library_order_list')}}" class="tile-content ink-reaction">
+                                <div class="tile-text">
+                                    Бронирование печатных изданий
+                                </div>
                             </a>
                         </li>
                     </ul>
@@ -172,6 +179,13 @@
                     <ul class="list divider-full-bleed">
                         <li class="tile">
                             <a href="{{ route('main_menu')}}" class="tile-content ink-reaction">
+                                <div class="tile-text">
+                                    Управление контрольными материалами
+                                </div>
+                            </a>
+                        </li>
+                        <li class="tile">
+                            <a href="{{ route('alltasksrec')}}" class="tile-content ink-reaction">
                                 <div class="tile-text">
                                     Управление контрольными материалами
                                 </div>

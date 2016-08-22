@@ -18,7 +18,7 @@
                     {{--<div class="card-body test-list">--}}
                     <h2 class="text-center">Личный кабинет</h2>
                         <a href="{{ route('test_results')}}" class="btn btn-warning col-md-offset-3 col-md-6 ">Перейти на страницу результатов системы тестирования</a>
-
+                        <a href="{{ route('student_lib_account')}}" class="btn btn-warning col-md-offset-3 col-md-6 ">Перейти на страницу заказов книг</a>
                         <div class="col-md-12 col-sm-12 style-gray">
                             <h3 class="text-default-bright">Раздел 1</h3>
                         </div>

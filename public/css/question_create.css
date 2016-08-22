@@ -1,68 +1,8 @@
-.fixed-nav {
-    position: fixed;
-    background-color: #F8F8F8;
-    /*border-bottom:3px solid #;*/
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
-    /*border: 5px solid #1b1b1b; border-radius: 20px; box-sizing: border-box;*/
-    width: 100%;
-    z-index: 1000;
-}
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-li {
-    float: left;
-    display: inline-block;
-    text-align: justify;
-}
-.NotAnswered a:link, a:visited {
-    display: block;
-    width: 80px;
-    /*font-weight: bold;*/
-    font-size: 14px;
-    color: #226666;
-    background-color: #F8F8F8;
-    text-align: center;
-    padding: 4px;
-    text-decoration: none;
-    text-transform: uppercase;
-}
-.NotAnswered a:hover, a:active {
-    background-color: darkgrey;
-}
-.Answered a:link, a:visited {
-    display: block;
-    width: 80px;
-    font-size: 14px;
-    /*font-weight: bold;*/
-    color: #FFFFFF;
-    background-color: #0aa89e;
-    text-align: center;
-    padding: 4px;
-    text-decoration: none;
-    text-transform: uppercase;
-}
-.Answered a:hover, a:active {
-    background-color: #05585b;
-}
-.Return a:link, a:visited {
-    display: block;
-    width: 80px;
-    font-size: 14px;
-    /*font-weight: bold;*/
-    color: #FFFFFF;
-    background-color: rgb(239, 151, 23);
-    text-align: center;
-    padding: 4px;
-    text-decoration: none;
-    text-transform: uppercase;
-}
-.Return a:hover, a:active {
-    background-color: #b0af2a;
-}
+/* 
+    Created on : 20.08.2016, 20:16:34
+    Author     : Станислав
+*/
+
 .smart-blue {
     margin-left:auto;
     margin-right:auto;
@@ -181,6 +121,88 @@ a {
     text-decoration: none;
 }
 
-/*#check {
-    display:inline-block;
-}*/
+.wrapped {
+    background-color:orange;
+    margin-top: 200px;
+    border-bottom: 20px;
+}
+
+.modalDialog {
+    position: fixed;
+    font-family: Arial, Helvetica, sans-serif;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 99999;
+    -webkit-transition: opacity 400ms ease-in;
+    -moz-transition: opacity 400ms ease-in;
+    transition: opacity 400ms ease-in;
+    display: none;
+    pointer-events: none;
+}
+
+.modalDialog:target {
+    display: block;
+    pointer-events: auto;
+}
+
+.modalDialog > div {
+    width: 1000px;
+    position: relative;
+    margin: 10% auto;
+    padding: 5px 20px 13px 20px;
+    border-radius: 10px;
+    background: #e5e6e6;
+}
+
+.close {
+    position: absolute;
+    right: -18px;
+    text-align: center;
+    top: -4px;
+    width: 24px;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+    -moz-box-shadow: 1px 1px 3px #000;
+    -webkit-box-shadow: 1px 1px 3px #000;
+    box-shadow: 1px 1px 3px #000;
+}
+
+#preview-btn:link {
+    text-decoration:none;
+    background-color: #0C84E4;
+}
+
+#preview-btn:visited {
+    text-decoration:none;
+    background-color: #0C84E4;
+}
+
+#close-btn {
+    width: 3%;
+    height: 4%;
+}
+#close-btn:link {
+    background-color: #f44336;
+}
+
+#close-btn:visited {
+    background-color: #f44336;
+}
+
+#result-table {
+    width: auto;
+}
+
+.non-current-test{
+    background-color: #fad7d4;
+}
+.current-test {
+    background-color: #d4fad6;
+}
+
+
+

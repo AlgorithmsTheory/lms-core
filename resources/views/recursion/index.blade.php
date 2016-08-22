@@ -63,11 +63,11 @@
 
                                                 <form class="form" role="form">
                                                     <div class="form-group floating-label">
-                                                        <input style="resize: none" name="func" id="textarea2" class="form-control" rows="3" placeholder=""></input>
+                                                        <input style="resize: none" name="func" id="textarea2" class="form-control" rows="3" placeholder="" ></input>
                                                         <label for="textarea2" style="top:-15px">Условие задачи: </label>
                                                     </div><br>
                                                     <div class="form-group floating-label">
-                                                        <input style="resize: none" id="text" onchange="superScript(this,this); puperScript(this);" name="rec_func"  class="form-control" rows="3" placeholder="" ></input>
+                                                        <input style="resize: none" id="rec_func" onchange="superScript(this,this); puperScript(this);" name="rec_func"  class="form-control" rows="3" placeholder="" ></input>
                                                         <label for="textarea2" style="top:-15px" >Ответ:</label>
                                                     </div>
                                                 </form>
@@ -117,7 +117,6 @@
 
 
 
-
                         </div>
                     </div>
                 </div>
@@ -142,7 +141,7 @@
                                     <li>Введите в поле "Условие задачи" функцию от переменной x.</li>
                                     <li>Для задания функции следует использовать только знаки +* . Например, функция 3x<sup>2</sup>+5x+1 должна быть введена в виде 3*x*x+5*x+1.</li>
                                     <li>В поле "Ответ" введите соответствующую рекурсивную функцию.</li>
-                                    <li>Для добавления нижнего индексов нужно набрать в поле ввода конструкцию вида _число. Пример: для задания R<sub>0</sub> нужно ввести R_0. Также для осуществления этой операции можно воспользоваться соответствующим спецсимволом на вспомогательной панели справа.</li>
+                                    <li>Для добавления нижнего индекса нужно набрать в поле ввода конструкцию вида _число. Пример: для задания R<sub>0</sub> нужно ввести R_0. Также для осуществления этой операции можно воспользоваться соответствующим спецсимволом на вспомогательной панели справа.</li>
                                     <li>Для добавления нижнего и верхнего индекса нужно набрать в поле ввода конструкцию вида _число1^число2. Пример: для задания U<sub>0</sub><sup>0</sup> нужно ввести U_0^0. Также для осуществления этой операции можно воспользоваться соответствующими спецсимволами на вспомогательной панели справа.</li>
                                     <li>Для того, чтобы проврить тождественность введенных функций нажмите "Запуск <i class="md md-fast-forward"></i>".</li>
 
@@ -164,25 +163,25 @@
     {!! HTML::script('js/recursion/mainScript.js') !!}
     {!! HTML::script('js/recursion/duperscript.js') !!}
     {!! HTML::script('js/recursion/button_onclick.js') !!}
-<!--    {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}-->
-<!--    {!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}-->
-<!--    {!! HTML::script('js/libs/jquery-ui/jquery-ui.min.js') !!}-->
-<!--    {!! HTML::script('js/libs/bootstrap/bootstrap.min.js') !!}-->
-<!--    {!! HTML::script('js/libs/spin.js/spin.min.js') !!}-->
-<!--    {!! HTML::script('js/libs/jquery-validation/dist/jquery.validate.min.js') !!}-->
-<!--    {!! HTML::script('js/libs/jquery-validation/dist/additional-methods.min.js') !!}-->
-<!--    {!! HTML::script('js/libs/autosize/jquery.autosize.min.js') !!}-->
-<!--    {!! HTML::script('js/libs/nestable/jquery.nestable.js') !!}-->
-<!--    {!! HTML::script('js/libs/nanoscroller/jquery.nanoscroller.min.js') !!}-->
-<!--    {!! HTML::script('js/core/source/App.js') !!}-->
-<!--    {!! HTML::script('js/core/source/AppNavigation.js') !!}-->
-<!--    {!! HTML::script('js/core/source/AppOffcanvas.js') !!}-->
-<!--    {!! HTML::script('js/core/source/AppCard.js') !!}-->
-<!--    {!! HTML::script('js/core/source/AppForm.js') !!}-->
-<!--    {!! HTML::script('js/core/source/AppNavSearch.js') !!}-->
-<!--    {!! HTML::script('js/core/source/AppVendor.js') !!}-->
-<!--    {!! HTML::script('js/core/demo/Demo.js') !!}-->
-<!--    {!! HTML::script('js/core/demo/DemoUILists.js') !!}-->
+    {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
+    {!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
+    {!! HTML::script('js/libs/jquery-ui/jquery-ui.min.js') !!}
+    {!! HTML::script('js/libs/bootstrap/bootstrap.min.js') !!}
+    {!! HTML::script('js/libs/spin.js/spin.min.js') !!}
+    {!! HTML::script('js/libs/jquery-validation/dist/jquery.validate.min.js') !!}
+    {!! HTML::script('js/libs/jquery-validation/dist/additional-methods.min.js') !!}
+    {!! HTML::script('js/libs/autosize/jquery.autosize.min.js') !!}
+    {!! HTML::script('js/libs/nestable/jquery.nestable.js') !!}
+    {!! HTML::script('js/libs/nanoscroller/jquery.nanoscroller.min.js') !!}
+    {!! HTML::script('js/core/source/App.js') !!}
+    {!! HTML::script('js/core/source/AppNavigation.js') !!}
+    {!! HTML::script('js/core/source/AppOffcanvas.js') !!}
+    {!! HTML::script('js/core/source/AppCard.js') !!}
+    {!! HTML::script('js/core/source/AppForm.js') !!}
+    {!! HTML::script('js/core/source/AppNavSearch.js') !!}
+    {!! HTML::script('js/core/source/AppVendor.js') !!}
+    {!! HTML::script('js/core/demo/Demo.js') !!}
+    {!! HTML::script('js/core/demo/DemoUILists.js') !!}
  <!--  {!! HTML::script('js/libs/utils/send.js') !!}-->
     {!! HTML::script('js/core/demo/DemoUIMessages.js') !!}
     {!! HTML::script('js/libs/toastr/toastr.js') !!}

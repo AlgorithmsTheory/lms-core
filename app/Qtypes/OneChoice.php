@@ -17,8 +17,7 @@ class OneChoice extends QuestionType {
     function __construct($id_question){
         parent::__construct($id_question);
     }
-    public function  create(){
-    }
+
     public  function add(Request $request){
         $options = $this->getOptions($request);
         $parse_text = preg_split('/\[\[|\]\]/', $request->input('title'));                                              //части текста вопроса без [[ ]]

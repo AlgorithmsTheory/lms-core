@@ -29,6 +29,6 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  */
 
 class Lecture extends Eloquent{
-    protected $lectures = 'lectures';
+    protected $table = 'lectures';
     public $timestamps = false;
 } 

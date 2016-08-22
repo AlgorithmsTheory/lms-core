@@ -15,8 +15,7 @@ class Theorem extends QuestionType {
     function __construct($id_question){
         parent::__construct($id_question);
     }
-    public function  create(){
-    }
+
     public function add(Request $request){
         $options = $this->getOptions($request);
         Question::insert(array('title' => $request->input('title'), 'variants' => '',
@@ -56,13 +55,25 @@ class Theorem extends QuestionType {
         $html .= '  Напишите или продолжите формулировку и приведите доказательство теоремы</td></tr>';
         $html .= '<tr><td>'.$this->text.'</td></tr></table>';
 
-        $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                          //чертим шапку
-                    <tr><td height="80px"></td></tr>
-                  </table>';
-        $html .= '<p>Доказательство:</p>';
-        $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                          //чертим шапку
-                    <tr><td height="250px"></td></tr>
-                  </table><br>';
-        $fpdf->WriteHTML($html);
+        if ($answered){                                                                                                 // с ответами
+            $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для формулировки
+                            <tr><td height="80px">'.$this->variants.'</td></tr>
+                      </table>';
+            $html .= '<p>Доказательство:</p>';
+            $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для доказательства
+                        <tr><td height="250px">'.$this->answer.'</td></tr>
+                      </table><br>';
+            $fpdf->WriteHTML($html);
+        }
+        else{
+            $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для формулировки
+                            <tr><td height="80px"></td></tr>
+                      </table>';
+            $html .= '<p>Доказательство:</p>';
+            $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для доказательства
+                        <tr><td height="250px"></td></tr>
+                      </table><br>';
+            $fpdf->WriteHTML($html);
+        }
     }
 } 

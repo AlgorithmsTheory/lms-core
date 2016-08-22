@@ -72,11 +72,11 @@ function get_results(str, max_x) {
     return cache;
 }
 
-function run_test(basic_function, rf) {
+function run_test_otl1(basic_function, rf) {
 
-    $('input[id=disabled6]').val("Неверно");
-    $('input[id=disabled5]').val("Неверно");
-    $('input[id=disabled4]').val("Неверно");
+    $('input[id=dis6]').val("Неверно");
+    $('input[id=dis5]').val("Неверно");
+    $('input[id=dis4]').val("Неверно");
    // var rf = $('input[name=rec_func]').val();
     var rf = $('input[name=rec_func]').attr('data-reversed');
     var basic_function = $('input[name=func]').val();
@@ -132,23 +132,23 @@ function run_test(basic_function, rf) {
     //srch(str);
     //alert('atata');
     if(diff.length>0 ) {
-        $('input[id=disabled6]').val("Вычислимость: ошибка");
+        $('input[id=dis6]').val("Вычислимость: ошибка");
 
     }
-    else { $('input[id=disabled6]').val("Вычислимость: верно");}
+    else { $('input[id=dis6]').val("Вычислимость: верно");}
 
     if(syntax(rf)==false) {
-        $('input[id=disabled5]').val("Синтаксис: ошибка");
+        $('input[id=dis5]').val("Синтаксис: ошибка");
     }
     else {
-        $('input[id=disabled5]').val("Синтаксис: верно");
+        $('input[id=dis5]').val("Синтаксис: верно");
     }
 
     if(srch(rf)==false) {
-        $('input[id=disabled4]').val("Индексы: ошибка");
+        $('input[id=dis4]').val("Индексы: ошибка");
     }
     else {
-        $('input[id=disabled4]').val("Индексы: верно");
+        $('input[id=dis4]').val("Индексы: верно");
     }
 }
 

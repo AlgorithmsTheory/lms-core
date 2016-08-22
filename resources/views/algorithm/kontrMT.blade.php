@@ -3,6 +3,7 @@
 		<title>Эмулятор машины Тьюринга</title>
 
 		<!-- BEGIN META -->
+        <meta name="csrf_token" content="{{ csrf_token() }}" />
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="keywords" content="your,keywords">
@@ -75,11 +76,11 @@
 															<li id="p_scnt" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text"  onchange="superScript(this);" id="st_1"  class="form-control" name="start" value="∂.S₀">
+																		<textarea type="text"  onchange="superScript(this);" id="st_1"  class="form-control" name="start" rows="1">∂.S₀</textarea>
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" onchange="superScript(this);" id="end_1"  class="form-control" name="end" value="∂.S₀.R">
+																		<textarea type="end_1" onchange="superScript(this);" id="text"  class="form-control" name="end" rows="1">∂.S₀.R</textarea>
 																	</div>
 																</div> 
 																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
@@ -90,11 +91,11 @@
 															<li id="p_scnt_2" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text" id="st_2" class="form-control" name="start">
+																		<textarea type="text" id="st_2" class="form-control" name="start" rows="1"></textarea>
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="end_2" class="form-control" name="end">
+																		<textarea type="text" id="end_2" class="form-control" name="end" rows="1"></textarea>
 																	</div>
 																</div> 
 																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
@@ -107,11 +108,11 @@
 															<li id="p_scnt_3" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text" id="st_3" class="form-control" name="start">
+																		<textarea type="text" id="st_3" class="form-control" name="start" rows="1"></textarea>
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="end_3" class="form-control" name="end">
+																		<textarea type="text" id="end_3" class="form-control" name="end" rows="1"></textarea>
 																	</div>
 																</div> 
 																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
@@ -124,11 +125,11 @@
 															<li id="p_scnt_4" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text" id="st_4" class="form-control" name="start">
+																		<textarea type="text" id="st_4" class="form-control" name="start" rows="1"></textarea>
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="end_4" class="form-control" name="end">
+																		<textarea type="text" id="end_4" class="form-control" name="end" rows="1"></textarea>
 																	</div>
 																</div> 
 																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
@@ -141,11 +142,11 @@
 															<li id="p_scnt_5" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text" id="st_5" class="form-control" name="start">
+																		<textarea type="text" id="st_5" class="form-control" name="start" rows="1"></textarea>
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="end_5" class="form-control" name="end">
+																		<textarea type="text" id="end_5" class="form-control" name="end" rows="1"></textarea>
 																	</div>
 																</div> 
 																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
@@ -158,11 +159,11 @@
 															<li id="p_scnt_6" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text" id="st_6" class="form-control" name="start">
+																		<textarea type="text" id="st_6" class="form-control" name="start" rows="1"></textarea>
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="end_6" class="form-control" name="end">
+																		<textarea type="text" id="end_6" class="form-control" name="end" rows="1"></textarea>
 																	</div>
 																</div> 
 																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
@@ -175,11 +176,11 @@
 															<li id="p_scnt_7" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text" id="st_7" class="form-control" name="start">
+																		<textarea type="text" id="st_7" class="form-control" name="start" rows="1"></textarea>
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="end_7" class="form-control" name="end">
+																		<textarea type="text" id="end_7" class="form-control" name="end" rows="1"></textarea>
 																	</div>
 																</div> 
 																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
@@ -192,11 +193,11 @@
 															<li id="p_scnt_8" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text"  id="st_8" class="form-control" name="start">
+																		<textarea type="text"  id="st_8" class="form-control" name="start" rows="1"></textarea>
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="end_8" class="form-control" name="end">
+																		<textarea type="text" id="end_8" class="form-control" name="end" rows="1"></textarea>
 																	</div>
 																</div> 
 																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
@@ -294,8 +295,8 @@
 																		
 										<form class="form" role="form">
 											<div class="form-group floating-label">
-                                                <textarea id="result1" disabled>Ваш балл: </textarea>
-<!--												<h2 id="result1" style="top:-5px; left: 40px">Ваш балл:</h2>-->
+												<textarea type="text" class="form-control" id="result1" disabled>Ваш балл:</textarea>
+												<!-- <label for="result1" style="top:-5px; left: 40px">Ваш балл:</label> -->
 											</div>
 											
 									</form>
@@ -309,13 +310,13 @@
 									<div class="card-head card-head-xs">
 									<header>Отладка:</header>
 									<div class="tools">
-											<a class="btn btn-icon-toggle" data-container="body" data-toggle="popover" data-placement="top" data-content="В режиме предотладки вы можете один раз проверить свой алгоритм на произвольном входном слове, которое можно ввести в соответствующее поле ниже между символами ∂ и λ" data-original-title="" title="" aria-describedby="popover665976"><i class="md md-help"></i></a>
+											<a class="btn btn-icon-toggle" data-container="body" data-toggle="popover" data-placement="top" data-content="В режиме отладки вы можете один раз проверить свой алгоритм на произвольном входном слове, которое можно ввести в соответствующее поле ниже между символами ∂ и λ" data-original-title="" title="" aria-describedby="popover665976"><i class="md md-help"></i></a>
 										</div>
 									</div>
 										<div class="card-body">
 											<form class="form" role="form">
 												<div class="form-group floating-label">
-													<textarea name="textarea_src" id="textarea2" class="form-control" rows="1" placeholder="" value="∂λ"></textarea>
+													<textarea name="textarea_src" id="textarea2" class="form-control" rows="1" placeholder="" >∂λ</textarea>
 													<label for="textarea2" style="top:-15px">Входное слово:</label>
 
 												</div>
@@ -420,134 +421,134 @@
 													<div class="card-body height-6 scroll style-default-bright" style="height: 570px;">
 
 														<ul id="b_scents" class="list" data-sortable="true">
-															<li id="b_scnt" class="tile">
+															<li id="p_scnt" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text"  onchange="superScript(this);" id="bst_1"  class="form-control" name="start" value="∂.S₀">
+																		<textarea type="text"  onchange="superScript(this);" id="bst_1"  class="form-control" name="start" rows="1">∂.S₀</textarea>
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" onchange="superScript(this);" id="bend_1"  class="form-control" name="end" value="∂.S₀.R">
+																		<textarea type="bend_1" onchange="superScript(this);" id="text"  class="form-control" name="end" rows="1">∂.S₀.R</textarea>
 																	</div>
 																</div> 
-																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt_2">
+																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
 																	<i class="fa fa-trash"></i>
 
 																</a>
 															</li>
-															<li id="b_scnt_2" class="tile">
+															<li id="p_scnt_2" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text" id="bst_2" class="form-control" name="start">
+																		<textarea type="text" id="bst_2" class="form-control" name="start" rows="1"></textarea>
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="bend_2" class="form-control" name="end">
+																		<textarea type="text" id="bend_2" class="form-control" name="end" rows="1"></textarea>
 																	</div>
 																</div> 
-																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt_2">
-																	<i class="fa fa-trash"></i>
-
-																</a>
-															</li>
-
-
-															<li id="b_scnt_3" class="tile">
-																<div class="input-group">
-																	<div class="input-group-content">
-																		<input type="text" id="bst_3" class="form-control" name="start">
-																	</div>
-																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
-																	<div class="input-group-content">
-																		<input type="text" id="bend_3" class="form-control" name="end">
-																	</div>
-																</div> 
-																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt_2">
+																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
 																	<i class="fa fa-trash"></i>
 
 																</a>
 															</li>
 
 
-															<li id="b_scnt_4" class="tile">
+															<li id="p_scnt_3" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text" id="bst_4" class="form-control" name="start">
+																		<textarea type="text" id="bst_3" class="form-control" name="start" rows="1"></textarea>
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="bend_4" class="form-control" name="end">
+																		<textarea type="text" id="bend_3" class="form-control" name="end" rows="1"></textarea>
 																	</div>
 																</div> 
-																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt_2">
+																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
 																	<i class="fa fa-trash"></i>
 
 																</a>
 															</li>
 
 
-															<li id="b_scnt_5" class="tile">
+															<li id="p_scnt_4" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text" id="bst_5" class="form-control" name="start">
+																		<textarea type="text" id="bst_4" class="form-control" name="start" rows="1"></textarea>
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="bend_5" class="form-control" name="end">
+																		<textarea type="text" id="bend_4" class="form-control" name="end" rows="1"></textarea>
 																	</div>
 																</div> 
-																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt_2">
+																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
 																	<i class="fa fa-trash"></i>
 
 																</a>
 															</li>
 
 
-															<li id="b_scnt_6" class="tile">
+															<li id="p_scnt_5" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text" id="bst_6" class="form-control" name="start">
+																		<textarea type="text" id="bst_5" class="form-control" name="start" rows="1"></textarea>
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="bend_6" class="form-control" name="end">
+																		<textarea type="text" id="bend_5" class="form-control" name="end" rows="1"></textarea>
 																	</div>
 																</div> 
-																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt_2">
+																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
 																	<i class="fa fa-trash"></i>
 
 																</a>
 															</li>
 
 
-															<li id="b_scnt_7" class="tile">
+															<li id="p_scnt_6" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text" id="bst_7" class="form-control" name="start">
+																		<textarea type="text" id="bst_6" class="form-control" name="start" rows="1"></textarea>
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="bend_7" class="form-control" name="end">
+																		<textarea type="text" id="bend_6" class="form-control" name="end" rows="1"></textarea>
 																	</div>
 																</div> 
-																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt_2">
+																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
 																	<i class="fa fa-trash"></i>
 
 																</a>
 															</li>
 
 
-															<li id="b_scnt_8" class="tile">
+															<li id="p_scnt_7" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text"  id="bst_8" class="form-control" name="start">
+																		<textarea type="text" id="bst_7" class="form-control" name="start" rows="1"></textarea>
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="bend_8" class="form-control" name="end">
+																		<textarea type="text" id="bend_7" class="form-control" name="end" rows="1"></textarea>
 																	</div>
 																</div> 
-																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt_2">
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+
+
+															<li id="p_scnt_8" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<textarea type="text"  id="bst_8" class="form-control" name="start" rows="1"></textarea>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<textarea type="text" id="bend_8" class="form-control" name="end" rows="1"></textarea>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
 																	<i class="fa fa-trash"></i>
 
 																</a>
@@ -569,7 +570,7 @@
 											</div>
 											<div class="col-md-3">
 												<div class="card-body text-center height-3" style="top: -90px;">
-													<button type="button" class="btn ink-reaction btn-raised btn-default-light" style="right:30px" href="#" id="reset_2	">Очистить</button>
+													<button type="button" class="btn ink-reaction btn-raised btn-default-light" style="right:30px" href="#" id="reset_2">Очистить</button>
 													<br/>
 												</div><!--end .card-body -->
 											</div>
@@ -639,8 +640,8 @@
 																		
 										<form class="form" role="form">
 											<div class="form-group floating-label">
-												<input type="text" class="form-control" id="result2" disabled>
-												<label for="result2" style="top:-5px; left: 40px">Ваш балл:</label>
+												<textarea type="text" class="form-control" id="result2" disabled>Ваш балл:</textarea>
+												<!-- <label for="result2" style="top:-5px; left: 40px"></label> -->
 											</div>
 											
 									</form>
@@ -661,19 +662,19 @@
 										<div class="card-body">
 											<form class="form" role="form">
 												<div class="form-group floating-label">
-													<textarea name="textarea_src" id="textarea2" class="form-control" rows="1" placeholder="" value="∂λ"></textarea>
+													<textarea name="textarea_src" id="textarea2" class="form-control" rows="1" placeholder="" >∂λ</textarea>
 													<label for="textarea2" style="top:-15px">Входное слово:</label>
 
 												</div>
 
 											</form>
-											<button type="button" id="onerun2" class="btn ink-reaction btn-primary" style="left: 40px" onClick="run_all_turing(false)">Запуск</button>
+											<button type="button" id="onerun2" class="btn ink-reaction btn-primary" style="left: 40px" onClick="run_all_turing_2(false)">Запуск</button>
 										<!--end .card-body -->
 																					
 											<form class="form" role="form">
 												<div class="form-group floating-label">
-													<input type="text" class="form-control" id="disabled6" disabled>
-													<label for="disabled6" style="top: -1px; left: 40px" >Результат: </label>
+													<input type="text" class="form-control" id="onesend_2" disabled>
+													<label for="onesend_2" style="top: -1px; left: 40px" >Результат: </label>
 												</div>
 												
 											</form>
@@ -774,62 +775,9 @@
 					</div></div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 616px; transform: translate(0px, 0px);"></div></div></div>
 					
 				</div>
-</div>
-
-<!--            <table>-->
-<!--                <tr>-->
-<!--                    <td id="hidden_input6"></td>-->
-<!--                    <td id="hidden_output6"></td>-->
-<!--                    <td id="hidden_field6"></td>-->
-<!--                </tr>-->
-<!--                <tr>-->
-<!--                    <td id="hidden_input7"></td>-->
-<!--                    <td id="hidden_output7"></td>-->
-<!--                    <td id="hidden_field7"></td>-->
-<!--                </tr >-->
-<!--                <tr>-->
-<!--                    <td id="hidden_input8"></td>-->
-<!--                    <td id="hidden_output8"></td>-->
-<!--                    <td id="hidden_field8"></td>-->
-<!--                </tr>-->
-<!--                <tr>-->
-<!--                    <td id="hidden_input9"></td>-->
-<!--                    <td id="hidden_output9"></td>-->
-<!--                    <td id="hidden_field9"></td>-->
-<!--                </tr >-->
-<!--                <tr>-->
-<!--                    <td id="hidden_input10"></td>-->
-<!--                    <td id="hidden_output10" ></td>-->
-<!--                    <td id="hidden_field10"></td>-->
-<!--                </tr>-->
-<!--            </table>-->
+</div>		
 				</section>
 
-{{--<script>--}}
-{{--function disableFunction1() {--}}
-{{--document.getElementById("send_one").onclick = function () {--}}
-    {{--//disable--}}
-	{{--alert('click');--}}
-
-    {{--this.disabled = true;--}}
-
-    {{--//do some validation stuff--}}
-{{--}--}}
-{{--}--}}
-
-{{--setTimeout(disableFunction1, 20);--}}
-{{--function disableFunction2() {--}}
-{{--document.getElementById("send_two").onclick = function () {--}}
-    {{--//disable--}}
-
-    {{--this.disabled = true;--}}
-
-    {{--//do some validation stuff--}}
-{{--}--}}
-{{--}--}}
-
-{{--setTimeout(disableFunction2, 20);--}}
-{{--</script>--}}
 
 
 			<!--end #content-->
@@ -839,6 +787,8 @@
 		<!-- END BASE -->
 @section('js-down')
 		<!-- BEGIN JAVASCRIPT -->
+		
+
 		{!! HTML::script('js/algorithms/symols2.js') !!}
 		{!! HTML::script('js/algorithms/jquery-1.4.3.min.js') !!}
 		{!! HTML::script('js/algorithms/jquery-1.10.2.js') !!}
@@ -865,9 +815,11 @@
 		{!! HTML::script('js/core/demo/Demo.js') !!}
 		{!! HTML::script('js/core/demo/DemoUILists.js') !!}
 {{--		{!! HTML::script('js/algorithms/send.js') !!}--}}
-		{!! HTML::script('js/algorithms/Kontrsend.js') !!}
+		{!! HTML::script('js/algorithms/KontrSend.js') !!}
 		{!! HTML::script('js/core/demo/DemoUIMessages.js') !!}
 		{!! HTML::script('js/libs/toastr/toastr.js') !!}
+		{!! HTML::script('js/algorithms/onesend.js') !!}
+		{!! HTML::script('js/algorithms/twosend.js') !!}
 		<!-- END JAVASCRIPT -->
 @stop
 

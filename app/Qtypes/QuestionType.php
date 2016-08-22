@@ -15,15 +15,15 @@ use Illuminate\Http\Request;
 abstract class QuestionType {
     const PUBLIC_DIR = 'public/';
     public $question;
-    public  $id_question;
-    public  $text;
-    public  $variants;
-    public  $answer;
-    public  $points;
-    public  $control;
-    public  $theme_code;
-    public  $section_code;
-    public  $type_code;
+    public $id_question;
+    public $text;
+    public $variants;
+    public $answer;
+    public $points;
+    public $control;
+    public $theme_code;
+    public $section_code;
+    public $type_code;
     function __construct($id_question){
         if ($id_question != Question::max('id_question')+1){                                                            //проверка не является ли вопрос новым
             $this->question = new Question();
@@ -54,7 +54,7 @@ abstract class QuestionType {
         //return preg_replace("/#img1#/", "{!! HTML::image('img/symbols/all.png') !!}", $string);
         return $string;
     }*/
-    abstract function create();
+
     abstract function add(Request $request);
     abstract function show($count);
     abstract function check($array);

@@ -41,12 +41,11 @@ use Illuminate\Http\Request;
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  count()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  toSql()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  paginate($value)
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  links()
  *
  */
 class Question extends Eloquent {
     protected $table = 'questions';
-    public $timestamps = false;
-
 
     /** Определяет одиночный вопрос (true) или может использоваться только в группе с такими же (false) */
     public static function getSingle($id){

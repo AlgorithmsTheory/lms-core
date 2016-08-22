@@ -49,8 +49,9 @@ $('#type_question_add').on('click','.del-var-3',function(){
 /** по номеру блока удаляет необходимый блок и сдвигает все индексы у нижестоящих блоков */
 function removeBlock(blockNum){
     var j;
-    $('#card-body-'+blockNum).remove();                                                                             //удаляем этот блок
-    for (j=blockNum+1; j<word_number; j++){                                                                         //передвигаем индексы всех нижестоящих элементов на -1
+    $('#card-body-'+blockNum).remove();                                                                  //удаляем этот блок
+    j = blockNum + 1;
+    for (j; j<word_number; j++){                                                                         //передвигаем индексы всех нижестоящих элементов на -1
         $('#card-body-'+j).attr('id', 'card-body-'+(j-1));
         $('#column-'+j+' textarea').attr('name', 'variants-'+(j-1)+'[]');
         $('#column-'+j).attr('id', 'column-'+(j-1));
@@ -181,7 +182,7 @@ $('#type_question_add').on('click','.text-part', function(){
         var pattern = /text-part-/;
         if ($(this).hasClass('inside') == false){                                                                   //если слово не находится в области
             if ($(this).css('background-color') == 'rgb(144, 238, 144)'){                                           //слово уже выделено (выделено светло-зеленым)
-                $(this).css({'background-color':''});
+                $(this).attr('style', 'cursor:pointer');
                 for (i=1; i<word_number; i++){
                     if ($('#card-body-'+i+' textarea').eq(1).text() == $(this).text()){                             //ищем нужный блок
                         removeBlock(i);
@@ -194,7 +195,6 @@ $('#type_question_add').on('click','.text-part', function(){
                 var idSpan = ($(this).attr('id'));
                 var tempStr = idSpan[0];
                 for (p=1; p<idSpan.length; p++){
-                    //alert(tempStr);
                     if (pattern.test(tempStr) == true){                                                             //присваиваем блоку класс span-x, где x - номер spanа в тексте
                         index  = p;
                         break;
@@ -206,10 +206,11 @@ $('#type_question_add').on('click','.text-part', function(){
             }
         }
         else{                                                                                                       //если слово принадлежит какой-либо области
-            $(this).parent().css({'background-color':''});                                                          //убираем его цвет
-            $(this).parent().children().css({'background-color':''});                                               //убираем цвет всех элементов области
+            $(this).parent().attr('style', 'cursor:pointer');                                                       //убираем его цвет
+            $(this).parent().children().attr('style', 'cursor:pointer');                                            //убираем цвет всех элементов области
             var parentId = $(this).parent().attr('id');                                                             //id спана области, куда тыкнули
-            removeBlock($('.span-'+parentId.substring(10)).attr('id').substring(10));                               //удаляем блок
+            var removableBlock = $('.span-'+parentId.substring(10)).attr('id').substring(10);
+            removeBlock(parseInt(removableBlock, 10));                                                              //удаляем блок
             $('#'+parentId+' .text-part').removeClass('inside');                                                    //убираем классы принадлжености области
             $('#'+parentId+' .text-part').addClass('temp');                                                         //создаем фиктивный временный класс
             $('.temp').unwrap();                                                                                    //удаляем спан, охватывающий область
@@ -326,14 +327,15 @@ $('#type_question_add').on('click', '#union', function(){
             $('#edit').removeAttr('disabled');                                                                      //включаем кнопку "Венуться к редактированию"
             $(this).text('Перейти в режим объединения слов');                                                       //меняем текст кнопки
             $('#cancel-selection').attr('style', 'display: none');                                                  //скрываем кнопку сброса выделения
-            var j,k;
+            var j,k, removableBlock;
             for (j=1; j<=spanLast; j++){                                                                            //идем по всем спанам тексте
                 if ($('#text-part-'+j).css('color') == 'rgb(204, 0, 0)'){                                           //красный цвет слов (слова, которые были выделены в блоки)
                     $('#text-part-'+j).css({'color':'', 'background-color':'lightgreen'});                          //убираем цвет букв
                     if ($('#text-part-'+j).hasClass('wrapped') == true){                                            //если слово оказалось внутри выделенной области
                         for (k=1; k<word_number; k++){
                             if ($('.card-body').hasClass('span-'+j)){                                                //нужно найти блок, у которого в нлассе span-x с нужным номером слова (i), взять id, а точнее номер card-body-y, и функцией удалить блок
-                                removeBlock($('.span-'+j).attr('id').substring(10));
+                                removableBlock = $('.span-'+j).attr('id').substring(10);
+                                removeBlock(parseInt(removableBlock, 10));
                             }
                         }
                     }

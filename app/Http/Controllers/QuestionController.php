@@ -138,11 +138,13 @@ class QuestionController extends Controller{
         }
     }
 
+    /** Список всех доступных вопросов */
     public function editList(){
         $questions = Question::where('section_code', '>', 0)
-                                ->where('section_code', '<', 2)
+                                ->where('section_code', '<', 10)
                                 ->where('theme_code', '>', 0)
-                                ->where('theme_code', '<', 2)->paginate(10);
+                                ->where('theme_code', '<', 23);
+        $questions = $questions->paginate(10);
         $widgets = [];
         foreach ($questions as $question){
             $data = $this->question->show($question['id_question'], '');
@@ -162,7 +164,61 @@ class QuestionController extends Controller{
         return $response;
     }
 
+    /** Поиск вопроса по тексту, разделу, теме, типу */ 
     public function find(Request $request){
+        $questions = new Question();
+        $questions = $questions->where('section_code', '>', 0)
+                        ->where('section_code', '<', 10)
+                        ->where('theme_code', '>', 0)
+                        ->where('theme_code', '<', 23);
+        if ($request->input('section') != 'Все'){
+            $section_code = Section::whereSection_name($request->input('section'))->select('section_code')->first()->section_code;
+            $questions = $questions->whereSection_code($section_code);
+            if ($request->input('theme') != '$nbsp'){
+                $theme_code = Theme::whereTheme_name($request->input('theme'))->select('theme_code')->first()->theme_code;
+                $questions = $questions->whereTheme_code($theme_code);
+            }
+        }
+        if ($request->input('type') != 'Все'){
+            $type_code = Type::whereType_name($request->input('type'))->select('type_code')->first()->type_code;
+            $questions = $questions->whereType_code($type_code);
+        }
+        if ($request->input('title') != ""){
+            $questions = $questions->whereRaw('(`title` LIKE "%'.$request->input("title").'%" 
+                                              or `variants` LIKE "%'.$request->input("title").'%"
+                                              or `answer` LIKE "%'.$request->input("title").'%")');
+        }
+        $questions = $questions->paginate(10);
+        
+        $widgets = [];
+        foreach ($questions as $question){
+            $data = $this->question->show($question['id_question'], '');
+            $widgets[] =  View::make($data['view'], $data['arguments']);
+            $question['section'] = Section::whereSection_code($question['section_code'])->select('section_name')
+                                    ->first()->section_name;
+            $question['theme'] = Theme::whereTheme_code($question['theme_code'])->select('theme_name')
+                                    ->first()->theme_name;
+            $question['type'] = Type::whereType_code($question['type_code'])->select('type_name')
+                                    ->first()->type_name;
+        }
+        $sections = Section::where('section_code', '>', 0)->select('section_name')->get();
+        $themes = Theme::where('theme_code', '>', 0)->select('theme_name')->get();
+        $types = Type::where('type_code', '>', 0)->select('type_name')->get();
+        $widgetListView = View::make('questions.teacher.question_list', compact('questions', 'sections', 'themes', 'types'))->with('widgets', $widgets);
+        $response = new Response($widgetListView);
+        return $response;
+    }
+    
+    /** Фомирование страницы редактирования */
+    public function edit($id_question){
+        
+    }
 
+    /** Удаление вопроса */
+    public function delete(Request $request){
+        if ($request->ajax()){
+            Question::whereId_question($request->input('id_question'))->delete();
+            return;
+        }
     }
 }

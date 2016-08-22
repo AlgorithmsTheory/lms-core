@@ -17,8 +17,6 @@ class YesNo extends QuestionType{
     function __construct($id_question){
         parent::__construct($id_question);
     }
-    public function  create(){
-    }
 
     public function add(Request $request){
         $options = $this->getOptions($request);

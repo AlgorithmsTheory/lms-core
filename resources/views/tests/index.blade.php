@@ -28,7 +28,8 @@ full-tests
                                     <div class="dropdown-content">
                                         Перейти к прохождению
                                         <a>Время завершения: {{ $test['end'] }}</a>
-                                        <a>Максимально возможный балл: N из {{ $test['total'] }}</a>
+                                        <a>Максимально возможный балл: {{ $test['max_points'] }} из {{ $test['total'] }}</a>
+                                        <a>Количество вопросов: {{ $test['amount'] }}</a>
                                         <a>Время на прохождение: {{ $test['test_time'] }} минут </a>
                                     </div>
                             </div>
@@ -39,8 +40,9 @@ full-tests
                                             <button class="dropbtn">{{$test['test_name']}}</button>
                                             <div class="dropdown-content">
                                                 Тест будет доступен позднее
-                                                <a>Максимальный балл: N из {{ $test['total'] }}</a>
+                                                <a>Максимальный балл: {{ $test['max_points'] }} из {{ $test['total'] }}</a>
                                                 <a>Время на прохождение: {{ $test['test_time'] }} минут </a>
+                                                <a>Количество вопросов: {{ $test['amount'] }}</a>
                                                 <a>Время завершения: {{ $test['end'] }}</a>
                                             </div>
                                         </div>
@@ -70,6 +72,7 @@ full-tests
                                             Перейти к прохождению
                                             <a>Максимально возможный балл: {{ $test['total'] }}</a>
                                             <a>Время на прохождение: {{ $test['test_time'] }} минут </a>
+                                            <a>Количество вопросов: {{ $test['amount'] }}</a>
                                             <a>Время завершения: {{ $test['end'] }}</a>
                                         </div>
                                     </div>
@@ -82,6 +85,7 @@ full-tests
                                             Тест будет доступен позднее
                                             <a>Максимальный балл: {{ $test['total'] }}</a>
                                             <a>Время на прохождение: {{ $test['test_time'] }} минут </a>
+                                            <a>Количество вопросов: {{ $test['amount'] }}</a>
                                             <a>Время завершения: {{ $test['end'] }}</a>
                                         </div>
                                     </div>

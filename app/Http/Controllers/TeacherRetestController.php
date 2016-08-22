@@ -140,9 +140,4 @@ class TeacherRetestController extends Controller {
         }
         return redirect()->back();
     }
-
-    /** продлевает все просроченные тесты на 4 месяца */
-    public function prolongTest(Request $request){
-
-    }
 } 

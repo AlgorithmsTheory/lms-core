@@ -38,7 +38,6 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 class Test extends Eloquent {
     const GROUP_AMOUNT = 3;                                                                                             // число вопросов в групповых вопросах
     protected $tests = 'tests';
-    public $timestamps = false;
     protected $fillable = ['test_name', 'amount', 'test_time', 'start', 'end', 'structure', 'total'];
 
     /** Проверяет, что установлена опция any в интерфейсе занесения теста */
@@ -73,6 +72,15 @@ class Test extends Eloquent {
             return false;
     }
 
+    /** Проверяет, были ли совершены по данному тесту попытки */
+    public static function hasAttempts($id_test){
+        $attempts = Result::whereId_test($id_test)->get();
+        if (is_null($attempts))
+            return true;
+        else
+            return false;
+    }
+
     /** Если тест прошлый возвращает -1, текущий 0, будущий 1 */
     public static function getTimeZone($id_test){
         $current_date = date("U");
@@ -99,7 +107,7 @@ class Test extends Eloquent {
     }
 
     /** вычисляет оценку по Болонской системе, если дан максимально возможный балл и реальный */
-    public function calcMarkBologna($max, $real){
+    public static function calcMarkBologna($max, $real){
         if ($real < $max * 0.6){
             return 'F';
         }
@@ -121,7 +129,7 @@ class Test extends Eloquent {
     }
 
     /** вычисляет оценку по обычной 5-тибалльной шкале, если дан максимально возможный балл и реальный */
-    public function calcMarkRus($max, $real){
+    public static function calcMarkRus($max, $real){
         if ($real < $max * 0.6){
             return '2';
         }
@@ -222,7 +230,7 @@ class Test extends Eloquent {
     }
 
     /**  метод, проверяющий, является ли тест одним из контрольных. В случаи если является, добавляет его результат в ведомость. */
-    public static function add_to_statements($id_test, $id_user, $score){
+    public static function addToStatements($id_test, $id_user, $score){
         $dictionary = Control_test_dictionary::where('id', 1)->first();
         if($id_test == $dictionary['test1']){
             Controls::where('userID', $id_user)->update(['test1' => $score]);
@@ -236,6 +244,7 @@ class Test extends Eloquent {
         return 0;
     }
 
+    /** Проверяет доступ к контрольному тесту исходя из роли пользователя */
     public static function isControlTestAccess($id_user){
         $role = User::whereId($id_user)->select('role')->first()->role;
         if ($role == '' || $role == 'Обычный'){
@@ -244,5 +253,4 @@ class Test extends Eloquent {
         else
             return true;
     }
-
 } 

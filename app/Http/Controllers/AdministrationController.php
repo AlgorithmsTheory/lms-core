@@ -123,67 +123,74 @@ class AdministrationController extends Controller{
     public function add_student(Request $request){
         $id = json_decode($request->input('id'),true);
         $user = User::find($id);
-        $user->role = 'Студент';
-        $user->save();
+        if($user['role'] != 'Студент') {
+            $user->role = 'Студент';
+            $user->save();
 
-        //Добавляем новую запись в ведомости по лекциям
-        $lectures = new Lectures();
-        $lectures->userID = $id;
-        $lectures->group = $user->group;
-        $lectures->save();
+//Добавляем новую запись в ведомости по лекциям
+            $lectures = new Lectures();
+            $lectures->userID = $id;
+            $lectures->group = $user->group;
+            $lectures->save();
 
-        //Добавляем новую запись в ведомости по лекциям
-        $seminars = new Seminars();
-        $seminars->userID = $id;
-        $seminars->group = $user->group;
-        $seminars->save();
+//Добавляем новую запись в ведомости по лекциям
+            $seminars = new Seminars();
+            $seminars->userID = $id;
+            $seminars->group = $user->group;
+            $seminars->save();
 
-        //Добавляем новую запись в ведомости по лекциям
-        $classwork = new Classwork();
-        $classwork->userID = $id;
-        $classwork->group = $user->group;
-        $classwork->save();
+//Добавляем новую запись в ведомости по лекциям
+            $classwork = new Classwork();
+            $classwork->userID = $id;
+            $classwork->group = $user->group;
+            $classwork->save();
 
-        //Добавляем новую запись в ведомости по контрольным
-        $controls = new Controls();
-        $controls->userID = $id;
-        $controls->group = $user->group;
-        $controls->save();
+//Добавляем новую запись в ведомости по контрольным
+            $controls = new Controls();
+            $controls->userID = $id;
+            $controls->group = $user->group;
+            $controls->save();
 
-        //Добавляем новую запись в итоговые ведомости
-        $total = new Totalresults();
-        $total->userID = $id;
-        $total->group = $user->group;
-        $total->save();
+//Добавляем новую запись в итоговые ведомости
+            $total = new Totalresults();
+            $total->userID = $id;
+            $total->group = $user->group;
+            $total->save();
 
-        //Добавляем новую запись в итоговые ведомости
-        $progress = new Statements_progress();
-        $progress->userID = $id;
-        $progress->group = $user->group;
-        $progress->save();
-
+//Добавляем новую запись в итоговые ведомости
+            $progress = new Statements_progress();
+            $progress->userID = $id;
+            $progress->group = $user->group;
+            $progress->save();
+        }
         return $id;
     }
     public function add_admin(Request $request){
         $id = json_decode($request->input('id'),true);
         $user = User::find($id);
-        $user->role = 'Админ';
-        $user->save();
+        if($user['role'] != 'Админ') {
+            $user->role = 'Админ';
+            $user->save();
+        }
         return $id;
     }
     public function add_average(Request $request){
         $id = json_decode($request->input('id'),true);
         $user = User::find($id);
-        $user->role = 'Обычный';
-        $user->save();
+        if($user['role'] != 'Обычный') {
+            $user->role = 'Обычный';
+            $user->save();
+        }
         return $id;
     }
 
     public function add_tutor(Request $request){
         $id = json_decode($request->input('id'),true);
         $user = User::find($id);
-        $user->role = 'Преподаватель';
-        $user->save();
+        if($user['role'] != 'Преподаватель') {
+            $user->role = 'Преподаватель';
+            $user->save();
+        }
         return $id;
     }
 

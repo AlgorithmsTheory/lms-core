@@ -210,3 +210,8 @@ var now = new Date();
 //alert( now );
 var start_time = now.getMinutes() ;
 setTimeout(get_tasks, 500);
+
+$('#p_scents').on('change', '.tile textarea', function(){
+    $(this).text($(this).val());
+    alert('Поменял!');
+});

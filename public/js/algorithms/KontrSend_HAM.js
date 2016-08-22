@@ -19,8 +19,10 @@ function run_all_normal(i){
     task.rule = new Array();
     task.duration = now.getMinutes() - start_time;
     task.str = $('textarea[name=textarea_src]').val();
-    var src = $('input[name=start]').toArray();
-    var dst = $('input[name=end]').toArray();
+    // var src = $('input[name=start]').toArray();
+    // var dst = $('input[name=end]').toArray();
+    var src = $('textarea[name=start]').toArray();
+    var dst = $('textarea[name=end]').toArray();
     if(i == 0) {
         document.getElementById("send_one").disabled = true;
     }
@@ -53,6 +55,7 @@ function run_all_normal(i){
         success: function(data){
             var resp = data;
             show_result(number, resp);
+
             if ( resp.error != 'ok' ) {
                 alert("Программа зациклилась!");
             }
@@ -63,14 +66,16 @@ function run_all_normal(i){
 
 
 function show_result(task_number, resp){
-    $('input[id=result' + (task_number + 1) + ']').val(resp.result); // записываем ответ
+    $('textarea[id=result' + (task_number + 1) + ']').val(resp.result); // записываем ответ
     for (var i = 1; i <= 5; ++i) {     //выводим последовательности
         field_number = i + task_number * 5;
         $('td[id=output' + field_number + ']').text(resp.conv[i - 1]);
         $('td[id=input' + field_number + ']').text(resp.input[i - 1]);
         $('td[id=field' + field_number + ']').text(resp.ksuha[i - 1]);
     }
+    protocol_HAM();
 }
+
 function get_tasks(){
     var token = $('#forma').children().eq(0).val();
     $.ajax({
@@ -98,6 +103,30 @@ function get_tasks(){
         }
     });
 }
+
+function protocol_HAM(){
+    html_text = $('#HAM-result').html();
+    token = $('#forma').children().eq(0).val();
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url: '/uir/public/get_HAM_protocol',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        data: { html_text: html_text, token: 'token' },
+        success: function(data){
+
+        }
+    });
+    return false;
+
+}
+
 var task_id_map = {};
 var now = new Date();
 //alert( now );

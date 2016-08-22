@@ -42,12 +42,15 @@ class TestController extends Controller{
                 }
                 else {
                     array_push($ctr_tests, $test);
+                    $test['max_points'] = Fine::levelToPercent(Fine::whereId(Auth::user()['id'])->whereId_test($test['id_test'])->select('fine')->first()->fine)/100 * $test['total'];
+
                 }
                 if ($current_date >= strtotime($test->start) && $current_date <= strtotime($test->end))                 //разделение на текущие и недоступные
                     $test['current'] = 1;
                 else
                     $test['current'] = 0;
             }
+            $test['amount'] = Test::getAmount($test['id_test']);
         }
 
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
@@ -62,11 +65,11 @@ class TestController extends Controller{
     public function create(){
         $types = [];
         $sections = [];
-        $query = Type::select('type_name')->get();                                                                      //формируем массив типов
+        $query = Type::where('type_code', '<', 10)->select('type_name')->get();                                                                      //формируем массив типов
         foreach ($query as $type){
             array_push($types,$type->type_name);
         }
-        $query = Section::select('section_name')->get();                                                                //формируем массив разделов
+        $query = Section::where('section_code', '<', 5)->where('section_code', '>', 0)->select('section_name')->get();                                                                //формируем массив разделов
         foreach ($query as $section){
             array_push($sections, $section->section_name);
         }
@@ -85,7 +88,7 @@ class TestController extends Controller{
         $end = $request->input('end-date').' '.$request->input('end-time');
         Test::insert(array('test_name' => $request->input('test-name'), 'test_type' => $test_type,
             'test_time' => $test_time,
-            'start' => $start, 'end' => $end, 'total' => $total));
+            'start' => $start, 'end' => $end, 'total' => $total, 'year' => 2016, 'visibility' => 1));
         $id_test = Test::max('id_test');
         for ($i=0; $i<=$request->input('num-rows'); $i++){
             if ($request->input('section')[$i] != 'Любой')
@@ -106,7 +109,7 @@ class TestController extends Controller{
     /** Список всех тестов для их редактирования и завершения */
     public function editList(){
         $current_date = date("Y-m-d H:i:s");                                                                            //текущая дата в mySlq формате DATETIME
-        $current_ctr_tests = $this->test->whereTest_type('Контрольный')                                                         //формируем текущие тесты
+        $current_ctr_tests = $this->test->whereTest_type('Контрольный')                                                 //формируем текущие тесты
                     ->where('start', '<', $current_date)
                     ->where('end', '>', $current_date)
                     ->select()
@@ -130,7 +133,7 @@ class TestController extends Controller{
             ->get();
         foreach ($past_ctr_tests as $test){
             $test['amount'] = Test::getAmount($test['id_test']);
-            if (Test::isFinished($test->id_test))                                                               //если таких студентов нет, то такой тест завршить нельзя
+            if (Test::isFinished($test->id_test))                                                                       //если таких студентов нет, то такой тест завршить нельзя
                 $test['finish_opportunity'] = 0;
             else                                                                                                        //иначе можно
                 $test['finish_opportunity'] = 1;
@@ -430,7 +433,7 @@ class TestController extends Controller{
             $widgetListView = View::make('tests.ctrresults',compact('total','score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'id_test', 'id_user'))->with('widgets', $widgets);
             $fine = new Fine();
             $fine->updateFine(Auth::user()['id'], $id_test, $mark_rus);                                                 //вносим в таблицу штрафов необходимую инфу
-            Test::add_to_statements($id_test, $id_user, $score);                                        //занесение балла в ведомость
+            Test::addToStatements($id_test, $id_user, $score);                                        //занесение балла в ведомость
         }
         else {                                                                                                          //тест тренировочный
             $widgetListView = View::make('questions.student.training_test',compact('score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'link_to_lecture'))->with('widgets', $widgets);

@@ -9,3 +9,4 @@ composer.lock
 _ide_helper.php
 public/download/pdf_tests/*
 public/archive/*
+/nbproject/private/

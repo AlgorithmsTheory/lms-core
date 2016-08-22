@@ -415,7 +415,7 @@
 		{!! HTML::script('js/core/source/AppVendor.js') !!}
 		{!! HTML::script('js/core/demo/Demo.js') !!}
 		{!! HTML::script('js/core/demo/DemoUILists.js') !!}
-		{!! HTML::script('js/libs/utils/send.js') !!}
+		{!! HTML::script('js/algorithms/send.js') !!}
 		{!! HTML::script('js/core/demo/DemoUIMessages.js') !!}
 		{!! HTML::script('js/libs/toastr/toastr.js') !!}
 		<!-- END JAVASCRIPT -->

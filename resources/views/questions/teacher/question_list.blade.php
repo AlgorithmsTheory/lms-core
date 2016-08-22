@@ -26,7 +26,7 @@
                     <label for="title">Текст вопроса</label>
                 </div>
                 <div class="form-group col-md-6">
-                    <select name="section" id="section" class="form-control" size="1">
+                    <select name="section" id="section" class="form-control" size="1" required>
                         <option value="Все">Все</option>
                         @foreach ($sections as $section)
                         <option value="{{ $section['section_name'] }}">{{ $section['section_name'] }}</option>
@@ -34,14 +34,8 @@
                     </select>
                     <label for="section">Раздел</label>
                 </div>
-                <div class="form-group col-md-6">
-                    <select name="theme" id="theme" class="form-control" size="1">
-                        <option value="Все">Все</option>
-                        @foreach ($themes as $theme)
-                        <option value="{{ $theme['theme_name'] }}">{{ $theme['theme_name'] }}</option>
-                        @endforeach
-                    </select>
-                    <label for="theme">Тема</label>
+                <div class="form-group col-md-6" id="theme-container">
+                    <!-- контейнер для подгрузки темы -->
                 </div>
                 <div class="form-group col-md-6">
                     <select name="type" id="type" class="form-control" size="1">
@@ -69,9 +63,9 @@
                 <div class="tools">
                     <div class="btn-group">
                         <div class="btn-group">
-                            <a href="#" class="btn btn-icon-toggle dropdown-toggle" data-toggle="dropdown"><i class="md md-colorize"></i></a>
+                            <a href="{{URL::route('question_edit', array($question['id_question']))}}" class="btn btn-icon-toggle dropdown-toggle" data-toggle="dropdown"><i class="md md-colorize"></i></a>
                         </div>
-                        <a class="btn btn-icon-toggle btn-collapse"><i class="fa fa-angle-down"></i></a>
+                        <a class="btn btn-icon-toggle btn-collapse"><i class="md md-keyboard-arrow-down"></i></a>
                         <a class="btn btn-icon-toggle btn-close"><i class="md md-close"></i></a>
                     </div>
                 </div>
@@ -86,10 +80,13 @@
         </div><!--end .card -->
     </div>
 @endforeach
-<?php echo $questions->render(); ?>
+{!! $questions->appends(['title' => Input::get('title'), 'section' => Input::get('section'), 
+                         'theme' => Input::get('theme'), 'type' => Input::get('type')])
+              ->render() !!}
 @stop
 
 @section('js-down')
+{!! HTML::script('js/questionList.js') !!}
 {!! HTML::script('js/libs/spin.js/spin.min.js') !!}
 {!! HTML::script('js/libs/autosize/jquery.autosize.min.js') !!}
 {!! HTML::script('js/libs/nanoscroller/jquery.nanoscroller.min.js') !!}

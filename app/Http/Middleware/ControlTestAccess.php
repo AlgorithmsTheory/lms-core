@@ -8,7 +8,6 @@
 
 namespace App\Http\Middleware;
 
-
 use App\Testing\Fine;
 use App\Testing\Test;
 use Auth;
