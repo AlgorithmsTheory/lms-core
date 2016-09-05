@@ -35,6 +35,10 @@ class YesNo extends QuestionType{
         }
     }
 
+    public function edit(){
+
+    }
+
     public function show($count){
         $text_parse = $this->text;
         $text = explode(";" , $text_parse);

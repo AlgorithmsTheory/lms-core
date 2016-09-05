@@ -23,6 +23,12 @@ class Theorem extends QuestionType {
             'control' => $options['control'], 'section_code' => $options['section'],
             'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
+
+    public function edit(){
+
+    }
+
+
     public function show($count){
         $view = 'tests.show6';
         $array = array('view' => $view, 'arguments' => array('text' => $this->text, "variants" => '', "type" => self::type_code, "id" => $this->id_question, "count" => $count));

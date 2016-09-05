@@ -28,6 +28,12 @@ class JustAnswer extends QuestionType {
                 'theme_code' => $options['theme'], 'type_code' => $options['type']));
         }
     }
+
+    public function edit(){
+
+    }
+
+
     public function show($count){
         $view = 'tests.show8';
         $array = array('view' => $view, 'arguments' => array('text' => $this->text, "variants" => '', "type" => self::type_code, "id" => $this->id_question, "count" => $count));

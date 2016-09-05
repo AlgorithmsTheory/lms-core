@@ -47,6 +47,10 @@ class AccordanceTable extends QuestionType {
             'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
 
+    public function edit(){
+
+    }
+
     public function show($count){
         $text_parse = $this->text;
         $parse = $this->variants;

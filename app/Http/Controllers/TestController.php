@@ -20,7 +20,6 @@ use Auth;
 use Illuminate\Http\Request;
 use App\Testing\Question;
 use Illuminate\Http\Response;
-use Session;
 use View;
 
 class TestController extends Controller{
@@ -172,6 +171,7 @@ class TestController extends Controller{
         $sections = Section::where('section_code', '>', '0')->get();
         $types = Type::where('type_code', '>', '0')->get();
         $test['time_zone'] = Test::getTimeZone($id_test);
+        $test['is_resolved'] = Test::isResolved($id_test);
 
         $number_of_sections = Section::where('section_code', '>', '0')->count();                                        //число разделов
         $number_of_types = Type::where('type_code', '>', '0')->count();                                                 //число типов
@@ -303,6 +303,7 @@ class TestController extends Controller{
 
     /** Главный метод: гененрирует полотно вопросов на странице тестов */
     public function showViews($id_test){
+        date_default_timezone_set('Europe/Moscow');
         $result = new Result();
         $user = new User();
         $question = new Question();
@@ -322,7 +323,7 @@ class TestController extends Controller{
         $amount = $this->test->getAmount($id_test);
         $test_time = $query->test_time;
         $test_type = $query->test_type;
-        if (!Session::has('test')){                                                                                     //если в тест зайдено первый раз
+        if (Result::getCurrentResult(Auth::user()['id'], $id_test) == -1){                                              //если пользователь не имеет начатый тест                                                                                     //если в тест зайдено первый раз
             $ser_array = $this->test->prepareTest($id_test);
             for ($i=0; $i<$amount; $i++){
                 $id = $question->chooseQuestion($ser_array);
@@ -335,24 +336,22 @@ class TestController extends Controller{
                 $widgets[] = View::make($data['view'], $data['arguments']);
             }
 
-            $start_time = date_create();                                                                                //время начала
-            $int_end_time =  date_format($start_time,'U')+60*$test_time;                                                //время конца
-            Session::put('end_time',$int_end_time);
+            $int_end_time =  date('U') + 60*$test_time;                                                                 //время конца
             $query = Result::max('id_result');                                                                          //пример использования агрегатных функций!!!
             $current_result = $query+1;                                                                                 //создаем строку в таблице пройденных тестов
             $query2 = $user->whereEmail(Auth::user()['email'])->select('id')->first();
             $result->id_result = $current_result;
             $result->id = $query2->id;;
             $result->id_test = $id_test;
-            $result->save();
+            $result->result_date = date('Y-m-d H:i:s', $int_end_time);
             $saved_test = serialize($saved_test);
-            Result::where('id_result', '=', $current_result)->update(['saved_test' => $saved_test]);
-            Session::put('test', $current_result);
+            $result->saved_test = $saved_test;
+            $result->save();
         }
         else {                                                                                                          //если была перезагружена страница теста или тест был покинут
-            $current_test = Session::get('test');
+            $current_test = Result::getCurrentResult(Auth::user()['id'], $id_test);
             $query = $result->whereId_result($current_test)->first();
-            $int_end_time = Session::get('end_time');                                                                   //время окончания теста
+            $int_end_time = strtotime($query->result_date);                                                              //время окончания теста
             $saved_test = $query->saved_test;
             $saved_test = unserialize($saved_test);
             for ($i=0; $i<$amount; $i++){
@@ -365,7 +364,7 @@ class TestController extends Controller{
         $left_min =  floor($int_left_time/60);                                                                          //осталось минут
         $left_sec = $int_left_time % 60;                                                                                //осталось секунд
 
-        $widgetListView = View::make('questions.student.widget_list',compact('amount', 'id_test','left_min', 'left_sec', 'test_type'))->with('widgets', $widgets);
+        $widgetListView = View::make('questions.student.widget_list',compact('current_result', 'amount', 'id_test','left_min', 'left_sec', 'test_type'))->with('widgets', $widgets);
         $response = new Response($widgetListView);
         //dd('1');
         return $response;
@@ -373,14 +372,13 @@ class TestController extends Controller{
 
     /** Проверка теста */
     public function checkTest(Request $request){   //обработать ответ на вопрос
-        if (Session::has('test'))                                                                                       //проверяем повторность обращения к результам
-            $current_test = Session::get('test');                                                                       //определяем проверяемый тест
+        date_default_timezone_set('Europe/Moscow');
+        $id_test = $request->input('id_test');
+        if (Result::getCurrentResult(Auth::user()['id'], $id_test) != -1)                                                                                       //проверяем повторность обращения к результам
+            $current_test = Result::getCurrentResult(Auth::user()['id'], $id_test);                                                                       //определяем проверяемый тест
         else
             return redirect('tests');
-        Session::forget('test');                                                                                        //тест считается честно пройденым
-        Session::forget('end_time');
         $amount = $request->input('amount');
-        $id_test = $request->input('id_test');
         $score_sum = 0;                                                                                                 //сумма набранных баллов
         $points_sum = 0;                                                                                                //сумма максимально овзможных баллов
         $choice = [];                                                                                                   //запоминаем выбранные варианты пользователя
@@ -433,7 +431,7 @@ class TestController extends Controller{
             $widgetListView = View::make('tests.ctrresults',compact('total','score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'id_test', 'id_user'))->with('widgets', $widgets);
             $fine = new Fine();
             $fine->updateFine(Auth::user()['id'], $id_test, $mark_rus);                                                 //вносим в таблицу штрафов необходимую инфу
-            Test::addToStatements($id_test, $id_user, $score);                                        //занесение балла в ведомость
+            Test::addToStatements($id_test, $id_user, $score);                                                          //занесение балла в ведомость
         }
         else {                                                                                                          //тест тренировочный
             $widgetListView = View::make('questions.student.training_test',compact('score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'link_to_lecture'))->with('widgets', $widgets);
@@ -443,13 +441,11 @@ class TestController extends Controller{
     }
 
     /** Пользователь отказался от прохождения теста */
-    public function dropTest(){
-        if (Session::has('test')){
-            $id_result = Session::get('test');
+    public function dropTest(Request $request){
+        if (Result::getCurrentResult(Auth::user()['id'], $request->input('id_test') != -1)){
+            date_default_timezone_set('Europe/Moscow');
             $date = date('Y-m-d H:i:s', time());
-            Session::forget('test');
-            Session::forget('end_time');
-            Result::whereId_result($id_result)->update(['result_date' => $date, 'result' => -1, 'mark_ru' => -1, 'mark_eu' => 'drop']);                                 //Присваиваем результату и оценке значения -1
+            Result::whereId_result($request->input('id_result'))->update(['result_date' => $date, 'result' => -1, 'mark_ru' => -1, 'mark_eu' => 'drop']);                                 //Присваиваем результату и оценке значения -1
         }
         return redirect('tests');
     }

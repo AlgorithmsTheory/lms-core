@@ -56,6 +56,7 @@ abstract class QuestionType {
     }*/
 
     abstract function add(Request $request);
+    abstract function edit();
     abstract function show($count);
     abstract function check($array);
     abstract function pdf(Mypdf $fpdf, $count, $answered=false);

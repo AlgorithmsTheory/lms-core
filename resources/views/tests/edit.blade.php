@@ -1,15 +1,8 @@
 @extends('templates.base')
 @section('head')
 <meta name="csrf_token" content="{{ csrf_token() }}" />
-<title>Редактирование теста "{{ $test['test_name'] }}"</title>
-{!! HTML::style('css/bootstrap.css') !!}
-{!! HTML::style('css/test_style.css') !!}
-{!! HTML::style('css/font-awesome.min.css') !!}
-{!! HTML::style('css/materialadmin.css') !!}
-{!! HTML::style('css/material-design-iconic-font.min.css') !!}
-{!! HTML::style('css/materialadmin_demo.css') !!}
+<title>Редактирование теста "{{ $test['test_name'] }}"</title>}
 {!! HTML::style('css/createTest.css') !!}
-{!! HTML::script('js/jquery.js') !!}
 @stop
 
 @section('content')
@@ -28,11 +21,12 @@
             <input type="hidden" id="id-test" name="id-test" value="{{ $test['id_test'] }}">
             <input type="hidden" id="test-type" name="test-type" value="{{ $test['test_type'] }}">
             <input type="hidden" id="test-time-zone" name="test-time-zone" value="{{ $test['time_zone'] }}">
+            <input type="hidden" id="test-resolved" name="test-resolved" value="{{ $test['is_resolved'] }}">
             <div class="col-lg-offset-1 col-md-10 col-sm-6">
                 <div class="card">
                     <div class="card-body">
                         <!-- название теста -->
-                        <div class="form-group floating-label">
+                        <div class="form-group">
                             <textarea  name="test-name" class="form-control textarea1" rows="1" placeholder=""  required>{{ $test['test_name'] }}</textarea>
                             <label for="textarea1">Название теста</label>
                         </div>
@@ -48,12 +42,12 @@
                             </label>
                         </div>
                         <!-- Максимум баллов за тест -->
-                        <div class="form-group floating-label">
+                        <div class="form-group">
                             <input type="number" min="1" name="total" id="total" class="form-control" value="{{ $test['total'] }}" required>
                             <label for="total">Максимум баллов за тест</label>
                         </div>
                         <!-- Время на прохождение теста -->
-                        <div class="form-group floating-label">
+                        <div class="form-group">
                             <input type="number" min="1" name="test-time" id="test-time" class="form-control" value="{{ $test['test_time'] }}" required>
                             <label for="test-time">Время на прохождение теста в минутах</label>
                         </div>
@@ -178,21 +172,6 @@
 @section ('js-down')
 {!! HTML::script('js/testCreate.js') !!}
 {!! HTML::script('js/testEdit.js') !!}
-{!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
-{!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
-{!! HTML::script('js/libs/bootstrap/bootstrap.min.js') !!}
-{!! HTML::script('js/libs/spin.js/spin.min.js') !!}
-{!! HTML::script('js/libs/autosize/jquery.autosize.min.js') !!}
-{!! HTML::script('js/libs/nanoscroller/jquery.nanoscroller.min.js') !!}
-{!! HTML::script('js/core/source/App.js') !!}
-{!! HTML::script('js/core/source/AppNavigation.js') !!}
-{!! HTML::script('js/core/source/AppOffcanvas.js') !!}
-{!! HTML::script('js/core/source/AppCard.js') !!}
-{!! HTML::script('js/core/source/AppForm.js') !!}
-{!! HTML::script('js/core/source/AppNavSearch.js') !!}
-{!! HTML::script('js/core/source/AppVendor.js') !!}
-{!! HTML::script('js/core/source/AppVendor.js') !!}
-{!! HTML::script('js/core/demo/Demo.js') !!}
 @stop
 
 

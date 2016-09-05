@@ -25,7 +25,7 @@ full-tests
                         <a href="{{ route('question_showtest', $test['id_test']) }}">
                             <div class="col-md-12 col-sm-12 card test-list text-lg dropdown" style="background-color: #d4fad6;">
                                 <button class="dropbtn">{{$test['test_name']}}</button>
-                                    <div class="dropdown-content">
+                                    <div class="dropdown-content" >
                                         Перейти к прохождению
                                         <a>Время завершения: {{ $test['end'] }}</a>
                                         <a>Максимально возможный балл: {{ $test['max_points'] }} из {{ $test['total'] }}</a>
@@ -98,18 +98,4 @@ full-tests
             </div>
         </div>
     </div>
-</section>
-    {!! HTML::script('js/libs/spin.js/spin.min.js') !!}
-    {!! HTML::script('js/libs/autosize/jquery.autosize.min.js') !!}
-    {!! HTML::script('js/libs/nestable/jquery.nestable.js') !!}
-    {!! HTML::script('js/libs/nanoscroller/jquery.nanoscroller.min.js') !!}
-    {!! HTML::script('js/core/source/App.js') !!}
-    {!! HTML::script('js/core/source/AppNavigation.js') !!}
-    {!! HTML::script('js/core/source/AppOffcanvas.js') !!}
-    {!! HTML::script('js/core/source/AppCard.js') !!}
-    {!! HTML::script('js/core/source/AppForm.js') !!}
-    {!! HTML::script('js/core/source/AppNavSearch.js') !!}
-    {!! HTML::script('js/core/source/AppVendor.js') !!}
-    {!! HTML::script('js/core/demo/Demo.js') !!}
-
 @stop

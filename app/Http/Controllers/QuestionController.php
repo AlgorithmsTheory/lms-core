@@ -211,7 +211,42 @@ class QuestionController extends Controller{
     
     /** Фомирование страницы редактирования */
     public function edit($id_question){
-        
+        $type_code = Question::whereId_question($id_question)->select('type_code')->first()->type_code;
+        $type_name = Type::whereType_code($type_code)->select('type_name')->first()->type_name;
+        switch($type_name){
+                case 'Выбор одного из списка':
+                $one_choice = new OneChoice($id_question);
+                $one_choice->edit();
+                break;
+            case 'Выбор нескольких из списка':
+                $multi_choice = new MultiChoice($id_question);
+                $multi_choice->edit();
+                break;
+            case 'Текстовый вопрос':
+                $fill_gaps = new FillGaps($id_question);
+                $fill_gaps->edit();
+                break;
+            case 'Таблица соответствий':
+                $fill_gaps = new AccordanceTable($id_question);
+                $fill_gaps->edit();
+                break;
+            case 'Да/Нет':
+                $fill_gaps = new YesNo($id_question);
+                $fill_gaps->edit();
+                break;
+            case 'Определение':
+                $definition = new Definition($id_question);
+                $definition->edit();
+                break;
+            case 'Просто ответ':
+                $just = new JustAnswer($id_question);
+                $just->edit();
+                break;
+            case 'Теорема':
+                $theorem = new Theorem($id_question);
+                $theorem->edit();
+                break;
+            }
     }
 
     /** Удаление вопроса */

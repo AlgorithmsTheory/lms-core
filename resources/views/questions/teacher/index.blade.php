@@ -8,6 +8,12 @@
      {!! HTML::link('library/lecture/3') !!}
      {!! HTML::image($image) !!}
      <img src="img/questions/title/94213.jpg">
+<?php
+    use App\Testing\Test;
+    $test_end = Test::whereId_test(168)->select('end')->first()->end;
+    echo strtotime($test_end).'<br>';
+    echo time();
+?>
 
 
 

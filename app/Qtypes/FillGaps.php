@@ -52,6 +52,11 @@ class FillGaps extends QuestionType {
             'control' => $options['control'], 'section_code' => $options['section'],
             'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
+
+    public function edit(){
+
+    }
+
     public function show($count){
         $text_parts = explode("<>", $this->text);                                                                       //части текста между селектами
         $parse = explode("%", $this->variants);

@@ -36,17 +36,23 @@
 @for ($i = 0; $i < $amount; $i++)
 <input id="super{{$i}}" type="hidden" name="{{$i}}" value="">
 @endfor
+<input id="id-result" type="hidden" name="id_result" value="{{ $current_result }}">
 <input id="amount" type="hidden" name="amount" value="{{ $amount }}">
 <input type="hidden" name="id_test" value="{{ $id_test }}">
     <div class="col-sm-6">
         <input id="check" onClick="fillSuper()" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-primary" type="submit" name="check" value="Отправить">
     </div>
+{!! Form::close() !!}
 @if ($test_type == 'Тренировочный')
     <div class="col-sm-6">
-        <a href="{{URL::route('drop_test')}}" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-danger" role="button">Отказаться</a>
+        {!! Form::open(['method' => 'POST', 'route' => 'drop_test', 'id' => 'drop-test', 'name' => 'drop_test']) !!}
+            <input id="id-result" type="hidden" name="id_result" value="{{ $current_result }}">
+            <input id="amount" type="hidden" name="amount" value="{{ $amount }}">
+            <input type="hidden" name="id_test" value="{{ $id_test }}">
+            <input id="drop" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-danger" type="submit" name="drop_btn" value="Отказаться">
+        {!! Form::close() !!}
     </div>
-    @endif
-{!! Form::close() !!}
+@endif
 {!! HTML::script('js/toolbar.js') !!}
 <br>
 </section>

@@ -30,4 +30,16 @@ class Result extends \Eloquent {
     protected $table = 'results';
     public $timestamps = false;
     protected $fillable = ['*'];
+
+    /** Возвращает идентификатор результата, если тест был начат пользователем, -1 - иначе */
+    public static function getCurrentResult($id_user, $id_test){
+        $result = -1;
+        $query = Result::whereId($id_user)->whereId_test($id_test)->whereNull('result')->select('id_result')->get();
+        if (count($query) == 1){
+            foreach ($query as $res){
+                $result = $res->id_result;
+            }
+        }
+        return $result;
+    }
 }

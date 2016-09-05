@@ -44,6 +44,11 @@ class OneChoice extends QuestionType {
                         'control' => $options['control'], 'section_code' => $options['section'],
                         'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
+
+    public function edit(){
+
+    }
+
     public function show($count){
         $parse = $this->variants;
         $variants = explode(";", $parse);

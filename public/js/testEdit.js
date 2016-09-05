@@ -1,8 +1,10 @@
 /**
  * Created by Станислав on 16.05.16.
  */
-if ($('#test-type').val() == 'Контрольный' && ($('#test-time-zone').val() == -1 || $('#test-time-zone').val() == 0)){ //если тест прошедший или текущий и обязательно контрольный
+if ($('#test-type').val() == 'Контрольный' && ($('#test-time-zone').val() == -1 || $('#test-time-zone').val() == 0) && $('#test-resolved') == 1){ //если тест прошедший или текущий и обязательно контрольный и обязательно уже кем-то решенный
     $('#question-table input, #question-table select').prop('disabled', true);                                          //блокируем все поля в настройке струтктуры теста
+    $('#add-row').prop('disabled', true);
+    $('#del-row').prop('disabled', true);
     $('#start-date, #start-time').prop('disabled', true);                                                               //нельзя менять начало теста
 }
 
@@ -17,6 +19,7 @@ $('.submit-test').click(function(){
             $('#end-date').val($('#old-end-date').val());                                                               //возвращаем в исходное состояние
             $('#end-time').val($('#old-end-time').val());
             $('#end-date').focus();
+            return false;
         }
     }
 });

@@ -98,7 +98,7 @@ class TeacherRetestController extends Controller {
             if ($request->input('changes')[$i] == true){                                                                //если тест был выбран для завершения
                 $id_test = $request->input('id-test')[$i];
                 $user_query = User::where('year', '=', $current_year)                                                   //пример сырого запроса
-                            //->whereRole('Студент')
+                            ->whereRole('Студент')
                             ->whereRaw("not exists (select `id` from `results`
                                         where results.id = users.id
                                         and `results`.`id_test` = ".$id_test. "

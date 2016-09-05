@@ -62,6 +62,10 @@ class MultiChoice extends QuestionType {
             'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
 
+    public function edit(){
+
+    }
+
     public function show($count){
         $parse = $this->variants;
         $variants = explode(";", $parse);

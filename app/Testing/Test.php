@@ -39,6 +39,7 @@ class Test extends Eloquent {
     const GROUP_AMOUNT = 3;                                                                                             // число вопросов в групповых вопросах
     protected $tests = 'tests';
     protected $fillable = ['test_name', 'amount', 'test_time', 'start', 'end', 'structure', 'total'];
+    public $timestamps = false;
 
     /** Проверяет, что установлена опция any в интерфейсе занесения теста */
     public function optionAny($option){
@@ -56,7 +57,7 @@ class Test extends Eloquent {
     public static function isFinished($id_test){
         //ищем среди студентов тех, кто не проходил данный тест в заданный промежуток времени
         $user_query = User::where('year', '=', date('Y'))                                                               //пример сырого запроса
-            //->whereRole('Студент')
+            ->whereRole('Студент')
             ->whereRaw("not exists (select `id` from `results`
                                         where results.id = users.id
                                         and `results`.`id_test` = ".$id_test. "
@@ -66,7 +67,7 @@ class Test extends Eloquent {
             ->distinct()
             ->select()
             ->get();
-        if (sizeof($user_query) == 0)                                                                                   //если таких студентов нет, то тест завершен
+        if (sizeof($user_query) == 0 && time() >= strtotime(Test::whereId_test($id_test)->select('end')->first()->end)) //если таких студентов нет и текущее время больше времени закрытия теста, то тест завершен
             return true;
         else                                                                                                            //иначе не завершен
             return false;
@@ -93,6 +94,16 @@ class Test extends Eloquent {
             return -1;
         if ($start > $current_date)
             return 1;
+    }
+
+    /** Возвращает 1, если тест уже был пройден хотя бы один раз, 0 - иначе */
+    public static function isResolved($id_test){
+        $result = 0;
+        $rows = Result::whereId_test($id_test)->count();
+        if ($rows != 0 ){
+            $result = 1;
+        }
+        return $result;
     }
 
     /** проверяет права доступа к рыбинским вопросам */
@@ -217,7 +228,8 @@ class Test extends Eloquent {
                         array_pop($new_temp_array);                                                                     //и из нового
                         $l++;
                     }
-                    Question::insert(array('title' => $new_title, 'variants' => '', 'answer' => $new_answer,            //вопрос про код и баллы
+                    Question::insert(array('id_question' => $new_id,'title' => $new_title,                              //вопрос про код и баллы
+                                            'variants' => '', 'answer' => $new_answer,
                                             'points' => 1, 'control' => 0, 'theme_code' => -1,
                                             'section_code' => -1, 'type_code' => $base_question_type));
                     $array[$k] = $new_id;                                                                               //добавляем сформированный вопрос в выходной массив
