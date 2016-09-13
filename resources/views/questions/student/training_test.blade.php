@@ -11,7 +11,7 @@
         <h1 class="text-default-bright">Ваши результаты</h1>
     </div>
     <div class="col-md-12 col-sm-6 card style-primary">
-        <h2 class="text-default-bright">Вы набрали {{$score}} баллов из 100!</h2>
+        <h2 class="text-default-bright">Вы набрали {{$score}} баллов из {{$total}}!</h2>
         <h2 class="text-default-bright">Ваша оценка: {{$mark_bologna}}({{$mark_rus}})</h2>
     </div>
     <table id="result-table">

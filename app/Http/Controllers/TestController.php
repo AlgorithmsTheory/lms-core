@@ -13,6 +13,7 @@ use App\Testing\Section;
 use App\Testing\StructuralRecord;
 use App\Testing\Test;
 use App\Testing\TestStructure;
+use App\Testing\TestTask;
 use App\Testing\Theme;
 use App\Testing\Type;
 use App\User;
@@ -35,7 +36,7 @@ class TestController extends Controller{
         $current_date = date('U');
         $query = $this->test->get();
         foreach ($query as $test){
-            if ($test->test_course != 'Рыбина' && $test->visibility == 1 && $test->year == date("Y")) {                 //проверка, что тест не из Рыбинских, он видим и он текущего года
+            if ($test->test_course != 'Рыбина' && $test->visibility == 1 && $test->year == date("Y") && $test->archived == 0) {   //проверка, что тест не из Рыбинских, он видим, он текущего года и он не архивный
                 if ($test->test_type == 'Тренировочный'){
                     array_push($tr_tests, $test);
                 }
@@ -109,6 +110,7 @@ class TestController extends Controller{
     public function editList(){
         $current_date = date("Y-m-d H:i:s");                                                                            //текущая дата в mySlq формате DATETIME
         $current_ctr_tests = $this->test->whereTest_type('Контрольный')                                                 //формируем текущие тесты
+                    ->where('archived', '<>', '1')
                     ->where('start', '<', $current_date)
                     ->where('end', '>', $current_date)
                     ->select()
@@ -118,6 +120,7 @@ class TestController extends Controller{
         }
 
         $current_tr_tests = $this->test->whereTest_type('Тренировочный')
+                    ->where('archived', '<>', '1')
                     ->where('start', '<', $current_date)
                     ->where('end', '>', $current_date)
                     ->select()
@@ -127,6 +130,7 @@ class TestController extends Controller{
         }
 
         $past_ctr_tests = $this->test->whereTest_type('Контрольный')                                                         //формируем прошлые тесты
+            ->where('archived', '<>', '1')
             ->where('end', '<', $current_date)
             ->select()
             ->get();
@@ -139,6 +143,7 @@ class TestController extends Controller{
         }
 
         $past_tr_tests = $this->test->whereTest_type('Тренировочный')
+            ->where('archived', '<>', '1')
             ->where('end', '<', $current_date)
             ->select()
             ->get();
@@ -147,6 +152,7 @@ class TestController extends Controller{
         }
 
         $future_ctr_tests = $this->test->whereTest_type('Контрольный')                                                         //формируем будущие тесты
+            ->where('archived', '<>', '1')
             ->where('start', '>', $current_date)
             ->select()
             ->get();
@@ -155,6 +161,7 @@ class TestController extends Controller{
         }
 
         $future_tr_tests = $this->test->whereTest_type('Тренировочный')
+            ->where('archived', '<>', '1')
             ->where('start', '>', $current_date)
             ->select()
             ->get();
@@ -254,15 +261,19 @@ class TestController extends Controller{
         return redirect()->route('tests_list');
     }
 
+    /** полное удаление, если никто не проходил его, пометка как архивный в противном случае */
     public function remove($id_test){
-        $structures = TestStructure::whereId_test($id_test)->get();
-        foreach ($structures as $structure){
-            StructuralRecord::whereId_structure($structure['id_structure'])->delete();
+        if (!Test::isResolved($id_test)){
+            $structures = TestStructure::whereId_test($id_test)->get();
+            foreach ($structures as $structure){
+                StructuralRecord::whereId_structure($structure['id_structure'])->delete();
+            }
+            TestStructure::whereId_test($id_test)->delete();
+            Test::whereId_test($id_test)->delete();
         }
-        TestStructure::whereId_test($id_test)->delete();
-        Result::whereId_test($id_test)->delete();
-        Fine::whereId_test($id_test)->delete();
-        Test::whereId_test($id_test)->delete();
+        else {
+            Test::whereId_test($id_test)->update(['archived' => 1]);
+        }
         return redirect()->route('tests_list');
     }
 
@@ -401,6 +412,7 @@ class TestController extends Controller{
             $right_or_wrong[$j] = $data['mark'];
             $choice[$j] = $data['choice'];
             $right_percent[$j] = $data['right_percent'];
+            TestTask::insert(['points' => $data['score'], 'id_question' => $array[0], 'id_result' => $current_test]);
             $j++;
             $score_sum += $data['score'];                                                                               //сумма набранных баллов
             $points_sum += $data['points'];                                                                             //сумма максимально возможных баллов
@@ -434,7 +446,7 @@ class TestController extends Controller{
             Test::addToStatements($id_test, $id_user, $score);                                                          //занесение балла в ведомость
         }
         else {                                                                                                          //тест тренировочный
-            $widgetListView = View::make('questions.student.training_test',compact('score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'link_to_lecture'))->with('widgets', $widgets);
+            $widgetListView = View::make('questions.student.training_test',compact('total','score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'link_to_lecture'))->with('widgets', $widgets);
         }
         $result->whereId_result($current_test)->update(['result_date' => $date, 'result' => $score, 'mark_ru' => $mark_rus, 'mark_eu' => $mark_bologna]);
         return $widgetListView;

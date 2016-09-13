@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent|\App\Testing\TestTask  join()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\TestTask  on()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\TestTask  toSql()
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\TestTask  insert($array)
  *
  */
 

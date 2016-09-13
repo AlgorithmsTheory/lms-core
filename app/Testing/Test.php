@@ -73,14 +73,6 @@ class Test extends Eloquent {
             return false;
     }
 
-    /** Проверяет, были ли совершены по данному тесту попытки */
-    public static function hasAttempts($id_test){
-        $attempts = Result::whereId_test($id_test)->get();
-        if (is_null($attempts))
-            return true;
-        else
-            return false;
-    }
 
     /** Если тест прошлый возвращает -1, текущий 0, будущий 1 */
     public static function getTimeZone($id_test){
