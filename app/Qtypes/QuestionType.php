@@ -48,7 +48,15 @@ abstract class QuestionType {
             $control = 1;
         else
             $control = 0;
-        return ['section' => $section, 'theme' => $theme, 'type' => $type, 'control' => $control];
+        $points = $request->input('points');
+        if ($request->input('translated')) {
+            $translated = 1;
+        }
+        else {
+            $translated = 0;
+        }
+        return ['section' => $section, 'theme' => $theme, 'type' => $type,
+                'control' => $control, 'points' => $points, 'translated' => $translated];
     }
     /*public function toBladeImage($string){
         //return preg_replace("/#img1#/", "{!! HTML::image('img/symbols/all.png') !!}", $string);

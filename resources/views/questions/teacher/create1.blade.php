@@ -4,20 +4,32 @@
             <span>Только для контрольных тестов</span>
         </label>
     </div>
+    <div class="checkbox checkbox-styled">
+        <label>
+            <input type="checkbox" name="translated" id="translated">
+            <span>Переведен на английский язык</span>
+        </label>
+    </div>
+
+    <!-- Текст на русском языке -->
     <div class="form-group">
         <textarea  name="title" id="textarea1" class="form-control" rows="3" placeholder="" required></textarea>
         <label for="textarea1">Текст</label>
     </div>
+
+    <!-- Текст на английском языке -->
+    <div class="form-group">
+        <textarea  name="eng-title" id="eng-textarea1" class="form-control" rows="3" placeholder=""></textarea>
+        <label for="textarea1">Text</label>
+    </div>
+
     <div id="text-images-container">
         <input type="file" name="text-images[]" id="text-image-input-1" class="text-image-input">
     </div>
     <br>
-    <!--<div class="form-group">
-        <textarea  name="answer" id="textarea2" class="form-control" rows="3" placeholder=""></textarea>
-        <label for="textarea2">Ответ</label>
-    </div> -->
 
-    <div id="variants" class="col-md-10 col-sm-6">
+    <!-- Русские варианты ответа -->
+    <div id="variants" class="col-md-6 col-sm-6">
         <div class="form-group">
             <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="Этот вариант будет ответом" required></textarea>
             <label for="textarea3">Вариант 1</label>
@@ -35,7 +47,26 @@
             <label for="textarea3">Вариант 4</label>
         </div>
     </div>
-    <div class="col-md-2 col-sm-6" style="margin-top: 220px" id="add-del-buttons">
+        <!-- Английские варианты ответа -->
+    <div id="eng-variants" class="col-md-6 col-sm-6">
+        <div class="form-group">
+            <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder="This variant will be the answer"></textarea>
+            <label for="textarea3">Variant 1</label>
+        </div>
+        <div class="form-group">
+            <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>
+            <label for="textarea3">Variant 2</label>
+        </div>
+        <div class="form-group">
+            <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>
+            <label for="textarea3">Variant 3</label>
+        </div>
+        <div class="form-group">
+            <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>
+            <label for="textarea3">Variant 4</label>
+        </div>
+    </div>
+    <div class="col-lg-offset-10 col-md-10 col-sm-6" id="add-del-buttons">
         <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-var-1"><b>+</b>   </button>
         <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-var-1"><b>-</b></button>
     </div>

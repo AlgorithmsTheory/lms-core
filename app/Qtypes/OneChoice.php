@@ -21,6 +21,8 @@ class OneChoice extends QuestionType {
     public  function add(Request $request){
         $options = $this->getOptions($request);
         $parse_text = preg_split('/\[\[|\]\]/', $request->input('title'));                                              //части текста вопроса без [[ ]]
+        $eng_parse_text = preg_split('/\[\[|\]\]/', $request->input('eng-title'));                                      //части текста вопроса на английском без [[ ]]
+
         $destinationPath = 'img/questions/title/';                                                                      //путь для картинки
         $input_images = Input::file();
         for ($i = 1; $i < count($input_images['text-images']); $i++){
@@ -28,10 +30,15 @@ class OneChoice extends QuestionType {
             $fileName = rand(11111, 99999) . '.' . $extension;                                                          //случайное имя картинки
             $input_images['text-images'][$i-1]->move($destinationPath, $fileName);                                      //перемещаем картинку
             $parse_text[2*$i-1] = '::'.$destinationPath.$fileName.'::';                                                 //заменить каждуый старый файл на новый
+            $eng_parse_text[2*$i-1] = '::'.$destinationPath.$fileName.'::';
         }
         $title = '';
         foreach ($parse_text as $part){                                                                                 //собираем все в строку
             $title .= $part;
+        }
+        $eng_title = '';
+        foreach ($eng_parse_text as $eng_part){                                                                         //собираем все в строку для английского текста
+            $eng_title .= $eng_part;
         }
 
         $variants = $request->input('variants')[0];
@@ -39,10 +46,18 @@ class OneChoice extends QuestionType {
             $variants = $variants.';'.$request->input('variants')[$i];
         }
         $answer = $request->input('variants')[0];
+
+        $eng_variants = $request->input('eng-variants')[0];
+        for ($i=1; $i<count($request->input('eng-variants')); $i++){
+            $eng_variants = $eng_variants.';'.$request->input('eng-variants')[$i];
+        }
+        $eng_answer = $request->input('eng-variants')[0];
+
         Question::insert(array('title' => $title, 'variants' => $variants,
-                        'answer' => $answer, 'points' => $request->input('points'),
-                        'control' => $options['control'], 'section_code' => $options['section'],
-                        'theme_code' => $options['theme'], 'type_code' => $options['type']));
+                        'answer' => $answer, 'points' => $options['points'],
+                        'control' => $options['control'], 'translated' => $options['translated'],
+                        'section_code' => $options['section'], 'theme_code' => $options['theme'], 'type_code' => $options['type'],
+                        'title_eng' => $eng_title, 'variants_eng' => $eng_variants, 'answer_eng' => $eng_answer));
     }
 
     public function edit(){
