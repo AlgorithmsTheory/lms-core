@@ -60,6 +60,7 @@ Route::get('questions/edit', ['as' => 'questions_list', 'uses' => 'QuestionContr
 Route::get('questions/edit/search', ['as' => 'questions_find', 'uses' => 'QuestionController@find', 'middleware' => ['general_auth','admin']]);
 Route::post('questions/edit/search', ['as' => 'questions_find', 'uses' => 'QuestionController@find', 'middleware' => ['general_auth','admin']]);
 Route::get('questions/edit/{id_question}', ['as' => 'question_edit', 'uses' => 'QuestionController@edit', 'middleware' => ['general_auth','admin']])->where($id_question, '[0-9]+');
+Route::post('questions/edit', ['as' => 'question_update', 'uses' => 'QuestionController@update', 'middleware' => ['general_auth','admin']]);
 Route::post('questions/delete', ['as' => 'question_delete', 'uses' => 'QuestionController@delete', 'middleware' => ['general_auth','admin']]);
 Route::post('get-theme', array('as'=>'get_theme', 'uses'=>'QuestionController@getTheme'));
 Route::post('get-type', array('as'=>'get_type', 'uses'=>'QuestionController@getType'));

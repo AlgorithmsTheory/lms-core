@@ -20,11 +20,15 @@ function updateLinkedFile(field, numFile) {
 /** Проверка корректности файлов в тексте вопроса */
 function checkFiles(field) {
     var res = true;
+    var con;
+    var flag = true;
     var array = field.val().split(/\[\[|\]\]/);
+    var oldArray = field.val().split(/::/);
     var filenames = [];
     $('#text-images-container').children('input').each(function(){                                                      //составляем массив из названий выбранных файлов
         filenames.push($(this).val());
     });
+
 
     if(array.length != (2*filenames.length - 1)){
         alert('Структура текста была изменена. Число выбранных файлов не соответствует тексту! Внесите изменения');
@@ -39,6 +43,24 @@ function checkFiles(field) {
         }
         else j++;
     }
+
+    $('.images-in-text').each(function() {
+       if (!flag){
+           return false;
+       }
+       for (i = 1; i < oldArray.length; i += 2) {
+           if ($(this).val() != oldArray[i]){
+               con = confirm("Вы изменили название ранее прикрепленного файла! Верните исходное название " + $(this).val() +
+                                 ". В противном случае в тесте данный текст будет отображен в таком виде: " + oldArray[i] +
+                                 ". Вернуться к редактированию?");
+               if (!con) {
+                   res = false;
+                   flag = false;
+                   break;
+               }
+           }
+       }
+    });
     return res;
 }
 

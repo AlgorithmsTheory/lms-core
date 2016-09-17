@@ -62,9 +62,7 @@
             <div class="card-head">
                 <div class="tools">
                     <div class="btn-group">
-                        <div class="btn-group">
-                            <a href="{{URL::route('question_edit', array($question['id_question']))}}" class="btn btn-icon-toggle dropdown-toggle" data-toggle="dropdown"><i class="md md-colorize"></i></a>
-                        </div>
+                        <a href="{{URL::route('question_edit', array($question['id_question']))}}" class="btn btn-icon-toggle dropdown-toggle"><i class="md md-colorize"></i></a>
                         <a class="btn btn-icon-toggle btn-collapse"><i class="md md-keyboard-arrow-down"></i></a>
                         <a class="btn btn-icon-toggle btn-close"><i class="md md-close"></i></a>
                     </div>

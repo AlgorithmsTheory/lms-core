@@ -2,7 +2,7 @@
  * Created by Станислав on 22.01.16.
  */
 
-var count = 4;                                                                                                      //счетчик числа вариантов
+var count = $('#count').val();                                                                                                //счетчик числа вариантов
 
 /** Добавление варианта */
 $('#type_question_add').on('click','#add-var-1', function(){

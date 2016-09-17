@@ -46,6 +46,7 @@ use Illuminate\Http\Request;
  */
 class Question extends Eloquent {
     protected $table = 'questions';
+    public $timestamps = false;
 
     /** Определяет одиночный вопрос (true) или может использоваться только в группе с такими же (false) */
     public static function getSingle($id){

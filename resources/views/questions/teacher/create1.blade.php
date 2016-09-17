@@ -1,3 +1,4 @@
+    <input type="hidden" id="count" value="4">
     <div class="checkbox checkbox-styled">
         <label>
             <input type="checkbox" name="control" id="control">
@@ -73,7 +74,7 @@
 
     <div id="other-options" class="col-md-10 col-sm-6">
         <div class="form-group">
-            <select name="section" id="select-section" class="form-control" size="1">
+            <select name="section" id="select-section" class="form-control" size="1" required>
                 <option value="$nbsp"></option>
                 @foreach ($sections as $section)
                 <option value="{{$section['section_name']}}">{{$section['section_name']}}</option>/td>

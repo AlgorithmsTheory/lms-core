@@ -9,6 +9,7 @@ namespace App\Qtypes;
 use App\Http\Controllers\QuestionController;
 use App\Mypdf;
 use App\Testing\Question;
+use App\Testing\Type;
 use Illuminate\Http\Request;
 use Input;
 use Session;
@@ -18,7 +19,7 @@ class OneChoice extends QuestionType {
         parent::__construct($id_question);
     }
 
-    public  function add(Request $request){
+    private function setAttributes(Request $request){
         $options = $this->getOptions($request);
         $parse_text = preg_split('/\[\[|\]\]/', $request->input('title'));                                              //части текста вопроса без [[ ]]
         $eng_parse_text = preg_split('/\[\[|\]\]/', $request->input('eng-title'));                                      //части текста вопроса на английском без [[ ]]
@@ -53,15 +54,42 @@ class OneChoice extends QuestionType {
         }
         $eng_answer = $request->input('eng-variants')[0];
 
-        Question::insert(array('title' => $title, 'variants' => $variants,
-                        'answer' => $answer, 'points' => $options['points'],
-                        'control' => $options['control'], 'translated' => $options['translated'],
-                        'section_code' => $options['section'], 'theme_code' => $options['theme'], 'type_code' => $options['type'],
-                        'title_eng' => $eng_title, 'variants_eng' => $eng_variants, 'answer_eng' => $eng_answer));
+        return ['title' => $title, 'variants' => $variants,
+                'answer' => $answer, 'points' => $options['points'],
+                'control' => $options['control'], 'translated' => $options['translated'],
+                'section_code' => $options['section'], 'theme_code' => $options['theme'], 'type_code' => $options['type'],
+                'title_eng' => $eng_title, 'variants_eng' => $eng_variants, 'answer_eng' => $eng_answer];
+    }
+
+    public  function add(Request $request){
+        $data = $this->setAttributes($request);
+        Question::insert(array('title' => $data['title'], 'variants' => $data['variants'],
+                        'answer' => $data['answer'], 'points' => $data['points'],
+                        'control' => $data['control'], 'translated' => $data['translated'],
+                        'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
+                        'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng']));
     }
 
     public function edit(){
+        $question = Question::whereId_question($this->id_question)->first();
+        $count = count(explode(";", $question->variants));
+        $type_name = Type::whereType_code($question->type_code)->select('type_name')->first()->type_name;
+        $images = explode("::", $question->title);
+        $variants = explode(";", $question->variants);
+        $eng_variants = explode(";", $question->variants_eng);
+        return array('question' => $question, 'count' => $count, 'type_name' => $type_name,
+                     'images' => $images, 'variants' => $variants, 'eng_variants' => $eng_variants);
+    }
 
+    public function update(Request $request){
+        $data = $this->setAttributes($request);
+        Question::whereId_question($this->id_question)->update(
+        array('title' => $data['title'], 'variants' => $data['variants'],
+              'answer' => $data['answer'], 'points' => $data['points'],
+              'control' => $data['control'], 'translated' => $data['translated'],
+              'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
+              'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng'])
+        );
     }
 
     public function show($count){

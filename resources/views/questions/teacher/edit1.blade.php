@@ -10,79 +10,124 @@
     <div class="col-md-12 col-sm-6 card style-primary text-center">
         <h1 class="">Редактировать вопрос</h1>
     </div>
-    <form action="{{URL::route('question_update', array($id_question))}}" method="POST" class="form" enctype="multipart/form-data">
+    <form action="{{URL::route('question_update')}}" method="POST" class="form" enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <input type="hidden" name="q-type" value="">
+        <input type="hidden" name="id-question" value="{{ $data['question']['id_question'] }}">
+        <input type="hidden" name="type" value="{{ $data['type_name'] }}">
+        <input type="hidden" id="count" value="{{ $data['count'] }}">
+        @for ($i = 1; $i < count($data['images']); $i += 2)
+            <input type="hidden" class="images-in-text" value="{{ $data['images'][$i] }}">
+        @endfor
+
         <div class="col-lg-offset-1 col-md-10 col-sm-6">
             <div class="card">
                 <div class="card-body">
                     <!-- Выбор типа вопроса -->
                     <div class="form-group ">
                         <select name="type" id="select-type" class="form-control" size="1" disabled>
-                            <option value="{{ $type }}"></option>
+                            <option value="{{ $data['type_name'] }}">{{ $data['type_name'] }}</option>
                         </select>
                         <label for="select-type">Тип</label>
                     </div>
                     <div id="type_question_add">
                         <div class="checkbox checkbox-styled">
                             <label>
-                                <input type="checkbox" name="control" id="control">
+                                <input type="checkbox" name="control" id="control"
+                                @if ($data['question']['control'] == 1)
+                                    checked
+                                @endif
+                                >
                                 <span>Только для контрольных тестов</span>
                             </label>
                         </div>
+                        <div class="checkbox checkbox-styled">
+                            <label>
+                                <input type="checkbox" name="translated" id="translated"
+                                @if ($data['question']['translated'] == 1)
+                                    checked
+                                @endif
+                                >
+                                <span>Переведен на английский язык</span>
+                            </label>
+                        </div>
+
+                        <!-- Текст на русском языке -->
                         <div class="form-group">
-                            <textarea  name="title" id="textarea1" class="form-control" rows="3" placeholder="" required></textarea>
+                            <textarea  name="title" id="textarea1" class="form-control" rows="3" placeholder="" required>{{ $data['question']['title'] }}</textarea>
                             <label for="textarea1">Текст</label>
                         </div>
+
+                        <!-- Текст на английском языке -->
+                        <div class="form-group">
+                            <textarea  name="eng-title" id="eng-textarea1" class="form-control" rows="3" placeholder="">{{ $data['question']['title_eng'] }}</textarea>
+                            <label for="textarea1">Text</label>
+                        </div>
+
                         <div id="text-images-container">
                             <input type="file" name="text-images[]" id="text-image-input-1" class="text-image-input">
                         </div>
                         <br>
 
-                        <div id="variants" class="col-md-10 col-sm-6">
-                            <div class="form-group">
-                                <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="Этот вариант будет ответом" required></textarea>
-                                <label for="textarea3">Вариант 1</label>
-                            </div>
-                            <div class="form-group">
-                                <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
-                                <label for="textarea3">Вариант 2</label>
-                            </div>
-                            <div class="form-group">
-                                <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
-                                <label for="textarea3">Вариант 3</label>
-                            </div>
-                            <div class="form-group">
-                                <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
-                                <label for="textarea3">Вариант 4</label>
-                            </div>
+                        <!-- Русские варианты ответа -->
+                        <div id="variants" class="col-md-6 col-sm-6">
+                            @for ($i = 0; $i < $data['count']; $i++)
+                                <div class="form-group">
+                                    <textarea  name="variants[]" class="form-control textarea3" rows="1" required>{{$data['variants'][$i]}}</textarea>
+                                    <label for="textarea3">Вариант {{$i+1}}</label>
+                                </div>
+                            @endfor
                         </div>
-                        <div class="col-md-2 col-sm-6" style="margin-top: 220px" id="add-del-buttons">
+                        <!-- Английские варианты ответа -->
+                        <div id="eng-variants" class="col-md-6 col-sm-6">
+                            @for ($i = 0; $i < $data['count']; $i++)
+                                <div class="form-group">
+                                    <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1"
+                                    @if ($i == 0)
+                                    placeholder="This variant will be the answer"
+                                    @endif
+                                    >{{$data['eng_variants'][$i]}}</textarea>
+                                    <label for="textarea3">Variant {{$i+1}}</label>
+                                </div>
+                            @endfor
+                        </div>
+                        <div class="col-lg-offset-10 col-md-10 col-sm-6" id="add-del-buttons">
                             <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-var-1"><b>+</b>   </button>
                             <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-var-1"><b>-</b></button>
                         </div>
 
                         <div id="other-options" class="col-md-10 col-sm-6">
                             <div class="form-group">
-                                <select name="section" id="select-section" class="form-control" size="1">
-                                    <option value="$nbsp"></option>
+                                <select name="section" id="select-section" class="form-control" size="1" required>
                                     @foreach ($sections as $section)
-                                    <option value="{{$section['section_name']}}">{{$section['section_name']}}</option>/td>
+                                        <option value="{{$section['section_name']}}"
+                                        @if ($section['section_code'] == $data['question']['section_code'])
+                                        selected
+                                        @endif
+                                        >{{$section['section_name']}}</option>
                                     @endforeach
                                 </select>
                                 <label for="select-section">Раздел</label>
                             </div>
 
                             <div class="form-group" id="container">
-                                <!-- контейнер для ajax -->
+                                <select name="theme" id="select-theme" class="form-control" size="1" required>
+                                    @foreach ($themes as $theme)
+                                        <option value="{{$theme['theme_name']}}"
+                                        @if ($theme['theme_code'] == $data['question']['theme_code'])
+                                        selected
+                                        @endif
+                                        >{{$theme['theme_name']}}</option>
+                                    @endforeach
+                                </select>
+                                <label for="select-theme">Тема</label>
                             </div>
 
                             <div class="form-group">
-                                <input type="number" min="1" name="points" id="points" class="form-control" value="1">
+                                <input type="number" min="1" name="points" id="points" class="form-control" value="{{ $data['question']['points'] }}">
                                 <label for="points">Баллы за верный ответ</label>
                             </div>
 
-                            <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>
+                            <button class="btn btn-primary btn-raised submit-question" type="submit">Применить изменения</button>
                             <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
                         </div>
                     </div>  <!-- Закрываем card-body -->
@@ -99,7 +144,7 @@
                 <h2 id="preview-text"></h2>
                 <div id="preview-container"></div>
             </form>
-            <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>
+            <button class="btn btn-primary btn-raised submit-question" type="submit">Применить изменения</button>
         </div>
     </div>
 </div>
