@@ -224,7 +224,8 @@ class QuestionController extends Controller{
                 break;
             case 'Выбор нескольких из списка':
                 $multi_choice = new MultiChoice($id_question);
-                $multi_choice->edit();
+                $data = $multi_choice->edit();
+                return view('questions.teacher.edit2', compact('data', 'sections', 'themes'));
                 break;
             case 'Текстовый вопрос':
                 $fill_gaps = new FillGaps($id_question);
@@ -264,7 +265,7 @@ class QuestionController extends Controller{
                 break;
             case 'Выбор нескольких из списка':
                 $multi_choice = new MultiChoice($id_question);
-                $multi_choice->edit();
+                $multi_choice->update($request);
                 break;
             case 'Текстовый вопрос':
                 $fill_gaps = new FillGaps($id_question);

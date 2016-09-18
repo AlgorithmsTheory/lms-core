@@ -9,6 +9,7 @@
 namespace App\Qtypes;
 use App\Mypdf;
 use App\Testing\Question;
+use App\Testing\Type;
 use Illuminate\Http\Request;
 use Session;
 use Input;
@@ -19,9 +20,11 @@ class MultiChoice extends QuestionType {
         parent::__construct($id_question);
     }
 
-    public function add(Request $request){
+    private function setAttributes(Request $request) {
         $options = $this->getOptions($request);
         $parse_text = preg_split('/\[\[|\]\]/', $request->input('title'));                                              //части текста вопроса без [[ ]]
+        $eng_parse_text = preg_split('/\[\[|\]\]/', $request->input('eng-title'));                                      //части текста вопроса на английском без [[ ]]
+
         $destinationPath = 'img/questions/title/';                                                                      //путь для картинки
         $input_images = Input::file();
         for ($i = 1; $i < count($input_images['text-images']); $i++){
@@ -29,23 +32,34 @@ class MultiChoice extends QuestionType {
             $fileName = rand(11111, 99999) . '.' . $extension;                                                          //случайное имя картинки
             $input_images['text-images'][$i-1]->move($destinationPath, $fileName);                                      //перемещаем картинку
             $parse_text[2*$i-1] = '::'.$destinationPath.$fileName.'::';                                                 //заменить каждуый старый файл на новый
+            $eng_parse_text[2*$i-1] = '::'.$destinationPath.$fileName.'::';
         }
         $title = '';
         foreach ($parse_text as $part){                                                                                 //собираем все в строку
             $title .= $part;
+        }
+        $eng_title = '';
+        foreach ($eng_parse_text as $eng_part){                                                                         //собираем все в строку для английского текста
+            $eng_title .= $eng_part;
         }
 
         $variants = $request->input('variants')[0];                                                                     //формирование вариантов
         for ($i=1; $i<count($request->input('variants')); $i++){
             $variants = $variants.';'.$request->input('variants')[$i];
         }
+        $eng_variants = $request->input('eng-variants')[0];
+        for ($i=1; $i<count($request->input('eng-variants')); $i++){
+            $eng_variants = $eng_variants.';'.$request->input('eng-variants')[$i];
+        }
 
         $answers = '';
+        $eng_answers = '';
         $flag = false;
         $j = 0;
         while ($flag != true && $j<count($request->input('answers'))){                                                  //формирование ответов
             if (isset($request->input('answers')[$j])){
                 $answers = $request->input('variants')[$request->input('answers')[$j]-1];
+                $eng_answers = $request->input('eng-variants')[$request->input('answers')[$j]-1];
                 $j++;
                 break;
             }
@@ -54,16 +68,55 @@ class MultiChoice extends QuestionType {
         for ($i=$j; $i<count($request->input('answers')); $i++){
             if (isset($request->input('answers')[$i])){
                 $answers = $answers.';'.$request->input('variants')[$request->input('answers')[$i]-1];
+                $eng_answers = $eng_answers.';'.$request->input('eng-variants')[$request->input('answers')[$i]-1];
             }
         }
-        Question::insert(array('title' => $title, 'variants' => $variants,
-            'answer' => $answers, 'points' => $request->input('points'),
-            'control' => $options['control'], 'section_code' => $options['section'],
-            'theme_code' => $options['theme'], 'type_code' => $options['type']));
+        return ['title' => $title, 'variants' => $variants,
+                'answer' => $answers, 'points' => $options['points'],
+                'control' => $options['control'], 'translated' => $options['translated'],
+                'section_code' => $options['section'], 'theme_code' => $options['theme'], 'type_code' => $options['type'],
+                'title_eng' => $eng_title, 'variants_eng' => $eng_variants, 'answer_eng' => $eng_answers];
+    }
+
+    public function add(Request $request){
+        $data = $this->setAttributes($request);
+        Question::insert(array('title' => $data['title'], 'variants' => $data['variants'],
+            'answer' => $data['answer'], 'points' => $data['points'],
+            'control' => $data['control'], 'translated' => $data['translated'],
+            'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
+            'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng']));
     }
 
     public function edit(){
+        $question = Question::whereId_question($this->id_question)->first();
+        $count = count(explode(";", $question->variants));
+        $type_name = Type::whereType_code($question->type_code)->select('type_name')->first()->type_name;
+        $images = explode("::", $question->title);
+        $variants = explode(";", $question->variants);
 
+        $answers = explode(";", $question->answer);
+        $j = 0;
+        $num_answers = [];
+        for ($i = 0; $i < count($variants); $i++) {
+            if ($variants[$i] == $answers[$j]) {
+                array_push($num_answers, $i);
+                $j++;
+            }
+        }
+        $eng_variants = explode(";", $question->variants_eng);
+        return array('question' => $question, 'count' => $count, 'type_name' => $type_name,
+            'images' => $images, 'variants' => $variants, 'eng_variants' => $eng_variants, 'num_answers' => $num_answers);
+    }
+
+    public function update(Request $request) {
+        $data = $this->setAttributes($request);
+        Question::whereId_question($this->id_question)->update(
+            array('title' => $data['title'], 'variants' => $data['variants'],
+                'answer' => $data['answer'], 'points' => $data['points'],
+                'control' => $data['control'], 'translated' => $data['translated'],
+                'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
+                'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng'])
+        );
     }
 
     public function show($count){

@@ -16,7 +16,7 @@
         <input type="hidden" name="type" value="{{ $data['type_name'] }}">
         <input type="hidden" id="count" value="{{ $data['count'] }}">
         @for ($i = 1; $i < count($data['images']); $i += 2)
-            <input type="hidden" class="images-in-text" value="{{ $data['images'][$i] }}">
+        <input type="hidden" class="images-in-text" value="{{ $data['images'][$i] }}">
         @endfor
 
         <div class="col-lg-offset-1 col-md-10 col-sm-6">
@@ -34,7 +34,7 @@
                             <label>
                                 <input type="checkbox" name="control" id="control"
                                 @if ($data['question']['control'] == 1)
-                                    checked
+                                checked
                                 @endif
                                 >
                                 <span>Только для контрольных тестов</span>
@@ -44,7 +44,7 @@
                             <label>
                                 <input type="checkbox" name="translated" id="translated"
                                 @if ($data['question']['translated'] == 1)
-                                    checked
+                                checked
                                 @endif
                                 >
                                 <span>Переведен на английский язык</span>
@@ -68,46 +68,59 @@
                         </div>
                         <br>
 
-                        <!-- Русские варианты ответа -->
-                        <div id="variants" class="col-md-6 col-sm-6">
+                        <div class="col-md-1 col-sm-6" id="answers">
                             @for ($i = 0; $i < $data['count']; $i++)
-                                <div class="form-group">
-                                    <textarea  name="variants[]" class="form-control textarea3" rows="1" required placeholder=""
-                                    @if ($i == 0)
-                                    placeholder="Этот вариант будет ответом"
+                                <div class="checkbox checkbox-styled"
+                                    @if ($i != 0)
+                                        style="margin-top:49px"
                                     @endif
-                                    >{{$data['variants'][$i]}}</textarea>
-                                    <label for="textarea3">Вариант {{$i+1}}</label>
+                                    >
+                                    <label>
+                                        <input type="checkbox" name="answers[]" value="{{ $i+1 }}"
+                                        @if ($i == $data['num_answers'][$j])
+                                            {!! $j++ !!}
+                                            checked
+                                        @endif
+                                        >
+                                        <span></span>
+                                    </label>
                                 </div>
                             @endfor
                         </div>
-                        <!-- Английские варианты ответа -->
-                        <div id="eng-variants" class="col-md-6 col-sm-6">
+
+                        <!-- Русские варианты ответа -->
+                        <div id="variants" class="col-md-5 col-sm-6">
                             @for ($i = 0; $i < $data['count']; $i++)
-                                <div class="form-group">
-                                    <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder=""
-                                    @if ($i == 0)
-                                    placeholder="This variant will be the answer"
-                                    @endif
-                                    >{{$data['eng_variants'][$i]}}</textarea>
-                                    <label for="textarea3">Variant {{$i+1}}</label>
-                                </div>
+                            <div class="form-group">
+                                <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required>{{$data['variants'][$i]}}</textarea>
+                                <label for="textarea3">Вариант {{ $i+1 }}</label>
+                            </div>
+                            @endfor
+                        </div>
+
+                        <!-- Английские варианты ответа -->
+                        <div id="eng-variants" class="col-md-5 col-sm-6">
+                            @for ($i = 0; $i < $data['count']; $i++)
+                            <div class="form-group">
+                                <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder="">{{$data['eng_variants'][$i]}}</textarea>
+                                <label for="textarea3">Variant {{ $i+1 }}</label>
+                            </div>
                             @endfor
                         </div>
                         <div class="col-lg-offset-10 col-md-10 col-sm-6" id="add-del-buttons">
-                            <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-var-1"><b>+</b></button>
-                            <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-var-1"><b>-</b></button>
+                            <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-var-2"><b>+</b></button>
+                            <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-var-2"><b>-</b></button>
                         </div>
 
                         <div id="other-options" class="col-md-10 col-sm-6">
                             <div class="form-group">
                                 <select name="section" id="select-section" class="form-control" size="1" required>
                                     @foreach ($sections as $section)
-                                        <option value="{{$section['section_name']}}"
-                                        @if ($section['section_code'] == $data['question']['section_code'])
-                                        selected
-                                        @endif
-                                        >{{$section['section_name']}}</option>
+                                    <option value="{{$section['section_name']}}"
+                                    @if ($section['section_code'] == $data['question']['section_code'])
+                                    selected
+                                    @endif
+                                    >{{$section['section_name']}}</option>
                                     @endforeach
                                 </select>
                                 <label for="select-section">Раздел</label>
@@ -116,11 +129,11 @@
                             <div class="form-group" id="container">
                                 <select name="theme" id="select-theme" class="form-control" size="1" required>
                                     @foreach ($themes as $theme)
-                                        <option value="{{$theme['theme_name']}}"
-                                        @if ($theme['theme_code'] == $data['question']['theme_code'])
-                                        selected
-                                        @endif
-                                        >{{$theme['theme_name']}}</option>
+                                    <option value="{{$theme['theme_name']}}"
+                                    @if ($theme['theme_code'] == $data['question']['theme_code'])
+                                    selected
+                                    @endif
+                                    >{{$theme['theme_name']}}</option>
                                     @endforeach
                                 </select>
                                 <label for="select-theme">Тема</label>
@@ -134,10 +147,10 @@
                             <button class="btn btn-primary btn-raised submit-question" type="submit">Применить изменения</button>
                             <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
                         </div>
-                    </div>  <!-- Закрываем card-body -->
-                </div>  <!-- Закрываем card -->
-            </div>  <!-- Закрываем col-md -->
-        </div>
+                    </div>
+                </div>  <!-- Закрываем card-body -->
+            </div>  <!-- Закрываем card -->
+        </div>  <!-- Закрываем col-md -->
     </form>
     <div id="question-preview" class="modalDialog">
         <div>
@@ -153,9 +166,9 @@
     </div>
 </div>
 
-    @stop
-    @section('js-down')
-    {!! HTML::script('js/question_create/oneChoice.js') !!}
-    {!! HTML::script('js/question_create/imageInTitle.js') !!}
-    {!! HTML::script('js/question_create/questionCreate.js') !!}
-    @stop
+@stop
+@section('js-down')
+{!! HTML::script('js/question_create/multiChoice.js') !!}
+{!! HTML::script('js/question_create/imageInTitle.js') !!}
+{!! HTML::script('js/question_create/questionCreate.js') !!}
+@stop
