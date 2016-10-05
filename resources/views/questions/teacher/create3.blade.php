@@ -1,8 +1,35 @@
+    <input type="hidden" id="js_word_number" value="1">
+    <input type="hidden" id="js_word_number_eng" value="1">
+    <input type="hidden" id="js_span_last" value="0">
+    <input type="hidden" id="js_span_last_eng" value="0">
+    <input type="hidden" id="js_span_edge" value="0">
+    <input type="hidden" id="js_span_edge_eng" value="0">
+    @for ($i = 1; $i <= 50; $i++)
+        <input type="hidden" id="js_count_{{ $i }}" value="5">
+    @endfor
+    @for ($i = 1; $i <= 50; $i++)
+    <input type="hidden" id="js_count_eng{{ $i }}" value="5">
+    @endfor
     <div class="checkbox checkbox-styled">
         <label>
             <input type="checkbox" name="control" id="control">
             <span>Только для контрольных тестов</span>
         </label>
+    </div>
+    <div class="checkbox checkbox-styled">
+        <label>
+            <input type="checkbox" name="translated" id="translated">
+            <span>Переведен на английский язык</span>
+        </label>
+    </div>
+    <br>
+
+
+    <!-- На русском языке -->
+    <div class="style-gray card">
+        <div class="card-body text-default-bright text-center text-lg">
+            Русский язык
+        </div>
     </div>
     <div class="form-group">
         <textarea class="form-control" name="title" id="edit-text" rows="3" placeholder="Введите текст вопроса, нажмите кнопку завершения редактирования, затем выделите пропущенные слова"></textarea>
@@ -17,7 +44,28 @@
 
 </div>
     <br><br>
-    <div id="other-options" class="col-md-10 col-sm-6">
+
+    <!-- На английском языке -->
+    <div class="style-gray card">
+        <div class="card-body text-default-bright text-center text-lg">
+            Английский язык
+        </div>
+    </div>
+    <div class="form-group">
+        <textarea class="form-control" name="eng-title" id="eng-edit-text" rows="3" placeholder="Type question's title, press button to finish editing, then select missed words"></textarea>
+        <p class="lead" id="eng-general-text"></p>
+        <label for="textarea1">Text</label>
+        <input type="hidden" value="">
+    </div>
+    <button class="btn btn-primary btn-raised" type="button" value="finish" id="eng-finish-edit"><span id="eng-button-title">Finish editing text</span></button>
+    <button class="btn btn-primary btn-raised" type="button" id="eng-union">Go to union mode</button>
+    <button class="btn btn-primary btn-raised" type="button" id="eng-cancel-selection" style="display:none">Reset selection</button>
+    <div id="eng-word-variants">
+
+    </div>
+
+    <br><br>
+    <div id="other-options" class="col-md-12 col-sm-6">
         <div class="form-group">
             <select name="section" id="select-section" class="form-control" size="1">
                 <option value="$nbsp"></option>
@@ -32,6 +80,7 @@
             <!-- контейнер для ajax -->
         </div>
 
+
         <div class="form-group">
             <input type="number" min="1" name="points" id="points" class="form-control" value="1">
             <label for="points">Баллы за верный ответ</label>
@@ -44,6 +93,7 @@
 </div>
 </div>
 <input type="hidden" id="number-of-blocks" value="" name="number_of_blocks">
+<input type="hidden" id="eng-number-of-blocks" value="" name="eng_number_of_blocks">
 </form>
 <div id="question-preview" class="modalDialog">
     <div>
@@ -60,3 +110,4 @@
 </div>
 
 {!! HTML::script('js/question_create/fillGaps.js') !!}
+{!! HTML::script('js/question_create/fillGapsEng.js') !!}

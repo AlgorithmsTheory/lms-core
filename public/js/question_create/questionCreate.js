@@ -104,7 +104,7 @@ $('#type_question_add').on('click', '#close-btn', function(){
 });
 
 /** действия при сабмите формы */
-$('#type_question_add').on('click', '.submit-question', function(){
+$('#type_question_add').on('click', '#submit-text', function(){
     if ($('#select-section').val() == '$nbsp'){                                                                     //если не выбрали раздел
         alert('Вы не выбрали раздел и тему!');
         return false;
@@ -114,6 +114,7 @@ $('#type_question_add').on('click', '.submit-question', function(){
         return false;
     }
     if ($('#select-type').val() == 'Текстовый вопрос'){
+        // Для русской части
         if (word_number == 1){                                                                                          //если не выделили ни одного слова
             alert('Вы не выделили ни одного слова!');
             return false;
@@ -121,14 +122,14 @@ $('#type_question_add').on('click', '.submit-question', function(){
         $('#number-of-blocks').val(word_number-1);                                                                      //заносим в форму информацию о количестве пропущенных слов
         var i;
         var sumCost = 0;
-        var costStting = '';
+        var costString = '';
         for (i=1; i<word_number; i++){
             $('#column-'+i+' textarea').first().val($('#column-'+i+' textarea').first().val().replace(/,/g, '.'));  //меняем в стоимости запятую на точку для правильной обработки на сервере
             sumCost += Number($('#column-'+i+' textarea').first().val());                                           //считаем сумму всех стоимостей
-            costStting += $('#column-'+i+' textarea').eq(1).val()+': '+$('#column-'+i+' textarea').eq(0).val()+'\n';//создаем строку вида "слово: стоимость"
+            costString += $('#column-'+i+' textarea').eq(1).val()+': '+$('#column-'+i+' textarea').eq(0).val()+'\n';//создаем строку вида "слово: стоимость"
         }
         if (sumCost.toFixed(2) != '1.00'){                                                                          //не сабмитим, если стоимости не равны 1 в сумме
-            alert('Сумма стоимостей должна быть равна единице!\n' + costStting);
+            alert('Сумма стоимостей должна быть равна единице!\n' + costString);
             return false;
         }
         for (i=1; i<word_number; i++){
@@ -136,6 +137,30 @@ $('#type_question_add').on('click', '.submit-question', function(){
             $('#edit-text').val($('#general-text').text());                                                         //записываем измененный текст в поле формы с текстом для отправки на сервер
             $('#column-'+i+' textarea').eq(1).val($('#column-'+i+' textarea').eq(1).val()+'|'+i);                   //верный вариант ответа также заменяем на него же с маркером
         }
+
+        // Для ангийской части
+        if (wordNumberEng == 1){                                                                                          //если не выделили ни одного слова
+            alert('No words selected!');
+            return false;
+        }
+        $('#eng-number-of-blocks').val(wordNumberEng-1);                                                                      //заносим в форму информацию о количестве пропущенных слов
+        var sumCostEng = 0;
+        var costStringEng = '';
+        for (i=1; i<wordNumberEng; i++){
+            $('#eng-column-'+i+' textarea').first().val($('#eng-column-'+i+' textarea').first().val().replace(/,/g, '.'));  //меняем в стоимости запятую на точку для правильной обработки на сервере
+            sumCostEng += Number($('#eng-column-'+i+' textarea').first().val());                                           //считаем сумму всех стоимостей
+            costStringEng += $('#eng-column-'+i+' textarea').eq(1).val()+': '+$('#eng-column-'+i+' textarea').eq(0).val()+'\n';//создаем строку вида "слово: стоимость"
+        }
+        if (sumCostEng.toFixed(2) != '1.00'){                                                                          //не сабмитим, если стоимости не равны 1 в сумме
+            alert('Sum of costs must be one!\n' + costStringEng);
+            return false;
+        }
+        for (i=1; i<wordNumberEng; i++){
+            $('#eng-text-part-'+$('#eng-card-body-'+i).attr('class').substring(23)).text($('#eng-text-part-'+$('#eng-card-body-'+i).attr('class').substring(23)).text().replace($('#eng-text-part-'+$('#eng-card-body-'+i).attr('class').substring(23)).text(), $('#eng-text-part-'+$('#eng-card-body-'+i).attr('class').substring(23)).text()+'|'+i));     //ко всем выделенным словам добавляем маркер вида |x, где x - номер пропущенного слова
+            $('#eng-edit-text').val($('#eng-general-text').text());                                                         //записываем измененный текст в поле формы с текстом для отправки на сервер
+            $('#eng-column-'+i+' textarea').eq(1).val($('#eng-column-'+i+' textarea').eq(1).val()+'|'+i);                   //верный вариант ответа также заменяем на него же с маркером
+        }
     }
+    return true;
 });
 

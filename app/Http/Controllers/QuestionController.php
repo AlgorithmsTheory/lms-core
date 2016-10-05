@@ -229,7 +229,8 @@ class QuestionController extends Controller{
                 break;
             case 'Текстовый вопрос':
                 $fill_gaps = new FillGaps($id_question);
-                $fill_gaps->edit();
+                $data = $fill_gaps->edit();
+                return view('questions.teacher.edit3', compact('data', 'sections', 'themes'));
                 break;
             case 'Таблица соответствий':
                 $fill_gaps = new AccordanceTable($id_question);
@@ -269,7 +270,7 @@ class QuestionController extends Controller{
                 break;
             case 'Текстовый вопрос':
                 $fill_gaps = new FillGaps($id_question);
-                $fill_gaps->edit();
+                $fill_gaps->update($request);
                 break;
             case 'Таблица соответствий':
                 $fill_gaps = new AccordanceTable($id_question);

@@ -17,8 +17,11 @@ abstract class QuestionType {
     public $question;
     public $id_question;
     public $text;
+    public $eng_text;
     public $variants;
+    public $eng_variants;
     public $answer;
+    public $eng_answer;
     public $points;
     public $control;
     public $theme_code;
@@ -29,8 +32,11 @@ abstract class QuestionType {
             $this->question = new Question();
             $query = Question::whereId_question($id_question)->first();
             $this->text = $query->title;
+            $this->eng_text = $query->title_eng;
             $this->variants = $query->variants;
+            $this->eng_variants = $query->variants_eng;
             $this->answer = $query->answer;
+            $this->eng_answer = $query->answer_eng;
             $this->points = $query->points;
             $this->control = $query->control;
             $this->section_code = $query->section_code;

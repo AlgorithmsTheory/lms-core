@@ -2,18 +2,14 @@
  * Created by Станислав on 22.01.16.
  */
 
-var margins = [];                                                                                                   //расстояние верхней границы кнопок добавления и удаления для текстового вопроса
 var counts = [];                                                                                                    //счетчики числа вариантов для текстового вопроса
-var word_number = 1;                                                                                                //номер вставляемого слова для текстового вопроса (всегда на 1 больше, чем блоков на самом деле)
-var spanLast = 0;                                                                                                   //номер последнего спана в тексте
-var spanEdge = 0;                                                                                                   //крайний правый спан (здесь только спаны с одиночными словами)
+var word_number = parseInt($('#js_word_number').val());                                                                                                //номер вставляемого слова для текстового вопроса (всегда на 1 больше, чем блоков на самом деле)
+var spanLast = parseInt($('#js_span_last').val());                                                                                                   //номер последнего спана в тексте
+var spanEdge = parseInt($('#js_span_edge').val());                                                                                                   //крайний правый спан (здесь только спаны с одиночными словами)
 var startSpan = 0, endSpan = 10000;                                                                                 //номера крайних выделенных спанов
 
-for (k=0; k<50; k++){
-    margins[k] = 294;
-}
-for (k=0; k<50; k++){
-    counts[k] = 5;
+for (k = 1; k <= 50; k++){
+    counts[k] = parseInt($('#js_count_'+k).val());
 }
 
 /** Добавление варианта */
@@ -28,8 +24,6 @@ $('#type_question_add').on('click','.add-var-3', function(){
                     <label for="textarea3">Вариант ' + counts[numButton] + '</label>\
                 </div>\
                 ');
-    margins[numButton] += 74;
-    $('#add-del-buttons-'+numButton).attr('style','margin-top:'+ margins[numButton]+'px');
     counts[numButton]++;
 });
 
@@ -40,8 +34,6 @@ $('#type_question_add').on('click','.del-var-3',function(){
     numButton = idButton.substring(15);
     if (counts[numButton] > 2){
         $('#column-'+numButton).children().last().remove();
-        margins[numButton] -= 74;
-        $('#add-del-buttons-'+numButton).attr('style','margin-top:'+margins[numButton]+'px');
         counts[numButton]--;
     }
 });
@@ -66,7 +58,7 @@ function removeBlock(blockNum){
 function addBlock(numSpan, firstVar){
     $('#word-variants').append('\
                 <div class="card-body '+numSpan+'" id="card-body-'+word_number+'">\
-                    <div class="col-md-10 col-sm-6 var-column" id="column-'+word_number+'">\
+                    <div class="col-md-12 col-sm-6 var-column" id="column-'+word_number+'">\
                      <div class="form-group">\
                             <textarea  name="variants-'+word_number+'[]"  class="form-control textarea3" rows="1" value="0.5" required>0.5</textarea>\
                             <label for="textarea3">Стоимость</label>\
@@ -88,7 +80,7 @@ function addBlock(numSpan, firstVar){
                             <label for="textarea3">Вариант 4</label>\
                         </div>\
                     </div>\
-                    <div class="col-md-2 col-sm-6" style="margin-top: 294px" id="add-del-buttons-'+word_number+'">\
+                    <div class="col-md-offset-10 col-md-6 col-sm-6" id="add-del-buttons-'+word_number+'">\
                         <button type="button" class="btn ink-reaction btn-floating-action btn-success add-var-3" id="var-add-button-'+word_number+'"><b>+</b>   </button>\
                         <button type="button" class="btn ink-reaction btn-floating-action btn-danger del-var-3" id="var-del-button-'+word_number+'"><b>-</b></button>\
                     </div>\
@@ -184,6 +176,8 @@ $('#type_question_add').on('click','.text-part', function(){
             if ($(this).css('background-color') == 'rgb(144, 238, 144)'){                                           //слово уже выделено (выделено светло-зеленым)
                 $(this).attr('style', 'cursor:pointer');
                 for (i=1; i<word_number; i++){
+//                    alert($('#card-body-'+i+' textarea').eq(1).text());
+//                    alert($(this).text());
                     if ($('#card-body-'+i+' textarea').eq(1).text() == $(this).text()){                             //ищем нужный блок
                         removeBlock(i);
                         break;
