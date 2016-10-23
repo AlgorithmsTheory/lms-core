@@ -3,6 +3,7 @@
 <meta name="csrf_token" content="{{ csrf_token() }}" />
 <title>Создание теста</title>
 {!! HTML::style('css/createTest.css') !!}
+{!! HTML::style('css/loading_blur.css') !!}
 @stop
 
 @section('content')
@@ -38,6 +39,20 @@
                             <label>
                                 <input type="checkbox" name="visibility" id="visibility" checked>
                                 <span>Видимость</span>
+                            </label>
+                        </div>
+                        <!-- Доступен на английском языке -->
+                        <div class="checkbox checkbox-styled">
+                            <label>
+                                <input type="checkbox" name="multilanguage" id="multilanguage">
+                                <span>Доступен на английском языке</span>
+                            </label>
+                        </div>
+                        <!-- Только для печатной версии -->
+                        <div class="checkbox checkbox-styled">
+                            <label>
+                                <input type="checkbox" name="only-for-print" id="only-for-print">
+                                <span>Только для печатной версии</span>
                             </label>
                         </div>
                         <!-- Максимум баллов за тест -->
@@ -97,7 +112,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr id="row-1">
+                            <tr id="row-1" class="test-structure">
                                 <td><input type="number" min="1" name="num[]" id="num-1" value="1" size="1" class="form-control num"></td>
                                 <td> <select name="section[]" id="select-section-1" class="form-control select-section" size="1" required="">
                                         <option value="Любой">Любой</option>
@@ -118,7 +133,7 @@
                                         <option value="{{$type}}">{{$type}}</option>
                                         @endforeach
                                     </select></td>
-                                <td id="amount-container-1"></td>
+                                <td id="amount-container-1" class="amount-container"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -134,6 +149,9 @@
                 <br><br>
             </div>
         </form>
+    </div>
+    <div id="overlay" class="none">
+        <div class="loading-pulse"></div>
     </div>
 @stop
 

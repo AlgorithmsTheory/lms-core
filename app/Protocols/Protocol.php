@@ -8,6 +8,7 @@
 
 namespace App\Protocols;
 
+use App\Group;
 use App\Mypdf;
 use App\User;
 
@@ -23,7 +24,7 @@ abstract class Protocol {
         $this->setTest($test);
         $query = User::whereId($user)->select('first_name', 'last_name', 'group')->first();
         $this->user = $query->first_name.' '.$query->last_name;
-        $this->group = $query->group;
+        $this->group = Group::whereGroup_id($query->group)->select('group_name')->first()->group_name;
         $now =  date("Y-m-d H-i-s");
         $this->filename = Mypdf::translit($this->user).' '.$now.'.pdf';
         $this->html = $html;
@@ -54,8 +55,8 @@ abstract class Protocol {
     /** Полный путь до файла */
     private function pathToFile(){
         $dir = $this->setBaseDir();                                                                                     //устанавливаем базовый каталог в зависимоти от типа (тест, эмулятор и тд)
-        $dir = $this->makeDir($dir.Mypdf::translit($this->test));                                                                        //переходим  каталог теста
-        $dir = $this->makeDir($dir.$this->group);                                                                       //переходим в каталог группы
+        $dir = $this->makeDir($dir.Mypdf::translit($this->test));                                                       //переходим  каталог теста
+        $dir = $this->makeDir($dir.Mypdf::translit($this->group));                                                                       //переходим в каталог группы
         $dir = $dir.$this->filename;                                                                                    //прибавляем само имя файла
         return $dir;
     }

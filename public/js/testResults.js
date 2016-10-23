@@ -5,6 +5,7 @@ $(document).ready(function(){
     var htmlText = $('#results').html();
     var test = $('#test').val();
     var user = $('#user').val();
+    alert('protocol');
     $.ajax({
         cache: false,
         type: 'POST',

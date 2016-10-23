@@ -60,7 +60,7 @@ class Fine extends Eloquent{
     }
 
     /** По уровню штрафа (0..5) высчитывает коэффициент, на который будет умножаться результат штрафника */
-    public function countFactor($fine){
+    public static function countFactor($fine){
         $factor = 1 - $fine/10;
         return $factor;
     }

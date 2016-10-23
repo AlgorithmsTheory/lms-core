@@ -3,6 +3,7 @@
 <meta name="csrf_token" content="{{ csrf_token() }}" />
 <title>Редактирование теста "{{ $test['test_name'] }}"</title>}
 {!! HTML::style('css/createTest.css') !!}
+{!! HTML::style('css/loading_blur.css') !!}
 @stop
 
 @section('content')
@@ -50,6 +51,28 @@
                                 <input type="checkbox" name="visibility" id="visibility">
                                 @endif
                                 <span>Видимость</span>
+                            </label>
+                        </div>
+                        <!-- Доступен на английском языке -->
+                        <div class="checkbox checkbox-styled">
+                            <label>
+                                @if ($test['multilanguage'] == 1)
+                                <input type="checkbox" name="multilanguage" id="multilanguage" checked>
+                                @else
+                                <input type="checkbox" name="multilanguage" id="multilanguage">
+                                @endif
+                                <span>Доступен на английском языке</span>
+                            </label>
+                        </div>
+                        <!-- Только для печатной версии -->
+                        <div class="checkbox checkbox-styled">
+                            <label>
+                                @if ($test['only_for_print'] == 1)
+                                <input type="checkbox" name="only-for-print" id="only-for-print" checked>
+                                @else
+                                <input type="checkbox" name="only-for-print" id="only-for-print">
+                                @endif
+                                <span>Только для печатной версии</span>
                             </label>
                         </div>
                         <!-- Максимум баллов за тест -->
@@ -114,7 +137,7 @@
                             <tbody>
                             <?php $i = 1 ?>
                             @foreach ($structures as $structure)
-                                <tr id="row-{{ $i }}">
+                                <tr id="row-{{ $i }}" class="test-structure">
                                     <td><input type="number" min="1" name="num[]" id="num-{{ $i }}" value="{{ $structure['amount'] }}" size="1" class="form-control num"></td>
                                     <td> <select name="section[]" id="select-section-1" class="form-control select-section" size="1" required="">
                                             <option value="Любой">Любой</option>
@@ -150,7 +173,7 @@
                                                 @endif
                                             @endforeach
                                         </select></td>
-                                    <td id="amount-container-{{ $i }}">{{ $structure['db-amount'] }}</td>
+                                    <td id="amount-container-{{ $i }}" class="amount-container">{{ $structure['db-amount'] }}</td>
                                 </tr>
                             <?php $i++ ?>
                             @endforeach
@@ -168,6 +191,9 @@
                 <br><br>
             </div>
         </form>
+    </div>
+    <div id="overlay" class="none">
+        <div class="loading-pulse"></div>
     </div>
 @stop
 @section ('js-down')

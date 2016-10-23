@@ -52,7 +52,11 @@
             <input id="drop" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-danger" type="submit" name="drop_btn" value="Отказаться">
         {!! Form::close() !!}
     </div>
+@else
+    {!! Form::open(['method' => 'POST']) !!}
+    {!! Form::close() !!}
 @endif
+
 {!! HTML::script('js/toolbar.js') !!}
 <br>
 </section>

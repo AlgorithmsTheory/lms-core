@@ -62,7 +62,15 @@ $('#question-table').on('change','.select-type, .select-theme, .select-section',
     if ($('#training').prop('checked')){
         testType = 'Тренировочный';
     }
-    else testType = 'Контрольный';
+    else {
+        testType = 'Контрольный';
+    }
+    if ($('#only-for-print').prop('checked')) {
+        printable = 1;
+    }
+    else {
+        printable = 0;
+    }
     if ($(this).attr('name') == 'section[]'){                                                                           //если изменили раздел
         section = $(this).val();
         theme = 'Любая';
@@ -81,7 +89,6 @@ $('#question-table').on('change','.select-type, .select-theme, .select-section',
         type = $(this).val();
         tempCount = $(this).parent().parent().attr('id').substring(4);
     }
-    //TODO: ОБРАБОТАТЬ, ЕСЛИ МЕНЯЕМ ТИП ТЕСТА
         token = $('.form').children().eq(0).val();
 
     $.ajax({
@@ -95,13 +102,51 @@ $('#question-table').on('change','.select-type, .select-theme, .select-section',
                 return xhr.setRequestHeader('X-CSRF-TOKEN', token);
             }
         },
-        data: { section: section, theme: theme, type: type, test_type: testType, token: 'token' },
+        data: { section: section, theme: theme, type: type, test_type: testType, printable: printable, token: 'token' },
         success: function(data){
             $('#amount-container-'+tempCount).html(data);
             $('#num-'+tempCount).attr('max', data);
         }
     });
     return false;
+});
+
+$('#page').on('change', '#only-for-print, #training', function(){
+    if ($('#training').prop('checked')){
+        testType = 'Тренировочный';
+    }
+    else testType = 'Контрольный';
+    if ($('#only-for-print').prop('checked')) {
+        printable = 1;
+    }
+    else printable = 0;
+    $('.test-structure').each(function(){
+        section = $(this).find('.select-section').val();
+        theme = $(this).find('.select-theme').val();
+        type = $(this).find('.select-type').val();
+
+        token = $('.form').children().eq(0).val();
+        var ind = $(this).find('.num').attr('id').substring(4);
+        myBlurFunction(1);
+        $.ajax({
+            cache: false,
+            type: 'POST',
+            url:   '/uir/public/get-amount',
+            beforeSend: function (xhr) {
+                var token = $('meta[name="csrf_token"]').attr('content');
+
+                if (token) {
+                    return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                }
+            },
+            data: { section: section, theme: theme, type: type, test_type: testType, printable: printable, token: 'token' },
+            success: function(data){
+                myBlurFunction(0);
+                $('#amount-container-'+ind).html(data);
+                $('#num-'+ind).attr('max', data);
+            }
+        });
+    });
 });
 
 /** Действия по сабмиту */
@@ -144,12 +189,20 @@ $('.submit-test').click(function(){
     }
 });
 
-/*$('body').on('change','#training', function(){
-    if ($('#training').prop('checked')){
-        testType = 'Тренировочный';
-    }
-    else testType = 'Контрольный';
-    if (){
+var myBlurFunction = function(state) {
+    /* state can be 1 or 0 */
+    var containerElement = document.getElementById('page');
+    var overlayEle = document.getElementById('overlay');
 
+    if (state) {
+        var winHeight = $(window).height()/2 - 24;
+        winHeight = winHeight.toString()
+
+        overlayEle.style.display = 'block';
+        overlayEle.style.top = winHeight.concat('px');
+        containerElement.setAttribute('class', 'blur');
+    } else {
+        overlayEle.style.display = 'none';
+        containerElement.setAttribute('class', null);
     }
-});*/
+};
