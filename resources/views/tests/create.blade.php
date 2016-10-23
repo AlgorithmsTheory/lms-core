@@ -22,63 +22,59 @@
                 <div class="card">
                     <div class="card-body">
                             <!-- название теста -->
-                            <div class="form-group floating-label">
+                            <div class="form-group dropdown-label">
                                 <textarea  name="test-name" class="form-control textarea1" rows="1" placeholder=""  required></textarea>
                                 <label for="textarea1">Название теста</label>
                             </div>
                             <!-- тренировочный тест -->
-                            <div class="checkbox checkbox-styled">
-                                <label>
-                                    <input type="checkbox" name="training" id="training">
-                                    <span>Тренировочный тест</span>
-                                </label>
-                            </div>
+                        <div class="checkbox checkbox-styled">
+                            <label>
+                                <input type="checkbox" name="training" id="training">
+                                <span>Тренировочный тест</span>
+                            </label>
+                        </div>
+                        <!-- Видимость теста -->
+                        <div class="checkbox checkbox-styled">
+                            <label>
+                                <input type="checkbox" name="visibility" id="visibility" checked>
+                                <span>Видимость</span>
+                            </label>
+                        </div>
                         <!-- Максимум баллов за тест -->
-                        <div class="form-group floating-label">
+                        <div class="form-group dropdown-label">
                             <input type="number" min="1" name="total" id="total" class="form-control" required>
                             <label for="total">Максимум баллов за тест</label>
                         </div>
                         <!-- Время на прохождение теста -->
-                        <div class="form-group floating-label">
+                        <div class="form-group dropdown-label">
                             <input type="number" min="1" name="test-time" id="test-time" class="form-control" required>
                             <label for="test-time">Время на прохождение теста в минутах</label>
                         </div>
                      </div>
                 </div>
             </div>
-            <div class="col-lg-offset-1 col-md-5 col-sm-10">
+            <div class="col-lg-offset-1 col-md-10 col-sm-10">
                 <div class="card">
                     <div class="card-body">
-                        <!-- дата открытия теста -->
-                            <label>
-                                <input type="date" name="start-date" id="start-date" value="2015-09-01">
-                                <span>&nbsp Дата открытия теста</span>
-                            </label>
-                    </div>
-                    <div class="card-body">
-                        <!-- дата закрытия теста -->
-                        <label>
-                            <input type="date" name="end-date" id="end-date" value="2016-08-01">
-                            <span>&nbsp Дата закрытия теста</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-5 col-sm-1">
-                <div class="card">
-                    <div class="card-body">
-                        <!-- время открытия теста -->
-                        <label>
-                            <input type="time" name="start-time" value="00:00">
-                            <span>&nbsp Время открытия теста</span>
-                        </label>
-                    </div>
-                    <div class="card-body">
-                        <!-- время закрытия теста -->
-                        <label>
-                            <input type="time" name="end-time" value="00:00">
-                            <span>&nbsp Время закрытия теста</span>
-                        </label>
+                       <table class="table table-condensed" id="test-dates-table">
+                           <tr>
+                               <td>Группа</td>
+                               <td>Дата открытия</td>
+                               <td>Время открытия</td>
+                               <td>Дата закрытия</td>
+                               <td>Время закрытия</td>
+                           </tr>
+                           @foreach ($groups as $group)
+                                <input type="hidden" name="id-group[]" value="{{ $group['group_id'] }}">
+                                <tr>
+                                    <td>{{ $group['group_name'] }}</td>
+                                    <td><input type="date" name="start-date[]" class="start-date" value="{{ $date }}"></td>
+                                    <td><input type="time" name="start-time[]" class="start-time" value="{{ $time }}"></td>
+                                    <td><input type="date" name="end-date[]" class="end-date" value="{{ $date }}"></td>
+                                    <td><input type="time" name="end-time[]" class="end-time" value="{{ $time }}"></td>
+                                </tr>
+                           @endforeach
+                       </table>
                     </div>
                 </div>
             </div>

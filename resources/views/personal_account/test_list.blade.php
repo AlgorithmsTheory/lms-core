@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="col-md-12 col-sm-6 card style-primary text-center">
-    <h1 class="">Список тестов</h1>
+    <h1 class="">Список тестов группы {{ $group_name }}</h1>
 </div>
 
 <div class="col-lg-offset-0 col-md-12 col-sm-6">
@@ -37,6 +37,7 @@
                 </div>
                 <form action="{{URL::route('finish_test')}}" method="POST" class="form">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="id_group" value="{{ $id_group }}">
                     <table class="table table-condensed" id="out-of-date-test-table">
                         <tr>
                             <th>Название теста</th>
@@ -91,6 +92,7 @@
                 </div>
                 <form action="{{URL::route('finish_test')}}" method="POST" class="form">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="id_group" value="{{ $id_group }}">
                     <table class="table table-condensed" id="out-of-date-test-table">
                         <tr>
                             <th>Название теста</th>
@@ -136,6 +138,7 @@
                 </div>
                 <form action="{{URL::route('finish_test')}}" method="POST" class="form">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="id_group" value="{{ $id_group }}">
                     <table class="table table-condensed" id="out-of-date-test-table">
                         <tr>
                             <th>Название теста</th>
@@ -208,6 +211,7 @@
                 </div>
                 <form action="{{URL::route('finish_test')}}" method="POST" class="form">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="id_group" value="{{ $id_group }}">
                     <table class="table table-condensed" id="out-of-date-test-table">
                         <tr>
                             <th>Название теста</th>
@@ -253,6 +257,7 @@
                 </div>
                 <form action="{{URL::route('finish_test')}}" method="POST" class="form">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="id_group" value="{{ $id_group }}">
                     <table class="table table-condensed" id="out-of-date-test-table">
                         <tr>
                             <th>Название теста</th>
@@ -295,6 +300,7 @@
                 </div>
                 <form action="{{URL::route('finish_test')}}" method="POST" class="form">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="id_group" value="{{ $id_group }}">
                     <table class="table table-condensed" id="out-of-date-test-table">
                         <tr>
                             <th>Название теста</th>

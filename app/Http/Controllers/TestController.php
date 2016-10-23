@@ -6,12 +6,14 @@
  * Time: 16:49
  */
 namespace App\Http\Controllers;
+use App\Group;
 use App\Protocols\TestProtocol;
 use App\Testing\Fine;
 use App\Testing\Result;
 use App\Testing\Section;
 use App\Testing\StructuralRecord;
 use App\Testing\Test;
+use App\Testing\TestForGroup;
 use App\Testing\TestStructure;
 use App\Testing\TestTask;
 use App\Testing\Theme;
@@ -73,7 +75,10 @@ class TestController extends Controller{
         foreach ($query as $section){
             array_push($sections, $section->section_name);
         }
-        return view('tests.create', compact('types', 'sections'));
+        $groups = Group::all();
+        $date = date("Y-m-d");
+        $time = date("H:i");
+        return view('tests.create', compact('types', 'sections' ,'groups', 'date', 'time'));
     }
 
     /** Добавляет новый тест в БД */
@@ -81,15 +86,26 @@ class TestController extends Controller{
         if ($request->input('training')) {
             $test_type = 'Тренировочный';
         }
-        else $test_type = 'Контрольный';
+        else {
+            $test_type = 'Контрольный';
+        }
+        if ($request->input('visibility')) {
+            $visibility = 1;
+        }
+        else {
+            $visibility = 0;
+        }
         $total = $request->input('total');
         $test_time = $request->input('test-time');
-        $start = $request->input('start-date').' '.$request->input('start-time');
-        $end = $request->input('end-date').' '.$request->input('end-time');
         Test::insert(array('test_name' => $request->input('test-name'), 'test_type' => $test_type,
-            'test_time' => $test_time,
-            'start' => $start, 'end' => $end, 'total' => $total, 'year' => 2016, 'visibility' => 1));
+            'test_time' => $test_time, 'total' => $total, 'year' => 2016, 'visibility' => $visibility));
         $id_test = Test::max('id_test');
+        for ($i = 0; $i < count($request->input('id-group')); $i++) {
+            $start = $request->input('start-date')[$i].' '.$request->input('start-time')[$i];
+            $end = $request->input('end-date')[$i].' '.$request->input('end-time')[$i];
+            TestForGroup::insert(['id_test' => $id_test, 'id_group' => $request->input('id-group')[$i],
+                                  'start' => $start, 'end' => $end]);
+        }
         for ($i=0; $i<=$request->input('num-rows'); $i++){
             if ($request->input('section')[$i] != 'Любой')
                 $section = Section::whereSection_name($request->input('section')[$i])->select('section_code')->first()->section_code;
@@ -106,10 +122,21 @@ class TestController extends Controller{
         return redirect()->route('test_create');
     }
 
+    /** Список всех групп для перехода к редактированию */
+    public function chooseGroup(){
+        $groups = Group::join('test_for_group', 'test_for_group.id_group' , '=', 'groups.group_id')
+                              ->select('groups.group_id', 'groups.group_name')
+                              ->distinct()
+                              ->get();
+        return view('tests.groups_for_test_list', compact('groups'));
+    }
+
     /** Список всех тестов для их редактирования и завершения */
-    public function editList(){
+    public function editList($id_group){
         $current_date = date("Y-m-d H:i:s");                                                                            //текущая дата в mySlq формате DATETIME
         $current_ctr_tests = $this->test->whereTest_type('Контрольный')                                                 //формируем текущие тесты
+                    ->leftJoin('test_for_group', 'tests.id_test', '=', 'test_for_group.id_test')
+                    ->where('test_for_group.id_group', '=', $id_group)
                     ->where('archived', '<>', '1')
                     ->where('start', '<', $current_date)
                     ->where('end', '>', $current_date)
@@ -120,6 +147,8 @@ class TestController extends Controller{
         }
 
         $current_tr_tests = $this->test->whereTest_type('Тренировочный')
+                    ->leftJoin('test_for_group', 'tests.id_test', '=', 'test_for_group.id_test')
+                    ->where('test_for_group.id_group', '=', $id_group)
                     ->where('archived', '<>', '1')
                     ->where('start', '<', $current_date)
                     ->where('end', '>', $current_date)
@@ -130,19 +159,23 @@ class TestController extends Controller{
         }
 
         $past_ctr_tests = $this->test->whereTest_type('Контрольный')                                                         //формируем прошлые тесты
+            ->leftJoin('test_for_group', 'tests.id_test', '=', 'test_for_group.id_test')
+            ->where('test_for_group.id_group', '=', $id_group)
             ->where('archived', '<>', '1')
             ->where('end', '<', $current_date)
             ->select()
             ->get();
         foreach ($past_ctr_tests as $test){
             $test['amount'] = Test::getAmount($test['id_test']);
-            if (Test::isFinished($test->id_test))                                                                       //если таких студентов нет, то такой тест завршить нельзя
+            if (Test::isFinished($test->id_test, $id_group))                                                                       //если таких студентов нет, то такой тест завршить нельзя
                 $test['finish_opportunity'] = 0;
             else                                                                                                        //иначе можно
                 $test['finish_opportunity'] = 1;
         }
 
         $past_tr_tests = $this->test->whereTest_type('Тренировочный')
+            ->leftJoin('test_for_group', 'tests.id_test', '=', 'test_for_group.id_test')
+            ->where('test_for_group.id_group', '=', $id_group)
             ->where('archived', '<>', '1')
             ->where('end', '<', $current_date)
             ->select()
@@ -152,6 +185,8 @@ class TestController extends Controller{
         }
 
         $future_ctr_tests = $this->test->whereTest_type('Контрольный')                                                         //формируем будущие тесты
+            ->leftJoin('test_for_group', 'tests.id_test', '=', 'test_for_group.id_test')
+            ->where('test_for_group.id_group', '=', $id_group)
             ->where('archived', '<>', '1')
             ->where('start', '>', $current_date)
             ->select()
@@ -161,6 +196,8 @@ class TestController extends Controller{
         }
 
         $future_tr_tests = $this->test->whereTest_type('Тренировочный')
+            ->leftJoin('test_for_group', 'tests.id_test', '=', 'test_for_group.id_test')
+            ->where('test_for_group.id_group', '=', $id_group)
             ->where('archived', '<>', '1')
             ->where('start', '>', $current_date)
             ->select()
@@ -169,7 +206,9 @@ class TestController extends Controller{
             $test['amount'] = Test::getAmount($test['id_test']);
         }
 
-        return view ('personal_account.test_list', compact('current_ctr_tests', 'current_tr_tests', 'past_ctr_tests', 'past_tr_tests', 'future_ctr_tests', 'future_tr_tests'));
+        $group_name = Group::whereGroup_id($id_group)->select('group_name')->first()->group_name;
+
+        return view ('personal_account.test_list', compact('current_ctr_tests', 'current_tr_tests', 'past_ctr_tests', 'past_tr_tests', 'future_ctr_tests', 'future_tr_tests', 'group_name', 'id_group'));
     }
 
     /** Редактирование выбранного теста */
@@ -177,12 +216,17 @@ class TestController extends Controller{
         $test = Test::whereId_test($id_test)->first();
         $sections = Section::where('section_code', '>', '0')->get();
         $types = Type::where('type_code', '>', '0')->get();
-        $test['time_zone'] = Test::getTimeZone($id_test);
+        $test['is_finished'] = Test::isFinished($id_test);
         $test['is_resolved'] = Test::isResolved($id_test);
 
         $number_of_sections = Section::where('section_code', '>', '0')->count();                                        //число разделов
         $number_of_types = Type::where('type_code', '>', '0')->count();                                                 //число типов
         $structures = TestStructure::whereId_test($id_test)->get();
+        $test_for_groups = TestForGroup::whereId_test($test->id_test)->get();
+        foreach ($test_for_groups as $test_for_group) {
+            $test_for_group['group_name'] = Group::whereGroup_id($test_for_group['id_group'])->select('group_name')->first()->group_name;
+            $test_for_group['time_zone'] = Test::getTimeZone($id_test, $test_for_group['id_group']);
+        }
         foreach ($structures as $structure){
             if (StructuralRecord::whereId_structure($structure['id_structure'])->distinct()->select('section_code')
                                     ->count('section_code') == $number_of_sections) {
@@ -221,7 +265,7 @@ class TestController extends Controller{
             $structure['db-amount'] = Question::getAmount($structure['section'], $structure['theme'],                      //число вопросов в БД заданной структуры
                                     $structure['type'], $test->test_type);
         }
-        return view ('tests.edit', compact('test', 'sections', 'types', 'structures'));
+        return view ('tests.edit', compact('test', 'sections', 'types', 'structures', 'test_for_groups'));
     }
 
     /** Применение изменений после редактирования теста */
@@ -229,17 +273,29 @@ class TestController extends Controller{
         if ($request->input('training')) {
             $test_type = 'Тренировочный';
         }
-        else $test_type = 'Контрольный';
+        else {
+            $test_type = 'Контрольный';
+        }
+        if ($request->input('visibility')) {
+            $visibility = 1;
+        }
+        else {
+            $visibility = 0;
+        }
         $total = $request->input('total');
         $test_time = $request->input('test-time');
-        $start = $request->input('start-date').' '.$request->input('start-time');
-        $end = $request->input('end-date').' '.$request->input('end-time');
         Test::whereId_test($request->input('id-test'))->update(array('test_name' => $request->input('test-name'), 'test_type' => $test_type,
-            'test_time' => $test_time,
-            'start' => $start, 'end' => $end, 'total' => $total));
+            'test_time' => $test_time, 'total' => $total, 'visibility' => $visibility));
 
-        $id_test = $request->input('id-test');                                                                          //удаляем старые записи и структуры
-        $old_structures = TestStructure::whereId_test($id_test)->get();
+        $id_test = $request->input('id-test');
+        for ($i = 0; $i < count($request->input('id-group')); $i++) {
+            $start = $request->input('start-date')[$i].' '.$request->input('start-time')[$i];
+            $end = $request->input('end-date')[$i].' '.$request->input('end-time')[$i];
+            TestForGroup::whereId_test($id_test)->whereId_group($request->input('id-group')[$i])->update(['id_test' => $id_test, 'id_group' => $request->input('id-group')[$i],
+                'start' => $start, 'end' => $end]);
+        }
+
+        $old_structures = TestStructure::whereId_test($id_test)->get();                                                 //удаляем старые записи и структуры
         foreach ($old_structures as $structure){
             StructuralRecord::whereId_structure($structure['id_structure'])->delete();
         }

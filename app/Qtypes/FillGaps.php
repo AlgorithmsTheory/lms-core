@@ -106,17 +106,17 @@ class FillGaps extends QuestionType {
         $j = 1;
         $k = 0;
 
-        $all_variants = explode("%", $this->variants);
-        $costs = explode(";", $all_variants[1]);
-        $split_variants = explode("<>", $all_variants[0]);
+        $all_variants = preg_split("/%/", $this->variants, -1, PREG_SPLIT_NO_EMPTY);
+        $costs = preg_split("/;/", $all_variants[1], -1, PREG_SPLIT_NO_EMPTY);
+        $split_variants = preg_split("/<>/", $all_variants[0], -1, PREG_SPLIT_NO_EMPTY);
         for ($i = 0; $i < count($split_variants); $i++) {
-            $variants[$i] = explode(";", $split_variants[$i]);
+            $variants[$i] = preg_split("/;/", $split_variants[$i], -1, PREG_SPLIT_NO_EMPTY);
         }
 
 
         $words_number = count(preg_split('/[\s,\.\?!-:"]+/', $this->text, -1, PREG_SPLIT_NO_EMPTY));
         $js_span_edge = $words_number;
-        $answers = explode(";", $this->answer);
+        $answers = preg_split("/;/", $this->answer, -1, PREG_SPLIT_NO_EMPTY);
 
         $text_parts = preg_split('/([\s|,|\.|\?|!|-|:|"]+)/', $this->text, -1, PREG_SPLIT_DELIM_CAPTURE);
         array_pop($text_parts);
@@ -168,17 +168,17 @@ class FillGaps extends QuestionType {
         $j = 1;
         $k = 0;
 
-        $eng_all_variants = explode("%", $this->eng_variants);
-        $eng_costs = explode(";", $eng_all_variants[1]);
-        $eng_split_variants = explode("<>", $eng_all_variants[0]);
+        $eng_all_variants = preg_split("/%/", $this->eng_variants, -1, PREG_SPLIT_NO_EMPTY);
+        $eng_costs = preg_split("/;/", $eng_all_variants[1], -1, PREG_SPLIT_NO_EMPTY);
+        $eng_split_variants = preg_split("/<>/", $eng_all_variants[0], -1, PREG_SPLIT_NO_EMPTY);
         for ($i = 0; $i < count($eng_split_variants); $i++) {
-            $eng_variants[$i] = explode(";", $eng_split_variants[$i]);
+            $eng_variants[$i] = preg_split("/;/", $eng_split_variants[$i], -1, PREG_SPLIT_NO_EMPTY);
         }
 
 
         $eng_words_number = count(preg_split('/[\s,\.\?!-:"]+/', $this->eng_text, -1, PREG_SPLIT_NO_EMPTY));
         $eng_js_span_edge = $eng_words_number;
-        $eng_answers = explode(";", $this->eng_answer);
+        $eng_answers = preg_split("/;/", $this->eng_answer, -1, PREG_SPLIT_NO_EMPTY);
 
         $eng_text_parts = preg_split('/([\s|,|\.|\?|!|-|:|"]+)/', $this->eng_text, -1, PREG_SPLIT_DELIM_CAPTURE);
         array_pop($eng_text_parts);

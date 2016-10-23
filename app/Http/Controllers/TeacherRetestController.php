@@ -7,9 +7,11 @@
  */
 
 namespace App\Http\Controllers;
+use App\Group;
 use App\Testing\Fine;
 use App\Testing\Result;
 use App\Testing\Test;
+use App\Testing\TestForGroup;
 use App\User;
 use DB;
 use Illuminate\Http\Request;
@@ -56,6 +58,7 @@ class TeacherRetestController extends Controller {
             $user = User::whereId($row->id)->where('year', '=', $current_year)->select('first_name', 'last_name', 'group')->first();
             array_push($student_names, $user->last_name.' '.$user->first_name);
             $test = Test::whereId_test($row->id_test)->select('test_name')->first();
+            Group::whereGroup_id($user->group)->select('group_name')->first()->group_name;
             array_push($groups, $user->group);
             array_push($test_names, $test->test_name);
             array_push($accesses, $row->access);
@@ -68,7 +71,7 @@ class TeacherRetestController extends Controller {
 
         $marks = ['A', 'B', 'C', 'D', 'E', 'F'];
 
-        $tests = Test::distinct()->select('test_name')->get();
+        $tests = Test::whereTest_type('Контрольный')->select('test_name')->get();
         foreach($tests as $test){
             array_push($all_tests, $test->test_name);
         }
@@ -94,17 +97,17 @@ class TeacherRetestController extends Controller {
         $absents = [];                                                                                                  //отсутствующие на тесте
         $fine = new Fine();
         $current_year = date('Y');
+        $id_group = $request->input('id_group');
         for ($i=0; $i < count($request->input('changes')); $i++){
             if ($request->input('changes')[$i] == true){                                                                //если тест был выбран для завершения
                 $id_test = $request->input('id-test')[$i];
                 $user_query = User::where('year', '=', $current_year)                                                   //пример сырого запроса
                             ->whereRole('Студент')
-                            ->whereRaw("not exists (select `id` from `results`
-                                        where results.id = users.id
-                                        and `results`.`id_test` = ".$id_test. "
-                                        and `results`.`result_date` between '".Test::whereId_test($id_test)->select('start')->first()->start."'
-                                        and '".Test::whereId_test($id_test)->select('end')->first()->end."'
-                                        )")
+                            ->whereGroup($id_group)
+                            ->whereRaw("not exists (select `id` from `fines`
+                                        where `fines`.id = `users`.id
+                                        and `fines`.`id_test` = ".$id_test. "
+                                        and `fines`.access = 1)")
                             ->distinct()
                             ->select()
                             ->get();
@@ -121,8 +124,8 @@ class TeacherRetestController extends Controller {
 
                     //добавить их в таблицу результатов, записав в качестве результатов -2 -2 absence
                     //если тест прошедший, то время результата должно быть на 5 секунд меньше, чем время завершения теста
-                    if (Test::whereId_test($id_test)->select('end')->first()->end < date("Y-m-d H:i:s")){
-                        $result_date = date("Y-m-d H:i:s",strtotime(Test::whereId_test($id_test)->select('end')->first()->end) - 5);
+                    if (Test::getTimeZone($id_test, $id_group) == -1){
+                        $result_date = date("Y-m-d H:i:s",strtotime(TestForGroup::whereId_test($id_test)->whereId_group($id_group)->select('end')->first()->end) - 5);
                     }
                     else $result_date = date("Y-m-d H:i:s");
                     Result::insert(['id' => $user->id, 'id_test' => $id_test,
@@ -131,9 +134,8 @@ class TeacherRetestController extends Controller {
 
                 }
                 //если тест является текущим, то сделать время его закрытия текущим временем (чтобы он попал в прошлые)
-                if (Test::whereId_test($id_test)->select('start')->first()->start < date("Y-m-d H:i:s") &&
-                    Test::whereId_test($id_test)->select('end')->first()->end > date("Y-m-d H:i:s")){
-                    Test::whereId_test($id_test)->update(['end' => date("Y-m-d H:i:s")]);
+                if (Test::getTimeZone($id_test, $id_group) == 0){
+                    TestForGroup::whereId_test($id_test)->whereId_group($id_group)->update(['end' => date("Y-m-d H:i:s")]);
                 }
                 //нельзя ставить дату открытия раньше сегодняшнего числа!
             }

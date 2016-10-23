@@ -41,6 +41,17 @@
                                 <span>Тренировочный тест</span>
                             </label>
                         </div>
+                        <!-- Видимый или невидимый тест -->
+                        <div class="checkbox checkbox-styled">
+                            <label>
+                                @if ($test['visibility'] == 1)
+                                <input type="checkbox" name="visibility" id="visibility" checked>
+                                @else
+                                <input type="checkbox" name="visibility" id="visibility">
+                                @endif
+                                <span>Видимость</span>
+                            </label>
+                        </div>
                         <!-- Максимум баллов за тест -->
                         <div class="form-group">
                             <input type="number" min="1" name="total" id="total" class="form-control" value="{{ $test['total'] }}" required>
@@ -54,41 +65,31 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-offset-1 col-md-5 col-sm-10">
+
+            <div class="col-lg-offset-1 col-md-10 col-sm-10">
                 <div class="card">
                     <div class="card-body">
-                        <!-- дата открытия теста -->
-                        <label>
-                            <input type="date" name="start-date" id="start-date" value="{{ substr($test['start'], 0, 10) }}">
-                            <span>&nbsp Дата открытия теста</span>
-                        </label>
-                    </div>
-                    <div class="card-body">
-                        <!-- дата закрытия теста -->
-                        <label>
-                            <input type="date" name="end-date" id="end-date" value="{{ substr($test['end'], 0, 10) }}">
-                            <input type="hidden" name="old-end-date" id="old-end-date" value="{{ substr($test['end'], 0, 10) }}">
-                            <span>&nbsp Дата закрытия теста</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-5 col-sm-1">
-                <div class="card">
-                    <div class="card-body">
-                        <!-- время открытия теста -->
-                        <label>
-                            <input type="time" name="start-time" id="start-time" value="{{ substr($test['start'], 11, 16) }}">
-                            <span>&nbsp Время открытия теста</span>
-                        </label>
-                    </div>
-                    <div class="card-body">
-                        <!-- время закрытия теста -->
-                        <label>
-                            <input type="time" name="end-time" id="end-time" value="{{ substr($test['end'], 11, 16) }}">
-                            <input type="hidden" name="old-end-time" id="old-end-time" value="{{ substr($test['end'], 11, 16) }}">
-                            <span>&nbsp Время закрытия теста</span>
-                        </label>
+                        <table class="table table-condensed" id="test-dates-table">
+                            <tr>
+                                <td>Группа</td>
+                                <td>Дата открытия</td>
+                                <td>Время открытия</td>
+                                <td>Дата закрытия</td>
+                                <td>Время закрытия</td>
+                            </tr>
+                            @foreach ($test_for_groups as $test_for_group)
+                            <input type="hidden" name="id-group[]" value="{{ $test_for_group['id_group'] }}">
+                            <input type="hidden" name="old-end-date[]" value="{{ substr($test_for_group['end'], 0, 10) }}">
+                            <input type="hidden" name="old-end-time[]" value="{{ substr($test_for_group['end'], 11, 16) }}">
+                            <tr>
+                                <td>{{ $test_for_group['group_name'] }}</td>
+                                <td><input type="date" name="start-date[]" class="start-date" value="{{ substr($test_for_group['start'], 0, 10) }}"></td>
+                                <td><input type="time" name="start-time[]" class="start-time" value="{{ substr($test_for_group['start'], 11, 16) }}"></td>
+                                <td><input type="date" name="end-date[]" class="end-date" value="{{ substr($test_for_group['end'], 0, 10) }}"></td>
+                                <td><input type="time" name="end-time[]" class="end-time" value="{{ substr($test_for_group['end'], 11, 16) }}"></td>
+                            </tr>
+                            @endforeach
+                        </table>
                     </div>
                 </div>
             </div>

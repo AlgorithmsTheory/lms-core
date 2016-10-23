@@ -73,12 +73,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <textarea class="form-control" name="title" id="edit-text" value="{{ $data['clear_text'] }}" rows="3" style="display: none;" placeholder="Введите текст вопроса, нажмите кнопку завершения редактирования, затем выделите пропущенные слова">
-                                {{ $data['clear_text'] }}
-                            </textarea>
-                            <p class="lead" id="general-text" style="display:block;">
-                                {!! $data['text'] !!}
-                            </p>
+                            <textarea class="form-control" name="title" id="edit-text" rows="3" style="display: none;" placeholder="Введите текст вопроса, нажмите кнопку завершения редактирования, затем выделите пропущенные слова">{{ $data['clear_text'] }}</textarea>
+                            <p class="lead" id="general-text" style="display:block;">{!! $data['text'] !!}</p>
                             <label for="textarea1">Текст</label>
                             <input type="hidden" value="">
                         </div>
@@ -120,16 +116,12 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <textarea class="form-control" name="eng-title" id="eng-edit-text" value="{{ $data['eng_clear_text'] }}" rows="3" style="display: none;" placeholder="Type question's title, press button to finish editing, then select missed words">
-                                {{ $data['clear_text'] }}
-                            </textarea>
-                            <p class="lead" id="eng-general-text" style="display:block;">
-                                {!! $data['eng_text'] !!}
-                            </p>
+                            <textarea class="form-control" name="eng-title" id="eng-edit-text" value="{{ $data['eng_clear_text'] }}" rows="3" style="display: none;" placeholder="Type question's title, press button to finish editing, then select missed words">{{ $data['eng_clear_text'] }}</textarea>
+                            <p class="lead" id="eng-general-text" style="display:block;">{!! $data['eng_text'] !!}</p>
                             <label for="textarea1">Text</label>
                             <input type="hidden" value="">
                         </div>
-                        <button class="btn btn-primary btn-raised" type="button" value="finish" id="eng-edit"><span id="eng-button-title">Finish editing text</span></button>
+                        <button class="btn btn-primary btn-raised" type="button" value="finish" id="eng-edit"><span id="eng-button-title">Back to editing</span></button>
                         <button class="btn btn-primary btn-raised" type="button" id="eng-union">Go to union mode</button>
                         <button class="btn btn-primary btn-raised" type="button" id="eng-cancel-selection" style="display:none">Reset selection</button>
                         <div id="eng-word-variants">

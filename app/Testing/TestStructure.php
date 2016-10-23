@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\TestStructure  whereId_structure($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\TestStructure  whereId_test($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\TestStructure  whereAmount($value)
- *
  * @method static \Illuminate\Database\Eloquent|\App\Testing\TestStructure  get()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\TestStructure  where()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\TestStructure  select()

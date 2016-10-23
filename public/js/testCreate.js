@@ -109,20 +109,39 @@ $('.submit-test').click(function(){
     $('#num-rows').val(count-1);
 
     var now = Date.now();
-    var start = Date.parse($('#start-date').val() + $('#start-time').val());
-    var end = Date.parse($('#end-date').val() + $('#end-time').val());
-    if (start <= now + 3600000){                                                                                        //если между началом и текущим временем меньше часа разницы
-        alert('Открытие теста должно быть хотя бы на час больше текущего времени');
-        $('#start-date').focus();
-        return false;
-    }
+    var startDates = [];
+    var endDates = [];
+    var startTimes = [];
+    var endTimes = [];
 
-    if (end <= start + 3600000){                                                                                        //если между началом и концом менее часа разницы
-        alert('Окончание теста должно быть хотя бы на час больше времени открытия');
-        $('#end-date').focus();
-        return false;
-    }
+    $('.start-date').each(function(){
+       startDates.push($(this).val());
+    });
+    $('.end-date').each(function(){
+        endDates.push($(this).val());
+    });
+    $('.start-time').each(function(){
+        startTimes.push($(this).val());
+    });
+    $('.end-time').each(function(){
+        endTimes.push($(this).val());
+    });
 
+    for (i = 0; i < startDates.length; i++) {
+        var start = Date.parse(startDates[i].concat(" ").concat(startTimes[i]));
+        var end = Date.parse(endDates[i].concat(" ").concat(endTimes[i]));
+        if (start <= now + 3600000){                                                                                        //если между началом и текущим временем меньше часа разницы
+            alert('Открытие теста должно быть хотя бы на час больше текущего времени');
+            $('.start-date').focus();
+            return false;
+        }
+
+        if (end <= start + 3600000){                                                                                        //если между началом и концом менее часа разницы
+            alert('Окончание теста должно быть хотя бы на час больше времени открытия');
+            $('.end-date').focus();
+            return false;
+        }
+    }
 });
 
 /*$('body').on('change','#training', function(){

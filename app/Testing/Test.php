@@ -9,6 +9,7 @@
 namespace App\Testing;
 use App\Control_test_dictionary;
 use App\Controls;
+use App\Group;
 use App\User;
 use Auth;
 use Illuminate\Database\Eloquent\Model as Eloquent;
@@ -53,31 +54,42 @@ class Test extends Eloquent {
         return TestStructure::whereId_test($id_test)->sum('amount');
     }
 
-    /** Проверяет, завершен ли тест */
-    public static function isFinished($id_test){
-        //ищем среди студентов тех, кто не проходил данный тест в заданный промежуток времени
+    /** Проверяет, завершен ли тест для данной группы */
+    public static function isFinishedForGroup($id_test, $id_group){
+        $test_for_group = TestForGroup::whereId_test($id_test)->whereId_group($id_group)->select('start', 'end')->first();
+        //ищем среди студентов тех, у кого нет доступа к написанию теста в таблице штрафов
         $user_query = User::where('year', '=', date('Y'))                                                               //пример сырого запроса
             ->whereRole('Студент')
-            ->whereRaw("not exists (select `id` from `results`
-                                        where results.id = users.id
-                                        and `results`.`id_test` = ".$id_test. "
-                                        and `results`.`result_date` between '".Test::whereId_test($id_test)->select('start')->first()->start."'
-                                        and '".Test::whereId_test($id_test)->select('end')->first()->end."'
-                                        )")
+            ->whereGroup($id_group)
+            ->whereRaw("not exists (select `id` from `fines`
+                                        where `fines`.id = `users`.id
+                                        and `fines`.`id_test` = ".$id_test. "
+                                        and `fines`.access = 1)")
             ->distinct()
             ->select()
             ->get();
-        if (sizeof($user_query) == 0 && time() >= strtotime(Test::whereId_test($id_test)->select('end')->first()->end)) //если таких студентов нет и текущее время больше времени закрытия теста, то тест завершен
+        if (sizeof($user_query) == 0 && time() >= strtotime($test_for_group->end)) //если таких студентов нет и текущее время больше времени закрытия теста, то тест завершен
             return true;
         else                                                                                                            //иначе не завершен
             return false;
     }
 
+    /** Проверяет, завершен ли тест для всех групп */
+    public static function isFinished($id_test) {
+        $groups = Group::all();
+        foreach ($groups as $group) {
+            if (!Test::isFinishedForGroup($id_test, $group['id_group'])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     /** Если тест прошлый возвращает -1, текущий 0, будущий 1 */
-    public static function getTimeZone($id_test){
+    public static function getTimeZone($id_test, $id_group){
         $current_date = date("U");
-        $test = Test::whereId_test($id_test)->first();
+        $test = TestForGroup::whereId_test($id_test)->whereId_group($id_group)->first();
         $start = strtotime($test->start);
         $end = strtotime(($test->end));
         if ($start < $current_date && $end > $current_date)
