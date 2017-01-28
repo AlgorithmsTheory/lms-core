@@ -42,7 +42,7 @@
                         @foreach($plans as $plan)
                         <tr>
                             <td class="info">
-                                {{ $plan['group'] }}
+                                {{ $plan['group_name'] }}
                             </td>
                             <td>
                                 <div class='checkbox checkbox-inline checkbox-styled'><label>

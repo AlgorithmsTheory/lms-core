@@ -65,25 +65,46 @@ class AccordanceTable extends QuestionType {
     public function check($array){
         $buf_array = $array;
         $score = 0;
-        $answer_parse = explode(";" ,$this->answer);     //массив правильных ответов
-        $step = $this->points/count($answer_parse);
-        for($i=0; $i<count($answer_parse); $i++){                 //перебор всех правильных ответов
-            for ($j=0; $j<count($array); $j++){
-                if($answer_parse[$i] == $array[$j]){
-                    $buf = $array[$j];
-                    $array[$j] = $array[count($array)-1];     //меняем местами правильный ответ с последним для удаления
-                    $array[count($array)-1] =  $buf;
-                    array_pop($array);
-                    $score+=$step;
+        $max_errors = 2;    //TODO: должно зависеть от чилса столбцов
+        $rows_number = count(explode(";", $this->text));
+        $columns_number = count(explode(";", $this->variants));
+        $answer_parse = explode(";" ,$this->answer);                                                                    //массив правильных ответов
+
+        $temp_i = 0;
+        $temp_j = 0;
+
+        for ($r = 1; $r <= $rows_number; $r++) {
+            $errors_in_row = 0;
+            for ($c = 1; $c <= $columns_number; $c++) {
+                $is_answer = false;
+                $is_chosen = false;
+                $cell = ($r-1)*$columns_number + $c;
+                for ($i = $temp_i; $i < count($answer_parse); $i++) {
+                    if ($answer_parse[$i] == $cell) {
+                        $is_answer = true;
+                        $temp_i++;
+                        break;
+                    }
+                }
+                for ($j = $temp_j; $j < count($array); $j++) {
+                    if ($array[$j] == $cell) {
+                        $is_chosen = true;
+                        $temp_j++;
+                        break;
+                    }
+                }
+                if ($is_answer != $is_chosen) {
+                    $errors_in_row++;
+                }
+                if ($errors_in_row == $max_errors) {
                     break;
+                }
+                if ($c == $columns_number) {
+                    $score += $this->points / (($errors_in_row + 1) * $rows_number);
                 }
             }
         }
-        if (!(empty($array))){
-            for($i = 0; $i < count($array) ; $i++) {
-                $score-=$step;
-            }
-        }
+
         if ($score > $this->points){                    //если при округлении получилось больше максимального числа баллов
             $score = $this->points;
         }

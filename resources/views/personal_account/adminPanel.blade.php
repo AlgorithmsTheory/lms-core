@@ -117,7 +117,7 @@
                             </a>
                         </li>
                         <li class="tile">
-                            <a href="{{ route('tests_list')}}" class="tile-content ink-reaction">
+                            <a href="{{ route('choose_group')}}" class="tile-content ink-reaction">
                             <div class="tile-text">
                                 Список всех тестов
                             </div>
@@ -180,17 +180,11 @@
                         <li class="tile">
                             <a href="{{ route('main_menu')}}" class="tile-content ink-reaction">
                                 <div class="tile-text">
-                                    Управление контрольными материалами
+                                    Управление контрольными материалами эмуляторов Машины Тьюринга и Алгоритмов Маркова
                                 </div>
                             </a>
                         </li>
-                        <li class="tile">
-                            <a href="{{ route('alltasksrec')}}" class="tile-content ink-reaction">
-                                <div class="tile-text">
-                                    Управление контрольными материалами
-                                </div>
-                            </a>
-                        </li>
+                        
                     </ul>
                 </div><!--end .card-body -->
             </div>

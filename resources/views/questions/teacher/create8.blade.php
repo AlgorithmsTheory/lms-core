@@ -1,52 +1,103 @@
-    <div class="checkbox checkbox-styled">
-        <label>
-            <input type="checkbox" name="control" id="control">
-            <span>Только для контрольных тестов</span>
-        </label>
-    </div>
-    <div class="col-md-2 col-sm-2" id="variants">
-        <div class="form-group">
-            <textarea name="variants[]" class="form-control textarea3" rows="3" placeholder="" required></textarea>
-            <label for="textarea3">Текст вопроса 1</label>
-        </div>
-    </div>
-    <div class="col-md-8 col-sm-8" id="answers">
-        <div class="form-group">
-            <textarea name="answers[]" class="form-control textarea3" rows="3" placeholder="" required></textarea>
-            <label for="textarea3">Ответ 1</label>
-        </div>
-    </div>
-    <div class="col-md-2 col-sm-2" style="margin-top: 50px" id="add-del-buttons">
-        <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-var-8"><b>+</b>   </button>
-        <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-var-8"><b>-</b></button>
-    </div>
+<input type="hidden" id="count" value="4">
+<div class="checkbox checkbox-styled">
+    <label>
+        <input type="checkbox" name="control" id="control">
+        <span>Только для контрольных тестов</span>
+    </label>
+</div>
+<div class="checkbox checkbox-styled">
+    <label>
+        <input type="checkbox" name="translated" id="translated">
+        <span>Переведен на английский язык</span>
+    </label>
+</div>
 
-    <div id="other-options" class="col-md-10 col-sm-6">
-        <div class="form-group">
-            <select name="section" id="select-section" class="form-control" size="1">
-                <option value="$nbsp"></option>
-                @foreach ($sections as $section)
+<!-- Текст на русском языке -->
+<div class="form-group">
+    <textarea  name="title" id="textarea1" class="form-control" rows="3" placeholder="" required></textarea>
+    <label for="textarea1">Текст</label>
+</div>
+
+<!-- Текст на английском языке -->
+<div class="form-group">
+    <textarea  name="eng-title" id="eng-textarea1" class="form-control" rows="3" placeholder=""></textarea>
+    <label for="textarea1">Text</label>
+</div>
+
+<div id="text-images-container">
+    <input type="file" name="text-images[]" id="text-image-input-1" class="text-image-input">
+</div>
+<br>
+
+<!-- Русские варианты ответа -->
+<div id="variants" class="col-md-6 col-sm-6">
+    <div class="form-group">
+        <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
+        <label for="textarea3">Вариант 1</label>
+    </div>
+    <div class="form-group">
+        <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
+        <label for="textarea3">Вариант 2</label>
+    </div>
+    <div class="form-group">
+        <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
+        <label for="textarea3">Вариант 3</label>
+    </div>
+    <div class="form-group">
+        <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
+        <label for="textarea3">Вариант 4</label>
+    </div>
+</div>
+<!-- Английские варианты ответа -->
+<div id="eng-variants" class="col-md-6 col-sm-6">
+    <div class="form-group">
+        <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>
+        <label for="textarea3">Variant 1</label>
+    </div>
+    <div class="form-group">
+        <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>
+        <label for="textarea3">Variant 2</label>
+    </div>
+    <div class="form-group">
+        <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>
+        <label for="textarea3">Variant 3</label>
+    </div>
+    <div class="form-group">
+        <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>
+        <label for="textarea3">Variant 4</label>
+    </div>
+</div>
+<div class="col-lg-offset-10 col-md-10 col-sm-6" id="add-del-buttons">
+    <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-var-1"><b>+</b>   </button>
+    <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-var-1"><b>-</b></button>
+</div>
+
+<div id="other-options" class="col-md-10 col-sm-6">
+    <div class="form-group">
+        <select name="section" id="select-section" class="form-control" size="1" required>
+            <option value="$nbsp"></option>
+            @foreach ($sections as $section)
                 <option value="{{$section['section_name']}}">{{$section['section_name']}}</option>/td>
-                @endforeach
-            </select>
-            <label for="select-section">Раздел</label>
-        </div>
-
-        <div class="form-group" id="container">
-            <!-- контейнер для ajax -->
-        </div>
-
-        <div class="form-group">
-            <input type="number" min="1" name="points" id="points" class="form-control" value="1">
-            <label for="points">Баллы за верный ответ</label>
-        </div>
-
-        <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>
-        <!-- <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a> -->
+            @endforeach
+        </select>
+        <label for="select-section">Раздел</label>
     </div>
+
+    <div class="form-group" id="container">
+        <!-- контейнер для ajax -->
+    </div>
+
+    <div class="form-group">
+        <input type="number" min="1" name="points" id="points" class="form-control" value="1">
+        <label for="points">Баллы за верный ответ</label>
+    </div>
+
+    <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>
+    <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
 </div>
-</div>
-</div>
+</div>  <!-- Закрываем card-body -->
+</div>  <!-- Закрываем card -->
+</div>  <!-- Закрываем col-md -->
 </form>
 <div id="question-preview" class="modalDialog">
     <div>
@@ -62,4 +113,5 @@
 </div>
 </div>
 
-{!! HTML::script('js/question_create/justAnswer.js') !!}
+{!! HTML::script('js/question_create/oneChoice.js') !!}
+{!! HTML::script('js/question_create/imageInTitle.js') !!}

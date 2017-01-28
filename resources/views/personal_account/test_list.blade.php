@@ -5,6 +5,11 @@
 @stop
 
 @section('content')
+<a href="{{URL::route('tests_list', $groups[$i-1]['group_id'])}}" class="btn btn-primary col-md-3 col-sm-3" role="button">
+<span>
+    Завершить тест для всех учебных групп
+</span>
+</a>
 <div class="col-md-12 col-sm-6 card style-primary text-center">
     <h1 class="">Список тестов группы {{ $group_name }}</h1>
 </div>
@@ -167,6 +172,13 @@
                                     </label>
                                 </div>
                             </td>
+                            @else
+                            <td class="text-center" title="Тест уже завершен">
+                                <span class="demo-icon-hover">
+                                    <i class="md md-done" style="font-size: 24px;"></i>
+                                </span>
+                            </td>
+                            @endif
                             <td class="text-center">
                                 <a href="{{URL::route('test_edit', $test['id_test'])}}" class="btn btn-primary" role="button">
                                             <span class="demo-icon-hover">
@@ -181,24 +193,6 @@
                                         </span>
                                 </a>
                             </td>
-                            @else
-                            <td class="text-center" title="Тест уже завершен">
-                                <span class="demo-icon-hover">
-                                    <i class="md md-done" style="font-size: 24px;"></i>
-                                </span>
-                            </td>
-                            <td class="text-center">
-                                 <span class="demo-icon-hover">
-                                    <i class="md md-block" style="font-size: 24px;"></i>
-                                </span>
-                            </td>
-                            <td class="text-center">
-                                 <span class="demo-icon-hover">
-                                    <i class="md md-block" style="font-size: 24px;"></i>
-                                </span>
-                            </td>
-                            @endif
-                        </tr>
                         @endforeach
                     </table>
                     <div class="col-lg-offset-9"  id="finish-chosen">

@@ -4,7 +4,7 @@ $(".delete").click(function() {
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/manage_news/delete',
+        url:   '/manage_news/delete',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -26,7 +26,7 @@ $(".show").click(function() {
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/manage_news/hide',
+        url:   '/manage_news/hide',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 

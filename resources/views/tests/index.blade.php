@@ -21,7 +21,7 @@ full-tests
                             <h3 class="none-tests">На данный момент не доступен ни один контрольный тест</h3>
                         @else
                             @foreach ($ctr_tests as $test)
-                                @if ($test['current'] == 1)
+                                @if ($test['availability'] == 1)
                         <a href="{{ route('question_showtest', $test['id_test']) }}">
                             <div class="col-md-12 col-sm-12 card test-list text-lg dropdown" style="background-color: #d4fad6;">
                                 <button class="dropbtn">{{$test['test_name']}}</button>
@@ -64,7 +64,7 @@ full-tests
                             <h3 class="none-tests">На данный момент не доступен ни один тренировочный тест</h3>
                         @else
                         @foreach ($tr_tests as $test)
-                            @if ($test['current'] == 1)
+                            @if ($test['availability'] == 1)
                                 <a href="{{ route('question_showtest', $test['id_test']) }}">
                                     <div class="col-md-12 col-sm-12 card test-list text-lg dropdown" style="background-color: #d4fad6;">
                                         <button class="dropbtn">{{$test['test_name']}}</button>

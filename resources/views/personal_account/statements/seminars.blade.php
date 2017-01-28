@@ -3,8 +3,8 @@
 <table class="table table-condensed table-bordered">
     <tr>
         <td rowspan="2" class="warning">Группа</td>
-        <td rowspan="2" class="warning">Имя</td>
         <td rowspan="2" class="warning">Фамилия</td>
+        <td rowspan="2" class="warning">Имя</td>
         <td colspan="7" class="info">1 Раздел</td>
         <td colspan="4" class="warning">2 Раздел</td>
         <td colspan="4" class="info">3 Раздел</td>
@@ -34,13 +34,13 @@
     foreach($statement as $state) {
         echo "<tr>";
         echo "<td>";
-        echo $state['group'];
-        echo "</td>";
-        echo "<td>";
-        echo $first_names[$count];
+        echo $state['group_name'];
         echo "</td>";
         echo "<td>";
         echo $last_names[$count];
+        echo "</td>";
+        echo "<td>";
+        echo $first_names[$count];
         echo "</td>";
         echo "<td>";
         if ($state['col1'] == 1) {
@@ -303,6 +303,59 @@
     }
     ?>
     </tbody>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+            <button class="btn btn-warning btn-raised all" id="col1" name="{{ $group }}">Все</button>
+        </td>
+        <td>
+            <button class="btn btn-warning btn-raised all" id="col2" name="{{ $group }}">Все</button>
+        </td>
+        <td>
+            <button class="btn btn-warning btn-raised all" id="col3" name="{{ $group }}">Все</button>
+        </td>
+        <td>
+            <button class="btn btn-warning btn-raised all" id="col4" name="{{ $group }}">Все</button>
+        </td>
+        <td>
+            <button class="btn btn-warning btn-raised all" id="col5" name="{{ $group }}">Все</button>
+        </td>
+        <td>
+            <button class="btn btn-warning btn-raised all" id="col6" name="{{ $group }}">Все</button>
+        </td>
+        <td>
+            <button class="btn btn-warning btn-raised all" id="col7" name="{{ $group }}">Все</button>
+        </td>
+        <td>
+            <button class="btn btn-warning btn-raised all" id="col8" name="{{ $group }}">Все</button>
+        </td>
+        <td>
+            <button class="btn btn-warning btn-raised all" id="col9" name="{{ $group }}">Все</button>
+        </td>
+        <td>
+            <button class="btn btn-warning btn-raised all" id="col10" name="{{ $group }}">Все</button>
+        </td>
+        <td>
+            <button class="btn btn-warning btn-raised all" id="col11" name="{{ $group }}">Все</button>
+        </td>
+        <td>
+            <button class="btn btn-warning btn-raised all" id="col12" name="{{ $group }}">Все</button>
+        </td>
+        <td>
+            <button class="btn btn-warning btn-raised all" id="col13" name="{{ $group }}">Все</button>
+        </td>
+        <td>
+            <button class="btn btn-warning btn-raised all" id="col14" name="{{ $group }}">Все</button>
+        </td>
+        <td>
+            <button class="btn btn-warning btn-raised all" id="col15" name="{{ $group }}">Все</button>
+        </td>
+        <td>
+            <button class="btn btn-warning btn-raised all" id="col16" name="{{ $group }}">Все</button>
+        </td>
+    </tr>
 </table>
 
 

@@ -15,7 +15,7 @@ $('#type_question_add').on('click','#add-var-2', function(){
             ');
     $('#eng-variants').append('\
             <div class="form-group">\
-                <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>\
+                <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>\
                 <label for="textarea3">Variant ' + count + '</label>\
             </div>\
             ');

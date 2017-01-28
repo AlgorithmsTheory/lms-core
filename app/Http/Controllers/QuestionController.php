@@ -7,9 +7,12 @@
  */
 namespace App\Http\Controllers;
 use App\Protocols\TestProtocol;
+use App\Qtypes\FromClini;
 use App\Testing\Lecture;
 use App\Qtypes\Theorem;
+use App\Qtypes\TheoremLike;
 use App\Testing\Section;
+use App\Testing\TestTask;
 use App\Testing\Type;
 use Auth;
 use Illuminate\Http\Response;
@@ -24,6 +27,7 @@ use App\Qtypes\AccordanceTable;
 use App\Qtypes\YesNo;
 use App\Qtypes\Definition;
 use App\Qtypes\JustAnswer;
+use App\Qtypes\ThreePoints;
 use View;
 
 class QuestionController extends Controller{
@@ -35,13 +39,13 @@ class QuestionController extends Controller{
     /** главная страница модуля тестирования */
     public function index(){
         $username =  null;
-        Session::forget('test');
+        /*Session::forget('test');
         if (Auth::check()){
             $username = Auth::user()['first_name'];
         }
         $protocol = new TestProtocol(161, 83, '');
         $protocol->create();
-        $image = 'img/library/Pic/2.jpeg';
+        $image = 'img/library/Pic/2.jpeg';*/
         return view('questions.teacher.index', compact('username', 'image'));
     }
 
@@ -75,11 +79,20 @@ class QuestionController extends Controller{
                 case 'Определение':
                     return (String) view('questions.teacher.create7', compact('sections'));
                     break;
-                case 'Просто ответ':
+                case 'Открытый тип':
                     return (String) view('questions.teacher.create8', compact('sections'));
                     break;
                 case 'Теорема':
                     return (String) view('questions.teacher.create6', compact('sections'));
+                    break;
+                case 'Три точки':
+                    return (String) view('questions.teacher.create9', compact('sections'));
+                    break;
+                case 'Как теорема':
+                    return (String) view('questions.teacher.create10', compact('sections'));
+                    break;
+                case 'Востановить арифметический вид':
+                    return (String) view('questions.teacher.create11', compact('sections'));
                     break;
             }
         }
@@ -116,12 +129,24 @@ class QuestionController extends Controller{
                 $definition = new Definition($id);
                 $definition->add($request);
                 break;
-            case 'Просто ответ':
+            case 'Открытый тип':
                 $just = new JustAnswer($id);
                 $just->add($request);
                 break;
             case 'Теорема':
                 $theorem = new Theorem($id);
+                $theorem->add($request);
+                break;
+            case 'Три точки':
+                $three = new ThreePoints($id);
+                $three->add($request);
+                break;
+            case 'Как теорема':
+                $theorem = new TheoremLike($id);
+                $theorem->add($request);
+                break;
+            case 'Востановить арифметический вид':
+                $theorem = new FromClini($id);
                 $theorem->add($request);
                 break;
         }
@@ -141,9 +166,9 @@ class QuestionController extends Controller{
     /** Список всех доступных вопросов */
     public function editList(){
         $questions = Question::where('section_code', '>', 0)
-                                ->where('section_code', '<', 10)
+                                ->where('section_code', '<', 20)
                                 ->where('theme_code', '>', 0)
-                                ->where('theme_code', '<', 23);
+                                ->where('theme_code', '<', 30);
         $questions = $questions->paginate(10);
         $widgets = [];
         foreach ($questions as $question){
@@ -168,9 +193,9 @@ class QuestionController extends Controller{
     public function find(Request $request){
         $questions = new Question();
         $questions = $questions->where('section_code', '>', 0)
-                        ->where('section_code', '<', 10)
+                        ->where('section_code', '<', 20)
                         ->where('theme_code', '>', 0)
-                        ->where('theme_code', '<', 23);
+                        ->where('theme_code', '<', 30);
         if ($request->input('section') != 'Все'){
             $section_code = Section::whereSection_name($request->input('section'))->select('section_code')->first()->section_code;
             $questions = $questions->whereSection_code($section_code);
@@ -244,15 +269,26 @@ class QuestionController extends Controller{
                 $definition = new Definition($id_question);
                 $definition->edit();
                 break;
-            case 'Просто ответ':
+            case 'Открытый тип':
                 $just = new JustAnswer($id_question);
-                $just->edit();
+                $data = $just->edit();
+                return view('questions.teacher.edit8', compact('data', 'sections', 'themes'));
                 break;
             case 'Теорема':
                 $theorem = new Theorem($id_question);
                 $theorem->edit();
                 break;
+            case 'Три точки':
+                $just = new ThreePoints($id_question);
+                $data = $just->edit();
+                return view('questions.teacher.edit9', compact('data', 'sections', 'themes'));
+                break;
+            case 'Как теорема':
+                $theorem = new TheoremLike($id_question);
+                $theorem->edit();
+                break;
             }
+
     }
 
     public function update(Request $request) {
@@ -284,12 +320,20 @@ class QuestionController extends Controller{
                 $definition = new Definition($id_question);
                 $definition->edit();
                 break;
-            case 'Просто ответ':
+            case 'Открытый тип':
                 $just = new JustAnswer($id_question);
-                $just->edit();
+                $just->update($request);
                 break;
             case 'Теорема':
                 $theorem = new Theorem($id_question);
+                $theorem->edit();
+                break;
+            case 'Три точки':
+                $just = new ThreePoints($id_question);
+                $just->update($request);
+                break;
+            case 'Как теорема':
+                $theorem = new TheoremLike($id_question);
                 $theorem->edit();
                 break;
         }
@@ -299,6 +343,7 @@ class QuestionController extends Controller{
     /** Удаление вопроса */
     public function delete(Request $request){
         if ($request->ajax()){
+            TestTask::whereId_question($request->input('id_question'))->delete();
             Question::whereId_question($request->input('id_question'))->delete();
             return;
         }

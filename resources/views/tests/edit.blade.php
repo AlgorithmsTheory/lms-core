@@ -12,6 +12,19 @@
         <h1 class="">Редактировать тест "{{ $test['test_name'] }}"</h1>
     </div>
 
+        <div class="col-lg-offset-1 col-md-10 col-sm-10 card style-warning">
+            <p class="text-default-bright text-lg">
+                <br>
+                @if ($test['is_resolved'] == 1 && $test['test_type'] == 'Контрольный')
+                    <b>Внимание!</b> Данный контрольный тест уже <b>был пройден</b> хотя бы одним студентом. Вы не можете менять структуру данного теста. <br>
+                    Если тест <b>завершен</b> для группы (выделено рыжим фоном), то нельзя уменьшать время его окончания. <br>
+                    Если тест <b>не завершен</b> для группы, то открытие теста должно быть хотя бы на час больше текущего времени, а окончание - хотя бы на час больше времени открытия.
+                @else
+                    <b>Внимание!</b> Данный тест еще <b>не был пройден</b> ни одним студентом либо является <b>тренировочным</b>.<br>
+                    Однако открытие теста не может стать меньше старого значения, а окончание должно быть хотя бы на час больше времени открытия.
+                @endif
+            </p>
+        </div>
         <!-- модуль задания основных настроек теста -->
         <div class="col-lg-offset-1 col-md-10 col-sm-10 card style-gray">
             <h2 class="text-default-bright">Настройка теста</h2>
@@ -21,7 +34,6 @@
             <input type="hidden" id="num-rows" name="num-rows" value="{{ count($structures) }}">
             <input type="hidden" id="id-test" name="id-test" value="{{ $test['id_test'] }}">
             <input type="hidden" id="test-type" name="test-type" value="{{ $test['test_type'] }}">
-            <input type="hidden" id="test-time-zone" name="test-time-zone" value="{{ $test['time_zone'] }}">
             <input type="hidden" id="test-resolved" name="test-resolved" value="{{ $test['is_resolved'] }}">
             <div class="col-lg-offset-1 col-md-10 col-sm-6">
                 <div class="card">
@@ -35,9 +47,9 @@
                         <div class="checkbox checkbox-styled">
                             <label>
                                 @if ($test['test_type'] == 'Тренировочный')
-                                    <input type="checkbox" name="training" id="training" checked>
+                                    <input type="checkbox" name="training" id="training" checked disabled>
                                 @else
-                                <input type="checkbox" name="training" id="training">
+                                <input type="checkbox" name="training" id="training" disabled>
                                 @endif
                                 <span>Тренировочный тест</span>
                             </label>
@@ -77,7 +89,7 @@
                         </div>
                         <!-- Максимум баллов за тест -->
                         <div class="form-group">
-                            <input type="number" min="1" name="total" id="total" class="form-control" value="{{ $test['total'] }}" required>
+                            <input type="number" min="1" step="0.5" name="total" id="total" class="form-control" value="{{ $test['total'] }}" required>
                             <label for="total">Максимум баллов за тест</label>
                         </div>
                         <!-- Время на прохождение теста -->
@@ -101,10 +113,13 @@
                                 <td>Время закрытия</td>
                             </tr>
                             @foreach ($test_for_groups as $test_for_group)
-                            <input type="hidden" name="id-group[]" value="{{ $test_for_group['id_group'] }}">
-                            <input type="hidden" name="old-end-date[]" value="{{ substr($test_for_group['end'], 0, 10) }}">
-                            <input type="hidden" name="old-end-time[]" value="{{ substr($test_for_group['end'], 11, 16) }}">
-                            <tr>
+                            <tr class="test-for-group-row" @if ($test_for_group['is_finished'] == 1) style="background-color: #ff9800;" @endif >
+                                <input type="hidden" name="id-group[]" class="id-group" value="{{ $test_for_group['id_group'] }}">
+                                <input type="hidden" name="old-start-date[]" class="old-start-date" value="{{ substr($test_for_group['start'], 0, 10) }}">
+                                <input type="hidden" name="old-end-date[]" class="old-end-date" value="{{ substr($test_for_group['end'], 0, 10) }}">
+                                <input type="hidden" name="old-start-time[]" class="old-start-time" value="{{ substr($test_for_group['start'], 11, 16) }}">
+                                <input type="hidden" name="old-end-time[]" class="old-end-time" value="{{ substr($test_for_group['end'], 11, 16) }}">
+                                <input type="hidden" name="is-finished[]" class="is-finished" value="{{ $test_for_group['is_finished'] }}">
                                 <td>{{ $test_for_group['group_name'] }}</td>
                                 <td><input type="date" name="start-date[]" class="start-date" value="{{ substr($test_for_group['start'], 0, 10) }}"></td>
                                 <td><input type="time" name="start-time[]" class="start-time" value="{{ substr($test_for_group['start'], 11, 16) }}"></td>
@@ -113,6 +128,11 @@
                             </tr>
                             @endforeach
                         </table>
+                        <a href="{{URL::route('finish_test_from_edit', $test['id_test'])}}" class="btn btn-primary col-lg-offset-7" role="button">
+                                        <span>
+                                            Завершить тест для всех учебных групп
+                                        </span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -164,7 +184,11 @@
                                         </div>
                                     </td>
                                     <td> <select name="type[]" id="select-type" class="form-control select-type" size="1" required="">
-                                            <option value="Любой">Любой</option>
+                                            @if ($structure['type'] == 'Любой')
+												<option value="Любой" selected>Любой</option>
+											@else
+												<option value="Любой">Любой</option>
+											@endif
                                             @foreach ($types as $type)
                                                 @if ($type['type_name'] == $structure['type'])
                                                     <option value="{{$type['type_name']}}" selected>{{$type['type_name']}}</option>
@@ -197,7 +221,7 @@
     </div>
 @stop
 @section ('js-down')
-{!! HTML::script('js/testCreate.js') !!}
+{!! HTML::script('js/testCreateAndEdit.js') !!}
 {!! HTML::script('js/testEdit.js') !!}
 @stop
 

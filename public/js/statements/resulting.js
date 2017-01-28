@@ -7,7 +7,7 @@ $('.resulting').on('change', function() {
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/statements/resulting/change',
+        url:   '/statements/resulting/change',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 

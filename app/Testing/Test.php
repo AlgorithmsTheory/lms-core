@@ -10,6 +10,7 @@ namespace App\Testing;
 use App\Control_test_dictionary;
 use App\Controls;
 use App\Group;
+use App\Totalresults;
 use App\User;
 use Auth;
 use Illuminate\Database\Eloquent\Model as Eloquent;
@@ -64,7 +65,7 @@ class Test extends Eloquent {
             ->whereRaw("not exists (select `id` from `fines`
                                         where `fines`.id = `users`.id
                                         and `fines`.`id_test` = ".$id_test. "
-                                        and `fines`.access = 1)")
+                                        and `fines`.access = 0)")
             ->distinct()
             ->select()
             ->get();
@@ -74,15 +75,68 @@ class Test extends Eloquent {
             return false;
     }
 
-    /** Проверяет, завершен ли тест для всех групп */
+    /** Проверяет, завершен ли тест для всех учебных групп */
     public static function isFinished($id_test) {
-        $groups = Group::all();
+        $groups = Group::where('group_name', '<>', 'Админы')->get();
         foreach ($groups as $group) {
             if (!Test::isFinishedForGroup($id_test, $group['id_group'])) {
                 return false;
             }
         }
         return true;
+    }
+
+    /** Завершить тест для группы */
+    public static function finishTestForGroup($id_test, $id_group){
+        $absents = [];                                                                                                  //отсутствующие на тесте
+        $fine = new Fine();
+        $current_year = date('Y');
+
+        $user_query = User::where('year', '=', $current_year)                                                   //пример сырого запроса
+            ->whereRole('Студент')
+            ->whereGroup($id_group)
+            ->whereRaw("not exists (select `id` from `fines`
+                                        where `fines`.id = `users`.id
+                                        and `fines`.`id_test` = ".$id_test. "
+                                        and `fines`.access = 0)")
+            ->distinct()
+            ->select()
+            ->get();
+        foreach ($user_query as $user){
+            array_push($absents, $user->id);
+            //добавить их в таблицу штрафов, записав им первый уровень штрафа
+            //в таблице штрафов присвоить всем по этому тесту досутп 0, у кого досутп есть
+            $fine_query = Fine::whereId($user->id)->whereId_test($id_test)->select('id_fine')->first();
+            if (is_null($fine_query))
+                Fine::insert(['id' => $user->id, 'id_test' => $id_test,
+                    'fine' => 1, 'access' => 0]);
+            else Fine::whereId($user->id)->whereId_test($id_test)
+                ->update(['fine' => $fine->maxFine($fine_query->fine + 1), 'access' => 0]);
+
+            //добавить их в таблицу результатов, записав в качестве результатов -2 -2 absence
+            //если тест прошедший, то время результата должно быть на 5 секунд меньше, чем время завершения теста
+            if (Test::getTimeZone($id_test, $id_group) == -1){
+                $result_date = date("Y-m-d H:i:s",strtotime(TestForGroup::whereId_test($id_test)->whereId_group($id_group)->select('end')->first()->end) - 5);
+            }
+            else $result_date = date("Y-m-d H:i:s");
+            Result::insert(['id' => $user->id, 'id_test' => $id_test,
+                'result_date' => $result_date,
+                'result' => -2, 'mark_ru' => -2, 'mark_eu' => 'absent', 'saved_test' => null]);
+
+        }
+        //если тест является текущим, то сделать время его закрытия текущим временем (чтобы он попал в прошлые)
+        if (Test::getTimeZone($id_test, $id_group) == 0){
+            TestForGroup::whereId_test($id_test)->whereId_group($id_group)->update(['end' => date("Y-m-d H:i:s")]);
+        }
+        //нельзя ставить дату открытия раньше сегодняшнего числа!
+    }
+
+    /** Завершить тест для всех учебных групп */
+    public static function finishTest($id_test) {
+        $groups = Group::where('group_name', '<>', 'Админы')->get();
+        foreach ($groups as $group){
+            Test::finishTestForGroup($id_test, $group['id_group']);
+        }
     }
 
 
@@ -108,6 +162,10 @@ class Test extends Eloquent {
             $result = 1;
         }
         return $result;
+    }
+
+    public function isForRyba($id_test) {
+        return ($this->test_course == 'Рыбина');
     }
 
     /** проверяет права доступа к рыбинским вопросам */
@@ -257,6 +315,14 @@ class Test extends Eloquent {
         if($id_test == $dictionary['test3']){
             Controls::where('userID', $id_user)->update(['test3' => $score]);
         }
+        if($id_test == $dictionary['exam']){
+//            $results = Totalresults::where('userID', $id_user)->get();
+            Totalresults::where('userID', $id_user)->update(['exam' => $score]);
+        }
+//        if($id_test == $dictionary['exam_quiz']){
+//            $results = Totalresults::where('userID', $id_user)->get();
+//            Totalresults::where('userID', $id_user)->update(['exam' => ($score + $results['exam'])]);
+//        }
         return 0;
     }
 

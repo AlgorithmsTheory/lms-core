@@ -92,52 +92,11 @@ class TeacherRetestController extends Controller {
      возможно, добавить записи user-test в таблицу штрафов
      */
     public function finishTest(Request $request){
-        //найти всех студентов текущего года
-        //а скорее искать тех, кого нет в таблице результатов по данному тесту в указанный интервал времени
-        $absents = [];                                                                                                  //отсутствующие на тесте
-        $fine = new Fine();
-        $current_year = date('Y');
         $id_group = $request->input('id_group');
         for ($i=0; $i < count($request->input('changes')); $i++){
             if ($request->input('changes')[$i] == true){                                                                //если тест был выбран для завершения
                 $id_test = $request->input('id-test')[$i];
-                $user_query = User::where('year', '=', $current_year)                                                   //пример сырого запроса
-                            ->whereRole('Студент')
-                            ->whereGroup($id_group)
-                            ->whereRaw("not exists (select `id` from `fines`
-                                        where `fines`.id = `users`.id
-                                        and `fines`.`id_test` = ".$id_test. "
-                                        and `fines`.access = 1)")
-                            ->distinct()
-                            ->select()
-                            ->get();
-                foreach ($user_query as $user){
-                    array_push($absents, $user->id);
-                    //добавить их в таблицу штрафов, записав им первый уровень штрафа
-                    //в таблице штрафов присвоить всем по этому тесту досутп 0, у кого досутп есть
-                    $fine_query = Fine::whereId($user->id)->whereId_test($id_test)->select('id_fine')->first();
-                    if (is_null($fine_query))
-                        Fine::insert(['id' => $user->id, 'id_test' => $request->input('id-test')[$i],
-                            'fine' => 1, 'access' => 0]);
-                    else Fine::whereId($user->id)->whereId_test($id_test)
-                            ->update(['fine' => $fine->maxFine($fine_query->fine + 1), 'access' => 0]);
-
-                    //добавить их в таблицу результатов, записав в качестве результатов -2 -2 absence
-                    //если тест прошедший, то время результата должно быть на 5 секунд меньше, чем время завершения теста
-                    if (Test::getTimeZone($id_test, $id_group) == -1){
-                        $result_date = date("Y-m-d H:i:s",strtotime(TestForGroup::whereId_test($id_test)->whereId_group($id_group)->select('end')->first()->end) - 5);
-                    }
-                    else $result_date = date("Y-m-d H:i:s");
-                    Result::insert(['id' => $user->id, 'id_test' => $id_test,
-                    'result_date' => $result_date,
-                    'result' => -2, 'mark_ru' => -2, 'mark_eu' => 'absent', 'saved_test' => null]);
-
-                }
-                //если тест является текущим, то сделать время его закрытия текущим временем (чтобы он попал в прошлые)
-                if (Test::getTimeZone($id_test, $id_group) == 0){
-                    TestForGroup::whereId_test($id_test)->whereId_group($id_group)->update(['end' => date("Y-m-d H:i:s")]);
-                }
-                //нельзя ставить дату открытия раньше сегодняшнего числа!
+                Test::finishTestForGroup($id_test, $id_group);
             }
         }
         return redirect()->back();

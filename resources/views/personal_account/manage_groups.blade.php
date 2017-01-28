@@ -26,7 +26,7 @@
                     @foreach( $groups as $group)
                         <tr id="{{ $group['id'] }}">
                             <td>
-                                {{ $group['group'] }}
+                                {{ $group['group_name'] }}
                             </td>
                             <td>
                                 {{ $group['last_name'] }}
@@ -50,7 +50,7 @@
                     <div class="form-group">
                         <select name="group" id="group" class="form-control" size="1">
                             @foreach($group_set as $g)
-                                <option value="{{ $g['number'] }}">{{ $g['number'] }}</option>/td>
+                                <option value="{{ $g['group_id'] }}">{{ $g['group_name'] }}</option>/td>
                             @endforeach
                         </select>
                         <label for="select-type">Выберите группу</label>

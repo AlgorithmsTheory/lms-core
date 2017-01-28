@@ -9,6 +9,7 @@
     {!! HTML::style('css/materialadmin_demo.css') !!}
     {!! HTML::script('js/jquery.js') !!}
     <title>Algorithms theory LMS</title>
+    <!-- Yandex.Metrika counter --> <script type="text/javascript"> (function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter41063559 = new Ya.Metrika({ id:41063559, clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true, trackHash:true }); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = "https://mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); } })(document, window, "yandex_metrika_callbacks"); </script> <noscript><div><img src="https://mc.yandex.ru/watch/41063559" style="position:absolute; left:-9999px;" alt="" /></div></noscript> <!-- /Yandex.Metrika counter -->
 
     <script>
         $(function() {
@@ -130,7 +131,7 @@
                                         <option value="0">Простой пользователь</option>
                                         <option value="0">Преподаватель</option>
                                         @foreach($groups as $group)
-                                            <option value="{{ $group['number'] }}">{{ "Студент группы ".$group['number'] }}</option>/td>
+                                            <option value="{{ $group['group_id'] }}">{{ "Студент группы ".$group['group_name'] }}</option>/td>
                                         @endforeach
                                     </select>
                                     <label for="select-type">Выберите</label>
@@ -170,7 +171,7 @@
 
                                 <div class="form-group">
                                     <input type="email" name="email" value="{{ old('email') }}" id="email" data-error="Введите корректный email!" tabindex="1" class="form-control" required>
-                                    <label for="email">Emaol</label>
+                                    <label for="email">Email</label>
                                     <div class="help-block with-errors"></div>
                                 </div>
 

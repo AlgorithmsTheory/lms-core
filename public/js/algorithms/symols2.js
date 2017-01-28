@@ -5,7 +5,7 @@ var focusedElem;
 		var i = $('#b_scents li').size() + 1;
 
 		$('#addScnt_2').live('click', function() {
-			$('<li  id ="b_scnt_' + i +'" class="tile"><div class="input-group"><div class="input-group-content"><input type="text" id="bst_'+ i +'" class="form-control" name="start" onchange="superScript(this)"></div><span class="input-group-addon"><i class="md md-arrow-forward"></i></span><div class="input-group-content"><input type="text" id="bend_'+ i +'" class="form-control" name="end" onchange="superScript(this)"></div></div><a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt_2"><i class="fa fa-trash"></i></a> </li>').appendTo(scntDiv);
+			$('<li  id ="b_scnt_' + i +'" class="tile ui-sortable-handle"><div class="input-group"><div class="input-group-content"><input rows="1" type="text" id="bst_'+ i +'" class="form-control" name="start" onchange="superScript(this)"></input></div><span class="input-group-addon"><i class="md md-arrow-forward"></i></span><div class="input-group-content"><input type="text" id="bend_'+ i +'" class="form-control" rows="1" name="end" onchange="superScript(this)"></input></div></div><a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt_2"><i class="fa fa-trash"></i></a> </li>').appendTo(scntDiv);
 
 			i++;
 			return false;
@@ -88,105 +88,19 @@ var focusedElem;
 
 			//}
 
+			$('input[type=text]').focus( function() {
+
+				focusedElem = $(this);
+			});
+
+
 	
 			$('#zero2').click( function() {
 
 				focusedElem.val(focusedElem.val() + 'S₀');
 
 			});
-			$('#bend_1').focus( function() {
-
-				 focusedElem = $('#bend_1');
-				
-			});	
- 
-			$('#bst_1').focus( function() {
-
-				focusedElem = $('#bst_1');
-			});
-			$('#bend_2').focus( function() {
-
-				 focusedElem = $('#bend_2');
-				
-			});	
- 
-			$('#bst_2').focus( function() {
-
-				focusedElem = $('#bst_2');
-			});
-			$('#bst_3').focus( function() {
-
-				focusedElem = $('#bst_3');
-			});
-			$('#bst_4').focus( function() {
-
-				focusedElem = $('#bst_4');
-			});
-			$('#bst_5').focus( function() {
-
-				focusedElem = $('#bst_5');
-			});
-			$('#bst_6').focus( function() {
-
-				focusedElem = $('#bst_6');
-			});
-			$('#bst_7').focus( function() {
-
-				focusedElem = $('#bst_7');
-			});
-			$('#bst_8').focus( function() {
-
-				focusedElem = $('#bst_8');
-			});
-			$('#bst_9').focus( function() {
-
-				focusedElem = $('#bst_9');
-			});$('#bst_10').focus( function() {
-
-				focusedElem = $('#bst_10');
-			});
-			$('#bst_11').focus( function() {
-
-				focusedElem = $('#bst_12');
-			});
 		
-
-
-			$('#bend_3').focus( function() {
-
-				focusedElem = $('#bend_3');
-			});
-			$('#bend_4').focus( function() {
-
-				focusedElem = $('#bend_4');
-			});
-			$('#bend_5').focus( function() {
-
-				focusedElem = $('#bend_5');
-			});
-			$('#bend_6').focus( function() {
-
-				focusedElem = $('#bend_6');
-			});
-			$('#bend_7').focus( function() {
-
-				focusedElem = $('#bend_7');
-			});
-			$('#bend_8').focus( function() {
-
-				focusedElem = $('#bend_8');
-			});
-			$('#bend_9').focus( function() {
-
-				focusedElem = $('#bend_9');
-			});$('#bend_10').focus( function() {
-
-				focusedElem = $('#bend_10');
-			});
-			$('#bend_11').focus( function() {
-
-				focusedElem = $('#bend_12');
-			});
 
 				$('#big_lambda2').click( function() {
 
@@ -212,6 +126,12 @@ var focusedElem;
 
 		         //var text = $('#text');
         		focusedElem.val(focusedElem.val() + 'H'); 
+
+    });
+		$('#delete2').click( function() {
+
+		         //var text = $('#text');
+        		focusedElem.val(focusedElem.val() + '_'); 
 
     });
 

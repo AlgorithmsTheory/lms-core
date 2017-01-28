@@ -3,8 +3,8 @@
 <table class="table table-condensed table-bordered">
     <tr class="info">
         <td rowspan="2">Группа</td>
-        <td rowspan="2">Имя</td>
         <td rowspan="2">Фамилия</td>
+        <td rowspan="2">Имя</td>
         <td colspan="2">Раздел 1</td>
         <td colspan="2">Раздел 2</td>
         <td colspan="2">Раздел 3</td>
@@ -44,16 +44,16 @@
     @foreach($statement as $state)
         <tr id="{{ $state['userID'] }}">
             <td>
-                {{ $state['group'] }}
-            </td>
-            <td>
-                {{ $first_names[$count] }}
+                {{ $state['group_name'] }}
             </td>
             <td>
                 {{ $last_names[$count] }}
             </td>
+            <td>
+                {{ $first_names[$count] }}
+            </td>
             <td colspan="2" class="
-                @if ($progress[$count]['section1'] == 0)
+                @if ($progress1[$count] == 0)
                     danger
                 @else
                     success
@@ -65,7 +65,7 @@
 {{--                <input type="number" value="{{ $state['section1'] }}" name="{{ $state['userID'] }}" id="section1" class="resulting" style="width: 50px;">--}}
             </td>
             <td colspan="2" class="
-                @if ($progress[$count]['section2'] == 0)
+                @if ($progress2[$count] == 0)
                     danger
                 @else
                     success
@@ -77,7 +77,7 @@
 {{--                <input type="number" value="{{ $state['section2'] }}" name="{{ $state['userID'] }}" id="section2" class="resulting" style="width: 50px;">--}}
             </td>
             <td colspan="2" class="
-                @if ($progress[$count]['section3'] == 0)
+                @if ($progress3[$count] == 0)
                     danger
                 @else
                     success
@@ -89,7 +89,7 @@
 {{--                <input type="number" value="{{ $state['section3'] }}" name="{{ $state['userID'] }}" id="section3" class="resulting" style="width: 50px;">--}}
             </td>
             <td colspan="2" class="
-                @if ($progress[$count]['section4'] == 0)
+                @if ($progress4[$count] == 0)
                     danger
                 @else
                     success
@@ -101,7 +101,7 @@
 {{--                <input type="number" value="{{ $state['section4'] }}" name="{{ $state['userID'] }}" id="section4" class="resulting" style="width: 50px;">--}}
             </td>
             <td colspan="2" class="
-                @if (($progress[$count]['section4'] == 0) || ($progress[$count]['section3'] == 0) || ($progress[$count]['section2'] == 0) || ($progress[$count]['section1'] == 0))
+                @if (($progress1[$count] == 0) || ($progress2[$count] == 0) || ($progress3[$count] == 0) || ($progress4[$count] == 0))
                     danger
                 @else
                     success

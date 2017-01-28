@@ -10,7 +10,7 @@ $('.plan').on('change', function() {
         $.ajax({
             cache: false,
             type: 'POST',
-            url:   '/uir/public/manage_plan/is',
+            url:   '/manage_plan/is',
             beforeSend: function (xhr) {
                 var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -31,7 +31,7 @@ $('.plan').on('change', function() {
         $.ajax({
             cache: false,
             type: 'POST',
-            url:   '/uir/public/manage_plan/is_not',
+            url:   '/manage_plan/is_not',
             beforeSend: function (xhr) {
                 var token = $('meta[name="csrf_token"]').attr('content');
 

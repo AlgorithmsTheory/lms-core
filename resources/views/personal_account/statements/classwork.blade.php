@@ -3,8 +3,8 @@
 <table class="table table-condensed table-bordered">
     <tr>
         <td rowspan="2" class="warning">Группа</td>
-        <td rowspan="2" class="warning">Имя</td>
         <td rowspan="2" class="warning">Фамилия</td>
+        <td rowspan="2" class="warning">Имя</td>
         <td colspan="7" class="info">1 Раздел</td>
         <td colspan="4" class="warning">2 Раздел</td>
         <td colspan="4" class="info">3 Раздел</td>
@@ -35,13 +35,13 @@
     @foreach($statement as $state)
         <tr id="{{ $state['userID'] }}">
             <td>
-                {{ $state['group'] }}
-            </td>
-            <td>
-                {{ $first_names[$count] }}
+                {{ $state['group_name'] }}
             </td>
             <td>
                 {{ $last_names[$count] }}
+            </td>
+            <td>
+                {{ $first_names[$count] }}
             </td>
             <td>
                 <input type="number" value="{{ $state['col1'] }}" name="{{ $state['userID'] }}" id="col1" class="classwork" style="width: 50px;" step="any">

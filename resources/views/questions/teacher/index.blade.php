@@ -10,10 +10,11 @@
      <img src="img/questions/title/94213.jpg">
 <?php
     use App\Testing\Test;
-    $test_end = Test::whereId_test(168)->select('end')->first()->end;
-    echo strtotime($test_end).'<br>';
-    echo time();
+    /*$test_end = Test::whereId_test(168)->select('end')->first()->end;
+    echo strtotime($test_end).'<br>';*/
+	echo date("Y-m-d H:i:s");
 ?>
+
 
 
 

@@ -12,7 +12,7 @@ $('.card').on('change','#section', function(){
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/get-theme',
+        url:   '/get-theme',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -35,7 +35,7 @@ $('.card').on('click', '.btn-close', function(){
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/questions/delete',
+        url:   '/questions/delete',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 

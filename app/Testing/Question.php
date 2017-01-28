@@ -10,10 +10,13 @@ namespace App\Testing;
 use App\Qtypes\AccordanceTable;
 use App\Qtypes\Definition;
 use App\Qtypes\FillGaps;
+use App\Qtypes\FromClini;
 use App\Qtypes\JustAnswer;
 use App\Qtypes\MultiChoice;
 use App\Qtypes\OneChoice;
 use App\Qtypes\Theorem;
+use App\Qtypes\TheoremLike;
+use App\Qtypes\ThreePoints;
 use App\Qtypes\YesNo;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Http\Request;
@@ -159,7 +162,7 @@ class Question extends Eloquent {
                 $array = $def->show($count);
                 return $array;
                 break;
-            case 'Просто ответ':
+            case 'Открытый тип':
                 $just = new JustAnswer($id_question);
                 $array = $just->show($count);
                 return $array;
@@ -167,6 +170,21 @@ class Question extends Eloquent {
             case 'Теорема':
                 $theorem = new Theorem($id_question);
                 $array = $theorem->show($count);
+                return $array;
+                break;
+            case 'Три точки':
+                $three = new ThreePoints($id_question);
+                $array = $three->show($count);
+                return $array;
+                break;
+            case 'Как теорема':
+                $three = new TheoremLike($id_question);
+                $array = $three->show($count);
+                return $array;
+                break;
+            case 'Востановить арифметический вид':
+                $clini = new FromClini($id_question);
+                $array = $clini->show($count);
                 return $array;
                 break;
         }
@@ -214,14 +232,20 @@ class Question extends Eloquent {
                 $data = $yes_no->check($array);
                 return $data;
                 break;
-            case 'Вопрос на вычисление':
-                echo 'Вопрос на вычисление';
+            case 'Открытый тип':
+                $just = new JustAnswer($id);
+                $data = $just->check($array);
+                return $data;
                 break;
-            case 'Вопрос на соответствие':
-                echo 'Вопрос на соответствие';
+            case 'Три точки':
+                $three = new ThreePoints($id);
+                $data = $three->check($array);
+                return $data;
                 break;
-            case 'Вид функции':
-                echo 'Вопрос на определение аналитического вида функции';
+            case 'Востановить арифметический вид':
+                $three = new FromClini($id);
+                $data = $three->check($array);
+                return $data;
                 break;
         }
     }

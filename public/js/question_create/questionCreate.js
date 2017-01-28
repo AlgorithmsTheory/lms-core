@@ -9,7 +9,7 @@ $('#select-type').change(function(){
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/get-type',
+        url:   '/get-type',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -32,7 +32,7 @@ $('#type_question_add').on('change','#select-section', function(){
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/get-theme',
+        url:   '/get-theme',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 

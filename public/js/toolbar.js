@@ -19,7 +19,7 @@ $(document).change(function(){
     var elementNumber;
     var elementToChange;
     var typeOfForm; //1 2 3 или 4 (тип вопроса)
-    for (index = 0; index < formsCount - 2; ++index) {
+    for (index = 0; index < formsCount - 1; ++index) {
         flag[index] = false;
         typeOfForm = document.forms[index].type.value;
         for(elementNumber = 0; elementNumber < document.forms[index].elements.length - 1; ++elementNumber){
@@ -43,6 +43,24 @@ $(document).change(function(){
             if(typeOfForm == 1){
                 //да/нет
                 if(document.forms[index].elements[elementNumber].checked == true){
+                    flag[index] = true;
+                }
+            }
+            if(typeOfForm == 8){
+                //открытый тип
+                if(document.forms[index].elements[4].value != ""){
+                    flag[index] = true;
+                }
+            }
+            if(typeOfForm == 9){
+                //Три точки
+                if(document.forms[index].elements[4].value != ""){
+                    flag[index] = true;
+                }
+            }
+            if(typeOfForm == 11){
+                //Восстановление аналитического вида
+                if(document.forms[index].elements[4].value != ""){
                     flag[index] = true;
                 }
             }
@@ -76,8 +94,6 @@ function startTimer() {
     var s = arr[1];
     if (s <= 0) {
         if (m <= 0) {                                                                                                   //если время вышло
-            m = 0;
-            s = 0;
             fillSuper();                                                                                                //собираем все данные в супер-форму
             $('#super-form').attr('onsubmit','return sendForm(false)');                                                 //меняем обработчик на false
             $('#super-form').trigger('submit');                                                                         //генерируем событие submit

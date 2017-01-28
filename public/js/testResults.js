@@ -5,11 +5,10 @@ $(document).ready(function(){
     var htmlText = $('#results').html();
     var test = $('#test').val();
     var user = $('#user').val();
-    alert('protocol');
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/tests/get-protocol',
+        url:   '/tests/get-protocol',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 

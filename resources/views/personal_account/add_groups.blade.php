@@ -18,24 +18,20 @@
                 <h2 class="text-center">Добавить или удалить группу</h2>
                 <table class="table table-condensed table-bordered">
                     <tr>
-                        <td class="info">Номер группы</td>
-                        <td class="info">Факультет</td>
-                        <td class="info">Кафедра</td>
+                        <td class="info">Группа</td>
+                        <td class="info">Описание</td>
                         <td class="info">Удалить</td>
                     </tr>
                     @foreach( $groups as $group)
-                        <tr id="{{ $group['number'] }}">
+                        <tr id="{{ $group['group_id'] }}">
                             <td>
-                                {{ $group['number'] }}
+                                {{ $group['group_name'] }}
                             </td>
                             <td>
-                                {{ $group['faculty'] }}
+                                {{ $group['description'] }}
                             </td>
                             <td>
-                                {{ $group['department'] }}
-                            </td>
-                            <td>
-                                <button type="button" class="delete btn btn-danger" name="{{ $group['number'] }}">
+                                <button type="button" class="delete btn btn-danger" name="{{ $group['group_id'] }}">
                                     <i class="md md-delete"></i>
                                 </button>
                             </td>
@@ -48,18 +44,13 @@
                     <div class="form">
 
                         <div class="form-group">
-                            <input type="number" name="number" data-minlength="3" max="999" id="number" class="form-control">
-                            <label for="group">Номер группы (только три последние цифры, например 221)</label>
+                            <input type="text" name="name" id="name" class="form-control">
+                            <label for="group">Группа (например Б15-501)</label>
                         </div>
 
                         <div class="form-group">
-                            <textarea name="faculty" id="faculty" class="form-control" rows="1" placeholder=""></textarea>
-                            <label for="faculty">Факультет</label>
-                        </div>
-
-                        <div class="form-group">
-                            <textarea name="department" id="department" class="form-control" rows="1" placeholder=""></textarea>
-                            <label for="department">Кафедра</label>
+                            <textarea name="description" id="description" class="form-control" rows="1" placeholder=""></textarea>
+                            <label for="faculty">Описание (необязательно)</label>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить группу</button>

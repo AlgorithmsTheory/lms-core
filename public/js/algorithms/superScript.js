@@ -10,7 +10,11 @@ superScript = function(e) {
 												return str;
 											})
 										}
-										setTimeout(function(){
-											$('input[name=start]').each(function(){this.setAttribute('onchange', 'superScript(this)')})
-											$('input[name=end]').each(function(){this.setAttribute('onchange', 'superScript(this)')})
-										}, 500);
+
+
+
+setTimeout(function(){
+	$('input[name=start]').each(function(){this.setAttribute('onchange', 'superScript(this)')})
+	$('input[name=end]').each(function(){this.setAttribute('onchange', 'superScript(this)')})
+}, 500);
+

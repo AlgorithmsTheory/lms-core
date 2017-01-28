@@ -2,13 +2,8 @@
 @section('head')
     <meta name="csrf_token" content="{{ csrf_token() }}" />
     <title>Результаты</title>
-    {!! HTML::style('css/full.css') !!}
     {!! HTML::style('css/font-awesome.min.css') !!}
-    {!! HTML::style('css/material-design-iconic-font.min.css') !!}
-    {!! HTML::style('css/materialadmin_demo.css') !!}
     {!! HTML::style('css/test_style.css') !!}
-    {!! HTML::style('css/bootstrap.css') !!}
-    {!! HTML::style('css/materialadmin.css') !!}
 @stop
 @section('content')
     <div id="results">

@@ -3,7 +3,7 @@
  */
 
 function sendForm(status){
-    var formsCount = document.forms.length - 2;
+    var formsCount = document.forms.length - 1;
     var elementNumber;
     var flag = [true];
     var countChecked = 0;
@@ -91,6 +91,25 @@ function fillSuper(){
 
                 if(typeOfForm == 5){    //да-нет
                     if(allElem[j].name=='num' || (pattern.test(allElem[j].name) && allElem[j].checked == true)){
+                        array[k] = allElem[j].value;
+                        k++;
+                    }
+                }
+
+                if(typeOfForm == 8){    //открытый тип
+                    if(allElem[j].name=='num' || (allElem[j].name=='choice')){
+                        array[k] = allElem[j].value;
+                        k++;
+                    }
+                }
+                if(typeOfForm == 9){    //три точки
+                    if(allElem[j].name=='num' || (allElem[j].name=='choice[]')){
+                        array[k] = allElem[j].value;
+                        k++;
+                    }
+                }
+                if(typeOfForm == 11){    //восстановить аналитический вид
+                    if(allElem[j].name=='num' || (allElem[j].name=='choice')){
                         array[k] = allElem[j].value;
                         k++;
                     }

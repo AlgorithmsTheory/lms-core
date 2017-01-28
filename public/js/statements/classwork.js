@@ -7,7 +7,7 @@ $('.classwork').on('change', function() {
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/statements/classwork/change',
+        url:   '/statements/classwork/change',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 

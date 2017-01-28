@@ -5,24 +5,39 @@ function drop_sup(x) {
         var n = sup.indexOf(x[i]);
         rs += ( n!=-1 ? chars[n] : x[i]);
     }
-    return rs
+    return rs;
 }
 
+function show_result(task_number, resp){
+    //$('textarea[id=result' + (task_number + 1) + ']').val(resp.result); // записываем ответ
+     $('input[id=result' + (task_number + 1) + ']').val(resp.result);
+    alert(resp.result);
+      // записываем ответ
+    for (var i = 1; i <= 5; ++i) {  
+   // alert(resp.ksuha[i - 1]);   //выводим последовательности
+        field_number = i + task_number * 5;
+        $('td[id=output' + field_number + ']').text(resp.conv[i - 1]);
+        $('td[id=input' + field_number + ']').text(resp.input[i - 1]);
+        $('td[id=field' + field_number + ']').text(resp.ksuha[i - 1]);
+    }
+    //protocol_HAM();
+}
 
 
 function run_all_normal(i){
 
     var number = i;
-    var key = '#' + $('div.active *> li.active > a')[0].href.split('#')[1];  // for example = #light1     var $max_mark;
+    var key = '#' + $('div.active *> li.active > a')[0].href.split('#')[1];  // for example = #light1     var $max_mark
+   
     var task = new Object();
     task.id = task_id_map[key]; // get id task
     task.rule = new Array();
     task.duration = now.getMinutes() - start_time;
     task.str = $('textarea[name=textarea_src]').val();
-    // var src = $('input[name=start]').toArray();
-    // var dst = $('input[name=end]').toArray();
-    var src = $('textarea[name=start]').toArray();
-    var dst = $('textarea[name=end]').toArray();
+    var src = $('div.active >* input[name=start]').toArray();
+    var dst = $('div.active >* input[name=end]').toArray();
+    //var src = $('textarea[name=start]').toArray();
+   // var dst = $('textarea[name=end]').toArray();
     if(i == 0) {
         document.getElementById("send_one").disabled = true;
     }
@@ -37,13 +52,11 @@ function run_all_normal(i){
             task.rule.push(tmp)
         }
     }
-
-
     token = $('#forma').children().eq(0).val();
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/get-HAM-kontr',
+        url:   '/get-HAM-kontr',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -56,32 +69,23 @@ function run_all_normal(i){
             var resp = data;
             show_result(number, resp);
 
-            if ( resp.error != 'ok' ) {
-                alert("Программа зациклилась!");
-            }
+            // if ( resp.error != 'ok' ) {
+            //     alert("Программа зациклилась!");
+            // }
         }
     });
     return false;
 }
 
 
-function show_result(task_number, resp){
-    $('textarea[id=result' + (task_number + 1) + ']').val(resp.result); // записываем ответ
-    for (var i = 1; i <= 5; ++i) {     //выводим последовательности
-        field_number = i + task_number * 5;
-        $('td[id=output' + field_number + ']').text(resp.conv[i - 1]);
-        $('td[id=input' + field_number + ']').text(resp.input[i - 1]);
-        $('td[id=field' + field_number + ']').text(resp.ksuha[i - 1]);
-    }
-    protocol_HAM();
-}
 
 function get_tasks(){
     var token = $('#forma').children().eq(0).val();
+
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/get_control_tasks_HAM',
+        url:   '/get_control_tasks_nam',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -110,7 +114,7 @@ function protocol_HAM(){
     $.ajax({
         cache: false,
         type: 'POST',
-        url: '/uir/public/get_HAM_protocol',
+        url: '/get_HAM_protocol',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 

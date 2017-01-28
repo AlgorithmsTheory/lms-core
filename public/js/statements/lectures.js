@@ -11,7 +11,7 @@ $('.was').on('change', function() {
         $.ajax({
             cache: false,
             type: 'POST',
-            url:   '/uir/public/statements/lecture/was',
+            url:   '/statements/lecture/was',
             beforeSend: function (xhr) {
                 var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -34,7 +34,7 @@ $('.was').on('change', function() {
         $.ajax({
             cache: false,
             type: 'POST',
-            url:   '/uir/public/statements/lecture/wasnot',
+            url:   '/statements/lecture/wasnot',
             beforeSend: function (xhr) {
                 var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -68,3 +68,30 @@ var myBlurFunction = function(state) {
         containerElement.setAttribute('class', null);
     }
 };
+
+
+$(".all").click(function() {
+    var column = String(this.id);
+    var group = this.name;
+    token = $('#forma').children().eq(0).val();
+    myBlurFunction(1);
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url:   '/statements/lecture/wasall',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        data: { column: column, group: group, token: 'token' },
+        success: function(data){
+            $( ".was").filter(function(index) {
+                return String(this.id) === column;
+            }).prop( "checked", true )
+            myBlurFunction(0);
+        }
+    });
+    return false;
+});

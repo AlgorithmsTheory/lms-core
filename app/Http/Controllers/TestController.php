@@ -35,35 +35,26 @@ class TestController extends Controller{
     public function index(){
         $tr_tests = [];                                                                                                 //массив тренировочных тестов
         $ctr_tests = [];                                                                                                //массив контрольных тестов
-        $current_date = date('U');
-        $id_group = Auth::user()['group'];
         $query = $this->test->get();
         foreach ($query as $test){
-            if ($test->test_course != 'Рыбина' && $test->visibility == 1 && $test->year == date("Y") && $test->archived == 0) {   //проверка, что тест не из Рыбинских, он видим, он текущего года и он не архивный
-                if ($test->test_type == 'Тренировочный'){
+            if ($test->test_course != 'Рыбина' && $test->visibility == 1 && $test->archived == 0 && $test->only_for_print == 0) {   //проверка, что тест не из Рыбинских, он видим, он текущего года и он не архивный
+                $test['access_for_group'] = 0; //TODO: Вычислить
+                if ($test->test_type == 'Тренировочный') {
+                    $test['access_for_student'] = 1;
                     array_push($tr_tests, $test);
                 }
                 else {
                     array_push($ctr_tests, $test);
+                    $test['access_for_student'] = 0; //TODO: Вычислить
                     $test['max_points'] = Fine::levelToPercent(Fine::whereId(Auth::user()['id'])->whereId_test($test['id_test'])->select('fine')->first()->fine)/100 * $test['total'];
-
                 }
-                $start = strtotime(TestForGroup::whereId_group($id_group)->whereId_test($test->id_test)->select('start')->first()->start);
-                $end = strtotime(TestForGroup::whereId_group($id_group)->whereId_test($test->id_test)->select('end')->first()->end);
-                $test['end'] = TestForGroup::whereId_group($id_group)->whereId_test($test->id_test)->select('end')->first()->end;
-
-                if ($current_date >= $start && $current_date <= $end)                                                   //разделение на текущие и недоступные
-                    $test['current'] = 1;
-                else
-                    $test['current'] = 0;
+                $test['amount'] = Test::getAmount($test['id_test']);
             }
-            $test['amount'] = Test::getAmount($test['id_test']);
         }
 
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
-        if ($role == '' || $role == 'Обычный'){                                                                         // Обычным пользователям не доступны контрольные тесты
+        if ($role == '' || $role == 'Обычный')                                                                          // Обычным пользователям не доступны контрольные тесты
             return view('tests.index', compact('tr_tests'));
-        }
         else
             return view('tests.index', compact('tr_tests', 'ctr_tests'));
     }
@@ -72,59 +63,37 @@ class TestController extends Controller{
     public function create(){
         $types = [];
         $sections = [];
-        $query = Type::where('type_code', '<', 10)->select('type_name')->get();                                                                      //формируем массив типов
+        $query = Type::select('type_name')->get();                                                                      //формируем массив типов
         foreach ($query as $type){
             array_push($types,$type->type_name);
         }
-        $query = Section::where('section_code', '<', 5)->where('section_code', '>', 0)->select('section_name')->get();                                                                //формируем массив разделов
+        $query = Section::where('section_code', '<', 20)->where('section_code', '>', 0)->select('section_name')->get();                                                                //формируем массив разделов
         foreach ($query as $section){
             array_push($sections, $section->section_name);
         }
         $groups = Group::all();
-        $date = date("Y-m-d");
-        $time = date("H:i");
-        return view('tests.create', compact('types', 'sections' ,'groups', 'date', 'time'));
+        return view('tests.create', compact('types', 'sections' ,'groups'));
     }
 
     /** Добавляет новый тест в БД */
     public function add(Request $request){
-        if ($request->input('training')) {
-            $test_type = 'Тренировочный';
-        }
-        else {
-            $test_type = 'Контрольный';
-        }
-        if ($request->input('visibility')) {
-            $visibility = 1;
-        }
-        else {
-            $visibility = 0;
-        }
-        if ($request->input('multilanguage')) {
-            $multilanguage = 1;
-        }
-        else {
-            $multilanguage = 0;
-        }
-        if ($request->input('only-for-print')) {
-            $only_for_print = 1;
-        }
-        else {
-            $only_for_print = 0;
-        }
+        $test_type = $request->input('training') ? 'Тренировочный' : 'Контрольный';
+        $visibility = $request->input('visibility') ? 1 : 0;
+        $multilanguage = $request->input('multilanguage') ? 1 : 0;
+        $only_for_print = $request->input('only-for-print') ? 1 : 0;
         $total = $request->input('total');
         $test_time = $request->input('test-time');
         Test::insert(array('test_name' => $request->input('test-name'), 'test_type' => $test_type,
-            'test_time' => $test_time, 'total' => $total, 'year' => 2016,
-            'visibility' => $visibility, 'multilanguage' => $multilanguage, 'only_for_print' => $only_for_print));
+            'test_time' => $test_time, 'total' => $total, 'visibility' => $visibility,
+            'multilanguage' => $multilanguage, 'only_for_print' => $only_for_print));
+
         $id_test = Test::max('id_test');
         for ($i = 0; $i < count($request->input('id-group')); $i++) {
-            $start = $request->input('start-date')[$i].' '.$request->input('start-time')[$i];
-            $end = $request->input('end-date')[$i].' '.$request->input('end-time')[$i];
-            TestForGroup::insert(['id_test' => $id_test, 'id_group' => $request->input('id-group')[$i],
-                                  'start' => $start, 'end' => $end]);
+            $availability = $request->input('availability')[$i] ? 1 : 0;
+            TestForGroup::insert(['id_test' => $id_test, 'id_group' => $request->input('id-group')[$i], 'availability' => $availability]);
         }
-        for ($i=0; $i<=$request->input('num-rows'); $i++){
+
+        for ($i=0; $i < $request->input('num-rows'); $i++){
             if ($request->input('section')[$i] != 'Любой')
                 $section = Section::whereSection_name($request->input('section')[$i])->select('section_code')->first()->section_code;
             else $section = 'Любой';
@@ -185,7 +154,7 @@ class TestController extends Controller{
             ->get();
         foreach ($past_ctr_tests as $test){
             $test['amount'] = Test::getAmount($test['id_test']);
-            if (Test::isFinished($test->id_test, $id_group))                                                                       //если таких студентов нет, то такой тест завршить нельзя
+            if (Test::isFinishedForGroup($test->id_test, $id_group))                                                                       //если таких студентов нет, то такой тест завршить нельзя
                 $test['finish_opportunity'] = 0;
             else                                                                                                        //иначе можно
                 $test['finish_opportunity'] = 1;
@@ -232,18 +201,24 @@ class TestController extends Controller{
     /** Редактирование выбранного теста */
     public function edit($id_test){
         $test = Test::whereId_test($id_test)->first();
-        $sections = Section::where('section_code', '>', 0)->where('section_code', '<', 5)->get();
+        $sections = Section::where('section_code', '>', 0)->where('section_code', '<', 20)->get();
         $types = Type::where('type_code', '>', '0')->get();
-        $test['is_finished'] = Test::isFinished($id_test);
         $test['is_resolved'] = Test::isResolved($id_test);
 
-        $number_of_sections = Section::where('section_code', '>', '0')->count();                                        //число разделов
-        $number_of_types = Type::where('type_code', '>', '0')->count();                                                 //число типов
+        $number_of_sections = Section::where('section_code', '>', '0')->count();                                        // число разделов
+        $type =  new Type();
+        $type = $type->where('type_code', '>', '0');
+        if (Test::whereId_test($id_test)->select('only_for_print')->first()->only_for_print == 0){
+            $type = $type->whereOnly_for_print(0);
+        }
+        $number_of_types = $type->count();                                                                              // число типов
         $structures = TestStructure::whereId_test($id_test)->get();
         $test_for_groups = TestForGroup::whereId_test($test->id_test)->get();
         foreach ($test_for_groups as $test_for_group) {
             $test_for_group['group_name'] = Group::whereGroup_id($test_for_group['id_group'])->select('group_name')->first()->group_name;
-            $test_for_group['time_zone'] = Test::getTimeZone($id_test, $test_for_group['id_group']);
+            $test_for_group['is_finished'] = Test::isFinishedForGroup($id_test, $test_for_group['id_group']);
+            $test_for_group['start'] = TestForGroup::whereId_test($id_test)->whereId_group($test_for_group['id_group'])->select('start')->first()->start;
+            $test_for_group['end'] = TestForGroup::whereId_test($id_test)->whereId_group($test_for_group['id_group'])->select('end')->first()->end;
         }
         foreach ($structures as $structure){
             if (StructuralRecord::whereId_structure($structure['id_structure'])->distinct()->select('section_code')
@@ -257,7 +232,7 @@ class TestController extends Controller{
                                        ->join('sections', 'structural_records.section_code', '=', 'sections.section_code')
                                        ->select('section_name')->first()->section_name;
 
-                $section_code = StructuralRecord::whereId_structure($structure['id_structure'])                                  //число тем данного раздела
+                $section_code = StructuralRecord::whereId_structure($structure['id_structure'])                         // число тем данного раздела
                                     ->select('section_code')->first()->section_code;
                 $number_of_themes = Theme::whereSection_code($section_code)->select()->count();
                 if (StructuralRecord::whereId_structure($structure['id_structure'])->distinct()->select('theme_code')
@@ -280,7 +255,7 @@ class TestController extends Controller{
                 $structure['type'] = StructuralRecord::whereId_structure($structure['id_structure'])
                     ->join('types', 'structural_records.type_code', '=', 'types.type_code')
                     ->select('type_name')->first()->type_name;
-            $structure['db-amount'] = Question::getAmount($structure['section'], $structure['theme'],                      //число вопросов в БД заданной структуры
+            $structure['db-amount'] = Question::getAmount($structure['section'], $structure['theme'],                   // число вопросов в БД заданной структуры
                                     $structure['type'], $test->test_type, $test->only_for_print);
         }
         return view ('tests.edit', compact('test', 'sections', 'types', 'structures', 'test_for_groups'));
@@ -288,6 +263,7 @@ class TestController extends Controller{
 
     /** Применение изменений после редактирования теста */
     public function update(Request $request){
+//        dd($request);
         if ($request->input('training')) {
             $test_type = 'Тренировочный';
         }
@@ -332,7 +308,7 @@ class TestController extends Controller{
         }
         TestStructure::whereId_test($id_test)->delete();
 
-        for ($i=0; $i<=$request->input('num-rows'); $i++){
+        for ($i=0; $i < $request->input('num-rows'); $i++){
             if ($request->input('section')[$i] != 'Любой')
                 $section = Section::whereSection_name($request->input('section')[$i])->select('section_code')->first()->section_code;
             else $section = 'Любой';
@@ -343,9 +319,16 @@ class TestController extends Controller{
                 $type = Type::whereType_name($request->input('type')[$i])->select('type_code')->first()->type_code;
             else $type = 'Любой';
             $amount = $request->input('num')[$i];
+//            dd($section);
             TestStructure::add($id_test, $amount, $section, $theme, $type);
         }
         return redirect()->route('choose_group');
+    }
+
+    /** Завершает выбранный тест для всех учебных групп */
+    public function finishTest($id_test) {
+        Test::finishTest($id_test);
+        return redirect()->route('test_edit', $id_test);
     }
 
     /** полное удаление, если никто не проходил его, пометка как архивный в противном случае */
@@ -454,7 +437,7 @@ class TestController extends Controller{
             $result->save();
         }
         else {                                                                                                          //если была перезагружена страница теста или тест был покинут
-            $current_test = Result::getCurrentResult(Auth::user()['id'], $id_test);
+			$current_test = Result::getCurrentResult(Auth::user()['id'], $id_test);
             $query = $result->whereId_result($current_test)->first();
             $int_end_time = strtotime($query->result_date);                                                              //время окончания теста
             $saved_test = $query->saved_test;

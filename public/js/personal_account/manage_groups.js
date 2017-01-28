@@ -27,7 +27,7 @@ $(".delete").click(function() {
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/manage_groups/delete_group',
+        url:   '/manage_groups/delete_group',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 

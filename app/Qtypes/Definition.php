@@ -79,7 +79,7 @@ class Definition extends QuestionType {
                     $html .= '<td>'.$answers[$i].'</td>';
             }
             else {                                                                                                      //пдф без ответов
-                $html .= '<td></td>';
+                $html .= '<td height="85px"></td>';
             }
             $html .= '</tr>';
         }

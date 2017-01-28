@@ -3,8 +3,8 @@
 <table class="table table-condensed table-bordered">
     <tr>
         <td rowspan="3" class="warning">Группа</td>
-        <td rowspan="3" class="warning">Имя</td>
         <td rowspan="3" class="warning">Фамилия</td>
+        <td rowspan="3" class="warning">Имя</td>
         <td colspan="8" class="info">1 Раздел</td>
         <td colspan="4" class="warning">2 Раздел</td>
         <td colspan="8" class="info">3 Раздел</td>
@@ -28,16 +28,16 @@
         <td>max 7</td>
         <td>min 4.2</td>
         <td>max 7</td>
-        <td>min 1.8</td>
-        <td>max 3</td>
-        <td>min 1.2</td>
-        <td>max 2</td>
-
-        <td>min 3</td>
-        <td>max 5</td>
+        <td>min 0.6</td>
+        <td>max 1</td>
         <td>min 2.4</td>
         <td>max 4</td>
 
+        <td>min 3.6</td>
+        <td>max 6</td>
+        <td>min 1.8</td>
+        <td>max 3</td>
+
         <td>min 2.4</td>
         <td>max 4</td>
         <td>min 1.8</td>
@@ -47,8 +47,8 @@
         <td>min 1.8</td>
         <td>max 3</td>
 
-        <td>min 4.8</td>
-        <td>max 8</td>
+        <td>min 6</td>
+        <td>max 10</td>
     </tr>
     <tbody id="target">
     <?php
@@ -57,13 +57,13 @@
     @foreach($statement as $state)
         <tr id="{{ $state['userID'] }}">
             <td>
-                {{ $state['group'] }}
-            </td>
-            <td>
-                {{ $first_names[$count] }}
+                {{ $state['group_name'] }}
             </td>
             <td>
                 {{ $last_names[$count] }}
+            </td>
+            <td>
+                {{ $first_names[$count] }}
             </td>
             <td colspan="2">
                 <input type="number" value="{{ $state['control1'] }}" name="{{ $state['userID'] }}" id="control1" class="controls" style="width: 50px;" step="any">

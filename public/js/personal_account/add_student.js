@@ -8,7 +8,7 @@ $(".student").click(function() {
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/verify_students/student',
+        url:   '/verify_students/student',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -30,7 +30,7 @@ $(".average").click(function() {
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/verify_students/average',
+        url:   '/verify_students/average',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -52,7 +52,7 @@ $(".admin").click(function() {
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/verify_students/admin',
+        url:   '/verify_students/admin',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -74,7 +74,7 @@ $(".tutor").click(function() {
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/verify_students/tutor',
+        url:   '/verify_students/tutor',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -90,14 +90,14 @@ $(".tutor").click(function() {
     return false;
 });
 
-$('.group_change').on('change', function() {
+$('.l_name_change').on('change', function() {
     var userID = this.name;
     var value = $( this ).val();
     token = $('#forma').children().eq(0).val();
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/verify_students/change_group',
+        url:   '/verify_students/change_user_l_name',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -107,6 +107,30 @@ $('.group_change').on('change', function() {
         },
         data: { id: userID, value: value, token: 'token' },
         success: function(data){
+            alert("Фамилия изменена!");
+        }
+    });
+    return false;
+});
+
+$('.f_name_change').on('change', function() {
+    var userID = this.name;
+    var value = $( this ).val();
+    token = $('#forma').children().eq(0).val();
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url:   '/verify_students/change_user_f_name',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        data: { id: userID, value: value, token: 'token' },
+        success: function(data){
+            alert("Имя изменено!");
         }
     });
     return false;

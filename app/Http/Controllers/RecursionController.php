@@ -8,170 +8,207 @@
 
 namespace App\Http\Controllers;
 
-use Request;
-use DateTime;
-use DB;
+
+use App\Recursion;
+use Illuminate\Http\Request;
+
 class RecursionController extends Controller
 {
-    public function index()
-    {
-        return view('recursion.index');
-    }
-    public function magic($array) {
-        return json_decode(json_encode($array), true);
-    }
-    public function main(){
-        return view('algorithm.main');
+
+    public function get_recursion(){
+        return view('recursion/recursion');
     }
 
-   /* public  function kontrRec($testId, $userId) {
-        $userId = 'vasya'; //TODO : REMOVE THIS BULLSHIT
+    public function get_recursion_one(){
+        return view('recursion/recursion_one');
+    }
 
-        $exists = DB::Select("SELECT * FROM `user_result_rec` WHERE `user_result_rec`.`test_id`='$testId' and `user_result_rec`.`user_id`='$userId'");
-        $exists = json_decode(json_encode($exists), true);
+    public function get_recursion_two(){
+        return view('recursion/recursion_two');
+    }
 
-        if (count($exists) == 0)
-        {
-            $result = DB::Select("SELECT * FROM `rectask` WHERE `rectask`.`level`='0' order by RAND() limit 1");
-            $result = json_decode(json_encode($result), true)[0];
-            $result2 = DB::Select("SELECT * FROM `rectask` WHERE `rectask`.`level`='1' order by RAND() limit 1");
-            $result2 = json_decode(json_encode($result2), true)[0];
-            $easyId = $result['id'];
-            $hardId = $result2['id'];
-            DB::INSERT("INSERT INTO `user_result_rec` VALUES ('$testId', '$userId', '$easyId', '$hardId', '0', '0', '0', '')");
-            //$solved = False;
-        }else{
-            $easyId = $exists[0]['task_easy'];
-            $hardId = $exists[0]['task_hard'];
-            $result = DB::Select("SELECT * FROM `rectask` WHERE `rectask`.`id`='$easyId'");
-            $result = json_decode(json_encode($result), true)[0];
-            $result2 = DB::Select("SELECT * FROM `rectask` WHERE `rectask`.`id`='$hardId'");
-            $result2 = json_decode(json_encode($result2), true)[0];
-            // $solved = $exists[0]['is_solved'];
+    public function get_recursion_three(){
+        return view('recursion/recursion_three');
+    }
 
+    public function calculate_one(Request $request){
+		$exp = (String) $request->input('expression');
+        $q = (String) $request->input('q');
+        $function = (String) $request->input('function');
+        $function = str_replace("-", " |-| ", $function);
+
+        if ($q == "" || $function == "" || $exp == "") return "Заполните все пропуски!";
+
+        $expression = $this->convertExp1Param($q, $exp);
+        $cmd = "/var/www/html/timelimit.sh '";
+        $cmd = $cmd . "head (" . $expression . " [0]) == (\\x ->" . $function . ") 0 \\n";
+        $cmd = $cmd . "head (" . $expression . " [1]) == (\\x ->" . $function . ") 1 \\n";
+        $cmd = $cmd . "head (" . $expression . " [2]) == (\\x ->" . $function . ") 2 \\n";
+        $cmd = $cmd . "head (" . $expression . " [3]) == (\\x ->" . $function . ") 3 \\n";
+        $cmd = $cmd . "head (" . $expression . " [10]) == (\\x ->" . $function . ") 10'";
+
+        exec($cmd, $res);
+
+        $countFalse = 0;
+        $countTrue = 0;
+        $pointsNumber = 5;
+        foreach($res as $str){
+            if(strstr($str,'False') !== false) $countFalse +=1;
+            if(strstr($str,'True') !== false) $countTrue +=1;
         }
-        return view("recursion.kontrRec", compact('result', 'result2', 'solved', 'selectedTask', 'answer', 'mark'));
-    }*/
 
-      public function kontrRec($testId, $userId) {
-            $userId = 'vasya'; //TODO : REMOVE THIS BULLSHIT
-    
-            $exists = DB::Select("SELECT * FROM `user_result_rec` WHERE `user_result_rec`.`test_id`='$testId' and `user_result_rec`.`user_id`='$userId'");
-            $exists = json_decode(json_encode($exists), true);
-    
-            if (count($exists) == 0)
-            {
-                $result = DB::Select("SELECT * FROM `rectask` WHERE `rectask`.`level`='0' order by RAND() limit 1");
-                $result = json_decode(json_encode($result), true)[0];
-                $result2 = DB::Select("SELECT * FROM `rectask` WHERE `rectask`.`level`='1' order by RAND() limit 1");
-                $result2 = json_decode(json_encode($result2), true)[0];
-                $easyId = $result['id'];
-                $hardId = $result2['id'];
-                DB::INSERT("INSERT INTO `user_result_rec` VALUES ('$testId', '$userId', '$easyId', '$hardId', '0', '0', '0', '')");
-                $solved = False;
-            }else{
-                $easyId = $exists[0]['task_easy'];
-                $hardId = $exists[0]['task_hard'];
-                $result = DB::Select("SELECT * FROM `rectask` WHERE `rectask`.`id`='$easyId'");
-                $result = json_decode(json_encode($result), true)[0];
-                $result2 = DB::Select("SELECT * FROM `rectask` WHERE `rectask`.`id`='$hardId'");
-                $result2 = json_decode(json_encode($result2), true)[0];
-                $solved = $exists[0]['is_solved'];
+        if($countTrue + $countFalse != $pointsNumber) return "Ошибка в выражениях или выход за временные рамки!";
+        if($countFalse == 0) return "Функции совпадают";
+
+        return "Функции НЕ совпадают";
+    }
+
+    function convertExp1Param($q, $exp){
+        $exp = strtolower($exp);
+        $exp = str_replace(" ", "", $exp);
+        $expression = "recursion1 " . $q . " (" . $this->depthStep($exp) . ")";
+        return $expression;
+    }
+
+    public function calculate_two(Request $request){
+        $second = (String) $request->input('second');
+        $first = (String) $request->input('first');
+        $function = (String) $request->input('function');
+        $function = str_replace("-", " |-| ", $function);
+
+        if ($first == "" || $function == "" || $second == "") return "Заполните все пропуски!";
+
+        $expression = $this->convertExp2Param($first, $second);
+
+        $cmd = "/var/www/html/timelimit.sh '";
+        $cmd = $cmd . "head (" . $expression . " [0, 0]) == (\\x y ->" . $function . ") 0 0 \\n";
+        $cmd = $cmd . "head (" . $expression . " [1, 1]) == (\\x y ->" . $function . ") 1 1 \\n";
+        $cmd = $cmd . "head (" . $expression . " [2, 2]) == (\\x y ->" . $function . ") 2 2 \\n";
+        $cmd = $cmd . "head (" . $expression . " [3, 3]) == (\\x y ->" . $function . ") 3 3 \\n";
+        $cmd = $cmd . "head (" . $expression . " [10, 10]) == (\\x y ->" . $function . ") 10 10'";
+
+        exec($cmd, $res);
+
+        $countFalse = 0;
+        $countTrue = 0;
+        $pointsNumber = 5;
+        foreach($res as $str){
+            if(strstr($str,'False') !== false) $countFalse +=1;
+            if(strstr($str,'True') !== false) $countTrue +=1;
+        }
+
+        if($countTrue + $countFalse != $pointsNumber) return "Ошибка в выражениях или выход за временные рамки!";
+        if($countFalse == 0) return "Функции совпадают";
+
+        return "Функции НЕ совпадают";
+    }
+
+    public function calculate_three(Request $request){
+        $second = (String) $request->input('second');
+        $first = (String) $request->input('first');
+        $function = (String) $request->input('function');
+        $function = str_replace("-", " |-| ", $function);
+
+        if ($first == "" || $function == "" || $second == "") return "Заполните все пропуски!";
+
+        $expression = $this->convertExp2Param($first, $second);
+
+        $cmd = "/var/www/html/timelimit.sh '";
+        $cmd = $cmd . "head (" . $expression . " [0, 0, 0]) == (\\x y z ->" . $function . ") 0 0 0 \\n";
+        $cmd = $cmd . "head (" . $expression . " [1, 1, 1]) == (\\x y z ->" . $function . ") 1 1 1 \\n";
+        $cmd = $cmd . "head (" . $expression . " [2, 2, 2]) == (\\x y z ->" . $function . ") 2 2 2 \\n";
+        $cmd = $cmd . "head (" . $expression . " [3, 3, 3]) == (\\x y z ->" . $function . ") 3 3 3 \\n";
+        $cmd = $cmd . "head (" . $expression . " [10, 10, 10]) == (\\x y z ->" . $function . ") 10 10 10'";
+
+        exec($cmd, $res);
+
+        $countFalse = 0;
+        $countTrue = 0;
+        $pointsNumber = 5;
+        foreach($res as $str){
+            if(strstr($str,'False') !== false) $countFalse +=1;
+            if(strstr($str,'True') !== false) $countTrue +=1;
+        }
+
+        if($countTrue + $countFalse != $pointsNumber) return "Ошибка в выражениях или выход за временные рамки!";
+        if($countFalse == 0) return "Функции совпадают";
+
+        return "Функции НЕ совпадают";
+    }
+
+    function convertExp2Param($first, $second){
+        $first = strtolower($first);
+        $second = strtolower($second);
+
+        $second = str_replace(" ", "", $second);
+        $first = str_replace(" ", "", $first);
+        $expression = "recursion (" . $this->depthStep($first) . ") (" . $this->depthStep($second) . ")";
+        return $expression;
+    }
+
+    function depthStep($str){
+        $args = strstr($str,'(');
+        $pos = strpos($str, '(');
+        $countOpen = 0;
+        $countClose = 0;
+        $tmpStr = "";
+        if ($pos === false) {
+           $fun = $str;
+        } else {
+            $fun = substr($str, 0, $pos);
+        }
+        $result = $this->matchFun($fun);
+        if ($args != "") {
+            $result = $result . " [";
+            $exp = explode(',', substr($args, 1 , -1));
+            $termCount = count($exp);
+            $i = 0;
+            foreach($exp as $term){
+                $i += 1;
+                $posOpen = strpos($term, '(');
+                $closeNum = substr_count($term, ')');
+                if ($posOpen === false && $closeNum == 0 && $countOpen == 0) {
+                    $result = $result . $this->depthStep($term) . ",";
+                } else {
+                    if ($countOpen == 0 && $posOpen !== false){
+                        $tmpStr = $tmpStr . $term;
+                    }
+                    else {
+                        $tmpStr = $tmpStr . "," . $term;
+                    }
+                    if ($posOpen !== false){
+                        $countOpen += 1;
+                    }
+                    if ($closeNum != 0) {
+                            $countClose += $closeNum;
+                    }
+                    if ($countOpen == $countClose && $countOpen != 0) {
+                        if ($i == $termCount) {
+                            $result = $result . $this->depthStep($tmpStr);
+                        } else {
+                            $result = $result . $this->depthStep($tmpStr) . ",";
+                        }
+                        $countOpen = 0;
+                        $countClose = 0;
+                        $tmpStr = "";
+                    }
+                }
             }
-
-           if ($solved) {
-               $answer = $exists[0]['answer'];
-               $selectedTask = $exists[0]['selected_task'];
-               $mark = $exists[0]['mark'];
-           }else {
-               $answer = '';
-               $selectedTask = '';
-               $mark = '';
-           }
-           return view("recursion.kontrRec", compact('result', 'result2', 'solved', 'selectedTask', 'answer', 'mark', 'userId', 'testId'));
-       }
-
-    public function solve() {
-        $mark = Request::input('mark');
-        $selected = Request::input('selected');
-        $answer = Request::input('rec_func');
-        $userId = Request::input('user_id');
-        $testId = Request::input('test_id');
-        //echo "mark: ".$mark." selected: ".$selected." answer: ".$answer." userId: ".$userId." testId: ".$testId; # TODO: remove
-        DB::Update("UPDATE `user_result_rec` SET `mark`='$mark', `selected_task`='$selected', `is_solved`='1', `answer`='$answer' where `test_id`='$testId' and `user_id`='$userId' ");
-        return $this->kontrRec($testId, $userId);
-    }
-
-    //  public function kontrtask(){
-    //TODO: сюда нужна авторизация для пользователя
-    // $result = DB::Select("SELECT `rectask`.`task`, `rectask`.`level`, `rectask`.`mark` FROM `rectask` WHERE `rectask`.`level`='0' order by RAND() limit 1");
-
-    //$row = $result->first();
-    //return view("recursion.kontrRec", compact('result'));
-    // }
-
-    
-  //  public function kontrtask(){
-        //TODO: сюда нужна авторизация для пользователя
-       // $result = DB::Select("SELECT `rectask`.`task`, `rectask`.`level`, `rectask`.`mark` FROM `rectask` WHERE `rectask`.`level`='0' order by RAND() limit 1");
-        
-        //$row = $result->first();
-        //return view("recursion.kontrRec", compact('result'));
-   // }
-
-    public function indexrec(){
-        $success = false;
-        $tasks = DB::select("SELECT * FROM `rectask`");
-        $tasks = RecursionController::magic($tasks);
-        return view("recursion.alltasksrec", compact('tasks'));
-    }
-    public function addtaskrec(){
-        $success = false;
-        return view("recursion.addtaskrec", compact('success'));
-    }
-    public function addingrec(){
-        $task_text = Request::input('task_text');
-        $max_mark = Request::input('max_mark');
-        $level = Request::input('level');
-        $result1 = DB::insert(  "INSERT INTO `rectask` (task, level, mark) 
-                                        VALUES('$task_text','$level','$max_mark')");
-        $results = DB::select('SELECT * from `rectask`');
-        $results = RecursionController::magic($results);
-        $success = true;
-          return view("recursion.addtaskrec", compact('success'));
-    }
-    public function editrec($id){
-
-        $result = DB::select("SELECT * from `rectask` WHERE id=".$id);
-        $result = RecursionController::magic($result)[0];
-        return view("recursion.editrec", compact('result','id'));
-    }
-    public function editTaskrec($id){
-
-        $task = Request::input("task");
-        $mark = Request::input("mark");
-        $level = Request::input("level");
-        $query3 = DB::update("UPDATE `rectask` SET `task`='$task', `mark`='$mark', `level`='$level' where `id`=".$id);
-        $query3 = RecursionController::magic($query3);
-        $tasks = DB::select('SELECT * FROM `rectask`');
-        $tasks = RecursionController::magic($tasks);
-        return view("recursion.alltasksrec", compact('tasks'));
-    }
-    public function deleteTaskrec($id){
-
-        $result = DB::select("SELECT * from rectask WHERE rectask.id=".$id);
-        $result = RecursionController::magic($result);
-        DB::delete("DELETE FROM `rectask` WHERE rectask.id=".$id);
-        $tasks = DB::select("SELECT * FROM `rectask` ");
-        $tasks = RecursionController::magic($tasks);
-        return view("recursion.alltasksrec", compact('tasks'));
-    }
-    public function get_rec_protocol(Request $request){
-        $user = Auth::user();
-        if ($request->ajax()) {
-            $protocol = new RecProtocol("recursion", $user['id'], $request->input('id_user'), $request->input('html_text'));
-            $protocol->create();
-            return;
+            $result = $result . "]";
         }
+        return str_replace(",]" , "]", $result);
+    }
+
+    function matchFun($fun){
+        if (preg_match('/^sum/', $fun) != 0) return 'summ';
+        if (preg_match('/^s[;0-9]+/', $fun) != 0) return 's';
+        if (preg_match('/^s/', $fun) != 0) return 'sNext';
+        if (preg_match('/^mul/', $fun) != 0) return 'mul';
+        if (preg_match('/^[\^]/', $fun) != 0) return 'pow';
+        if ($fun[0] == 'c' || $fun[0] == 'u'){
+            $args = explode('.', substr($fun, 1));
+            return '(' . $fun[0] . ' ' . $args[1] . ')';
+        }
+        return "1";
     }
 }

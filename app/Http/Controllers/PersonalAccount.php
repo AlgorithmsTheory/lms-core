@@ -14,7 +14,7 @@ class PersonalAccount extends Controller{
     public static function showTestResults(){   //показывает результаты тестов
         $tests = [];
         $names = [];
-        $query = Test::select('id_test', 'test_course', 'test_name', 'start', 'end', 'test_type')->get();
+        $query = Test::select('id_test', 'test_course', 'test_name', 'test_type')->get();
         foreach ($query as $test){
             if ($test->test_course != 'Рыбина'){                    //проверка, что тест открыт и он не из Рыбинских
                 array_push($tests, $test->id_test);                                                              //название тренировочного теста состоит из слова "Тренировочный" и
@@ -39,7 +39,7 @@ class PersonalAccount extends Controller{
         $result_dates = [];
         $results = [];
         $marks = [];
-        $query = $this->test->select('id_test', 'test_course', 'test_name', 'start', 'end', 'test_type')->get();
+        $query = $this->test->select('id_test', 'test_course', 'test_name', 'test_type')->get();
         foreach ($query as $test){
             if ($test->test_course != 'Рыбина'){                    //проверка, что тест открыт и он не из Рыбинских
                 array_push($tests, $test->id_test);                                                              //название тренировочного теста состоит из слова "Тренировочный" и
@@ -48,14 +48,14 @@ class PersonalAccount extends Controller{
         }
         $amount = count($tests);
         $c = 0;
-        $resultsQuery = Result::select('id', 'result_date', 'result', 'mark_eu')->get();
+        $resultsQuery = Result::join('tests', 'tests.id_test', '=', 'results.id_test')->select('id', 'test_name', 'result_date', 'result', 'mark_eu')->get();
         foreach ($resultsQuery as $res){
-            $user = User::whereId($res->id_user)->get();
+            $user = User::whereId($res->id)->join('groups', 'groups.group_id', '=', 'users.group')->get();
 //            $c = $c + count($user);
             if(count($user) != 0) {
                 array_push($last_names, $user[0]->last_name);
                 array_push($first_names, $user[0]->first_name);
-                array_push($groups, $user[0]->group);
+                array_push($groups, $user[0]->group_name);
             }
             else {
                 array_push($last_names, 'УДАЛЕН');

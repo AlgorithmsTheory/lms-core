@@ -28,7 +28,7 @@
 
                         <select name="group" id="group_num" class="form-control textarea3" size="1" required>
                             @foreach($group_set as $g)
-                                <option value="{{ $g['number'] }}">{{ $g['number'] }}</option>/td>
+                                <option value="{{ $g['group_id'] }}">{{ $g['group_name'] }}</option>/td>
                             @endforeach
                         </select>
                         <label for="group_num">Выберите группу</label>
@@ -40,7 +40,7 @@
                         <select name="type" id="group_num" class="form-control" size="1" required>
                             {{--<option value="">Все</option>--}}
                             @foreach($groups as $group)
-                                <option value="{{ $group['group'] }}">{{ $group['group'] }}</option>
+                                <option value="{{ $group['group_id'] }}">{{ $group['group_name'] }}</option>
                             @endforeach
                         </select>
                         <label for="select-type">Выбор группы</label>

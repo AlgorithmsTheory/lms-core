@@ -48,7 +48,7 @@
                     @foreach($query as $user)
                     <tr id="{{ $user['id'] }}">
                         <td>
-                           {{ $user['group'] }}
+                           {{ $user['group_name'] }}
                         </td>
                         <td>
                             {{ $user['last_name'] }}

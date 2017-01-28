@@ -4,7 +4,7 @@ $(".delete").click(function() {
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/manage_groups/group_set/delete',
+        url:   '/manage_groups/group_set/delete',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 

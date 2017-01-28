@@ -25,7 +25,7 @@ function run_all_normal(j){
 	var step = j;
 	var task = new Object()
 	task.rule = new Array()
-	task.str = $('textarea[name=textarea_src]').val()
+	task.str = 'Λ'+$('textarea[name=textarea_src]').val()
 	var src = $('input[name=start]').toArray()
 	var dst = $('input[name=end]').toArray()
 	$("td").remove();
@@ -43,7 +43,7 @@ function run_all_normal(j){
 	$.ajax({
 		cache: false,
 		type: 'POST',
-		url:   '/uir/public/get-HAM',
+		url:   '/get-HAM',
 		beforeSend: function (xhr) {
 			var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -53,7 +53,7 @@ function run_all_normal(j){
 		},
 		data: { task: JSON.stringify(task), token: 'token' },
 		success: function(data){
-			var resp = data;
+			var resp = JSON.parse(data);
 			if ( resp.error != 'ok' ) {
 				alert("Программа зациклилась!");
 				$('input[id=disabled6]').val("Ошибка!");
@@ -91,11 +91,10 @@ function run_all_turing(j){
 
 
 	token = $('#forma').children().eq(0).val();
-	alert(task.str);
 	$.ajax({
 		cache: false,
 		type: 'POST',
-		url:   '/uir/public/get-MT',
+		url:   '/get-MT',
 		beforeSend: function (xhr) {
 			var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -105,9 +104,8 @@ function run_all_turing(j){
 		},
 		data: { task: JSON.stringify(task), token: 'token' },
 		success: function(data){
-			var resp = data;
+			var resp = JSON.parse(data);
 			if ( resp.error != 'ok' ) {
-				alert("Программа зациклилась!");
 				$('input[id=disabled6]').val("Ошибка!");
 				if (step == true){
 					debag(resp);

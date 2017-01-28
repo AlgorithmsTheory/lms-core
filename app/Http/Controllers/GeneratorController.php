@@ -17,6 +17,7 @@ use App\Qtypes\JustAnswer;
 use App\Qtypes\MultiChoice;
 use App\Qtypes\OneChoice;
 use App\Qtypes\Theorem;
+use App\Qtypes\TheoremLike;
 use App\Qtypes\YesNo;
 use App\Testing\Question;
 use App\Testing\Test;
@@ -62,6 +63,10 @@ class GeneratorController extends Controller {
                 break;
             case 'Теорема':
                 $theorem = new Theorem($id_question);
+                $theorem->pdf($fpdf, $count, $answered);
+                break;
+            case 'Как теорема':
+                $theorem = new TheoremLike($id_question);
                 $theorem->pdf($fpdf, $count, $answered);
                 break;
         }

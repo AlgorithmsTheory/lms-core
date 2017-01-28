@@ -47,13 +47,15 @@
                         @foreach($query as $user)
                             <tr id="{{ $user['id'] }}">
                                 <td>
-                                    <input type="number" value="{{ $user['group'] }}" name="{{ $user['id'] }}" class="group_change" style="width: 50px;">
+                                    {{ $user['group_name'] }}
                                 </td>
                                 <td>
-                                    {{ $user['last_name'] }}
+                                    <input type="text" value="{{ $user['last_name'] }}" name="{{ $user['id'] }}" class="l_name_change">
+{{--                                    {{ $user['last_name'] }}--}}
                                 </td>
                                 <td>
-                                    {{ $user['first_name'] }}
+                                    <input type="text" value="{{ $user['first_name'] }}" name="{{ $user['id'] }}" class="f_name_change">
+                                    {{--{{ $user['first_name'] }}--}}
                                 </td>
                                 <td>
                                     {{ $user['email'] }}

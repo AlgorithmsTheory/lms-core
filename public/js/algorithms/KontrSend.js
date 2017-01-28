@@ -31,7 +31,7 @@ function drop_sup(x) {
 //    $.ajax({
 //        cache: false,
 //        type: 'POST',
-//        url:   '/uir/public/get-HAM-kontr',
+//        url:   '/get-HAM-kontr',
 //        beforeSend: function (xhr) {
 //            var token = $('meta[name="csrf_token"]').attr('content');
 //
@@ -55,11 +55,6 @@ function drop_sup(x) {
 //}
 
 
-
-
-
-
-
 function run_all_normal(){
     var task = new Object()
     task.rule = new Array()
@@ -68,6 +63,8 @@ function run_all_normal(){
     var src = $('input[name=start]').toArray()
     var dst = $('input[name=end]').toArray()
 
+   // var src = $('textarea[name=start]').toArray()
+    //var dst = $('textarea[name=end]').toArray()
     for ( var i = 0; i < src.length; i++) {
         tmp = new Object();
         tmp.src = drop_sup(src[i].value);
@@ -90,8 +87,9 @@ function run_all_normal(){
 }
 
 function show_result(task_number, resp){
-    //$('input[id=result' + (task_number + 1) + ']').val(resp.result); // записываем ответ
-    $('#result' + (task_number + 1)).text('Ваш балл: ' + resp.result);
+    $('input[id=result' + (task_number + 1) + ']').val(resp.result);
+    alert(resp.result); // записываем ответ
+    // $('#result' + (task_number + 1)).text('Ваш балл: ' + resp.result);
     for (var i = 1; i <= 5; ++i) {     //выводим последовательности
         field_number = i + task_number * 5;
         $('td[id=output' + field_number + ']').text(resp.conv[i - 1]);
@@ -106,14 +104,16 @@ function run_all_turing(i){
     //protocol();
     var number = i;
     var key = '#' + $('div.active *> li.active > a')[0].href.split('#')[1];  // for example = #light1     var $max_mark;
-    alert(key);
+    
     var task = new Object();
     task.id = task_id_map[key]; // get id task
     task.rule = new Array();
     task.duration = now.getMinutes() - start_time;
     task.str = $('textarea[name=textarea_src]').val();
-    var src = $('input[name=start]').toArray();
-    var dst = $('input[name=end]').toArray();
+    var src = $('div.active >* input[name=start]').toArray();
+    var dst = $('div.active >* input[name=end]').toArray();
+   //  var src = $('textarea[name=start]').toArray();
+   // var dst = $('textarea[name=end]').toArray();
     if(i == 0) {
         document.getElementById("send_one").disabled = true;
     }
@@ -132,7 +132,7 @@ function run_all_turing(i){
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/get-MT-kontr',
+        url:   '/get-MT-kontr',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -143,12 +143,12 @@ function run_all_turing(i){
         data: { task: JSON.stringify(task), token: 'token' },
         success: function(data){
             var resp = data;
-            //resp = $.parseJSON(data);
+//            resp = $.parseJSON(data);
             //alert(data);
             show_result(number, resp);
-            if ( resp.error != 'ok' ) {
-                alert("Программа зациклилась!");
-            }
+//            if ( resp.error != 'ok' ) {
+//                alert("Программа зациклилась!");
+//            }
         }
     });
     return false;
@@ -160,7 +160,7 @@ function protocol(){
     $.ajax({
         cache: false,
         type: 'POST',
-        url: '/uir/public/get_MT_protocol',
+        url: '/get_MT_protocol',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -180,12 +180,15 @@ function protocol(){
 
 function get_tasks(){
     var token = $('#forma').children().eq(0).val();
+    
+
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/uir/public/get_control_tasks',
+        url:   '/get_control_tasks',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
+            
 
             if (token) {
                 return xhr.setRequestHeader('X-CSRF-TOKEN', token);
@@ -205,13 +208,9 @@ function get_tasks(){
         }
     });
 }
+
 var task_id_map = {};
 var now = new Date();
 //alert( now );
 var start_time = now.getMinutes() ;
 setTimeout(get_tasks, 500);
-
-$('#p_scents').on('change', '.tile textarea', function(){
-    $(this).text($(this).val());
-    alert('Поменял!');
-});

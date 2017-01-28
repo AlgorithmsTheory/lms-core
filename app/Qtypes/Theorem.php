@@ -77,7 +77,7 @@ class Theorem extends QuestionType {
                       </table>';
             $html .= '<p>Доказательство:</p>';
             $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для доказательства
-                        <tr><td height="250px"></td></tr>
+                        <tr><td height="500px"></td></tr>
                       </table><br>';
             $fpdf->WriteHTML($html);
         }

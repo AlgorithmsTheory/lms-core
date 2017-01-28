@@ -13,7 +13,7 @@ $('#show').click(function(){
             $.ajax({
                 cache: false,
                 type: 'POST',
-                url:   '/uir/public/statements/get-lectures',
+                url:   '/statements/get-lectures',
                 beforeSend: function (xhr) {
                     var token = $('meta[name="csrf_token"]').attr('content');
                     if (token) {
@@ -31,7 +31,7 @@ $('#show').click(function(){
             $.ajax({
                 cache: false,
                 type: 'POST',
-                url:   '/uir/public/statements/get-seminars',
+                url:   '/statements/get-seminars',
                 beforeSend: function (xhr) {
                     var token = $('meta[name="csrf_token"]').attr('content');
                     if (token) {
@@ -49,7 +49,7 @@ $('#show').click(function(){
             $.ajax({
                 cache: false,
                 type: 'POST',
-                url:   '/uir/public/statements/get-controls',
+                url:   '/statements/get-controls',
                 beforeSend: function (xhr) {
                     var token = $('meta[name="csrf_token"]').attr('content');
                     if (token) {
@@ -67,7 +67,7 @@ $('#show').click(function(){
             $.ajax({
                 cache: false,
                 type: 'POST',
-                url:   '/uir/public/statements/get-classwork',
+                url:   '/statements/get-classwork',
                 beforeSend: function (xhr) {
                     var token = $('meta[name="csrf_token"]').attr('content');
                     if (token) {
@@ -85,7 +85,7 @@ $('#show').click(function(){
             $.ajax({
                 cache: false,
                 type: 'POST',
-                url:   '/uir/public/statements/get-resulting',
+                url:   '/statements/get-resulting',
                 beforeSend: function (xhr) {
                     var token = $('meta[name="csrf_token"]').attr('content');
                     if (token) {

@@ -19,7 +19,7 @@
         <form action="{{URL::route('test_add')}}" method="POST" class="form">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" id="num-rows" name="num-rows" value="1">
-            <div class="col-lg-offset-1 col-md-10 col-sm-6">
+            <div class="col-lg-offset-1 col-md-5 col-sm-5">
                 <div class="card">
                     <div class="card-body">
                             <!-- название теста -->
@@ -57,7 +57,7 @@
                         </div>
                         <!-- Максимум баллов за тест -->
                         <div class="form-group dropdown-label">
-                            <input type="number" min="1" name="total" id="total" class="form-control" required>
+                            <input type="number" min="1" step="0.5" name="total" id="total" class="form-control" required>
                             <label for="total">Максимум баллов за тест</label>
                         </div>
                         <!-- Время на прохождение теста -->
@@ -68,25 +68,26 @@
                      </div>
                 </div>
             </div>
-            <div class="col-lg-offset-1 col-md-10 col-sm-10">
+            <div class="col-md-5 col-sm-5">
                 <div class="card">
                     <div class="card-body">
                        <table class="table table-condensed" id="test-dates-table">
                            <tr>
                                <td>Группа</td>
-                               <td>Дата открытия</td>
-                               <td>Время открытия</td>
-                               <td>Дата закрытия</td>
-                               <td>Время закрытия</td>
+                               <td>Доступность</td>
                            </tr>
                            @foreach ($groups as $group)
                                 <input type="hidden" name="id-group[]" value="{{ $group['group_id'] }}">
                                 <tr>
                                     <td>{{ $group['group_name'] }}</td>
-                                    <td><input type="date" name="start-date[]" class="start-date" value="{{ $date }}"></td>
-                                    <td><input type="time" name="start-time[]" class="start-time" value="{{ $time }}"></td>
-                                    <td><input type="date" name="end-date[]" class="end-date" value="{{ $date }}"></td>
-                                    <td><input type="time" name="end-time[]" class="end-time" value="{{ $time }}"></td>
+                                    <td>
+                                        <div class="checkbox checkbox-styled">
+                                            <label>
+                                                <input type="checkbox" name="availability[]">
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                    </td>
                                 </tr>
                            @endforeach
                        </table>
@@ -157,6 +158,7 @@
 
 @section('js-down')
     {!! HTML::script('js/testCreate.js') !!}
+    {!! HTML::script('js/testCreateAndEdit.js') !!}
 @stop
 
 

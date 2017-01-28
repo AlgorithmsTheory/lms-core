@@ -57,7 +57,7 @@
 										<div class="tools">
 											<div class="btn-group">
 												
-												<input type="hidden" id="inputFileNameToSaveAs" value="Алгоритм НАМ">
+												<input type="hidden" id="inputFileNameToSaveAs" value="Алгоритм НАМ"></input>
 													<button type="button" title="" data-original-title="Сохранить в файл алгоритм и условие задачи" data-toggle="tooltip" data-placement="top" class="btn btn-default-bright btn-raised" onclick="saveTextAsFile()"><i class="md md-file-download"></i></button>
 													
 													<button type="button" onclick="loadFileAsText()" style="left:5px" title="" data-original-title="Загрузить в эмулятор ранее сохраненный алгоритм. Перед этим выберите файл" data-toggle="tooltip" data-placement="top" class="btn btn-default-bright btn-raised"><i class="md md-file-upload"></i></button>
@@ -207,6 +207,276 @@
 
 																</a>
 															</li>
+															<li id="p_scnt_9" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_9" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_9" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_10" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_10" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_10" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_11" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_11" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_11" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_12" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_12" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_12" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_13" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_13" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_13" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_14" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_14" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_14" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_15" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_15" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_15" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_16" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_16" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_16" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_17" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_17" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_17" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_18" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_18" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_18" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_19" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_19" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_19" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_20" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_20" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_20" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_21" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_21" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_21" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_22" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_22" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_22" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_23" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_23" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_23" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_24" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_24" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_24" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_25" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_25" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_25" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+															<li id="p_scnt_25" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  id="st_25" class="form-control" name="start" rows="1"></input>
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" id="end_25" class="form-control" name="end" rows="1"></input>
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
 
 														</ul>
 														<!--вставить новую строку -->	
@@ -293,7 +563,7 @@
 											<button type="button" class="btn ink-reaction btn-default-bright" id="one_tild">Õ</button>
 											<button type="button" class="btn ink-reaction btn-default-bright" id="big_lambda">&lambda;</button>
 											<button type="button" class="btn ink-reaction btn-default-bright" id="bull">H</button>
-											
+											<button type="button" class="btn ink-reaction btn-default-bright" id="delete">_</button>
 																						
 										</div> 
 									</div><!--end .card-body -->
@@ -367,14 +637,16 @@
 		
 		<h4>Инструкция:</h4>
 			<ul class="list-divided">
-				<li>Введите в соответствующие поля входное слово, исходный алфавит, а также сам текст программы(правую и левую части).</li>
-				<li>Все введенные символы отделяйте друг от друга точками. Но симол с нижними индексами считается как один. Пример: а<sub>0</sub>.a -> a.a.a</li>
+				<li>Введите в соответствующие поля входное слово, а также сам текст программы(правую и левую части).</li>
+				<!-- <li>Все введенные символы отделяйте друг от друга точками. Но симол с нижними индексами считается как один. Пример: а<sub>0</sub>.a -> a.a.a</li>
+				 -->
+				<li>Для обозначения удаления всех символов, находящихся в левой части, используйте символ "_". Например, запись "11 -> _ " будет эквивалентна "11 ->   ".</li>
 				<li>Для точки останова используйте английскую букву "H".</li>
 				<li>Для перемещения строк нужно, удерживая курсором нужный элемент списка за стрелку, перетащить его на желаемую позицию.</li>
 				<li>Для добавления строки нажмите кнопку "+".</li>
-				<li>Для добавления нижнего индекса нужно набрать в поле ввода конструкцию вида _{цифры}. Пример: S_{00} преобразуется в S<sub>00</sub>. </li>
+				<!-- <li>Для добавления нижнего индекса нужно набрать в поле ввода конструкцию вида _{цифры}. Пример: S_{00} преобразуется в S<sub>00</sub>. </li> -->
 				<li>Очитстить все строки можно с помощью соответствующей кнопки. </li>
-				<li>Специальный символ можно добавить, кликнув на него, находясь на нужной позиции поля ввода. </li>
+				<li>Специальный символ можно добавить, кликнув на него, находясь на нужной позиции поля ввода. Внимание: спецсимвол добавляется в конец редактируемого поля без учета конкретной позиции курсора в нем. </li>
 
 			</ul>
 		</div></div><div class="nano-pane"><div class="nano-slider" style="height: 199px; transform: translate(0px, 0px);"></div></div></div>
@@ -390,10 +662,11 @@
 		<!-- END BASE -->
 @section('js-down')
 		<!-- BEGIN JAVASCRIPT -->
+		
+	
 		{!! HTML::script('js/algorithms/jquery-1.4.3.min.js') !!}
 		{!! HTML::script('js/algorithms/jquery-1.10.2.js') !!}
 		{!! HTML::script('js/algorithms/symbols.js') !!}
-		
 		{!! HTML::script('js/algorithms/saving.js') !!}
 		{!! HTML::script('js/algorithms/superScript.js') !!}
 		{!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
@@ -418,7 +691,7 @@
 		{!! HTML::script('js/algorithms/send.js') !!}
 		{!! HTML::script('js/core/demo/DemoUIMessages.js') !!}
 		{!! HTML::script('js/libs/toastr/toastr.js') !!}
-		<!-- END JAVASCRIPT -->
+			<!-- END JAVASCRIPT -->
 @stop
 
 

@@ -18,7 +18,7 @@
                     {{--<div class="card-body test-list">--}}
                     <h2 class="text-center">Личный кабинет</h2>
                         <a href="{{ route('test_results')}}" class="btn btn-warning col-md-offset-3 col-md-6 ">Перейти на страницу результатов системы тестирования</a>
-                        <a href="{{ route('student_lib_account')}}" class="btn btn-warning col-md-offset-3 col-md-6 ">Перейти на страницу заказов книг</a>
+
                         <div class="col-md-12 col-sm-12 style-gray">
                             <h3 class="text-default-bright">Раздел 1</h3>
                         </div>
@@ -258,7 +258,7 @@
                                         <div class="dropdown">
                                             <button class="dropbtn">Тест №1</button>
                                             <div class="dropdown-content">
-                                                <a>От 1.8 до 3 баллов</a>
+                                                <a>От 0.6 до 1 баллов</a>
                                             </div>
                                         </div>
                                     </td>
@@ -266,7 +266,7 @@
                                         <div class="dropdown">
                                             <button class="dropbtn">Тест №1 (письменная часть)</button>
                                             <div class="dropdown-content">
-                                                <a>От 1.2 до 2 баллов</a>
+                                                <a>От 2.4 до 4 баллов</a>
                                             </div>
                                         </div>
                                     </td>
@@ -492,7 +492,7 @@
                                         <div class="dropdown">
                                             <button class="dropbtn">Тест №2</button>
                                             <div class="dropdown-content">
-                                                <a>От 3 до 5 баллов</a>
+                                                <a>От 3.6 до 6 баллов</a>
                                             </div>
                                         </div>
                                     </td>
@@ -500,7 +500,7 @@
                                         <div class="dropdown">
                                             <button class="dropbtn">Тест №2 (письменная часть)</button>
                                             <div class="dropdown-content">
-                                                <a>От 2.4 до 4 баллов</a>
+                                                <a>От 1.8 до 3 баллов</a>
                                             </div>
                                         </div>
                                     </td>
@@ -879,7 +879,7 @@
                                             @if ($progress['lastquiz'] == 1)
                                             class="success"
                                             @endif
-                                            >
+                                    >
                                         {{ $controls['lastquiz'] }}
                                     </td>
                                     <td
@@ -889,7 +889,7 @@
                                             @if ($progress['section4'] == 1)
                                             class="success"
                                             @endif
-                                            >
+                                    >
                                         {{ $results['section4'] }}
                                     </td>
                                 </tr>
@@ -901,6 +901,86 @@
                         <h3 class="text-default-bright">Итоги</h3>
                     </div>
                     <div class="col-md-12 col-sm-12 card test-list">
+                        <table class="table table-condensed table-bordered">
+                            <tr>
+                                <td class="info">
+                                    <div class="dropdown">
+                                        <button class="dropbtn">Итог за разделы</button>
+                                        <div class="dropdown-content">
+                                            <a>От 36 до 60 баллов</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="info">
+                                    <div class="dropdown">
+                                        <button class="dropbtn">Экзамен</button>
+                                        <div class="dropdown-content">
+                                            <a>От 24 до 40 баллов</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="info">
+                                    <div class="dropdown">
+                                        <button class="dropbtn">Суммарный итог</button>
+                                        <div class="dropdown-content">
+                                            <a>От 60 до 100 баллов</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="info">
+                                    <div class="dropdown">
+                                        <button class="dropbtn">Оценка</button>
+                                        <div class="dropdown-content">
+                                            <a>От E до A баллов</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tbody>
+                            <tr>
+                                <td
+                                        @if ((($progress['section4'] == 0) or ($progress['section3'] == 0) or ($progress['section2'] == 0) or ($progress['section1'] == 0)) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1))
+                                        class="danger"
+                                        @endif
+                                        @if (!((($progress['section4'] == 0) or ($progress['section3'] == 0) or ($progress['section2'] == 0) or ($progress['section1'] == 0)) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1)))
+                                        class="success"
+                                        @endif
+                                >
+                                    {{ $results['termResult'] }}
+                                </td>
+                                <td
+                                        @if (($results['exam'] < 24) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1))
+                                        class="danger"
+                                        @endif
+                                        @if (!(($results['exam'] < 24) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1)))
+                                        class="success"
+                                        @endif
+                                >
+                                    {{ $results['exam'] }}
+                                </td>
+                                <td
+                                        @if ((($progress['section4'] == 0) or ($progress['section3'] == 0) or ($progress['section2'] == 0) or ($progress['section1'] == 0) or ($results['exam'] < 24)) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1))
+                                        class="danger"
+                                        @endif
+                                        @if (!((($progress['section4'] == 0) or ($progress['section3'] == 0) or ($progress['section2'] == 0) or ($progress['section1'] == 0) or ($results['exam'] < 24)) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1)))
+                                        class="success"
+                                        @endif
+                                >
+                                    {{ $results['finalResult'] }}
+                                </td>
+                                <td
+                                        @if ((($progress['section4'] == 0) or ($progress['section3'] == 0) or ($progress['section2'] == 0) or ($progress['section1'] == 0) or ($results['exam'] < 24)) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1))
+                                        class="danger"
+                                        @endif
+                                        @if (!((($progress['section4'] == 0) or ($progress['section3'] == 0) or ($progress['section2'] == 0) or ($progress['section1'] == 0) or ($results['exam'] < 24)) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1)))
+                                        class="success"
+                                        @endif
+                                >
+                                    {{ $results['markEU'] }}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     <div class="col-lg-offset-1 col-md-10 col-sm-10 ">
                         <br>
                         <div class="card">
