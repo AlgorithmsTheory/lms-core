@@ -66,6 +66,7 @@ Route::post('get-theme', array('as'=>'get_theme', 'uses'=>'QuestionController@ge
 Route::post('get-type', array('as'=>'get_type', 'uses'=>'QuestionController@getType'));
 Route::post('questions/create', ['as' => 'question_add', 'uses' => 'QuestionController@add']);
 Route::get('tests/create', ['as' => 'test_create', 'uses' => 'TestController@create', 'middleware' => ['general_auth', 'admin']]);
+Route::get('tests/create/step2', ['as' => 'test_create_step2', 'uses' => 'TestController@createSndStep', 'middleware' => ['general_auth', 'admin']]);
 Route::post('get-theme-for-test', array('as'=>'get_theme_for_test', 'uses'=>'TestController@getTheme'));
 Route::post('get-amount', array('as'=>'get_amount', 'uses'=>'TestController@getAmount'));
 Route::post('tests/create', ['as' => 'test_add', 'uses' => 'TestController@add']);

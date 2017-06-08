@@ -59,7 +59,7 @@ class TestController extends Controller{
             return view('tests.index', compact('tr_tests', 'ctr_tests'));
     }
 
-    /** генерирует страницу создания нового теста */
+    /** генерирует страницу создания нового теста (шаг 1 - основные настройки) */
     public function create(){
         $types = [];
         $sections = [];
@@ -73,6 +73,11 @@ class TestController extends Controller{
         }
         $groups = Group::all();
         return view('tests.create', compact('types', 'sections' ,'groups'));
+    }
+
+    /** генерирует страницу создания нового теста (шаг 2 - создание структур) */
+    public function createSndStep() {
+        return view('tests.create2');
     }
 
     /** Добавляет новый тест в БД */
