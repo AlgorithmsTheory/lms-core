@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Notifications\Notifiable as Notifiable;
 
 /**
  * @method static \Illuminate\Database\Query\Builder|\App\User whereId($value)
@@ -21,6 +22,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @method static \Illuminate\Database\Query\Builder|\App\User whereRole($value)
  *
  * @method static \Illuminate\Database\Query\Builder|\App\User whereNull($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\User create($array)
  * @method static \Illuminate\Database\Query\Builder|\App\User where($value)
  * @method static \Illuminate\Database\Query\Builder|\App\User  join()
  * @method static \Illuminate\Database\Query\Builder|\App\User  leftJoin()
@@ -33,7 +35,7 @@ class User extends Model implements AuthenticatableContract,
     AuthorizableContract,
     CanResetPasswordContract
 {
-    use Authenticatable, Authorizable, CanResetPassword;
+    use Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
     /**
      * The database table used by the model.

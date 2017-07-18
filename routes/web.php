@@ -14,6 +14,11 @@
 Route::get('/', function() {
     return redirect('home');
 });
+
+Route::get('public', function() {
+    return redirect('home');
+});
+
 Route::get('home', ['as' => 'home', 'uses' => 'HomeController@get_home']);
 
 
@@ -22,19 +27,21 @@ Route::get('in-process', ['as' => 'in_process', function() {
 }]);
 
 // Авторизация
-Route::post('auth/login', ['as' => 'login', 'uses' => 'Auth\AuthController@postLogin']);
-Route::get('auth/logout', ['as' => 'logout', 'uses' => 'Auth\AuthController@getLogout']);
+Route::post('auth/login', ['as' => 'login', 'uses' => 'Auth\LoginController@login']);
+Route::get('auth/logout', ['as' => 'logout', 'uses' => 'Auth\LoginController@logout']);
 Route::get('auth/login', ['as' => 'login', 'uses' => 'HomeController@get_home']);
 
 // Регистрация
-Route::post('auth/register', ['as' => 'register', 'uses' => 'Auth\AuthController@postRegister']);
+Route::post('auth/register', ['as' => 'register', 'uses' => 'Auth\RegisterController@register']);
 
 // Восстановление пароля
-Route::get('password/email', 'Auth\PasswordController@getEmail');
-Route::post('password/email', ['as' => 'passEmailPost', 'uses' => 'Auth\PasswordController@postEmail']);
-Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
-Route::post('password/reset',['as' => 'passReset', 'uses' => 'Auth\PasswordController@postReset']);
+Route::get('password/email', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.email');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('passEmailPost');
+Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.request');
 
+
+// Модуль тестирования - прохождение тестов
 Route::get('tests', ['as' => 'tests', 'uses' => 'TestController@index', 'middleware' => 'general_auth']);
 Route::get('questions/show-test/{id_test}', ['as' => 'question_showtest', 'uses' => 'TestController@showViews', 'middleware' => ['general_auth', 'single_test', 'have_attempts']]);
 Route::patch('questions/check-test', ['as' => 'question_checktest', 'uses' => 'TestController@checkTest']);

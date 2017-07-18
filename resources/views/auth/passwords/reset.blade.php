@@ -30,7 +30,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-12">
-                            <form id="newpass-form" method="POST" action="{{URL::route('passReset')}}" data-toggle="validator" role="form" style="display: block;">
+                            <form id="newpass-form" method="POST" action="{{URL::route('password.request')}}" data-toggle="validator" role="form" style="display: block;">
                                 {!! csrf_field() !!}
                                 <input type="hidden" name="token" value="{{ $token }}">
 
