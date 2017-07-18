@@ -12,13 +12,13 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::filter('csrf-ajax', function()
+/*Route::filter('csrf-ajax', function()
 {
     if (Session::token() != Request::header('x-csrf-token'))
     {
         throw new Illuminate\Session\TokenMismatchException;
     }
-});
+});*/
 
 Route::get('/', function() {
     return redirect('home');
