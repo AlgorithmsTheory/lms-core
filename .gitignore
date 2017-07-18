@@ -4,7 +4,6 @@
 /public/storage
 Homestead.yaml
 Homestead.json
-workspace.xml
 /config/*
 composer.json
 composer.lock
