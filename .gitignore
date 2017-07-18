@@ -1,5 +1,9 @@
 /vendor
 .env
+/node_modules
+/public/storage
+Homestead.yaml
+Homestead.json
 workspace.xml
 /config/*
 composer.json
@@ -8,4 +12,9 @@ _ide_helper.php
 public/download/*
 public/archive/*
 /nbproject/private/
-.idea/*
+.idea/
+
+# ====== OS X ===========================================
+.DS_Store
+.AppleDouble
+.LSOverride
