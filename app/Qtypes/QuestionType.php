@@ -64,14 +64,36 @@ abstract class QuestionType {
         return ['section' => $section, 'theme' => $theme, 'type' => $type,
                 'control' => $control, 'points' => $points, 'translated' => $translated];
     }
-    /*public function toBladeImage($string){
-        //return preg_replace("/#img1#/", "{!! HTML::image('img/symbols/all.png') !!}", $string);
-        return $string;
-    }*/
 
+    /**
+     * Add new question to questions table in DB
+     */
     abstract function add(Request $request);
+
+    /**
+     * Generate page for editing question
+     */
     abstract function edit();
+
+    /**
+     * Update question in DB
+     */
+    abstract function update(Request $request);
+
+    /**
+     * Provide the name of the view and necessary parameters for displaying question in test
+     */
     abstract function show($count);
+
+    /**
+     * Define estimate algorithm of student's answer
+     */
     abstract function check($array);
+
+    /**
+     * @param Mypdf $fpdf - Library for PDF
+     * @param int $count - Ordered number of the question
+     * @param bool $answered - true if needed to generate PDF with correct answers (for teachers), false - for students
+     */
     abstract function pdf(Mypdf $fpdf, $count, $answered=false);
 }

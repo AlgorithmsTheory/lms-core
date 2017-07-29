@@ -4,15 +4,39 @@
             <span>Только для контрольных тестов</span>
         </label>
     </div>
-<!--    Таблицы соответствия-->
-    <button class="btn btn-primary btn-raised" type="button" id="build-table">Построить таблицу</button>
-    <input type="number" id="table-tr" min="1" max="10" required>
-    <span> на </span>
-    <input type="number" id="table-td" min="1" max="10" required>
-    <span> элементов. </span>
-    <br>
-    <br>
-    <div id="table-place">
+    <div class="checkbox checkbox-styled">
+        <label>
+            <input type="checkbox" name="translated" id="translated">
+            <span>Переведен на английский язык</span>
+        </label>
+    </div>
+
+    <!--  Русская таблица соответствия-->
+    <div>
+        <button class="btn btn-primary btn-raised" type="button" id="build-table">Построить таблицу</button>
+        <input type="number" id="table-tr" min="1" max="10" required>
+        <span> на </span>
+        <input type="number" id="table-td" min="1" max="10" required>
+        <span> элементов. </span>
+        <br>
+        <br>
+        <div id="table-place">
+            <!-- container for table -->
+        </div>
+    </div>
+
+    <!--  Английская таблица соответствия-->
+    <div>
+        <button class="btn btn-primary btn-raised" type="button" id="build-table-eng">Build table</button>
+        <input type="number" id="table-tr-eng" min="1" max="10" required>
+        <span> X </span>
+        <input type="number" id="table-td-eng" min="1" max="10" required>
+        <span> items. </span>
+        <br>
+        <br>
+        <div id="table-place-eng">
+            <!-- container for english table -->
+        </div>
     </div>
 
     <div id="other-options" class="col-md-10 col-sm-6">
@@ -57,3 +81,4 @@
 
 
 {!! HTML::script('js/question_create/accordanceTable.js') !!}
+{!! HTML::script('js/question_create/accordanceTableEng.js') !!}

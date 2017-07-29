@@ -258,8 +258,9 @@ class QuestionController extends Controller{
                 return view('questions.teacher.edit3', compact('data', 'sections', 'themes'));
                 break;
             case 'Таблица соответствий':
-                $fill_gaps = new AccordanceTable($id_question);
-                $fill_gaps->edit();
+                $accordance_table = new AccordanceTable($id_question);
+                $data = $accordance_table->edit();
+                return view('questions.teacher.edit5', compact('data', 'sections', 'themes'));
                 break;
             case 'Да/Нет':
                 $fill_gaps = new YesNo($id_question);
@@ -309,8 +310,8 @@ class QuestionController extends Controller{
                 $fill_gaps->update($request);
                 break;
             case 'Таблица соответствий':
-                $fill_gaps = new AccordanceTable($id_question);
-                $fill_gaps->edit();
+                $accordance_table = new AccordanceTable($id_question);
+                $accordance_table->update($request);
                 break;
             case 'Да/Нет':
                 $fill_gaps = new YesNo($id_question);

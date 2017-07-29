@@ -53,11 +53,23 @@ $('#type_question_add').on('click','#build-table', function(){
         for (k = 1; k <= rows; k++) {
             var z = document.createElement("TD");
             var t = document.createElement("INPUT");
+
+            var d = document.createElement("DIV");
+            d.setAttribute("class", "checkbox checkbox-styled");
+
+            var l = document.createElement("LABEL");
+
             t.setAttribute("type", "checkbox");
             t.setAttribute("name", "answer[]");
             t.setAttribute("value", ((i-1)*rows + k));
-            z.appendChild(t);
-            document.getElementById(i).appendChild(z);
+
+            var s = document.createElement("SPAN");
+
+            l.appendChild(t);
+            l.appendChild(s);
+            d.appendChild(l);
+            z.appendChild(d);
+            y.appendChild(z);
         }
     }
 });

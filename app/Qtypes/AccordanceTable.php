@@ -8,6 +8,7 @@
 namespace App\Qtypes;
 use App\Mypdf;
 use App\Testing\Question;
+use App\Testing\Type;
 use Illuminate\Http\Request;
 
 class AccordanceTable extends QuestionType {
@@ -16,39 +17,79 @@ class AccordanceTable extends QuestionType {
         parent::__construct($id_question);
     }
 
-    public function add(Request $request){
+    private function setAttributes(Request $request) {
         $options = $this->getOptions($request);
+
+        $title = $request->input('title')[0];
+        for ($i = 1; $i < count($request->input('title')); $i++){
+            $title = $title.';'.$request->input('title')[$i];
+        }
+        $title_eng = $request->input('eng-title')[0];
+        for ($i = 1; $i < count($request->input('eng-title')); $i++){
+            $title_eng = $title_eng.';'.$request->input('eng-title')[$i];
+        }
+
         $variants = $request->input('variants')[0];
-        $answer = '';
-        $flag = false;
         for ($i=1; $i<count($request->input('variants')); $i++){
             $variants = $variants.';'.$request->input('variants')[$i];
         }
-        $title = $request->input('title')[0];
-        for ($i=1; $i<count($request->input('title')); $i++){
-            $title = $title.';'.$request->input('title')[$i];
+        $variants_eng = $request->input('eng-variants')[0];
+        for ($i=1; $i<count($request->input('eng-variants')); $i++){
+            $variants_eng = $variants_eng.';'.$request->input('eng-variants')[$i];
         }
-// $j = 0;
-// while ($flag != true && $j<count($request->input('answer'))){
-// if (isset($request->input('answer')[$j])){
-// $answer = $j + 1;
-// $j++;
-// break;
-// }
-// $j++;
-// }
+
         $answer = $request->input('answer')[0];
         for ($i=1; $i<count($request->input('answer')); $i++){
             $answer = $answer.';'.$request->input('answer')[$i];
         }
-        Question::insert(array('title' => $title, 'variants' => $variants,
+        $answer_eng = $request->input('eng-answer')[0];
+        for ($i=1; $i<count($request->input('eng-answer')); $i++){
+            $answer_eng = $answer_eng.';'.$request->input('eng-answer')[$i];
+        }
+
+        return ['title' => $title, 'variants' => $variants,
             'answer' => $answer, 'points' => $request->input('points'),
-            'control' => $options['control'], 'section_code' => $options['section'],
-            'theme_code' => $options['theme'], 'type_code' => $options['type']));
+            'control' => $options['control'], 'translated' => $options['translated'],
+            'section_code' => $options['section'],
+            'theme_code' => $options['theme'], 'type_code' => $options['type'],
+            'title_eng' => $title_eng, 'variants_eng' => $variants_eng, 'answer_eng' => $answer_eng];
+    }
+
+    public function add(Request $request) {
+        $data = $this->setAttributes($request);
+
+        Question::insert(array('title' => $data['title'], 'variants' => $data['variants'],
+            'answer' => $data['answer'], 'points' => $data['points'],
+            'control' => $data['control'], 'translated' => $data['translated'],
+            'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
+            'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng']));
+
     }
 
     public function edit(){
+        $question = Question::whereId_question($this->id_question)->first();
+        $type_name = Type::whereType_code($question->type_code)->select('type_name')->first()->type_name;
+        $title = explode(";", $question->title);
+        $eng_title = explode(";", $question->title_eng);
+        $variants = explode(";", $question->variants);
+        $eng_variants = explode(";", $question->variants_eng);
+        $answers = explode(";", $question->answer);
+        $eng_answers = explode(";", $question->answer_eng);
+        return array('question' => $question, 'type_name' => $type_name,
+            'title' => $title, 'eng_title' => $eng_title,
+            'variants' => $variants, 'eng_variants' => $eng_variants,
+            'answers' => $answers, 'eng_answers' => $eng_answers);
+    }
 
+    public function update(Request $request) {
+        $data = $this->setAttributes($request);
+        Question::whereId_question($this->id_question)->update(
+            array('title' => $data['title'], 'variants' => $data['variants'],
+                'answer' => $data['answer'], 'points' => $data['points'],
+                'control' => $data['control'], 'translated' => $data['translated'],
+                'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
+                'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng'])
+        );
     }
 
     public function show($count){
