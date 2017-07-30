@@ -7,7 +7,7 @@
  */
 namespace App\Http\Controllers;
 use App\Protocols\TestProtocol;
-use App\Qtypes\FromClini;
+use App\Qtypes\FromCleene;
 use App\Testing\Lecture;
 use App\Qtypes\Theorem;
 use App\Qtypes\TheoremLike;
@@ -139,7 +139,7 @@ class QuestionController extends Controller{
                 $theorem->add($request);
                 break;
             case 'Востановить арифметический вид':
-                $theorem = new FromClini($id);
+                $theorem = new FromCleene($id);
                 $theorem->add($request);
                 break;
         }
@@ -284,8 +284,12 @@ class QuestionController extends Controller{
                 $theorem = new TheoremLike($id_question);
                 $theorem->edit();
                 break;
+            case 'Востановить арифметический вид':
+                $from_cleene = new FromCleene($id_question);
+                $data = $from_cleene->edit();
+                return view('questions.teacher.edit11', compact('data', 'sections', 'themes'));
+                break;
             }
-
     }
 
     public function update(Request $request) {
@@ -333,6 +337,11 @@ class QuestionController extends Controller{
                 $theorem = new TheoremLike($id_question);
                 $theorem->edit();
                 break;
+            case 'Востановить арифметический вид':
+                $from_cleene = new FromCleene($id_question);
+                $from_cleene->update($request);
+                break;
+
         }
         return redirect()->route('questions_list');
     }

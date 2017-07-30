@@ -7,7 +7,7 @@ use App\Testing\Type;
 use Illuminate\Http\Request;
 use Input;
 use Session;
-class FromClini extends QuestionType {
+class FromCleene extends QuestionType {
     const type_code = 11;
     function __construct($id_question){
         parent::__construct($id_question);
@@ -38,11 +38,10 @@ class FromClini extends QuestionType {
 
         $answer = $request->input('answer');
 
-        return ['title' => $title, 'variants' => '',
-            'answer' => $answer, 'points' => $options['points'],
+        return ['title' => $title, 'answer' => $answer, 'points' => $options['points'],
             'control' => $options['control'], 'translated' => $options['translated'],
             'section_code' => $options['section'], 'theme_code' => $options['theme'], 'type_code' => $options['type'],
-            'title_eng' => $eng_title, 'variants_eng' => '', 'answer_eng' => ''];
+            'title_eng' => $eng_title, 'answer_eng' => $answer];
     }
 
     public  function add(Request $request){

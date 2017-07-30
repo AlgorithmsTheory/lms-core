@@ -10,7 +10,7 @@ namespace App\Testing;
 use App\Qtypes\AccordanceTable;
 use App\Qtypes\Definition;
 use App\Qtypes\FillGaps;
-use App\Qtypes\FromClini;
+use App\Qtypes\FromCleene;
 use App\Qtypes\JustAnswer;
 use App\Qtypes\MultiChoice;
 use App\Qtypes\OneChoice;
@@ -183,7 +183,7 @@ class Question extends Eloquent {
                 return $array;
                 break;
             case 'Востановить арифметический вид':
-                $clini = new FromClini($id_question);
+                $clini = new FromCleene($id_question);
                 $array = $clini->show($count);
                 return $array;
                 break;
@@ -243,7 +243,7 @@ class Question extends Eloquent {
                 return $data;
                 break;
             case 'Востановить арифметический вид':
-                $three = new FromClini($id);
+                $three = new FromCleene($id);
                 $data = $three->check($array);
                 return $data;
                 break;
