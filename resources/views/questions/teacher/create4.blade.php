@@ -4,18 +4,32 @@
             <span>Только для контрольных тестов</span>
         </label>
     </div>
+    <div class="checkbox checkbox-styled">
+        <label>
+            <input type="checkbox" name="translated" id="translated">
+            <span>Переведен на английский язык</span>
+        </label>
+    </div>
     <!— ДА/НЕТ-->
-    <h2>Поочередно добавляйте утверждения. Напротив верных отмечайте галочку.</h2>
+    <h3>Поочередно добавляйте утверждения. Напротив верных отмечайте галочку.</h3>
+    <h3>Add new statements. Mark correct statements using checkbox.</h3>
     <br>
-    <div id="variants" class="col-md-9 col-sm-6">
+    <div id="variants" class="col-md-5 col-sm-5">
         <div class="form-group">
             <textarea name="variants[]" class="form-control textarea3" rows="1" placeholder="" required></textarea>
             <label for="textarea3">Утверждение 1</label>
         </div>
     </div>
-    <div class="col-md-1 col-sm-6" id="answers">
+    <div id="eng-variants" class="col-md-5 col-sm-5">
+        <div class="form-group">
+            <textarea name="eng-variants[]" class="form-control textarea3" rows="1" placeholder=""></textarea>
+            <label for="textarea3">Statement 1</label>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-2" id="answers">
         <div class="checkbox checkbox-styled">
             <label>
+                <input type="hidden" name="answers[]" value="0">
                 <input type="checkbox" name="answers[]" value="1">
                 <span></span>
             </label>

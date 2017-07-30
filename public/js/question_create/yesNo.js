@@ -6,7 +6,7 @@ var count = 1;                                                                  
 var margin = 25;                                                                                                   //расстояние верхней границы кнопок доавления и удаления
 
 /** Добавление варианта */
-$('#type_question_add').on('click','#add-var-4', function(){            //Я добавил
+$('#type_question_add').on('click','#add-var-4', function(){
     count++;
     $('#variants').append('\
             <div class="form-group">\
@@ -14,6 +14,12 @@ $('#type_question_add').on('click','#add-var-4', function(){            //Я д�
                 <label for="textarea3">Утверждение ' + (count) + '</label>\
             </div>\
             ');
+    $('#eng-variants').append('\
+            <div class="form-group">\
+                <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>\
+                <label for="textarea3">Statement ' + (count) + '</label>\
+            </div>\
+            ')
     $('#answers').append('\
             <div class="checkbox checkbox-styled" style="margin-top:49px">\
                 <label>\
@@ -22,16 +28,15 @@ $('#type_question_add').on('click','#add-var-4', function(){            //Я д�
                 </label>\
             </div>\
             ');
-    margin += 74;
     $('#add-del-buttons').attr('style','margin-top:'+margin+'px');
 });
 
 /** Удаление последнего варианта */
-$('#type_question_add').on('click','#del-var-4',function(){                 //Я добавил
+$('#type_question_add').on('click','#del-var-4',function(){
     if (count > 1){
-        lastelem = $('#variants').children().last().remove();
+        $('#variants').children().last().remove();
+        $('#eng-variants').children().last().remove();
         $('.checkbox-styled').last().remove();
-        margin -= 74;
         $('#add-del-buttons').attr('style','margin-top:'+margin+'px');
         count--;
     }
