@@ -278,7 +278,8 @@ class QuestionController extends Controller{
                 break;
             case 'Теорема':
                 $theorem = new Theorem($id_question);
-                $theorem->edit();
+                $data = $theorem->edit();
+                return view('questions.teacher.edit6', compact('data', 'sections', 'themes'));
                 break;
             case 'Три точки':
                 $just = new ThreePoints($id_question);
@@ -328,7 +329,7 @@ class QuestionController extends Controller{
                 break;
             case 'Теорема':
                 $theorem = new Theorem($id_question);
-                $theorem->edit();
+                $theorem->update($request);
                 break;
             case 'Три точки':
                 $just = new ThreePoints($id_question);

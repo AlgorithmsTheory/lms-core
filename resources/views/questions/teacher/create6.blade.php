@@ -4,9 +4,20 @@
             <span>Только для контрольных тестов</span>
         </label>
     </div>
+    <div class="checkbox checkbox-styled">
+        <label>
+            <input type="checkbox" name="translated" id="translated">
+            <span>Переведен на английский язык</span>
+        </label>
+    </div>
+
     <div class="form-group">
         <textarea  name="title" id="textarea1" class="form-control" rows="3" placeholder="Введине название или неполную формулировку теоремы" required></textarea>
         <label for="textarea1">Текст</label>
+    </div>
+    <div class="form-group">
+        <textarea  name="eng-title" id="textarea1" class="form-control" rows="3" placeholder="Type the name or incomplete formulation of the theorem"></textarea>
+        <label for="textarea1">Text</label>
     </div>
 
     <div id="other-options" class="col-md-10 col-sm-6">
