@@ -8,6 +8,7 @@
 namespace App\Qtypes;
 use App\Mypdf;
 use App\Testing\Question;
+use App\Testing\Type;
 use Illuminate\Http\Request;
 
 class Definition extends QuestionType {
@@ -21,16 +22,38 @@ class Definition extends QuestionType {
         $options = $this->getOptions($request);
         for ($i=0; $i<count($request->input('variants')); $i++){
             $title = $request->input('variants')[$i];
+            $eng_title = $request->input('eng-variants')[$i];
             $answer = $request->input('answers')[$i];
-            Question::insert(array('title' => $title, 'variants' => '',
-                'answer' => $answer, 'points' => $request->input('points'),
+            $eng_answer = $request->input('eng-answers')[$i];
+            Question::insert(array('title' => $title, 'title_eng' => $eng_title,
+                'answer' => $answer, 'answer_eng' => $eng_answer,
+                'points' => $request->input('points'),
+                'translated' => $options['translated'],
                 'control' => $options['control'], 'section_code' => $options['section'],
                 'theme_code' => $options['theme'], 'type_code' => $options['type']));
         }
     }
 
     public function edit(){
+        $question = Question::whereId_question($this->id_question)->first();
+        $type_name = Type::whereType_code($question->type_code)->select('type_name')->first()->type_name;
+        return array('question' => $question, 'type_name' => $type_name);
+    }
 
+    public function update(Request $request)
+    {
+        $options = $this->getOptions($request);
+        $title = $request->input('title');
+        $eng_title = $request->input('eng-title');
+        $answer = $request->input('answer');
+        $eng_answer = $request->input('eng-answer');
+
+        Question::whereId_question($this->id_question)->update(array('title' => $title, 'title_eng' => $eng_title,
+            'answer' => $answer, 'answer_eng' => $eng_answer,
+            'points' => $request->input('points'),
+            'translated' => $options['translated'],
+            'control' => $options['control'], 'section_code' => $options['section'],
+            'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
 
 

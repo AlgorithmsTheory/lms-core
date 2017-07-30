@@ -269,7 +269,8 @@ class QuestionController extends Controller{
                 break;
             case 'Определение':
                 $definition = new Definition($id_question);
-                $definition->edit();
+                $data = $definition->edit();
+                return view('questions.teacher.edit7', compact('data', 'sections', 'themes'));
                 break;
             case 'Открытый тип':
                 $just = new JustAnswer($id_question);
@@ -321,7 +322,7 @@ class QuestionController extends Controller{
                 break;
             case 'Определение':
                 $definition = new Definition($id_question);
-                $definition->edit();
+                $definition->update($request);
                 break;
             case 'Открытый тип':
                 $just = new JustAnswer($id_question);

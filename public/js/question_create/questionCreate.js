@@ -166,5 +166,7 @@ $('#type_question_add').on('click', '#submit-text', function(){
         }
     }
     return true;
+
+    // TODO: check translated flag - if checked then all english fields must not be empty!
 });
 

@@ -4,16 +4,35 @@
                 <span>Только для контрольных тестов</span>
             </label>
         </div>
+        <div class="checkbox checkbox-styled">
+            <label>
+                <input type="checkbox" name="translated" id="translated">
+                <span>Переведен на английский язык</span>
+            </label>
+        </div>
+
         <div class="col-md-2 col-sm-2" id="variants">
             <div class="form-group">
                 <textarea name="variants[]" class="form-control textarea3" rows="3" placeholder="" required></textarea>
                 <label for="textarea3">Определение 1</label>
             </div>
         </div>
-        <div class="col-md-8 col-sm-8" id="answers">
+        <div class="col-md-3 col-sm-3" id="answers">
             <div class="form-group">
                 <textarea name="answers[]" class="form-control textarea3" rows="3" placeholder="" required></textarea>
                 <label for="textarea3">Расшифровка 1</label>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-2" id="eng-variants">
+            <div class="form-group">
+                <textarea name="eng-variants[]" class="form-control textarea3" rows="3" placeholder=""></textarea>
+                <label for="textarea3">Definition 1</label>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-3" id="eng-answers">
+            <div class="form-group">
+                <textarea name="eng-answers[]" class="form-control textarea3" rows="3" placeholder=""></textarea>
+                <label for="textarea3">Transcript 1</label>
             </div>
         </div>
         <div class="col-md-2 col-sm-2" style="margin-top: 50px" id="add-del-buttons">
