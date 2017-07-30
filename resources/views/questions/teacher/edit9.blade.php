@@ -152,7 +152,6 @@
 
 @stop
 @section('js-down')
-    {!! HTML::script('js/question_create/oneChoice.js') !!}
     {!! HTML::script('js/question_create/imageInTitle.js') !!}
     {!! HTML::script('js/question_create/questionCreate.js') !!}
 @stop

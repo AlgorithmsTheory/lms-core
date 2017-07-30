@@ -50,7 +50,7 @@ class ThreePoints extends QuestionType {
             'answer' => $answers, 'points' => $options['points'],
             'control' => $options['control'], 'translated' => $options['translated'],
             'section_code' => $options['section'], 'theme_code' => $options['theme'], 'type_code' => $options['type'],
-            'title_eng' => $eng_title, 'variants_eng' => '', 'answer_eng' => ''];
+            'title_eng' => $eng_title, 'variants_eng' => $variants, 'answer_eng' => $answers];
     }
 
     public  function add(Request $request){

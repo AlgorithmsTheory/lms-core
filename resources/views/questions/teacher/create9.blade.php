@@ -99,5 +99,4 @@
 </div>
 </div>
 
-{!! HTML::script('js/question_create/oneChoice.js') !!}
 {!! HTML::script('js/question_create/imageInTitle.js') !!}
