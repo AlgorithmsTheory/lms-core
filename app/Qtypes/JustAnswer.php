@@ -67,12 +67,12 @@ class JustAnswer extends QuestionType {
         $type_name = Type::whereType_code($question->type_code)->select('type_name')->first()->type_name;
         $images = explode("::", $question->title);
         $variants = explode("@", $question->answer);
-        $eng_variants = explode("@", $question->eng_answer);
+        $eng_variants = explode("@", $question->answer_eng);
         return array('question' => $question, 'count' => $count, 'type_name' => $type_name,
             'images' => $images, 'variants' => $variants, 'eng_variants' => $eng_variants);
     }
 
-    public function update(Request $request){
+    public function update(Request $request) {
         $data = $this->setAttributes($request);
         Question::whereId_question($this->id_question)->update(
             array('title' => $data['title'], 'variants' => $data['variants'],

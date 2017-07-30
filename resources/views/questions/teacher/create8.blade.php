@@ -29,47 +29,51 @@
 </div>
 <br>
 
+<h3>Любой из нижеперечисленных вариантов ответа будет считаться верным</h3>
+<h3>All answers are correct</h3>
+<br>
+
 <!-- Русские варианты ответа -->
 <div id="variants" class="col-md-6 col-sm-6">
     <div class="form-group">
         <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
-        <label for="textarea3">Вариант 1</label>
+        <label for="textarea3">Ответ 1</label>
     </div>
     <div class="form-group">
         <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
-        <label for="textarea3">Вариант 2</label>
+        <label for="textarea3">Ответ 2</label>
     </div>
     <div class="form-group">
         <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
-        <label for="textarea3">Вариант 3</label>
+        <label for="textarea3">Ответ 3</label>
     </div>
     <div class="form-group">
         <textarea  name="variants[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
-        <label for="textarea3">Вариант 4</label>
+        <label for="textarea3">Ответ 4</label>
     </div>
 </div>
 <!-- Английские варианты ответа -->
 <div id="eng-variants" class="col-md-6 col-sm-6">
     <div class="form-group">
         <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>
-        <label for="textarea3">Variant 1</label>
+        <label for="textarea3">Answer 1</label>
     </div>
     <div class="form-group">
         <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>
-        <label for="textarea3">Variant 2</label>
+        <label for="textarea3">Answer 2</label>
     </div>
     <div class="form-group">
         <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>
-        <label for="textarea3">Variant 3</label>
+        <label for="textarea3">Answer 3</label>
     </div>
     <div class="form-group">
         <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder=""></textarea>
-        <label for="textarea3">Variant 4</label>
+        <label for="textarea3">Answer 4</label>
     </div>
 </div>
 <div class="col-lg-offset-10 col-md-10 col-sm-6" id="add-del-buttons">
-    <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-var-1"><b>+</b>   </button>
-    <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-var-1"><b>-</b></button>
+    <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-var-8"><b>+</b>   </button>
+    <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-var-8"><b>-</b></button>
 </div>
 
 <div id="other-options" class="col-md-10 col-sm-6">
@@ -108,10 +112,10 @@
             <h2 id="preview-text"></h2>
             <div id="preview-container"></div>
         </form>
-        <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>
+        <button class="btn btn-primary btn-raised submit-question" type="submit" disabled>Добавить вопрос</button>
     </div>
 </div>
 </div>
 
-{!! HTML::script('js/question_create/oneChoice.js') !!}
+{!! HTML::script('js/question_create/justAnswer.js') !!}
 {!! HTML::script('js/question_create/imageInTitle.js') !!}

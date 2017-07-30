@@ -39,13 +39,6 @@ class QuestionController extends Controller{
     /** главная страница модуля тестирования */
     public function index(){
         $username =  null;
-        /*Session::forget('test');
-        if (Auth::check()){
-            $username = Auth::user()['first_name'];
-        }
-        $protocol = new TestProtocol(161, 83, '');
-        $protocol->create();
-        $image = 'img/library/Pic/2.jpeg';*/
         return view('questions.teacher.index', compact('username', 'image'));
     }
 
@@ -61,19 +54,19 @@ class QuestionController extends Controller{
             $type = $request->input('choice');
             $sections = Section::all();
             switch($type){
-                case 'Выбор одного из списка':                      //Стас
+                case 'Выбор одного из списка':
                     return (String) view('questions.teacher.create1', compact('sections'));
                     break;
                 case 'Выбор нескольких из списка':
                     return (String) view('questions.teacher.create2', compact('sections'));
                     break;
-                case 'Текстовый вопрос':                            //Стас
+                case 'Текстовый вопрос':
                     return (String) view('questions.teacher.create3', compact('sections'));
                     break;
-                case 'Таблица соответствий':                        //Миша
+                case 'Таблица соответствий':
                     return (String) view('questions.teacher.create5', compact('sections'));
                     break;
-                case 'Да/Нет':                                      //Миша
+                case 'Да/Нет':
                     return (String) view('questions.teacher.create4', compact('sections'));
                     break;
                 case 'Определение':

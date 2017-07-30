@@ -35,21 +35,24 @@ class TestController extends Controller{
     public function index(){
         $tr_tests = [];                                                                                                 //массив тренировочных тестов
         $ctr_tests = [];                                                                                                //массив контрольных тестов
-        $query = $this->test->get();
+        $query = $this->test->whereVisibility(1)->whereArchived(0)
+                            ->whereOnly_for_print(0)->where('year', '=', date("Y"))
+                            ->get();
         foreach ($query as $test){
-            if ($test->test_course != 'Рыбина' && $test->visibility == 1 && $test->archived == 0 && $test->only_for_print == 0) {   //проверка, что тест не из Рыбинских, он видим, он текущего года и он не архивный
-                $test['access_for_group'] = 0; //TODO: Вычислить
-                if ($test->test_type == 'Тренировочный') {
-                    $test['access_for_student'] = 1;
-                    array_push($tr_tests, $test);
-                }
-                else {
-                    array_push($ctr_tests, $test);
-                    $test['access_for_student'] = 0; //TODO: Вычислить
-                    $test['max_points'] = Fine::levelToPercent(Fine::whereId(Auth::user()['id'])->whereId_test($test['id_test'])->select('fine')->first()->fine)/100 * $test['total'];
-                }
-                $test['amount'] = Test::getAmount($test['id_test']);
+            $availability_for_group = TestForGroup::whereId_group(Auth::user()['group'])
+                                    ->whereId_test($test['id_test'])
+                                    ->select('availability')->first()->availability;
+            $test['access_for_group'] = $availability_for_group;
+            if ($test->test_type == 'Тренировочный') {
+                $test['access_for_student'] = 1;
+                array_push($tr_tests, $test);
             }
+            else {
+                array_push($ctr_tests, $test);
+                $test['access_for_student'] = 0; //TODO: Вычислить
+                $test['max_points'] = Fine::levelToPercent(Fine::whereId(Auth::user()['id'])->whereId_test($test['id_test'])->select('fine')->first()->fine)/100 * $test['total'];
+            }
+            $test['amount'] = Test::getAmount($test['id_test']);
         }
 
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
@@ -403,14 +406,9 @@ class TestController extends Controller{
 
         $query = $this->test->whereId_test($id_test)->first();
         $id_group = Auth::user()['group'];
-        $start = strtotime(TestForGroup::whereId_group($id_group)->whereId_test($id_test)->select('start')->first()->start);
-        $end = strtotime(TestForGroup::whereId_group($id_group)->whereId_test($id_test)->select('end')->first()->end);
-        if ($current_date < $start || $current_date > $end || $query->year != date("Y")){                               //проверка открыт ли тест
+        $availability = TestForGroup::whereId_group($id_group)->whereId_test($id_test)->select('availability')->first()->availability;
+        if ($availability != 1 || $query->year != date("Y") || $query->visibility == 0){                               //проверка открыт ли тест
             $message = 'Тест не открыт в настоящий момент';
-            return view('no_access', compact('message'));
-        }
-        if ($query->visibility == 0){
-            $message = 'Тест не доступен в данный момент';
             return view('no_access', compact('message'));
         }
         $amount = $this->test->getAmount($id_test);

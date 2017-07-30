@@ -15,7 +15,7 @@ class YesNo extends QuestionType{
     const type_code = 5;
     public $single = false;
 
-    function __construct($id_question){
+    function __construct($id_question) {
         parent::__construct($id_question);
     }
 
@@ -23,7 +23,7 @@ class YesNo extends QuestionType{
 
     }
 
-    public function add(Request $request){
+    public function add(Request $request) {
         $options = $this->getOptions($request);
         for ($i=0; $i<count($request->input('variants')); $i++){
             $title = $request->input('variants')[$i];
@@ -42,14 +42,13 @@ class YesNo extends QuestionType{
         }
     }
 
-    public function edit(){
+    public function edit() {
         $question = Question::whereId_question($this->id_question)->first();
         $type_name = Type::whereType_code($question->type_code)->select('type_name')->first()->type_name;
         return array('question' => $question, 'type_name' => $type_name);
     }
 
-    public function update(Request $request)
-    {
+    public function update(Request $request) {
         $options = $this->getOptions($request);
         $title = $request->input('title');
         $eng_title = $request->input('eng-title');
@@ -62,7 +61,7 @@ class YesNo extends QuestionType{
             'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
 
-    public function show($count){
+    public function show($count) {
         $text_parse = $this->text;
         $text = explode(";" , $text_parse);
         $view = 'tests.show5';

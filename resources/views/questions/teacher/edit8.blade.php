@@ -73,7 +73,7 @@
                                 @for ($i = 0; $i < $data['count']; $i++)
                                     <div class="form-group">
                                     <textarea  name="variants[]" class="form-control textarea3" rows="1" required placeholder="">{{$data['variants'][$i]}}</textarea>
-                                        <label for="textarea3">Вариант {{$i+1}}</label>
+                                        <label for="textarea3">Ответ {{$i+1}}</label>
                                     </div>
                                 @endfor
                             </div>
@@ -83,7 +83,7 @@
                                     <div class="form-group">
                                     <textarea  name="eng-variants[]"  class="form-control textarea3" rows="1" placeholder=""
                                     >{{$data['eng_variants'][$i]}}</textarea>
-                                        <label for="textarea3">Variant {{$i+1}}</label>
+                                        <label for="textarea3">Answer {{$i+1}}</label>
                                     </div>
                                 @endfor
                             </div>
@@ -141,14 +141,14 @@
                     <h2 id="preview-text"></h2>
                     <div id="preview-container"></div>
                 </form>
-                <button class="btn btn-primary btn-raised submit-question" type="submit">Применить изменения</button>
+                <button class="btn btn-primary btn-raised submit-question" type="submit" disabled>Применить изменения</button>
             </div>
         </div>
     </div>
 
 @stop
 @section('js-down')
-    {!! HTML::script('js/question_create/oneChoice.js') !!}
+    {!! HTML::script('js/question_create/justAnswer.js') !!}
     {!! HTML::script('js/question_create/imageInTitle.js') !!}
     {!! HTML::script('js/question_create/questionCreate.js') !!}
 @stop
