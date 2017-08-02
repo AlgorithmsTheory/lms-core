@@ -1,5 +1,5 @@
 <?php
-namespace App\TestGeneration;
+namespace App\Testing\TestGeneration;
 
 /**
  * Created by PhpStorm.
@@ -9,6 +9,7 @@ namespace App\TestGeneration;
  */
 interface TestGenerator {
     /**
+     *  @throws TestGenerationException
      *  Create final list of questions for test
      */
     public function generate();

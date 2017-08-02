@@ -6,7 +6,7 @@
  * Time: 23:46
  */
 
-namespace App\TestGeneration;
+namespace App\Testing\TestGeneration;
 
 
 class Graph {

@@ -6,19 +6,18 @@
  * Time: 0:00
  */
 
-namespace App\TestGeneration;
+namespace App\Testing\TestGeneration;
 
 
 use App\Testing\TestStructure;
 
 class StructuralNode extends Node {
-    private $structure;
+    public $id_structure;
+    public $amount;
 
-    public function __construct(TestStructure $structure) {
-        $this->structure = $structure;
-    }
-
-    public function getStructure() {
-        return $this->structure;
+    public function __construct($id_structure, $amount) {
+        parent::__construct();
+        $this->id_structure = $id_structure;
+        $this->amount = $amount;
     }
 }
