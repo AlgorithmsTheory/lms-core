@@ -14,11 +14,34 @@ use App\Testing\Theme;
 use App\Testing\Type;
 
 class DirectedEdge {
+    /**
+     * @var EdgeType
+     */
     private $type;
+
+    /**
+     * @var Node
+     */
     private $node_from;
+
+    /**
+     * @var Node
+     */
     private $node_to;
+
+    /**
+     * @var int
+     */
     private $capacity;
+
+    /**
+     * @var int
+     */
     private $flow;
+
+    /**
+     * @var bool
+     */
     private $in_route;
 
     function __construct(Node $node_from, Node $node_to, $type, $test_type, $printable) {
@@ -30,10 +53,64 @@ class DirectedEdge {
         $this->in_route = false;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return Node
+     */
+    public function getNodeFrom()
+    {
+        return $this->node_from;
+    }
+
+    /**
+     * @return Node
+     */
+    public function getNodeTo()
+    {
+        return $this->node_to;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCapacity()
+    {
+        return $this->capacity;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFlow()
+    {
+        return $this->flow;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInRoute()
+    {
+        return $this->in_route;
+    }
+
+
+
     public function changeFlow() {
         // TODO: depends on next route node mark
     }
 
+    /**
+     * @param string $test_type
+     * @param int $printable
+     */
     private function setCapacity($test_type, $printable) {
         switch ($this->type) {
             case EdgeType::BEGIN :
@@ -49,5 +126,13 @@ class DirectedEdge {
                 $this->capacity = $this->node_from->amount;
                 break;
         }
+    }
+
+    public function saturate(){
+        $this->flow = $this->capacity;
+    }
+
+    public function isSaturated() {
+        return $this->flow == $this->capacity;
     }
 }

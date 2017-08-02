@@ -43,6 +43,7 @@ class QuestionController extends Controller{
         $username =  null;
         $testGenerator = new UsualTestGenerator(Test::whereId_test(100)->first());
         $testGenerator->buildGraph();
+        $testGenerator->generate();
         return view('questions.teacher.index', compact('username', 'image'));
     }
 

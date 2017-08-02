@@ -1,6 +1,7 @@
 <?php
 namespace App\Testing\TestGeneration;
 
+use App\Testing\Question;
 use App\Testing\Test;
 use App\Testing\StructuralRecord;
 use App\Testing\TestStructure;
@@ -13,9 +14,24 @@ use App\Testing\TestStructure;
  * Time: 23:38
  */
 class UsualTestGenerator implements TestGenerator {
+    /**
+     * @var Test
+     */
     private $test;
+
+    /**
+     * @var Graph
+     */
+
     private $graph;
-    private $available_qurstions;
+    /**
+     * @var int[]
+     */
+    private $available_questions;
+
+    /**
+     * @var int[]
+     */
     private $chosen_questions;
 
     function __construct(Test $test) {
@@ -70,6 +86,8 @@ class UsualTestGenerator implements TestGenerator {
             }
         }
         $this->graph = new Graph($nodes, $edges);
+
+        $this->graph->putInfoForNodes();
     }
 
     public function getAvailableQuestions() {
@@ -77,7 +95,11 @@ class UsualTestGenerator implements TestGenerator {
     }
 
     public function generate() {
-        // TODO: Implement generate() method.
+        // Put initial flows
+
+        // Mark source
+        $source_node = $this->graph->findSource();
+        $source_node->changeMark(-1000);
     }
 
     public function chooseQuestion() {
