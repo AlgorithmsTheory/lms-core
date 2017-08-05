@@ -9,6 +9,8 @@
 namespace App\Testing\TestGeneration;
 
 
+use Illuminate\Support\Facades\Log;
+
 Class Node {
     /**
      * @var Node[]
@@ -21,14 +23,41 @@ Class Node {
     private $next_nodes;
 
     /**
-     * @var int
+     * @var int Sum of output edges capacities
+     */
+    private $capacity;
+
+    /**
+     * @var int Sum of input edges flows
+     */
+    private $flow;
+
+    /**
+     * @var NodeMark
      */
     private $mark;
 
     function __construct() {
-        $this->mark = 0;
+        $this->flow = 0;
+        $this->mark = new NodeMark();
         $this->prev_nodes = [];
         $this->next_nodes = [];
+    }
+
+    public function getCapacity() {
+        return $this->capacity;
+    }
+
+    public function setCapacity($capacity) {
+        $this->capacity = $capacity;
+    }
+
+    public function getFlow() {
+        return $this->flow;
+    }
+
+    public function setFlow($flow) {
+        $this->flow = $flow;
     }
 
     public function getMark() {
@@ -57,8 +86,18 @@ Class Node {
         $this->next_nodes = $next_nodes;
     }
 
-    public function changeMark($new_mark) {
-        $this->mark = $new_mark;
+    public function setMark($node_from, $value) {
+        $this->mark->setNodeFrom($node_from);
+        $this->mark->setValue($value);
+//        Log::deubg("Set mark " . $value);
+    }
+
+    public function isMarked() {
+        return $this->mark->getValue() != 0;
+    }
+
+    public function getLeftCapacity() {
+        return $this->capacity - $this->flow;
     }
 
     public function isSource() {

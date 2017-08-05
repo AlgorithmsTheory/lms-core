@@ -95,11 +95,7 @@ class UsualTestGenerator implements TestGenerator {
     }
 
     public function generate() {
-        // Put initial flows
-
-        // Mark source
-        $source_node = $this->graph->findSource();
-        $source_node->changeMark(-1000);
+        $this->graph->fordFulkersonMaxFlow();
     }
 
     public function chooseQuestion() {

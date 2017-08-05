@@ -39,11 +39,6 @@ class DirectedEdge {
      */
     private $flow;
 
-    /**
-     * @var bool
-     */
-    private $in_route;
-
     function __construct(Node $node_from, Node $node_to, $type, $test_type, $printable) {
         $this->type = $type;
         $this->node_from = $node_from;
@@ -93,18 +88,8 @@ class DirectedEdge {
         return $this->flow;
     }
 
-    /**
-     * @return bool
-     */
-    public function isInRoute()
-    {
-        return $this->in_route;
-    }
-
-
-
-    public function changeFlow() {
-        // TODO: depends on next route node mark
+    public function setFlow($flow) {
+        $this->flow = $flow;
     }
 
     /**
@@ -130,6 +115,32 @@ class DirectedEdge {
 
     public function saturate(){
         $this->flow = $this->capacity;
+    }
+
+    /**
+     * Fill the edge with @param int $flow
+     * @return int filled flow
+     */
+    public function fill($flow) {
+        if ($flow > $this->capacity) {
+            if ($flow > $this->getNodeTo()->getLeftCapacity()) {
+                $filled_flow = min($this->capacity, $this->getNodeTo()->getLeftCapacity());
+            }
+            else {
+                $filled_flow = $this->capacity;
+            }
+        }
+        else {
+            if ($flow > $this->getNodeTo()->getLeftCapacity()) {
+                $filled_flow = $this->getNodeTo()->getLeftCapacity();
+            }
+            else {
+                $filled_flow = $flow;
+            }
+        }
+        $this->flow += $filled_flow;
+        $this->getNodeTo()->setFlow($this->getNodeTo()->getFlow() - $filled_flow);
+        return $filled_flow;
     }
 
     public function isSaturated() {
