@@ -89,7 +89,6 @@ Class Node {
     public function setMark($node_from, $value) {
         $this->mark->setNodeFrom($node_from);
         $this->mark->setValue($value);
-//        Log::deubg("Set mark " . $value);
     }
 
     public function isMarked() {

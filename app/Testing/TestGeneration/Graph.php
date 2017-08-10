@@ -86,14 +86,14 @@ class Graph {
             $route = [];
             $route = $this->findWay($sink_node, $source_node, $route);
             $this->fillWay($route);
-            $this->markNodes();
+            $this->markNodes($source_node, $sink_node);
         }
         $this->flushMarks();
     }
 
     private function allNodesMarked() {
         foreach ($this->nodes as $node) {
-            if (!$node->isMarked()) {
+            if (!$node->isMarked() && !$node->isSink()) {
                 return false;
             }
         }
@@ -106,7 +106,7 @@ class Graph {
             foreach ($node->getNextNodes() as $next_node) {
                 $edge = $this->getEdge($node, $next_node);
                 if ($edge->getFlow() < $edge->getCapacity() && !$next_node->isMarked()) {
-                    array_push($next_nodes, $node);
+                    array_push($next_nodes, $next_node);
                 }
             }
             if (count($next_nodes) == 0) {
@@ -135,35 +135,62 @@ class Graph {
         }
     }
 
-    private function markNodes() {
-
-    }
-
-    private function putInitialFlowsRecursively(Node $node) {
-        $edges = [];
-        $input_flow = $node->getFlow();
-        foreach ($this->edges as $edge) {
-            if ($edge->getNodeFrom() == $node) {
-                array_push($edges, $edge);
+    private function markNodes(Node $source, Node $sink) {
+        foreach ($source->getNextNodes() as $record_node) {
+            if(!$record_node->isMarked()) {
+                $edge = $this->getEdge($source, $record_node);
+                if ($edge->isSaturated()) {
+                    $record_node->setMark(null, 1);
+                }
             }
         }
-        $number_of_edges = count($edges);
-        while ($number_of_edges > 0 && $input_flow > 0) {
-            $rand_index = rand(0, $number_of_edges - 1);
-            $current_edge = $edges[$rand_index];
-            $output_flow = $current_edge->fill($input_flow);
-            $input_flow -= $output_flow;
 
-            $buffer = $edges[$number_of_edges - 1];
-            $edges[$number_of_edges - 1] = $current_edge;
-            $edges[$rand_index] = $buffer;
-            array_pop($edges);
-            $number_of_edges--;
-
-            if (!$current_edge->getNodeTo()->isSink()) {
-                $current_edge->getNodeTo()->setFlow($current_edge->getNodeTo()->getFlow() + $output_flow);
-                $this->putInitialFlowsRecursively($current_edge->getNodeTo());
+        foreach ($sink->getPrevNodes() as $struct_node) {
+            if (!$struct_node->isMarked()) {
+                $edge = $this->getEdge($struct_node, $sink);
+                if ($edge->isSaturated()) {
+                    $struct_node->setMark(null, 1);
+                }
+                else {
+                    $must_be_marked = true;
+                    foreach ($struct_node->getPrevNodes() as $record_node) {
+                        $edge = $this->getEdge($record_node, $struct_node);
+                        if (!$edge->isSaturated() && !$record_node->isMarked()) {
+                            $must_be_marked = false;
+                            break;
+                        }
+                    }
+                    if ($must_be_marked) {
+                        $struct_node->setMark(null, 1);
+                    }
+                }
             }
+        }
+
+        foreach ($source->getNextNodes() as $record_node) {
+            $must_be_marked = true;
+            foreach ($record_node->getNextNodes() as $struct_node) {
+                $edge = $this->getEdge($record_node, $struct_node);
+                if (!$struct_node->isMarked() && !$edge->isSaturated()) {
+                    $must_be_marked = false;
+                    break;
+                }
+            }
+            if ($must_be_marked) {
+                $record_node->setMark(null, 1);
+            }
+        }
+
+        $must_be_marked = true;
+        foreach($source->getNextNodes() as $record_node) {
+            $edge = $this->getEdge($source, $record_node);
+            if (!$record_node->isMarked()) {
+                $must_be_marked = false;
+                break;
+            }
+        }
+        if ($must_be_marked) {
+            $source->setMark(null, 1);
         }
     }
 
@@ -172,6 +199,7 @@ class Graph {
         $source_node = $this->findSource();
         $sink_node = $this->findSink();
         $i = 1;
+        $this->putInitialFlows();
 
         while(1) {
             Log::debug('Iteration '. $i);
