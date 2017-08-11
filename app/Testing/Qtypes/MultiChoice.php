@@ -6,7 +6,7 @@
  * Time: 15:49
  */
 
-namespace App\Qtypes;
+namespace App\Testing\Qtypes;
 use App\Mypdf;
 use App\Testing\Question;
 use App\Testing\Type;

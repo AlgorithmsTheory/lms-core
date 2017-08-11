@@ -22,6 +22,16 @@ class Graph {
      */
     private $edges;
 
+    /**
+     * @var Node
+     */
+    private $source;
+
+    /**
+     * @var Node
+     */
+    private $sink;
+
     function __construct($nodes, $edges) {
         $this->nodes = $nodes;
         $this->edges = $edges;
@@ -53,40 +63,55 @@ class Graph {
      * @return bool
      */
     public function isSaturated() {
-        // TODO: flow = capacity for all structure -> sink edges
+        foreach ($this->sink->getPrevNodes() as $struct_node) {
+            $edge = $this->getEdge($struct_node, $this->sink);
+            if (!$edge->isSaturated()) {
+                return false;
+            }
+        }
+        return true;
     }
-
-    /**
-     * @return Node
-     * @throws TestGenerationException
-     */
-    public function findSource() {
-    foreach ($this->nodes as $node) {
-        if ($node->isSource()) return $node;
-    }
-    throw new TestGenerationException("Source node not found");
-    }
-
-    /**
-     * @return Node
-     * @throws TestGenerationException
-     */
-    public function findSink() {
+    
+    public function setSource() {
         foreach ($this->nodes as $node) {
-            if ($node->isSink()) return $node;
+            if ($node->isSource()) {
+                $this->source = $node;
+                return;
+            }
+        }
+        throw new TestGenerationException("Source node not found");
+    }
+    
+    public function setSink() {
+        foreach ($this->nodes as $node) {
+            if ($node->isSink()) {
+                $this->sink = $node;
+                return;
+            }
         }
         throw new TestGenerationException("Sink node not found");
     }
 
-    public function putInitialFlows() {
-        $source_node = $this->findSource();
-        $sink_node = $this->findSink();
+    /**
+     * @return Node
+     */
+    public function getSource() {
+        return $this->source;
+    }
 
+    /**
+     * @return Node
+     */
+    public function getSink() {
+        return $this->sink;
+    }
+
+    public function putInitialFlows() {
         while (!$this->allNodesMarked()) {
             $route = [];
-            $route = $this->findWay($sink_node, $source_node, $route);
+            $route = $this->findWay($this->sink, $this->source, $route);
             $this->fillWay($route);
-            $this->markNodes($source_node, $sink_node);
+            $this->markNodes($this->source, $this->sink);
         }
         $this->flushMarks();
     }
@@ -183,7 +208,6 @@ class Graph {
 
         $must_be_marked = true;
         foreach($source->getNextNodes() as $record_node) {
-            $edge = $this->getEdge($source, $record_node);
             if (!$record_node->isMarked()) {
                 $must_be_marked = false;
                 break;
@@ -195,25 +219,20 @@ class Graph {
     }
 
     public function fordFulkersonMaxFlow() {
-        Log::debug('start fordFulkersonMaxFlow()');
-        $source_node = $this->findSource();
-        $sink_node = $this->findSink();
-        $i = 1;
         $this->putInitialFlows();
 
         while(1) {
-            Log::debug('Iteration '. $i);
-            $source_node->setMark(null, -1000);
-            $active_node = $this->findAndMarkUnmarkedNode($source_node);
+            $this->source->setMark(null, -1000);
+            $active_node = $this->findAndMarkUnmarkedNode($this->source);
 
             while ($active_node != null) {
                 $active_node = $this->findAndMarkUnmarkedNode($active_node);
             }
-            if (!$sink_node->isMarked()) {
+            if (!$this->sink->isMarked()) {
                 return;
             } else {
-                $current_code = $sink_node;
-                while ($current_code != $source_node) {
+                $current_code = $this->sink;
+                while ($current_code != $this->source) {
                     if ($current_code->getMark()->getValue() > 0) {
                         $edge = $this->getEdge($current_code->getMark()->getNodeFrom(), $current_code);
                         $edge->setFlow($edge->getFlow() + abs($current_code->getMark()->getValue()));
@@ -226,7 +245,6 @@ class Graph {
                 }
                 $this->flushMarks();
             }
-            $i++;
         }
     }
 

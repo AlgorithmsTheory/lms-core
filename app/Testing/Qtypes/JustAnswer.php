@@ -1,5 +1,5 @@
 <?php
-namespace App\Qtypes;
+namespace App\Testing\Qtypes;
 use App\Http\Controllers\QuestionController;
 use App\Mypdf;
 use App\Testing\Question;

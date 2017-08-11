@@ -5,7 +5,7 @@
  * Date: 30.05.15
  * Time: 17:21
  */
-namespace App\Qtypes;
+namespace App\Testing\Qtypes;
 use App\Mypdf;
 use App\Testing\Question;
 use App\Testing\Type;

@@ -7,17 +7,17 @@
  */
 
 namespace App\Testing;
-use App\Qtypes\AccordanceTable;
-use App\Qtypes\Definition;
-use App\Qtypes\FillGaps;
-use App\Qtypes\FromCleene;
-use App\Qtypes\JustAnswer;
-use App\Qtypes\MultiChoice;
-use App\Qtypes\OneChoice;
-use App\Qtypes\Theorem;
-use App\Qtypes\TheoremLike;
-use App\Qtypes\ThreePoints;
-use App\Qtypes\YesNo;
+use App\Testing\Qtypes\AccordanceTable;
+use App\Testing\Qtypes\Definition;
+use App\Testing\Qtypes\FillGaps;
+use App\Testing\Qtypes\FromCleene;
+use App\Testing\Qtypes\JustAnswer;
+use App\Testing\Qtypes\MultiChoice;
+use App\Testing\Qtypes\OneChoice;
+use App\Testing\Qtypes\Theorem;
+use App\Testing\Qtypes\TheoremLike;
+use App\Testing\Qtypes\ThreePoints;
+use App\Testing\Qtypes\YesNo;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Http\Request;
 
@@ -31,19 +31,6 @@ use Illuminate\Http\Request;
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\Question  whereType_code($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\Question  wherePoints($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\Question  whereControl($value)
- *
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  get()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  where()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  whereRaw()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  orWhere()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  select()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  first()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  insert($array)
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  table($array)
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  max($array)
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  count()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  toSql()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  paginate($value)
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  links()
  *
  */

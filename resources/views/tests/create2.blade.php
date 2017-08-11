@@ -14,172 +14,82 @@
     <form action="{{URL::route('test_add')}}" method="POST" class="form">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <input type="hidden" id="num-rows" name="num-rows" value="1">
+        <input type="hidden" id="sections-info" name="sections-info" value="{{$json_sections}}">
 
-        <!-- структурный блок -->
-        <div class="col-md-12">
-            <div class="card card-bordered style-primary card-collapsed">
-                <div class="card-head">
-                    <header>
-                        Структура №1
-                    </header>
-                </div>
-                <div class="card-body style-default-bright">
-                    <div class="form-group dropdown-label col-md-4 col-sm-4">
-                        <input type="number" min="1" step="1" name="number_of_questions[]" id="number_of_questions-1" class="form-control" required>
-                        <label for="number_of_questions-1">Число вопросов</label>
-                    </div>
-                    <div class="form-group dropdown-label col-md-4 col-sm-4">
-                        <input type="number" min="1" step="1" name="number_of_access_questions[]" id="number_of_access_questions-1" class="form-control" disabled>
-                        <label for="number_of_access_questions-1">Доступно вопросов данной структуры</label>
-                    </div>
-                </div>
+        <div id="structures">
 
-                <div class="card-body style-default-bright col-md-12 col-sm-12" id="sections_and_themes">
-                    <table class="table no-margin">
-                        <thead>
-                            <tr>
-                                <th>Выберите разделы:</th>
-                                <th>Выберите темы:</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="checkbox checkbox-styled">
-                                        <label>
-                                            <input type="checkbox" name="sections[]" id="section-1">
-                                            <span>Формальные описания алгоритмов</span>
-                                        </label>
-                                    </div>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td rowspan="8">
-                                    <div class="checkbox checkbox-styled">
-                                        <label>
-                                            <input type="checkbox" name="sections[]" id="section-1">
-                                            <span>Числовые множества и арифметические вычисления</span>
-                                        </label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="checkbox checkbox-styled">
-                                        <label>
-                                            <input type="checkbox" name="themes[]" id="theme-1">
-                                            <span>Мощность множеств</span>
-                                        </label>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                
-                                <td>
-                                    <div class="checkbox checkbox-styled">
-                                        <label>
-                                            <input type="checkbox" name="themes[]" id="theme-1">
-                                            <span>Счетные множества</span>
-                                        </label>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                
-                                <td>
-                                    <div class="checkbox checkbox-styled">
-                                        <label>
-                                            <input type="checkbox" name="themes[]" id="theme-1">
-                                            <span>Несчетные множества</span>
-                                        </label>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                
-                                <td>
-                                    <div class="checkbox checkbox-styled">
-                                        <label>
-                                            <input type="checkbox" name="themes[]" id="theme-1">
-                                            <span>Кантор и парадоксы</span>
-                                        </label>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                
-                                <td>
-                                    <div class="checkbox checkbox-styled">
-                                        <label>
-                                            <input type="checkbox" name="themes[]" id="theme-1">
-                                            <span>Вычислимость чисел</span>
-                                        </label>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                
-                                <td>
-                                    <div class="checkbox checkbox-styled">
-                                        <label>
-                                            <input type="checkbox" name="themes[]" id="theme-1">
-                                            <span>Арифметические функции</span>
-                                        </label>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                
-                                <td>
-                                    <div class="checkbox checkbox-styled">
-                                        <label>
-                                            <input type="checkbox" name="themes[]" id="theme-1">
-                                            <span>Частичные арифметические функции</span>
-                                        </label>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                
-                                <td>
-                                    <div class="checkbox checkbox-styled">
-                                        <label>
-                                            <input type="checkbox" name="themes[]" id="theme-1">
-                                            <span>Распознавание и сравнение функций</span>
-                                        </label>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="checkbox checkbox-styled">
-                                        <label>
-                                            <input type="checkbox" name="sections[]" id="section-1">
-                                            <span>Рекурсивные функции и сложность вычислений</span>
-                                        </label>
-                                    </div>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="checkbox checkbox-styled">
-                                        <label>
-                                            <input type="checkbox" name="sections[]" id="section-1">
-                                            <span>Сложность вычислений</span>
-                                        </label>
-                                    </div>
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- структурный блок -->
+            <div class="col-md-12" id="structure-1">
+                <div class="card card-bordered style-primary card-collapsed">
+                    <div class="card-head">
+                        <header>
+                            Структура №1
+                        </header>
+                    </div>
+                    <div class="card-body style-default-bright">
+                        <div class="form-group dropdown-label col-md-4 col-sm-4">
+                            <input type="number" min="1" step="1" name="number_of_questions[]" class="form-control number_of_questions" required>
+                            <label for="number_of_questions-1">Число вопросов</label>
+                        </div>
+                        <div class="form-group dropdown-label col-md-4 col-sm-4">
+                            <input type="number" min="1" step="1" name="number_of_access_questions[]" class="form-control number_of_access_questions" disabled>
+                            <label for="number_of_access_questions-1">Доступно вопросов данной структуры</label>
+                        </div>
+
+
+                        <div class="sections_and_themes">
+                            <table class="table no-margin">
+                                <thead>
+                                    <tr>
+                                        <th>Выберите разделы:</th>
+                                        <th>Выберите темы:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for($i=0; $i < count($sections); $i++)
+                                        <tr class="section-tr">
+                                            <td rowspan="1" class="section-td">
+                                                <div class="checkbox checkbox-styled">
+                                                    <label>
+                                                        <input type="checkbox" name="sections[0][]">  <!-- номер структуры -->
+                                                        <span>{{ $sections[$i]['name'] }}</span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td class="empty-td"></td>
+                                            <td style="display: none" class="theme-td">
+                                                <div class="checkbox checkbox-styled">
+                                                    <label>
+                                                        <input type="checkbox" name="themes[0][{{ $i }}][]">  <!-- номер, структуры, номер секции в структуре -->
+                                                        <span>{{ $section[$i]['themes'][0] }}</span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        @for($j = 1; $j < count($sections[$i]['themes']); $j++)
+                                            <tr class="theme-tr" style="display: none">
+                                                <td class="section-td">
+                                                    <div class="checkbox checkbox-styled">
+                                                        <label>
+                                                            <input type="checkbox" name="themes[0][{{ $i }}][]">
+                                                            <span>{{ $sections[$i]['themes'][$j] }}</span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endfor
+                                    @endfor
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="col-lg-offset-10 col-md-2 col-sm-6" id="add-del-buttons">
-            <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-row"><b>+</b>   </button>
-            <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-row"><b>-</b></button>
+            <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-structure"><b>+</b>   </button>
+            <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-structure"><b>-</b></button>
         </div>
         <div class="col-lg-offset-1 col-md-2 col-sm-6" id="add-test">
             <button class="btn btn-primary btn-raised submit-test" type="submit">Добавить тест</button>
@@ -193,8 +103,7 @@
 @stop
 
 @section('js-down')
-{!! HTML::script('js/testCreate.js') !!}
-{!! HTML::script('js/testCreateAndEdit.js') !!}
+{!! HTML::script('js/testCreate2.js') !!}
 @stop
 
 

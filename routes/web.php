@@ -63,11 +63,12 @@ Route::post('questions/delete', ['as' => 'question_delete', 'uses' => 'QuestionC
 Route::post('get-theme', array('as'=>'get_theme', 'uses'=>'QuestionController@getTheme'));
 Route::post('get-type', array('as'=>'get_type', 'uses'=>'QuestionController@getType'));
 Route::post('questions/create', ['as' => 'question_add', 'uses' => 'QuestionController@add']);
-Route::get('tests/create', ['as' => 'test_create', 'uses' => 'TestController@create', 'middleware' => ['general_auth', 'admin']]);
+Route::get('tests/create/step1', ['as' => 'test_create', 'uses' => 'TestController@create', 'middleware' => ['general_auth', 'admin']]);
+Route::post('tests/create/step1', ['as' => 'test_finish_first_creation_step', 'uses' => 'TestController@finishFstCreationStep']);
 Route::get('tests/create/step2', ['as' => 'test_create_step2', 'uses' => 'TestController@createSndStep', 'middleware' => ['general_auth', 'admin']]);
+Route::post('tests/create/step2', ['as' => 'test_add', 'uses' => 'TestController@add']);
 Route::post('get-theme-for-test', array('as'=>'get_theme_for_test', 'uses'=>'TestController@getTheme'));
 Route::post('get-amount', array('as'=>'get_amount', 'uses'=>'TestController@getAmount'));
-Route::post('tests/create', ['as' => 'test_add', 'uses' => 'TestController@add']);
 Route::get('retest', ['as' => 'retest_index', 'uses' => 'TeacherRetestController@index']);
 Route::post('retest', ['as' => 'retest_change', 'uses' => 'TeacherRetestController@change']);
 Route::get('tests/test-list/{id_group}', ['as' => 'tests_list', 'uses' => 'TestController@editList']);

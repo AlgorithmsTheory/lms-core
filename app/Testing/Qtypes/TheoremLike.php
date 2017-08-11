@@ -5,7 +5,7 @@
  * Date: 30.05.15
  * Time: 16:07
  */
-namespace App\Qtypes;
+namespace App\Testing\Qtypes;
 use App\Mypdf;
 use App\Testing\Question;
 use Illuminate\Http\Request;
@@ -26,6 +26,10 @@ class TheoremLike extends QuestionType {
 
     public function edit(){
 
+    }
+
+    public function update(Request $request) {
+        // TODO: Implement update() method.
     }
 
     public function show($count){

@@ -14,6 +14,8 @@ use App\Testing\Section;
 use App\Testing\StructuralRecord;
 use App\Testing\Test;
 use App\Testing\TestForGroup;
+use App\Testing\TestGeneration\RecordNode;
+use App\Testing\TestGeneration\UsualTestGenerator;
 use App\Testing\TestStructure;
 use App\Testing\TestTask;
 use App\Testing\Theme;
@@ -64,23 +66,54 @@ class TestController extends Controller{
 
     /** генерирует страницу создания нового теста (шаг 1 - основные настройки) */
     public function create(){
-        $types = [];
-        $sections = [];
-        $query = Type::select('type_name')->get();                                                                      //формируем массив типов
-        foreach ($query as $type){
-            array_push($types,$type->type_name);
-        }
-        $query = Section::where('section_code', '<', 20)->where('section_code', '>', 0)->select('section_name')->get();                                                                //формируем массив разделов
-        foreach ($query as $section){
-            array_push($sections, $section->section_name);
-        }
         $groups = Group::all();
-        return view('tests.create', compact('types', 'sections' ,'groups'));
+        return view('tests.create', compact('groups'));
+    }
+
+    public function finishFstCreationStep(Request $request) {
+        $general_settings = [];
+        $test_for_groups = [];
+
+        $general_settings['test_type'] = $request->input('training') ? 'Тренировочный' : 'Контрольный';
+        $general_settings['visibility'] = $request->input('visibility') ? 1 : 0;
+        $general_settings['multilanguage'] = $request->input('multilanguage') ? 1 : 0;
+        $general_settings['only_for_print'] = $request->input('only-for-print') ? 1 : 0;
+        $general_settings['total'] = $request->input('total');
+        $general_settings['test_time'] = $request->input('test-time');
+
+        for ($i = 0; $i < count($request->input('id-group')); $i++) {
+            $availability = $request->input('availability')[$i] ? 1 : 0;
+            $test_for_groups[$request->input('id-group')[$i]] = $availability;
+        }
+
+        $request->session()->put('general_settings', $general_settings);
+        $request->session()->put('test_for_groups', $test_for_groups);
+
+        return redirect()->route('test_create_step2');
     }
 
     /** генерирует страницу создания нового теста (шаг 2 - создание структур) */
-    public function createSndStep() {
-        return view('tests.create2');
+    public function createSndStep(Request $request) {
+        $general_settings = $request->session()->get('general_settings');
+        $sections = [];
+        $sections_db = Section::where('section_code', '<', 10)->where('section_code', '>', 0)->select('section_code', 'section_name')->get();
+        for ($i=0; $i < sizeof($sections_db); $i++) {
+            $sections[$i]['name'] = $sections_db[$i]->section_name;
+            $themes_in_section = Theme::whereSection_code($sections_db[$i]->section_code)->select('theme_name')->get();
+            for ($j=0; $j < count($themes_in_section); $j++) {
+                $sections[$i]['themes'][$j] = $themes_in_section[$j];
+            }
+        }
+
+        if ($general_settings['only_for_print']) {
+            $types = Type::all();
+        }
+        else {
+            $types = Type::whereOnly_for_print(0)->get();
+        }
+
+        $json_sections = json_encode($sections);
+        return view('tests.create2',compact('general_settings', 'sections', 'types', 'json_sections'));
     }
 
     /** Добавляет новый тест в БД */
@@ -404,20 +437,22 @@ class TestController extends Controller{
         $saved_test = [];
         $current_date = date('U');
 
-        $query = $this->test->whereId_test($id_test)->first();
+        $test = $this->test->whereId_test($id_test)->first();
         $id_group = Auth::user()['group'];
         $availability = TestForGroup::whereId_group($id_group)->whereId_test($id_test)->select('availability')->first()->availability;
-        if ($availability != 1 || $query->year != date("Y") || $query->visibility == 0){                               //проверка открыт ли тест
+        if ($availability != 1 || $test->year != date("Y") || $test->visibility == 0){                               //проверка открыт ли тест
             $message = 'Тест не открыт в настоящий момент';
             return view('no_access', compact('message'));
         }
         $amount = $this->test->getAmount($id_test);
-        $test_time = $query->test_time;
-        $test_type = $query->test_type;
-        if (Result::getCurrentResult(Auth::user()['id'], $id_test) == -1){                                              //если пользователь не имеет начатый тест                                                                                     //если в тест зайдено первый раз
-            $ser_array = $this->test->prepareTest($id_test);
-            for ($i=0; $i<$amount; $i++){
-                $id = $question->chooseQuestion($ser_array);
+        $test_time = $test->test_time;
+        $test_type = $test->test_type;
+        if (Result::getCurrentResult(Auth::user()['id'], $id_test) == -1) {                                             //если пользователь не имеет начатый тест                                                                                     //если в тест зайдено первый раз
+            $generator = new UsualTestGenerator($test);
+            $generator->buildGraph();
+            $generator->generate();
+            for ($i=0; $i < $amount; $i++) {
+                $id = $generator->chooseQuestion();
                 if (!$this->test->rybaTest($id)){                                                                       //проверка на вопрос по рыбе
                     $message = 'Тест не предназначен для общего пользования';
                     return view('no_access', $message);
@@ -428,8 +463,8 @@ class TestController extends Controller{
             }
 
             $int_end_time =  date('U') + 60*$test_time;                                                                 //время конца
-            $query = Result::max('id_result');                                                                          //пример использования агрегатных функций!!!
-            $current_result = $query+1;                                                                                 //создаем строку в таблице пройденных тестов
+            $test = Result::max('id_result');                                                                          //пример использования агрегатных функций!!!
+            $current_result = $test+1;                                                                                 //создаем строку в таблице пройденных тестов
             $query2 = $user->whereEmail(Auth::user()['email'])->select('id')->first();
             $result->id_result = $current_result;
             $result->id = $query2->id;;
@@ -441,9 +476,9 @@ class TestController extends Controller{
         }
         else {                                                                                                          //если была перезагружена страница теста или тест был покинут
 			$current_test = Result::getCurrentResult(Auth::user()['id'], $id_test);
-            $query = $result->whereId_result($current_test)->first();
-            $int_end_time = strtotime($query->result_date);                                                              //время окончания теста
-            $saved_test = $query->saved_test;
+            $test = $result->whereId_result($current_test)->first();
+            $int_end_time = strtotime($test->result_date);                                                              //время окончания теста
+            $saved_test = $test->saved_test;
             $saved_test = unserialize($saved_test);
             for ($i=0; $i<$amount; $i++){
                 $widgets[] = View::make($saved_test[$i]['view'], $saved_test[$i]['arguments']);

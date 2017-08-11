@@ -1,6 +1,8 @@
 <?php
 namespace App\Testing\TestGeneration;
 
+use App\Testing\Test;
+
 /**
  * Created by PhpStorm.
  * User: ssorokin
@@ -9,15 +11,18 @@ namespace App\Testing\TestGeneration;
  */
 interface TestGenerator {
     /**
-     *  @throws TestGenerationException
-     *  Create final list of questions for test
+     * @param $restrictions
+     * @throws TestGenerationException
+     * Build dicotyledonous graph (source - records - structures - sink) with capacities and flows from teacher's restrictions
      */
-    public function generate();
+    public function buildGraphFromRestrictions($restrictions);
 
     /**
-     *  Return list of all questions from available structural records
+     * @param $test Test
+     * @throws TestGenerationException
+     * Build dicotyledonous graph (source - records - structures - sink) with capacities and flows from existence test
      */
-    public function getAvailableQuestions();
+    public function buildGraphFromTest(Test $test);
 
     /**
      *  Choose one question from final list
@@ -25,7 +30,8 @@ interface TestGenerator {
     public function chooseQuestion();
 
     /**
-     *  Build dicotyledonous graph (source - records - structures - sink) with capacities and flows
+     *  @throws TestGenerationException
+     *  Create final list of questions for test
      */
-    public function buildGraph();
+    public function generate();
 }

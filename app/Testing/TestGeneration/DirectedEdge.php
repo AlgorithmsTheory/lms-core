@@ -97,6 +97,7 @@ class DirectedEdge {
      * @param int $printable
      */
     private function setCapacity($test_type, $printable) {
+        // TODO: count capacity using test's properties: print, lang, control
         switch ($this->type) {
             case EdgeType::BEGIN :
                 $section_name = Section::whereSection_code($this->node_to->section_code)->select('section_name')->first()->section_name;
