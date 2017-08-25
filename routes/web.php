@@ -239,3 +239,8 @@ Route::get('recursion_three', ['as' => 'recursion_three', 'uses' => 'RecursionCo
 Route::post('recursion/calculate_one', ['as' => 'calculate_one', 'uses' => 'RecursionController@calculate_one']);
 Route::post('recursion/calculate_two', ['as' => 'calculate_two', 'uses' => 'RecursionController@calculate_two']);
 Route::post('recursion/calculate_three', ['as' => 'calculate_three', 'uses' => 'RecursionController@calculate_three']);
+
+//API for mobile app
+Route::get('api/get/groups', ['uses' => 'APIController@getGroupList']);
+Route::get('api/get/students/{group_id}', ['uses' => 'APIController@getStudentsFromGroup']);
+
