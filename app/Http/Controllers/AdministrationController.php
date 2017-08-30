@@ -38,7 +38,7 @@ class AdministrationController extends Controller{
     }
 
     public function add_groups(){
-        $groups = Group::orderBy('number', 'desc')->get();
+        $groups = Group::get();
         return view('personal_account/add_groups', compact('groups'));
     }
 
