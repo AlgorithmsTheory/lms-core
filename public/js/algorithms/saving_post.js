@@ -2,14 +2,18 @@ function saveTextAsFile()
 {	
 	var textToWrite = document.getElementById("task_text").value;
 	var i=0;
-	var DataMassSt=[];
-	var DataMassEnd=[];
-		while(document.getElementById('st_'+(i+1))!=null){
-			DataMassSt.push(document.getElementById('st_'+(i+1)).value);
-			DataMassEnd.push(document.getElementById('end_'+(i+1)).value);
+	var DataMassSelect=[];
+	var DataMassGoto1=[];
+	var DataMassGoto2=[];
+	var DataMassComment=[];
+		while(document.getElementById('select_'+(i+1))!=null){
+			DataMassSelect.push(document.getElementById('select_'+(i+1)).value);
+			DataMassGoto1.push(document.getElementById('goto1_'+(i+1)).value);
+			DataMassGoto2.push(document.getElementById('goto2_'+(i+1)).value);
+			DataMassComment.push(document.getElementById('comment_'+(i+1)).value);
 			i++;
 			}
-		var data={task:textToWrite, "DataMassSt":DataMassSt, "DataMassEnd":DataMassEnd}	
+		var data={task:textToWrite, "DataMassSelect":DataMassSelect, "DataMassGoto1":DataMassGoto1, "DataMassGoto2":DataMassGoto2, "DataMassComment":DataMassComment}	
 	
 	var json=JSON.stringify(data);
 	var textFileAsBlob = new Blob([json], {type:'application/json'});
@@ -53,9 +57,12 @@ function loadFileAsText()
 		var doc = eval('(' + textFromFileLoaded + ')');
 		var i=0;
 		
-		while(document.getElementById('st_'+(i+1))!=null){
-			document.getElementById('st_'+(i+1)).value=doc.DataMassSt[i];
-			document.getElementById('end_'+(i+1)).value=doc.DataMassEnd[i];
+		while(document.getElementById('select_'+(i+1))!=null){
+			//document.getElementById('select_'+(i+1)).setAttribute('value', doc.DataMassSelect[i]);
+			document.getElementById('select_'+(i+1)).value=doc.DataMassSelect[i];
+			document.getElementById('goto1_'+(i+1)).value=doc.DataMassGoto1[i];
+			document.getElementById('goto2_'+(i+1)).value=doc.DataMassGoto2[i];
+			document.getElementById('comment_'+(i+1)).value=doc.DataMassComment[i];
 			i++;
 			}
 			document.getElementById("task_text").value =doc.task;

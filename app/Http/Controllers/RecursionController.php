@@ -40,7 +40,7 @@ class RecursionController extends Controller
         if ($q == "" || $function == "" || $exp == "") return "Заполните все пропуски!";
 
         $expression = $this->convertExp1Param($q, $exp);
-        $cmd = "/var/www/html/timelimit.sh '";
+        $cmd = "/var/www/timelimit.sh '";
         $cmd = $cmd . "head (" . $expression . " [0]) == (\\x ->" . $function . ") 0 \\n";
         $cmd = $cmd . "head (" . $expression . " [1]) == (\\x ->" . $function . ") 1 \\n";
         $cmd = $cmd . "head (" . $expression . " [2]) == (\\x ->" . $function . ") 2 \\n";
@@ -80,7 +80,7 @@ class RecursionController extends Controller
 
         $expression = $this->convertExp2Param($first, $second);
 
-        $cmd = "/var/www/html/timelimit.sh '";
+        $cmd = "/var/www/timelimit.sh '";
         $cmd = $cmd . "head (" . $expression . " [0, 0]) == (\\x y ->" . $function . ") 0 0 \\n";
         $cmd = $cmd . "head (" . $expression . " [1, 1]) == (\\x y ->" . $function . ") 1 1 \\n";
         $cmd = $cmd . "head (" . $expression . " [2, 2]) == (\\x y ->" . $function . ") 2 2 \\n";
@@ -113,7 +113,7 @@ class RecursionController extends Controller
 
         $expression = $this->convertExp2Param($first, $second);
 
-        $cmd = "/var/www/html/timelimit.sh '";
+        $cmd = "/var/www/timelimit.sh '";
         $cmd = $cmd . "head (" . $expression . " [0, 0, 0]) == (\\x y z ->" . $function . ") 0 0 0 \\n";
         $cmd = $cmd . "head (" . $expression . " [1, 1, 1]) == (\\x y z ->" . $function . ") 1 1 1 \\n";
         $cmd = $cmd . "head (" . $expression . " [2, 2, 2]) == (\\x y z ->" . $function . ") 2 2 2 \\n";

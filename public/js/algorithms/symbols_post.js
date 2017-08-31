@@ -5,7 +5,7 @@ var focusedElem;
 		var i = $('#p_scents li').size() + 1;
 
 		$('#addScnt').live('click', function() {
-			$('<li  id ="p_scnt_' + i +'" class="tile"><div class="input-group"><div class="input-group-content"><input type="text" id="st_'+ i +'" class="form-control" name="start" onchange="superScript(this)"></div><span class="input-group-addon"><i class="md md-arrow-forward"></i></span><div class="input-group-content"><input type="text" id="end_'+ i +'" class="form-control" name="end" onchange="superScript(this)"></div></div><a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt"><i class="fa fa-trash"></i></a> </li>').appendTo(scntDiv);
+			$('<li  id ="p_scnt_' + i +'" class="tile"><span class="input-group-addon"><b>' + i + '</b></span> <div class="col-md-3"> <div class="input-group-content"><select id="select_' + i +'" name="select_' + i +'" class="form-control"> <option value=">">&nbsp;</option> <option value=">">></option> <option value="<"><</option> <option value="1">1</option> <option value="0">0</option> <option value="?">?</option> <option value="!">!</option> </select> </div> </div> <div class="col-md-3" style="left: -50px;"> <div class="input-group-content"> <input type="number" min="1" id="goto1" class="form-control" required=""> </div> <div class="input-group-content"> <input type="number" min="1" id="goto2" class="form-control" required=""> </div> <span class="input-group-addon">|</span> </div> <div class="col-md-6" style="left: -40px;"> <div class="input-group-content"> <input type="text" class="form-control" name="end" placeholder="Комментарий"> <div class="form-control-line"></div> </div> </div></li>').appendTo(scntDiv);
 
 			i++;
 			return false;
@@ -27,6 +27,15 @@ var focusedElem;
 
 				$(this).val('');
 			});
+			$('input[type=number]').each(function() {
+
+				$(this).val('');
+			});
+			$('select').each(function() {
+
+				$(this).val('');
+			});
+			
 			return false;
 
 		});
@@ -122,12 +131,6 @@ var focusedElem;
 
 		         //var text = $('#text');
         		focusedElem.val(focusedElem.val() + 'H'); 
-
-    });
-		$('#delete').click( function() {
-
-		         //var text = $('#text');
-        		focusedElem.val(focusedElem.val() + '_'); 
 
     });
 

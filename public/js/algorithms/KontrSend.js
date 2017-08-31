@@ -108,7 +108,7 @@ function run_all_turing(i){
     var task = new Object();
     task.id = task_id_map[key]; // get id task
     task.rule = new Array();
-    task.duration = now.getMinutes() - start_time;
+    task.duration = (new Date().getTime() - start_time) / 1000;
     task.str = $('textarea[name=textarea_src]').val();
     var src = $('div.active >* input[name=start]').toArray();
     var dst = $('div.active >* input[name=end]').toArray();
@@ -210,7 +210,5 @@ function get_tasks(){
 }
 
 var task_id_map = {};
-var now = new Date();
-//alert( now );
-var start_time = now.getMinutes() ;
+var start_time = new Date().getTime() ;
 setTimeout(get_tasks, 500);
