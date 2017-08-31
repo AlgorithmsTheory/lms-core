@@ -19,7 +19,7 @@
         <div id="structures">
 
             <!-- структурный блок -->
-            <div class="col-md-12" id="structure-1">
+            <div class="col-md-12 structure" id="structure-1">
                 <div class="card card-bordered style-primary card-collapsed">
                     <div class="card-head">
                         <header>
@@ -37,42 +37,42 @@
                         </div>
 
 
-                        <div class="sections_and_themes">
+                        <div id="sections_and_themes">
                             <table class="table no-margin">
                                 <thead>
                                     <tr>
-                                        <th>Выберите разделы:</th>
-                                        <th>Выберите темы:</th>
+                                        <th width="50%">Выберите разделы:</th>
+                                        <th width="50%">Выберите темы:</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @for($i=0; $i < count($sections); $i++)
-                                        <tr class="section-tr">
+                                        <tr class="section-tr" id="section-tr-{{ $i }}">
                                             <td rowspan="1" class="section-td">
-                                                <div class="checkbox checkbox-styled">
+                                                <div class="checkbox checkbox-styled checkbox-section">
                                                     <label>
                                                         <input type="checkbox" name="sections[0][]">  <!-- номер структуры -->
                                                         <span>{{ $sections[$i]['name'] }}</span>
                                                     </label>
                                                 </div>
                                             </td>
-                                            <td class="empty-td"></td>
                                             <td style="display: none" class="theme-td">
-                                                <div class="checkbox checkbox-styled">
+                                                <div class="checkbox checkbox-styled checkbox-fst-theme">
                                                     <label>
-                                                        <input type="checkbox" name="themes[0][{{ $i }}][]">  <!-- номер, структуры, номер секции в структуре -->
-                                                        <span>{{ $section[$i]['themes'][0] }}</span>
+                                                        <input type="checkbox" name="themes[0][{{ $i }}][]">   <!-- номер, структуры, номер секции в структуре -->
+                                                        <span>{{ $sections[$i]['themes'][0]['theme_name'] }}</span>
                                                     </label>
                                                 </div>
                                             </td>
                                         </tr>
                                         @for($j = 1; $j < count($sections[$i]['themes']); $j++)
-                                            <tr class="theme-tr" style="display: none">
-                                                <td class="section-td">
-                                                    <div class="checkbox checkbox-styled">
+                                            <tr class="theme-tr-{{ $i }}" style="display: none">
+                                                <td></td>
+                                                <td class="theme-td">
+                                                    <div class="checkbox checkbox-styled checkbox-theme">
                                                         <label>
                                                             <input type="checkbox" name="themes[0][{{ $i }}][]">
-                                                            <span>{{ $sections[$i]['themes'][$j] }}</span>
+                                                            <span>{{ $sections[$i]['themes'][$j]['theme_name'] }}</span>
                                                         </label>
                                                     </div>
                                                 </td>

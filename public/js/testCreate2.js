@@ -86,3 +86,27 @@ page.on('click','#del-structure', function(){
         numberOfStructures--;
     }
 });
+
+page.on('change', '.checkbox-section input', function () {
+    var structure = $(this).parents('.structure');
+    var sectionTr = $(this).parents('tr');
+    var sectionNum = sectionTr.attr('id').substr(11);
+    var firstTheme = sectionTr.children('.theme-td');
+    var otherThemeTr = $(structure).find('.theme-tr-' + sectionNum);
+    var numberOfThemes = 1 + otherThemeTr.size();
+
+    if (!$(this).prop('checked')) {
+        $(firstTheme).hide();
+        $(otherThemeTr).each(function (i, tr) {
+            $(tr).hide();
+        });
+        sectionTr.attr('rowspan', 1);
+    }
+    else {
+        $(firstTheme).show();
+        $(otherThemeTr).each(function (i, tr) {
+            $(tr).show();
+        });
+        sectionTr.attr('rowspan', numberOfThemes);
+    }
+});

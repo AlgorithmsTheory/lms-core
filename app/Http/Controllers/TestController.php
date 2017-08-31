@@ -112,7 +112,9 @@ class TestController extends Controller{
             $types = Type::whereOnly_for_print(0)->get();
         }
 
-        $json_sections = json_encode($sections);
+        $prep_sections = $sections;
+
+        $json_sections = json_encode($prep_sections);
         return view('tests.create2',compact('general_settings', 'sections', 'types', 'json_sections'));
     }
 
@@ -448,8 +450,8 @@ class TestController extends Controller{
         $test_time = $test->test_time;
         $test_type = $test->test_type;
         if (Result::getCurrentResult(Auth::user()['id'], $id_test) == -1) {                                             //если пользователь не имеет начатый тест                                                                                     //если в тест зайдено первый раз
-            $generator = new UsualTestGenerator($test);
-            $generator->buildGraph();
+            $generator = new UsualTestGenerator();
+            $generator->buildGraphFromTest($test);
             $generator->generate();
             for ($i=0; $i < $amount; $i++) {
                 $id = $generator->chooseQuestion();
