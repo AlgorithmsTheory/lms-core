@@ -37,7 +37,7 @@
                         </div>
 
 
-                        <div id="sections_and_themes">
+                        <div class="sections_and_themes">
                             <table class="table no-margin">
                                 <thead>
                                     <tr>

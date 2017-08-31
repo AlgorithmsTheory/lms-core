@@ -9,7 +9,7 @@ var page = $('#page');
 page.on('click','#add-structure', function(){
     numberOfStructures++;
     var newStructureHtml = '\
-        <div class="col-md-12" id="structure-' + numberOfStructures + '">\
+        <div class="col-md-12 structure" id="structure-' + numberOfStructures + '">\
             <div class="card card-bordered style-primary card-collapsed">\
                 <div class="card-head">\
                     <header>\
@@ -30,25 +30,24 @@ page.on('click','#add-structure', function(){
                         <table class="table no-margin">\
                             <thead>\
                                 <tr>\
-                                    <th>Выберите разделы:</th>\
-                                    <th>Выберите темы:</th>\
+                                    <th width="50%">Выберите разделы:</th>\
+                                    <th width="50%">Выберите темы:</th>\
                                 </tr>\
                             </thead>\
                             <tbody>';
     for (var i = 0; i < sections.length; i++) {
         newStructureHtml += '\
-                                <tr class="section-tr">\
+                                <tr class="section-tr" id="section-tr-' + i + '">\
                                     <td rowspan="1" class="section-td">\
-                                        <div class="checkbox checkbox-styled">\
+                                        <div class="checkbox checkbox-styled checkbox-section">\
                                             <label>\
                                                 <input type="checkbox" name="sections[' + numberOfStructures + '][]">\
                                                 <span>' + sections[i].name + '</span>\
                                             </label>\
                                         </div>\
                                     </td>\
-                                    <td class="empty-td"></td>\
                                     <td style="display: none" class="theme-td">\
-                                        <div class="checkbox checkbox-styled">\
+                                        <div class="checkbox checkbox-styled checkbox-fst-theme">\
                                             <label>\
                                                 <input type="checkbox" name="themes[' + numberOfStructures + '][' + i + '][]">\
                                                 <span>' + sections[i].themes[0].theme_name + '</span>\
@@ -58,9 +57,10 @@ page.on('click','#add-structure', function(){
                                 </tr>';
         for(var j = 1; j < sections[i].themes.length; j++) {
             newStructureHtml += '\
-                                <tr class="theme-tr" style="display: none">\
-                                    <td class="section-td">\
-                                        <div class="checkbox checkbox-styled">\
+                                <tr class="theme-tr-' + i + '" style="display: none">\
+                                    <td></td>\
+                                    <td class="theme-td">\
+                                        <div class="checkbox checkbox-styled checkbox-theme">\
                                             <label>\
                                                 <input type="checkbox" name="themes[' + numberOfStructures + '][' + i + '][]">\
                                                 <span>' + sections[i].themes[j].theme_name + '</span>\
