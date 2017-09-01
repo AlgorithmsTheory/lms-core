@@ -3,9 +3,11 @@
  */
 var numberOfStructures = 1;
 var sections = JSON.parse($('#sections-info').val());
+var types = JSON.parse($('#types-info').val());
 
 var page = $('#page');
 
+ /** add new structure */
 page.on('click','#add-structure', function(){
     numberOfStructures++;
     var newStructureHtml = '\
@@ -30,8 +32,8 @@ page.on('click','#add-structure', function(){
                         <table class="table no-margin">\
                             <thead>\
                                 <tr>\
-                                    <th width="50%">Выберите разделы:</th>\
-                                    <th width="50%">Выберите темы:</th>\
+                                    <th width="50%" class="text-lg">Выберите разделы:</th>\
+                                    <th width="50%" class="text-lg">Выберите темы:</th>\
                                 </tr>\
                             </thead>\
                             <tbody>';
@@ -41,7 +43,7 @@ page.on('click','#add-structure', function(){
                                     <td rowspan="1" class="section-td">\
                                         <div class="checkbox checkbox-styled checkbox-section">\
                                             <label>\
-                                                <input type="checkbox" name="sections[' + numberOfStructures + '][]">\
+                                                <input type="checkbox" name="sections[' + numberOfStructures + '][]" value="' + sections[i].code + '">\
                                                 <span>' + sections[i].name + '</span>\
                                             </label>\
                                         </div>\
@@ -49,7 +51,7 @@ page.on('click','#add-structure', function(){
                                     <td style="display: none" class="theme-td">\
                                         <div class="checkbox checkbox-styled checkbox-fst-theme">\
                                             <label>\
-                                                <input type="checkbox" name="themes[' + numberOfStructures + '][' + i + '][]">\
+                                                <input type="checkbox" name="themes[' + numberOfStructures + '][' + i + '][]" value="' + sections[i].themes[0].theme_code + '">\
                                                 <span>' + sections[i].themes[0].theme_name + '</span>\
                                             </label>\
                                         </div>\
@@ -62,7 +64,7 @@ page.on('click','#add-structure', function(){
                                     <td class="theme-td">\
                                         <div class="checkbox checkbox-styled checkbox-theme">\
                                             <label>\
-                                                <input type="checkbox" name="themes[' + numberOfStructures + '][' + i + '][]">\
+                                                <input type="checkbox" name="themes[' + numberOfStructures + '][' + i + '][]" value="' + sections[i].themes[j].theme_code + '">\
                                                 <span>' + sections[i].themes[j].theme_name + '</span>\
                                             </label>\
                                         </div>\
@@ -74,12 +76,80 @@ page.on('click','#add-structure', function(){
                             </tbody>\
                         </table>\
                     </div>\
+                    <div class="types">\
+                        <table class="table no-margin">\
+                            <thead>\
+                                <tr>\
+                                    <th class="text-lg">Выберите типы:</th>\
+                                    <th></th>\
+                                    <th></th>\
+                                    <th></th>\
+                                </tr>\
+                            </thead>\
+                            <tbody>';
+    for (var k = 0; k < types.length; k += 4) {
+        newStructureHtml += '\
+                                <tr>\
+                                    <td class="type-td">';
+        if(k < types.length) {
+            newStructureHtml += '\
+                                        <div class="checkbox checkbox-styled checkbox-type">\
+                                            <label>\
+                                                <input type="checkbox" name="types[' + i + '][]" value="' + types[k].type_code + '">\
+                                                <span>' + types[k].type_name + '</span>\
+                                            </label>\
+                                        </div>';
+        }
+        newStructureHtml += '\
+                                    </td>\
+                                    \<td class="type-td">';
+        if(k + 1 < types.length) {
+            newStructureHtml += '\
+                                    <div class="checkbox checkbox-styled checkbox-type">\
+                                            <label>\
+                                                <input type="checkbox" name="types[' + i + '][]" value="' + types[k + 1].type_code + '">\
+                                                <span>' + types[k + 1].type_name + '</span>\
+                                            </label>\
+                                        </div>';
+        }
+        newStructureHtml += '\
+                                    </td>\
+                                    \<td class="type-td">';
+        if(k + 2 < types.length) {
+            newStructureHtml += '\
+                                    <div class="checkbox checkbox-styled checkbox-type">\
+                                            <label>\
+                                                <input type="checkbox" name="types[' + i + '][]" value="' + types[k + 2].type_code + '">\
+                                                <span>' + types[k + 2].type_name + '</span>\
+                                            </label>\
+                                        </div>';
+        }
+        newStructureHtml += '\
+                                    </td>\
+                                    \<td class="type-td">';
+        if(k + 3 < types.length) {
+            newStructureHtml += '\
+                                        <div class="checkbox checkbox-styled checkbox-type">\
+                                            <label>\
+                                                <input type="checkbox" name="types[' + i + '][]" value="' + types[k + 3].type_code + '">\
+                                                <span>' + types[k + 3].type_name + '</span>\
+                                            </label>\
+                                        </div>';
+        }
+        newStructureHtml += '\
+                                    </td>';
+    }
+    newStructureHtml += '\
+                                </tbody>\
+                            </table>\
+                        </div>\
+                    </div>\
                 </div>\
-            </div>\
-        </div>';
+            </div>';
     $('#structures').append(newStructureHtml);
 });
 
+/** delete last structure */
 page.on('click','#del-structure', function(){
     if (numberOfStructures > 1){
         $('#structures').children().last().remove();
@@ -87,6 +157,7 @@ page.on('click','#del-structure', function(){
     }
 });
 
+/** show and hide themes of the section when this section checked and unchecked */
 page.on('change', '.checkbox-section input', function () {
     var structure = $(this).parents('.structure');
     var sectionTr = $(this).parents('tr');

@@ -15,6 +15,7 @@
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <input type="hidden" id="num-rows" name="num-rows" value="1">
         <input type="hidden" id="sections-info" name="sections-info" value="{{$json_sections}}">
+        <input type="hidden" id="types-info" name="types-info" value="{{$json_types}}">
 
         <div id="structures">
 
@@ -36,13 +37,12 @@
                             <label for="number_of_access_questions-1">Доступно вопросов данной структуры</label>
                         </div>
 
-
                         <div class="sections_and_themes">
                             <table class="table no-margin">
                                 <thead>
                                     <tr>
-                                        <th width="50%">Выберите разделы:</th>
-                                        <th width="50%">Выберите темы:</th>
+                                        <th width="50%" class="text-lg">Выберите разделы:</th>
+                                        <th width="50%" class="text-lg">Выберите темы:</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -51,7 +51,7 @@
                                             <td rowspan="1" class="section-td">
                                                 <div class="checkbox checkbox-styled checkbox-section">
                                                     <label>
-                                                        <input type="checkbox" name="sections[0][]">  <!-- номер структуры -->
+                                                        <input type="checkbox" name="sections[0][]" value="{{ $sections[$i]['code'] }}">  <!-- номер структуры -->
                                                         <span>{{ $sections[$i]['name'] }}</span>
                                                     </label>
                                                 </div>
@@ -59,7 +59,7 @@
                                             <td style="display: none" class="theme-td">
                                                 <div class="checkbox checkbox-styled checkbox-fst-theme">
                                                     <label>
-                                                        <input type="checkbox" name="themes[0][{{ $i }}][]">   <!-- номер, структуры, номер секции в структуре -->
+                                                        <input type="checkbox" name="themes[0][{{ $i }}][]" value="{{ $sections[$i]['themes'][0]['theme_code'] }}">   <!-- номер структуры, номер секции в структуре -->
                                                         <span>{{ $sections[$i]['themes'][0]['theme_name'] }}</span>
                                                     </label>
                                                 </div>
@@ -71,13 +71,71 @@
                                                 <td class="theme-td">
                                                     <div class="checkbox checkbox-styled checkbox-theme">
                                                         <label>
-                                                            <input type="checkbox" name="themes[0][{{ $i }}][]">
+                                                            <input type="checkbox" name="themes[0][{{ $i }}][]" value="{{ $sections[$i]['themes'][$j]['theme_code'] }}">
                                                             <span>{{ $sections[$i]['themes'][$j]['theme_name'] }}</span>
                                                         </label>
                                                     </div>
                                                 </td>
                                             </tr>
                                         @endfor
+                                    @endfor
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="types">
+                            <table class="table no-margin">
+                                <thead>
+                                    <tr>
+                                        <th class="text-lg">Выберите типы:</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for ($i = 0; $i < count($types); $i += 4)
+                                        <tr>
+                                            <td class="type-td">
+                                                @if($i < count($types))
+                                                    <div class="checkbox checkbox-styled checkbox-type">
+                                                        <label>
+                                                            <input type="checkbox" name="types[0][]" value="{{ $types[$i]['type_code'] }}">
+                                                            <span>{{ $types[$i]['type_name'] }}</span>
+                                                        </label>
+                                                    </div>
+                                                @endif
+                                            </td>
+                                            <td class="type-td">
+                                                @if($i + 1 < count($types))
+                                                    <div class="checkbox checkbox-styled checkbox-type">
+                                                        <label>
+                                                            <input type="checkbox" name="types[0][]" value="{{ $types[$i + 1]['type_code'] }}">
+                                                            <span>{{ $types[$i + 1]['type_name'] }}</span>
+                                                        </label>
+                                                    </div>
+                                                @endif
+                                            </td>
+                                            <td class="type-td">
+                                                @if($i + 2 < count($types))
+                                                    <div class="checkbox checkbox-styled checkbox-type">
+                                                        <label>
+                                                            <input type="checkbox" name="types[0][]" value="{{ $types[$i + 2]['type_code'] }}">
+                                                            <span>{{ $types[$i + 2]['type_name'] }}</span>
+                                                        </label>
+                                                    </div>
+                                                @endif
+                                            </td>
+                                            <td class="type-td">
+                                                @if($i + 3 < count($types))
+                                                    <div class="checkbox checkbox-styled checkbox-type">
+                                                        <label>
+                                                            <input type="checkbox" name="types[0][]" value="{{ $types[$i + 3]['type_code'] }}">
+                                                            <span>{{ $types[$i + 3]['type_name'] }}</span>
+                                                        </label>
+                                                    </div>
+                                                @endif
+                                            </td>
+                                        </tr>
                                     @endfor
                                 </tbody>
                             </table>
