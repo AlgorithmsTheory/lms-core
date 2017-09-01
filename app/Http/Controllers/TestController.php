@@ -115,6 +115,7 @@ class TestController extends Controller{
 
         $json_sections = json_encode($sections);
         $json_types = json_encode($types);
+        $general_settings = json_encode($general_settings);
         return view('tests.create2',compact('general_settings', 'sections', 'types', 'json_sections', 'json_types'));
     }
 

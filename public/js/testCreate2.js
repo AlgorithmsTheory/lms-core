@@ -4,6 +4,7 @@
 var numberOfStructures = 1;
 var sections = JSON.parse($('#sections-info').val());
 var types = JSON.parse($('#types-info').val());
+var generalSettings = JSON.parse($('#general-settings').val());
 
 var page = $('#page');
 
@@ -49,7 +50,7 @@ page.on('click','#add-structure', function(){
                                         </div>\
                                     </td>\
                                     <td style="display: none" class="theme-td">\
-                                        <div class="checkbox checkbox-styled checkbox-fst-theme">\
+                                        <div class="checkbox checkbox-styled checkbox-theme">\
                                             <label>\
                                                 <input type="checkbox" name="themes[' + numberOfStructures + '][' + i + '][]" value="' + sections[i].themes[0].theme_code + '">\
                                                 <span>' + sections[i].themes[0].theme_name + '</span>\
@@ -166,18 +167,62 @@ page.on('change', '.checkbox-section input', function () {
     var otherThemeTr = $(structure).find('.theme-tr-' + sectionNum);
     var numberOfThemes = 1 + otherThemeTr.size();
 
-    if (!$(this).prop('checked')) {
+    if (!$(this).prop('checked')) {                                                                                     // when uncheck
         $(firstTheme).hide();
         $(otherThemeTr).each(function (i, tr) {
             $(tr).hide();
         });
         sectionTr.attr('rowspan', 1);
     }
-    else {
+    else {                                                                                                              // when check
         $(firstTheme).show();
+        $(firstTheme).find('input').prop('checked', false);
         $(otherThemeTr).each(function (i, tr) {
+            $(tr).find('input').prop('checked', false);
             $(tr).show();
         });
         sectionTr.attr('rowspan', numberOfThemes);
     }
+});
+
+// TODO: show only checked inputs in non-focused structures and show full structure on focus
+
+/** count all accessible questions with specified restrictions in the structure */
+page.on('change', '.checkbox-section, .checkbox-theme, .checkbox-type', function () {
+    var structure = $(this).parents('.structure');
+    var maxNumberOfQuestionsInput = $(structure).find('.number-of-access-questions').first();
+    var sections = [];
+    $(structure).find('.checkbox-section input:checked').each(function(i, section) {
+        sections.push($(section).val());
+    });
+    var themes = [];
+    $(structure).find('.checkbox-theme input:checked').each(function (i, theme){
+       themes.push($(theme).val());
+    });
+    var types = [];
+    $(structure).find('.checkbox-type input:checked').each(function (i, type) {
+        types.push($(type).val());
+    });
+    var testType = generalSettings.test_type;
+    var printable = generalSettings.only_for_print;
+
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url:   '/get-amount',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        data: { section: sections, theme: themes, type: types, test_type: testType, printable: printable, token: 'token' },
+        success: function(data){
+            $(maxNumberOfQuestionsInput).val(data);
+        },
+        error: function (error) {
+
+        }
+    });
 });

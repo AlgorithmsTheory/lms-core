@@ -49,27 +49,34 @@ class Question extends Eloquent {
     }
 
     /** AJAX-метод: по названию раздела, темы, типа, типа теста, возможности печати вычисляет количество доступных вопросов в БД данной структуры */
-    public static function getAmount($section_name, $theme_name, $type_name, $test_type, $printable){
-        if ($section_name != 'Любой')
-            $section = Section::whereSection_name($section_name)->select('section_code')->first()->section_code;
-        else $section = 'Любой';
-        if ($theme_name != 'Любая')
-            $theme = Theme::whereTheme_name($theme_name)->select('theme_code')->first()->theme_code;
-        else $theme = 'Любая';
-        if ($type_name != 'Любой')
-            $type = Type::whereType_name($type_name)->select('type_code')->first()->type_code;
-        else $type = 'Любой';
+    public static function getAmount($sections, $themes, $types, $test_type, $printable){
+        if (count($sections) == 0 || count($themes) == 0 || count($types) == 0) {
+            header('HTTP/1.1 500 Some parameters are not specified yet');
+            header('Content-Type: application/json; charset=UTF-8');
+            die(json_encode(array('message' => 'Some parameters are not specified yet', 'code' => 1337)));
+        }
 
         $questions  = new Question();
-        if ($section != 'Любой'){
-            $questions = $questions->whereSection_code($section);
-        }
-        if ($theme != 'Любая'){
-            $questions = $questions->whereTheme_code($theme);
-        }
-        if ($type != 'Любой'){
-            $questions = $questions->whereType_code($type);
-        }
+        $questions = $questions->where(function($query) use ($sections) {
+            $query->whereSection_code($sections[0]);
+            for ($i = 1; $i < count($sections); $i++) {
+                $query->orWhere('section_code', '=', $sections[$i]);
+            }
+        });
+
+        $questions = $questions->where(function($query) use ($themes) {
+            $query->whereTheme_code($themes[0]);
+            for ($i = 1; $i < count($themes); $i++) {
+                $query->orWhere('theme_code', '=', $themes[$i]);
+            }
+        });
+
+        $questions = $questions->where(function($query) use ($types) {
+            $query->whereType_code($types[0]);
+            for ($i = 1; $i < count($types); $i++) {
+                $query->orWhere('type_code', '=', $types[$i]);
+            }
+        });
         if ($test_type == 'Тренировочный'){
             $questions = $questions->whereControl(0);
         }

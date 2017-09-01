@@ -16,6 +16,7 @@
         <input type="hidden" id="num-rows" name="num-rows" value="1">
         <input type="hidden" id="sections-info" name="sections-info" value="{{$json_sections}}">
         <input type="hidden" id="types-info" name="types-info" value="{{$json_types}}">
+        <input type="hidden" id="general-settings" name="general-settings" value="{{$general_settings}}">
 
         <div id="structures">
 
@@ -29,12 +30,12 @@
                     </div>
                     <div class="card-body style-default-bright">
                         <div class="form-group dropdown-label col-md-4 col-sm-4">
-                            <input type="number" min="1" step="1" name="number_of_questions[]" class="form-control number_of_questions" required>
-                            <label for="number_of_questions-1">Число вопросов</label>
+                            <input type="number" min="1" step="1" name="number-of-questions[]" class="form-control number-of-questions" required>
+                            <label for="number-of-questions-1">Число вопросов</label>
                         </div>
                         <div class="form-group dropdown-label col-md-4 col-sm-4">
-                            <input type="number" min="1" step="1" name="number_of_access_questions[]" class="form-control number_of_access_questions" disabled>
-                            <label for="number_of_access_questions-1">Доступно вопросов данной структуры</label>
+                            <input type="number" min="1" step="1" name="number-of-access-questions[]" class="form-control number-of-access-questions" disabled>
+                            <label for="number-of-access-questions-1">Доступно вопросов данной структуры</label>
                         </div>
 
                         <div class="sections_and_themes">
@@ -57,7 +58,7 @@
                                                 </div>
                                             </td>
                                             <td style="display: none" class="theme-td">
-                                                <div class="checkbox checkbox-styled checkbox-fst-theme">
+                                                <div class="checkbox checkbox-styled checkbox-theme">
                                                     <label>
                                                         <input type="checkbox" name="themes[0][{{ $i }}][]" value="{{ $sections[$i]['themes'][0]['theme_code'] }}">   <!-- номер структуры, номер секции в структуре -->
                                                         <span>{{ $sections[$i]['themes'][0]['theme_name'] }}</span>
