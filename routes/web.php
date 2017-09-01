@@ -1,28 +1,24 @@
 <?php
 
-use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
-| Application Routes
+| Web Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::filter('csrf-ajax', function()
-{
-    if (Session::token() != Request::header('x-csrf-token'))
-    {
-        throw new Illuminate\Session\TokenMismatchException;
-    }
-});
 
 Route::get('/', function() {
     return redirect('home');
 });
+
+Route::get('public', function() {
+    return redirect('home');
+});
+
 Route::get('home', ['as' => 'home', 'uses' => 'HomeController@get_home']);
 
 
@@ -31,19 +27,21 @@ Route::get('in-process', ['as' => 'in_process', function() {
 }]);
 
 // Авторизация
-Route::post('auth/login', ['as' => 'login', 'uses' => 'Auth\AuthController@postLogin']);
-Route::get('auth/logout', ['as' => 'logout', 'uses' => 'Auth\AuthController@getLogout']);
+Route::post('auth/login', ['as' => 'login', 'uses' => 'Auth\LoginController@login']);
+Route::get('auth/logout', ['as' => 'logout', 'uses' => 'Auth\LoginController@logout']);
 Route::get('auth/login', ['as' => 'login', 'uses' => 'HomeController@get_home']);
 
 // Регистрация
-Route::post('auth/register', ['as' => 'register', 'uses' => 'Auth\AuthController@postRegister']);
+Route::post('auth/register', ['as' => 'register', 'uses' => 'Auth\RegisterController@register']);
 
 // Восстановление пароля
-Route::get('password/email', 'Auth\PasswordController@getEmail');
-Route::post('password/email', ['as' => 'passEmailPost', 'uses' => 'Auth\PasswordController@postEmail']);
-Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
-Route::post('password/reset',['as' => 'passReset', 'uses' => 'Auth\PasswordController@postReset']);
+Route::get('password/email', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.email');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('passEmailPost');
+Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.request');
 
+
+// Модуль тестирования - прохождение тестов
 Route::get('tests', ['as' => 'tests', 'uses' => 'TestController@index', 'middleware' => 'general_auth']);
 Route::get('questions/show-test/{id_test}', ['as' => 'question_showtest', 'uses' => 'TestController@showViews', 'middleware' => ['general_auth', 'single_test', 'have_attempts']]);
 Route::patch('questions/check-test', ['as' => 'question_checktest', 'uses' => 'TestController@checkTest']);
@@ -66,6 +64,7 @@ Route::post('get-theme', array('as'=>'get_theme', 'uses'=>'QuestionController@ge
 Route::post('get-type', array('as'=>'get_type', 'uses'=>'QuestionController@getType'));
 Route::post('questions/create', ['as' => 'question_add', 'uses' => 'QuestionController@add']);
 Route::get('tests/create', ['as' => 'test_create', 'uses' => 'TestController@create', 'middleware' => ['general_auth', 'admin']]);
+Route::get('tests/create/step2', ['as' => 'test_create_step2', 'uses' => 'TestController@createSndStep', 'middleware' => ['general_auth', 'admin']]);
 Route::post('get-theme-for-test', array('as'=>'get_theme_for_test', 'uses'=>'TestController@getTheme'));
 Route::post('get-amount', array('as'=>'get_amount', 'uses'=>'TestController@getAmount'));
 Route::post('tests/create', ['as' => 'test_add', 'uses' => 'TestController@add']);
@@ -244,7 +243,7 @@ Route::post('recursion/calculate_one', ['as' => 'calculate_one', 'uses' => 'Recu
 Route::post('recursion/calculate_two', ['as' => 'calculate_two', 'uses' => 'RecursionController@calculate_two']);
 Route::post('recursion/calculate_three', ['as' => 'calculate_three', 'uses' => 'RecursionController@calculate_three']);
 
-
 //API for mobile app
 Route::get('api/get/groups', ['uses' => 'APIController@getGroupList']);
 Route::get('api/get/students/{group_id}', ['uses' => 'APIController@getStudentsFromGroup']);
+
