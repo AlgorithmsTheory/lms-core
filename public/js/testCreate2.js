@@ -3,6 +3,7 @@
  */
 var numberOfStructures = 1;
 var sections = JSON.parse($('#sections-info').val());
+var types = JSON.parse($('#types-info').val());
 
 var page = $('#page');
 
@@ -30,8 +31,8 @@ page.on('click','#add-structure', function(){
                         <table class="table no-margin">\
                             <thead>\
                                 <tr>\
-                                    <th width="50%">Выберите разделы:</th>\
-                                    <th width="50%">Выберите темы:</th>\
+                                    <th width="50%" class="text-lg">Выберите разделы:</th>\
+                                    <th width="50%" class="text-lg">Выберите темы:</th>\
                                 </tr>\
                             </thead>\
                             <tbody>';
@@ -41,7 +42,7 @@ page.on('click','#add-structure', function(){
                                     <td rowspan="1" class="section-td">\
                                         <div class="checkbox checkbox-styled checkbox-section">\
                                             <label>\
-                                                <input type="checkbox" name="sections[' + numberOfStructures + '][]">\
+                                                <input type="checkbox" name="sections[' + numberOfStructures + '][]" value="' + sections[i].code + '">\
                                                 <span>' + sections[i].name + '</span>\
                                             </label>\
                                         </div>\
@@ -49,7 +50,7 @@ page.on('click','#add-structure', function(){
                                     <td style="display: none" class="theme-td">\
                                         <div class="checkbox checkbox-styled checkbox-fst-theme">\
                                             <label>\
-                                                <input type="checkbox" name="themes[' + numberOfStructures + '][' + i + '][]">\
+                                                <input type="checkbox" name="themes[' + numberOfStructures + '][' + i + '][]" value="' + sections[i].themes[0].theme_code + '">\
                                                 <span>' + sections[i].themes[0].theme_name + '</span>\
                                             </label>\
                                         </div>\
@@ -62,7 +63,7 @@ page.on('click','#add-structure', function(){
                                     <td class="theme-td">\
                                         <div class="checkbox checkbox-styled checkbox-theme">\
                                             <label>\
-                                                <input type="checkbox" name="themes[' + numberOfStructures + '][' + i + '][]">\
+                                                <input type="checkbox" name="themes[' + numberOfStructures + '][' + i + '][]" value="' + sections[i].themes[j].theme_code + '">\
                                                 <span>' + sections[i].themes[j].theme_name + '</span>\
                                             </label>\
                                         </div>\
@@ -74,9 +75,60 @@ page.on('click','#add-structure', function(){
                             </tbody>\
                         </table>\
                     </div>\
+                    <div class="types">\
+                        <table class="table no-margin">\
+                            <thead>\
+                                <tr>\
+                                    <th class="text-lg">Выберите типы:</th>\
+                                    <th></th>\
+                                    <th></th>\
+                                    <th></th>\
+                                </tr>\
+                            </thead>\
+                            <tbody>';
+    for (var k = 0; k < types.length; k += 4) {
+        newStructureHtml += '\
+                                <tr>\
+                                    <td class="type-td">\
+                                        <div class="checkbox checkbox-styled checkbox-type">\
+                                            <label>\
+                                                <input type="checkbox" name="types[' + i + '][]" value="' + types[k].type_code + '">\
+                                                <span>' + types[k].type_name + '</span>\
+                                            </label>\
+                                        </div>\
+                                    </td>\
+                                    \<td class="type-td">\
+                                        <div class="checkbox checkbox-styled checkbox-type">\
+                                            <label>\
+                                                <input type="checkbox" name="types[' + i + '][]" value="' + types[k + 1].type_code + '">\
+                                                <span>' + types[k + 1].type_name + '</span>\
+                                            </label>\
+                                        </div>\
+                                    </td>\
+                                    \<td class="type-td">\
+                                        <div class="checkbox checkbox-styled checkbox-type">\
+                                            <label>\
+                                                <input type="checkbox" name="types[' + i + '][]" value="' + types[k + 2].type_code + '">\
+                                                <span>' + types[k + 2].type_name + '</span>\
+                                            </label>\
+                                        </div>\
+                                    </td>\
+                                    \<td class="type-td">\
+                                        <div class="checkbox checkbox-styled checkbox-type">\
+                                            <label>\
+                                                <input type="checkbox" name="types[' + i + '][]" value="' + types[k + 3].type_code + '">\
+                                                <span>' + types[k + 3].type_name + '</span>\
+                                            </label>\
+                                        </div>\
+                                    </td>';
+    }
+    newStructureHtml += '\
+                                </tbody>\
+                            </table>\
+                        </div>\
+                    </div>\
                 </div>\
-            </div>\
-        </div>';
+            </div>';
     $('#structures').append(newStructureHtml);
 });
 

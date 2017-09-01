@@ -99,7 +99,8 @@ class TestController extends Controller{
         $sections_db = Section::where('section_code', '<', 10)->where('section_code', '>', 0)->select('section_code', 'section_name')->get();
         for ($i=0; $i < sizeof($sections_db); $i++) {
             $sections[$i]['name'] = $sections_db[$i]->section_name;
-            $themes_in_section = Theme::whereSection_code($sections_db[$i]->section_code)->select('theme_name')->get();
+            $sections[$i]['code'] = $sections_db[$i]->section_code;
+            $themes_in_section = Theme::whereSection_code($sections_db[$i]->section_code)->select('theme_name', 'theme_code')->get();
             for ($j=0; $j < count($themes_in_section); $j++) {
                 $sections[$i]['themes'][$j] = $themes_in_section[$j];
             }
@@ -112,10 +113,9 @@ class TestController extends Controller{
             $types = Type::whereOnly_for_print(0)->get();
         }
 
-        $prep_sections = $sections;
-
-        $json_sections = json_encode($prep_sections);
-        return view('tests.create2',compact('general_settings', 'sections', 'types', 'json_sections'));
+        $json_sections = json_encode($sections);
+        $json_types = json_encode($types);
+        return view('tests.create2',compact('general_settings', 'sections', 'types', 'json_sections', 'json_types'));
     }
 
     /** Добавляет новый тест в БД */
