@@ -8,6 +8,14 @@ var generalSettings = JSON.parse($('#general-settings').val());
 
 var page = $('#page');
 
+function parseIdStructure(htmlDivId) {
+    return htmlDivId.substr(10);
+}
+
+function parseIdSection(htmlTrId) {
+    return htmlTrId.substr(11);
+}
+
  /** add new structure */
 page.on('click','#add-structure', function(){
     numberOfStructures++;
@@ -162,7 +170,7 @@ page.on('click','#del-structure', function(){
 page.on('change', '.checkbox-section input', function () {
     var structure = $(this).parents('.structure');
     var sectionTr = $(this).parents('tr');
-    var sectionNum = sectionTr.attr('id').substr(11);
+    var sectionNum = parseIdSection(sectionTr.attr('id'));
     var firstTheme = sectionTr.children('.theme-td');
     var otherThemeTr = $(structure).find('.theme-tr-' + sectionNum);
     var numberOfThemes = 1 + otherThemeTr.size();
@@ -185,12 +193,11 @@ page.on('change', '.checkbox-section input', function () {
     }
 });
 
-// TODO: show only checked inputs in non-focused structures and show full structure on focus
-
 /** count all accessible questions with specified restrictions in the structure */
 page.on('change', '.checkbox-section, .checkbox-theme, .checkbox-type', function () {
     var structure = $(this).parents('.structure');
     var maxNumberOfQuestionsInput = $(structure).find('.number-of-access-questions').first();
+    var numberOfQuestionsInput = $(structure).find('.number-of-questions').first();
     var sections = [];
     $(structure).find('.checkbox-section input:checked').each(function(i, section) {
         sections.push($(section).val());
@@ -220,9 +227,45 @@ page.on('change', '.checkbox-section, .checkbox-theme, .checkbox-type', function
         data: { section: sections, theme: themes, type: types, test_type: testType, printable: printable, token: 'token' },
         success: function(data){
             $(maxNumberOfQuestionsInput).val(data);
+            $(numberOfQuestionsInput).attr('max', data);
         },
         error: function (error) {
 
         }
     });
 });
+
+/** When structure block focused out, check acceptability of question number and
+ *  at least one theme and one type is checked */
+page.on('focusout', '.structure', function () {
+    var $elem = $(this);
+    setTimeout(function () {
+        if (!$elem.find(':focus').length) {
+            var card = $elem.find('.card').first();
+            var maxNumberOfQuestionsInput = $elem.find('.number-of-access-questions').first();
+            var numberOfQuestionsInput = $elem.find('.number-of-questions').first();
+            var checkedThemes = $elem.find('.checkbox-theme input:checked');
+            var checkedTypes = $elem.find('.checkbox-type input:checked');
+            card.removeClass('style-primary');
+            card.removeClass('style-success');
+            card.removeClass('style-danger');
+
+            if ($(numberOfQuestionsInput).val() > $(maxNumberOfQuestionsInput).val() ||
+            $(numberOfQuestionsInput).val() == "" ||
+            $(checkedThemes).length === 0 ||
+            $(checkedTypes).length === 0
+            ) {
+                card.addClass('style-danger');
+            }
+            else {
+                card.addClass('style-success');
+            }
+            // TODO: show only checked inputs in non-focused structures and show full structure on focus
+        }
+    }, 1000);
+
+    // $(structure).find('.checkbox-section input:checked')
+});
+
+
+
