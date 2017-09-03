@@ -25,38 +25,38 @@ class AdministrationController extends Controller{
         $user = Auth::user();
         if ($user['role'] == 'Админ')
         {
-            $query = User::whereRole("")->orderBy('id', 'desc')->get();
+            $query = User::whereRole("")->join('groups', 'groups.group_id', '=', 'users.group')->orderBy('id', 'desc')->get();
         } else {
-            $query = TeacherHasGroup::join('users', 'teacher_has_group.group', '=', 'users.group')->where('teacher_has_group.user_id', $user['id'])->select('users.first_name', 'users.last_name', 'users.role', 'users.group', 'users.email')->get();
+            $query = TeacherHasGroup::join('users', 'teacher_has_group.group', '=', 'users.group')->join('groups', 'groups.group_id', '=', 'users.group')->where('teacher_has_group.user_id', $user['id'])->where('users.role', '')->select('users.first_name', 'users.last_name', 'users.role', 'users.group', 'users.email', 'users.id', 'groups.group_name')->distinct()->get();
         }
         return view('personal_account/verify_students', compact('query'));
     }
 
     public function change_role(){
-        $query = User::orderBy('id', 'desc')->get();
+        $query = User::join('groups', 'groups.group_id', '=', 'users.group', 'left outer')->orderBy('id', 'desc')->get();
         return view('personal_account/change_role', compact('query'));
     }
 
     public function add_groups(){
-        $groups = Group::get();
+        $groups = Group::orderBy('group_id', 'desc')->get();
         return view('personal_account/add_groups', compact('groups'));
     }
 
     public function add_group_to_set(Request $request){
-        $number = $request->input('number');
-        $faculty = $request->input('faculty');
-        $department = $request->input('department');
-        $validate = Group::whereNumber($number)->get();
+        $name = $request->input('name');
+        $description = $request->input('description');
+        $validate = Group::whereGroup_name($name)->get();
         if(count($validate) == 0){
-            Group::insert(['number' => $number, 'faculty' => $faculty, 'department' => $department]);
-            Pass_plan::insert(['group' => $number]);
+            Group::insert(['group_name' => $name, 'description' => $description]);
+            $id = Group::whereGroup_name($name)->get()->first();
+            Pass_plan::insert(['group' => $id['group_id']]);
         }
         return redirect()->route('group_set');
     }
 
     public function delete_group_from_set(Request $request){
         $id = json_decode($request->input('number'),true);
-        Group::where('number', $id)->delete();
+        Group::where('group_id', $id)->delete();
         Pass_plan::where('group', $id)->delete();
         TeacherHasGroup::where('group', $id)->delete();
         return $id;
@@ -70,10 +70,26 @@ class AdministrationController extends Controller{
         return 0;
     }
 
+    public function change_l_name(Request $request){
+        $id = json_decode($request->input('id'),true);
+        $value = $request->input('value');
+        User::where('id', $id)->update(['last_name' => $value]);
+        return 0;
+    }
+    public function change_f_name(Request $request){
+        $id = json_decode($request->input('id'),true);
+        $value = $request->input('value');
+        User::where('id', $id)->update(['first_name' => $value]);
+        return 0;
+    }
+
     public function manage_groups(){
         $teachers = User::whereRole("Преподаватель")->orderBy('id', 'desc')->get();
         $group_set = Group::get();
-        $groups = TeacherHasGroup::join('users', 'teacher_has_group.user_id', '=', 'users.id')->select('teacher_has_group.user_id', 'teacher_has_group.group', 'teacher_has_group.id', 'users.first_name', 'users.last_name')->get();
+        $groups = TeacherHasGroup::join('users', 'teacher_has_group.user_id', '=', 'users.id')
+            ->join('groups', 'groups.group_id', '=', 'teacher_has_group.group')
+            ->select('teacher_has_group.user_id', 'teacher_has_group.group', 'teacher_has_group.id', 'users.first_name', 'users.last_name', 'groups.group_name')
+            ->get();
         return view('personal_account/manage_groups', compact('teachers', 'groups', 'group_set'));
     }
 
@@ -127,37 +143,37 @@ class AdministrationController extends Controller{
             $user->role = 'Студент';
             $user->save();
 
-//Добавляем новую запись в ведомости по лекциям
+            //Добавляем новую запись в ведомости по лекциям
             $lectures = new Lectures();
             $lectures->userID = $id;
             $lectures->group = $user->group;
             $lectures->save();
 
-//Добавляем новую запись в ведомости по лекциям
+            //Добавляем новую запись в ведомости по лекциям
             $seminars = new Seminars();
             $seminars->userID = $id;
             $seminars->group = $user->group;
             $seminars->save();
 
-//Добавляем новую запись в ведомости по лекциям
+            //Добавляем новую запись в ведомости по лекциям
             $classwork = new Classwork();
             $classwork->userID = $id;
             $classwork->group = $user->group;
             $classwork->save();
 
-//Добавляем новую запись в ведомости по контрольным
+            //Добавляем новую запись в ведомости по контрольным
             $controls = new Controls();
             $controls->userID = $id;
             $controls->group = $user->group;
             $controls->save();
 
-//Добавляем новую запись в итоговые ведомости
+            //Добавляем новую запись в итоговые ведомости
             $total = new Totalresults();
             $total->userID = $id;
             $total->group = $user->group;
             $total->save();
 
-//Добавляем новую запись в итоговые ведомости
+            //Добавляем новую запись в итоговые ведомости
             $progress = new Statements_progress();
             $progress->userID = $id;
             $progress->group = $user->group;
