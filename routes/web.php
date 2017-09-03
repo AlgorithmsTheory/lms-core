@@ -39,13 +39,7 @@ Route::get('password/email', 'Auth\ForgotPasswordController@showLinkRequestForm'
 Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('passEmailPost');
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.request');
-<<<<<<< HEAD
 
-
-=======
-
-
->>>>>>> 76a3f90e75fd3c966cb03f2a05f50b14a8d687e3
 // Модуль тестирования - прохождение тестов
 Route::get('tests', ['as' => 'tests', 'uses' => 'TestController@index', 'middleware' => 'general_auth']);
 Route::get('questions/show-test/{id_test}', ['as' => 'question_showtest', 'uses' => 'TestController@showViews', 'middleware' => ['general_auth', 'single_test', 'have_attempts']]);
@@ -251,7 +245,3 @@ Route::post('recursion/calculate_three', ['as' => 'calculate_three', 'uses' => '
 //API for mobile app
 Route::get('api/get/groups', ['uses' => 'APIController@getGroupList']);
 Route::get('api/get/students/{group_id}', ['uses' => 'APIController@getStudentsFromGroup']);
-<<<<<<< HEAD
-=======
-
->>>>>>> 76a3f90e75fd3c966cb03f2a05f50b14a8d687e3
