@@ -9,15 +9,16 @@ use App\Tasks;
 use App\Testsequence;
 use App\User;
 use Auth;
+use App\Controls;
 
 class EmulatorController extends Controller {
 
 
-    
-//$user = Auth::user();
-//$user['id'];
 
-  public function magic($array) {
+    //$user = Auth::user();
+    //$user['id'];
+
+    public function magic($array) {
         return json_decode(json_encode($array), true);
     }
 
@@ -29,56 +30,68 @@ class EmulatorController extends Controller {
         fclose($fd);
     }
 
-
- public function open_MT(){
-
-     $start_date_tur = DB::select("SELECT start_date FROM kontr_rab WHERE id = '1' AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) > start_date AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) < finish_date");
-
-     $start_date_tur = EmulatorController::magic($start_date_tur);
+    public function open_MMT(){
+        return  EmulatorController::MMT();
+    }
 
 
-
-     if (empty($start_date_tur))
-     {
-
-         return  EmulatorController::MT();
-     }
-     else
-
-     {
-         return  EmulatorController::kontrMT();
-     }
-
-  }
-
-  public function open_HAM(){
-
-     $start_date_nam = DB::select("SELECT start_date FROM kontr_rab WHERE id = '2' AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) > start_date AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) < finish_date");
-
-     $start_date_nam = EmulatorController::magic($start_date_nam);
-
-     if (empty($start_date_nam))
-     {
-         return  EmulatorController::HAM();
-     }
-     else
-
-     {
-         return  EmulatorController::kontrHAM();
-     }
-
-  }
+ public function Post(){
+      return view("algorithm.Post");
+    }
 
 
-  
+    public function open_MT(){
+
+        $start_date_tur = DB::select("SELECT start_date FROM kontr_rab WHERE id = '1' AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) > start_date AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) < finish_date");
+
+        $start_date_tur = EmulatorController::magic($start_date_tur);
+
+
+
+        if (empty($start_date_tur))
+        {
+
+            return  EmulatorController::MT();
+        }
+        else
+
+        {
+            return  EmulatorController::kontrMT();
+        }
+
+    }
+
+    public function open_HAM(){
+
+        $start_date_nam = DB::select("SELECT start_date FROM kontr_rab WHERE id = '2' AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) > start_date AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) < finish_date");
+
+        $start_date_nam = EmulatorController::magic($start_date_nam);
+
+        if (empty($start_date_nam))
+        {
+            return  EmulatorController::HAM();
+        }
+        else
+
+        {
+            return  EmulatorController::kontrHAM();
+        }
+
+    }
+
+
+
 
     public function MT(){
+        return view("algorithm.MT");
+    }
 
-      return view("algorithm.MT");
+    public function MMT() {
+        return view("algorithm.MMT");
     }
 
     public function HAM(){
-      return view("algorithm.HAM");
+        return view("algorithm.HAM");
     }
 
     public function kontrMT(){
@@ -90,7 +103,7 @@ class EmulatorController extends Controller {
     }
 
 
-   public function MTPOST(Request $request){
+    public function MTPOST(Request $request){
 
         // $cmd = "/usr/local/bin/turing.sh";
         // $data = json_decode($request->input('task'),true);
@@ -108,7 +121,7 @@ class EmulatorController extends Controller {
         // exec('LANG=\"en_US.UTF8\" locale charmap');
         $cmd = "/usr/local/bin/turing.sh";
         $data = $request->input('task');
-        $task_file = tempnam(sys_get_temp_dir(), 'turn_'); //why prefix?
+        $task_file = tempnam(sys_get_temp_dir(), 'turn_'); 
         $task_answ = tempnam(sys_get_temp_dir(), 'turn_answ_');
         file_put_contents($task_file, $data);
         $data = exec($cmd . " " . $task_file);
@@ -121,7 +134,7 @@ class EmulatorController extends Controller {
 
         $cmd = "/usr/local/bin/normal.sh";
         $data = $request->input('task');
-        $task_file = tempnam(sys_get_temp_dir(), 'norm_'); //why prefix?
+        $task_file = tempnam(sys_get_temp_dir(), 'norm_'); 
         $task_answ = tempnam(sys_get_temp_dir(), 'norm_answ_');
         file_put_contents($task_file, $data);
         $data = exec($cmd . " " . $task_file);
@@ -144,44 +157,40 @@ class EmulatorController extends Controller {
 
 
     function run($data){
-	
+
         $cmd = "/usr/local/bin/turing.sh";
-	$task_file = tempnam(sys_get_temp_dir(), 'turn_');
-//        $task_file = tempnam(sys_get_temp_dir(), 'turn_t'); //создание файла с уникальным именем
-//       $this->add_to_file($task_file, $word);
-	file_put_contents($task_file, json_encode($data));
-        $res = exec($cmd . " " . $task_file); //запуск эмулятура
-//        unlink($task_file);  //удаление файла
+        $task_file = tempnam(sys_get_temp_dir(), 'turn_');
+
+        file_put_contents($task_file, json_encode($data));
+        $res = exec($cmd . " " . $task_file);
         $res = json_decode($res, True);
-//        $temp = json_decode(exec($cmd  . " " . $rule_file . " " . $task_file), true);
         unlink($task_file);
-	return $res['result'];
-//        return $temp['result'];
-//        return "0101";
+        return $res;
+
     }
 
     function runHAM($data){
 
         $cmd = "/usr/local/bin/normal.sh";
-        $task_file = tempnam(sys_get_temp_dir(), 'norm_'); //создание файла с уникальным именем
+        $task_file = tempnam(sys_get_temp_dir(), 'norm_');
         file_put_contents($task_file, json_encode($data));
-        $res = exec($cmd . " " . $task_file); //запуск эмулятура
-//        unlink($task_file);  //удаление файла
+        $res = exec($cmd . " " . $task_file); 
         $res = json_decode($res, True);
-        //$temp = json_decode(exec($cmd  . " " . $rule_file . " " . $task_file), true);
         unlink($task_file);
-        return $res['result'];
-//        return "0101";
+        return $res;
     }
 
-public function kontr_HAMPOST(Request $request) {
-    
+    public function kontr_HAMPOST(Request $request) {
+
         $user = Auth::user();
         $id_user = $user['id'];
         $mark = 0;
         $data = json_decode($request->input('task'),true);
-        $id_task = $data['id'];
-        // $rule_file = tempnam(sys_get_temp_dir(), 'norm_r_'); //sys_get_temp_dir — Возвращает путь к директории временных файлов
+        $id_task = $data['id']; 
+        $solution_time = $data['duration'];
+
+
+        // $rule_file = tempnam(sys_get_temp_dir(), 'norm_r_'); 
         // foreach ($data["rule"] as $rule){
         //     $this->add_to_file($rule_file, $rule["src"] . "->" . $rule["dst"] . "\n");
         // }
@@ -191,31 +200,46 @@ public function kontr_HAMPOST(Request $request) {
         $input = array();
         $conv = array();
         $ksuha = array();
-        /* Проверить алгоритм и выставить оценку */
+        /* Get result mark */
         $n_tests = 0;
+        $total_cycle = 0;
         if ( $res = $sqnc) {
-           foreach ($res as $row ) {
+            foreach ($res as $row ) {
                 $n_tests += 1;
                 $data['str'] = $row['input_word'];
                 $result = $this->runHAM($data);
-                
-                if ( $result == $row['conv'] ) {
+                if ( $result['result'] == $row['conv'] ) {
                     $mark+= 1;
+                    $total_cycle += $result['cycle'];
                 }
                 array_push($input, $row['input_word']);
                 array_push($conv, $row['conv']);
-                array_push($ksuha, $result);
+                array_push($ksuha, $result['result']);
             }
         } else {
             //unlink($rule_file);
             die ("res error");
         }
 
+
+        $task_info = DB::select("SELECT * FROM tasks_nam WHERE Id  =".$id_task);
+        $task_info = EmulatorController::magic($task_info)[0];
+        $max_mark = $task_info['max_mark'];
         $efc = 1;
-        $max_mark = DB::select("SELECT max_mark FROM tasks_nam WHERE id=".$id_task);
-        $max_mark = EmulatorController::magic($max_mark);
-        $max_mark = $max_mark[0]['max_mark'];
-        $result_mark  = ($mark / $n_tests) * $max_mark * $efc;
+        $total_test_time = 45 * 60; 
+        if ($solution_time < $task_info['expected_time'] - $task_info['delta']) {
+            $efc = $solution_time * (1 - $task_info['time_coef_b']) / ($task_info['expected_time'] - $task_info['delta']) + $task_info['time_coef_b'];
+        }
+        if ($solution_time > $task_info['expected_time'] + $task_info['delta']) {
+            $efc = $solution_time * ($task_info['time_coef_a'] - 1) / ($total_test_time - $task_info['expected_time'] - $task_info['delta']) + $task_info['time_coef_a'];
+        }
+        if ($mark == $n_tests) { 
+            if ($total_cycle < $task_info['cycle']) {
+                $efc *= $task_info['cycle_coef'];
+                DB::update("UPDATE tasks_nam SET cycle = " . $total_cycle . " WHERE Id = " . $id_task);
+            }
+        }
+        $result_mark  = ($mark / $n_tests) * $max_mark * $efc ;
         $repost = array(
             "input" => $input,
             "conv" => $conv,
@@ -223,39 +247,45 @@ public function kontr_HAMPOST(Request $request) {
             "result" => $result_mark,
         );
 
-        /* Удалить использованный файл*/
-       // unlink($rule_file);
+        // unlink($rule_file);
 
-           //записать в БД результат  
+        //set result to data base  
         $task_number = DB::select("SELECT task_number FROM tasks_nam WHERE id =".$id_task);
-        
         $task_number = EmulatorController::magic($task_number);
         $task_number = $task_number[0]['task_number'];
-//        $id_user= 8;
-          if ($task_number == 1)
-            {
-               DB::update( "UPDATE  user_result_nam SET id_task_1=".$id_task.",mark_1=".$result_mark.",user_time_1='10' WHERE id_user=".$id_user);
-            }
-             else 
-            {
-               DB::update( "UPDATE  user_result_nam SET  id_task_2=".$id_task.",mark_2=".$result_mark.",user_time_2='10' WHERE id_user=".$id_user);
-            }  
-        
-         return $repost;
-//    return $sqnc[0]['input_word'];
-}
+        //        $id_user= 8;
+        if ($task_number == 1)
+        {
+            DB::update( "UPDATE  user_result_nam SET id_task_1=".$id_task.",mark_1=".$result_mark.",user_time_1='10' WHERE id_user=".$id_user);
+        }
+        else 
+        {
+            DB::update( "UPDATE  user_result_nam SET  id_task_2=".$id_task.",mark_2=".$result_mark.",user_time_2='10' WHERE id_user=".$id_user);
+        }  
+
+//ddToStatements
+
+	$mark_info_2 = DB::select("SELECT * FROM user_result_nam WHERE id_user=".$id_user);
+        $mark_info_2 = EmulatorController::magic($mark_info_2)[0];
+	$score_2 = $mark_info_2['mark_1']+$mark_info_2['mark_2'];
+	Controls::where('userID', $id_user)->update(['control2' => $score_2]);
+
+        return $repost;
+        //    return $sqnc[0]['input_word'];
+    }
 
 
 
     public function kontr_MTPOST(Request $request){
-        
+
         $user = Auth::user();
         $id_user = $user['id'];
         $mark = 0;
-       	
- //$max_mark = 5;       
+
         $data = json_decode($request->input('task'), true);
         $id_task = $data['id'];
+        $rules_size = count($data['rule']);
+        $solution_time = $data['duration'];
 
         /*$data = [
             'rule' => [
@@ -263,12 +293,12 @@ public function kontr_HAMPOST(Request $request) {
                 'dst' => 'b.B.R']
             ]
         ];*
-	
 
-	//$max_mark = json_decode(json_encode($max_mark), true);
-        $rule_file = tempnam(sys_get_temp_dir(), 'turn_r'); //sys_get_temp_dir — Возвращает путь к директории временных файлов
-	file_put_contents($rule_file, $data);
-        /* Получить входные последовательности и преобразования из базы данных */
+
+    //$max_mark = json_decode(json_encode($max_mark), true);
+        $rule_file = tempnam(sys_get_temp_dir(), 'turn_r');
+    file_put_contents($rule_file, $data);
+        /* Get sequences from data base */
         $sqnc_1  = DB::select("SELECT input_word, output_word as conv FROM testsequence WHERE task_id =".$id_task);
 
 
@@ -276,30 +306,49 @@ public function kontr_HAMPOST(Request $request) {
         $input = array();
         $conv = array();
         $ksuha = array();
-        /* Проверить алгоритм и выставить оценку */
+        /* Get result mark */
         $n_tests = 0;
+        $total_cycle = 0;
         if ( $res = $sqnc ) {
-
             foreach($res as $row) {
                 $n_tests += 1;
-		$data['str'] = $row['input_word'];
+                $data['str'] = $row['input_word'];
                 $result = $this->run($data);
-                if ( $result == $row['conv'] ) {
+                if ($result['result'] == $row['conv']) {
                     $mark+= 1;
+                    $total_cycle += $result['cycle'];
                 }
                 array_push($input, $row['input_word']);
                 array_push($conv, $row['conv']);
-                array_push($ksuha, $result);
+                array_push($ksuha, $result['result']);
             }
         } else {
-//            unlink($rule_file);
+            //            unlink($rule_file);
             die ("res error");
         }
+
+        $task_info = DB::select("SELECT * FROM tasks WHERE id_task =".$id_task);
+        $task_info = EmulatorController::magic($task_info)[0];
+        $max_mark = $task_info['mark'];
         $efc = 1;
-	$max_mark = DB::select("SELECT mark FROM tasks WHERE id_task =".$id_task);
-	$max_mark = EmulatorController::magic($max_mark);
-	$max_mark = $max_mark[0]['mark'];
-        $result_mark  = ($mark / $n_tests) * $max_mark * $efc;
+        $total_test_time = 45 * 60; 
+        if ($solution_time < $task_info['expected_time'] - $task_info['delta']) {
+            $efc = $solution_time * (1 - $task_info['time_coef_b']) / ($task_info['expected_time'] - $task_info['delta']) + $task_info['time_coef_b'];
+        }
+        if ($solution_time > $task_info['expected_time'] + $task_info['delta']) {
+            $efc = $solution_time * ($task_info['time_coef_a'] - 1) / ($total_test_time - $task_info['expected_time'] - $task_info['delta']) + $task_info['time_coef_a'];
+        }
+        if ($mark == $n_tests) { 
+            if ($total_cycle < $task_info['cycle']) {
+                $efc *= $task_info['cycle_coef'];
+                DB::update("UPDATE tasks SET cycle = " . $total_cycle . " WHERE id_task = " . $id_task);
+            }
+            if ($rules_size < $task_info['rows']) {
+                $efc *= $task_info['rows_coef'];
+                DB::update("UPDATE tasks SET rows = " . $rules_size . " WHERE id_task = " . $id_task);
+            }
+        }
+        $result_mark  = ($mark / $n_tests) * $max_mark * $efc ;
 
         $repost = array(
             "input" => $input,
@@ -307,63 +356,69 @@ public function kontr_HAMPOST(Request $request) {
             "ksuha" => $ksuha,
             "result" => $result_mark,
         );
-        
-        //записать в БД результат  
-         $task_number = DB::select("SELECT number FROM tasks WHERE id_task =".$id_task);
-         $task_number = EmulatorController::magic($task_number);
-         $task_number = $task_number[0]['number'];
-          
-//         $id_user = 9;
-       
-          if ($task_number == 1)
-            {
-               DB::update( "UPDATE  user_result_tur SET id_task_1=".$id_task.",mark_1=".$result_mark.",user_time_1='10' WHERE id_user=".$id_user);
-            }
-             else 
-            {
-               DB::update( "UPDATE  user_result_tur SET  id_task_2=".$id_task.",mark_2=".$result_mark.",user_time_2='10' WHERE id_user=".$id_user);
-            }  
-        
- //        unlink($rule_file);
-       
+
+        //set result to data base 
+        $task_number = DB::select("SELECT number FROM tasks WHERE id_task =".$id_task);
+        $task_number = EmulatorController::magic($task_number);
+        $task_number = $task_number[0]['number'];
+
+        //         $id_user = 9;
+
+        if ($task_number == 1)
+        {
+            DB::update( "UPDATE  user_result_tur SET id_task_1=".$id_task.",mark_1=".$result_mark.",user_time_1='10' WHERE id_user=".$id_user);
+        }
+        else 
+        {
+            DB::update( "UPDATE  user_result_tur SET  id_task_2=".$id_task.",mark_2=".$result_mark.",user_time_2='10' WHERE id_user=".$id_user);
+        }  
+
+        //        unlink($rule_file);
+
+	//ddToStatements
+
+	$mark_info = DB::select("SELECT * FROM user_result_tur WHERE id_user=".$id_user);
+        $mark_info = EmulatorController::magic($mark_info)[0];
+	$score = $mark_info['mark_1']+$mark_info['mark_2'];
+	Controls::where('userID', $id_user)->update(['control1' => $score]);
+
         return $repost;
 
 
     }
 
     public function get_control_tasks(Request $request){
-        
-         $user = Auth::user();
-         $id_user = $user['id'];
-//        $id_user = 9;
+
+        $user = Auth::user();
+        $id_user = $user['id'];
+        //        $id_user = 9;
         $array = array();
         $is_started = DB::select("SELECT variant FROM user_result_tur WHERE id_user =".$id_user);
         $is_started = EmulatorController::magic($is_started); 
-        if (empty($is_started)) { //если варианта у студента еще нет
+        if (empty($is_started)) { //if student hasn't variant
 
-        $variant = DB::select("SELECT variant FROM tasks order by RAND() limit 1");
-        $variant = EmulatorController::magic($variant);
-        $variant = $variant[0]['variant'];
-        $res = DB::select("SELECT task, number, level, variant, id_task FROM tasks WHERE variant = " . $variant . " AND number in (1, 2) AND level in (1,2)");
-       //записать вариант в БД на студента
-        DB::insert( "INSERT INTO user_result_tur (id_user,variant) VALUES (".$id_user.",".$variant.")");
-                
-        }
-
-        else { //если вариант есть, вернуть ему тот же
-
-        $variant = DB::select("SELECT variant FROM user_result_tur WHERE id_user =".$id_user);
-        $variant = EmulatorController::magic($variant);
-        $variant = $variant[0]['variant'];
-        $res = DB::select("SELECT task, number, level, variant, id_task FROM tasks WHERE variant = " . $variant . " AND number in (1, 2) AND level in (1,2)");
+            $variant = DB::select("SELECT variant FROM tasks order by RAND() limit 1");
+            $variant = EmulatorController::magic($variant);
+            $variant = $variant[0]['variant'];
+            $res = DB::select("SELECT task, number, level, variant, id_task FROM tasks WHERE variant = " . $variant . " AND number in (1, 2) AND level in (1,2)");
+            //set the student variant to data base
+            DB::insert( "INSERT INTO user_result_tur (id_user,variant) VALUES (".$id_user.",".$variant.")");
 
         }
-       //  $variant = DB::select("SELECT variant FROM tasks order by RAND() limit 1");
-       //  $variant = EmulatorController::magic($variant);
-       //  $variant = $variant[0]['variant'];
-       //  $res = DB::select("SELECT task, number, level, variant, id_task FROM tasks WHERE variant = " . $variant . " AND number in (1, 2) AND level in (1,2)");
-       // //записать вариант в БД на студента
-       
+
+        else { //if the variant is, return it
+
+            $variant = DB::select("SELECT variant FROM user_result_tur WHERE id_user =".$id_user);
+            $variant = EmulatorController::magic($variant);
+            $variant = $variant[0]['variant'];
+            $res = DB::select("SELECT task, number, level, variant, id_task FROM tasks WHERE variant = " . $variant . " AND number in (1, 2) AND level in (1,2)");
+
+        }
+        //  $variant = DB::select("SELECT variant FROM tasks order by RAND() limit 1");
+        //  $variant = EmulatorController::magic($variant);
+        //  $variant = $variant[0]['variant'];
+        //  $res = DB::select("SELECT task, number, level, variant, id_task FROM tasks WHERE variant = " . $variant . " AND number in (1, 2) AND level in (1,2)");
+
         $res = EmulatorController::magic($res);
         foreach ($res as $r){
             array_push ( $array, $r);
@@ -373,11 +428,11 @@ public function kontr_HAMPOST(Request $request) {
 
     }
 
-public function get_control_tasks_nam(Request $request){
-    
-         $user = Auth::user();
-         $id_user = $user['id'];
-//        $id_user = 1;
+    public function get_control_tasks_nam(Request $request){
+
+        $user = Auth::user();
+        $id_user = $user['id'];
+        //        $id_user = 1;
         $array = array();
         $is_started = DB::select("SELECT variant FROM user_result_nam WHERE id_user =".$id_user);
         $is_started = EmulatorController::magic($is_started); 
@@ -386,26 +441,18 @@ public function get_control_tasks_nam(Request $request){
             $variant = EmulatorController::magic($variant);
             $variant = $variant[0]['variant_number'];
             $res = DB::select("SELECT task_text as task, task_number as number, level, variant_number as variant, id as id_task FROM tasks_nam WHERE variant_number = " . $variant . " AND task_number in (1, 2) AND level in (1,2)");
-             //записать вариант в БД на студента
+            //set the student variant to data base
             DB::insert( "INSERT INTO user_result_nam (id_user,variant) VALUES ('$id_user','$variant')");
         }
         else {
-
-            // if ($status!=0)
-            // {
-            //     //те, кого отметили на переписывание, выдать этим такой варант, какого у них еще не было, и чистим инфу про них. И дать статус 0
-            // }
-            // else {
-            //     //это те, у кого статус 0, уже написали либо еще пишут. Если статус 0 и дата  такая, как текущая,  выдаем вар-т тот, что уже выдан. Иначе выдаем, что уже писали кр.
-            // }
             $variant = DB::select("SELECT variant FROM user_result_nam WHERE id_user =".$id_user);
             $variant = EmulatorController::magic($variant);
             $variant = $variant[0]['variant'];
             $res = DB::select("SELECT task_text as task, task_number as number, level, variant_number as variant, id as id_task FROM tasks_nam WHERE variant_number = " . $variant . " AND task_number in (1, 2) AND level in (1,2)");
-               
+
 
         }
-     
+
         $res = EmulatorController::magic($res);
         foreach ($res as $r){
             array_push ( $array, $r);
@@ -414,11 +461,11 @@ public function get_control_tasks_nam(Request $request){
     }
 
 
-//Создание протокола
-        public function get_MT_protocol(Request $request){
-            $user = Auth::user();
+    //protocol creation
+    public function get_MT_protocol(Request $request){
+        $user = Auth::user();
         if ($request->ajax()) {
-            $protocol = new MTProtocol('МТ', $user['id'], $request->input('html_text'));
+            $protocol = new MTProtocol('MT', $user['id'], $request->input('html_text'));
             $protocol->create();
             return;
         }
@@ -432,5 +479,5 @@ public function get_control_tasks_nam(Request $request){
             return;
         }
     }
- 
- }
+
+}

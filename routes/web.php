@@ -40,7 +40,6 @@ Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail'
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.request');
 
-
 // Модуль тестирования - прохождение тестов
 Route::get('tests', ['as' => 'tests', 'uses' => 'TestController@index', 'middleware' => 'general_auth']);
 Route::get('questions/show-test/{id_test}', ['as' => 'question_showtest', 'uses' => 'TestController@showViews', 'middleware' => ['general_auth', 'single_test', 'have_attempts']]);
@@ -143,7 +142,10 @@ Route::post('get_HAM_protocol', array('as'=>'get_HAM_protocol', 'uses'=>'Emulato
 
 
 Route::get('algorithm/MT', ['as' => 'MT', 'uses' => 'EmulatorController@open_MT']);
+Route::get('algorithm/MMT', ['as' => 'MMT', 'uses' => 'EmulatorController@open_MMT']);
 Route::get('algorithm/HAM', ['as' => 'HAM', 'uses' => 'EmulatorController@open_HAM']);
+Route::get('algorithm/Post', ['as' => 'Post', 'uses' => 'EmulatorController@Post']);
+
 
 
 Route::get('algorithm/kontrMT', ['as' => 'kontrMT', 'uses' => 'EmulatorController@open_MT']);
@@ -152,7 +154,7 @@ Route::get('algorithm/kontrHAM', ['as' => 'kontrHAM', 'uses' => 'EmulatorControl
 
 //контрольный режим эмуляторов
 
-    //Route::get('algorithm/kontrMT', ['as' => 'kontrMT', 'uses' => 'EmulatorController@kontrMT']);
+//Route::get('algorithm/kontrMT', ['as' => 'kontrMT', 'uses' => 'EmulatorController@kontrMT']);
 
 //Route::get('algorithm/kontrHAM', ['as' => 'kontrHAM', 'uses' => 'EmulatorController@kontrHAM']);
 Route::post('get-MT-kontr', array('as'=>'get_MT', 'uses'=>'EmulatorController@kontr_MTPOST'));
@@ -243,4 +245,3 @@ Route::post('recursion/calculate_three', ['as' => 'calculate_three', 'uses' => '
 //API for mobile app
 Route::get('api/get/groups', ['uses' => 'APIController@getGroupList']);
 Route::get('api/get/students/{group_id}', ['uses' => 'APIController@getStudentsFromGroup']);
-
