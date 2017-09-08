@@ -24,8 +24,11 @@ class StatementsController extends Controller{
     //Возвращает главную страницу для выбора типа ведомости и группы
     public function statements(){
         $user = Auth::user();
-        $groups = TeacherHasGroup::where('user_id', $user['id'])->join('groups', 'groups.group_id', '=', 'teacher_has_group.group')->get();
-        $group_set = Group::get();
+        $groups = TeacherHasGroup::where('user_id', $user['id'])
+            ->join('groups', 'groups.group_id', '=', 'teacher_has_group.group')
+            ->where('groups.archived', 0)
+            ->get();
+        $group_set = Group::where('groups.archived', 0)->get();
         return view('personal_account/statements', compact('groups', 'user', 'group_set'));
     }
 
@@ -74,9 +77,13 @@ class StatementsController extends Controller{
     public function manage_plan(Request $request){
         $user = Auth::user();
         if($user['role'] == 'Админ') {
-            $plans = Pass_plan::join('groups', 'groups.group_id', '=', 'pass_plan.group')->get();
+            $plans = Pass_plan::join('groups', 'groups.group_id', '=', 'pass_plan.group')->where('groups.archived', 0)->get();
         } else {
-            $plans = TeacherHasGroup::join('pass_plan', 'teacher_has_group.group', '=', 'pass_plan.group')->join('groups', 'groups.group_id', '=', 'pass_plan.group')->where('teacher_has_group.user_id', $user['id'])->get();
+            $plans = TeacherHasGroup::join('pass_plan', 'teacher_has_group.group', '=', 'pass_plan.group')
+                ->join('groups', 'groups.group_id', '=', 'pass_plan.group')
+                ->where('groups.archived', 0)
+                ->where('teacher_has_group.user_id', $user['id'])
+                ->get();
         }
         return view('personal_account/manage_plan', compact('plans'));
     }

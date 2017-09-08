@@ -45,7 +45,7 @@ class HomeController extends Controller {
 			return view('main', compact('news'));
 		}
 		else {
-			$groups = Group::get();
+			$groups = Group::where('archived', 0)->get();
 			return view('welcome', compact('groups'));
 		}
 	}
