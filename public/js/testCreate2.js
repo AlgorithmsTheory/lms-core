@@ -264,10 +264,11 @@ page.on('focusout', '.structure', function () {
             card.removeClass('style-primary');
             card.removeClass('style-success');
             card.removeClass('style-danger');
-            if ($(numberOfQuestionsInput).val() > $(maxNumberOfQuestionsInput).val() ||
-            $(numberOfQuestionsInput).val() == "" ||
-            $(checkedThemes).length === 0 ||
-            $(checkedTypes).length === 0
+            if (parseInt($(numberOfQuestionsInput).val()) > parseInt($(maxNumberOfQuestionsInput).val()) ||
+                parseInt($(numberOfQuestionsInput).val()) <= 0 ||
+                $(numberOfQuestionsInput).val() == "" ||
+                $(checkedThemes).length === 0 ||
+                $(checkedTypes).length === 0
             ) {
                 card.addClass('style-danger');
             }

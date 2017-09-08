@@ -83,7 +83,7 @@
                                     <td>
                                         <div class="checkbox checkbox-styled">
                                             <label>
-                                                <input type="checkbox" name="availability[]">
+                                                <input type="checkbox" name="availability[]" value="{{ $group['group_id'] }}">
                                                 <span></span>
                                             </label>
                                         </div>

@@ -75,6 +75,7 @@ class TestController extends Controller{
         $general_settings = [];
         $test_for_groups = [];
 
+        $general_settings['test_name'] = $request->input('test-name');
         $general_settings['test_type'] = $request->input('training') ? 'Тренировочный' : 'Контрольный';
         $general_settings['visibility'] = $request->input('visibility') ? 1 : 0;
         $general_settings['multilanguage'] = $request->input('multilanguage') ? 1 : 0;
@@ -83,7 +84,7 @@ class TestController extends Controller{
         $general_settings['test_time'] = $request->input('test-time');
 
         for ($i = 0; $i < count($request->input('id-group')); $i++) {
-            $availability = $request->input('availability')[$i] ? 1 : 0;
+            $availability = in_array($request->input('id-group')[$i], $request->input('availability')) ? 1 : 0;
             $test_for_groups[$request->input('id-group')[$i]] = $availability;
         }
 
@@ -130,7 +131,7 @@ class TestController extends Controller{
             $restrictions['structures'][$i]['amount'] = $request->input('form')['number-of-questions'][$i];
             for ($j = 0; $j < count($request->input('form')['sections'][$i]); $j++) {
                 $restrictions['structures'][$i]['sections'][$j]['section_code'] = $request->input('form')['sections'][$i][$j];
-                $theme_index = $this->getSectionOrderForThemes($request, $restrictions, $i, $j);
+                $theme_index = $this->getSectionOrderForThemes($request->input('form')['themes'], $restrictions['structures'][$i]['sections'][$j]['section_code'], $i);
                 for ($k = 0; $k < count($request->input('form')['themes'][$i][$theme_index]); $k++) {
                     $restrictions['structures'][$i]['sections'][$j]['themes'][$k]['theme_code'] = $request->input('form')['themes'][$i][$theme_index][$k];
                 }
@@ -146,13 +147,13 @@ class TestController extends Controller{
         return (String) $testGenerator->getGraph()->isSaturated();
     }
 
-    private function getSectionOrderForThemes(Request $request, $restrictions, $i, $j) {
-        $themes_in_db = Theme::whereSection_code($restrictions['structures'][$i]['sections'][$j]['section_code'])->select('theme_code')->get();
+    private function getSectionOrderForThemes($themes, $section_code, $i) {
+        $themes_in_db = Theme::whereSection_code($section_code)->select('theme_code')->get();
         $number_of_sections_in_db = Section::where('section_code', '>', 0)->count();
         for ($l = 0; $l < $number_of_sections_in_db; $l++) {
-            for ($n = 0; $n < count($request->input('form')['themes'][$i][$l]); $n++) {
+            for ($n = 0; $n < count($themes[$i][$l]); $n++) {
                 foreach ($themes_in_db as $theme_in_db) {
-                    if ($theme_in_db->theme_code == $request->input('form')['themes'][$i][$l][$n]) {
+                    if ($theme_in_db->theme_code == $themes[$i][$l][$n]) {
                         return $l;
                     }
                 }
@@ -163,34 +164,41 @@ class TestController extends Controller{
 
     /** Добавляет новый тест в БД */
     public function add(Request $request){
-        $test_type = $request->input('training') ? 'Тренировочный' : 'Контрольный';
-        $visibility = $request->input('visibility') ? 1 : 0;
-        $multilanguage = $request->input('multilanguage') ? 1 : 0;
-        $only_for_print = $request->input('only-for-print') ? 1 : 0;
-        $total = $request->input('total');
-        $test_time = $request->input('test-time');
-        Test::insert(array('test_name' => $request->input('test-name'), 'test_type' => $test_type,
-            'test_time' => $test_time, 'total' => $total, 'visibility' => $visibility,
-            'multilanguage' => $multilanguage, 'only_for_print' => $only_for_print));
+        $general_settings = $request->session()->get('general_settings');
+        Test::insert(array(
+            'test_name' => $general_settings['test_name'],
+            'test_type' => $general_settings['test_type'],
+            'test_time' => $general_settings['test_time'],
+            'total' => $general_settings['total'],
+            'visibility' => $general_settings['visibility'],
+            'multilanguage' => $general_settings['multilanguage'],
+            'only_for_print' => $general_settings['only_for_print']
+        ));
 
         $id_test = Test::max('id_test');
-        for ($i = 0; $i < count($request->input('id-group')); $i++) {
-            $availability = $request->input('availability')[$i] ? 1 : 0;
-            TestForGroup::insert(['id_test' => $id_test, 'id_group' => $request->input('id-group')[$i], 'availability' => $availability]);
+        $request->session()->get('test_for_groups');
+        foreach ($request->session()->get('test_for_groups') as $group_id => $availability) {
+            TestForGroup::insert(['id_test' => $id_test, 'id_group' => $group_id, 'availability' => $availability]);
         }
 
-        for ($i=0; $i < $request->input('num-rows'); $i++){
-            if ($request->input('section')[$i] != 'Любой')
-                $section = Section::whereSection_name($request->input('section')[$i])->select('section_code')->first()->section_code;
-            else $section = 'Любой';
-            if ($request->input('theme')[$i] != 'Любая')
-                $theme = Theme::whereTheme_name($request->input('theme')[$i])->select('theme_code')->first()->theme_code;
-            else $theme = 'Любая';
-            if ($request->input('type')[$i] != 'Любой')
-                $type = Type::whereType_name($request->input('type')[$i])->select('type_code')->first()->type_code;
-            else $type = 'Любой';
-            $amount = $request->input('num')[$i];
-            TestStructure::add($id_test, $amount, $section, $theme, $type);
+        for ($i = 0; $i < count($request->input('sections')); $i++) {
+            $id_structure = TestStructure::max('id_structure') + 1;
+            TestStructure::insert(array('id_structure' => $id_structure, 'id_test' => $id_test, 'amount' => $request->input('number-of-questions')[$i]));
+            for ($j = 0; $j < count($request->input('sections')[$i]); $j++) {
+                $restrictions['structures'][$i]['sections'][$j]['section_code'] = $request->input('sections')[$i][$j];
+                $theme_index = $this->getSectionOrderForThemes($request->input('themes'), $request->input('sections')[$i][$j], $i);
+                for ($k = 0; $k < count($request->input('themes')[$i][$theme_index]); $k++) {
+                    for ($l = 0; $l < count($request->input('types')[$i]); $l++) {
+                        StructuralRecord::insert(array(
+                            'theme_code' => $request->input('themes')[$i][$theme_index][$k],
+                            'section_code' => $request->input('sections')[$i][$j],
+                            'type_code' => $request->input('types')[$i][$l],
+                            'id_test' => $id_test,
+                            'id_structure' => $id_structure
+                        ));
+                    }
+                }
+            }
         }
         return redirect()->route('test_create');
     }
