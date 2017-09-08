@@ -51,40 +51,35 @@ class DirectedEdge {
     /**
      * @return mixed
      */
-    public function getType()
-    {
+    public function getType() {
         return $this->type;
     }
 
     /**
      * @return Node
      */
-    public function getNodeFrom()
-    {
+    public function getNodeFrom() {
         return $this->node_from;
     }
 
     /**
      * @return Node
      */
-    public function getNodeTo()
-    {
+    public function getNodeTo() {
         return $this->node_to;
     }
 
     /**
      * @return mixed
      */
-    public function getCapacity()
-    {
+    public function getCapacity() {
         return $this->capacity;
     }
 
     /**
      * @return int
      */
-    public function getFlow()
-    {
+    public function getFlow() {
         return $this->flow;
     }
 
@@ -98,12 +93,12 @@ class DirectedEdge {
      */
     private function setCapacity($test_type, $printable) {
         // TODO: count capacity using test's properties: print, lang, control
+        $sections = [$this->node_to->section_code];
+        $themes = [$this->node_to->theme_code];
+        $types = [$this->node_to->type_code];
         switch ($this->type) {
             case EdgeType::BEGIN :
-                $section_name = Section::whereSection_code($this->node_to->section_code)->select('section_name')->first()->section_name;
-                $theme_name = Theme::whereTheme_code($this->node_to->theme_code)->select('theme_name')->first()->theme_name;
-                $type_name = Type::whereType_code($this->node_to->type_code)->select('type_name')->first()->type_name;
-                $this->capacity = Question::getAmount($section_name, $theme_name, $type_name, $test_type, $printable);
+                $this->capacity = Question::getAmount($sections, $themes, $types, $test_type, $printable);
                 break;
             case EdgeType::MIDDLE :
                 $this->capacity = $this->node_to->amount;

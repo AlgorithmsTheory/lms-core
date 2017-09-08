@@ -20,7 +20,7 @@ function parseIdSection(htmlTrId) {
 page.on('click','#add-structure', function(){
     numberOfStructures++;
     var newStructureHtml = '\
-        <div class="col-md-12 structure" id="structure-' + numberOfStructures + '">\
+        <div class="col-md-12 structure" id="structure-' + (numberOfStructures - 1) + '">\
             <div class="card card-bordered style-primary card-collapsed">\
                 <div class="card-head">\
                     <header>\
@@ -29,11 +29,11 @@ page.on('click','#add-structure', function(){
                 </div>\
                 <div class="card-body style-default-bright">\
                     <div class="form-group dropdown-label col-md-4 col-sm-4">\
-                        <input type="number" min="1" step="1" name="number_of_questions[]" class="form-control number_of_questions" required>\
+                        <input type="number" min="1" step="1" name="number-of-questions[]" class="form-control number-of-questions" required>\
                         <label for="number_of_questions-1">Число вопросов</label>\
                     </div>\
                     <div class="form-group dropdown-label col-md-4 col-sm-4">\
-                        <input type="number" min="1" step="1" name="number_of_access_questions[]" class="form-control number_of_access_questions" disabled>\
+                        <input type="number" min="1" step="1" name="number_of_access_questions[]" class="form-control number-of-access-questions" disabled>\
                         <label for="number_of_access_questions-1">Доступно вопросов данной структуры</label>\
                     </div>\
             \
@@ -52,7 +52,7 @@ page.on('click','#add-structure', function(){
                                     <td rowspan="1" class="section-td">\
                                         <div class="checkbox checkbox-styled checkbox-section">\
                                             <label>\
-                                                <input type="checkbox" name="sections[' + numberOfStructures + '][]" value="' + sections[i].code + '">\
+                                                <input type="checkbox" name="sections[' + (numberOfStructures - 1) + '][]" value="' + sections[i].code + '">\
                                                 <span>' + sections[i].name + '</span>\
                                             </label>\
                                         </div>\
@@ -60,7 +60,7 @@ page.on('click','#add-structure', function(){
                                     <td style="display: none" class="theme-td">\
                                         <div class="checkbox checkbox-styled checkbox-theme">\
                                             <label>\
-                                                <input type="checkbox" name="themes[' + numberOfStructures + '][' + i + '][]" value="' + sections[i].themes[0].theme_code + '">\
+                                                <input type="checkbox" name="themes[' + (numberOfStructures - 1) + '][' + i + '][]" value="' + sections[i].themes[0].theme_code + '">\
                                                 <span>' + sections[i].themes[0].theme_name + '</span>\
                                             </label>\
                                         </div>\
@@ -73,7 +73,7 @@ page.on('click','#add-structure', function(){
                                     <td class="theme-td">\
                                         <div class="checkbox checkbox-styled checkbox-theme">\
                                             <label>\
-                                                <input type="checkbox" name="themes[' + numberOfStructures + '][' + i + '][]" value="' + sections[i].themes[j].theme_code + '">\
+                                                <input type="checkbox" name="themes[' + (numberOfStructures - 1) + '][' + i + '][]" value="' + sections[i].themes[j].theme_code + '">\
                                                 <span>' + sections[i].themes[j].theme_name + '</span>\
                                             </label>\
                                         </div>\
@@ -104,7 +104,7 @@ page.on('click','#add-structure', function(){
             newStructureHtml += '\
                                         <div class="checkbox checkbox-styled checkbox-type">\
                                             <label>\
-                                                <input type="checkbox" name="types[' + i + '][]" value="' + types[k].type_code + '">\
+                                                <input type="checkbox" name="types[' + (numberOfStructures - 1) + '][]" value="' + types[k].type_code + '">\
                                                 <span>' + types[k].type_name + '</span>\
                                             </label>\
                                         </div>';
@@ -116,7 +116,7 @@ page.on('click','#add-structure', function(){
             newStructureHtml += '\
                                     <div class="checkbox checkbox-styled checkbox-type">\
                                             <label>\
-                                                <input type="checkbox" name="types[' + i + '][]" value="' + types[k + 1].type_code + '">\
+                                                <input type="checkbox" name="types[' + (numberOfStructures - 1) + '][]" value="' + types[k + 1].type_code + '">\
                                                 <span>' + types[k + 1].type_name + '</span>\
                                             </label>\
                                         </div>';
@@ -128,7 +128,7 @@ page.on('click','#add-structure', function(){
             newStructureHtml += '\
                                     <div class="checkbox checkbox-styled checkbox-type">\
                                             <label>\
-                                                <input type="checkbox" name="types[' + i + '][]" value="' + types[k + 2].type_code + '">\
+                                                <input type="checkbox" name="types[' + (numberOfStructures - 1) + '][]" value="' + types[k + 2].type_code + '">\
                                                 <span>' + types[k + 2].type_name + '</span>\
                                             </label>\
                                         </div>';
@@ -140,7 +140,7 @@ page.on('click','#add-structure', function(){
             newStructureHtml += '\
                                         <div class="checkbox checkbox-styled checkbox-type">\
                                             <label>\
-                                                <input type="checkbox" name="types[' + i + '][]" value="' + types[k + 3].type_code + '">\
+                                                <input type="checkbox" name="types[' + (numberOfStructures - 1) + '][]" value="' + types[k + 3].type_code + '">\
                                                 <span>' + types[k + 3].type_name + '</span>\
                                             </label>\
                                         </div>';
@@ -235,8 +235,7 @@ page.on('change', '.checkbox-section, .checkbox-theme, .checkbox-type', function
     });
 });
 
-/** When structure block focused out, check acceptability of question number and
- *  at least one theme and one type is checked */
+/** When structure block focused out */
 page.on('focusout', '.structure', function () {
     var $elem = $(this);
     setTimeout(function () {
@@ -246,10 +245,25 @@ page.on('focusout', '.structure', function () {
             var numberOfQuestionsInput = $elem.find('.number-of-questions').first();
             var checkedThemes = $elem.find('.checkbox-theme input:checked');
             var checkedTypes = $elem.find('.checkbox-type input:checked');
+
+            // TODO: put error message into structure block's header
+
+            /** if section checked, but no themes checked in it - uncheck this section */
+            $elem.find('.checkbox-section input:checked').each(function(i, section) {
+                var sectionTr = $(section).parents('.section-tr');
+                var sectionNum = parseIdSection($(sectionTr).attr('id'));
+                var firstTheme = $(sectionTr).find('.checkbox-theme input:checked');
+                var otherThemeTr = $elem.find('.theme-tr-' + sectionNum + ' .checkbox-theme input:checked');
+                if (firstTheme.length === 0 && otherThemeTr.length === 0) {
+                    var sectionCheckbox = $(sectionTr).find('.checkbox-section input');
+                    $(sectionCheckbox).click();
+                }
+            });
+
+            /** check acceptability of question number and at least one theme and one type is checked */
             card.removeClass('style-primary');
             card.removeClass('style-success');
             card.removeClass('style-danger');
-
             if ($(numberOfQuestionsInput).val() > $(maxNumberOfQuestionsInput).val() ||
             $(numberOfQuestionsInput).val() == "" ||
             $(checkedThemes).length === 0 ||
@@ -263,8 +277,46 @@ page.on('focusout', '.structure', function () {
             // TODO: show only checked inputs in non-focused structures and show full structure on focus
         }
     }, 1000);
+});
 
-    // $(structure).find('.checkbox-section input:checked')
+page.on('click', '#add-test-button', function () {
+    var submit = true;
+    $('.structure').each(function (i, structure) {
+       if (!$(structure).find('.card').first().hasClass('style-success')) {
+           alert('Структура ' + (parseInt(i) + 1) + ' заполнена неверно!');
+           $(structure).find('.number-of-questions').trigger('focus');
+           submit = false;
+           return false;
+       }
+    });
+
+    if (submit) {
+        $.ajax({
+            cache: false,
+            type: 'POST',
+            url: '/tests/validate-test-structure',
+            beforeSend: function (xhr) {
+                var token = $('meta[name="csrf_token"]').attr('content');
+
+                if (token) {
+                    return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                }
+            },
+            data: {form: $('.form').first().serializeJSON()},                                                           // use user function for processing complicated web-form via jquery AJAX (url: https://github.com/marioizquierdo/jquery.serializeJSON)
+            success: function (data) {
+                if (data == true) {
+                    $('.form').first().submit();
+                }
+                else {
+                    alert('Данный набор струтктур не может обеспечить, чтобы каждая из них была наполнена вопросами! Попробуйте уменьшить число вопросов и повторите попытку!');
+                    submit = false;
+                }
+            },
+            error: function (error) {
+                alert('Критическая ошибка! Обратитесь к администраторам системы!');
+            }
+        });
+    }
 });
 
 

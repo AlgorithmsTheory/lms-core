@@ -9,9 +9,17 @@
 namespace App\Testing\TestGeneration;
 
 
-use Illuminate\Support\Facades\Log;
-
 Class Node {
+    /**
+     * @var int
+     */
+    private static $max_id = 0;
+
+    /**
+     * @var int
+     */
+    private $id;
+
     /**
      * @var Node[]
      */
@@ -38,10 +46,15 @@ Class Node {
     private $mark;
 
     function __construct() {
+        $this->id = Node::$max_id++;
         $this->flow = 0;
         $this->mark = new NodeMark();
         $this->prev_nodes = [];
         $this->next_nodes = [];
+    }
+
+    public function getId() {
+        return $this->id;
     }
 
     public function getCapacity() {
@@ -105,5 +118,9 @@ Class Node {
 
     public function isSink() {
         return count($this->next_nodes) == 0 ? true : false;
+    }
+
+    public function equals(Node $other) {
+        return $this->id === $other->getId();
     }
 }

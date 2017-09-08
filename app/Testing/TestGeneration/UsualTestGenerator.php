@@ -32,7 +32,9 @@ class UsualTestGenerator implements TestGenerator {
         $struct_nodes = [];
         $edges = [];
         $source_node = new Node();
+        $source_node->setCapacity(1);
         $sink_node = new Node();
+        $sink_node->setCapacity(-1);
         $records = StructuralRecord::whereId_test($id_test)->distinct()->select('section_code', 'theme_code', 'type_code')->get();
         foreach ($records as $record) {
             $node = new RecordNode($record->section_code, $record->theme_code, $record->type_code);
@@ -81,7 +83,55 @@ class UsualTestGenerator implements TestGenerator {
     }
 
     public function buildGraphFromRestrictions($restrictions) {
-        // TODO: Implement buildGraphFromRestrictions() method.
+        $record_nodes = [];
+        $struct_nodes = [];
+        $edges = [];
+        $source_node = new Node();
+        $source_node->setCapacity(1);
+        $sink_node = new Node();
+        $sink_node->setCapacity(-1);
+        $structures = $restrictions['structures'];
+        foreach ($structures as $structure) {
+            $struct_node = new StructuralNode($structure['id_structure'], $structure['amount']);
+            $sink_edge = new DirectedEdge($struct_node, $sink_node, EdgeType::END,  $restrictions['test']->test_type, $restrictions['test']->only_for_print);
+            array_push($struct_nodes, $struct_node);
+            array_push($edges, $sink_edge);
+            foreach ($structure['sections'] as $section) {
+                foreach ($section['themes'] as $theme) {
+                    foreach ($structure['types'] as $type) {
+                        $record_node = new RecordNode($section['section_code'], $theme['theme_code'], $type['type_code']);
+                        $in_array = false;
+                        $exist_node = null;
+                        foreach ($record_nodes as $exist_node) {
+                            if ($exist_node->equalsForStructure($record_node)) {
+                                $in_array = true;
+                                break;
+                            }
+                        }
+                        if (!$in_array) {
+                            $source_edge = new DirectedEdge($source_node, $record_node, EdgeType::BEGIN, $restrictions['test']->test_type, $restrictions['test']->only_for_print);
+                            array_push($record_nodes, $record_node);
+                            array_push($edges, $source_edge);
+                            $edge = new DirectedEdge($record_node, $struct_node, EdgeType::MIDDLE, $restrictions['test']->test_type, $restrictions['test']->only_for_print);
+                            array_push($edges, $edge);
+                        }
+                        else {
+                            $edge = new DirectedEdge($exist_node, $struct_node, EdgeType::MIDDLE, $restrictions['test']->test_type, $restrictions['test']->only_for_print);
+                            array_push($edges, $edge);
+                        }
+                    }
+                }
+            }
+        }
+        $nodes = array_merge($record_nodes, $struct_nodes);
+        array_push($nodes, $source_node);
+        array_push($nodes, $sink_node);
+
+        $this->graph = new Graph($nodes, $edges);
+
+        $this->graph->putInfoForNodes();
+        $this->graph->setSource();
+        $this->graph->setSink();
     }
 
     public function generate() {
@@ -174,6 +224,9 @@ class UsualTestGenerator implements TestGenerator {
         $this->chosen_questions = $array;
     }
 
+    /**
+     * @return int
+     */
     public function chooseQuestion() {
         if (empty($this->chosen_questions)){                                                                                             //если вопросы кончились, завершаем тест
             return -1;
@@ -184,5 +237,12 @@ class UsualTestGenerator implements TestGenerator {
             array_pop($this->chosen_questions);                                                                                          //удаляем его из списка
             return $chosen;
         }
+    }
+
+    /**
+     * @return Graph
+     */
+    public function getGraph() {
+        return $this->graph;
     }
 }

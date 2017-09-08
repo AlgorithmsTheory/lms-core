@@ -9,8 +9,6 @@
 namespace App\Testing\TestGeneration;
 
 
-use Illuminate\Support\Facades\Log;
-
 class Graph {
     /**
      * @var Node[]
@@ -41,18 +39,36 @@ class Graph {
      *  Set prev nodes, next nodes and capacity for each node
      */
     public function putInfoForNodes() {
-        foreach ($this->nodes as $node) {
-            foreach ($this->edges as $edge) {
-                if ($edge->getNodeFrom() == $node) {
+//        foreach ($this->nodes as $node) {
+//            foreach ($this->edges as $edge) {
+//                if ($edge->getNodeFrom() === $node) {
+//                    $array = $node->getNextNodes();
+//                    array_push($array, $edge->getNodeTo());
+//                    $node->setNextNodes($array);
+//                    $edge->setNodeFrom($node);
+//                    $node->setCapacity($node->getCapacity() + $edge->getCapacity());
+//                }
+//                if ($edge->getNodeTo() === $node) {
+//                    $array = $node->getPrevNodes();
+//                    array_push($array, $edge->getNodeFrom());
+//                    $node->setPrevNodes($array);
+//                    $edge->setNodeTo($node);
+//                }
+//            }
+//        }
+        foreach ($this->edges as $edge) {
+            $node_from = $edge->getNodeFrom();
+            $node_to = $edge->getNodeTo();
+            foreach ($this->nodes as $node) {
+                if ($node_from->equals($node)) {
                     $array = $node->getNextNodes();
-                    array_push($array, $edge->getNodeTo());
+                    array_push($array, $node_to);
                     $node->setNextNodes($array);
-
                     $node->setCapacity($node->getCapacity() + $edge->getCapacity());
                 }
-                if ($edge->getNodeTo() == $node) {
+                if ($node_to->equals($node)) {
                     $array = $node->getPrevNodes();
-                    array_push($array, $edge->getNodeFrom());
+                    array_push($array, $node_from);
                     $node->setPrevNodes($array);
                 }
             }
@@ -107,6 +123,7 @@ class Graph {
     }
 
     public function putInitialFlows() {
+        $this->flushMarks();
         while (!$this->allNodesMarked()) {
             $route = [];
             $route = $this->findWay($this->sink, $this->source, $route);
@@ -126,7 +143,7 @@ class Graph {
     }
 
     private function findWay(Node $sink, Node $node, $route) {
-        if ($node != $sink) {
+        if ($node !== $sink) {
             $next_nodes = [];
             foreach ($node->getNextNodes() as $next_node) {
                 $edge = $this->getEdge($node, $next_node);
@@ -335,7 +352,7 @@ class Graph {
      */
     public function getEdge(Node $node_from, Node $node_to) {
         foreach ($this->edges as $edge) {
-            if ($edge->getNodeFrom() == $node_from && $edge->getNodeTo() == $node_to) {
+            if ($edge->getNodeFrom()->equals($node_from) && $edge->getNodeTo()->equals($node_to)) {
                 return $edge;
             }
         }

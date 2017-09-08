@@ -67,6 +67,7 @@ Route::get('tests/create/step1', ['as' => 'test_create', 'uses' => 'TestControll
 Route::post('tests/create/step1', ['as' => 'test_finish_first_creation_step', 'uses' => 'TestController@finishFstCreationStep']);
 Route::get('tests/create/step2', ['as' => 'test_create_step2', 'uses' => 'TestController@createSndStep', 'middleware' => ['general_auth', 'admin']]);
 Route::post('tests/create/step2', ['as' => 'test_add', 'uses' => 'TestController@add']);
+Route::post('tests/validate-test-structure', ['as' => 'validate_test_structure', 'uses' => 'TestController@validateTestStructure']);
 Route::post('get-theme-for-test', array('as'=>'get_theme_for_test', 'uses'=>'TestController@getTheme'));
 Route::post('get-amount', array('as'=>'get_amount', 'uses'=>'TestController@getAmount'));
 Route::get('retest', ['as' => 'retest_index', 'uses' => 'TeacherRetestController@index']);

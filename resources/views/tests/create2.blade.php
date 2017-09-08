@@ -146,14 +146,15 @@
             </div>
         </div>
 
-        <div class="col-lg-offset-10 col-md-2 col-sm-6" id="add-del-buttons">
+        <div class="col-md-10 col-sm-10" id="add-test">
+            <button class="btn btn-primary btn-raised submit-test" type="button" id="add-test-button">Добавить тест</button>
+            <br><br>
+        </div>
+        <div class="col-md-2 col-sm-2" id="add-del-buttons">
             <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-structure"><b>+</b>   </button>
             <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-structure"><b>-</b></button>
         </div>
-        <div class="col-lg-offset-1 col-md-2 col-sm-6" id="add-test">
-            <button class="btn btn-primary btn-raised submit-test" type="submit">Добавить тест</button>
-            <br><br>
-        </div>
+
     </form>
 </div>
 <div id="overlay" class="none">
@@ -163,6 +164,7 @@
 
 @section('js-down')
 {!! HTML::script('js/testCreate2.js') !!}
+{!! HTML::script('js/jquery.serializejson.js') !!}
 @stop
 
 

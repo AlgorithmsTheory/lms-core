@@ -48,7 +48,14 @@ class Question extends Eloquent {
         else return true;
     }
 
-    /** AJAX-метод: по названию раздела, темы, типа, типа теста, возможности печати вычисляет количество доступных вопросов в БД данной структуры */
+    /**
+     * @param $sections int[]
+     * @param $themes int[]
+     * @param $types int[]
+     * @param $test_type string
+     * @param $printable int
+     * @return int number of question with specified test settings | HTTP bad header
+     */
     public static function getAmount($sections, $themes, $types, $test_type, $printable){
         if (count($sections) == 0 || count($themes) == 0 || count($types) == 0) {
             header('HTTP/1.1 500 Some parameters are not specified yet');

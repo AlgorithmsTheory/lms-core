@@ -15,6 +15,7 @@ use App\Testing\StructuralRecord;
 use App\Testing\Test;
 use App\Testing\TestForGroup;
 use App\Testing\TestGeneration\RecordNode;
+use App\Testing\TestGeneration\TestGenerator;
 use App\Testing\TestGeneration\UsualTestGenerator;
 use App\Testing\TestStructure;
 use App\Testing\TestTask;
@@ -117,6 +118,47 @@ class TestController extends Controller{
         $json_types = json_encode($types);
         $general_settings = json_encode($general_settings);
         return view('tests.create2',compact('general_settings', 'sections', 'types', 'json_sections', 'json_types'));
+    }
+
+    public function validateTestStructure(Request $request) {
+        $restrictions = [];
+        $restrictions['test'] = json_decode($request->input('form')['general-settings']);
+        $number_of_structures = count($request->input('form')['sections']);
+
+        for ($i = 0; $i < $number_of_structures; $i++) {
+            $restrictions['structures'][$i]['id_structure'] = $i;
+            $restrictions['structures'][$i]['amount'] = $request->input('form')['number-of-questions'][$i];
+            for ($j = 0; $j < count($request->input('form')['sections'][$i]); $j++) {
+                $restrictions['structures'][$i]['sections'][$j]['section_code'] = $request->input('form')['sections'][$i][$j];
+                $theme_index = $this->getSectionOrderForThemes($request, $restrictions, $i, $j);
+                for ($k = 0; $k < count($request->input('form')['themes'][$i][$theme_index]); $k++) {
+                    $restrictions['structures'][$i]['sections'][$j]['themes'][$k]['theme_code'] = $request->input('form')['themes'][$i][$theme_index][$k];
+                }
+            }
+            for ($j = 0; $j < count($request->input('form')['types'][$i]); $j++) {
+                $restrictions['structures'][$i]['types'][$j]['type_code'] = $request->input('form')['types'][$i][$j];
+            }
+        }
+
+        $testGenerator = new UsualTestGenerator();
+        $testGenerator->buildGraphFromRestrictions($restrictions);
+        $testGenerator->getGraph()->fordFulkersonMaxFlow();
+        return (String) $testGenerator->getGraph()->isSaturated();
+    }
+
+    private function getSectionOrderForThemes(Request $request, $restrictions, $i, $j) {
+        $themes_in_db = Theme::whereSection_code($restrictions['structures'][$i]['sections'][$j]['section_code'])->select('theme_code')->get();
+        $number_of_sections_in_db = Section::where('section_code', '>', 0)->count();
+        for ($l = 0; $l < $number_of_sections_in_db; $l++) {
+            for ($n = 0; $n < count($request->input('form')['themes'][$i][$l]); $n++) {
+                foreach ($themes_in_db as $theme_in_db) {
+                    if ($theme_in_db->theme_code == $request->input('form')['themes'][$i][$l][$n]) {
+                        return $l;
+                    }
+                }
+            }
+        }
+        throw new \Exception("Restrictions are invalid!");
     }
 
     /** Добавляет новый тест в БД */
@@ -299,6 +341,7 @@ class TestController extends Controller{
                 $structure['type'] = StructuralRecord::whereId_structure($structure['id_structure'])
                     ->join('types', 'structural_records.type_code', '=', 'types.type_code')
                     ->select('type_name')->first()->type_name;
+            // TODO: getAmount now works with codes
             $structure['db-amount'] = Question::getAmount($structure['section'], $structure['theme'],                   // число вопросов в БД заданной структуры
                                     $structure['type'], $test->test_type, $test->only_for_print);
         }
@@ -416,7 +459,7 @@ class TestController extends Controller{
                 $printable = 1;
             }
             else $printable = 0;
-            $amount = Question::getAmount($request->input('section'), $request->input('theme'), $request->input('type'), $test_type, $printable);
+            $amount = Question::getAmount($request->input('section'), $request->input('theme'), $request->input('type'), $request->input('test_type'), $printable);
             return (String) $amount;
         }
     }
