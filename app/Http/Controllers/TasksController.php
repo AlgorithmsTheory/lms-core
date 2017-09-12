@@ -106,8 +106,8 @@ public function editAllCoef($id){
       $output_word3 = Request::input('output_word3'); 
       $input_word4 = Request::input('input_word4');
       $output_word4 = Request::input('output_word4');   
-      $result1 = DB::insert(  " INSERT INTO tasks_nam (efficiency_coef,time_coef,task_number,task_text,level,variant_number,max_mark,min_time) 
-                                        VALUES('1','1','$task_number','$task_text','$level','$variant_number','$max_mark','00:00:00')");
+      $result1 = DB::insert(  " INSERT INTO tasks_nam (efficiency_coef,time_coef_a, time_coef_b, delta, task_number,task_text,level,variant_number,max_mark,min_time) 
+                                        VALUES('1','1','1', '00:00:00', '$task_number','$task_text','$level','$variant_number','$max_mark','00:00:00')");
       $results = DB::select('SELECT * from tasks_nam');
       $results = TasksController::magic($results);
       $task_id = $results[count($results) - 1]['id'];
@@ -223,9 +223,40 @@ public function editAllCoefMt($id_task){
       
     }
 
+public function edit_date(){
 
+        $result1 = DB::select("SELECT * from kontr_rab WHERE id = '1'");
+        $result1 = TasksController::magic($result1)[0];
+        $result2 = DB::select("SELECT * from kontr_rab WHERE id = '2'");
+        $result2 = TasksController::magic($result2)[0];
+        $result3 = DB::select("SELECT * from kontr_rab WHERE id = '3'");
+        $result3 = TasksController::magic($result3)[0];
 
+        return view("algorithm.edit_date", compact('result1','result2','result3'));
     }
+
+  
+public function editAllDate(){
+
+       $tur_start = Request::input("tur_start");
+       $new_tur_finish = Request::input("new_tur_finish");
+       $new_nam_start = Request::input("new_nam_start");
+       $new_nam_finish = Request::input("new_nam_finish");
+       $new_rec_start = Request::input("new_rec_start");
+       $new_rec_finish = Request::input("new_rec_finish");
+       $query3 = DB::update("UPDATE kontr_rab SET start_date='$tur_start', finish_date='$new_tur_finish' WHERE id = '1'");
+       DB::update("UPDATE kontr_rab SET start_date='$new_nam_start', finish_date='$new_nam_finish' WHERE id = '2'");
+       DB::update("UPDATE kontr_rab SET start_date='$new_rec_start', finish_date='$new_rec_finish' WHERE id = '3'");
+
+
+       
+       $tasks_and_sequences = DB::select("SELECT * FROM `testsequence` i LEFT JOIN `tasks` u ON u.id_task = i.task_id");
+        $tasks_and_sequences = TasksController::magic($tasks_and_sequences);
+        return view("algorithm.tasks.mt.alltasks", compact('tasks_and_sequences'));
+      
+    }
+
+  }
     
      
 

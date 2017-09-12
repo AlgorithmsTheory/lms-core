@@ -33,7 +33,8 @@
 			<section id="HAM-result">
 					
 					<div class="section-body contain-lg">
-					
+						 <div id="mytimer"></div> 	
+				
 						<div class="row">
 							<div class="col-lg-12">
 								<h1 class="text-primary">Контрольная работа по теме "Нормальные алгоритмы Маркова"</h1>
@@ -1638,7 +1639,7 @@
 		
 		<!-- END JAVASCRIPT -->
 		<!-- {!! HTML::script('js/algorithms/onerun.js') !!} -->
-		<!--{!! HTML::script('js/algorithms/timer.js') !!} -->
+		{!! HTML::script('js/algorithms/timer.js') !!}
 		{!! HTML::script('js/algorithms/jquery-1.4.3.min.js') !!}
 		{!! HTML::script('js/algorithms/jquery-1.10.2.js') !!}
 		{!! HTML::script('js/algorithms/symbols.js') !!}

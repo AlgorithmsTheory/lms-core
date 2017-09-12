@@ -180,8 +180,6 @@ function protocol(){
 
 function get_tasks(){
     var token = $('#forma').children().eq(0).val();
-    
-
     $.ajax({
         cache: false,
         type: 'POST',
