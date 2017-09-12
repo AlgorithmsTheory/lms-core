@@ -20,7 +20,8 @@
                     <tr>
                         <td class="info">Группа</td>
                         <td class="info">Описание</td>
-                        <td class="info">Удалить</td>
+                        <td class="info">Статус</td>
+                        <td class="info">Действие</td>
                     </tr>
                     @foreach( $groups as $group)
                         <tr id="{{ $group['group_id'] }}">
@@ -31,8 +32,11 @@
                                 {{ $group['description'] }}
                             </td>
                             <td>
-                                <button type="button" class="delete btn btn-danger" name="{{ $group['group_id'] }}">
-                                    <i class="md md-delete"></i>
+                                {{ $group['archived'] == 0 ? "Активна" : "В архиве" }}
+                            </td>
+                            <td>
+                                <button type="button" class="delete btn btn-danger" name="{{ $group['group_id'] }}" id="{{ $group['group_id'] }}delete" {{ $group['archived'] == 0 ? "" : "Disabled" }}>
+                                    Архивировать
                                 </button>
                             </td>
                         </tr>
@@ -59,8 +63,6 @@
                 </form>
             </div>
         </div>
-
     </div>
     {!! HTML::script('js/personal_account/delete_group.js') !!}
-
 @stop

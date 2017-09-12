@@ -131,7 +131,7 @@
                                         <option value="0">Простой пользователь</option>
                                         <option value="0">Преподаватель</option>
                                         @foreach($groups as $group)
-                                            <option value="{{ $group['group_id'] }}">{{ "Студент группы ".$group['group_name'] }}</option>/td>
+                                            <option value="{{ $group['group_id'] }}">{{ $group['group_name'] }}</option>/td>
                                         @endforeach
                                     </select>
                                     <label for="select-type">Выберите</label>

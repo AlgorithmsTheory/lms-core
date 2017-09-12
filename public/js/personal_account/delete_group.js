@@ -13,8 +13,8 @@ $(".delete").click(function() {
             }
         },
         data: { number: number, token: 'token' },
-        success: function(data){
-            $('#' + data).attr('style', 'display: none;');
+        success: function(){
+            location.reload();
         }
     });
     return false;

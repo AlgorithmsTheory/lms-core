@@ -36,7 +36,7 @@ class TestController extends Controller{
         $tr_tests = [];                                                                                                 //массив тренировочных тестов
         $ctr_tests = [];                                                                                                //массив контрольных тестов
         $query = $this->test->whereVisibility(1)->whereArchived(0)
-                            ->whereOnly_for_print(0)->where('year', '=', date("Y"))
+                            ->whereOnly_for_print(0)
                             ->get();
         foreach ($query as $test){
             $availability_for_group = TestForGroup::whereId_group(Auth::user()['group'])

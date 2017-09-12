@@ -16,16 +16,12 @@ use Illuminate\Http\Request;
 use Session;
 class AdministrationController extends Controller{
 
-    public function pashalka(){
-        return view('personal_account/pashalka');
-    }
-
     public function verify()
     {
         $user = Auth::user();
         if ($user['role'] == 'Админ')
         {
-            $query = User::whereRole("")->join('groups', 'groups.group_id', '=', 'users.group')->orderBy('id', 'desc')->get();
+            $query = User::whereRole("")->join('groups', 'groups.group_id', '=', 'users.group')->where('groups.archived', 0)->orderBy('id', 'desc')->get();
         } else {
             $query = TeacherHasGroup::join('users', 'teacher_has_group.group', '=', 'users.group')->join('groups', 'groups.group_id', '=', 'users.group')->where('teacher_has_group.user_id', $user['id'])->where('users.role', '')->select('users.first_name', 'users.last_name', 'users.role', 'users.group', 'users.email', 'users.id', 'groups.group_name')->distinct()->get();
         }
@@ -33,7 +29,7 @@ class AdministrationController extends Controller{
     }
 
     public function change_role(){
-        $query = User::join('groups', 'groups.group_id', '=', 'users.group', 'left outer')->orderBy('id', 'desc')->get();
+        $query = User::join('groups', 'groups.group_id', '=', 'users.group', 'left outer')->where('groups.archived', 0)->orderBy('id', 'desc')->get();
         return view('personal_account/change_role', compact('query'));
     }
 
@@ -47,7 +43,7 @@ class AdministrationController extends Controller{
         $description = $request->input('description');
         $validate = Group::whereGroup_name($name)->get();
         if(count($validate) == 0){
-            Group::insert(['group_name' => $name, 'description' => $description]);
+            Group::insert(['group_name' => $name, 'description' => $description, 'archived' => 0]);
             $id = Group::whereGroup_name($name)->get()->first();
             Pass_plan::insert(['group' => $id['group_id']]);
         }
@@ -56,9 +52,7 @@ class AdministrationController extends Controller{
 
     public function delete_group_from_set(Request $request){
         $id = json_decode($request->input('number'),true);
-        Group::where('group_id', $id)->delete();
-        Pass_plan::where('group', $id)->delete();
-        TeacherHasGroup::where('group', $id)->delete();
+        Group::where('group_id', $id)->update(['archived' => 1]);
         return $id;
     }
 
@@ -85,9 +79,10 @@ class AdministrationController extends Controller{
 
     public function manage_groups(){
         $teachers = User::whereRole("Преподаватель")->orderBy('id', 'desc')->get();
-        $group_set = Group::get();
+        $group_set = Group::where('archived', 0)->get();
         $groups = TeacherHasGroup::join('users', 'teacher_has_group.user_id', '=', 'users.id')
             ->join('groups', 'groups.group_id', '=', 'teacher_has_group.group')
+            ->where('groups.archived', 0)
             ->select('teacher_has_group.user_id', 'teacher_has_group.group', 'teacher_has_group.id', 'users.first_name', 'users.last_name', 'groups.group_name')
             ->get();
         return view('personal_account/manage_groups', compact('teachers', 'groups', 'group_set'));
