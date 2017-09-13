@@ -8,6 +8,7 @@
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     {!! HTML::style('css/materialadmin_demo.css') !!}
     {!! HTML::script('js/jquery.js') !!}
+    <meta name="csrf_token" content="{{ csrf_token() }}" />
     <!-- Yandex.Metrika counter --> <script type="text/javascript"> (function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter41063559 = new Ya.Metrika({ id:41063559, clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true, trackHash:true }); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = "https://mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); } })(document, window, "yandex_metrika_callbacks"); </script> <noscript><div><img src="https://mc.yandex.ru/watch/41063559" style="position:absolute; left:-9999px;" alt="" /></div></noscript> <!-- /Yandex.Metrika counter -->
 </head>
 <body class="menubar-hoverable header-fixed" >
@@ -41,19 +42,8 @@
                     <li><a href="{{URL::route('recursion_index')}}" class="btn">Рекурсия</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle btn" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            <span class="glyphicon glyphicon-user"></span>
-                            {{ Auth::user()['first_name'] }}
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu navbar-nav">
-                            <li><a href="{{URL::route('personal_account')}}" class="btn">Личный кабинет</a></li>
-                            <li><a href="{{URL::route('logout')}}" class="btn">Выйти</a></li>
-                        </ul>
-                    </li>
-                    {{--<li><a href="{{URL::route('personal_account')}}" class="btn">Результаты</a></li>--}}
-                    {{--<li><a href="{{URL::route('logout')}}" class="btn">Выйти</a></li>--}}
+                    <li><a href="{{URL::route('personal_account')}}" class="btn"><span class="glyphicon glyphicon-user"></span></a></li>
+                    <li><a href="{{URL::route('logout')}}" class="btn"><span class="glyphicon glyphicon-log-out"></span></a></li>
                 </ul>
             </div>
         </div>
@@ -61,6 +51,9 @@
 
 <div class="section-body" style="margin-top: 80px;">
 @yield('content')
+    <form action="" method="POST" id="forma" enctype="multipart/form-data">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+    </form>
 </div>
 </section>
 
