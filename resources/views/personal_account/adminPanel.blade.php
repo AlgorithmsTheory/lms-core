@@ -117,7 +117,7 @@
                             </a>
                         </li>
                         <li class="tile">
-                            <a href="{{ route('choose_group')}}" class="tile-content ink-reaction">
+                            <a href="{{ route('tests_list')}}" class="tile-content ink-reaction">
                             <div class="tile-text">
                                 Список всех тестов
                             </div>

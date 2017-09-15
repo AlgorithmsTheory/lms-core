@@ -39,7 +39,7 @@ class TestController extends Controller{
         $tr_tests = [];                                                                                                 //массив тренировочных тестов
         $ctr_tests = [];                                                                                                //массив контрольных тестов
         $query = $this->test->whereVisibility(1)->whereArchived(0)
-                            ->whereOnly_for_print(0)->where('year', '=', date("Y"))
+                            ->whereOnly_for_print(0)
                             ->get();
         foreach ($query as $test){
             $availability_for_group = TestForGroup::whereId_group(Auth::user()['group'])
@@ -58,6 +58,8 @@ class TestController extends Controller{
             $test['amount'] = Test::getAmount($test['id_test']);
         }
 
+
+        //TODO: student's group must be not archived to be able to see control tests
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
         if ($role == '' || $role == 'Обычный')                                                                          // Обычным пользователям не доступны контрольные тесты
             return view('tests.index', compact('tr_tests'));
@@ -67,6 +69,7 @@ class TestController extends Controller{
 
     /** генерирует страницу создания нового теста (шаг 1 - основные настройки) */
     public function create(){
+        //TODO: get values if session exists
         $groups = Group::all();
         return view('tests.create', compact('groups'));
     }
@@ -83,8 +86,10 @@ class TestController extends Controller{
         $general_settings['total'] = $request->input('total');
         $general_settings['test_time'] = $request->input('test-time');
 
+        $availability_input = ($request->input('availability') == null) ? [] : $request->input('availability');
+
         for ($i = 0; $i < count($request->input('id-group')); $i++) {
-            $availability = in_array($request->input('id-group')[$i], $request->input('availability')) ? 1 : 0;
+            $availability = in_array($request->input('id-group')[$i], $availability_input) ? 1 : 0;
             $test_for_groups[$request->input('id-group')[$i]] = $availability;
         }
 
@@ -200,224 +205,79 @@ class TestController extends Controller{
                 }
             }
         }
+        //TODO: flush session
         return redirect()->route('test_create');
     }
 
-    /** Список всех групп для перехода к редактированию */
-    public function chooseGroup(){
-        $groups = Group::join('test_for_group', 'test_for_group.id_group' , '=', 'groups.group_id')
-                              ->select('groups.group_id', 'groups.group_name')
-                              ->distinct()
-                              ->get();
-        return view('tests.groups_for_test_list', compact('groups'));
-    }
-
     /** Список всех тестов для их редактирования и завершения */
-    public function editList($id_group){
-        $current_date = date("Y-m-d H:i:s");                                                                            //текущая дата в mySlq формате DATETIME
-        $current_ctr_tests = $this->test->whereTest_type('Контрольный')                                                 //формируем текущие тесты
-                    ->leftJoin('test_for_group', 'tests.id_test', '=', 'test_for_group.id_test')
-                    ->where('test_for_group.id_group', '=', $id_group)
-                    ->where('archived', '<>', '1')
-                    ->where('start', '<', $current_date)
-                    ->where('end', '>', $current_date)
-                    ->select()
-                    ->get();
-        foreach ($current_ctr_tests as $test){
-            $test['amount'] = Test::getAmount($test['id_test']);
-        }
-
-        $current_tr_tests = $this->test->whereTest_type('Тренировочный')
-                    ->leftJoin('test_for_group', 'tests.id_test', '=', 'test_for_group.id_test')
-                    ->where('test_for_group.id_group', '=', $id_group)
-                    ->where('archived', '<>', '1')
-                    ->where('start', '<', $current_date)
-                    ->where('end', '>', $current_date)
-                    ->select()
-                    ->get();
-        foreach ($current_tr_tests as $test){
-            $test['amount'] = Test::getAmount($test['id_test']);
-        }
-
-        $past_ctr_tests = $this->test->whereTest_type('Контрольный')                                                         //формируем прошлые тесты
-            ->leftJoin('test_for_group', 'tests.id_test', '=', 'test_for_group.id_test')
-            ->where('test_for_group.id_group', '=', $id_group)
+    public function editList(){
+        $ctr_tests = $this->test->whereTest_type('Контрольный')
             ->where('archived', '<>', '1')
-            ->where('end', '<', $current_date)
             ->select()
             ->get();
-        foreach ($past_ctr_tests as $test){
+        foreach ($ctr_tests as $test){
             $test['amount'] = Test::getAmount($test['id_test']);
-            if (Test::isFinishedForGroup($test->id_test, $id_group))                                                                       //если таких студентов нет, то такой тест завршить нельзя
-                $test['finish_opportunity'] = 0;
-            else                                                                                                        //иначе можно
-                $test['finish_opportunity'] = 1;
+            //TODO: process finish opportunity
+//            if (Test::isFinishedForGroup($test->id_test, $id_group))
+//                $test['finish_opportunity'] = 0;
+//            else
+//                $test['finish_opportunity'] = 1;
         }
 
-        $past_tr_tests = $this->test->whereTest_type('Тренировочный')
-            ->leftJoin('test_for_group', 'tests.id_test', '=', 'test_for_group.id_test')
-            ->where('test_for_group.id_group', '=', $id_group)
+        $tr_tests = $this->test->whereTest_type('Тренировочный')
             ->where('archived', '<>', '1')
-            ->where('end', '<', $current_date)
             ->select()
             ->get();
-        foreach ($past_tr_tests as $test){
+        foreach ($tr_tests as $test){
             $test['amount'] = Test::getAmount($test['id_test']);
         }
 
-        $future_ctr_tests = $this->test->whereTest_type('Контрольный')                                                         //формируем будущие тесты
-            ->leftJoin('test_for_group', 'tests.id_test', '=', 'test_for_group.id_test')
-            ->where('test_for_group.id_group', '=', $id_group)
-            ->where('archived', '<>', '1')
-            ->where('start', '>', $current_date)
-            ->select()
-            ->get();
-        foreach ($future_ctr_tests as $test){
-            $test['amount'] = Test::getAmount($test['id_test']);
-        }
-
-        $future_tr_tests = $this->test->whereTest_type('Тренировочный')
-            ->leftJoin('test_for_group', 'tests.id_test', '=', 'test_for_group.id_test')
-            ->where('test_for_group.id_group', '=', $id_group)
-            ->where('archived', '<>', '1')
-            ->where('start', '>', $current_date)
-            ->select()
-            ->get();
-        foreach ($future_tr_tests as $test){
-            $test['amount'] = Test::getAmount($test['id_test']);
-        }
-
-        $group_name = Group::whereGroup_id($id_group)->select('group_name')->first()->group_name;
-
-        return view ('personal_account.test_list', compact('current_ctr_tests', 'current_tr_tests', 'past_ctr_tests', 'past_tr_tests', 'future_ctr_tests', 'future_tr_tests', 'group_name', 'id_group'));
+        return view ('personal_account.test_list', compact('ctr_tests', 'tr_tests'));
     }
 
     /** Редактирование выбранного теста */
     public function edit($id_test){
         $test = Test::whereId_test($id_test)->first();
-        $sections = Section::where('section_code', '>', 0)->where('section_code', '<', 20)->get();
-        $types = Type::where('type_code', '>', '0')->get();
         $test['is_resolved'] = Test::isResolved($id_test);
-
-        $number_of_sections = Section::where('section_code', '>', '0')->count();                                        // число разделов
-        $type =  new Type();
-        $type = $type->where('type_code', '>', '0');
-        if (Test::whereId_test($id_test)->select('only_for_print')->first()->only_for_print == 0){
-            $type = $type->whereOnly_for_print(0);
-        }
-        $number_of_types = $type->count();                                                                              // число типов
-        $structures = TestStructure::whereId_test($id_test)->get();
         $test_for_groups = TestForGroup::whereId_test($test->id_test)->get();
         foreach ($test_for_groups as $test_for_group) {
             $test_for_group['group_name'] = Group::whereGroup_id($test_for_group['id_group'])->select('group_name')->first()->group_name;
-            $test_for_group['is_finished'] = Test::isFinishedForGroup($id_test, $test_for_group['id_group']);
-            $test_for_group['start'] = TestForGroup::whereId_test($id_test)->whereId_group($test_for_group['id_group'])->select('start')->first()->start;
-            $test_for_group['end'] = TestForGroup::whereId_test($id_test)->whereId_group($test_for_group['id_group'])->select('end')->first()->end;
         }
-        foreach ($structures as $structure){
-            if (StructuralRecord::whereId_structure($structure['id_structure'])->distinct()->select('section_code')
-                                    ->count('section_code') == $number_of_sections) {
-                $structure['section'] = 'Любой';
-                $structure['theme'] = 'Любая';
-                $structure['themes'] = [];
-            }
-            else {
-               $structure['section'] = StructuralRecord::whereId_structure($structure['id_structure'])
-                                       ->join('sections', 'structural_records.section_code', '=', 'sections.section_code')
-                                       ->select('section_name')->first()->section_name;
-
-                $section_code = StructuralRecord::whereId_structure($structure['id_structure'])                         // число тем данного раздела
-                                    ->select('section_code')->first()->section_code;
-                $number_of_themes = Theme::whereSection_code($section_code)->select()->count();
-                if (StructuralRecord::whereId_structure($structure['id_structure'])->distinct()->select('theme_code')
-                                        ->count('theme_code') == $number_of_themes){
-                    $structure['theme'] = 'Любая';
-                    $structure['themes'] = [];
-                }
-                else {
-                    $structure['theme'] = StructuralRecord::whereId_structure($structure['id_structure'])
-                        ->join('themes', 'structural_records.theme_code', '=', 'themes.theme_code')
-                        ->select('theme_name')->first()->theme_name;
-                    $structure['themes'] = Theme::whereSection_code($section_code)->select('theme_name')->get();
-                }
-            }
-
-            if (StructuralRecord::whereId_structure($structure['id_structure'])->distinct()->select('type_code')
-                                    ->count('type_code') == $number_of_types)
-                $structure['type'] = 'Любой';
-            else
-                $structure['type'] = StructuralRecord::whereId_structure($structure['id_structure'])
-                    ->join('types', 'structural_records.type_code', '=', 'types.type_code')
-                    ->select('type_name')->first()->type_name;
-            // TODO: getAmount now works with codes
-            $structure['db-amount'] = Question::getAmount($structure['section'], $structure['theme'],                   // число вопросов в БД заданной структуры
-                                    $structure['type'], $test->test_type, $test->only_for_print);
-        }
-        return view ('tests.edit', compact('test', 'sections', 'types', 'structures', 'test_for_groups'));
+        return view ('tests.edit', compact('test',  'test_for_groups'));
     }
 
     /** Применение изменений после редактирования теста */
     public function update(Request $request){
-//        dd($request);
-        if ($request->input('training')) {
-            $test_type = 'Тренировочный';
-        }
-        else {
-            $test_type = 'Контрольный';
-        }
-        if ($request->input('visibility')) {
-            $visibility = 1;
-        }
-        else {
-            $visibility = 0;
-        }
-        if ($request->input('multilanguage')) {
-            $multilanguage = 1;
-        }
-        else {
-            $multilanguage = 0;
-        }
-        if ($request->input('only-for-print')) {
-            $only_for_print = 1;
-        }
-        else {
-            $only_for_print = 0;
-        }
+        $id_test = $request->input('id-test');
+        $test_name = $request->input('test-name');
+        $test_type = $request->input('test-type');
+        $visibility = $request->input('visibility') ? 1 : 0;
+        $multilanguage = $request->input('multilanguage') ? 1 : 0;
+        $only_for_print = $request->input('only-for-print') ? 1 : 0;
         $total = $request->input('total');
         $test_time = $request->input('test-time');
-        Test::whereId_test($request->input('id-test'))->update(array('test_name' => $request->input('test-name'), 'test_type' => $test_type,
-            'test_time' => $test_time, 'total' => $total,
-            'visibility' => $visibility, 'multilanguage' => $multilanguage, 'only_for_print' => $only_for_print));
 
-        $id_test = $request->input('id-test');
+        Test::whereId_test($id_test)->update([
+            'test_name' => $test_name, 'test_type' => $test_type, 'test_time' => $test_time,
+            'total' => $total,'visibility' => $visibility, 'archived' => 0,
+            'multilanguage' => $multilanguage, 'only_for_print' => $only_for_print]);
+
+        $availability_input = ($request->input('availability') == null) ? [] : $request->input('availability');
+
         for ($i = 0; $i < count($request->input('id-group')); $i++) {
-            $start = $request->input('start-date')[$i].' '.$request->input('start-time')[$i];
-            $end = $request->input('end-date')[$i].' '.$request->input('end-time')[$i];
-            TestForGroup::whereId_test($id_test)->whereId_group($request->input('id-group')[$i])->update(['id_test' => $id_test, 'id_group' => $request->input('id-group')[$i],
-                'start' => $start, 'end' => $end]);
+            $availability = in_array($request->input('id-group')[$i], $availability_input) ? 1 : 0;
+            TestForGroup::whereId_test($id_test)
+                ->whereId_group($request->input('id-group')[$i])
+                ->update(['id_test' => $id_test, 'id_group' => $request->input('id-group')[$i], 'availability' => $availability]);
         }
 
-        $old_structures = TestStructure::whereId_test($id_test)->get();                                                 //удаляем старые записи и структуры
-        foreach ($old_structures as $structure){
-            StructuralRecord::whereId_structure($structure['id_structure'])->delete();
+        if ($request->input('go-to-edit-structure')) {
+            //TODO: edit test's structure
+            return redirect()->route('in_process');
         }
-        TestStructure::whereId_test($id_test)->delete();
-
-        for ($i=0; $i < $request->input('num-rows'); $i++){
-            if ($request->input('section')[$i] != 'Любой')
-                $section = Section::whereSection_name($request->input('section')[$i])->select('section_code')->first()->section_code;
-            else $section = 'Любой';
-            if ($request->input('theme')[$i] != 'Любая')
-                $theme = Theme::whereTheme_name($request->input('theme')[$i])->select('theme_code')->first()->theme_code;
-            else $theme = 'Любая';
-            if ($request->input('type')[$i] != 'Любой')
-                $type = Type::whereType_name($request->input('type')[$i])->select('type_code')->first()->type_code;
-            else $type = 'Любой';
-            $amount = $request->input('num')[$i];
-//            dd($section);
-            TestStructure::add($id_test, $amount, $section, $theme, $type);
+        else {
+            return redirect()->route('tests_list');
         }
-        return redirect()->route('choose_group');
     }
 
     /** Завершает выбранный тест для всех учебных групп */

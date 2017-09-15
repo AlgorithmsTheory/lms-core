@@ -108,7 +108,6 @@
 
 @section('js-down')
     {!! HTML::script('js/testCreate.js') !!}
-    {!! HTML::script('js/testCreateAndEdit.js') !!}
 @stop
 
 
