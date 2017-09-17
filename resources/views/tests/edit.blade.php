@@ -104,6 +104,9 @@
                             <tr>
                                 <td>Группа</td>
                                 <td>Доступность</td>
+                                @if ($test['test_type'] == 'Контрольный')
+                                    <td>Завершить тест</td>
+                                @endif
                             </tr>
                             @foreach ($test_for_groups as $group)
                                 <input type="hidden" name="id-group[]" value="{{ $group['id_group'] }}">
@@ -121,14 +124,32 @@
                                             </label>
                                         </div>
                                     </td>
+                                    @if ($test['test_type'] == 'Контрольный' && $group['finish_opportunity'] == 1)
+                                        <td class="text-center">
+                                            <button class="btn btn-danger finish-test-for-group" type="button">
+                                                <div class="demo-icon-hover">
+                                                    <span class="glyphicon glyphicon-time text-medium"></span>
+                                                </div>
+                                            </button>
+                                            <a href="{{URL::route('finish_test_for_group', [$test['id_test'], $group['id_group']])}}" style="display: none;"></a>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </table>
+                        @if ($test['test_type'] == 'Контрольный' && $test['finish_opportunity'] == 1)
+                            <div class="col-lg-offset-4">
+                                <button id="finish-test" class="btn btn-danger" type="button">
+                                    Завершить тест для всех групп
+                                </button>
+                                <a href="{{URL::route('finish_test', $test['id_test'])}}" style="display: none;"></a>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-3" id="edit-test">
+            <div class="col-lg-offset-6 col-md-3 col-sm-3" id="edit-test">
                 <button class="btn btn-primary btn-raised submit-test" type="submit">Применить изменения</button>
                 <br><br>
             </div>
@@ -139,9 +160,6 @@
                 </div>
             @endif
         </form>
-    </div>
-    <div id="overlay" class="none">
-        <div class="loading-pulse"></div>
     </div>
 @stop
 @section ('js-down')

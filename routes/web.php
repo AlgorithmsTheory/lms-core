@@ -77,8 +77,8 @@ Route::post('tests/update-general-settings', ['as' => 'update_general_settings',
 Route::post('tests/edit', ['as' => 'test_update', 'uses' => 'TestController@update']);
 Route::get('tests/remove/{id_test}', ['as' => 'test_remove', 'uses' => 'TestController@remove']);
 Route::get('tests/edit/{id_test}', ['as' => 'test_edit', 'uses' => 'TestController@edit']);
-Route::post('tests/dates/finish', ['as' => 'finish_test', 'uses' => 'TeacherRetestController@finishTest']);
-Route::post('tests/finish/{id_test}', ['as' => 'finish_test_from_edit', 'uses' => 'TestController@finishTest']);
+Route::get('tests/finish/{id_test}', ['as' => 'finish_test', 'uses' => 'TestController@finishTest']);
+Route::get('tests/finish-for-group/{id_test}/{id_group}', ['as' => 'finish_test_for_group', 'uses' => 'TestController@finishTestForGroup']);
 Route::get('tests/groups-for-tests', ['as' => 'choose_group', 'uses' => 'TestController@chooseGroup']);
 
 //электронная библиотека

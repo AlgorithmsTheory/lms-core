@@ -19,7 +19,7 @@
                     <div class="col-lg-offset-0 col-md-12 col-sm-12 card style-gray">
                         <h2 class="text-default-bright">Контрольные тесты</h2>
                     </div>
-                    <form action="{{URL::route('finish_test')}}" method="POST" class="form">
+                    <form action="" method="POST" class="form">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <table class="table table-condensed" id="out-of-date-test-table">
                             <tr>
@@ -86,7 +86,7 @@
                     <div class="col-lg-offset-0 col-md-12 col-sm-12 card style-gray">
                         <h2 class="text-default-bright">Тренировочные тесты</h2>
                     </div>
-                    <form action="{{URL::route('finish_test')}}" method="POST" class="form">
+                    <form action="" method="POST" class="form">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="id_group" value="{{ $id_group }}">
                         <table class="table table-condensed" id="out-of-date-test-table">

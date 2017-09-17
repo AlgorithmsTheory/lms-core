@@ -94,13 +94,15 @@ class Test extends Eloquent {
         foreach ($absents as $user){
             //добавить их в таблицу штрафов, записав им первый уровень штрафа
             //в таблице штрафов присвоить всем по этому тесту досутп 0, у кого досутп есть
-            $fine_query = Fine::whereId($user->id)->whereId_test($id_test)->select('id_fine')->first();
-            if (is_null($fine_query))
+            $fine_query = Fine::whereId($user->id)->whereId_test($id_test)->get();
+            if (count($fine_query) == 0) {
                 Fine::insert(['id' => $user->id, 'id_test' => $id_test,
                     'fine' => 1, 'access' => 0]);
-            else Fine::whereId($user->id)->whereId_test($id_test)
-                ->update(['fine' => $fine->maxFine($fine_query->fine + 1), 'access' => 0]);
-
+            }
+            else {
+                Fine::whereId($user->id)->whereId_test($id_test)
+                    ->update(['fine' => $fine->maxFine($fine_query[0]->fine + 1), 'access' => 0]);
+            }
             //добавить их в таблицу результатов, записав в качестве результатов -2 -2 absence
             $result_date = date("Y-m-d H:i:s");
             Result::insert(['id' => $user->id, 'id_test' => $id_test,

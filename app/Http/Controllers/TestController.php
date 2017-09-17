@@ -213,6 +213,7 @@ class TestController extends Controller{
     public function editList(){
         $ctr_tests = $this->test->whereTest_type('Контрольный')
             ->where('archived', '<>', '1')
+            ->orderByDesc('id_test')
             ->select()
             ->get();
         foreach ($ctr_tests as $test){
@@ -221,6 +222,7 @@ class TestController extends Controller{
 
         $tr_tests = $this->test->whereTest_type('Тренировочный')
             ->where('archived', '<>', '1')
+            ->orderByDesc('id_test')
             ->select()
             ->get();
         foreach ($tr_tests as $test){
@@ -242,9 +244,11 @@ class TestController extends Controller{
     public function edit($id_test){
         $test = Test::whereId_test($id_test)->first();
         $test['is_resolved'] = Test::isResolved($id_test);
+        $test['finish_opportunity'] = Test::isFinished($id_test) ? 0 : 1;
         $test_for_groups = TestForGroup::whereId_test($test->id_test)->get();
         foreach ($test_for_groups as $test_for_group) {
             $test_for_group['group_name'] = Group::whereGroup_id($test_for_group['id_group'])->select('group_name')->first()->group_name;
+            $test_for_group['finish_opportunity'] = Test::isFinishedForGroup($id_test, $test_for_group['id_group']) ? 0 : 1;
         }
         return view ('tests.edit', compact('test',  'test_for_groups'));
     }
@@ -286,6 +290,11 @@ class TestController extends Controller{
     /** Завершает выбранный тест для всех учебных групп */
     public function finishTest($id_test) {
         Test::finishTest($id_test);
+        return redirect()->route('test_edit', $id_test);
+    }
+
+    public function finishTestForGroup($id_test, $id_group) {
+        Test::finishTestForGroup($id_test, $id_group);
         return redirect()->route('test_edit', $id_test);
     }
 
