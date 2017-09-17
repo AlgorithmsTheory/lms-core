@@ -45,17 +45,18 @@ class TestController extends Controller{
             $availability_for_group = TestForGroup::whereId_group(Auth::user()['group'])
                                     ->whereId_test($test['id_test'])
                                     ->select('availability')->first()->availability;
-            $test['access_for_group'] = $availability_for_group;
-            if ($test->test_type == 'Тренировочный') {
-                $test['access_for_student'] = 1;
-                array_push($tr_tests, $test);
+            if ($availability_for_group) {
+                if ($test->test_type == 'Тренировочный') {
+                    array_push($tr_tests, $test);
+                } else {
+                    array_push($ctr_tests, $test);
+                    $fine = Fine::whereId_test($test['id_test'])->whereId(Auth::user()['id'])->select('access')->get();
+                    $test['access_for_student'] = count($fine) == 0 ? 1 : $fine[0]->access;
+                    $test['max_points'] = Fine::levelToPercent(Fine::whereId(Auth::user()['id'])->whereId_test($test['id_test'])->select('fine')->first()->fine) / 100 * $test['total'];
+                }
+                $test['amount'] = Test::getAmount($test['id_test']);
+                $test['attempts'] = Result::whereId_test($test['id_test'])->whereId(Auth::user()['id'])->where('mark_ru', '>=', 0)->count();
             }
-            else {
-                array_push($ctr_tests, $test);
-                $test['access_for_student'] = 0; //TODO: Вычислить
-                $test['max_points'] = Fine::levelToPercent(Fine::whereId(Auth::user()['id'])->whereId_test($test['id_test'])->select('fine')->first()->fine)/100 * $test['total'];
-            }
-            $test['amount'] = Test::getAmount($test['id_test']);
         }
 
 
@@ -361,15 +362,8 @@ class TestController extends Controller{
         $question = new Question();
         $widgets = [];
         $saved_test = [];
-        $current_date = date('U');
 
         $test = $this->test->whereId_test($id_test)->first();
-        $id_group = Auth::user()['group'];
-        $availability = TestForGroup::whereId_group($id_group)->whereId_test($id_test)->select('availability')->first()->availability;
-        if ($availability != 1 || $test->year != date("Y") || $test->visibility == 0){                               //проверка открыт ли тест
-            $message = 'Тест не открыт в настоящий момент';
-            return view('no_access', compact('message'));
-        }
         $amount = $this->test->getAmount($id_test);
         $test_time = $test->test_time;
         $test_type = $test->test_type;
