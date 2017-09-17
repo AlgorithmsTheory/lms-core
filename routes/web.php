@@ -73,6 +73,7 @@ Route::post('get-amount', array('as'=>'get_amount', 'uses'=>'TestController@getA
 Route::get('retest', ['as' => 'retest_index', 'uses' => 'TeacherRetestController@index']);
 Route::post('retest', ['as' => 'retest_change', 'uses' => 'TeacherRetestController@change']);
 Route::get('tests/test-list', ['as' => 'tests_list', 'uses' => 'TestController@editList']);
+Route::post('tests/update-general-settings', ['as' => 'update_general_settings', 'uses' => 'TestController@updateSettings']);
 Route::post('tests/edit', ['as' => 'test_update', 'uses' => 'TestController@update']);
 Route::get('tests/remove/{id_test}', ['as' => 'test_remove', 'uses' => 'TestController@remove']);
 Route::get('tests/edit/{id_test}', ['as' => 'test_edit', 'uses' => 'TestController@edit']);

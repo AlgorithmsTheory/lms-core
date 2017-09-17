@@ -217,11 +217,6 @@ class TestController extends Controller{
             ->get();
         foreach ($ctr_tests as $test){
             $test['amount'] = Test::getAmount($test['id_test']);
-            //TODO: process finish opportunity
-//            if (Test::isFinishedForGroup($test->id_test, $id_group))
-//                $test['finish_opportunity'] = 0;
-//            else
-//                $test['finish_opportunity'] = 1;
         }
 
         $tr_tests = $this->test->whereTest_type('Тренировочный')
@@ -233,6 +228,14 @@ class TestController extends Controller{
         }
 
         return view ('personal_account.test_list', compact('ctr_tests', 'tr_tests'));
+    }
+
+    public function updateSettings(Request $request) {
+        Test::whereId_test($request->input('id_test'))->update([
+            'visibility' => $request->input('visibility'),
+            'only_for_print' => $request->input('only_for_print'),
+            'multilanguage' => $request->input('multilanguage')
+        ]);
     }
 
     /** Редактирование выбранного теста */
@@ -367,10 +370,6 @@ class TestController extends Controller{
             $generator->generate();
             for ($i=0; $i < $amount; $i++) {
                 $id = $generator->chooseQuestion();
-                if (!$this->test->rybaTest($id)){                                                                       //проверка на вопрос по рыбе
-                    $message = 'Тест не предназначен для общего пользования';
-                    return view('no_access', $message);
-                };
                 $data = $question->show($id, $i+1);                                                                     //должны получать название view и необходимые параметры
                 $saved_test[] = $data;
                 $widgets[] = View::make($data['view'], $data['arguments']);

@@ -8,24 +8,21 @@
 
 namespace App\Http\Controllers;
 
-use Anouar\Fpdf\Fpdf;
 use App\Mypdf;
-use App\Qtypes\AccordanceTable;
-use App\Qtypes\Definition;
-use App\Qtypes\FillGaps;
-use App\Qtypes\JustAnswer;
-use App\Qtypes\MultiChoice;
-use App\Qtypes\OneChoice;
-use App\Qtypes\Theorem;
-use App\Qtypes\TheoremLike;
-use App\Qtypes\YesNo;
+use App\Testing\Qtypes\AccordanceTable;
+use App\Testing\Qtypes\Definition;
+use App\Testing\Qtypes\FillGaps;
+use App\Testing\Qtypes\JustAnswer;
+use App\Testing\Qtypes\MultiChoice;
+use App\Testing\Qtypes\OneChoice;
+use App\Testing\Qtypes\Theorem;
+use App\Testing\Qtypes\TheoremLike;
+use App\Testing\Qtypes\YesNo;
 use App\Testing\Question;
 use App\Testing\Test;
-use App\Testing\TestStructure;
-use App\Testing\Type;
+use App\Testing\TestGeneration\UsualTestGenerator;
 use Illuminate\Http\Request;
-use mPDF;
-use ZipArchive;
+
 
 class GeneratorController extends Controller {
 
@@ -134,12 +131,11 @@ class GeneratorController extends Controller {
             $answered_fpdf = new Mypdf();
             $this->headOfPdf($fpdf, $test_name, $k, $amount);
             $this->headOfPdf($answered_fpdf, $test_name, $k, $amount);
-            $ser_array = $test->prepareTest($id_test);                                                                  // подготавливаем тест
+            $generator = new UsualTestGenerator();
+            $generator->buildGraphFromTest($test);
+            $generator->generate();
             for ($i=0; $i<$amount; $i++){                                                                               // показываем каждый вопрос из теста
-                $id = $question->chooseQuestion($ser_array);
-                if (!$test->rybaTest($id)){                                                                             //проверка на вопрос по рыбе
-                    return view('no_access');
-                };
+                $id = $generator->chooseQuestion();
                 $this->pdfQuestion($fpdf, $id, $i+1);
                 $this->pdfQuestion($answered_fpdf, $id, $i+1, true);
             }

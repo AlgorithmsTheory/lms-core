@@ -12,13 +12,12 @@ full
 @stop
 
 @section('content')
+<div class="col-md-12 col-sm-6 card style-primary text-center">
+    <h1 class="">Переписывание тестов</h1>
+</div>
 <div class="col-lg-offset-1 col-md-10 col-sm-6">
     <div class="card">
         <div class="card-body">
-            <nav class="navbar col-md-4 col-md-offset-4 style-primary">
-                <h3 class="text-center">Переписывание тестов</h3>
-            </nav>
-            <br>
             <div class="col-lg-12">
                 <a class="btn btn-raised ink-reaction btn-default-bright pull-right" href="#offcanvas-demo-right" data-toggle="offcanvas">
                     <i class="md md-help"></i>
@@ -81,7 +80,7 @@ full
                 <tbody id="target">
                 @for ($i=0; $i < count($accesses); $i++)
                 <input type="hidden" name="id[]" value="{{$id[$i]}}">
-                <tr style="display:;">
+                <tr>
                     <td >{{ $student_names[$i] }}</td>
                     <td class="text-center">{{ $groups[$i] }}</td>
                     <td class="text-center">{{ $test_names[$i] }}</td>
