@@ -13,15 +13,6 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\Section  whereSection_code($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\Section  whereSection_name($value)
  *
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Section  get()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Section  where()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Section  select()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Section  first()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Section  join()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Section  on()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Section  toSql()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Section  count()
- *
  */
 
 class Section extends Eloquent {

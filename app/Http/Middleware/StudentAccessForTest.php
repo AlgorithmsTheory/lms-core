@@ -15,7 +15,7 @@ use Closure;
 use Illuminate\Http\Request;
 
 /** Проверяет наличие попытки прохождения контрольного теста */
-class ControlTestAccess {
+class StudentAccessForTest {
     public function handle(Request $request, Closure $next)
     {
         $fine_class = new Fine();

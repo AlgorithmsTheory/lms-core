@@ -7,17 +7,17 @@
  */
 
 namespace App\Testing;
-use App\Qtypes\AccordanceTable;
-use App\Qtypes\Definition;
-use App\Qtypes\FillGaps;
-use App\Qtypes\FromCleene;
-use App\Qtypes\JustAnswer;
-use App\Qtypes\MultiChoice;
-use App\Qtypes\OneChoice;
-use App\Qtypes\Theorem;
-use App\Qtypes\TheoremLike;
-use App\Qtypes\ThreePoints;
-use App\Qtypes\YesNo;
+use App\Testing\Qtypes\AccordanceTable;
+use App\Testing\Qtypes\Definition;
+use App\Testing\Qtypes\FillGaps;
+use App\Testing\Qtypes\FromCleene;
+use App\Testing\Qtypes\JustAnswer;
+use App\Testing\Qtypes\MultiChoice;
+use App\Testing\Qtypes\OneChoice;
+use App\Testing\Qtypes\Theorem;
+use App\Testing\Qtypes\TheoremLike;
+use App\Testing\Qtypes\ThreePoints;
+use App\Testing\Qtypes\YesNo;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Http\Request;
 
@@ -31,19 +31,6 @@ use Illuminate\Http\Request;
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\Question  whereType_code($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\Question  wherePoints($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\Question  whereControl($value)
- *
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  get()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  where()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  whereRaw()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  orWhere()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  select()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  first()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  insert($array)
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  table($array)
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  max($array)
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  count()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  toSql()
- * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  paginate($value)
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Question  links()
  *
  */
@@ -61,28 +48,42 @@ class Question extends Eloquent {
         else return true;
     }
 
-    /** AJAX-метод: по названию раздела, темы, типа, типа теста, возможности печати вычисляет количество доступных вопросов в БД данной структуры */
-    public static function getAmount($section_name, $theme_name, $type_name, $test_type, $printable){
-        if ($section_name != 'Любой')
-            $section = Section::whereSection_name($section_name)->select('section_code')->first()->section_code;
-        else $section = 'Любой';
-        if ($theme_name != 'Любая')
-            $theme = Theme::whereTheme_name($theme_name)->select('theme_code')->first()->theme_code;
-        else $theme = 'Любая';
-        if ($type_name != 'Любой')
-            $type = Type::whereType_name($type_name)->select('type_code')->first()->type_code;
-        else $type = 'Любой';
+    /**
+     * @param $sections int[]
+     * @param $themes int[]
+     * @param $types int[]
+     * @param $test_type string
+     * @param $printable int
+     * @return int number of question with specified test settings | HTTP bad header
+     */
+    public static function getAmount($sections, $themes, $types, $test_type, $printable){
+        if (count($sections) == 0 || count($themes) == 0 || count($types) == 0) {
+            header('HTTP/1.1 500 Some parameters are not specified yet');
+            header('Content-Type: application/json; charset=UTF-8');
+            die(json_encode(array('message' => 'Some parameters are not specified yet', 'code' => 1337)));
+        }
 
         $questions  = new Question();
-        if ($section != 'Любой'){
-            $questions = $questions->whereSection_code($section);
-        }
-        if ($theme != 'Любая'){
-            $questions = $questions->whereTheme_code($theme);
-        }
-        if ($type != 'Любой'){
-            $questions = $questions->whereType_code($type);
-        }
+        $questions = $questions->where(function($query) use ($sections) {
+            $query->whereSection_code($sections[0]);
+            for ($i = 1; $i < count($sections); $i++) {
+                $query->orWhere('section_code', '=', $sections[$i]);
+            }
+        });
+
+        $questions = $questions->where(function($query) use ($themes) {
+            $query->whereTheme_code($themes[0]);
+            for ($i = 1; $i < count($themes); $i++) {
+                $query->orWhere('theme_code', '=', $themes[$i]);
+            }
+        });
+
+        $questions = $questions->where(function($query) use ($types) {
+            $query->whereType_code($types[0]);
+            for ($i = 1; $i < count($types); $i++) {
+                $query->orWhere('type_code', '=', $types[$i]);
+            }
+        });
         if ($test_type == 'Тренировочный'){
             $questions = $questions->whereControl(0);
         }

@@ -42,13 +42,11 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('passw
 
 // Модуль тестирования - прохождение тестов
 Route::get('tests', ['as' => 'tests', 'uses' => 'TestController@index', 'middleware' => 'general_auth']);
-Route::get('questions/show-test/{id_test}', ['as' => 'question_showtest', 'uses' => 'TestController@showViews', 'middleware' => ['general_auth', 'single_test', 'have_attempts']]);
+Route::get('questions/show-test/{id_test}', ['as' => 'question_showtest', 'uses' => 'TestController@showViews', 'middleware' => ['general_auth', 'single_test', 'have_attempts', 'test_is_available']]);
 Route::patch('questions/check-test', ['as' => 'question_checktest', 'uses' => 'TestController@checkTest']);
 Route::post('tests/drop', ['as' => 'drop_test', 'uses' => 'TestController@dropTest', 'middleware' => 'general_auth']);
 Route::post('tests/get-protocol', ['as' => 'get_protocol', 'uses' => 'TestController@getProtocol', 'middleware' => 'general_auth']);
 
-//модуль тестирования для курса ИнСист
-Route::get('fish', ['as' => 'fish', 'uses' => 'FishController@index', 'middleware' => ['general_auth', 'fish']]);
 
 //модуль тестирования для преподавателей
 Route::get('questions', ['as' => 'question_index', 'uses' => 'QuestionController@index', 'middleware' => ['general_auth', 'admin']]);
@@ -62,19 +60,22 @@ Route::post('questions/delete', ['as' => 'question_delete', 'uses' => 'QuestionC
 Route::post('get-theme', array('as'=>'get_theme', 'uses'=>'QuestionController@getTheme'));
 Route::post('get-type', array('as'=>'get_type', 'uses'=>'QuestionController@getType'));
 Route::post('questions/create', ['as' => 'question_add', 'uses' => 'QuestionController@add']);
-Route::get('tests/create', ['as' => 'test_create', 'uses' => 'TestController@create', 'middleware' => ['general_auth', 'admin']]);
+Route::get('tests/create/step1', ['as' => 'test_create', 'uses' => 'TestController@create', 'middleware' => ['general_auth', 'admin']]);
+Route::post('tests/create/step1', ['as' => 'test_finish_first_creation_step', 'uses' => 'TestController@finishFstCreationStep']);
 Route::get('tests/create/step2', ['as' => 'test_create_step2', 'uses' => 'TestController@createSndStep', 'middleware' => ['general_auth', 'admin']]);
+Route::post('tests/create/step2', ['as' => 'test_add', 'uses' => 'TestController@add']);
+Route::post('tests/validate-test-structure', ['as' => 'validate_test_structure', 'uses' => 'TestController@validateTestStructure']);
 Route::post('get-theme-for-test', array('as'=>'get_theme_for_test', 'uses'=>'TestController@getTheme'));
 Route::post('get-amount', array('as'=>'get_amount', 'uses'=>'TestController@getAmount'));
-Route::post('tests/create', ['as' => 'test_add', 'uses' => 'TestController@add']);
 Route::get('retest', ['as' => 'retest_index', 'uses' => 'TeacherRetestController@index']);
 Route::post('retest', ['as' => 'retest_change', 'uses' => 'TeacherRetestController@change']);
-Route::get('tests/test-list/{id_group}', ['as' => 'tests_list', 'uses' => 'TestController@editList']);
+Route::get('tests/test-list', ['as' => 'tests_list', 'uses' => 'TestController@editList']);
+Route::post('tests/update-general-settings', ['as' => 'update_general_settings', 'uses' => 'TestController@updateSettings']);
 Route::post('tests/edit', ['as' => 'test_update', 'uses' => 'TestController@update']);
 Route::get('tests/remove/{id_test}', ['as' => 'test_remove', 'uses' => 'TestController@remove']);
 Route::get('tests/edit/{id_test}', ['as' => 'test_edit', 'uses' => 'TestController@edit']);
-Route::post('tests/dates/finish', ['as' => 'finish_test', 'uses' => 'TeacherRetestController@finishTest']);
-Route::post('tests/finish/{id_test}', ['as' => 'finish_test_from_edit', 'uses' => 'TestController@finishTest']);
+Route::get('tests/finish/{id_test}', ['as' => 'finish_test', 'uses' => 'TestController@finishTest']);
+Route::get('tests/finish-for-group/{id_test}/{id_group}', ['as' => 'finish_test_for_group', 'uses' => 'TestController@finishTestForGroup']);
 Route::get('tests/groups-for-tests', ['as' => 'choose_group', 'uses' => 'TestController@chooseGroup']);
 
 //электронная библиотека

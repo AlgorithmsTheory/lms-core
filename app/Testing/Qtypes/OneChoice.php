@@ -1,5 +1,11 @@
 <?php
-namespace App\Qtypes;
+/**
+ * Created by PhpStorm.
+ * User: Станислав
+ * Date: 30.05.15
+ * Time: 13:49
+ */
+namespace App\Testing\Qtypes;
 use App\Http\Controllers\QuestionController;
 use App\Mypdf;
 use App\Testing\Question;
@@ -7,8 +13,8 @@ use App\Testing\Type;
 use Illuminate\Http\Request;
 use Input;
 use Session;
-class ThreePoints extends QuestionType {
-    const type_code = 9;
+class OneChoice extends QuestionType {
+    const type_code = 1;
     function __construct($id_question){
         parent::__construct($id_question);
     }
@@ -38,87 +44,79 @@ class ThreePoints extends QuestionType {
 
         $variants = $request->input('variants')[0];
         for ($i=1; $i<count($request->input('variants')); $i++){
-            $variants = $variants.'@'.$request->input('variants')[$i];
+            $variants = $variants.';'.$request->input('variants')[$i];
         }
+        $answer = $request->input('variants')[0];
 
-        $answers = $request->input('answers')[0];
-        for ($i=1; $i<count($request->input('answers')); $i++){
-            $answers = $answers.'@'.$request->input('answers')[$i];
+        $eng_variants = $request->input('eng-variants')[0];
+        for ($i=1; $i<count($request->input('eng-variants')); $i++){
+            $eng_variants = $eng_variants.';'.$request->input('eng-variants')[$i];
         }
+        $eng_answer = $request->input('eng-variants')[0];
 
         return ['title' => $title, 'variants' => $variants,
-            'answer' => $answers, 'points' => $options['points'],
-            'control' => $options['control'], 'translated' => $options['translated'],
-            'section_code' => $options['section'], 'theme_code' => $options['theme'], 'type_code' => $options['type'],
-            'title_eng' => $eng_title, 'variants_eng' => $variants, 'answer_eng' => $answers];
+                'answer' => $answer, 'points' => $options['points'],
+                'control' => $options['control'], 'translated' => $options['translated'],
+                'section_code' => $options['section'], 'theme_code' => $options['theme'], 'type_code' => $options['type'],
+                'title_eng' => $eng_title, 'variants_eng' => $eng_variants, 'answer_eng' => $eng_answer];
     }
 
     public  function add(Request $request){
         $data = $this->setAttributes($request);
         Question::insert(array('title' => $data['title'], 'variants' => $data['variants'],
-            'answer' => $data['answer'], 'points' => $data['points'],
-            'control' => $data['control'], 'translated' => $data['translated'],
-            'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
-            'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng']));
+                        'answer' => $data['answer'], 'points' => $data['points'],
+                        'control' => $data['control'], 'translated' => $data['translated'],
+                        'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
+                        'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng']));
     }
 
     public function edit(){
         $question = Question::whereId_question($this->id_question)->first();
+        $count = count(explode(";", $question->variants));
         $type_name = Type::whereType_code($question->type_code)->select('type_name')->first()->type_name;
         $images = explode("::", $question->title);
-        $variants = explode("@", $question->variants);
-        $answers = explode("@", $question->answer);
-        return array('question' => $question, 'type_name' => $type_name,
-            'images' => $images, 'variants' => $variants, 'answers' => $answers);
+        $variants = explode(";", $question->variants);
+        $eng_variants = explode(";", $question->variants_eng);
+        return array('question' => $question, 'count' => $count, 'type_name' => $type_name,
+                     'images' => $images, 'variants' => $variants, 'eng_variants' => $eng_variants);
     }
 
     public function update(Request $request){
         $data = $this->setAttributes($request);
         Question::whereId_question($this->id_question)->update(
-            array('title' => $data['title'], 'variants' => $data['variants'],
-                'answer' => $data['answer'], 'points' => $data['points'],
-                'control' => $data['control'], 'translated' => $data['translated'],
-                'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
-                'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng'])
+        array('title' => $data['title'], 'variants' => $data['variants'],
+              'answer' => $data['answer'], 'points' => $data['points'],
+              'control' => $data['control'], 'translated' => $data['translated'],
+              'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
+              'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng'])
         );
     }
 
     public function show($count){
         $parse = $this->variants;
-        $variants = explode("@", $parse);
-        $view = 'tests.show9';
-        $array = array('view' => $view, 'arguments' => array('text' => explode('::',$this->text), "variants" => $variants, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
+        $variants = explode(";", $parse);
+        $new_variants = $this->question->mixVariants($variants);
+        $view = 'tests.show1';
+        $array = array('view' => $view, 'arguments' => array('text' => explode('::',$this->text), "variants" => $new_variants, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
         return $array;
     }
     public function check($array){
-        $answers = explode("@",  $this->answer);
-        $score = 0;
-        $right_percent = 0;
-        $count = 0;
-
-        for($i = 0; $i < 3; $i++){
-            if($array[$i] == $answers[$i]) $count += 1;
-        }
-        if($count == 3){
+        if ($array[0] == $this->answer){
             $score = $this->points;
             $right_percent = 100;
-        } else if($count == 2){
-            $score = $this->points / 3 * 2;
-            $right_percent = 100 / 3 * 2;
-        } else if($count == 1){
-            $score = $this->points / 3;
-            $right_percent = 100 / 3;
-        } else{
-            $score = 0;
-            $right_percent = 0;
-        }
-
-        if ($right_percent == 100){
-            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array, 'right_percent' => $right_percent);
+            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array[0], 'right_percent' => $right_percent);
         }
         else {
-            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array, 'right_percent' => $right_percent);
+            $score = 0;
+            $right_percent = 0;
+            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array[0], 'right_percent' => $right_percent);
         }
+        //echo $score.'<br>';
+        if ($score != $this->points){
+            $right_percent = 0;
+            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array[0], 'right_percent' => $right_percent);
+        }
+        //echo $score.'<br>';
         return $data;
     }
 
@@ -156,4 +154,4 @@ class ThreePoints extends QuestionType {
         $fpdf->WriteHTML($html);
     }
 
-}
+} 

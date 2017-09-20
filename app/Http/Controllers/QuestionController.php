@@ -12,6 +12,7 @@ use App\Testing\Lecture;
 use App\Qtypes\Theorem;
 use App\Qtypes\TheoremLike;
 use App\Testing\Section;
+use App\Testing\Test;
 use App\Testing\TestTask;
 use App\Testing\Type;
 use Auth;
@@ -28,6 +29,7 @@ use App\Qtypes\YesNo;
 use App\Qtypes\Definition;
 use App\Qtypes\JustAnswer;
 use App\Qtypes\ThreePoints;
+use App\Testing\TestGeneration\UsualTestGenerator;
 use View;
 
 class QuestionController extends Controller{
@@ -39,6 +41,9 @@ class QuestionController extends Controller{
     /** главная страница модуля тестирования */
     public function index(){
         $username =  null;
+        $testGenerator = new UsualTestGenerator(Test::whereId_test(100)->first());
+        $testGenerator->buildGraph();
+        $testGenerator->generate();
         return view('questions.teacher.index', compact('username', 'image'));
     }
 

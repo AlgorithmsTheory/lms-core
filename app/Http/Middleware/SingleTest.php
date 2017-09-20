@@ -10,7 +10,7 @@ use Session;
 class SingleTest
 {
     /**
-     * Запрещает проходить более одного тренировочного теста одновременно
+     * Запрещает проходить более одного теста одновременно
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
