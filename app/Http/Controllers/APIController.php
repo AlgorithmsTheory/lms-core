@@ -21,7 +21,7 @@ class APIController extends Controller{
 
     public function addStudentFace($student_id, $person_id, $group_id, $pswd){
         if($pswd == "mephiisthebest") {
-            Face::insert(['student_id' => $student_id, 'person_id' => $person_id, 'group_id' => $group_id]);
+            Face::insert(['student_id' => $student_id, 'person_id' => $person_id, 'azure_group_id' => $group_id]);
             $headers = [ 'Content-Type' => 'application/json; charset=utf-8' ];
             return response()->json(0, 200, $headers, JSON_UNESCAPED_UNICODE);
         } else {
@@ -36,9 +36,9 @@ class APIController extends Controller{
         return response()->json($face, 200, $headers, JSON_UNESCAPED_UNICODE);
     }
 
-    public function deleteGroup($group_id, $pswd){
+    public function deleteAzureGroup($group_id, $pswd){
         if($pswd == "mephiisthebest") {
-            Face::where('group_id', $group_id)->delete();
+            Face::where('azure_group_id', $group_id)->delete();
             $headers = [ 'Content-Type' => 'application/json; charset=utf-8' ];
             return response()->json("success", 200, $headers, JSON_UNESCAPED_UNICODE);
         } else {

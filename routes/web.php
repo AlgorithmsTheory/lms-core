@@ -247,6 +247,6 @@ Route::get('api/get/groups', ['uses' => 'APIController@getGroupList']);
 Route::get('api/get/students/{group_id}', ['uses' => 'APIController@getStudentsFromGroup']);
 Route::get('api/add/{student_id}/{person_id}/{group_id}/{mephiisthebest}', ['uses' => 'APIController@addStudentFace']);
 Route::get('api/get/face/{student_id}', ['uses' => 'APIController@getStudentFace']);
-Route::get('api/delete/group/{group_id}/{mephiisthebest}', ['uses' => 'APIController@deleteGroup']);
+Route::get('api/delete/group/{group_id}/{mephiisthebest}', ['uses' => 'APIController@deleteAzureGroup']);
 
 
