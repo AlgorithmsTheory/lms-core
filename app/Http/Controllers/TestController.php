@@ -39,12 +39,12 @@ class TestController extends Controller{
         $tr_tests = [];                                                                                                 //массив тренировочных тестов
         $ctr_tests = [];                                                                                                //массив контрольных тестов
         $query = $this->test->whereVisibility(1)->whereArchived(0)
-                            ->whereOnly_for_print(0)
-                            ->get();
+            ->whereOnly_for_print(0)
+            ->get();
         foreach ($query as $test){
             $availability_for_group = TestForGroup::whereId_group(Auth::user()['group'])
-                                    ->whereId_test($test['id_test'])
-                                    ->select('availability')->first()->availability;
+                ->whereId_test($test['id_test'])
+                ->select('availability')->first()->availability;
             if ($availability_for_group) {
                 if ($test->test_type == 'Тренировочный') {
                     array_push($tr_tests, $test);
@@ -70,8 +70,7 @@ class TestController extends Controller{
 
     /** генерирует страницу создания нового теста (шаг 1 - основные настройки) */
     public function create(){
-        //TODO: get values if session exists
-        $groups = Group::all();
+        $groups = Group::whereArchived(0)->get();
         return view('tests.create', compact('groups'));
     }
 
@@ -246,7 +245,10 @@ class TestController extends Controller{
         $test = Test::whereId_test($id_test)->first();
         $test['is_resolved'] = Test::isResolved($id_test);
         $test['finish_opportunity'] = Test::isFinished($id_test) ? 0 : 1;
-        $test_for_groups = TestForGroup::whereId_test($test->id_test)->get();
+        $test_for_groups = TestForGroup::whereId_test($test->id_test)
+            ->join('groups', 'test_for_group.id_group', 'groups.group_id')
+            ->where('archived', '=', 0)
+            ->get();
         foreach ($test_for_groups as $test_for_group) {
             $test_for_group['group_name'] = Group::whereGroup_id($test_for_group['id_group'])->select('group_name')->first()->group_name;
             $test_for_group['finish_opportunity'] = Test::isFinishedForGroup($id_test, $test_for_group['id_group']) ? 0 : 1;
@@ -391,7 +393,7 @@ class TestController extends Controller{
             $result->save();
         }
         else {                                                                                                          //если была перезагружена страница теста или тест был покинут
-			$current_test = Result::getCurrentResult(Auth::user()['id'], $id_test);
+            $current_test = Result::getCurrentResult(Auth::user()['id'], $id_test);
             $test = $result->whereId_result($current_test)->first();
             $int_end_time = strtotime($test->result_date);                                                              //время окончания теста
             $saved_test = $test->saved_test;
@@ -431,7 +433,7 @@ class TestController extends Controller{
         $test_type = $query->test_type;
 
         $id_user = Result::whereId_result($current_test)
-                        ->join('users', 'results.id', '=', 'users.id')->select('users.id')->first()->id;
+            ->join('users', 'results.id', '=', 'users.id')->select('users.id')->first()->id;
 
         for ($i=0; $i<$amount; $i++){                                                                                   //обрабатываем каждый вопрос
             $data = $request->input($i);
@@ -460,7 +462,7 @@ class TestController extends Controller{
 
         $result = new Result();
         $date = date('Y-m-d H:i:s', time());                                                                            //текущее время
-                                                                                                                        //если тест тренировочный
+        //если тест тренировочный
         $widgets = [];
         $query = $result->whereId_result($current_test)->first();                                                       //берем сохраненный тест из БД
         $saved_test = $query->saved_test;
