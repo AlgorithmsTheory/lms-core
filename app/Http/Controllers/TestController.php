@@ -405,8 +405,8 @@ class TestController extends Controller{
 
         $current_time = date_create();                                                                                  //текущее время
         $int_left_time = $int_end_time - date_format($current_time, 'U');                                               //оставшееся время
-        $left_min =  floor($int_left_time/60);                                                                          //осталось минут
-        $left_sec = $int_left_time % 60;                                                                                //осталось секунд
+        $left_min =  ($int_left_time > 0) ? floor($int_left_time/60) : 0;                                                                          //осталось минут
+        $left_sec = ($int_left_time > 0) ? $int_left_time % 60 : 0;                                                                                //осталось секунд
 
         $widgetListView = View::make('questions.student.widget_list',compact('current_result', 'amount', 'id_test','left_min', 'left_sec', 'test_type'))->with('widgets', $widgets);
         $response = new Response($widgetListView);

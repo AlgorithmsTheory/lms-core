@@ -21,22 +21,22 @@ class GeneralAccessForTest {
         $test = Test::whereId_test($id_test)->first();
         if (!$test->visibility) {
             $message = "Тест не доступен в данный момент";
-            return view('tests.no_access', compact('message'));
+            return redirect()->route('no_access', compact('message'));
         }
         if ($test->archived) {
             $message = "Тест удален";
-            return view('tests.no_access', compact('message'));
+            return redirect()->route('no_access', compact('message'));
         }
         if ($test->only_for_print) {
             $message = "Тест предназначен только для печатной версии";
-            return view('tests.no_access', compact('message'));
+            return redirect()->route('no_access', compact('message'));
         }
         $availability_for_group = TestForGroup::whereId_group(Auth::user()['group'])
             ->whereId_test($id_test)
             ->select('availability')->first()->availability;
         if (!$availability_for_group) {
             $message = "Тест не доступен для вашей группы";
-            return view('tests.no_access', compact('message'));
+            return redirect()->route('no_access', compact('message'));
         }
         return $next($request);
     }

@@ -3,7 +3,7 @@
  */
 
 function sendForm(status){
-    var formsCount = document.forms.length - 1;
+    var formsCount = document.forms.length - 2;
     var elementNumber;
     var flag = [true];
     var countChecked = 0;
