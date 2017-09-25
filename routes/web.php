@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,6 +13,8 @@
 |
 */
 
+
+
 Route::get('/', function() {
     return redirect('home');
 });
@@ -21,9 +25,18 @@ Route::get('public', function() {
 
 Route::get('home', ['as' => 'home', 'uses' => 'HomeController@get_home']);
 
-
 Route::get('in-process', ['as' => 'in_process', function() {
     return view('in_process');
+}]);
+
+Route::get('no-access', ['as' => 'no_access', function(Request $request) {
+    $message = $request->message;
+    return view('no_access', compact('message'));
+}]);
+
+Route::get('tests/single-test/{id_test}', ['as' => 'single_test', function($id_test) {
+    $test_name = App\Testing\Test::whereId_test($id_test)->select('test_name')->first()->test_name;
+    return view('tests.single_test', compact('test_name', 'id_test'));
 }]);
 
 // Авторизация
