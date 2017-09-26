@@ -21,9 +21,17 @@
         <div class="card-body">
             <h2 class="text-center">Отметить студентов</h2>
             <div class="form">
-                <div class="form-group">
-                    <textarea  class="form-control textarea3" id="regexp" rows="1" placeholder="Номер группы" required></textarea>
-                    <label for="textarea3">Группа</label>
+                <div class="form-group col-md-12">
+                    <input type="text" id="groupInput" class="form-control" onkeyup="groupFilter()" placeholder="Введите номер группы">
+                    <label for="groupInput">Группа</label>
+                </div>
+                <div class="form-group col-md-6">
+                    <input type="text" id="emailInput" class="form-control" onkeyup="emailFilter()" placeholder="Введите email">
+                    <label for="emailInput">Email</label>
+                </div>
+                <div class="form-group col-md-6">
+                    <input type="text" id="nameInput" class="form-control" onkeyup="nameFilter()" placeholder="Введите фамилию">
+                    <label for="emailInput">Фамилия</label>
                 </div>
             </div>
             <br>
@@ -85,6 +93,6 @@
 </div>
 
 {!! HTML::script('js/personal_account/add_student.js') !!}
-{!! HTML::script('js/personal_account/verify_students_filter.js') !!}
+{!! HTML::script('js/personal_account/change_role_filter.js') !!}
 
 @stop

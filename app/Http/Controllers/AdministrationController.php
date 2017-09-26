@@ -16,6 +16,16 @@ use Illuminate\Http\Request;
 use Session;
 class AdministrationController extends Controller{
 
+    public function checkEmailIfExists(Request $request){
+        $email = $request->input('email');
+        $users = User::where('email' , $email)->get();
+        if (count($users) != 0) {
+            return "exists";
+        } else {
+            return "notExists";
+        }
+    }
+
     public function verify()
     {
         $user = Auth::user();
