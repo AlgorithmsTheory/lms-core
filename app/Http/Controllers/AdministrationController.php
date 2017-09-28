@@ -28,6 +28,7 @@ class AdministrationController extends Controller{
 
     public function verify()
     {
+        $groups = Group::where('archived', 0)->get();
         $user = Auth::user();
         if ($user['role'] == 'Админ')
         {
@@ -35,12 +36,13 @@ class AdministrationController extends Controller{
         } else {
             $query = TeacherHasGroup::join('users', 'teacher_has_group.group', '=', 'users.group')->join('groups', 'groups.group_id', '=', 'users.group')->where('teacher_has_group.user_id', $user['id'])->where('users.role', '')->select('users.first_name', 'users.last_name', 'users.role', 'users.group', 'users.email', 'users.id', 'groups.group_name')->distinct()->get();
         }
-        return view('personal_account/verify_students', compact('query'));
+        return view('personal_account/verify_students', compact('query', 'groups'));
     }
 
     public function change_role(){
+        $groups = Group::where('archived', 0)->get();
         $query = User::join('groups', 'groups.group_id', '=', 'users.group', 'left outer')->where('groups.archived', 0)->orderBy('id', 'desc')->get();
-        return view('personal_account/change_role', compact('query'));
+        return view('personal_account/change_role', compact('query', 'groups'));
     }
 
     public function add_groups(){

@@ -1,8 +1,7 @@
 function groupFilter() {
     // Declare variables
-    var input, filter, table, tr, td, i;
-    input = document.getElementById("groupInput");
-    filter = input.value.toUpperCase();
+    var filter, table, tr, td, i;
+    filter = $('#groupInput option:selected').val().toUpperCase();
     table = document.getElementById("target");
     tr = table.getElementsByTagName("tr");
 

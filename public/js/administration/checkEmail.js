@@ -19,9 +19,10 @@ $(".checkEmail").change(function() {
         success: function(data){
             if (data == "notExists") {
                 $('#loginError').show();
-
+                $(':input[type="submit"]').prop('disabled', true);
             } else {
                 $('#loginError').hide();
+                $(':input[type="submit"]').prop('disabled', false);
             }
         }
     });
@@ -45,9 +46,10 @@ $(".checkEmailUnique").change(function() {
         success: function(data){
             if (data == "exists") {
                 $('#registerError').show();
-
+                $(':input[type="submit"]').prop('disabled', true);
             } else {
                 $('#registerError').hide();
+                $(':input[type="submit"]').prop('disabled', false);
             }
         }
     });
@@ -71,9 +73,10 @@ $(".checkRestoreEmail").change(function() {
         success: function(data){
             if (data == "notExists") {
                 $('#restoreError').show();
-
+                $(':input[type="submit"]').prop('disabled', true);
             } else {
                 $('#restoreError').hide();
+                $(':input[type="submit"]').prop('disabled', false);
             }
         }
     });
