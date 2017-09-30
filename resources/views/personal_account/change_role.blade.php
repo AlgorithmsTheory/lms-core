@@ -19,11 +19,24 @@
     <div class="col-lg-offset-0 col-md-12 col-sm-12">
         <div class="card">
             <div class="card-body">
-                <h2 class="text-center">Сменить роль или группу пользователя</h2>
+                <h2 class="text-center">Редактировать роль, фамилию и имя пользователей.</h2>
                 <div class="form">
-                    <div class="form-group col-md-12">
-                        <textarea  class="form-control textarea3" rows="1" id="regexp" placeholder="" required></textarea>
-                        <label for="textarea3">Фаимилия пользователя</label>
+                    <div class="form-group col-md-4">
+                        <select name="group" id="groupInput" class="form-control" size="1" onchange="groupFilter()">
+                            <option value="">Все</option>
+                            @foreach($groups as $group)
+                                <option value="{{ $group['group_id'] }}">{{ $group['group_name'] }}</option>/td>
+                            @endforeach
+                        </select>
+                        <label for="groupInput">Группа</label>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <input type="text" id="emailInput" class="form-control" onkeyup="emailFilter()" placeholder="Введите email">
+                        <label for="emailInput">Email</label>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <input type="text" id="nameInput" class="form-control" onkeyup="nameFilter()" placeholder="Введите фамилию">
+                        <label for="emailInput">Фамилия</label>
                     </div>
                 </div>
                 <br>
@@ -86,6 +99,7 @@
     </div>
 
     {!! HTML::script('js/personal_account/add_student.js') !!}
-    {!! HTML::script('js/personal_account/change_role_filter.js') !!}
+    {!! HTML::script('js/personal_account/person_filter.js') !!}
+
 
 @stop

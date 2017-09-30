@@ -205,7 +205,6 @@ Route::post('statements/seminar/wasnot', ['as' => 'seminar_wasnot', 'uses' => 'S
 Route::post('statements/classwork/change', ['as' => 'classwork_change', 'uses' => 'StatementsController@classwork_change', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/controls/change', ['as' => 'controls_change', 'uses' => 'StatementsController@controls_change', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/resulting/change', ['as' => 'resulting_change', 'uses' => 'StatementsController@resulting_change', 'middleware' => ['general_auth', 'admin']]);
-//НОВОЕ 05.09.2016
 Route::post('statements/lecture/wasall', ['as' => 'lecture_wasall', 'uses' => 'StatementsController@lecture_was_all', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/seminar/wasall', ['as' => 'seminar_wasall', 'uses' => 'StatementsController@seminar_was_all', 'middleware' => ['general_auth', 'admin']]);
 Route::post('verify_students/change_user_l_name', ['as' => 'change_l_name', 'uses' => 'AdministrationController@change_l_name', 'middleware' => ['general_auth', 'admin']]);
@@ -251,7 +250,6 @@ Route::get('recursion_index', ['as' => 'recursion_index', 'uses' => 'RecursionCo
 Route::get('recursion_one', ['as' => 'recursion_one', 'uses' => 'RecursionController@get_recursion_one']);
 Route::get('recursion_two', ['as' => 'recursion_two', 'uses' => 'RecursionController@get_recursion_two']);
 Route::get('recursion_three', ['as' => 'recursion_three', 'uses' => 'RecursionController@get_recursion_three']);
-
 Route::post('recursion/calculate_one', ['as' => 'calculate_one', 'uses' => 'RecursionController@calculate_one']);
 Route::post('recursion/calculate_two', ['as' => 'calculate_two', 'uses' => 'RecursionController@calculate_two']);
 Route::post('recursion/calculate_three', ['as' => 'calculate_three', 'uses' => 'RecursionController@calculate_three']);
@@ -262,5 +260,9 @@ Route::get('api/get/students/{group_id}', ['uses' => 'APIController@getStudentsF
 Route::get('api/add/{student_id}/{person_id}/{group_id}/{mephiisthebest}', ['uses' => 'APIController@addStudentFace']);
 Route::get('api/get/face/{student_id}', ['uses' => 'APIController@getStudentFace']);
 Route::get('api/delete/group/{group_id}/{mephiisthebest}', ['uses' => 'APIController@deleteAzureGroup']);
+
+//Login verification
+Route::post('check/ifExists', ['uses' => 'AdministrationController@checkEmailIfExists']);
+
 
 
