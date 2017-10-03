@@ -1,8 +1,7 @@
 @extends('templates.MTbase')
 @section('head')
 		<title>Эмулятор машины Нормальных алгоритмов Маркова</title>
-		<meta name="csrf_token" content="{{ csrf_token() }}" />
-
+		<!-- <meta name="csrf_token" content="{{ csrf_token() }}" /> -->
 		<!-- BEGIN META -->
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +11,7 @@
 
 		<!-- BEGIN STYLESHEETS -->
 		<link href='http://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css'/>
-		{!! HTML::style('css/bootstrap.css?1422792965') !!}
+		<!-- {!! HTML::style('css/bootstrap.css?1422792965') !!} -->
 		{!! HTML::style('css/materialadmin.css?1425466319') !!}
 		{!! HTML::style('css/font-awesome.min.css?1422529194') !!}
 		{!! HTML::style('css/material-design-iconic-font.min.css?1421434286') !!}
