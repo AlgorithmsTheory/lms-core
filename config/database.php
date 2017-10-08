@@ -57,7 +57,7 @@ return [
             'host'      => 'localhost',
             'database'  => 'uir',
             'username'  => 'root',
-            'password'  => 'Tihomirova17Mephi',
+            'password'  => 'root',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',

@@ -1,6 +1,6 @@
 @extends('templates.base')
 @section('head')
-		<title>Настройка дат и групп по НАМ</title>
+		<title>Настройка дат и групп по MT</title>
 
 		<!-- BEGIN META -->
 		<meta charset="utf-8">
@@ -46,7 +46,7 @@
 							<div class="col-lg-8">
 								<article class="margin-bottom-xxl">
 									<p class="lead">
-										Здесь можно настроить даты и группы для проведения контрольной работы по нормальным алгоритмам Маркова на эмуляторах
+										Здесь можно настроить даты и группы для проведения контрольной работы по теме "Машина Тьюринга"
 									</p>
 								</article>
 							</div><!--end .col -->
@@ -59,22 +59,21 @@
 
 <div class="card">
 			
-			<form class="form form-validate floating-label" novalidate="novalidate" method="post"  action="{{URL::route('editAllDate')}}">
+			<form class="form form-validate floating-label" novalidate="novalidate" method="post"  action="{{URL::route('editAllDate_mt')}}">
 			
 
-			
-			<div class="modal-body">
-			<h3><label >Нормальные алгоритмы Маркова:</label></h3>
+				<div class="modal-body">
+				<h3><label >Машина Тьюринга:</label></h3>
 					<div class="input-group">
 						<div class="input-group-content">
 							
-							<input type="text" id="old_nam_start" class="form-control" name="old_nam_start"   value="Дата открытия работы:" disabled/>
+							<input type="text" id="old_tur_start" class="form-control" name="old_tur_start"  value="Дата открытия работы:" disabled/>
 						</div>
 						<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 						<div class="input-group-content">
 							<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 							<div class="form-group">
-							<input type="text" id="new_nam_start" class="form-control" placeholder="YYYY-MM-DD HH:MM:SS" value="<?php echo $result2['start_date']; ?>"   name="new_nam_start"  / >
+							<input type="text" id="tur_start" class="form-control"   placeholder="2016-09-26 08:30:00" value="<?php echo $result1['start_date']; ?>" name="tur_start"  / >
 						
 						</div>
 						</div>
@@ -82,19 +81,22 @@
 					<div class="input-group">
 						<div class="input-group-content">
 							
-							<input type="text" id="old_nam_finish" class="form-control" name="old_nam_finish"  value="Дата закрытия работы" disabled/>
+							<input type="text" id="old_tur_finish" class="form-control" name="old_tur_finish"   value="Дата закрытия работы" disabled/>
 						</div>
 						<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 						<div class="input-group-content">
 							<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 							<div class="form-group">
-							<input type="text" id="new_nam_finish" class="form-control" placeholder="YYYY-MM-DD HH:MM:SS"  value="<?php echo $result2['finish_date']; ?>" name="new_nam_finish"  / >
+							<input type="text" id="new_tur_finish" class="form-control" placeholder="YYYY-MM-DD HH:MM:SS"  value="<?php echo $result1['finish_date']; ?>"  name="new_tur_finish"  / >
 						
 						</div>
 						</div>
 						
 					</div>
-				</div>	
+					
+
+				</div>
+				
 <!-- <div class="col-md-12 col-sm-6 card style-primary text-center">
     <h1 class="">Выбор группы</h1>
 </div>
@@ -153,9 +155,8 @@
 			                           @endforeach
 			                       </table>
 			                    </div>
-			                   <button style="left:450px"class="btn ink-reaction btn-raised btn-primary" type="submit" name="submit"> Изменить </button>
+			                    <button style="left:450px"class="btn ink-reaction btn-raised btn-primary" type="submit" name="submit"> Изменить </button>
 			                </div>
-
 			            </div>
 
 			            

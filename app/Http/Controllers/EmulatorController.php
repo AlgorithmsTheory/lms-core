@@ -42,40 +42,97 @@ class EmulatorController extends Controller {
 
     public function open_MT(){
 
+        $user = Auth::user();
+        $id_user = $user['id'];
+        //$id_user =54;
+       //$cur_group=9;
+        $cur_group=DB::select("SELECT `id_group` FROM mt_for_group WHERE availability='1'");
+        
+        $cur_group = EmulatorController::magic($cur_group);
+
         $start_date_tur = DB::select("SELECT start_date FROM kontr_rab WHERE id = '1' AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) > start_date AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) < finish_date");
 
         $start_date_tur = EmulatorController::magic($start_date_tur);
 
+        $group = DB::select("SELECT `group` FROM `users` WHERE id=".$id_user);
+        $group = EmulatorController::magic($group);
 
+         for ($i = 0; $i < count($cur_group); $i++) {
+            $new[$i]=$cur_group[$i]['id_group']; 
+            }   
+        
+             $available = 0;
+        if ($new != null) {
+            if (in_array($group[0]['group'], $new))
+            {
+                $available = 1;
+            }
+                 
+        }  
+            if ($available==0)   
+            {
+                //return  $cur_group;
+                 return  EmulatorController::MT();
+            }
+            else
 
-        if (empty($start_date_tur))
-        {
+            {
+                //return $cur_group[1]['id_group'];
+                return  EmulatorController::kontrMT();
+            }
 
-            return  EmulatorController::MT();
-        }
-        else
+        // if (empty($start_date_tur))
+        // {
 
-        {
-            return  EmulatorController::kontrMT();
-        }
+        //     return  EmulatorController::MT();
+        // }
+        // else
+
+        // {
+        //     return  EmulatorController::kontrMT();
+        // }
 
     }
 
     public function open_HAM(){
 
+        $user = Auth::user();
+        $id_user = $user['id'];
+        //$id_user =54;
+       //$cur_group=9;
+        $cur_group=DB::select("SELECT `id_group` FROM nam_for_group WHERE availability='1'");
+        
+        $cur_group = EmulatorController::magic($cur_group);
+    
         $start_date_nam = DB::select("SELECT start_date FROM kontr_rab WHERE id = '2' AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) > start_date AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) < finish_date");
-
         $start_date_nam = EmulatorController::magic($start_date_nam);
+        
+        $group = DB::select("SELECT `group` FROM `users` WHERE id=".$id_user);
+        $group = EmulatorController::magic($group);
 
-        if (empty($start_date_nam))
-        {
-            return  EmulatorController::HAM();
-        }
-        else
+         for ($i = 0; $i < count($cur_group); $i++) {
+            $new[$i]=$cur_group[$i]['id_group']; 
+            }   
+        
+             $available = 0;
+        if ($new != null) {
+            if (in_array($group[0]['group'], $new))
+            {
+                $available = 1;
+            }
+                 
+        }  
+            if ($available==0)   
+            {
+                //return  $cur_group;
+                return EmulatorController::HAM();
+            }
+            else
 
-        {
-            return  EmulatorController::kontrHAM();
-        }
+            {
+                //return $cur_group[1]['id_group'];
+                return  EmulatorController::kontrHAM();
+            }
 
     }
 
@@ -391,7 +448,7 @@ class EmulatorController extends Controller {
 
         $user = Auth::user();
         $id_user = $user['id'];
-        //        $id_user = 9;
+        //        $id_user = 54;
         $array = array();
         $is_started = DB::select("SELECT variant FROM user_result_tur WHERE id_user =".$id_user);
         $is_started = EmulatorController::magic($is_started); 
@@ -430,9 +487,9 @@ class EmulatorController extends Controller {
 
     public function get_control_tasks_nam(Request $request){
 
-        $user = Auth::user();
-        $id_user = $user['id'];
-        //        $id_user = 1;
+         $user = Auth::user();
+         $id_user = $user['id'];
+        //$id_user = 9;
         $array = array();
         $is_started = DB::select("SELECT variant FROM user_result_nam WHERE id_user =".$id_user);
         $is_started = EmulatorController::magic($is_started); 

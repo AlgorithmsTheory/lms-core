@@ -176,8 +176,9 @@ Route::post('get-MT-kontr', array('as'=>'get_MT', 'uses'=>'EmulatorController@ko
 Route::post('get-HAM-kontr', array('as'=>'get_HAM_kontr', 'uses'=>'EmulatorController@kontr_HAMPOST'));
 
 Route::get('algorithm/edit_date', ['as' => 'edit_date', 'uses' => 'TasksController@edit_date']);
+Route::get('algorithm/edit_date_mt', ['as' => 'edit_date_mt', 'uses' => 'TasksController@edit_date_mt']);
 Route::post('algorithm/edit_all_date', ['as' => 'editAllDate', 'uses' => 'TasksController@editAllDate']);
-
+Route::post('algorithm/edit_all_date_mt', ['as' => 'editAllDate_mt', 'uses' => 'TasksController@editAllDate_mt']);
 
 //модуль генерации вариантов
 Route::get('generator', ['as' => 'generator_index', 'uses' => 'GeneratorController@index', 'middleware' => ['general_auth', 'admin']]);
