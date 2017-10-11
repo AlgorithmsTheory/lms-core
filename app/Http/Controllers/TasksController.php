@@ -7,6 +7,9 @@ use App\Tasks;
 use App\Testsequence;
 use App\Tasks_nam;
 use App\Testsequence_nam;
+use App\NamForGroup;
+
+
 
 class TasksController extends Controller {
 
@@ -225,36 +228,96 @@ public function editAllCoefMt($id_task){
 
 public function edit_date(){
 
+
         $result1 = DB::select("SELECT * from kontr_rab WHERE id = '1'");
         $result1 = TasksController::magic($result1)[0];
         $result2 = DB::select("SELECT * from kontr_rab WHERE id = '2'");
         $result2 = TasksController::magic($result2)[0];
         $result3 = DB::select("SELECT * from kontr_rab WHERE id = '3'");
         $result3 = TasksController::magic($result3)[0];
+       //выбрать все группы из 
+        $all_groups = DB::select("SELECT * FROM `groups` i LEFT JOIN `nam_for_group` u ON u.id_group = i.group_id WHERE archived='0'");
+        $all_groups = TasksController::magic($all_groups);
+        return view("algorithm.edit_date", compact('result1','result2','result3', 'all_groups'));
 
-        return view("algorithm.edit_date", compact('result1','result2','result3'));
     }
 
+public function edit_date_mt(){
+
+
+        $result1 = DB::select("SELECT * from kontr_rab WHERE id = '1'");
+        $result1 = TasksController::magic($result1)[0];
+        $result2 = DB::select("SELECT * from kontr_rab WHERE id = '2'");
+        $result2 = TasksController::magic($result2)[0];
+        $result3 = DB::select("SELECT * from kontr_rab WHERE id = '3'");
+        $result3 = TasksController::magic($result3)[0];
+       //выбрать все группы из 
+        $all_groups = DB::select("SELECT * FROM `groups` i LEFT JOIN `mt_for_group` u ON u.id_group = i.group_id WHERE archived='0'");
+        $all_groups = TasksController::magic($all_groups);
+        return view("algorithm.edit_date_mt", compact('result1','result2','result3', 'all_groups'));
+
+    }
   
 public function editAllDate(){
 
-       $tur_start = Request::input("tur_start");
-       $new_tur_finish = Request::input("new_tur_finish");
+       // $tur_start = Request::input("tur_start");
+       // $new_tur_finish = Request::input("new_tur_finish");
        $new_nam_start = Request::input("new_nam_start");
        $new_nam_finish = Request::input("new_nam_finish");
-       $new_rec_start = Request::input("new_rec_start");
-       $new_rec_finish = Request::input("new_rec_finish");
-       $query3 = DB::update("UPDATE kontr_rab SET start_date='$tur_start', finish_date='$new_tur_finish' WHERE id = '1'");
+       //$new_rec_start = Request::input("new_rec_start");
+      // $new_rec_finish = Request::input("new_rec_finish");
+       $availability_input = (Request::input("availability")== null) ? [] : Request::input("availability");
+               
+       for ($i = 0; $i < count(Request::input("id-group")); $i++) {
+            $availability = in_array(Request::input("id-group")[$i], $availability_input) ? 1 : 0;
+            $group = Request::input("id-group")[$i];
+            //return Request::input("id-group");
+            DB::insert("INSERT INTO nam_for_group (id_group, availability) VALUES ($group, $availability) ON DUPLICATE KEY UPDATE availability = '$availability'" );
+            
+        }
+          
+        
+
+     
        DB::update("UPDATE kontr_rab SET start_date='$new_nam_start', finish_date='$new_nam_finish' WHERE id = '2'");
-       DB::update("UPDATE kontr_rab SET start_date='$new_rec_start', finish_date='$new_rec_finish' WHERE id = '3'");
+      // DB::update("UPDATE kontr_rab SET start_date='$new_rec_start', finish_date='$new_rec_finish' WHERE id = '3'");
 
 
        
-       $tasks_and_sequences = DB::select("SELECT * FROM `testsequence` i LEFT JOIN `tasks` u ON u.id_task = i.task_id");
-        $tasks_and_sequences = TasksController::magic($tasks_and_sequences);
-        return view("algorithm.tasks.mt.alltasks", compact('tasks_and_sequences'));
+       // $tasks_and_sequences = DB::select("SELECT * FROM `testsequence` i LEFT JOIN `tasks` u ON u.id_task = i.task_id");
+       // $tasks_and_sequences = TasksController::magic($tasks_and_sequences);
+        
+      return view("algorithm.main");
       
     }
+
+public function editAllDate_mt(){
+
+       $tur_start = Request::input("tur_start");
+       $new_tur_finish = Request::input("new_tur_finish");
+      //$new_rec_start = Request::input("new_rec_start");
+      // $new_rec_finish = Request::input("new_rec_finish");
+       $availability_input = (Request::input("availability")== null) ? [] : Request::input("availability");
+               
+       for ($i = 0; $i < count(Request::input("id-group")); $i++) {
+            $availability = in_array(Request::input("id-group")[$i], $availability_input) ? 1 : 0;
+            $group = Request::input("id-group")[$i];
+            //return Request::input("id-group");
+            DB::insert("INSERT INTO mt_for_group (id_group, availability) VALUES ($group, $availability) ON DUPLICATE KEY UPDATE availability = '$availability'" );
+            
+        }
+          
+        DB::update("UPDATE kontr_rab SET start_date='$tur_start', finish_date='$new_tur_finish' WHERE id = '1'");
+      // DB::update("UPDATE kontr_rab SET start_date='$new_rec_start', finish_date='$new_rec_finish' WHERE id = '3'");
+
+
+       
+       // $tasks_and_sequences = DB::select("SELECT * FROM `testsequence` i LEFT JOIN `tasks` u ON u.id_task = i.task_id");
+       // $tasks_and_sequences = TasksController::magic($tasks_and_sequences);
+        
+      return view("algorithm.main");
+      
+    }    
 
   }
     

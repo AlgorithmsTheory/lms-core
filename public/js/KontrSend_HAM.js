@@ -94,8 +94,8 @@ function get_tasks(){
         data: {token: 'token' },
         success: function(data){
             var resp = $.parseJSON(data);
-            //var resp = data;
-            //alert(resp);
+            var resp = data;
+            alert(resp);
             for ( var i = 0; i < resp.length; ++i){
                 selector = '#' + ((resp[i].level == 1) ? 'light' : 'hard') + resp[i].number + '> p';
                 $(selector).text(resp[i].task);
