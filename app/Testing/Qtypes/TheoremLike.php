@@ -8,6 +8,7 @@
 namespace App\Testing\Qtypes;
 use App\Mypdf;
 use App\Testing\Question;
+use App\Testing\Type;
 use Illuminate\Http\Request;
 
 class TheoremLike extends QuestionType {
@@ -18,18 +19,26 @@ class TheoremLike extends QuestionType {
 
     public function add(Request $request){
         $options = $this->getOptions($request);
-        Question::insert(array('title' => $request->input('title'), 'variants' => '',
-            'answer' => '', 'points' => $request->input('points'),
+        Question::insert(array('title' => $request->input('title'), 'title_eng' => $request->input('eng-title'),
+            'answer' => $request->input('answer'), 'answer_eng' => $request->input('eng-answer'),
+            'points' => $request->input('points'), 'translated' => $options['translated'],
             'control' => $options['control'], 'section_code' => $options['section'],
             'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
 
     public function edit(){
-
+        $question = Question::whereId_question($this->id_question)->first();
+        $type_name = Type::whereType_code($question->type_code)->select('type_name')->first()->type_name;
+        return array('question' => $question, 'type_name' => $type_name);
     }
 
     public function update(Request $request) {
-        // TODO: Implement update() method.
+        $options = $this->getOptions($request);
+        Question::whereId_question($this->id_question)->update(array('title' => $request->input('title'), 'title_eng' => $request->input('eng-title'),
+            'answer' => $request->input('answer'), 'answer_eng' => $request->input('eng-answer'),
+            'points' => $request->input('points'), 'translated' => $options['translated'],
+            'control' => $options['control'], 'section_code' => $options['section'],
+            'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
 
     public function show($count){
@@ -37,26 +46,8 @@ class TheoremLike extends QuestionType {
         $array = array('view' => $view, 'arguments' => array('text' => $this->text, "variants" => '', "type" => self::type_code, "id" => $this->id_question, "count" => $count));
         return $array;
     }
-    public function check($array){ //надо переделать
-        $parse = explode("%", $this->variants);    //первый элемент - все варианты через <>, второй - стоимости через ;
-        $variants = explode("<>", $parse[0]);
-        $values = explode (";", $parse[1]);
-        $parse_answer = $this->answer;
-        $answer = explode(";", $parse_answer);
-        $score = 0;
-        $p = 0;                          //счетчик правильных ответов
-        for ($i=0; $i < count($variants); $i++){
-            $step = $this->points * $values[$i];
-            if ($array[$i] == $answer[$i]){
-                $score +=$step;
-                $p++;
-            }
-        }
-        if($p == count($variants))
-            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array);
-        else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array);
-        //echo $score.'<br>';
-        return $data;
+    public function check($array){
+        // not checked automatically
     }
 
     public function pdf(Mypdf $fpdf, $count, $answered=false){
@@ -67,14 +58,14 @@ class TheoremLike extends QuestionType {
         if ($answered){                                                                                                 // с ответами
             $html .= '<p>Ответ:</p>';
             $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для доказательства
-                        <tr><td height="250px">'.$this->answer.'</td></tr>
+                        <tr><td height="150px">'.$this->answer.'</td></tr>
                       </table><br>';
             $fpdf->WriteHTML($html);
         }
         else{
             $html .= '<p>Ответ:</p>';
             $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для доказательства
-                        <tr><td height="500px"></td></tr>
+                        <tr><td height="200px"></td></tr>
                       </table><br>';
             $fpdf->WriteHTML($html);
         }

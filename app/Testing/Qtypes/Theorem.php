@@ -17,30 +17,31 @@ class Theorem extends QuestionType {
         parent::__construct($id_question);
     }
 
-    public function add(Request $request){
+    public function add(Request $request) {
         $options = $this->getOptions($request);
         Question::insert(array('title' => $request->input('title'), 'title_eng' => $request->input('eng-title'),
+            'answer' => $request->input('answer'), 'answer_eng' => $request->input('eng-answer'),
             'points' => $request->input('points'), 'translated' => $options['translated'],
             'control' => $options['control'], 'section_code' => $options['section'],
             'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
 
-    public function edit(){
+    public function edit() {
         $question = Question::whereId_question($this->id_question)->first();
         $type_name = Type::whereType_code($question->type_code)->select('type_name')->first()->type_name;
         return array('question' => $question, 'type_name' => $type_name);
     }
 
-    public function update(Request $request)
-    {
+    public function update(Request $request) {
         $options = $this->getOptions($request);
         Question::whereId_question($this->id_question)->update(array('title' => $request->input('title'), 'title_eng' => $request->input('eng-title'),
+            'answer' => $request->input('answer'), 'answer_eng' => $request->input('eng-answer'),
             'points' => $request->input('points'), 'translated' => $options['translated'],
             'control' => $options['control'], 'section_code' => $options['section'],
             'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
 
-    public function show($count){
+    public function show($count) {
         $view = 'tests.show6';
         $array = array('view' => $view, 'arguments' => array('text' => $this->text, "variants" => '', "type" => self::type_code, "id" => $this->id_question, "count" => $count));
         return $array;

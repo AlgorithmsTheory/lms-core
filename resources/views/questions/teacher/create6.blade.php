@@ -19,6 +19,14 @@
         <textarea  name="eng-title" id="textarea1" class="form-control" rows="3" placeholder="Type the name or incomplete formulation of the theorem"></textarea>
         <label for="textarea1">Text</label>
     </div>
+    <div class="form-group">
+        <textarea  name="answer" id="textarea1" class="form-control" rows="5" placeholder="Введите текст доказательства теоремы"></textarea>
+        <label for="textarea1">Доказательство</label>
+    </div>
+    <div class="form-group">
+        <textarea  name="eng-answer" id="textarea1" class="form-control" rows="5" placeholder="Type the proof of the theorem"></textarea>
+        <label for="textarea1">Proof</label>
+    </div>
 
     <div id="other-options" class="col-md-10 col-sm-6">
         <div class="form-group">
