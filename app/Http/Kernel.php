@@ -33,6 +33,7 @@ class Kernel extends HttpKernel {
         'single_test' => 'App\Http\Middleware\SingleTest',
         'have_attempts' => 'App\Http\Middleware\StudentAccessForTest',
         'test_is_available' => 'App\Http\Middleware\GeneralAccessForTest',
+        'access_for_library' => 'App\Http\Middleware\AccessForLibrary',
         'can' => 'Illuminate\Auth\Middleware\Authorize',
         'bindings' => '\Illuminate\Routing\Middleware\SubstituteBindings'
 	];
