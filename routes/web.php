@@ -39,6 +39,10 @@ Route::get('tests/single-test/{id_test}', ['as' => 'single_test', function($id_t
     return view('tests.single_test', compact('test_name', 'id_test'));
 }]);
 
+Route::get('tests/no-attempts/{max_test_points}/{total}', ['as' => 'no_attempts', function ($max_test_points, $total){
+    return view('tests.no_attempts', compact('max_test_points', 'total'));
+}]);
+
 // Авторизация
 Route::post('auth/login', ['as' => 'login', 'uses' => 'Auth\LoginController@login']);
 Route::get('auth/logout', ['as' => 'logout', 'uses' => 'Auth\LoginController@logout']);

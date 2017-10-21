@@ -309,10 +309,17 @@ class TestController extends Controller{
                 StructuralRecord::whereId_structure($structure['id_structure'])->delete();
             }
             TestStructure::whereId_test($id_test)->delete();
+            TestForGroup::whereId_test($id_test)->delete();
             Test::whereId_test($id_test)->delete();
         }
         else {
             Test::whereId_test($id_test)->update(['archived' => 1]);
+        }
+        $active_results = Result::whereId_test($id_test)->whereNull('result')->select('id_result')->get();
+
+        // fill null results
+        foreach ($active_results as $result) {
+            Result::whereId_result($result->id_result)->update(['result' => -1, 'mark_ru' => -1, 'mark_eu' => 'test deleted']);
         }
         return redirect()->route('tests_list');
     }

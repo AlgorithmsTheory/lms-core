@@ -102,7 +102,8 @@ class GeneratorController extends Controller {
 
     public function index(){
         $tests = [];
-        $query = Test::select('id_test', 'test_name', 'test_type')->get();
+        $query = Test::whereArchived(0)
+                    ->select('id_test', 'test_name', 'test_type')->get();
         foreach ($query as $test){
             if ($test->test_type != 'Тренировочный'){
                 array_push($tests, $test->test_name);
@@ -132,7 +133,7 @@ class GeneratorController extends Controller {
             $this->headOfPdf($fpdf, $test_name, $k, $amount);
             $this->headOfPdf($answered_fpdf, $test_name, $k, $amount);
             $generator = new UsualTestGenerator();
-            $generator->buildGraphFromTest($test);
+            $generator->buildGraphFromTest(Test::whereId_test($id_test)->first());
             $generator->generate();
             for ($i=0; $i<$amount; $i++){                                                                               // показываем каждый вопрос из теста
                 $id = $generator->chooseQuestion();

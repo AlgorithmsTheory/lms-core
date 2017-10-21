@@ -28,7 +28,7 @@ class StudentAccessForTest {
                 $fine = $query->fine;
                 $factor = $fine_class->countFactor($fine);
                 $max_test_points = $factor * $query_test->total;                                                        //наибольшее число баллов за этот тест при следующей попытке
-                return view('tests.no_attempts', compact('max_test_points', 'total'));
+                return redirect()->route('no_attempts', compact('max_test_points', 'total'));
             }
         }
         return $next($request);
