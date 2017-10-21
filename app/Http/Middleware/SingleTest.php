@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Testing\Result;
-use App\Testing\Test;
 use Auth;
 use Closure;
 
