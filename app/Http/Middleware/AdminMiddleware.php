@@ -19,6 +19,6 @@ class AdminMiddleware
         if ((Auth::user()['role'] == 'Админ') or (Auth::user()['role'] == 'Преподаватель')){
             return $next($request);
         }
-        else return view('no_access');
+        else return redirect()->route('no_access');
     }
 }

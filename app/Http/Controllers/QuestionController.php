@@ -6,29 +6,26 @@
  * Time: 16:15
  */
 namespace App\Http\Controllers;
-use App\Protocols\TestProtocol;
-use App\Qtypes\FromCleene;
-use App\Testing\Lecture;
-use App\Qtypes\Theorem;
-use App\Qtypes\TheoremLike;
+
+use App\Testing\Qtypes\FromCleene;
+use App\Testing\Qtypes\Theorem;
+use App\Testing\Qtypes\TheoremLike;
 use App\Testing\Section;
 use App\Testing\Test;
 use App\Testing\TestTask;
 use App\Testing\Type;
-use Auth;
 use Illuminate\Http\Response;
-use Session;
 use Illuminate\Http\Request;
 use App\Testing\Question;
 use App\Testing\Theme;
-use App\Qtypes\OneChoice;
-use App\Qtypes\MultiChoice;
-use App\Qtypes\FillGaps;
-use App\Qtypes\AccordanceTable;
-use App\Qtypes\YesNo;
-use App\Qtypes\Definition;
-use App\Qtypes\JustAnswer;
-use App\Qtypes\ThreePoints;
+use App\Testing\Qtypes\OneChoice;
+use App\Testing\Qtypes\MultiChoice;
+use App\Testing\Qtypes\FillGaps;
+use App\Testing\Qtypes\AccordanceTable;
+use App\Testing\Qtypes\YesNo;
+use App\Testing\Qtypes\Definition;
+use App\Testing\Qtypes\JustAnswer;
+use App\Testing\Qtypes\ThreePoints;
 use App\Testing\TestGeneration\UsualTestGenerator;
 use View;
 
@@ -281,13 +278,14 @@ class QuestionController extends Controller{
                 return view('questions.teacher.edit6', compact('data', 'sections', 'themes'));
                 break;
             case 'Три точки':
-                $just = new ThreePoints($id_question);
-                $data = $just->edit();
+                $three_points = new ThreePoints($id_question);
+                $data = $three_points->edit();
                 return view('questions.teacher.edit9', compact('data', 'sections', 'themes'));
                 break;
             case 'Как теорема':
-                $theorem = new TheoremLike($id_question);
-                $theorem->edit();
+                $theorem_like = new TheoremLike($id_question);
+                $data = $theorem_like->edit();
+                return view('questions.teacher.edit6', compact('data', 'sections', 'themes'));
                 break;
             case 'Востановить арифметический вид':
                 $from_cleene = new FromCleene($id_question);
@@ -335,12 +333,12 @@ class QuestionController extends Controller{
                 $theorem->update($request);
                 break;
             case 'Три точки':
-                $just = new ThreePoints($id_question);
-                $just->update($request);
+                $three_points = new ThreePoints($id_question);
+                $three_points->update($request);
                 break;
             case 'Как теорема':
-                $theorem = new TheoremLike($id_question);
-                $theorem->edit();
+                $theorem_like = new TheoremLike($id_question);
+                $theorem_like->update($request);
                 break;
             case 'Востановить арифметический вид':
                 $from_cleene = new FromCleene($id_question);

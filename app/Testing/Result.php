@@ -14,6 +14,7 @@ namespace App\Testing;
  *
 * @method static \Illuminate\Database\Eloquent|\App\Testing\Result  get()
 * @method static \Illuminate\Database\Eloquent|\App\Testing\Result  where()
+* @method static \Illuminate\Database\Eloquent|\App\Testing\Result  update($array)
 * @method static \Illuminate\Database\Eloquent|\App\Testing\Result  orWhere()
 * @method static \Illuminate\Database\Eloquent|\App\Testing\Result  select()
 * @method static \Illuminate\Database\Eloquent|\App\Testing\Result  first()

@@ -25,6 +25,6 @@ class StudentMiddleware {
         if ((Auth::user()['role'] == 'Студент')){
             return $next($request);
         }
-        else return view('no_access');
+        else return redirect()->route('no_access');
     }
 } 

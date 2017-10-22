@@ -14,6 +14,6 @@ class HAMProtocol extends Protocol {
         $this->test =  $id;
     }
     public function setBaseDir(){
-        return $this::PROTOCOL_PATH.$this::HAM_MRPROTOCOL_DIR;
+        return $this::PROTOCOL_PATH.$this::HAM_PROTOCOL_DIR;
     }
 } 

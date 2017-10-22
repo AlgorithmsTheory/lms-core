@@ -4,9 +4,28 @@
         <span>Только для контрольных тестов</span>
     </label>
 </div>
+<div class="checkbox checkbox-styled">
+    <label>
+        <input type="checkbox" name="translated" id="translated">
+        <span>Переведен на английский язык</span>
+    </label>
+</div>
 <div class="form-group">
-    <textarea  name="title" id="textarea1" class="form-control" rows="3" placeholder="Вопрос" required></textarea>
+    <textarea  name="title" id="textarea1" class="form-control" rows="3" placeholder="Введите условие задачи" required></textarea>
     <label for="textarea1">Текст</label>
+</div>
+<div class="form-group">
+    <textarea  name="eng-title" id="textarea1" class="form-control" rows="3" placeholder="Type task's condition"></textarea>
+    <label for="textarea1">Text</label>
+</div>
+
+<div class="form-group">
+    <textarea  name="answer" id="textarea1" class="form-control" rows="5" placeholder="Введите решение задачи"></textarea>
+    <label for="textarea1">Решение</label>
+</div>
+<div class="form-group">
+    <textarea  name="eng-answer" id="textarea1" class="form-control" rows="5" placeholder="Type the answer"></textarea>
+    <label for="textarea1">Answer</label>
 </div>
 
 <div id="other-options" class="col-md-10 col-sm-6">
