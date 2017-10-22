@@ -69,16 +69,17 @@ class EmulatorController extends Controller {
             }
                  
         }  
-            if ($available==0)   
+            if ($available==1)   
             {
                 //return  $cur_group;
-                 return  EmulatorController::MT();
+                return  EmulatorController::kontrMT();
+                
             }
             else
 
             {
                 //return $cur_group[1]['id_group'];
-                return  EmulatorController::kontrMT();
+                return  EmulatorController::MT();
             }
 
         // if (empty($start_date_tur))
@@ -110,6 +111,11 @@ class EmulatorController extends Controller {
         $group = DB::select("SELECT `group` FROM `users` WHERE id=".$id_user);
         $group = EmulatorController::magic($group);
 
+        $user_access = DB::select("SELECT `access` FROM `user_result_nam` WHERE Id_user=".$id_user);
+        $user_access = EmulatorController::magic($user_access);
+        $user_access = $user_access[0]['access'];
+
+
          for ($i = 0; $i < count($cur_group); $i++) {
             $new[$i]=$cur_group[$i]['id_group']; 
             }   
@@ -122,16 +128,17 @@ class EmulatorController extends Controller {
             }
                  
         }  
-            if ($available==0)   
+            if ($available==1 or $user_access==1)   
             {
                 //return  $cur_group;
-                return EmulatorController::HAM();
+                return  EmulatorController::kontrHAM();
+                
             }
             else
 
             {
                 //return $cur_group[1]['id_group'];
-                return  EmulatorController::kontrHAM();
+                return EmulatorController::HAM();
             }
 
     }

@@ -180,6 +180,13 @@ Route::get('algorithm/edit_date_mt', ['as' => 'edit_date_mt', 'uses' => 'TasksCo
 Route::post('algorithm/edit_all_date', ['as' => 'editAllDate', 'uses' => 'TasksController@editAllDate']);
 Route::post('algorithm/edit_all_date_mt', ['as' => 'editAllDate_mt', 'uses' => 'TasksController@editAllDate_mt']);
 
+//доступ к контрольному режиму для кокретных студентов
+
+Route::get('algorithm/edit_users_nam', ['as' => 'edit_users_nam', 'uses' => 'TasksController@edit_users_nam']);
+Route::post('algorithm/edit_users_nam_change', ['as' => 'edit_users_nam_change', 'uses' => 'TasksController@edit_users_nam_change']);
+Route::get('algorithm/edit_users_mt', ['as' => 'edit_users_mt', 'uses' => 'TasksController@edit_users_mt']);
+Route::post('algorithm/edit_users_mt', ['as' => 'edit_users_mt_change', 'uses' => 'TasksController@edit_users_mt_change']);
+
 //модуль генерации вариантов
 Route::get('generator', ['as' => 'generator_index', 'uses' => 'GeneratorController@index', 'middleware' => ['general_auth', 'admin']]);
 Route::post('generator/pdf', ['as' => 'generator_pdf', 'uses' => 'GeneratorController@pdfTest', 'middleware' => ['general_auth', 'admin']]);

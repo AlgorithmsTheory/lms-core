@@ -544,13 +544,13 @@
 		</div><!--end .card-body -->
 		<div class="card">
 
-			<div class="col-sm-4">
+			<div class="col-sm-6">
 				<button type="button" class="btn ink-reaction btn-primary" title="" data-original-title="Увидеть только результат преобразования" data-toggle="tooltip" data-placement="top" onClick="run_all_turing(false)">Запуск</button>	
 			</div>
-            <div class="col-sm-4">									
+            <!-- <div class="col-sm-4">									
 				<button type="button" style="right: -20px;"class="btn ink-reaction btn-primary" onClick="" title="" data-original-title="Шаг для отладки алгоритма" data-toggle="tooltip" data-placement="top"><i class="md md-fast-forward"></i></button>
-			</div>
-			<div class="col-sm-4">									
+			</div> -->
+			<div class="col-sm-6">									
 				<button  type="button" class="btn ink-reaction btn-primary" onClick="run_all_turing(true)" title="" data-original-title="Отладить до конца" data-toggle="tooltip" data-placement="top"><i class="md md-play-arrow"></i></button>
 			</div>
 			<br>
