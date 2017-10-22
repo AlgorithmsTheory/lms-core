@@ -52,20 +52,20 @@
                             </div>
 
                             <div class="form-group">
-                                <textarea  name="title" id="textarea1" class="form-control" rows="3" placeholder="Введине название или неполную формулировку теоремы" required>{{ $data['question']['title'] }}</textarea>
+                                <textarea  name="title" id="textarea1" class="form-control" rows="3" placeholder="Введите условие задачи" required>{{ $data['question']['title'] }}</textarea>
                                 <label for="textarea1">Текст</label>
                             </div>
                             <div class="form-group">
-                                <textarea  name="eng-title" id="textarea1" class="form-control" rows="3" placeholder="Type the name or incomplete formulation of the theorem">{{ $data['question']['title_eng'] }}</textarea>
+                                <textarea  name="eng-title" id="textarea1" class="form-control" rows="3" placeholder="Type task's condition">{{ $data['question']['title_eng'] }}</textarea>
                                 <label for="textarea1">Text</label>
                             </div>
                             <div class="form-group">
-                                <textarea  name="answer" id="textarea1" class="form-control" rows="5" placeholder="Введите текст доказательства теоремы">{{ $data['question']['answer'] }}</textarea>
-                                <label for="textarea1">Доказательство</label>
+                                <textarea  name="answer" id="textarea1" class="form-control" rows="5" placeholder="Введите решение задачи">{{ $data['question']['answer'] }}</textarea>
+                                <label for="textarea1">Решение</label>
                             </div>
                             <div class="form-group">
-                                <textarea  name="eng-answer" id="textarea1" class="form-control" rows="5" placeholder="Type the proof of the theorem">{{ $data['question']['answer_eng'] }}</textarea>
-                                <label for="textarea1">Proof</label>
+                                <textarea  name="eng-answer" id="textarea1" class="form-control" rows="5" placeholder="Type the answer">{{ $data['question']['answer_eng'] }}</textarea>
+                                <label for="textarea1">Answer</label>
                             </div>
 
                             <div id="other-options" class="col-md-10 col-sm-6">

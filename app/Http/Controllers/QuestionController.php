@@ -278,13 +278,14 @@ class QuestionController extends Controller{
                 return view('questions.teacher.edit6', compact('data', 'sections', 'themes'));
                 break;
             case 'Три точки':
-                $just = new ThreePoints($id_question);
-                $data = $just->edit();
+                $three_points = new ThreePoints($id_question);
+                $data = $three_points->edit();
                 return view('questions.teacher.edit9', compact('data', 'sections', 'themes'));
                 break;
             case 'Как теорема':
-                $theorem = new TheoremLike($id_question);
-                $theorem->edit();
+                $theorem_like = new TheoremLike($id_question);
+                $data = $theorem_like->edit();
+                return view('questions.teacher.edit6', compact('data', 'sections', 'themes'));
                 break;
             case 'Востановить арифметический вид':
                 $from_cleene = new FromCleene($id_question);
@@ -332,12 +333,12 @@ class QuestionController extends Controller{
                 $theorem->update($request);
                 break;
             case 'Три точки':
-                $just = new ThreePoints($id_question);
-                $just->update($request);
+                $three_points = new ThreePoints($id_question);
+                $three_points->update($request);
                 break;
             case 'Как теорема':
-                $theorem = new TheoremLike($id_question);
-                $theorem->edit();
+                $theorem_like = new TheoremLike($id_question);
+                $theorem_like->update($request);
                 break;
             case 'Востановить арифметический вид':
                 $from_cleene = new FromCleene($id_question);
