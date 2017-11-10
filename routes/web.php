@@ -99,7 +99,7 @@ Route::get('tests/groups-for-tests', ['as' => 'choose_group', 'uses' => 'TestCon
 Route::get('library', ['as' => 'library_index', 'uses' => 'LibraryController@index', 'middleware' => ['general_auth', 'access_for_library']]);
 Route::get('library/definitions', ['as' => 'library_definitions', 'uses' => 'LibraryController@definitions', 'middleware' => ['general_auth', 'access_for_library']]);
 Route::get('library/theorems', ['as' => 'library_theorems', 'uses' => 'LibraryController@theorems', 'middleware' => ['general_auth', 'admin', 'access_for_library']]);
-Route::get('library/lecture/{index}{anchor?}', ['as' => 'lecture', 'uses' => 'LibraryController@lecture', 'middleware' => ['general_auth', 'access_for_library']])->where('anchor', '[a-z0-9-]+');
+Route::get('library/lecture/{index?}{anchor?}', ['as' => 'lecture', 'uses' => 'LibraryController@lecture', 'middleware' => ['general_auth', 'access_for_library']])->where('anchor', '[a-z0-9-]+');
 Route::get('library/persons', ['as' => 'library_persons', 'uses' => 'LibraryController@persons', 'middleware' => ['general_auth', 'access_for_library']]);
 Route::get('library/persons/{person}', ['as' => 'person', 'uses' => 'LibraryController@person', 'middleware' => ['general_auth', 'access_for_library']]);
 Route::get('library/extra', ['as' => 'library_extra', 'uses' => 'LibraryController@extra', 'middleware' => ['general_auth', 'access_for_library']]);

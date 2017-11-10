@@ -38,10 +38,13 @@ class Question extends Eloquent {
     protected $table = 'questions';
     public $timestamps = false;
 
+    const GROUP_AMOUNT = 3;         // TODO: think how it can be set outside
+
     /** Определяет одиночный вопрос (true) или может использоваться только в группе с такими же (false) */
-    public static function getSingle($id){
+    public static function isSingle($id){
         $type_code = Question::whereId_question($id)->select('type_code')->first()->type_code;
         $type = Type::whereType_code($type_code)->select('type_name')->first()->type_name;
+        // TODO: remove hard code of grouped question types
         if ($type == 'Да/Нет' || $type == 'Определение' || $type == 'Просто ответ'){
             return false;
         }

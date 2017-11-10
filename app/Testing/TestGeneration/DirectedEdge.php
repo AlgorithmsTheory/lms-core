@@ -98,7 +98,10 @@ class DirectedEdge {
         $types = [$this->node_to->type_code];
         switch ($this->type) {
             case EdgeType::BEGIN :
-                $this->capacity = Question::getAmount($sections, $themes, $types, $test_type, $printable);
+                $type = $types[0];
+                // TODO: remove hard code of grouped questions
+                $amount = Question::getAmount($sections, $themes, $types, $test_type, $printable);
+                $this->capacity = ($type == 5 || $type == 7) ? floor($amount / Question::GROUP_AMOUNT) : $amount;
                 break;
             case EdgeType::MIDDLE :
                 $this->capacity = $this->node_to->amount;
