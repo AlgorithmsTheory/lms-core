@@ -14,8 +14,6 @@ use App\Testing\TestStructure;
  * Time: 23:38
  */
 class UsualTestGenerator implements TestGenerator {
-    const GROUP_AMOUNT = 3;
-
     /**
      * @var Graph
      */
@@ -160,7 +158,7 @@ class UsualTestGenerator implements TestGenerator {
                     $temp_array = Question::randomArray($temp_array);                                                       //выбираем случайный вопрос
                     $temp_question = $temp_array[count($temp_array)-1];
 
-                    if (Question::getSingle($temp_question)){                                                               //если вопрос одиночный (то есть как и было ранее)
+                    if (Question::isSingle($temp_question)){                                                               //если вопрос одиночный (то есть как и было ранее)
                         $array[$k] = $temp_question;                                                                        //добавляем вопрос в выходной массив
                         $k++;
                         $amount--;
@@ -182,7 +180,7 @@ class UsualTestGenerator implements TestGenerator {
                             }
                         }
 
-                        if (count($new_temp_array) < $this::GROUP_AMOUNT - 1){                                              // если нужных вопросов заведомо не хватит для составления группового вопроса
+                        if (count($new_temp_array) < Question::GROUP_AMOUNT - 1){                                              // если нужных вопросов заведомо не хватит для составления группового вопроса
                             foreach ($new_temp_array as $question_for_remove){                                              // удаляем их из temp_array
                                 $index_in_old_array = array_search($question_for_remove, $temp_array);                      //ищем в базовом массиве индекс нашего вопроса
                                 $chosen = $temp_array[$index_in_old_array];                                                 //и меняем его с последним элементом в этом массиве
@@ -194,7 +192,7 @@ class UsualTestGenerator implements TestGenerator {
                         }
 
                         $l = 1;
-                        while ($l < $this::GROUP_AMOUNT) {                                                                  //берем 3 вопроса
+                        while ($l < Question::GROUP_AMOUNT) {                                                                  //берем 3 вопроса
                             $new_temp_array = Question::randomArray($new_temp_array);
                             $temp_question_new = $new_temp_array[count($new_temp_array)-1];
 

@@ -23,7 +23,7 @@ class LibraryController extends Controller {
     }
 
     public function lecture($index, $anchor = null){
-        return view('library.lectures.'.$index.$anchor);
+        return ($index != null) ? view('library.lectures.'.$index.$anchor) : view('library.index');
     }
 
     public function persons(){
