@@ -40,6 +40,8 @@
                     <li><a href="{{URL::route('MT')}}" class="btn">Тьюринг</a></li>
                     <li><a href="{{URL::route('HAM')}}" class="btn">Марков</a></li>
                     <li><a href="{{URL::route('recursion_index')}}" class="btn">Рекурсия</a></li>
+                    <li><a href="{{URL::route('Post')}}" class="btn">Пост</a></li>
+                    <li><a href="{{URL::route('MMT')}}" class="btn">Тьюринг (3 ленты)</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="{{URL::route('personal_account')}}" class="btn"><span class="glyphicon glyphicon-user"></span></a></li>

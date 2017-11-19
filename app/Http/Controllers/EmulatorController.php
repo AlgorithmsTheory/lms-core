@@ -57,6 +57,10 @@ class EmulatorController extends Controller {
         $group = DB::select("SELECT `group` FROM `users` WHERE id=".$id_user);
         $group = EmulatorController::magic($group);
 
+        $user_access = DB::select("SELECT `access` FROM `user_result_tur` WHERE Id_user=".$id_user);
+        $user_access = EmulatorController::magic($user_access);
+        $user_access = $user_access[0]['access'];
+
          for ($i = 0; $i < count($cur_group); $i++) {
             $new[$i]=$cur_group[$i]['id_group']; 
             }   
@@ -69,16 +73,17 @@ class EmulatorController extends Controller {
             }
                  
         }  
-            if ($available==0)   
+            if ($available==1 or $user_access==1)   
             {
                 //return  $cur_group;
-                 return  EmulatorController::MT();
+                return  EmulatorController::kontrMT();
+                
             }
             else
 
             {
                 //return $cur_group[1]['id_group'];
-                return  EmulatorController::kontrMT();
+                return  EmulatorController::MT();
             }
 
         // if (empty($start_date_tur))
@@ -110,6 +115,11 @@ class EmulatorController extends Controller {
         $group = DB::select("SELECT `group` FROM `users` WHERE id=".$id_user);
         $group = EmulatorController::magic($group);
 
+        $user_access = DB::select("SELECT `access` FROM `user_result_nam` WHERE Id_user=".$id_user);
+        $user_access = EmulatorController::magic($user_access);
+        $user_access = $user_access[0]['access'];
+
+
          for ($i = 0; $i < count($cur_group); $i++) {
             $new[$i]=$cur_group[$i]['id_group']; 
             }   
@@ -122,16 +132,17 @@ class EmulatorController extends Controller {
             }
                  
         }  
-            if ($available==0)   
+            if ($available==1 or $user_access==1)   
             {
                 //return  $cur_group;
-                return EmulatorController::HAM();
+                return  EmulatorController::kontrHAM();
+                
             }
             else
 
             {
                 //return $cur_group[1]['id_group'];
-                return  EmulatorController::kontrHAM();
+                return EmulatorController::HAM();
             }
 
     }
@@ -322,10 +333,10 @@ class EmulatorController extends Controller {
 
 //ddToStatements
 
-	$mark_info_2 = DB::select("SELECT * FROM user_result_nam WHERE id_user=".$id_user);
+    $mark_info_2 = DB::select("SELECT * FROM user_result_nam WHERE id_user=".$id_user);
         $mark_info_2 = EmulatorController::magic($mark_info_2)[0];
-	$score_2 = $mark_info_2['mark_1']+$mark_info_2['mark_2'];
-	Controls::where('userID', $id_user)->update(['control2' => $score_2]);
+    $score_2 = $mark_info_2['mark_1']+$mark_info_2['mark_2'];
+    Controls::where('userID', $id_user)->update(['control2' => $score_2]);
 
         return $repost;
         //    return $sqnc[0]['input_word'];
@@ -432,12 +443,12 @@ class EmulatorController extends Controller {
 
         //        unlink($rule_file);
 
-	//ddToStatements
+    //ddToStatements
 
-	$mark_info = DB::select("SELECT * FROM user_result_tur WHERE id_user=".$id_user);
+    $mark_info = DB::select("SELECT * FROM user_result_tur WHERE id_user=".$id_user);
         $mark_info = EmulatorController::magic($mark_info)[0];
-	$score = $mark_info['mark_1']+$mark_info['mark_2'];
-	Controls::where('userID', $id_user)->update(['control1' => $score]);
+    $score = $mark_info['mark_1']+$mark_info['mark_2'];
+    Controls::where('userID', $id_user)->update(['control1' => $score]);
 
         return $repost;
 

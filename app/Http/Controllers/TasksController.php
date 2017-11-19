@@ -317,7 +317,74 @@ public function editAllDate_mt(){
         
       return view("algorithm.main");
       
-    }    
+    }  
+
+    public function edit_users_nam(){
+
+
+       //выбрать всех студентов и результаты контрольных по Маркову 
+        $all_users = DB::select("SELECT * FROM `users` i LEFT JOIN `user_result_nam` u ON u.Id_user = i.id LEFT JOIN `groups` g ON i.group = g.group_id WHERE archived='0'");
+        $all_users = TasksController::magic($all_users);
+
+        //return $all_users[0]['group'];
+        return view("algorithm.edit_users_nam", compact('all_users'));
+
+    }  
+    public function edit_users_nam_change(Request $request){
+
+        $availability_input = (Request::input("fines") == null) ? [] : Request::input("fines");
+
+        for ($i=0; $i < count(Request::input("id")); $i++){
+
+           $availability = in_array(Request::input("id")[$i], $availability_input) ? 1 : 0;
+           $user = Request::input("id")[$i];
+
+            DB::insert("INSERT INTO user_result_nam (Id_user, access) VALUES ($user, $availability) ON DUPLICATE KEY UPDATE access = '$availability'" );
+            
+           //  $variant = DB::select("SELECT variant FROM tasks order by RAND() limit 1");
+           //  $variant = EmulatorController::magic($variant);
+           //  $variant = $variant[0]['variant'];
+
+           // DB::update( "UPDATE `user_result_nam` SET `variant`=".$variant." ,`mark_1`= 0 ,`mark_2` = 0, `Id_task_1`=0, `Id_task_2`=0  WHERE access = 1 AND `Id_user`=".$user);
+        
+        }
+        //return $availability_input;
+        return redirect()->back();
+    }
+
+     public function edit_users_mt(){
+
+
+       //выбрать всех студентов и результаты контрольных по Маркову 
+        $all_users = DB::select("SELECT * FROM `users` i LEFT JOIN `user_result_tur` u ON u.Id_user = i.id LEFT JOIN `groups` g ON i.group = g.group_id WHERE archived='0'");
+        $all_users = TasksController::magic($all_users);
+
+        //return $all_users[0]['group'];
+        return view("algorithm.edit_users_mt", compact('all_users'));
+
+    }  
+
+     public function edit_users_mt_change(Request $request){
+
+        $availability_input = (Request::input("fines") == null) ? [] : Request::input("fines");
+
+        for ($i=0; $i < count(Request::input("id")); $i++){
+
+           $availability = in_array(Request::input("id")[$i], $availability_input) ? 1 : 0;
+           $user = Request::input("id")[$i];
+
+            DB::insert("INSERT INTO user_result_tur (Id_user, access) VALUES ($user, $availability) ON DUPLICATE KEY UPDATE access = '$availability'" );
+            
+           //  $variant = DB::select("SELECT variant FROM tasks order by RAND() limit 1");
+           //  $variant = EmulatorController::magic($variant);
+           //  $variant = $variant[0]['variant'];
+
+           // DB::update( "UPDATE `user_result_nam` SET `variant`=".$variant." ,`mark_1`= 0 ,`mark_2` = 0, `Id_task_1`=0, `Id_task_2`=0  WHERE access = 1 AND `Id_user`=".$user);
+        
+        }
+        //return $availability_input;
+        return redirect()->back();
+    }
 
   }
     
