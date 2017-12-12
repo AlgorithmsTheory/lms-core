@@ -10,7 +10,8 @@
         <td colspan="2">Раздел 3</td>
         <td colspan="2">Раздел 4</td>
         <td colspan="2">Итог за семестр</td>
-        <td colspan="2">Экзамен</td>
+        <td colspan="2">Экзамен (письм.)</td>
+        <td colspan="2">Экзамен (авт.)</td>
         <td colspan="2">Суммарный итог</td>
         <td rowspan="2">Оценка(A-F)</td>
         <td rowspan="2">Оценка(2-5)</td>
@@ -31,8 +32,11 @@
         <td>min 36</td>
         <td>max 60</td>
 
-        <td>min 24</td>
-        <td>max 40</td>
+        <td>min 12</td>
+        <td>max 20</td>
+
+        <td>min 12</td>
+        <td>max 20</td>
 
         <td>min 60</td>
         <td>max 100</td>
@@ -113,13 +117,21 @@
                 {{--<input type="number" value="{{ $state['termResult'] }}" name="{{ $state['userID'] }}" id="termResult" class="resulting" style="width: 50px;">--}}
             </td>
             <td colspan="2" class="
-                @if ($state['exam'] < 24)
+                @if ($state['exam'] < 12)
                     danger
                 @else
                     success
                 @endif
             ">
                 <input type="number" value="{{ $state['exam'] }}" name="{{ $state['userID'] }}" id="exam" class="resulting" style="width: 50px;">
+            <td colspan="2" class="
+                @if ($state['exam2'] < 12)
+                    danger
+                @else
+                    success
+                @endif
+                    ">
+                <input type="number" value="{{ $state['exam2'] }}" name="{{ $state['userID'] }}" id="exam2" class="resulting" style="width: 50px;">
             </td>
             <td colspan="2" class="
                 @if ($state['finalResult'] < 60)

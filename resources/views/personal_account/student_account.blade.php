@@ -707,18 +707,18 @@
                                         <div class="dropdown">
                                             <button class="dropbtn">КР №3 (рекурсии)</button>
                                             <div class="dropdown-content">
-                                                <a>От 2.4 до 4 баллов</a>
+                                                <a>От 4.2 до 7 баллов</a>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="info">
-                                        <div class="dropdown">
-                                            <button class="dropbtn">КР №3 (письменная часть)</button>
-                                            <div class="dropdown-content">
-                                                <a>От 1.8 до 3 баллов</a>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    {{--<td class="info">--}}
+                                        {{--<div class="dropdown">--}}
+                                            {{--<button class="dropbtn">КР №3 (письменная часть)</button>--}}
+                                            {{--<div class="dropdown-content">--}}
+                                                {{--<a>От 1.8 до 3 баллов</a>--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                    {{--</td>--}}
                                     <td class="info">
                                         <div class="dropdown">
                                             <button class="dropbtn">Тест №3</button>
@@ -755,16 +755,16 @@
                                             >
                                         {{ $controls['control3'] }}
                                     </td>
-                                    <td
-                                            @if (($progress['control3quiz'] == 0) and ($plan['control3quiz'] == 1))
-                                            class="danger"
-                                            @endif
-                                            @if ($progress['control3quiz'] == 1)
-                                            class="success"
-                                            @endif
-                                            >
-                                        {{ $controls['control3quiz'] }}
-                                    </td>
+                                    {{--<td--}}
+                                            {{--@if (($progress['control3quiz'] == 0) and ($plan['control3quiz'] == 1))--}}
+                                            {{--class="danger"--}}
+                                            {{--@endif--}}
+                                            {{--@if ($progress['control3quiz'] == 1)--}}
+                                            {{--class="success"--}}
+                                            {{--@endif--}}
+                                            {{-->--}}
+                                        {{--{{ $controls['control3quiz'] }}--}}
+                                    {{--</td>--}}
                                     <td
                                             @if (($progress['test3'] == 0) and ($plan['test3'] == 1))
                                             class="danger"
@@ -950,30 +950,30 @@
                                     {{ $results['termResult'] }}
                                 </td>
                                 <td
-                                        @if (($results['exam'] < 24) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1))
+                                        @if (($results['exam'] < 12) and ($results['exam2'] < 12) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1))
                                         class="danger"
                                         @endif
-                                        @if (!(($results['exam'] < 24) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1)))
+                                        @if (!(($results['exam'] < 12) and ($results['exam2'] < 12) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1)))
                                         class="success"
                                         @endif
                                 >
-                                    {{ $results['exam'] }}
+                                    {{ $results['exam'] + $results['exam2'] }}
                                 </td>
                                 <td
-                                        @if ((($progress['section4'] == 0) or ($progress['section3'] == 0) or ($progress['section2'] == 0) or ($progress['section1'] == 0) or ($results['exam'] < 24)) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1))
+                                        @if ((($progress['section4'] == 0) or ($progress['section3'] == 0) or ($progress['section2'] == 0) or ($progress['section1'] == 0) or ($results['exam'] < 12) or ($results['exam2'] < 12)) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1))
                                         class="danger"
                                         @endif
-                                        @if (!((($progress['section4'] == 0) or ($progress['section3'] == 0) or ($progress['section2'] == 0) or ($progress['section1'] == 0) or ($results['exam'] < 24)) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1)))
+                                        @if (!((($progress['section4'] == 0) or ($progress['section3'] == 0) or ($progress['section2'] == 0) or ($progress['section1'] == 0) or ($results['exam'] < 24) or ($results['exam2'] < 12)) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1)))
                                         class="success"
                                         @endif
                                 >
                                     {{ $results['finalResult'] }}
                                 </td>
                                 <td
-                                        @if ((($progress['section4'] == 0) or ($progress['section3'] == 0) or ($progress['section2'] == 0) or ($progress['section1'] == 0) or ($results['exam'] < 24)) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1))
+                                        @if ((($progress['section4'] == 0) or ($progress['section3'] == 0) or ($progress['section2'] == 0) or ($progress['section1'] == 0) or ($results['exam'] < 24) or ($results['exam2'] < 12)) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1))
                                         class="danger"
                                         @endif
-                                        @if (!((($progress['section4'] == 0) or ($progress['section3'] == 0) or ($progress['section2'] == 0) or ($progress['section1'] == 0) or ($results['exam'] < 24)) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1)))
+                                        @if (!((($progress['section4'] == 0) or ($progress['section3'] == 0) or ($progress['section2'] == 0) or ($progress['section1'] == 0) or ($results['exam'] < 24) or ($results['exam2'] < 12)) and ($plan['section1'] == 1) and ($plan['section2'] == 1) and ($plan['section3'] == 1) and ($plan['section4'] == 1)))
                                         class="success"
                                         @endif
                                 >
