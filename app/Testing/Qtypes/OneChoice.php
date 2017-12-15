@@ -15,32 +15,14 @@ use Input;
 use Session;
 class OneChoice extends QuestionType {
     const type_code = 1;
+
     function __construct($id_question){
         parent::__construct($id_question);
     }
 
-    private function setAttributes(Request $request){
+    private function setAttributes(Request $request) {
         $options = $this->getOptions($request);
-        $parse_text = preg_split('/\[\[|\]\]/', $request->input('title'));                                              //части текста вопроса без [[ ]]
-        $eng_parse_text = preg_split('/\[\[|\]\]/', $request->input('eng-title'));                                      //части текста вопроса на английском без [[ ]]
-
-        $destinationPath = 'img/questions/title/';                                                                      //путь для картинки
-        $input_images = Input::file();
-        for ($i = 1; $i < count($input_images['text-images']); $i++){
-            $extension = $input_images['text-images'][$i-1]->getClientOriginalExtension();                              //получаем расширение файла
-            $fileName = rand(11111, 99999) . '.' . $extension;                                                          //случайное имя картинки
-            $input_images['text-images'][$i-1]->move($destinationPath, $fileName);                                      //перемещаем картинку
-            $parse_text[2*$i-1] = '::'.$destinationPath.$fileName.'::';                                                 //заменить каждуый старый файл на новый
-            $eng_parse_text[2*$i-1] = '::'.$destinationPath.$fileName.'::';
-        }
-        $title = '';
-        foreach ($parse_text as $part){                                                                                 //собираем все в строку
-            $title .= $part;
-        }
-        $eng_title = '';
-        foreach ($eng_parse_text as $eng_part){                                                                         //собираем все в строку для английского текста
-            $eng_title .= $eng_part;
-        }
+        $title = $this->getTitleWithImage($request);
 
         $variants = $request->input('variants')[0];
         for ($i=1; $i<count($request->input('variants')); $i++){
@@ -54,14 +36,14 @@ class OneChoice extends QuestionType {
         }
         $eng_answer = $request->input('eng-variants')[0];
 
-        return ['title' => $title, 'variants' => $variants,
+        return ['title' => $title['ru_title'], 'variants' => $variants,
                 'answer' => $answer, 'points' => $options['points'],
                 'control' => $options['control'], 'translated' => $options['translated'],
                 'section_code' => $options['section'], 'theme_code' => $options['theme'], 'type_code' => $options['type'],
-                'title_eng' => $eng_title, 'variants_eng' => $eng_variants, 'answer_eng' => $eng_answer];
+                'title_eng' => $title['eng_title'], 'variants_eng' => $eng_variants, 'answer_eng' => $eng_answer];
     }
 
-    public  function add(Request $request){
+    public  function add(Request $request) {
         $data = $this->setAttributes($request);
         Question::insert(array('title' => $data['title'], 'variants' => $data['variants'],
                         'answer' => $data['answer'], 'points' => $data['points'],
@@ -70,7 +52,7 @@ class OneChoice extends QuestionType {
                         'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng']));
     }
 
-    public function edit(){
+    public function edit() {
         $question = Question::whereId_question($this->id_question)->first();
         $count = count(explode(";", $question->variants));
         $type_name = Type::whereType_code($question->type_code)->select('type_name')->first()->type_name;
@@ -81,7 +63,7 @@ class OneChoice extends QuestionType {
                      'images' => $images, 'variants' => $variants, 'eng_variants' => $eng_variants);
     }
 
-    public function update(Request $request){
+    public function update(Request $request) {
         $data = $this->setAttributes($request);
         Question::whereId_question($this->id_question)->update(
         array('title' => $data['title'], 'variants' => $data['variants'],
@@ -92,7 +74,7 @@ class OneChoice extends QuestionType {
         );
     }
 
-    public function show($count){
+    public function show($count) {
         $parse = $this->variants;
         $variants = explode(";", $parse);
         $new_variants = $this->question->mixVariants($variants);
@@ -100,7 +82,8 @@ class OneChoice extends QuestionType {
         $array = array('view' => $view, 'arguments' => array('text' => explode('::',$this->text), "variants" => $new_variants, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
         return $array;
     }
-    public function check($array){
+
+    public function check($array) {
         if ($array[0] == $this->answer){
             $score = $this->points;
             $right_percent = 100;
@@ -120,7 +103,7 @@ class OneChoice extends QuestionType {
         return $data;
     }
 
-    public function pdf(Mypdf $fpdf, $count, $answered=false){
+    public function pdf(Mypdf $fpdf, $count, $answered=false) {
         $parse = $this->variants;
         $variants = explode(";", $parse);
         $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
@@ -153,5 +136,4 @@ class OneChoice extends QuestionType {
         $html .= '</table><br>';
         $fpdf->WriteHTML($html);
     }
-
 } 

@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 
 class FillGaps extends QuestionType {
     const type_code = 3;
+
     function __construct($id_question){
         parent::__construct($id_question);
     }
@@ -86,7 +87,7 @@ class FillGaps extends QuestionType {
             'title_eng' => $eng_wet_text, 'variants_eng' => $eng_variants, 'answer_eng' => $eng_answers];
     }
 
-    public function add(Request $request){
+    public function add(Request $request) {
         $data = $this->setAttributes($request);
         Question::insert(array('title' => $data['title'], 'variants' => $data['variants'],
             'answer' => $data['answer'], 'points' => $data['points'],
@@ -95,7 +96,7 @@ class FillGaps extends QuestionType {
             'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng']));
     }
 
-    public function edit(){
+    public function edit() {
         $question = Question::whereId_question($this->id_question)->first();
         $type_name = Type::whereType_code($question->type_code)->select('type_name')->first()->type_name;
 
@@ -241,7 +242,7 @@ class FillGaps extends QuestionType {
         );
     }
 
-    public function show($count){
+    public function show($count) {
         $text_parts = explode("<>", $this->text);                                                                       //части текста между селектами
         $parse = explode("%", $this->variants);
         $variants = explode("<>", $parse[0]);
@@ -258,7 +259,8 @@ class FillGaps extends QuestionType {
         $array = array('view' => $view, 'arguments' => array("variants" => $group_variants, "type" => self::type_code, "id" => $this->id_question, "text_parts" => $text_parts, "num_var" => $num_var, "num_slot" => $num_slot, "count" => $count));
         return $array;
     }
-    public function check($array){
+
+    public function check($array) {
         $parse = explode("%", $this->variants);                                                                         //первый элемент - все варианты через <>, второй - стоимости через ;
         $variants = explode("<>", $parse[0]);
         $values = explode (";", $parse[1]);
@@ -278,11 +280,10 @@ class FillGaps extends QuestionType {
         if($p == count($variants))
             $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array, 'right_percent' => $right_percent);
                else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array, 'right_percent' => $right_percent);
-        //echo $score.'<br>';
         return $data;
     }
 
-    public function pdf(Mypdf $fpdf, $count, $answered=false){
+    public function pdf(Mypdf $fpdf, $count, $answered=false) {
         $text_parts = explode("<>", $this->text);                                                                       //части текста между селектами
         $parse = explode("%", $this->variants);
         $variants = explode("<>", $parse[0]);

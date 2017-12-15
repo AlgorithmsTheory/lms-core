@@ -13,7 +13,8 @@ use Illuminate\Http\Request;
 
 class AccordanceTable extends QuestionType {
     const type_code = 4;
-    function __construct($id_question){
+
+    function __construct($id_question) {
         parent::__construct($id_question);
     }
 
@@ -66,7 +67,7 @@ class AccordanceTable extends QuestionType {
 
     }
 
-    public function edit(){
+    public function edit() {
         $question = Question::whereId_question($this->id_question)->first();
         $type_name = Type::whereType_code($question->type_code)->select('type_name')->first()->type_name;
         $title = explode(";", $question->title);
@@ -92,7 +93,7 @@ class AccordanceTable extends QuestionType {
         );
     }
 
-    public function show($count){
+    public function show($count) {
         $text_parse = $this->text;
         $parse = $this->variants;
         $variants = explode(";", $parse);
@@ -103,7 +104,7 @@ class AccordanceTable extends QuestionType {
         return $array;
     }
 
-    public function check($array){
+    public function check($array) {
         $buf_array = $array;
         $score = 0;
         $max_errors = 2;    //TODO: должно зависеть от чилса столбцов
@@ -162,7 +163,7 @@ class AccordanceTable extends QuestionType {
         return $data;
     }
 
-    public function pdf(Mypdf $fpdf, $count, $answered=false){
+    public function pdf(Mypdf $fpdf, $count, $answered=false) {
         $text_parse = $this->text;
         $parse = $this->variants;
         $variants = explode(";", $parse);

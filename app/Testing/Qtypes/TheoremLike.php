@@ -13,11 +13,12 @@ use Illuminate\Http\Request;
 
 class TheoremLike extends QuestionType {
     const type_code = 10;
+
     function __construct($id_question){
         parent::__construct($id_question);
     }
 
-    public function add(Request $request){
+    public function add(Request $request) {
         $options = $this->getOptions($request);
         Question::insert(array('title' => $request->input('title'), 'title_eng' => $request->input('eng-title'),
             'answer' => $request->input('answer'), 'answer_eng' => $request->input('eng-answer'),
@@ -26,7 +27,7 @@ class TheoremLike extends QuestionType {
             'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
 
-    public function edit(){
+    public function edit() {
         $question = Question::whereId_question($this->id_question)->first();
         $type_name = Type::whereType_code($question->type_code)->select('type_name')->first()->type_name;
         return array('question' => $question, 'type_name' => $type_name);
@@ -41,16 +42,17 @@ class TheoremLike extends QuestionType {
             'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
 
-    public function show($count){
+    public function show($count) {
         $view = 'tests.show10';
         $array = array('view' => $view, 'arguments' => array('text' => $this->text, "variants" => '', "type" => self::type_code, "id" => $this->id_question, "count" => $count));
         return $array;
     }
-    public function check($array){
-        // not checked automatically
+
+    public function check($array) {
+        //TODO: not checked automatically
     }
 
-    public function pdf(Mypdf $fpdf, $count, $answered=false){
+    public function pdf(Mypdf $fpdf, $count, $answered=false) {
         $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
         $html .= '  Ответьте на вопрос или решите задачу. Ответы без обоснования НЕ оцениваются</td></tr>';
         $html .= '<tr><td>'.$this->text.'</td></tr></table>';

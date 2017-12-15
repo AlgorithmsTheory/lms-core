@@ -1,12 +1,11 @@
 <?php
 namespace App\Testing\Qtypes;
-use App\Http\Controllers\QuestionController;
 use App\Mypdf;
 use App\Testing\Question;
 use App\Testing\Type;
 use Illuminate\Http\Request;
-use Input;
 use Session;
+
 class ThreePoints extends QuestionType {
     const type_code = 9;
     function __construct($id_question){
@@ -15,26 +14,7 @@ class ThreePoints extends QuestionType {
 
     private function setAttributes(Request $request){
         $options = $this->getOptions($request);
-        $parse_text = preg_split('/\[\[|\]\]/', $request->input('title'));                                              //части текста вопроса без [[ ]]
-        $eng_parse_text = preg_split('/\[\[|\]\]/', $request->input('eng-title'));                                      //части текста вопроса на английском без [[ ]]
-
-        $destinationPath = 'img/questions/title/';                                                                      //путь для картинки
-        $input_images = Input::file();
-        for ($i = 1; $i < count($input_images['text-images']); $i++){
-            $extension = $input_images['text-images'][$i-1]->getClientOriginalExtension();                              //получаем расширение файла
-            $fileName = rand(11111, 99999) . '.' . $extension;                                                          //случайное имя картинки
-            $input_images['text-images'][$i-1]->move($destinationPath, $fileName);                                      //перемещаем картинку
-            $parse_text[2*$i-1] = '::'.$destinationPath.$fileName.'::';                                                 //заменить каждуый старый файл на новый
-            $eng_parse_text[2*$i-1] = '::'.$destinationPath.$fileName.'::';
-        }
-        $title = '';
-        foreach ($parse_text as $part){                                                                                 //собираем все в строку
-            $title .= $part;
-        }
-        $eng_title = '';
-        foreach ($eng_parse_text as $eng_part){                                                                         //собираем все в строку для английского текста
-            $eng_title .= $eng_part;
-        }
+        $title = $this->getTitleWithImage($request);
 
         $variants = $request->input('variants')[0];
         for ($i=1; $i<count($request->input('variants')); $i++){
@@ -46,11 +26,11 @@ class ThreePoints extends QuestionType {
             $answers = $answers.'@'.$request->input('answers')[$i];
         }
 
-        return ['title' => $title, 'variants' => $variants,
+        return ['title' => $title['ru_title'], 'variants' => $variants,
             'answer' => $answers, 'points' => $options['points'],
             'control' => $options['control'], 'translated' => $options['translated'],
             'section_code' => $options['section'], 'theme_code' => $options['theme'], 'type_code' => $options['type'],
-            'title_eng' => $eng_title, 'variants_eng' => $variants, 'answer_eng' => $answers];
+            'title_eng' => $title['eng_title'], 'variants_eng' => $variants, 'answer_eng' => $answers];
     }
 
     public  function add(Request $request){
