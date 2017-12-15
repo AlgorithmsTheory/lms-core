@@ -19,10 +19,6 @@ class YesNo extends QuestionType{
         parent::__construct($id_question);
     }
 
-    private function setAttributes(Request $request) {
-
-    }
-
     public function add(Request $request) {
         $options = $this->getOptions($request);
         for ($i=0; $i<count($request->input('variants')); $i++){
@@ -69,7 +65,7 @@ class YesNo extends QuestionType{
         return $array;
     }
 
-    public function check($array){
+    public function check($array) {
         $score = 0;
         $text_parse = $this->text;
         $text = explode(";" , $text_parse);
@@ -95,7 +91,7 @@ class YesNo extends QuestionType{
         return $data;
     }
 
-    public function pdf(Mypdf $fpdf, $count, $answered=false){
+    public function pdf(Mypdf $fpdf, $count, $answered=false) {
         $text_parse = $this->text;
         $text = explode(";" , $text_parse);
         $answers = explode(';', $this->answer);

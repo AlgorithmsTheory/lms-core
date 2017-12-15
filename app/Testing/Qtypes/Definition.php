@@ -13,12 +13,12 @@ use Illuminate\Http\Request;
 
 class Definition extends QuestionType {
     const type_code = 7;
+
     function __construct($id_question){
         parent::__construct($id_question);
     }
-    public function  create(){
-    }
-    public function add(Request $request){
+
+    public function add(Request $request) {
         $options = $this->getOptions($request);
         for ($i=0; $i<count($request->input('variants')); $i++){
             $title = $request->input('variants')[$i];
@@ -34,14 +34,13 @@ class Definition extends QuestionType {
         }
     }
 
-    public function edit(){
+    public function edit() {
         $question = Question::whereId_question($this->id_question)->first();
         $type_name = Type::whereType_code($question->type_code)->select('type_name')->first()->type_name;
         return array('question' => $question, 'type_name' => $type_name);
     }
 
-    public function update(Request $request)
-    {
+    public function update(Request $request) {
         $options = $this->getOptions($request);
         $title = $request->input('title');
         $eng_title = $request->input('eng-title');
@@ -56,35 +55,17 @@ class Definition extends QuestionType {
             'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
 
-
-    public function show($count){
+    public function show($count) {
         $view = 'tests.show7';
         $array = array('view' => $view, 'arguments' => array('text' => $this->text, "variants" => '', "type" => self::type_code, "id" => $this->id_question, "count" => $count));
         return $array;
     }
-    public function check($array){  //надо переделать
-        $parse = explode("%", $this->variants);    //первый элемент - все варианты через <>, второй - стоимости через ;
-        $variants = explode("<>", $parse[0]);
-        $values = explode (";", $parse[1]);
-        $parse_answer = $this->answer;
-        $answer = explode(";", $parse_answer);
-        $score = 0;
-        $p = 0;                          //счетчик правильных ответов
-        for ($i=0; $i < count($variants); $i++){
-            $step = $this->points * $values[$i];
-            if ($array[$i] == $answer[$i]){
-                $score +=$step;
-                $p++;
-            }
-        }
-        if($p == count($variants))
-            $data = array('mark'=>'Верно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array);
-        else $data = array('mark'=>'Неверно','score'=> $score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => $array);
-        //echo $score.'<br>';
-        return $data;
+
+    public function check($array) {
+        // TODO: question is not automatically checked
     }
 
-    public function pdf(Mypdf $fpdf, $count, $answered=false){
+    public function pdf(Mypdf $fpdf, $count, $answered=false) {
         $text_parse = $this->text;
         $text = explode(";" , $text_parse);
         $answers = explode(';', $this->answer);

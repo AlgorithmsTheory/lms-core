@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 
 class Theorem extends QuestionType {
     const type_code = 6;
+
     function __construct($id_question){
         parent::__construct($id_question);
     }
@@ -47,11 +48,11 @@ class Theorem extends QuestionType {
         return $array;
     }
 
-    public function check($array){
-        // theorem is not checked automatically
+    public function check($array) {
+        // TODO: theorem is not checked automatically
     }
 
-    public function pdf(Mypdf $fpdf, $count, $answered=false){
+    public function pdf(Mypdf $fpdf, $count, $answered=false) {
         $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
         $html .= '  Напишите или продолжите формулировку и приведите доказательство теоремы</td></tr>';
         $html .= '<tr><td>'.$this->text.'</td></tr></table>';

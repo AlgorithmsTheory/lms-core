@@ -16,32 +16,14 @@ use Input;
 
 class MultiChoice extends QuestionType {
     const type_code = 2;
-    function __construct($id_question){
+
+    function __construct($id_question) {
         parent::__construct($id_question);
     }
 
     private function setAttributes(Request $request) {
         $options = $this->getOptions($request);
-        $parse_text = preg_split('/\[\[|\]\]/', $request->input('title'));                                              //части текста вопроса без [[ ]]
-        $eng_parse_text = preg_split('/\[\[|\]\]/', $request->input('eng-title'));                                      //части текста вопроса на английском без [[ ]]
-
-        $destinationPath = 'img/questions/title/';                                                                      //путь для картинки
-        $input_images = Input::file();
-        for ($i = 1; $i < count($input_images['text-images']); $i++){
-            $extension = $input_images['text-images'][$i-1]->getClientOriginalExtension();                              //получаем расширение файла
-            $fileName = rand(11111, 99999) . '.' . $extension;                                                          //случайное имя картинки
-            $input_images['text-images'][$i-1]->move($destinationPath, $fileName);                                      //перемещаем картинку
-            $parse_text[2*$i-1] = '::'.$destinationPath.$fileName.'::';                                                 //заменить каждуый старый файл на новый
-            $eng_parse_text[2*$i-1] = '::'.$destinationPath.$fileName.'::';
-        }
-        $title = '';
-        foreach ($parse_text as $part){                                                                                 //собираем все в строку
-            $title .= $part;
-        }
-        $eng_title = '';
-        foreach ($eng_parse_text as $eng_part){                                                                         //собираем все в строку для английского текста
-            $eng_title .= $eng_part;
-        }
+        $title = $this->getTitleWithImage($request);
 
         $variants = $request->input('variants')[0];                                                                     //формирование вариантов
         for ($i=1; $i<count($request->input('variants')); $i++){
@@ -71,14 +53,14 @@ class MultiChoice extends QuestionType {
                 $eng_answers = $eng_answers.';'.$request->input('eng-variants')[$request->input('answers')[$i]-1];
             }
         }
-        return ['title' => $title, 'variants' => $variants,
+        return ['title' => $title['ru_title'], 'variants' => $variants,
                 'answer' => $answers, 'points' => $options['points'],
                 'control' => $options['control'], 'translated' => $options['translated'],
                 'section_code' => $options['section'], 'theme_code' => $options['theme'], 'type_code' => $options['type'],
-                'title_eng' => $eng_title, 'variants_eng' => $eng_variants, 'answer_eng' => $eng_answers];
+                'title_eng' => $title['eng_title'], 'variants_eng' => $eng_variants, 'answer_eng' => $eng_answers];
     }
 
-    public function add(Request $request){
+    public function add(Request $request) {
         $data = $this->setAttributes($request);
         Question::insert(array('title' => $data['title'], 'variants' => $data['variants'],
             'answer' => $data['answer'], 'points' => $data['points'],
@@ -87,7 +69,7 @@ class MultiChoice extends QuestionType {
             'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng']));
     }
 
-    public function edit(){
+    public function edit() {
         $question = Question::whereId_question($this->id_question)->first();
         $count = count(explode(";", $question->variants));
         $type_name = Type::whereType_code($question->type_code)->select('type_name')->first()->type_name;
@@ -119,7 +101,7 @@ class MultiChoice extends QuestionType {
         );
     }
 
-    public function show($count){
+    public function show($count) {
         $parse = $this->variants;
         $variants = explode(";", $parse);
         $new_variants = $this->question->mixVariants($variants);
@@ -128,7 +110,7 @@ class MultiChoice extends QuestionType {
         return $array;
     }
 
-    public function check($array){
+    public function check($array) {
         $choices = $array;
         $answers = explode(';', $this->answer);
         $score = 0;
@@ -165,7 +147,7 @@ class MultiChoice extends QuestionType {
         return $data;
     }
 
-    public function pdf(Mypdf $fpdf, $count, $answered=false){
+    public function pdf(Mypdf $fpdf, $count, $answered=false) {
         $text_parse = explode('::', $this->text);
         $text = "";
         for ($i=0; $i < count($text_parse); $i++){                                                                      //обработка картинки в тексте вопроса

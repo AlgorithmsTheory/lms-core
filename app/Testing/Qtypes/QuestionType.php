@@ -12,8 +12,12 @@ use App\Testing\Section;
 use App\Testing\Theme;
 use App\Testing\Type;
 use Illuminate\Http\Request;
+use Input;
+
 abstract class QuestionType {
     const PUBLIC_DIR = 'public/';
+    const IMAGES_IN_TITLE_DIR = 'img/questions/title/';
+
     public $question;
     public $id_question;
     public $text;
@@ -27,6 +31,7 @@ abstract class QuestionType {
     public $theme_code;
     public $section_code;
     public $type_code;
+
     function __construct($id_question){
         if ($id_question != Question::max('id_question')+1){                                                            //проверка не является ли вопрос новым
             $this->question = new Question();
@@ -46,7 +51,7 @@ abstract class QuestionType {
         $this->id_question = $id_question;
     }
 
-    public function getOptions(Request $request){
+    protected function getOptions(Request $request){
         $section = Section::whereSection_name($request->input('section'))->select('section_code')->first()->section_code;
         $theme = Theme::whereTheme_name($request->input('theme'))->select('theme_code')->first()->theme_code;
         $type = Type::whereType_name($request->input('type'))->select('type_code')->first()->type_code;
@@ -63,6 +68,30 @@ abstract class QuestionType {
         }
         return ['section' => $section, 'theme' => $theme, 'type' => $type,
                 'control' => $control, 'points' => $points, 'translated' => $translated];
+    }
+
+    protected function getTitleWithImage(Request $request) {
+        $parse_text = preg_split('/\[\[|\]\]/', $request->input('title'));                                              //части текста вопроса без [[ ]]
+        $eng_parse_text = preg_split('/\[\[|\]\]/', $request->input('eng-title'));                                      //части текста вопроса на английском без [[ ]]
+
+        $input_images = Input::file();
+        for ($i = 1; $i < count($input_images['text-images']) + 1; $i++){
+            $extension = $input_images['text-images'][$i-1]->getClientOriginalExtension();                              //получаем расширение файла
+            $fileName = time() + rand(11111, 99999) . '.' . $extension;                                                          //случайное имя картинки
+            $input_images['text-images'][$i-1]->move($this::IMAGES_IN_TITLE_DIR, $fileName);                                      //перемещаем картинку
+            $parse_text[2*$i-1] = '::'.$this::IMAGES_IN_TITLE_DIR.$fileName.'::';                                                 //заменить каждуый старый файл на новый
+            $eng_parse_text[2*$i-1] = '::'.$this::IMAGES_IN_TITLE_DIR.$fileName.'::';
+        }
+        $title = '';
+        foreach ($parse_text as $part){                                                                                 //собираем все в строку
+            $title .= $part;
+        }
+        $eng_title = '';
+        foreach ($eng_parse_text as $eng_part){                                                                         //собираем все в строку для английского текста
+            $eng_title .= $eng_part;
+        }
+
+        return ['ru_title' => $title, 'eng_title' => $eng_title];
     }
 
     /**
