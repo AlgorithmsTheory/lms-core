@@ -383,7 +383,8 @@ class StatementsController extends Controller{
         }
         else {
             $results = Totalresults::where('userID', $user_id)->get();
-        }        $id = 0;
+        }
+        $id = 0;
         foreach ($results as $result){
             $score = 0;
             $id = $result['userID'];
@@ -393,7 +394,8 @@ class StatementsController extends Controller{
             $seminar = Seminars::where('userID', $id)->first();
             $classwork = Classwork::where('userID', $id)->first();
             //подсчет балла
-            $score += $control['control3'] + $control['control3quiz'] + $control['test3'] + $control['test3quiz'];
+//            $score += $control['control3'] + $control['control3quiz'] + $control['test3'] + $control['test3quiz'];
+            $score += $control['control3'] + $control['test3'] + $control['test3quiz'];
             $score += ($lecture['col12'] + $lecture['col13'] + $lecture['col14'] + $lecture['col15']) / $k_lec;
             $score += $classwork['col12'] + $classwork['col13'] + $classwork['col14'] + $classwork['col15'];
             $score += ($seminar['col12'] + $seminar['col13'] + $seminar['col14'] + $seminar['col15']) / $k_sem;
@@ -402,18 +404,18 @@ class StatementsController extends Controller{
             //запись результата
             Totalresults::where('userID', $id)->update(['section3' => round($score)]);
             //отмечаем в програссе, преодолели ли проходной балл
-            if ($control['control3'] >= 2.4){
+            if ($control['control3'] >= 4.2){
                 Statements_progress::where('userID', $id)->update(['control3' => 1]);
             }
             else {
                 Statements_progress::where('userID', $id)->update(['control3' => 0]);
             }
-            if ($control['control3quiz'] >= 1.8){
-                Statements_progress::where('userID', $id)->update(['control3quiz' => 1]);
-            }
-            else {
-                Statements_progress::where('userID', $id)->update(['control3quiz' => 0]);
-            }
+//            if ($control['control3quiz'] >= 1.8){
+//                Statements_progress::where('userID', $id)->update(['control3quiz' => 1]);
+//            }
+//            else {
+//                Statements_progress::where('userID', $id)->update(['control3quiz' => 0]);
+//            }
             if ($control['test3'] >= 1.8){
                 Statements_progress::where('userID', $id)->update(['test3' => 1]);
             }
@@ -521,7 +523,7 @@ class StatementsController extends Controller{
             //поск необходимых записей в таблицах
             $id = $result['userID'];
             //подсчет балла и оценок
-            $score += $result['termResult'] + $result['exam'];
+            $score += $result['termResult'] + $result['exam'] + $result['exam2'];
             if ($score > $max_score) $score = $max_score;
             $markRU = Test::calcMarkRus(100, $score);
             $markEU = Test::calcMarkBologna(100, $score);

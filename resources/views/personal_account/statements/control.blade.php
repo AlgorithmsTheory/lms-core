@@ -7,7 +7,7 @@
         <td rowspan="3" class="warning">Имя</td>
         <td colspan="8" class="info">1 Раздел</td>
         <td colspan="4" class="warning">2 Раздел</td>
-        <td colspan="8" class="info">3 Раздел</td>
+        <td colspan="6" class="info">3 Раздел</td>
         <td colspan="2" class="warning">4 Раздел</td>
     </tr>
     <tr class="active">
@@ -18,7 +18,7 @@
         <td colspan="2">Тест 2(авт.)</td>
         <td colspan="2">Тест 2(письм.)</td>
         <td colspan="2">КР №3-рекурсии</td>
-        <td colspan="2">КР №3-письм.</td>
+        {{--<td colspan="2">КР №3-письм.</td>--}}
         <td colspan="2">Тест 3(авт.)</td>
         <td colspan="2">Тест 3(письм.)</td>
         <td colspan="2">Опрос</td>
@@ -38,10 +38,10 @@
         <td>min 1.8</td>
         <td>max 3</td>
 
-        <td>min 2.4</td>
-        <td>max 4</td>
-        <td>min 1.8</td>
-        <td>max 3</td>
+        <td>min 4.2</td>
+        <td>max 7</td>
+        {{--<td>min 1.8</td>--}}
+        {{--<td>max 3</td>--}}
         <td>min 1.8</td>
         <td>max 3</td>
         <td>min 1.8</td>
@@ -86,9 +86,9 @@
             <td colspan="2">
                 <input type="number" value="{{ $state['control3'] }}" name="{{ $state['userID'] }}" id="control3" class="controls" style="width: 50px;" step="any">
             </td>
-            <td colspan="2">
-                <input type="number" value="{{ $state['control3quiz'] }}" name="{{ $state['userID'] }}" id="control3quiz" class="controls" style="width: 50px;" step="any">
-            </td>
+            {{--<td colspan="2">--}}
+{{--                <input type="number" value="{{ $state['control3quiz'] }}" name="{{ $state['userID'] }}" id="control3quiz" class="controls" style="width: 50px;" step="any">--}}
+            {{--</td>--}}
             <td colspan="2">
                 <input type="number" value="{{ $state['test3'] }}" name="{{ $state['userID'] }}" id="test3" class="controls" style="width: 50px;" step="any">
             </td>
