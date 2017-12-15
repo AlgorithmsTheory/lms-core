@@ -10,6 +10,7 @@ composer.lock
 _ide_helper.php
 public/download/*
 public/archive/*
+public/img/questions/title/*
 /nbproject/private/
 .idea/
 
