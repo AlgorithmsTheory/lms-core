@@ -7,7 +7,7 @@
         <td rowspan="3" class="warning">Имя</td>
         <td colspan="8" class="info">1 Раздел</td>
         <td colspan="4" class="warning">2 Раздел</td>
-        <td colspan="8" class="info">3 Раздел</td>
+        <td colspan="6" class="info">3 Раздел</td>
         <td colspan="2" class="warning">4 Раздел</td>
     </tr>
     <tr class="active">
