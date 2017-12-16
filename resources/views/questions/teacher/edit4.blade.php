@@ -67,7 +67,7 @@
                                 <div class="checkbox checkbox-styled">
                                     <label>
                                         <input type="checkbox" name="answer" value="1"
-                                            @if($data['question']['answer'] == true)
+                                            @if($data['question']['answer'] == 'true')
                                                 checked
                                             @endif
                                         >
