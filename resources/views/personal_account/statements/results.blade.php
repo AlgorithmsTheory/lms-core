@@ -10,8 +10,8 @@
         <td colspan="2">Раздел 3</td>
         <td colspan="2">Раздел 4</td>
         <td colspan="2">Итог за семестр</td>
-        <td colspan="2">Экзамен (письм.)</td>
         <td colspan="2">Экзамен (авт.)</td>
+        <td colspan="2">Экзамен (письм.)</td>
         <td colspan="2">Суммарный итог</td>
         <td rowspan="2">Оценка(A-F)</td>
         <td rowspan="2">Оценка(2-5)</td>
@@ -124,6 +124,7 @@
                 @endif
             ">
                 <input type="number" value="{{ $state['exam'] }}" name="{{ $state['userID'] }}" id="exam" class="resulting" style="width: 50px;">
+            </td>
             <td colspan="2" class="
                 @if ($state['exam2'] < 12)
                     danger
