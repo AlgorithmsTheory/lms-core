@@ -14,9 +14,15 @@ class APIController extends Controller{
     }
 
     public function getStudentsFromGroup($group_id){
-        $students = User::where('group', $group_id)->get();
-        $headers = [ 'Content-Type' => 'application/json; charset=utf-8' ];
-        return response()->json($students, 200, $headers, JSON_UNESCAPED_UNICODE);
+        if ($group_id == 'all') {
+            $students = User::whereIn('role', ['АДМИН', 'СТУДЕНТ'])->get();
+            $headers = [ 'Content-Type' => 'application/json; charset=utf-8' ];
+            return response()->json($students, 200, $headers, JSON_UNESCAPED_UNICODE);
+        } else {
+            $students = User::where('group', $group_id)->whereIn('role', ['АДМИН', 'СТУДЕНТ'])->get();
+            $headers = [ 'Content-Type' => 'application/json; charset=utf-8' ];
+            return response()->json($students, 200, $headers, JSON_UNESCAPED_UNICODE);
+        }
     }
 
     public function addStudentFace($student_id, $person_id, $group_id, $pswd){
