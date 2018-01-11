@@ -22,16 +22,6 @@ class Mypdf extends \mPDF{
         $this->WriteHTML($html);
     }
 
-    /** нижний колонтитул */
-    function Footer(){
-        //Позиция на 1,5 cm от нижнего края страницы
-        $this->SetY(-15);
-        //Шрифт Arial, курсив, размер 8
-        $this->SetFont('DejaVuSansMono','',8);
-        //Номер страницы
-        $this->Cell(0,10,'Страница '.$this->PageNo().'/{nb}',0,0,'C');
-    }
-
     /** Информация о билете
      @variant номер варианта
      */
