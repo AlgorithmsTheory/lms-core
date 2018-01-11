@@ -70,12 +70,18 @@ class GeneratorController extends Controller {
     }
 
     private function headOfPdf(Mypdf $fpdf, $test_name, $variant, $num_tasks){
-            $fpdf->AliasNbPages();                                                                                      // для вывода общего числа страниц
-            //$fpdf->AddFont('TimesNewRomanPSMT','','times.php');
-            $fpdf->AddPage();
-            $fpdf->Head($test_name);
-            $fpdf->info($variant);                                                                                            // вывод информации о билете
-            $fpdf->task_table($num_tasks);                                                                                 // вывод таблицы результатов
+        $fpdf->AliasNbPages();
+        $fpdf->defaultfooterfontstyle = 'DejaVuSansMono';
+        $fpdf->SetFooter('Страница {PAGENO}/{nb}', '');
+        $fpdf->AddPage();
+        $fpdf->Head($test_name);
+        $fpdf->info($variant);                                                                                            // вывод информации о билете
+        $fpdf->task_table($num_tasks);                                                                                 // вывод таблицы результатов
+    }
+
+    private function footerOfPdf(Mypdf $fpdf, $protocol_num, $protocol_date) {
+        $footer = 'Билеты утверждены на заседании кафедры "Кибернетика", протокол №' . $protocol_num . ' от ' . $protocol_date . '.';
+        $fpdf->WriteHTML($footer);
     }
 
     /** удаляет директорию вместе с файлами */
@@ -114,7 +120,6 @@ class GeneratorController extends Controller {
 
     /** Генерирует pdf файлы с тестом с заданным количеством вариантов */
     public function pdfTest(Request $request){
-        $question = new Question();
         $test = new Test();
 
         $test_name = $request->input('test');
@@ -139,6 +144,9 @@ class GeneratorController extends Controller {
                 $id = $generator->chooseQuestion();
                 $this->pdfQuestion($fpdf, $id, $i+1);
                 $this->pdfQuestion($answered_fpdf, $id, $i+1, true);
+            }
+            if ($request->input('protocol-num') != '') {
+                $this->footerOfPdf($fpdf, $request->input('protocol-num'), $request->input('protocol-date'));
             }
             $fpdf->Output($dir.'/variant'.$k.'.pdf', 'F');
             $answered_fpdf->Output($dir.'/answered_variant'.$k.'.pdf', 'F');
