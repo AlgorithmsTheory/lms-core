@@ -31,16 +31,18 @@ full
                 
             </div>
             <br>
-            <br>
-            <table class="table table-condensed" id="retest-table">
+            <input type="text" id="myInput0" onkeyup="myFunction(0)" placeholder="Поиск по фамилии" style="margin-right: 25px;">
+            <input type="text" id="myInput2" onkeyup="myFunction(2)" placeholder="Поиск по группе">
+            <br> 
+            <table class="table table-condensed" id="retest-table" style="margin-top: 25px;">
                 <tr>
-                    <td class="text-center">ФИО</td>
-                    <td ></td>
-                    <td class="text-center">Группа</td>
+                    <th id="0" name="th">Фамилия</th>
+                    <th id="1" name="th">Имя</th>
+                    <th id="2" name="th" class="text-center">Группа</th>
                     <!-- <td>Название теста</td> -->
                     <!-- <td>Число попыток</td> -->
-                    <td class="text-center">Последняя оценка</td>
-                    <td class="text-center">Возможность прохождения</td>
+                    <th id="3" name="th" class="text-center">Последняя оценка</th>
+                    <th id="4" name="th" class="text-center">Возможность прохождения</th>
                    <!--  <td>Максимальный балл, %</td> -->
                 </tr>
                 <tbody id="target">
@@ -109,7 +111,8 @@ full
 
 @section('js-down')
 {!! HTML::script('js/retest.js') !!}
+
 {!! HTML::script('js/core/source/AppOffcanvas.js') !!}
 {!! HTML::script('js/libs/nanoscroller/jquery.nanoscroller.min.js') !!}
-
+{!! HTML::script('js/algorithms/sort.js') !!}
 @stop

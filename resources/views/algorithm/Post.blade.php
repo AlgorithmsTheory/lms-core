@@ -662,13 +662,13 @@
 									</div><!--end .card-body -->
 									<div class="card">
 										<div class="col-sm-6">
-											<button type="button" onclick="RunPost()" class="btn ink-reaction btn-primary" title="" data-original-title="Увидеть только результат преобразования" data-toggle="tooltip" data-placement="top" onClick="run_all_normal(false)">Запуск</button>	
+											<button type="button" onclick="RunPost()" class="btn ink-reaction btn-primary" title="" data-original-title="Увидеть только результат преобразования" data-toggle="tooltip" data-placement="top" >Запуск</button>	
 										</div>
 		                               <!--  <div class="col-sm-4">									
 											<button type="button" style="right: -20px;"class="btn ink-reaction btn-primary" onClick="" title="" data-original-title="Шаг для отладки алгоритма" data-toggle="tooltip" data-placement="top"><i class="md md-fast-forward"></i></button>
 										</div> -->
 										<div class="col-sm-6">									
-											<button  type="button" class="btn ink-reaction btn-primary" onClick="run_all_normal(true)" title="" data-original-title="Отладить до конца" data-toggle="tooltip" data-placement="top"><i class="md md-play-arrow"></i></button>
+											<button  type="button" class="btn ink-reaction btn-primary"  title="" data-original-title="Отладить до конца" data-toggle="tooltip" data-placement="top"><i class="md md-play-arrow"></i></button>
 										</div>
 										<br>
 									</div>		
@@ -741,39 +741,40 @@
 
 	<div id="offcanvas-demo-right" class="offcanvas-pane width-10" style="">
 		<div class="offcanvas-head">
-			<header>Как работать с эмулятором</header>
-			<div class="offcanvas-tools">
-				<a class="btn btn-icon-toggle btn-default-light pull-right" data-dismiss="offcanvas">
-					<i class="md md-close"></i>
-				</a>
-			</div>
+			<header>Что это и как с этим работать?</header>
+			
 		</div>
-		<div class="nano has-scrollbar" style="height: 318px;"><div class="nano-content" tabindex="0" style="right: -17px;"><div class="offcanvas-body">
+		<div class="nano has-scrollbar" style="height: 318px;">
+		<div class="nano-content" tabindex="0" style="right: -17px;">
+		<div class="offcanvas-body">
 
-		<p>
-			Введите в соответствующие поля входное слово, алфавит, а также сам текст программы(правую и левую части).
-		</p>
-		
-		<h4>Инструкция:</h4>
+		<h4>Что такое машина Поста?</h4>
 			<ul class="list-divided">
-				<li>Введите в соответствующие поля входное слово, а также сам текст программы.</li>
-				<!-- <li>Все введенные символы отделяйте друг от друга точками. Но симол с нижними индексами считается как один. Пример: а<sub>0</sub>.a -> a.a.a</li>
-				 -->
-				<li>Ввод строки алгоритма осуществляется в следующем формате: <действие> <строка_перехода> <строка перехода в ином случае> (вводится, если выбрано действе "?") </li>
-				<li>В эмуляторе можно выбрать один из шести видов команд:</li>
-				<ol>1. → j – сдвинуться вправо, перейти к j-й строке программы</ol>
-				<ol>2. ← j – сдвинуться влево, перейти к j-й строке программы</ol>
-				<ol>3. V j – поставить метку, перейти к j-й строке программы</ol>
-				<ol>4. X j – стереть метку, перейти к j-й строке программы</ol>
-				<ol>5. ? j1; j2 – если в ячейке нет метки, то перейти к j1-й строке программы, иначе перейти к j2-й строке программы </ol>
+				<li>Машина Поста — это абстрактная, но очень простая вычислительная машина.</li>
+				<li>Машина Поста состоит из каретки (считывающей и записывающей головки) и ленты, разбитой на ячейки. Каждая ячейка ленты может быть либо пустой («0»), или содержать метку («1»).</li>
+				<li>Программа состоит из пронумерованных строк. В каждой строке записывается одна из следующих команд:</li>
+				<ol>1. → j – переместить каретку вправо на 1 ячейку и перейти к строке с номером j</ol>
+				<ol>2. ← j – переместить каретку влево на 1 ячейку и перейти к строке с номером j</ol>
+				<ol>3. 1 j – записать в текущую ячейку «1» (поставить метку) и перейти к строке с номером j</ol>
+				<ol>4. 0 j – записать в текущую ячейку «0» (стереть метку) и перейти к строке с номером j</ol>
+				<ol>5. ? i; j – если текущая ячейка содержит «0» (не отмечена), то перейти к строке с номером i, иначе перейти к строке j</ol>
 				<ol>6. ! – конец программы (стоп). В команде «стоп» переход на следующую строку не указывается</ol>
-				
-			<!-- <li>Для добавления нижнего индекса нужно набрать в поле ввода конструкцию вида _{цифры}. Пример: S_{00} преобразуется в S<sub>00</sub>. </li> -->
-				<li>Очитстить все строки можно с помощью кнопки "Очистить" </li>
-				
-
 			</ul>
-		</div></div><div class="nano-pane"><div class="nano-slider" style="height: 199px; transform: translate(0px, 0px);"></div></div></div>
+		<h4>Как этим пользоваться?</h4>
+			<ul class="list-divided">
+				<li>В правой части находится поле редактора, в которое можно ввести условие задачи в свободной форме.</li>
+				<li>Ниже расположено поле для ввода входного слова, которое должна обработать программа. Тут введите последовательность из нулей и единиц. Таким образом будет задана лента. </li>
+				<li>В таблице справа набирается программа. Каждая строка программы нумеруется автоматически.</li>
+				<ol>1. В каждой строке в первом поле из списка выбирается нужная команда.</ol>
+				<ol>2. Во втором вводится номер строки для перехода (если это необходимо). </ol>
+				<ol>3. В третье поле также можно ввести номер строки перехода, это требуется в случае выбора в строке команды «?».</ol>
+				<ol>4. Четвертое может содержать комментарий к каждой строчке программы. </ol>
+				<li>Добавить строки таблицы или очистить их можно с помощью кнопок, расположенных снизу от таблицы. </li>
+				<li>Программа может выполняться сразу до конца(кнопка Запуск) или по шагам (Шаг).</li>
+				<li>Задачи для машины Поста можно сохранять в файлах. Сохраняется условие задачи и программа. Для этого нажмите «Стрелку вниз».</li>
+				<li>Для загрузки сохраненного алгоритма выберите файл и нажмите «Стрелку вверх».</li>
+			</ul>
+		</div></div><div class="nano-pane"><div class="nano-slider" style="height: 199px; transform: translate(0px, 0px);"></div>
 	</div>
 </div>
 </section>

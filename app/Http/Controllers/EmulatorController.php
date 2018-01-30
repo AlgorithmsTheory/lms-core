@@ -463,7 +463,7 @@ class EmulatorController extends Controller {
         $array = array();
         $is_started = DB::select("SELECT variant FROM user_result_tur WHERE id_user =".$id_user);
         $is_started = EmulatorController::magic($is_started); 
-        if (empty($is_started)) { //if student hasn't variant
+        if (empty($is_started) ) { //if student hasn't variant
 
             $variant = DB::select("SELECT variant FROM tasks order by RAND() limit 1");
             $variant = EmulatorController::magic($variant);
@@ -479,8 +479,18 @@ class EmulatorController extends Controller {
             $variant = DB::select("SELECT variant FROM user_result_tur WHERE id_user =".$id_user);
             $variant = EmulatorController::magic($variant);
             $variant = $variant[0]['variant'];
-            $res = DB::select("SELECT task, number, level, variant, id_task FROM tasks WHERE variant = " . $variant . " AND number in (1, 2) AND level in (1,2)");
 
+            if ($variant==0) 
+            {
+               $variant = DB::select("SELECT variant FROM tasks order by RAND() limit 1"); 
+               $variant = EmulatorController::magic($variant);
+               $variant = $variant[0]['variant'];
+               DB::update("UPDATE user_result_tur SET variant=" . $variant . " WHERE id_user =".$id_user);
+            }
+                          
+            $res = DB::select("SELECT task, number, level, variant, id_task FROM tasks WHERE variant = " . $variant . " AND number in (1, 2) AND level in (1,2)");
+           
+            
         }
         //  $variant = DB::select("SELECT variant FROM tasks order by RAND() limit 1");
         //  $variant = EmulatorController::magic($variant);
@@ -513,9 +523,20 @@ class EmulatorController extends Controller {
             DB::insert( "INSERT INTO user_result_nam (id_user,variant) VALUES ('$id_user','$variant')");
         }
         else {
+
+
             $variant = DB::select("SELECT variant FROM user_result_nam WHERE id_user =".$id_user);
             $variant = EmulatorController::magic($variant);
             $variant = $variant[0]['variant'];
+
+             if ($variant==0) 
+            {
+                $variant = DB::select("SELECT variant_number  FROM tasks_nam order by RAND() limit 1");
+                $variant = EmulatorController::magic($variant);
+                $variant = $variant[0]['variant_number'];
+               DB::update("UPDATE user_result_nam SET variant_number=" . $variant . " WHERE id_user =".$id_user);
+            }
+
             $res = DB::select("SELECT task_text as task, task_number as number, level, variant_number as variant, id as id_task FROM tasks_nam WHERE variant_number = " . $variant . " AND task_number in (1, 2) AND level in (1,2)");
 
 

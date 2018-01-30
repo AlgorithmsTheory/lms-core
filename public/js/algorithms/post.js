@@ -137,6 +137,7 @@ function GetInput() {
         return input;
     } else {
         throw Error("InvalidInput");
+    
     }
 }
 
