@@ -94,16 +94,26 @@ function PostMachine(state, rules, position, ruleId) {
             throw Error("Unknown rule");
         }
     }
+
+    this.GetStateWithPosition = function () {
+        return this.State.substr(0, this.Position) + 
+            "[" + 
+            this.State[this.Position] + 
+            "]" + 
+            this.State.substr(this.Position+1);
+    }
 }
 
 
 function GetResult(rules, state, position = 0, initialRule = 1) {
     algo = new PostMachine(state, rules, position, initialRule);
-
+    log = [];
+    log.push(algo.GetStateWithPosition());
     for (var i = 0; i < 10000; i++) {
         res = algo.UpdateState();
+        log.push(algo.GetStateWithPosition());
         if (res) {
-            return res;
+            return log;
         }
     }
     throw Error("ToManySteps");
@@ -141,8 +151,23 @@ function GetInput() {
     }
 }
 
-function RunPost() {
+function RunPost(withDebug=false) {
     rules = GetRules();
-    input  = GetInput();
-    $("#result_word").val(GetResult(rules, input));
+    input = GetInput();
+    result = GetResult(rules, input)
+    
+    var logTable = document.getElementById("debug");
+    logTable.innerHTML = "";
+
+    $("#result_word").val(result[result.length - 1]);
+    if (withDebug) {
+        for (var i = 0; i < result.length; i++) {
+            var row = logTable.insertRow(i);
+            cellNumer = row.insertCell(0);
+            cellState = row.insertCell(1);
+
+            cellNumer.innerText = i + 1;
+            cellState.innerText = result[i];
+        }
+    }
 }
