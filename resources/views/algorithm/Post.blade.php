@@ -662,13 +662,13 @@
 									</div><!--end .card-body -->
 									<div class="card">
 										<div class="col-sm-6">
-											<button type="button" onclick="RunPost()" class="btn ink-reaction btn-primary" title="" data-original-title="Увидеть только результат преобразования" data-toggle="tooltip" data-placement="top" >Запуск</button>	
+											<button type="button" onclick="RunPost()" class="btn ink-reaction btn-primary" title="" data-original-title="Отладить до конца" data-toggle="tooltip" data-placement="top" >Запуск</button>	
 										</div>
 		                               <!--  <div class="col-sm-4">									
 											<button type="button" style="right: -20px;"class="btn ink-reaction btn-primary" onClick="" title="" data-original-title="Шаг для отладки алгоритма" data-toggle="tooltip" data-placement="top"><i class="md md-fast-forward"></i></button>
 										</div> -->
 										<div class="col-sm-6">									
-											<button  type="button" class="btn ink-reaction btn-primary"  title="" data-original-title="Отладить до конца" data-toggle="tooltip" data-placement="top"><i class="md md-play-arrow"></i></button>
+											<button  type="button" onclick="RunPost(true)" class="btn ink-reaction btn-primary"  title="" data-original-title="Шаг для отладки алгоритма" data-toggle="tooltip" data-placement="top"><i class="md md-play-arrow"></i></button>
 										</div>
 										<br>
 									</div>		
