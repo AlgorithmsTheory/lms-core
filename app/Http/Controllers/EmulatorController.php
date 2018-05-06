@@ -35,7 +35,7 @@ class EmulatorController extends Controller {
     }
 
 
- public function Post(){
+	public function Post(){
       return view("algorithm.Post");
     }
 
@@ -169,6 +169,10 @@ class EmulatorController extends Controller {
     public function kontrHAM(){
         return view("algorithm.kontrHAM");
     }
+	
+	public function RAM() {
+		return view("algorithm.RAM");
+	}
 
 
     public function MTPOST(Request $request){

@@ -1,0 +1,16 @@
+#editor {
+	position: absolute;    
+	!min-height: 50%;
+	height: 300px;
+	margin-top:0px;
+	top:0px;
+	left:0px;
+	right:0px;
+	bottom:0px;
+}
+
+.myMarker {
+  position:absolute;
+  background:rgba(100,200,100,0.5);
+  z-index:20
+}
