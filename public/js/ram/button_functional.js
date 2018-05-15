@@ -79,13 +79,13 @@ btn_reset.onclick = function() {
 };
 
 btn_help.onclick = function() {
-	alert('aaa');
+	RegisterManager.add_register(100);
 };
 
 btn_save_doc.onclick = function() {
-	alert('aaa');
+	RegisterManager.reset_values();
 };
 
 btn_load_doc.onclick = function() {
-	alert('aaa');
+	RegisterManager.reset();
 };
