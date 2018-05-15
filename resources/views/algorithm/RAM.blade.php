@@ -52,24 +52,41 @@
 					<div class = "row justify-content-md-center">
 						<div class = "col col-md-auto">	
 							<div class="dropdown">
-								<button class="btn btn-block btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-									Dropdown
+								<button class="btn btn-block btn-primary dropdown-toggle" type="button" id="dropdownChoiceMod" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+									<span id = "mod">Отладка</span>
 									<span class="caret"></span>
 								</button>
-								<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-									<li id = "drop_debug"><a href="#">Debug</a></li>
-									<li id = "drop_animate"><a href="#">Animate</a></li>
-									<li id = "drop_run"><a href="#">Run</a></li>
+								<ul class="dropdown-menu" aria-labelledby="dropdownChoiceMod">
+									<li id = "drop_debug"><a href="#">Отладка</a></li>
+									<li id = "drop_animate"><a href="#">Анимация</a></li>
+									<li id = "drop_run"><a href="#">Исполнение</a></li>
 								</ul>
 							</div>
 							</br>
-							<button type="button" class="btn btn-block btn-primary mt-5" id = "btn_animate">Debug</button>
+							<button type="button" class="btn btn-block btn-primary mt-5" id = "btn_start">Старт</button>
 							<button type="button" class="btn btn-block btn-primary" id = "btn_pause" disabled>Пауза</button>
 							<button type="button" class="btn btn-block btn-primary" id = "btn_next" disabled>След. Операция</button>
 							<button type="button" class="btn btn-block btn-primary" id = "btn_reset">Сброс</button>
 							<button type="button" class="btn btn-block btn-primary" id = "btn_save_doc">Сохранить в файл</button>
 							<button type="button" class="btn btn-block btn-primary" id = "btn_load_doc">Загрузить из файла</button>
 							<button type="button" class="btn btn-block btn-primary mb-5" id = "btn_help">Помощь</button>
+							</br></br></br>
+							<div class = "row justify-content-md-center">
+								<div class = "col-md-10 col-md-offset-1">
+									<b>Работа с регистрами</b>
+								</div>
+							</div>
+							<div class = "row">
+								<div class = "col-md-2">
+									<button type="button" class="btn btn-block btn-primary" id = "btn_reg_plus">+</button>
+								</div>
+								<div class = "col-md-2">
+									<button type="button" class="btn btn-block btn-primary" id = "btn_reg_minus">-</button>
+								</div>
+								<div class = "col-md-8">
+									<button type="button" class="btn btn-block btn-primary" id = "btn_reg_default">default</button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -87,7 +104,7 @@
 					<div class="form-group form-group-lg">
 						<label class="col-sm-2 control-label"><b>Выходная лента</b></label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" id="output" placeholder="" disabled>
+							<input type="text" class="form-control" id="output" placeholder="">
 						</div>
 					</div>
 				</form>
@@ -105,12 +122,7 @@
 		{!! HTML::script('/js/ram/bootstrap.min.js') !!}
 		{!! HTML::script('/js/ram/src-noconflict/ace.js') !!}
 		
-		{{-- HTML::script('/js/ram/RAM.js') --}}
-		{!! HTML::script('/js/ram/registerManager.js') !!}
-		
-		{!! HTML::script('/js/ram/ace-first-init.js') !!}
-		{!! HTML::script('/js/ram/functional.js') !!}
-		{!! HTML::script('/js/ram/button_functional.js') !!}
+		{!! HTML::script('/js/ram/RAM.js') !!}
 		<!-- END JAVASCRIPT -->
 @stop
 
