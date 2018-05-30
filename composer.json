@@ -11,7 +11,8 @@
         "laravelcollective/html": "5.4.*",
         "guzzlehttp/guzzle": "^6.1",
 		"kendu/l5-mpdf" : "dev-master",
-        "laravel/tinker": "^1.0"
+        "laravel/tinker": "^1.0",
+        "phpoffice/phpspreadsheet": "^1.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
