@@ -22,9 +22,22 @@ full-tests
                         @else
                             @foreach ($ctr_tests as $test)
                                 @if ($test['access_for_student'] == 1)
-                                    <a href="{{ route('question_showtest', $test['id_test']) }}">
-                                        <div class="col-md-12 col-sm-12 card test-list text-lg dropdown" style="background-color: #d4fad6;">
-                                            <button class="dropbtn">{{$test['test_name']}}</button>
+                                    @if ($test['adaptive'] == 1)
+                                        <a href="{{ route('show_adaptive_test', $test['id_test']) }}">
+                                            <div class="col-md-12 col-sm-12 card test-list text-lg dropdown" style="background-color: #d4fad6;">
+                                                <button class="dropbtn">{{$test['test_name']}}</button>
+                                                <div class="dropdown-content" >
+                                                    Перейти к прохождению
+                                                    <a>Максимально возможный балл: {{ $test['max_points'] }} из {{ $test['total'] }}</a>
+                                                    <a>Количество вопросов в основной фазе: {{ $test['compulsory_amount'] }}</a>
+                                                    <a>Попыток сделано: {{ $test['attempts'] }}  </a>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @else
+                                        <a href="{{ route('question_showtest', $test['id_test']) }}">
+                                            <div class="col-md-12 col-sm-12 card test-list text-lg dropdown" style="background-color: #d4fad6;">
+                                                <button class="dropbtn">{{$test['test_name']}}</button>
                                                 <div class="dropdown-content" >
                                                     Перейти к прохождению
                                                     <a>Максимально возможный балл: {{ $test['max_points'] }} из {{ $test['total'] }}</a>
@@ -32,18 +45,25 @@ full-tests
                                                     <a>Время на прохождение: {{ $test['test_time'] }} минут </a>
                                                     <a>Попыток сделано: {{ $test['attempts'] }}  </a>
                                                 </div>
-                                        </div>
-                                    </a>
+                                            </div>
+                                        </a>
+                                    @endif
                                 @else
                                     <a>
                                         <div class="col-md-12 col-sm-12 card test-list text-lg dropdown" style="background-color: #fad7d4;">
                                             <button class="dropbtn">{{$test['test_name']}}</button>
                                             <div class="dropdown-content">
                                                 У вас не осталось попыток на прохождение! Если вам нужно переписать этот тест, обратитесь к преподавателю!
-                                                <a>Максимальный балл: {{ $test['max_points'] }} из {{ $test['total'] }}</a>
-                                                <a>Время на прохождение: {{ $test['test_time'] }} минут </a>
-                                                <a>Количество вопросов: {{ $test['amount'] }}</a>
-                                                <a>Попыток сделано: {{ $test['attempts'] }}  </a>
+                                                @if ($test['adaptive'] == 1)
+                                                    <a>Максимально возможный балл: {{ $test['max_points'] }} из {{ $test['total'] }}</a>
+                                                    <a>Количество вопросов в основной фазе: {{ $test['compulsory_amount'] }}</a>
+                                                    <a>Попыток сделано: {{ $test['attempts'] }}  </a>
+                                                @else
+                                                    <a>Максимальный балл: {{ $test['max_points'] }} из {{ $test['total'] }}</a>
+                                                    <a>Время на прохождение: {{ $test['test_time'] }} минут </a>
+                                                    <a>Количество вопросов: {{ $test['amount'] }}</a>
+                                                    <a>Попыток сделано: {{ $test['attempts'] }}  </a>
+                                                @endif
                                             </div>
                                         </div>
                                     </a>
@@ -64,18 +84,32 @@ full-tests
                             <h3 class="none-tests">На данный момент не доступен ни один тренировочный тест</h3>
                         @else
                         @foreach ($tr_tests as $test)
-                            <a href="{{ route('question_showtest', $test['id_test']) }}">
-                                <div class="col-md-12 col-sm-12 card test-list text-lg dropdown" style="background-color: #d4fad6;">
-                                    <button class="dropbtn">{{$test['test_name']}}</button>
-                                    <div class="dropdown-content">
-                                        Перейти к прохождению
-                                        <a>Максимально возможный балл: {{ $test['total'] }}</a>
-                                        <a>Время на прохождение: {{ $test['test_time'] }} минут </a>
-                                        <a>Количество вопросов: {{ $test['amount'] }}</a>
-                                        <a>Попыток сделано: {{ $test['attempts'] }}  </a>
+                            @if ($test['adaptive'] == 1)
+                                <a href="{{ route('show_adaptive_test', $test['id_test']) }}">
+                                    <div class="col-md-12 col-sm-12 card test-list text-lg dropdown" style="background-color: #d4fad6;">
+                                        <button class="dropbtn">{{$test['test_name']}}</button>
+                                        <div class="dropdown-content" >
+                                            Перейти к прохождению
+                                            <a>Максимально возможный балл: {{ $test['max_points'] }} из {{ $test['total'] }}</a>
+                                            <a>Количество вопросов в основной фазе: {{ $test['compulsory_amount'] }}</a>
+                                            <a>Попыток сделано: {{ $test['attempts'] }}  </a>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
+                                </a>
+                            @else
+                                <a href="{{ route('question_showtest', $test['id_test']) }}">
+                                    <div class="col-md-12 col-sm-12 card test-list text-lg dropdown" style="background-color: #d4fad6;">
+                                        <button class="dropbtn">{{$test['test_name']}}</button>
+                                        <div class="dropdown-content" >
+                                            Перейти к прохождению
+                                            <a>Максимально возможный балл: {{ $test['max_points'] }} из {{ $test['total'] }}</a>
+                                            <a>Количество вопросов: {{ $test['amount'] }}</a>
+                                            <a>Время на прохождение: {{ $test['test_time'] }} минут </a>
+                                            <a>Попыток сделано: {{ $test['attempts'] }}  </a>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endif
                         @endforeach
                         @endif
                     </div>

@@ -38,9 +38,9 @@ class QuestionController extends Controller{
     /** главная страница модуля тестирования */
     public function index(){
         $username =  null;
-        $testGenerator = new UsualTestGenerator(Test::whereId_test(100)->first());
-        $testGenerator->buildGraph();
-        $testGenerator->generate();
+//        $testGenerator = new UsualTestGenerator(Test::whereId_test(100)->first());
+//        $testGenerator->buildGraph();
+//        $testGenerator->generate();
         return view('questions.teacher.index', compact('username', 'image'));
     }
 

@@ -60,6 +60,7 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('passw
 // Модуль тестирования - прохождение тестов
 Route::get('tests', ['as' => 'tests', 'uses' => 'TestController@index', 'middleware' => 'general_auth']);
 Route::get('questions/show-test/{id_test}', ['as' => 'question_showtest', 'uses' => 'TestController@showViews', 'middleware' => ['general_auth', 'single_test', 'have_attempts', 'test_is_available']]);
+Route::get('questions/show-adaptive-test/{id_test}', ['as' => 'show_adaptive_test', 'uses' => 'TestController@showAdaptiveTest', 'middleware' => ['general_auth', 'single_test', 'have_attempts', 'test_is_available']]);
 Route::patch('questions/check-test', ['as' => 'question_checktest', 'uses' => 'TestController@checkTest']);
 Route::post('tests/drop', ['as' => 'drop_test', 'uses' => 'TestController@dropTest', 'middleware' => 'general_auth']);
 Route::post('tests/get-protocol', ['as' => 'get_protocol', 'uses' => 'TestController@getProtocol', 'middleware' => 'general_auth']);
@@ -433,3 +434,11 @@ Route::prefix('algorithm')->group(function () {
 		Route::post('edit_all_date', ['as' => 'editAllDate', 'uses' => 'Emulators\EmulatorController@editAllDate']);
 	});
 });
+Route::get('students-knowledge-level', ['as' => 'students_level', 'uses' => 'StudentKnowledgeLevelController@index']);
+Route::get('students-knowledge-level/{error}', ['as' => 'students_level_with_errors', 'uses' => 'StudentKnowledgeLevelController@indexWithErrors']);
+Route::post('students-knowledge-level', ['as' => 'set_students_level', 'uses' => 'StudentKnowledgeLevelController@setLevel']);
+
+Route::get('data-manage/difficulty-init', ['as' => 'diff_init', 'uses' => 'DataUpdateController@initDifficulty']);
+
+
+
