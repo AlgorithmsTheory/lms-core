@@ -144,6 +144,20 @@
                             </div>
                             </a>
                         </li>
+                        <li class="tile">
+                            <a href="{{ route('students_level')}}" class="tile-content ink-reaction">
+                                <div class="tile-text">
+                                    Уровень подготовки студентов
+                                </div>
+                            </a>
+                        </li>
+                        <li class="tile">
+                            <a href="{{ route('adaptive_test_params')}}" class="tile-content ink-reaction">
+                                <div class="tile-text">
+                                    Пересчет параметров адаптивной модели
+                                </div>
+                            </a>
+                        </li>
                     </ul>
                 </div><!--end .card-body -->
             </div>

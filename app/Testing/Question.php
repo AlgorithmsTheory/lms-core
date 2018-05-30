@@ -18,6 +18,7 @@ use App\Testing\Qtypes\Theorem;
 use App\Testing\Qtypes\TheoremLike;
 use App\Testing\Qtypes\ThreePoints;
 use App\Testing\Qtypes\YesNo;
+use App\User;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Http\Request;
 
@@ -267,5 +268,63 @@ class Question extends Eloquent {
                        '.'.Question::whereId_question($id_question)->select('theme_code')->first()->theme_code);
         }
         return $array;
+    }
+
+    public static function isAnsweredRight($score, $max_points) {
+        return ($score >= $max_points * 0.6);
+    }
+
+    public function evalDiscriminant($id_question) {
+        $points = [];
+        $levels = [];
+
+        $tasks = TestTask::whereId_question($id_question)->select('points', 'id_result')->get();
+        foreach ($tasks as $task) {
+            array_push($points, $task->points);
+            $user_id = Result::whereId_result($task->id_result)->select('id')->first()->id;
+            $level = User::whereId($user_id)->select('knowledge_level')->first()->knowledge_level;
+            array_push($levels, $level);
+        }
+
+        $number = count($points);
+        if ($number > 0) {
+
+            $sum_points = 0;
+            $sum_levels = 0;
+            $sum_points_and_levels = 0;
+            $sum_quadratic_points = 0;
+            $sum_quadratic_levels = 0;
+            for ($i = 0; $i < count($points); $i++) {
+                $sum_points += $points[$i];
+                $sum_levels += $levels[$i];
+                $sum_points_and_levels += $points[$i] * $levels[$i];
+                $sum_quadratic_points += $points[$i] * $points[$i];
+                $sum_quadratic_levels += $levels[$i] * $levels[$i];
+            }
+
+            $division = ($number * $sum_points_and_levels) - ($sum_points * $sum_levels);
+            $divider = sqrt(($number * $sum_quadratic_points - pow($sum_points, 2)) *
+                ($number * $sum_quadratic_levels - pow($sum_levels, 2)));
+
+            if ($divider != 0) return $division / $divider;
+        }
+        return Question::whereId_question($id_question)
+            ->select('discriminant')->first()->discriminant;
+    }
+
+    public function evalDifficulty($id_question) {
+        $right_answers_count = 0;
+        $wrong_answers_count = 0;
+
+        $question = Question::whereId_question($id_question)->select('points', 'difficulty')->first();
+        $max_points = $question->points;
+        $tasks = TestTask::whereId_question($id_question)->select('points')->get();
+        foreach ($tasks as $task) {
+            if (Question::isAnsweredRight($task->points, $max_points)) $right_answers_count++;
+            else $wrong_answers_count++;
+        }
+
+        if ($right_answers_count == 0 || $wrong_answers_count == 0) return $question->difficulty;
+        return log($wrong_answers_count / $right_answers_count);
     }
 } 
