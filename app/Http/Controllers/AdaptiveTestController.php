@@ -21,7 +21,6 @@ class AdaptiveTestController extends Controller {
     }
 
     public function params() {
-
         return view('adaptive_tests.params');
     }
 
@@ -48,5 +47,17 @@ class AdaptiveTestController extends Controller {
             }
         }
         return view('adaptive_tests.params');
+    }
+
+    public function reEvalDifficulty(Request $request) {
+        $id_question = $request->input('id_question');
+        $question = Question::whereId_question($id_question)->first();
+        return $question->evalDifficulty($id_question);
+    }
+
+    public function reEvalDiscriminant(Request $request) {
+        $id_question = $request->input('id_question');
+        $question = Question::whereId_question($id_question)->first();
+        return $question->evalDiscriminant($id_question);
     }
 }

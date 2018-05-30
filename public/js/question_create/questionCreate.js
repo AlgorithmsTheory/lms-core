@@ -170,3 +170,64 @@ $('#type_question_add').on('click', '#submit-text', function(){
     // TODO: check translated flag - if checked then all english fields must not be empty!
 });
 
+/** Пересчет сложности */
+$('#type_question_add').on('click', '#reevaluate-difficulty', function(){
+    myBlurFunction(1);
+    var idQuestion = $('input[name="id-question"]').val();
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url:   '/adaptive-tests/reevaluate-difficulty',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        data: { id_question: idQuestion },
+        success: function(newDifficulty){
+            myBlurFunction(0);
+            $('#difficulty').val(newDifficulty);
+        }
+    });
+});
+
+/** Пересчет дискриминанта */
+$('#type_question_add').on('click', '#reevaluate-discriminant', function(){
+    myBlurFunction(1);
+    var idQuestion = $('input[name="id-question"]').val();
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url:   '/adaptive-tests/reevaluate-discriminant',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        data: { id_question: idQuestion },
+        success: function(newDiscriminant){
+            myBlurFunction(0);
+            $('#difficulty').val(newDiscriminant);
+        }
+    });
+});
+
+var myBlurFunction = function(state) {
+    var containerElement = document.getElementById('page');
+    var overlayEle = document.getElementById('overlay');
+
+    if (state) {
+        var winHeight = $(window).height()/2 - 24;
+        winHeight = winHeight.toString()
+
+        overlayEle.style.display = 'block';
+        overlayEle.style.top = winHeight.concat('px');
+        containerElement.setAttribute('class', 'blur');
+    } else {
+        overlayEle.style.display = 'none';
+        containerElement.setAttribute('class', null);
+    }
+};
+

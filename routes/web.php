@@ -440,6 +440,8 @@ Route::post('students-knowledge-level', ['as' => 'set_students_level', 'uses' =>
 
 Route::get('adaptive-tests/params', ['as' => 'adaptive_test_params', 'uses' => 'AdaptiveTestController@params']);
 Route::post('adaptive-tests/params', ['as' => 'eval_params', 'uses' => 'AdaptiveTestController@evalParams']);
+Route::post('adaptive-tests/reevaluate-difficulty', ['as' => 'reeval_difficulty', 'uses' => 'AdaptiveTestController@reEvalDifficulty']);
+Route::post('adaptive-tests/reevaluate-discriminant', ['as' => 'reeval_difficulty', 'uses' => 'AdaptiveTestController@reEvalDiscriminant']);
 
 Route::get('data-manage/difficulty-init', ['as' => 'diff_init', 'uses' => 'DataUpdateController@initDifficulty']);
 
