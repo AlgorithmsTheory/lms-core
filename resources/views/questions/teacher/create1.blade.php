@@ -21,7 +21,7 @@
     <!-- Текст на английском языке -->
     <div class="form-group">
         <textarea  name="eng-title" id="eng-textarea1" class="form-control" rows="3" placeholder=""></textarea>
-        <label for="textarea1">Text</label>
+        <label for="eng-textarea1">Text</label>
     </div>
 
     <div id="text-images-container">
@@ -87,9 +87,28 @@
             <!-- контейнер для ajax -->
         </div>
 
+        <!-- Баллы за правильный ответ -->
         <div class="form-group">
-            <input type="number" min="1" name="points" id="points" class="form-control" value="1">
+            <input type="number" min="1" step="0.1" max="2" name="points" id="points" class="form-control" value="1">
             <label for="points">Баллы за верный ответ</label>
+        </div>
+
+        <!-- Сложность -->
+        <div class="form-group">
+            <textarea  name="difficulty" id="difficulty" class="form-control" rows="1" placeholder="" required readonly>0</textarea>
+            <label for="difficulty">Сложность</label>
+        </div>
+
+        <!-- Дискриминант -->
+        <div class="form-group">
+            <textarea  name="discriminant" id="discriminant" class="form-control" rows="1" placeholder="" required readonly>0.5</textarea>
+            <label for="discriminant">Дискриминант</label>
+        </div>
+
+        <!-- Коэффициент угадывания -->
+        <div class="form-group">
+            <textarea  name="guess" id="guess" class="form-control" rows="1" placeholder="" required readonly></textarea>
+            <label for="guess">Коэффициент угадывания</label>
         </div>
 
         <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>

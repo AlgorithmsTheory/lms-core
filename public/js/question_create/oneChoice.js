@@ -2,7 +2,8 @@
  * Created by Станислав on 22.01.16.
  */
 
-var count = $('#count').val();                                                                                                //счетчик числа вариантов
+var count = $('#count').val();                                                                                           //счетчик числа вариантов
+$('#guess').val(evalGuess(count));
 
 /** Добавление варианта */
 $('#type_question_add').on('click','#add-var-1', function(){
@@ -19,6 +20,7 @@ $('#type_question_add').on('click','#add-var-1', function(){
                 <label for="textarea3">Variant ' + count + '</label>\
             </div>\
             ');
+    $('#guess').val(evalGuess(count))
 });
 
 /** Удаление последнего варианта */
@@ -27,5 +29,11 @@ $('#type_question_add').on('click','#del-var-1',function(){
         $('#variants').children().last().remove();
         $('#eng-variants').children().last().remove();
         count--;
+        $('#guess').val(evalGuess(count))
     }
 });
+
+function evalGuess(number) {
+    return 1 / number;
+}
+

@@ -3,6 +3,7 @@
 <meta name="csrf_token" content="{{ csrf_token() }}" />
 <title>Редактирование вопроса</title>
 {!! HTML::style('css/question_create.css') !!}
+{!! HTML::style('css/loading_blur.css') !!}
 @stop
 
 @section('content')
@@ -131,8 +132,34 @@
                                 <label for="points">Баллы за верный ответ</label>
                             </div>
 
-                            <button class="btn btn-primary btn-raised submit-question" type="submit">Применить изменения</button>
-                            <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
+                            <!-- Сложность -->
+                            <div class="form-group col-md-11 col-sm-11">
+                                <textarea  name="difficulty" id="difficulty" class="form-control" rows="1" placeholder="" required readonly>{{ $data['question']['difficulty'] }}</textarea>
+                                <label for="difficulty">Сложность</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1">
+                                <button class="btn btn-warning btn-raised submit-question" type="button" id="reevaluate-difficulty">Пересчитать</button>
+                            </div>
+
+                            <!-- Дискриминант -->
+                            <div class="form-group col-md-11 col-sm-11">
+                                <textarea  name="discriminant" id="discriminant" class="form-control" rows="1" placeholder="" required readonly>{{ $data['question']['discriminant'] }}</textarea>
+                                <label for="discriminant">Дискриминант</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1">
+                                <button class="btn btn-warning btn-raised submit-question" type="button" id="reevaluate-discriminant">Пересчитать</button>
+                            </div>
+
+                            <!-- Коэффициент угадывания -->
+                            <div class="form-group col-md-12 col-sm-12">
+                                <textarea  name="guess" id="guess" class="form-control" rows="1" placeholder="" required readonly>{{ $data['question']['guess'] }}</textarea>
+                                <label for="guess">Коэффициент угадывания</label>
+                            </div>
+
+                            <div class="form-group col-md-12 col-sm-12">
+                                <button class="btn btn-primary btn-raised submit-question" type="submit">Применить изменения</button>
+                                <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
+                            </div>
                         </div>
                     </div>  <!-- Закрываем card-body -->
                 </div>  <!-- Закрываем card -->
@@ -151,6 +178,9 @@
             <button class="btn btn-primary btn-raised submit-question" type="submit">Применить изменения</button>
         </div>
     </div>
+</div>
+<div id="overlay" class="none">
+    <div class="loading-pulse"></div>
 </div>
 
     @stop
