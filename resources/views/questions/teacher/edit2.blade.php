@@ -15,6 +15,7 @@
         <input type="hidden" name="id-question" value="{{ $data['question']['id_question'] }}">
         <input type="hidden" name="type" value="{{ $data['type_name'] }}">
         <input type="hidden" id="count" value="{{ $data['count'] }}">
+        <input type="hidden" id="right-answers" value="{{ count($data['num_answers']) }}">
         @for ($i = 1; $i < count($data['images']); $i += 2)
         <input type="hidden" class="images-in-text" value="{{ $data['images'][$i] }}">
         @endfor
@@ -139,9 +140,40 @@
                                 <label for="select-theme">Тема</label>
                             </div>
 
+                            <!-- Баллы за правильный ответ -->
                             <div class="form-group">
                                 <input type="number" min="1" name="points" id="points" class="form-control" value="{{ $data['question']['points'] }}">
                                 <label for="points">Баллы за верный ответ</label>
+                            </div>
+
+                            <!-- Сложность -->
+                            <div class="form-group col-md-11 col-sm-11">
+                                <textarea  name="difficulty" id="difficulty" class="form-control" rows="1" placeholder="" required readonly>{{ $data['question']['difficulty'] }}</textarea>
+                                <label for="difficulty">Сложность</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1">
+                                <button class="btn btn-warning btn-raised submit-question" type="button" id="reevaluate-difficulty">Пересчитать</button>
+                            </div>
+
+                            <!-- Дискриминант -->
+                            <div class="form-group col-md-11 col-sm-11">
+                                <textarea  name="discriminant" id="discriminant" class="form-control" rows="1" placeholder="" required readonly>{{ $data['question']['discriminant'] }}</textarea>
+                                <label for="discriminant">Дискриминант</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1">
+                                <button class="btn btn-warning btn-raised submit-question" type="button" id="reevaluate-discriminant">Пересчитать</button>
+                            </div>
+
+                            <!-- Коэффициент угадывания -->
+                            <div class="form-group col-md-12 col-sm-12">
+                                <textarea  name="guess" id="guess" class="form-control" rows="1" placeholder="" required readonly>{{ $data['question']['guess'] }}</textarea>
+                                <label for="guess">Коэффициент угадывания</label>
+                            </div>
+
+                            <!-- Время на вопрос -->
+                            <div class="form-group col-md-12 col-sm-12">
+                                <input type="number" min="30" step="1" max="3600" name="pass-time" id="pass-time" class="form-control" value="{{ $data['question']['pass_time'] }}">
+                                <label for="pass-time">Время на вопрос в секундах</label>
                             </div>
 
                             <button class="btn btn-primary btn-raised submit-question" type="submit">Применить изменения</button>
