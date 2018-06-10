@@ -111,7 +111,7 @@
             <label for="pass-time">Время на вопрос в секундах</label>
         </div>
 
-        <button class="btn btn-primary btn-raised submit-question" type="submit" id="submit-text">Добавить вопрос</button>
+        <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>
         <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
     </div>
 </div>

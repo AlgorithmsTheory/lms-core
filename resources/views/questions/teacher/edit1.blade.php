@@ -164,7 +164,7 @@
                             </div>
 
                             <div class="form-group col-md-12 col-sm-12">
-                                <button class="btn btn-primary btn-raised submit-question" id="submit-text" type="submit">Применить изменения</button>
+                                <button class="btn btn-primary btn-raised submit-question" type="submit">Применить изменения</button>
                                 <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
                             </div>
                         </div>
