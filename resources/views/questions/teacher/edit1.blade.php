@@ -127,6 +127,7 @@
                                 <label for="select-theme">Тема</label>
                             </div>
 
+                            <!-- Баллы за правильный ответ -->
                             <div class="form-group">
                                 <input type="number" min="1" name="points" id="points" class="form-control" value="{{ $data['question']['points'] }}">
                                 <label for="points">Баллы за верный ответ</label>
