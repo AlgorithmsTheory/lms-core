@@ -63,6 +63,7 @@ abstract class QuestionType {
         $difficulty = $request->input('difficulty');
         $discriminant = $request->input('discriminant');
         $guess = $request->input('guess');
+        $pass_time = $request->input('pass-time');
 
         if ($request->input('translated')) {
             $translated = 1;
@@ -72,7 +73,8 @@ abstract class QuestionType {
         }
         return ['section' => $section, 'theme' => $theme, 'type' => $type,
                 'control' => $control, 'points' => $points, 'difficulty' => $difficulty,
-                'discriminant' => $discriminant, 'guess' => $guess, 'translated' => $translated];
+                'discriminant' => $discriminant, 'guess' => $guess,
+                'pass_time' => $pass_time, 'translated' => $translated];
     }
 
     protected function getTitleWithImage(Request $request) {

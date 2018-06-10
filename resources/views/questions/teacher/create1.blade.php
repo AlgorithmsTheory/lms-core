@@ -111,6 +111,12 @@
             <label for="guess">Коэффициент угадывания</label>
         </div>
 
+        <!-- Время на вопрос -->
+        <div class="form-group">
+            <input type="number" min="30" step="1" max="3600" name="pass-time" id="pass-time" class="form-control" value="120">
+            <label for="pass-time">Время на вопрос в секундах</label>
+        </div>
+
         <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>
         <a id="preview-btn" class="btn btn-primary btn-raised" href="#question-preview">Preview</a>
     </div>
