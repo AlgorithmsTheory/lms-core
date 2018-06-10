@@ -105,6 +105,7 @@ $('#type_question_add').on('click', '#close-btn', function(){
 
 /** действия при сабмите формы */
 $('#type_question_add').on('click', '#submit-text', function(){
+    console.log('МЫ ТУТ!');
     if ($('#select-section').val() === '$nbsp'){                                                                     //если не выбрали раздел
         alert('Вы не выбрали раздел и тему!');
         return false;
@@ -114,6 +115,7 @@ $('#type_question_add').on('click', '#submit-text', function(){
         return false;
     }
     if ($('#select-type').val() === 'Текстовый вопрос'){
+        console.log(word_number-1);
         // Для русской части
         if (word_number === 1){                                                                                          //если не выделили ни одного слова
             alert('Вы не выделили ни одного слова!');
