@@ -69,6 +69,5 @@ function evalGuess(count, rightAnswersCount) {
         if (sum >= minWriteAnswers) rightSums++;
     }
     return rightSums / (rowNumber - 1);
-
 }
 
