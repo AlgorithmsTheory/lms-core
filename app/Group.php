@@ -14,6 +14,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @method static \Illuminate\Database\Query\Builder|\App\Group select($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Group whereGroup_id($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Group whereArchived($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Group whereAcademic($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Group join($value)
  */
 

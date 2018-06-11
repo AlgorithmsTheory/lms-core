@@ -228,6 +228,14 @@ class QuestionController extends Controller{
         $response = new Response($widgetListView);
         return $response;
     }
+
+    public function profile($id_question) {
+        $question = Question::whereId_question($id_question)->first();
+        $data = $this->question->show($question['id_question'], '');
+        $widget =  View::make($data['view'], $data['arguments']);
+        $widgetListView = View::make('questions.teacher.profile', compact('question'))->with('widget', $widget);
+        return new Response($widgetListView);
+    }
     
     /** Фомирование страницы редактирования */
     public function edit($id_question){
