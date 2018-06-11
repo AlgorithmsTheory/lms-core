@@ -20,6 +20,9 @@ class FromCleene extends QuestionType {
         $answer = $request->input('answer');
 
         return ['title' => $title['ru_title'], 'answer' => $answer, 'points' => $options['points'],
+            'difficulty' => $options['difficulty'],
+            'discriminant' => $options['discriminant'], 'guess' => $options['guess'],
+            'pass_time' => $options['pass_time'],
             'control' => $options['control'], 'translated' => $options['translated'],
             'section_code' => $options['section'], 'theme_code' => $options['theme'], 'type_code' => $options['type'],
             'title_eng' => $title['eng_title'], 'answer_eng' => $answer];
@@ -28,7 +31,8 @@ class FromCleene extends QuestionType {
     public function add(Request $request) {
         $data = $this->setAttributes($request);
         Question::insert(array('title' => $data['title'], 'variants' => $data['variants'],
-            'answer' => $data['answer'], 'points' => $data['points'],
+            'answer' => $data['answer'], 'points' => $data['points'], 'difficulty' => $data['difficulty'],
+            'discriminant' => $data['discriminant'], 'guess' => $data['guess'], 'pass_time' => $data['pass_time'],
             'control' => $data['control'], 'translated' => $data['translated'],
             'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
             'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng']));
@@ -49,7 +53,8 @@ class FromCleene extends QuestionType {
         $data = $this->setAttributes($request);
         Question::whereId_question($this->id_question)->update(
             array('title' => $data['title'], 'variants' => $data['variants'],
-                'answer' => $data['answer'], 'points' => $data['points'],
+                'answer' => $data['answer'], 'points' => $data['points'], 'difficulty' => $data['difficulty'],
+                'discriminant' => $data['discriminant'], 'guess' => $data['guess'], 'pass_time' => $data['pass_time'],
                 'control' => $data['control'], 'translated' => $data['translated'],
                 'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
                 'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng'])
