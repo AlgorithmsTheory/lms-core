@@ -72,6 +72,7 @@ Route::get('questions/create', ['as' => 'question_create', 'uses' => 'QuestionCo
 Route::get('questions/edit', ['as' => 'questions_list', 'uses' => 'QuestionController@editList', 'middleware' => ['general_auth','admin']]);
 Route::get('questions/edit/search', ['as' => 'questions_find', 'uses' => 'QuestionController@find', 'middleware' => ['general_auth','admin']]);
 Route::post('questions/edit/search', ['as' => 'questions_find', 'uses' => 'QuestionController@find', 'middleware' => ['general_auth','admin']]);
+Route::get('questions/profile/{id_question}', ['as' => 'question_profile', 'uses' => 'QuestionController@profile', 'middleware' => ['general_auth','admin']]);
 Route::get('questions/edit/{id_question}', ['as' => 'question_edit', 'uses' => 'QuestionController@edit', 'middleware' => ['general_auth','admin']])->where($id_question, '[0-9]+');
 Route::post('questions/edit', ['as' => 'question_update', 'uses' => 'QuestionController@update', 'middleware' => ['general_auth','admin']]);
 Route::post('questions/delete', ['as' => 'question_delete', 'uses' => 'QuestionController@delete', 'middleware' => ['general_auth','admin']]);
@@ -288,5 +289,8 @@ Route::post('adaptive-tests/reevaluate-discriminant', ['as' => 'reeval_difficult
 
 Route::get('data-manage/difficulty-init', ['as' => 'diff_init', 'uses' => 'DataUpdateController@initDifficulty']);
 
-
+Route::get('stat/get-question-success/{id_question}', ['as' => 'question_success_stat', 'uses' => 'StatisticController@getSuccess']);
+Route::get('stat/get-questions-diff-and-det/{id_question}', ['as' => 'question_diff_and_det', 'uses' => 'StatisticController@getDifficultyAndDiscriminant']);
+Route::get('stat/get-question-frequency-by-month/{id_question}', ['as' => 'question_freq_by_month', 'uses' => 'StatisticController@getFrequencyByMonth']);
+Route::get('stat/get-question-group-success/{id_question}', ['as' => 'question_group_success_stat', 'uses' => 'StatisticController@getGroupSuccess']);
 
