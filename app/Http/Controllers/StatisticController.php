@@ -13,6 +13,7 @@ use App\Group;
 use App\Testing\Question;
 use App\Testing\Result;
 use App\Testing\TestTask;
+use App\Testing\Type;
 
 class StatisticController extends Controller {
 
@@ -114,5 +115,49 @@ class StatisticController extends Controller {
             $i++;
         }
         echo json_encode($successes);
+    }
+
+    /** Результаты за тест по Болонской системе */
+    public function getResults($id_test) {
+        $results = [];
+        $test_results = Result::whereId_test($id_test)->whereNotNull('result')->where('result', '<>', -1)->where('result', '<>', -2)->select('mark_eu')->get();
+        foreach ($test_results as $result) {
+            $results[$result->mark_eu]++;
+        }
+        echo json_encode($results);
+    }
+
+    /** Результаты за тест по Болонской системе для конкретной группы */
+    public function getResultsForGroup($id_test, $id_group) {
+        $results = [];
+        $test_results = Result::whereId_test($id_test)->whereNotNull('result')->where('result', '<>', -1)->where('result', '<>', -2)
+            ->join('users', 'users.id', 'results.id')
+            ->whereRaw("users.`group` in (select group_id from groups where `group` = " . $id_group . ")")
+            ->select('results.mark_eu')->get();
+        foreach ($test_results as $result) {
+            $results[$result->mark_eu]++;
+        }
+        echo json_encode($results);
+    }
+
+    /** Частота выпадения разных типов вопросов в тесте */
+    public function getQuestionTypeFrequencyInTest($id_test) {
+        $type_freq = [];
+        $types = Type::whereOnly_for_print(0)->select('type_name')->get();
+        foreach ($types as $type) {
+            $type_freq[$type->type_name] = 0;
+        }
+
+        $results = Result::whereId_test($id_test)->whereNotNull('result')->where('result', '<>', -1)->where('result', '<>', -2)->select('id_result')->get();
+        foreach ($results as $result) {
+            $tasks = TestTask::whereId_result($result->id_result)->select('id_question')->get();
+            foreach ($tasks as $task) {
+                $question_type = Question::whereId_question($task->id_question)
+                    ->join('types', 'questions.type_code', 'types.type_code')
+                    ->select('types.type_name')->first()->type_name;
+                $type_freq[$question_type]++;
+            }
+        }
+        echo json_encode($type_freq);
     }
 }

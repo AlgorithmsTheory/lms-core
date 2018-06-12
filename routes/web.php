@@ -89,6 +89,7 @@ Route::post('get-amount', array('as'=>'get_amount', 'uses'=>'TestController@getA
 Route::get('retest', ['as' => 'retest_index', 'uses' => 'TeacherRetestController@index']);
 Route::post('retest', ['as' => 'retest_change', 'uses' => 'TeacherRetestController@change']);
 Route::get('tests/test-list', ['as' => 'tests_list', 'uses' => 'TestController@editList']);
+Route::get('tests/profile/{id_question}', ['as' => 'test_profile', 'uses' => 'TestController@profile', 'middleware' => ['general_auth','admin']]);
 Route::post('tests/update-general-settings', ['as' => 'update_general_settings', 'uses' => 'TestController@updateSettings']);
 Route::post('tests/edit', ['as' => 'test_update', 'uses' => 'TestController@update']);
 Route::get('tests/remove/{id_test}', ['as' => 'test_remove', 'uses' => 'TestController@remove']);
@@ -293,4 +294,8 @@ Route::get('stat/get-question-success/{id_question}', ['as' => 'question_success
 Route::get('stat/get-questions-diff-and-det/{id_question}', ['as' => 'question_diff_and_det', 'uses' => 'StatisticController@getDifficultyAndDiscriminant']);
 Route::get('stat/get-question-frequency-by-month/{id_question}', ['as' => 'question_freq_by_month', 'uses' => 'StatisticController@getFrequencyByMonth']);
 Route::get('stat/get-question-group-success/{id_question}', ['as' => 'question_group_success_stat', 'uses' => 'StatisticController@getGroupSuccess']);
+
+Route::get('stat/get-test-results/{id_test}', ['as' => 'test_results_stat', 'uses' => 'StatisticController@getResults']);
+Route::get('stat/get-test-results/{id_test}/{id_group}', ['as' => 'test_results_stat_for_group', 'uses' => 'StatisticController@getResultsForGroup']);
+Route::get('stat/get-question-type-frequency-in-test/{id_test}', ['as' => 'question_type_freq_in_test', 'uses' => 'StatisticController@getQuestionTypeFrequencyInTest']);
 

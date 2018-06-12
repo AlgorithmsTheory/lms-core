@@ -232,6 +232,39 @@ class TestController extends Controller{
         return view ('personal_account.test_list', compact('ctr_tests', 'tr_tests'));
     }
 
+    public function profile($id_test) {
+        $test = Test::whereId_test($id_test)->first();
+        $test['mean'] = Test::getMean($id_test);
+        $test['median'] = Test::getMedian($id_test);
+        $test['deviation'] = sqrt(Test::getVariance($id_test));
+        $test['reliability'] = Test::getReliability($id_test);
+
+        $structures = TestStructure::whereId_test($id_test)->select('id_structure', 'amount')->get();
+        $restrictions = [];
+        for ($i = 0; $i < count($structures); $i++) {
+            $restrictions[$i]['amount'] = $structures[$i]->amount;
+            $records = StructuralRecord::whereId_structure($structures[$i]->id_structure)->select('section_code', 'theme_code', 'type_code')->get();
+            $sections = [];
+            $themes = [];
+            $types = [];
+            foreach ($records as $record) {
+                $section_name = Section::whereSection_code($record->section_code)->select('section_name')->first()->section_name;
+                $theme_name = Theme::whereTheme_code($record->theme_code)->select('theme_name')->first()->theme_name;
+                $type_name = Type::whereType_code($record->type_code)->select('type_name')->first()->type_name;
+                if (!in_array($section_name, $sections)) array_push($sections, $section_name);
+                if (!in_array($theme_name, $themes)) array_push($themes, $theme_name);
+                if (!in_array($type_name, $types)) array_push($types, $type_name);
+            }
+            $restrictions[$i]['sections'] = $sections;
+            $restrictions[$i]['themes'] = $themes;
+            $restrictions[$i]['types'] = $types;
+
+        }
+
+        $groups = Group::whereArchived(0)->whereAcademic(1)->select('group_id', 'group_name')->get();
+        return view('tests.profile', compact('test', 'restrictions', 'groups'));
+    }
+
     public function updateSettings(Request $request) {
         Test::whereId_test($request->input('id_test'))->update([
             'visibility' => $request->input('visibility'),

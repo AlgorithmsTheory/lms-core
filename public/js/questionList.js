@@ -30,7 +30,7 @@ $('.card').on('change','#section', function(){
 
 /** Удаление вопроса */
 $('.card').on('click', '.btn-close', function(){
-    idQuestion = $(this).first().parents('.card-bordered').find('input[name="num"]').val();
+    idTest = $(this).first().parents('.card-bordered').find('input[name="num"]').val();
     removableObject = $(this).parents('.col-md-12');
     $.ajax({
         cache: false,
