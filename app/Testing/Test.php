@@ -204,4 +204,76 @@ class Test extends Eloquent {
         else
             return true;
     }
+
+    public static function getMean($id_test) {
+        $results = Result::whereId_test($id_test)->whereNotNull('result')->where('result', '<>', -1)->where('result', '<>', -2)->select('result')->get();
+        $sum_results = 0;
+        foreach ($results as $result) {
+            $sum_results += $result['result'];
+        }
+        if (count($results) > 0) return $sum_results / count($results);
+        else return -1;
+    }
+
+    public static function getMedian($id_test) {
+        $results = Result::whereId_test($id_test)->whereNotNull('result')->where('result', '<>', -1)->where('result', '<>', -2)->select('result')->orderBy('result')->get()->all();
+        $median_index = count($results) / 2;
+        return $results[$median_index]->result;
+    }
+
+    public static function getVariance($id_test) {
+        $results = Result::whereId_test($id_test)->whereNotNull('result')->where('result', '<>', -1)->where('result', '<>', -2)->select('result')->get();
+        $mean = Test::getMean($id_test);
+        $sum_results = 0;
+        foreach ($results as $result) {
+            $sum_results += ($result['result'] - $mean) * ($result['result'] - $mean);
+        }
+        if (count($results) > 0) return $sum_results / count($results);
+        else return -1;
+    }
+
+    public static function getReliability($id_test) {
+        $odd_points = [];
+        $even_points = [];
+        $results = Result::whereId_test($id_test)->whereNotNull('result')->where('result', '<>', -1)->where('result', '<>', -2)->select('id_result', 'result')->get();
+        foreach ($results as $result) {
+            $tasks = TestTask::whereId_result($result->id_result)->select('points', 'id_question')->get()->all();
+            $real_odd_points_sum = 0;
+            $max_odd_points_sum = 0;
+            $real_even_points_sum = 0;
+            $max_even_points_sum = 0;
+            for ($i = 0; $i < count($tasks) - 1; $i+=2) {
+                $max_even_points_sum += Question::whereId_question($tasks[$i]->id_question)->select('points')->first()->points;
+                $real_even_points_sum += $tasks[$i]->points;
+                $max_odd_points_sum += Question::whereId_question($tasks[$i+1]->id_question)->select('points')->first()->points;
+                $real_odd_points_sum += $tasks[$i+1]->points;
+            }
+            array_push($odd_points, $real_odd_points_sum * 100 / $max_odd_points_sum);
+            array_push($even_points, $real_even_points_sum * 100 / $max_even_points_sum);
+        }
+
+        $number = count($odd_points);
+        if ($number > 0) {
+
+            $sum_odd_points = 0;
+            $sum_even_points = 0;
+            $sum_odd_and_even = 0;
+            $sum_quadratic_odd_points = 0;
+            $sum_quadratic_even_points = 0;
+            for ($i = 0; $i < count($odd_points); $i++) {
+                $sum_odd_points += $odd_points[$i];
+                $sum_even_points += $even_points[$i];
+                $sum_odd_and_even += $odd_points[$i] * $even_points[$i];
+                $sum_quadratic_odd_points += $odd_points[$i] * $odd_points[$i];
+                $sum_quadratic_even_points += $even_points[$i] * $even_points[$i];
+            }
+
+            $division = ($number * $sum_odd_and_even) - ($sum_odd_points * $sum_even_points);
+            $divider = sqrt(($number * $sum_quadratic_odd_points - pow($sum_odd_points, 2)) *
+                ($number * $sum_quadratic_even_points - pow($sum_even_points, 2)));
+
+            if ($divider != 0) return $division / $divider;
+        }
+        return -2;
+    }
 } 

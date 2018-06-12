@@ -28,7 +28,7 @@
                                 <th class="text-center">Время прохождения, мин</th>
                                 <th class="text-center">Видимость</th>
                                 <th class="text-center">Только для печати</th>
-                                <th class="text-center">Доступен на английском</th>
+                                <th class="text-center">Перейти в профиль</th>
                                 <th class="text-center">Редактировать тест</th>
                                 <th class="text-center">Удалить тест</th>
                             </tr>
@@ -55,12 +55,11 @@
                                     </div>
                                 </td>
                                 <td class="text-center">
-                                    <div class="checkbox checkbox-styled">
-                                        <label>
-                                            <input type="checkbox" name="multilanguage[]" class="multilanguage" @if ($test['multilanguage'] == 1) checked @endif>
-                                            <span></span>
-                                        </label>
-                                    </div>
+                                    <a href="{{URL::route('test_profile', $test['id_test'])}}" class="btn btn-info" role="button">
+                                                <span class="demo-icon-hover">
+                                                    <i class="md md-insert-chart"></i>
+                                                </span>
+                                    </a>
                                 </td>
                                 <td class="text-center">
                                     <a href="{{URL::route('test_edit', $test['id_test'])}}" class="btn btn-primary" role="button">
@@ -96,7 +95,7 @@
                                 <th class="text-center">Время прохождения, мин</th>
                                 <th class="text-center">Видимость</th>
                                 <th class="text-center">Только для печати</th>
-                                <th class="text-center">Доступен на английском</th>
+                                <th class="text-center">Перейти в профиль</th>
                                 <th class="text-center">Редактировать тест</th>
                                 <th class="text-center">Удалить тест</th>
                             </tr>
@@ -123,12 +122,11 @@
                                     </div>
                                 </td>
                                 <td class="text-center">
-                                    <div class="checkbox checkbox-styled">
-                                        <label>
-                                            <input type="checkbox" name="multilanguage[]" class="multilanguage" @if ($test['multilanguage'] == 1) checked @endif>
-                                            <span></span>
-                                        </label>
-                                    </div>
+                                    <a href="{{URL::route('test_profile', $test['id_test'])}}" class="btn btn-info" role="button">
+                                                <span class="demo-icon-hover">
+                                                    <i class="md md-insert-chart"></i>
+                                                </span>
+                                    </a>
                                 </td>
                                 <td class="text-center" >
                                     <a href="{{URL::route('test_edit', $test['id_test'])}}" class="btn btn-primary" role="button">
