@@ -14,7 +14,8 @@ class VerifyCsrfToken extends BaseVerifier {
 	 */
 
     protected $except = [
-        'generator/pdf',                                                                                                  // исклчюил генератор
+        'generator/pdf',                                                                                                 // исклчюил генератор
+        'api/check'
     ];
 	public function handle($request, Closure $next)
 	{
