@@ -26,6 +26,18 @@
 @section('content')
 
     <!-- BEGIN BLANK SECTION -->
+    <div class="container-fluid">
+
+        @if($messageFlag == "YES")
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <p>Есть вовремя не сданные книги</p>
+            </div>
+
+        @endif
+
+        <div class="row">
+            <div class="col-lg-8">
     <section>
         <div class="section-header">
             <ol class="breadcrumb">
@@ -45,49 +57,68 @@
         <div class="section-body">
         </div><!--end .section-body -->
     </section>
+            </div>
+
+
+
+            <div class="col-lg-4">
+                @if($role == 'Админ')
+                    {!! HTML::link('Kadyrov/library/books/create','Добавить книгу',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+                    {!! HTML::link('Kadyrov/library/books/teacherCabinet','Личный кабинет',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+                @endif
+                @if($role == 'Студент')
+                        {!! HTML::link('Kadyrov/library/books/studentCabinet','Личный кабинет',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+                    @endif
+            </div>
+        </div>
+    </div>
+
 
     <div class="card card-tiles style-default-light">
         <article style="margin-left:10%; margin-right:13%; text-align: justify">
             <br>
             <center>
-                <form class="form" action="{{URL::route('library_search')}}"  method="post">
+                <form class="form" action="{{URL::route('Kadyrov_library_search')}}"  method="post">
                     <input type="text"  name="search" id="text-to-find" size="50px" value="<?php echo $searchquery?>" placeholder="Введите название книги или имя автора" />
                     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                    <button type="submit" class="btn ink-reaction btn-primary">Искать</button></form>
+                    <button type="submit" class="btn ink-reaction btn-primary"> Искать</button></form>
                 <!--<input type="button" onclick="javascript: FindOnPage('text-to-find'); " value="Искать" target="_blank"/> -->
             </center>
             <center>
                 <br>
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tbody >
-                    <?php
-                    $rows = count($result);
-                    $c_row = 0;
-                    while($c_row < $rows) {
-                        $row = $result[$c_row++];
-                        echo '<tr style="padding:20px; margin-top:20px">';
-                        // left book
-                        echo view('library.books.book', compact('row'));
-                        echo '<td style="width:155px">';
-                        echo '<p>&nbsp;</p>';
-                        echo '</td>';
-                        // right book
-                        if ($c_row < $rows){
-                            $row = $result[$c_row++];
-                            echo view('library.books.book', compact('row'));
-                        }else{ //right
-                            echo '<td style="width:155px; padding: 5px"/>';
-                            echo '<td style="width:154px"/>';
-                        }
-                        echo '</tr>';
-                    }
-                    ?>
 
-                    </tbody>
-                </table>
+                    <?php
+                         $countBook = 0   ?>
+                <div class="container">
+                @if(count($books)%2 != 0)
+                    @while($countBook < (count($books) -1))
+                            <div class="row">
+                                @include('library.books.kadyrov_book',array('book' => $books[$countBook]))
+                                @include('library.books.kadyrov_book',array('book' => $books[++$countBook]))
+                            </div>
+                        <br>
+                            <br>
+                        <?php $countBook++?>
+                    @endwhile
+                        <div class="row">
+                    @include('library.books.kadyrov_book',array('book' => $books[$countBook]))
+                        </div>
+                @else
+                        @while($countBook < (count($books)))
+                            <div class="row">
+                                @include('library.books.kadyrov_book',array('book' => $books[$countBook]))
+                                @include('library.books.kadyrov_book',array('book' => $books[++$countBook]))
+                            </div>
+                            <br>
+                            <br>
+                            <?php $countBook++?>
+                        @endwhile
+                @endif
+                </div>
                 <p>&nbsp;</p>
             </center>
         </article>
+
     </div>
     </div><!--end #content-->
 
@@ -115,5 +146,32 @@
     {!! HTML::script('js/core/source/AppNavSearch.js') !!}
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
+    <script type="text/javascript">
+        function ConfirmDelete()
+        {
+
+            var x = confirm("Удалить книгу?");
+            if (x)
+                return true;
+            else
+                return false;
+        }
+        /*$( document ).ready(function(){
+            $(".delete_book").on("click", function(){
+                var id = $(this).attr("id");
+                var title = 'title' + id;
+                title = $('.col-lg-6').find( $('#'+title));
+                title = title.html();
+                var author = 'author' + id;
+                author = $('.col-lg-6').find( $('#'+author));
+                author = author.html();
+                //alert(author);
+                 $('.modal').find('#modal_delete_book_title').html(title);
+                $('.modal').find('#modal_delete_book_author').html(author);
+                $('.modal').find('.ref').attr('href', 'Kadyrov/library/book/'+ id + '/delete');
+                //alert($('.modal').find('.ref').attr('href'));
+            });
+        });*/
+    </script>
     <!-- END JAVASCRIPT -->
 @stop

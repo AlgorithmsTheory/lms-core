@@ -1,16 +1,5 @@
 $(document).ready(function(){
-
-
-    $('#buttonBooks').click( function(){
-        $('#collapseOrders').collapse('hide')
-    });
-
-    $('#buttonOrder').click( function(){
-        $('#collapseMyBook').collapse('hide')
-    });
-
     //Строки таблицы Мои заказы
-
     $('#dateOrder').change( function(){
         var rows = $('table.tableMyOrder tr:gt(0) ');
         rows = rows.not( ".deleted" );
@@ -115,15 +104,36 @@ $(document).ready(function(){
             // rows = rows.not( "[style='display: none;']" );
         }
     });
+    $('#dateIssureBook').change( function(){
+        $("#dateReturnBook").val("Дата возврата");
+        $("#authorBook").val("Автор книги");
+        if( $("#dateIssureBook option:selected").text() == "Дата получения" ){
+            rowsMyOrder.show();
+        }else{
+            rowsMyOrder.each(function( elem ) {
+                if($( this ).children('#date_issure_td').text() != $("#dateIssureBook option:selected").text()){
+                    $( this ).hide();
+                }else{
+                    $( this ).show();
+                }
+            });
+            // rows = rows.not( "[style='display: none;']" );
+        }
+    });
 
-//Потверждение  и отмены заказа
+
+
+//Потверждение  и отмена заказа
 
     $('.cancel_order').click(function () {
         var x = confirm("Отменить заказ?");
         if (x){
             // alert( "{{ route('Kadyrov_student_order_delete',['id' => \"+id+\"]) }}");
             var id = $( this ).attr("id");
+            var regular = /\d+/;
+            id = (id.match(regular));
             var token = $( this ).attr("value");
+            var button = $( this );
             $.ajax(
                 {
                     //посмотри как можно изменить данный url
@@ -133,17 +143,17 @@ $(document).ready(function(){
                     data: {
                         "id": id,
                         "_method": 'DELETE',
-                        "_token": token
+                        "_token": token,
+                        //"button": button
                     },
                     success: function (data)
                     {
                         //$('td[id=' + adId + ']')
-                        var button = $('table.tableMyOrder tr:gt(0) ').find("#"+data);
-
-                       //alert(button.attr("id"));
+                        var button = $('table.tableMyOrder tr:gt(0) ').find("#delete"+data);
                         button.parent().parent().attr('class','deleted');
                         button.parent().parent().hide();
-                        //console.log("it Work");
+
+
                     }
                 });
 
@@ -161,10 +171,10 @@ $(document).ready(function(){
             // alert( "{{ route('Kadyrov_student_order_delete',['id' => \"+id+\"]) }}");
             var id = $( this ).attr("id");
             var token = $( this ).attr("value");
+            var regular = /\d+/;
+            id = (id.match(regular));
             $.ajax(
                 {
-                    //посмотри как можно изменить данный url
-
                     url: "studentCabinet/"+id+"/delete_message",
                     type: 'DELETE',
                     dataType: "JSON",
@@ -176,7 +186,7 @@ $(document).ready(function(){
                     success: function (data)
                     {
                         //$('td[id=' + adId + ']')
-                        var button = $('table.table_message tr:gt(0) ').find("#"+data);
+                        var button = $('table.table_message tr:gt(0) ').find("#cancel"+data);
 
                         //alert(button.attr("id"));
                         button.parent().parent().hide();
@@ -188,6 +198,80 @@ $(document).ready(function(){
         else
             return false;
     });
+//Настройка календаря
+    $.ajax(
+        {
+            //посмотри как можно изменить данный url
+            url: "studentCabinet/settingCalendar",
+            type: 'GET',
+            dataType: "json",
+            async: false,
+            success: function (data)
+            {
+
+                //alert(data["possible_date"]);
+                //var arr = data["possible_date"].split(',');
+                var arrayPossibleDate = JSON.parse(data["possible_date"]);
+                //alert(typeof (data["minDay"]));
+                $('.datetimepicker').datetimepicker({
+                    format: 'YYYY.MM.DD ',
+                    locale: 'ru',
+                    daysOfWeekDisabled: arrayPossibleDate,
+                    minDate: data["minDay"],
+                    maxDate: data["maxDay"],
+                    useCurrent: false
+                });
+            }
+        });
+
+    $('.form_extend').on('submit', function(event) {
+        //Валидация календаря
+        // $('.extend_button').on('click',function(event){
+        //    alert("hi");
+        //     var myDate = new Date();
+        //     // var input_date = new Date($(this).parent().parent().find('#date_extend').val());
+        //     var input_date = $(this).parent().parent().find('.datetimepicker').data("DateTimePicker").date();
+        //     if (input_date < myDate){
+        //         alert("Введенна не актуальная дата");
+        //        // $(this).parent().parent().find('#date_extend').attr('value','');
+        //         event.preventDefault();
+        //     }
+        // });
+        var myDate = new Date();
+        var input_date = $(this).find('.datetimepicker').data("DateTimePicker").date();
+       // alert(input_date);
+             if (input_date <= myDate){
+                 alert("Введенна не актуальная дата");
+                 $(this).find('#date_extend').attr('value','');
+                 event.preventDefault();
+                    return false;
+             }else {
+                 var $form = $(this);
+                 // alert($form.attr('action'));
+                 var input_date = $(this).find('#date_extend');
+                 var id_issure_book = $(this).attr('id');
+                 //alert($form.attr('method'));
+                 $.ajax({
+                     type: 'post',
+                     url: "studentCabinet/" + id_issure_book + '/extendDate',
+                     data: $(this).serialize(),
+                     async: false,
+                     success: function (data) {
+                         var form = $("form[id=" + id_issure_book + "]");
+                         var row = form.parent().parent();
+                         var new_dateExtend = data.replace(/[\.\/]/g,'-');
+                         row.find('#date_return_td').text(new_dateExtend);
+                        // row.find('#date_return_td').text(data);
+                         form.find('#date_extend').attr('value', '');
+                         // var button = $('table.table_message tr:gt(0) ').find("#"+data);
+                         //alert("it is work"+ id_issure_book);
+                     }
+                 });
+                 //отмена действия по умолчанию для кнопки submit
+                 event.preventDefault();
+             }
+    });
+
 
 
 });

@@ -1,24 +1,590 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Set_date_calendar;
 use App\Ebook;
+use App\Http\Requests\AddBookRequest;
+use App\Http\Requests\UpdateBookRequest;
+use App\User;
+use Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Filesystem\Filesystem as Filesystem;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 use Request;
 use DateTime;
 use App\Book;
 use App\Testing\Lecture;
 use App\Order;
+use App\Order_books;
 use DB;
+use Carbon\Carbon;
+use Symfony\Component\DomCrawler\Image;
+use App\Order_book;
+use MaddHatter\LaravelFullcalendar\Facades\Calendar ;
+
+
 class BooksController extends Controller {
-    
-    
+
+    //Контроллер для предоставления студентам списка книг
+    public function Kadyrov_index(){
+//        $studentStatus = DB::table('users')//если 0- то учится в этом семе, если 1, то нет
+//            ->join('groups', 'users.group', '=', 'groups.group_id')
+//            ->select('groups.archived')
+//            ->first()->archived;
+        $studentStatus = 1;
+        $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
+        if ($role == "Студент"){
+            $studentStatus = DB::select('SELECT groups.archived FROM users LEFT JOIN `groups`
+ ON users.group = groups.group_id where users.id = ?', [Auth::user()['id']]);
+            $studentStatus = $studentStatus[0]->archived;
+        }
+
+       $books = Book::all();
+        $searchquery = "";
+        $messageFlag = "NO";
+        if ($role== "Студент"){
+            $results = DB::select('select * from issure_book where message= ? AND id_user=?', ["YES",Auth::user()['id']]);
+            if ($results){
+                $messageFlag = "YES";
+                DB::update('update issure_book set message = ? where id_user = ?', ['NO',Auth::user()['id']]);
+            }
+        }
+        return view("library.kadyrov_books", compact('books','searchquery','role','studentStatus',
+            'messageFlag'));
+       // return Auth::user()['id'];
+
+    }
+
+    public function kadyrov_search(){
+        $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
+        $search = Request::input('search');
+        $book = Book::where('title', 'like', "%$search%");
+        $book->orWhere('author', 'like', "%$search%");
+        //$query = "SELECT id, coverImg, title, author, format FROM `book` WHERE UPPER(`title`) LIKE UPPER('%$search%') OR UPPER(`author`) LIKE UPPER('%$search%')";
+        $books = $book->get();
+        $searchquery = $search;
+        return view("library.kadyrov_books", compact('books','searchquery','role'));
+    }
+
+    public function kadyrov_getBook($id){
+        $studentStatus = DB::table('users')//если 0- то учится в этом семе, если 1, то нет
+        ->join('groups', 'users.group', '=', 'groups.group_id')
+            ->select('groups.archived')
+            ->first()->archived;
+        $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
+        $book = Book::where('id', '=', "$id");
+        $book = $book->first();
+
+        return view("library.kadyrov_book", compact('book','role','studentStatus'));
+    }
+
+    public function add_new_book(){
+
+        return view("library.add_new_book");
+    }
+
+//   public function store_book(AddBookRequest $request){
+//
+//
+//
+//       // $input = Request::all();
+//        //$book = new Book($input);
+//            $book = new Book($request->all());
+//        /*$book->title = $input['title'];
+//        $book->author = $input['author'];
+//        $book->description = $input['description'];
+//        $book->format = $input['format'];
+//        $book->publisher = $input['publisher'];*/
+//        $book->coverImg = 'libr_pic/'.$_FILES['picture']['name'];
+//        $book->save();
+//        @copy($_FILES['picture']['tmp_name'], 'img/library/'.$book->coverImg);
+//        return redirect('Kadyrov/library/books');
+//    }
+
+
+
+
+    public function store_book(\Illuminate\Http\Request $request){
+        \Validator::extend('uniqueTitleAndAuthor', function ($attribute, $value, $parameters, $validator) {
+            $count = \DB::table('book')->where('title', $value)
+                ->where('author', $parameters[0])
+                ->count();
+
+            return $count === 0;
+        });
+//        $messages = array(
+//            'validation.unique_title_and_author' => 'Автор и название такие уже есть.',
+//        );
+        $validator = \Validator::make($request->all(), [
+            'title' => "required|between:5,150|uniqueTitleAndAuthor:{$request->author}",
+            'author' => 'required|between:5,50',
+            'description' => 'required|between:30,1000',
+            'format' => 'required|between:5,30',
+            'publisher' => 'required|between:5,30',
+            'picture' => ['image','required'],
+
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('Kadyrov/library/books/create')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        // $input = Request::all();
+        //$book = new Book($input);
+        $book = new Book($request->all());
+        /*$book->title = $input['title'];
+        $book->author = $input['author'];
+        $book->description = $input['description'];
+        $book->format = $input['format'];
+        $book->publisher = $input['publisher'];*/
+        $book->coverImg = 'libr_pic/'.$_FILES['picture']['name'];
+        $book->save();
+        @copy($_FILES['picture']['tmp_name'], 'img/library/'.$book->coverImg);
+        return redirect('Kadyrov/library/books');
+    }
+
+    public function kadyrov_editBook($id){
+        $book = Book::findOrFail($id);
+        return view('library.edit_book', compact('book'));
+    }
+
+//    public function update_book($id, UpdateBookRequest $request){
+//        $book = Book::findOrFail($id);
+//        if (!empty($_FILES['picture']['name'])){
+//            $book->coverImg = 'libr_pic/'.$_FILES['picture']['name'];
+//            @copy($_FILES['picture']['tmp_name'], 'img/library/'.$book->coverImg);
+//        }
+//        $book->update($request->all());
+//
+//
+//        return redirect('Kadyrov/library/book/'.$book->id);
+//    }
+
+    public function update_book($id, \Illuminate\Http\Request $request){
+        \Validator::extend('uniqueTitleAndAuthor', function ($attribute, $value, $parameters, $validator) {
+            $count = \DB::table('book')->where('title', $value)
+                ->where('author', $parameters[0])
+                ->count();
+
+            return $count === 0;
+        });
+//        $messages = array(
+//            'validation.unique_title_and_author' => 'Автор и название такие уже есть.',
+//        );
+        $validator = \Validator::make($request->all(), [
+            'title' => "required|between:5,150|uniqueTitleAndAuthor:{$request->author}",
+            'author' => 'required|between:5,50',
+            'description' => 'required|between:30,1000',
+            'format' => 'required|between:5,30',
+            'publisher' => 'required|between:5,30',
+            'picture' => ['image'],
+
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('Kadyrov/library/books/create')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+
+        $book = Book::findOrFail($id);
+        if (!empty($_FILES['picture']['name'])){
+            $book->coverImg = 'libr_pic/'.$_FILES['picture']['name'];
+            @copy($_FILES['picture']['tmp_name'], 'img/library/'.$book->coverImg);
+        }
+        $book->update($request->all());
+
+
+        return redirect('Kadyrov/library/book/'.$book->id);
+    }
+
+
+
+
+
+
+
+
+
+
+
+    public function deleteBook($id){
+
+        $book = Book::findOrFail($id);
+        $path = 'img/library/'.$book->coverImg;
+        app(Filesystem::class)->delete(public_path($path ));
+
+     $book->delete();
+        return  redirect('Kadyrov/library/books');
+    }
+//личный кабинет учителя
+    public function teacherCabinet(){
+        //отмечаем должников
+        DB::update('update issure_book set status = ? where date_return < ? ', ["delay",date("Y-m-d")]);
+// для таблицы Заказы книг
+        $orders = DB::Select("SELECT  `order_books`.`id`, `order_books`.`date_order`, `order_books`.`id_user`, `order_books`.`id_book`,
+ `book`.`title`, `book`.`author`, `users`.`first_name`, `users`.`last_name`, `groups`.`group_name`, `issure_book`.`status`,
+ MAX(`issure_book`.`status`)
+FROM `order_books` LEFT JOIN `book` ON book.id=order_books.id_book LEFT JOIN `users` ON `order_books`.`id_user` = `users`.`id`  
+    LEFT JOIN `groups` ON `groups`.`group_id`=`users`.`group` LEFT JOIN `issure_book` ON `issure_book`.`id_user`= `order_books`.`id_user`
+     WHERE `order_books`.`status` = ? group by  `order_books`.`id`  ORDER BY date_order", ["active"]);
+
+        $userDelays = DB::Select("SELECT  `issure_book`.`id_user`, `issure_book`.`status`FROM `issure_book` ");
+
+        foreach ($orders as $order){
+            foreach ($userDelays as $userDelay){
+                if ($order->id_user == $userDelay->id_user && $userDelay->status=='delay'){
+                    $order->status = 'delay';
+                }
+            }
+        }
+
+        $groupOrders = [];
+        foreach ($orders as $order){
+            $groupOrders[] = $order->group_name;
+        }
+        $groupOrders = array_unique($groupOrders);
+        $titleOrders = [];
+        foreach ($orders as $order){
+            $titleOrders[] = $order->title;
+        }
+        $titleOrders = array_unique($titleOrders);
+        $authorOrders = [];
+        foreach ($orders as $order){
+            $authorOrders[] = $order->author;
+        }
+        $authorOrders = array_unique($authorOrders);
+        $dateOrders = [];
+        foreach ($orders as $order){
+            $dateOrders[] = $order->date_order;
+        }
+        $dateOrders= array_unique($dateOrders);
+        $nameOrders = [];
+        foreach ($orders as $order){
+            $nameOrders [] = $order->first_name." ".$order->last_name;
+        }
+        $nameOrders = array_unique($nameOrders );
+
+        // для таблицы Выданные книги
+        $issureBooks = DB::Select("SELECT  `issure_book`.`id`, `issure_book`.`date_issure`, `issure_book`.`date_return`, `issure_book`.`id_book`,
+ `book`.`title`, `book`.`author`, `users`.`first_name`, `users`.`last_name`, `groups`.`group_name`, `issure_book`.`status`
+FROM `issure_book` LEFT JOIN `book` ON book.id=issure_book.id_book LEFT JOIN `users` ON `issure_book`.`id_user` = `users`.`id`
+    LEFT JOIN `groups` ON `groups`.`group_id`=`users`.`group` 
+     ORDER BY date_return");
+        $groupIssureBooks = [];
+        foreach ($issureBooks as $issureBook){
+            $groupIssureBooks[] = $issureBook->group_name;
+        }
+        $groupIssureBooks= array_unique($groupIssureBooks);
+        $titleIssureBooks = [];
+        foreach ($issureBooks as $issureBook){
+            $titleIssureBooks[] = $issureBook->title;
+        }
+        $titleIssureBooks= array_unique($titleIssureBooks);
+        $authorIssureBooks = [];
+        foreach ($issureBooks as $issureBook){
+            $authorIssureBooks[] = $issureBook->author;
+        }
+        $authorIssureBooks= array_unique($authorIssureBooks);
+        $dateIssureIssureBooks = [];
+        foreach ($issureBooks as $issureBook){
+            $dateIssureIssureBooks[] = $issureBook->date_issure;
+        }
+        $dateIssureIssureBooks= array_unique($dateIssureIssureBooks);
+        $dateReturnIssureBooks = [];
+        foreach ($issureBooks as $issureBook){
+            $dateReturnIssureBooks[] = $issureBook->date_return;
+        }
+        $dateReturnIssureBooks= array_unique($dateReturnIssureBooks);
+
+        // для таблицы Книги в наличии
+        $inLibraryBooks = DB::Select("SELECT book.* FROM book  LEFT JOIN issure_book ON book.id=issure_book.id_book  WHERE issure_book.id_book IS NULL");
+        $titleInLibraryBooks = [];
+        foreach ($inLibraryBooks as $inLibraryBook){
+            $titleInLibraryBooks[] = $inLibraryBook->title;
+        }
+        $titleInLibraryBooks= array_unique($titleInLibraryBooks);
+        $authorInLibraryBooks = [];
+        foreach ($inLibraryBooks as $inLibraryBook){
+            $authorInLibraryBooks[] = $inLibraryBook->author;
+        }
+        $authorInLibraryBooks= array_unique($authorInLibraryBooks);
+        return view("personal_account.teacher_cabinet", compact("orders","groupOrders", "titleOrders", "authorOrders", "dateOrders",
+            "issureBooks", "groupIssureBooks", "titleIssureBooks", "authorIssureBooks", "dateIssureIssureBooks", "dateReturnIssureBooks",
+            "inLibraryBooks", "titleInLibraryBooks", "authorInLibraryBooks", "nameOrders"));
+       //return compact("groupOrders");
+    }
+//Выдача книг студентам
+    public function teacherIssureBook($id){
+        $result = Request::all();
+        $issureDate = date("Y-m-d");
+        $returnDate = new DateTime('+7 days');
+        $returnDate = $returnDate->format('Y-m-d');
+        DB::insert('insert into issure_book (id_user, id_book, date_issure, date_return, status, message) values (?, ?, ?, ?, ?, ?)',[ $result['user_id'], $result['book_id'],
+            $issureDate, $returnDate, "notDelay", "NO" ]);
+        DB::delete('DELETE FROM order_books WHERE id = ?', [$result['order_id']]);
+
+        //return [ "returnDate" => json_encode($returnDate)];
+        return $result['order_id'];
+    }
+
+    //Отмена заказа преподавателем
+    public function teacherOrderDelete($id){
+
+
+        $request = Request::all();
+        DB::update('update `order_books` set status = ? where id = ?', ['cancel',$id]);
+
+        return $id;
+
+    }
+
+    // перенос заказа преподавателем
+    public function teacherExtendDate($id){
+        $request = Request::all();
+        //$request["date_extend"]
+        $NewFormatDate = preg_replace('/\./', '-', $request["date_extend"]);
+        $dateReturn = strtotime($NewFormatDate);
+        $dateReturnToBD = date("Y-m-d", $dateReturn);
+//        DB::update('update order_books set date_order = ? where order_books.id = ?', [$request["date_extend"], $request["id_order"]]);
+//        DB::update('update order_books set status = ? where order_books.id_book = ? AND order_books.date_order <= ?
+//AND order_books.id_user <> ?',
+//            ["extendT",$request["id_book"], $request["date_extend"], $request["id_user"]]);
+
+        DB::update('update order_books set date_order = ? where order_books.id = ?', [$request["date_extend"], $request["id_order"]]);
+        DB::update('update order_books set status = ? where order_books.id_book = ? AND order_books.date_order <= ?
+AND order_books.id <> ?',
+            ["extendT",$request["id_book"], $request["date_extend"], $request["id_order"]]);
+
+       return ['date_extend' => $request["date_extend"], 'id_order' => $request["id_order"], 'id_book' => $request["id_book"],
+           'date_order' => $request["date_order"], 'dateReturnToBD' => $dateReturnToBD];
+    }
+//Возврат книг
+    public function teacherReturnBook($id){
+        $request = Request::all();
+        DB::delete('delete from issure_book where id =?',[$id]);
+        return $id;
+
+    }
+// Отправка сообщения студенту о вовремя не сданной книге
+    public function teacherSendMessage($id){
+        $request = Request::all();
+        DB::update('update issure_book set message = ? where id = ?', ['YES',$request['id_issureBook']]);
+
+        return $request['id_issureBook'];
+
+    }
+
+
+
+
+
+
+
+
+
+
+//сохраняем параметры календаря
+    public function set_Date_Calendar(){
+        $result = Request::all();
+       if (empty(Set_date_calendar::all()->toArray())) {
+            $setCalendar = new Set_date_calendar;
+            $setCalendar->start_date = $result['start_date'];
+            $setCalendar->end_date = $result['end_date'];
+            $setCalendar->days = $result['1Day'].$result['2Day'].$result['3Day'].$result['4Day'].
+                $result['5Day'].$result['6Day'].$result['7Day'];
+            $setCalendar->save();
+
+        }else{
+           $setCalendar = Set_date_calendar::find(1);
+           $setCalendar->start_date = $result['start_date'];
+           $setCalendar->end_date = $result['end_date'];
+           $setCalendar->days = $result['1Day'].$result['2Day'].$result['3Day'].$result['4Day'].
+               $result['5Day'].$result['6Day'].$result['7Day'];
+           $setCalendar->save();
+        }
+        return redirect('Kadyrov/library/books/teacherCabinet');
+
+    }
+    // зазказ книг
+    public function kadyrov_book_order($id){
+        $results = DB::select('select date_order from order_books where id_book = ? AND status = ?', [$id, "active"]);
+       // $results = Order_book::where('id_book', $id)->date_order;
+        $order_date= [];
+        foreach ($results as $result) {
+            $order_date[] = $result->date_order;
+        }
+        $result = DB::select('select days from set_date_calendar where id = ?', [1]);
+       $possible_date = str_split($result[0]->days);
+       $allday = ["0", "1", "2", "3", "4", "5", "6"];
+        $possible_date = array_diff($allday, $possible_date);
+        $return_possible_date = [];
+        foreach ($possible_date as $date){
+            $return_possible_date[] = $date;
+        }
+        $minDay = DB::select('select start_date from set_date_calendar where id = ?', [1]);
+        $maxDay = DB::select('select end_date from set_date_calendar where id = ?', [1]);
+
+
+return view('personal_account.Kadyrov_calendar_order', ["order_date" => json_encode($order_date), "possible_date" =>
+  json_encode($return_possible_date), "book_id" => $id , "minDay" => json_encode($minDay[0]->start_date),
+    "maxDay" => json_encode($maxDay[0]->end_date)]);
+
+       //return $return_possible_date;
+    }
+
+    public function kadyrov_book_send_order($id){
+        $user_id = Auth::user()['id'];
+        $status = "active";
+        $order_date = Request::all();
+        $date = strtotime($order_date["date_order"]);
+        $dateToBD = date("Y-m-d", $date);
+        DB::insert('insert into order_books (id_user, id_book, status, date_order) values (?, ?, ?, ?)', [ $user_id, $id, $status, $dateToBD ]);
+       return redirect('Kadyrov/library/books');
+
+    }
+
+//личный кабинет студента
+    public function studentCabinet(){
+        DB::update('update issure_book set status = ? where date_return < ? ', ["delay",date("Y-m-d")]);
+
+        $orders = DB::Select("SELECT `order_books`.`id`, `order_books`.`date_order`, `order_books`.`id_user`,`order_books`.`status`, `order_books`.`id_book`,
+ `book`.`title`, `book`.`author` 
+FROM `order_books` INNER JOIN `book` ON book.id=order_books.id_book WHERE id_user = ?   ORDER BY date_order", [Auth::user()['id']]);
+
+        $books = DB::Select("SELECT `issure_book`.`id`, `issure_book`.`date_issure`, `issure_book`.`date_return` ,`issure_book`.`id_user`,`issure_book`.`status`, `issure_book`.`id_book`,
+ `book`.`title`, `book`.`author` 
+FROM `issure_book` INNER JOIN `book` ON book.id=issure_book.id_book WHERE id_user = ?   ORDER BY date_return", [Auth::user()['id']]);
+// для таблицы мои заказы
+        $dateOrders = [];
+        foreach ($orders as $order){
+            if ($order->status == "active"){
+                $dateOrders[] = $order->date_order;
+            }
+        }
+        $dateOrders = array_unique($dateOrders);
+        $titleOrders = [];
+        foreach ($orders as $order){
+            if ($order->status =="active") {
+                $titleOrders[] = $order->title;
+                }
+        }
+        $titleOrders  = array_unique($titleOrders );
+        $authorOrders = [];
+        foreach ($orders as $order){
+            if ($order->status == "active") {
+                $authorOrders[] = $order->author;
+            }
+        }
+        $authorOrders  = array_unique($authorOrders );
+
+        // для таблицы книги на руках
+        $titleMyBooks = [];
+        foreach ($books as $book){
+
+                $titleMyBooks[] = $book->title;
+
+        }
+        $titleMyBooks = array_unique($titleMyBooks);
+        $authorMyBooks = [];
+        foreach ($books as $book){
+
+                $authorMyBooks[] = $book->author;
+
+        }
+        $authorMyBooks = array_unique($authorMyBooks);
+        $dateReturnMyBooks = [];
+        foreach ($books as $book){
+
+            $dateReturnMyBooks[] = $book->date_return;
+
+        }
+        $dateReturnMyBooks = array_unique($dateReturnMyBooks);
+        $dateIssureMyBooks = [];
+        foreach ($books as $book){
+
+            $dateIssureMyBooks[] = $book->date_issure;
+
+        }
+        $dateIssureMyBooks = array_unique($dateIssureMyBooks);
+
+
+
+        return view("personal_account.student_cabinet", compact("orders","books", "dateOrders", "titleOrders", "authorOrders", "titleMyBooks",
+            "authorMyBooks", "dateReturnMyBooks", "dateIssureMyBooks"));
+            //return compact("dateOrders") ;
+    }
+
+    //Отмена заказов студентом
+    public function studentOrderDelete($id){
+
+        $request = Request::all();
+        DB::delete('delete from `order_books`  WHERE `order_books`.`id`= ?',[$id]);
+      return $id;
+
+    }
+    //// Удаление сообщений об отменённом заказе студентом
+    public function studentMessageDelete($id){
+        $request = Request::all();
+        DB::delete('delete from `order_books`  WHERE `order_books`.`id`= ?',[$id]);
+        return $id;
+    }
+    //// Настройка календаря для продления книги студентом
+    public function studentSettingCalendar(){
+
+        $result = DB::select('select days from set_date_calendar where id = ?', [1]);
+        $possible_date = str_split($result[0]->days);
+        $allday = ["0", "1", "2", "3", "4", "5", "6"];
+        $possible_date = array_diff($allday, $possible_date);
+        $return_possible_date = [];
+        foreach ($possible_date as $date){
+            $return_possible_date[] = $date;
+        }
+        $minDay = DB::select('select start_date from set_date_calendar where id = ?', [1]);
+        $maxDay = DB::select('select end_date from set_date_calendar where id = ?', [1]);
+
+        return  [ "possible_date" => json_encode($return_possible_date), "minDay" => json_encode($minDay[0]->start_date),
+            "maxDay" => json_encode($maxDay[0]->end_date)];
+       // return  [ "possible_date" => json_encode($possible_date)];
+    }
+// перенос даты возврата книги студентом
+    public function studentExtendDate($id){
+        $request = Request::all();
+        //$request["date_extend"]
+        $dateReturn = strtotime($request["date_extend"]);
+        $dateReturnToBD = date("Y-m-d", $dateReturn);
+//        DB::update('update issure_book set date_return = ? where issure_book.id = ?', [$request["date_extend"], $id]);
+//        DB::update('update order_books set status = ? where order_books.id_book = ? AND order_books.date_order <= ?
+//AND order_books.id <> ?', ["extendS",$request["id_book"], $request["date_extend"], $request["id_user"]]);
+//      return $request["date_extend"];
+        DB::update('update issure_book set date_return = ? where issure_book.id = ?', [$request["date_extend"], $id]);
+        DB::update('update order_books set status = ? where order_books.id_book = ? AND order_books.date_order <= ? 
+', ["extendS",$request["id_book"], $request["date_extend"]]);
+        return $request["date_extend"];
+    }
+
+
+
+
+
+
+
+
+
+////Началось не моё
+
     public function index(){
         $book = Book::select();
 	    $result = $book->get();
-        $searchquery = ""; 
+        $searchquery = "";
         return view("library.books", compact('result','searchquery'));
     }
-    
-    
+
+
     public function search(){
         $search = Request::input('search');
         $book = Book::where('title', 'like', "%$search%");
@@ -28,7 +594,7 @@ class BooksController extends Controller {
         $searchquery = $search;
         return view("library.books", compact('result','searchquery'));
     }
-    
+
     public function getBook($id){
         $book = Book::where('id', '=', "$id");
         $row = $book->first();

@@ -13,8 +13,7 @@ class Kernel extends HttpKernel {
 		'Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode',
 		'Illuminate\Cookie\Middleware\EncryptCookies',
 		'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
-		'Illuminate\Session\Middleware\StartSession',
-		'Illuminate\View\Middleware\ShareErrorsFromSession',
+
         //'Illuminate\Foundation\Http\Middleware\VerifyCsrfToken'
 	];
 
@@ -35,7 +34,10 @@ class Kernel extends HttpKernel {
         'test_is_available' => 'App\Http\Middleware\GeneralAccessForTest',
         'access_for_library' => 'App\Http\Middleware\AccessForLibrary',
         'can' => 'Illuminate\Auth\Middleware\Authorize',
-        'bindings' => '\Illuminate\Routing\Middleware\SubstituteBindings'
+        'bindings' => '\Illuminate\Routing\Middleware\SubstituteBindings',
+        'studentLibraryCabinet' => 'App\Http\Middleware\StudentCabinetLibrary'
+
+
 	];
 
     protected $middlewareGroups = [
