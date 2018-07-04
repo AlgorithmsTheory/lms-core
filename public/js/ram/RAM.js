@@ -37,8 +37,11 @@ class Functional_{
 	}
 
 	do_halt(){
-		alert("Job's done");
+		clearInterval(timerId);
+		$("#btn_pause").html("Пауза");
+		btn_pause.disabled = true;
 		btn_next.disabled = true;
+		alert("Работа выполнена");
 		return true;
 	}
 
@@ -205,6 +208,8 @@ class RAM_ {
 		this.markers = []; 
 		this.m_lines = [];
 		this.is_halt = false;
+		this.counterOperations = 0;
+		this.is_error = false;
 	}
 	
 	set_mark(num_row, mark){
@@ -248,6 +253,12 @@ class RAM_ {
 		if(this.is_halt){
 			return;
 		}
+		if(this.counterOperations > 10000){
+			this.is_halt = this.Functional.do_halt();
+			this.is_error = true;
+			return;
+		}
+		
 		var a;
 		if(a = /^\s*\w+:/.exec(line)){
 			line = line.substr(a.index + a[0].length);
@@ -301,21 +312,30 @@ class RAM_ {
 		else if(a = /^\s*(JUMP|JGTZ|JZERO)\b\s*(\w+)/.exec(line)){
 			if(a[1] == "JUMP"){
 				this.markerLine = this.Functional.do_jump(a[2]);
+				this.counterOperations++;
 			}
 			else if(a[1] == "JGTZ"){
 				var next_line = this.Functional.do_jgtz(a[2]);
 				if(next_line != -1){
 					this.markerLine = next_line;
+					this.counterOperations++;
+				}
+				else{
+					line = line.substr(a.index + a[0].length);
+					this.execute_line(line);
 				}
 			}
 			else if(a[1] == "JZERO"){
 				var next_line = this.Functional.do_jzero(a[2]);
 				if(next_line != -1){
 					this.markerLine = next_line;
+					this.counterOperations++;
+				}
+				else{
+					line = line.substr(a.index + a[0].length);
+					this.execute_line(line);
 				}
 			}
-			line = line.substr(a.index + a[0].length);
-			this.execute_line(line);
 		}	
 	}
 	
@@ -323,8 +343,14 @@ class RAM_ {
 		return this.is_halt;
 	}
 	
+	isError(){
+		return this.is_error;
+	}
+	
 	start(){
+		this.counterOperations = 0;
 		this.is_halt = false;
+		this.is_error = false;
 		this.markerLine = 0;
 		this.scane_markers();
 		this.TextEditor.set_readOnly(true);
@@ -339,7 +365,7 @@ class RAM_ {
 		this.markerLine = this.markerLine + 1;
 		this.TextEditor.drawLine(this.markerLine);
 		if(!this.isHalt() && this.markerLine >= this.TextEditor.get_length()){
-			this.Functional.do_halt();
+			this.is_halt = this.Functional.do_halt();
 		}
 	}
 	
@@ -354,6 +380,7 @@ class RAM_ {
 
 
 
+var timerId;
 class ButtonFunctional{
 	static change_mode() {
 		$("#mod").text($(this).text());
@@ -368,11 +395,11 @@ class ButtonFunctional{
 	constructor(){
 		btn_start.onclick = function() {
 			if(RAM.TextEditor.is_syntax_error()){
-				alert('There are some error in code!');
+				alert('Есть некоторые ошибки в коде!');
 				return;
 			}
 			if(!RAM.check_text()){
-				alert('There are some JUMPs is brake');
+				alert('Одна из команд JUMP с ошибкой!');
 				return;
 			}
 			
@@ -380,12 +407,14 @@ class ButtonFunctional{
 			if($("#mod").html() == "Отладка"){
 				btn_next.disabled = false;
 				btn_pause.disabled = true;
+				btn_load_doc.disabled = true;
 				RAM.TextEditor.set_highlight(true);
 				RAM.start();
 			}
 			else if($("#mod").html() == "Исполнение"){
 				btn_next.disabled = true;
 				btn_pause.disabled = true;
+				btn_load_doc.disabled = true;
 				RAM.TextEditor.set_highlight(false);
 				RAM.start();
 				ButtonFunctional.run();
@@ -393,14 +422,22 @@ class ButtonFunctional{
 			else{
 				btn_next.disabled = true;
 				btn_pause.disabled = false;
+				btn_load_doc.disabled = true;
 				RAM.TextEditor.set_highlight(true);
 				RAM.start();
-				// TODO
+				timerId = setInterval(function() { btn_next.dispatchEvent(new Event("click")); }, 500);
 			}
 		};
 		
 		btn_pause.onclick = function() {
-			alert('aaa');
+			if($("#btn_pause").html() == "Пауза"){
+				clearInterval(timerId);
+				$("#btn_pause").html("Продолжить");
+			}
+			else{
+				timerId = setInterval(function() { btn_next.dispatchEvent(new Event("click")); }, 500);
+				$("#btn_pause").html("Пауза");
+			}
 		};
 		
 		btn_next.onclick = function() {
@@ -408,23 +445,60 @@ class ButtonFunctional{
 		};
 
 		btn_reset.onclick = function() {
-			btn_start.disabled = false;
+			clearInterval(timerId);
 			btn_pause.disabled = true;
+			$("#btn_pause").html("Пауза");
+			
+			btn_start.disabled = false;
 			btn_next.disabled = true;
+			btn_load_doc.disabled = false;
 			RAM.reset();
 		};
 
-		btn_help.onclick = function() {
+		/*btn_help.onclick = function() {
 			alert('aaa');
-		};
+		};*/
 
 		btn_save_doc.onclick = function() {
-			alert('aaa');
+			var textToWrite = RAM.TextEditor.get_text();
+			textToWrite = textToWrite.replace(/\r/g, "");
+			textToWrite = textToWrite.replace(/\n/g, "\r\n");
+			var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
+			var fileNameToSaveAs = "Программа RAM";
+
+			var downloadLink = document.createElement("a");
+			downloadLink.download = fileNameToSaveAs;
+			downloadLink.innerHTML = "Download File";
+			if (window.URL != null)
+			{
+				// Chrome allows the link to be clicked
+				// without actually adding it to the DOM.
+				downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+			}
+			else
+			{
+				// Firefox requires the link to be added to the DOM
+				// before it can be clicked.
+				downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+				downloadLink.onclick = destroyClickedElement;
+				downloadLink.style.display = "none";
+				document.body.appendChild(downloadLink);
+			}
+
+			downloadLink.click();
 		};
 
 		btn_load_doc.onclick = function() {
-			alert('aaa');
+			var fileToLoad = document.getElementById("fileToLoad").files[0];
+			var fileReader = new FileReader();
+			fileReader.onload = function(fileLoadedEvent) 
+			{
+				var textFromFileLoaded = fileLoadedEvent.target.result;
+				RAM.TextEditor.set_text(textFromFileLoaded)
+			};
+			fileReader.readAsText(fileToLoad, "UTF-8");
 		};
+		
 		drop_debug.onclick = ButtonFunctional.change_mode;
 		drop_run.onclick = ButtonFunctional.change_mode;
 		drop_animate.onclick = ButtonFunctional.change_mode;

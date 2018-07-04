@@ -277,6 +277,6 @@ Route::get('api/delete/group/{group_id}/{mephiisthebest}', ['uses' => 'APIContro
 Route::post('check/ifExists', ['uses' => 'AdministrationController@checkEmailIfExists']);
 
 //RAM Emulator
-Route::get('algorithm/RAM', ['as' => 'RAM', 'uses' => 'EmulatorController@RAM']);
+Route::get('algorithm/RAM', ['as' => 'RAM', 'uses' => 'EmulatorController@open_RAM']);
 
 
