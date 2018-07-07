@@ -35,7 +35,7 @@ class EmulatorController extends Controller {
     }
 
 
-	public function Post(){
+ public function Post(){
       return view("algorithm.Post");
     }
 
