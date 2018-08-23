@@ -104,19 +104,16 @@ Route::get('library/persons', ['as' => 'library_persons', 'uses' => 'LibraryCont
 Route::get('library/persons/{person}', ['as' => 'person', 'uses' => 'LibraryController@person', 'middleware' => ['general_auth', 'access_for_library']]);
 Route::get('library/extra', ['as' => 'library_extra', 'uses' => 'LibraryController@extra', 'middleware' => ['general_auth', 'access_for_library']]);
 
-Route::get('library/books', ['as' => 'books', 'uses' => 'BooksController@index', ]); //только студентам и преподавателям
-Route::post('library/books/search', ['as' => 'library_search', 'uses' => 'BooksController@search']); //только студентам и преподавателям
-Route::get('library/book/{id}', ['as' => 'book', 'uses' => 'BooksController@getBook']); //только студентам и преподавателям
 
 //Кадыров илья, библиотека для студентов и преподавателей
 //каталог книг
-Route::get('Kadyrov/library/books', ['as' => 'Kadyrov_books', 'uses' => 'BooksController@Kadyrov_index']);
+Route::get('library/books', ['as' => 'Kadyrov_books', 'uses' => 'BooksController@Kadyrov_index']);
 //поиск по каталогу
-Route::post('Kadyrov/library/books/search', ['as' => 'Kadyrov_library_search', 'uses' => 'BooksController@kadyrov_search']);
+Route::post('library/books/search', ['as' => 'Kadyrov_library_search', 'uses' => 'BooksController@kadyrov_search']);
 //добавление новой книги
-Route::get('Kadyrov/library/books/create', ['as' => 'Kadyrov_books_create', 'uses' => 'BooksController@add_new_book', 'middleware' => ['general_auth', 'admin']]);
+Route::get('library/books/create', ['as' => 'Kadyrov_books_create', 'uses' => 'BooksController@add_new_book', 'middleware' => ['general_auth', 'admin']]);
 //сохранение и валидация данных о новой книге
-Route::post('Kadyrov/library/books', ['as' => 'Kadyrov_book_store', 'uses' => 'BooksController@store_book']);
+Route::post('library/books', ['as' => 'Kadyrov_book_store', 'uses' => 'BooksController@store_book']);
 // просмотр конкретной книги
 Route::get('Kadyrov/library/book/{id}', ['as' => 'Kadyrov_book', 'uses' => 'BooksController@kadyrov_getBook']);
 // обновление данных о книге
@@ -126,9 +123,9 @@ Route::get('Kadyrov/library/book/{id}/edit', ['as' => 'Kadyrov_book_edit', 'uses
 // Удаление книг
 Route::delete('Kadyrov/library/book/{id}/delete',['as' => 'Kadyrov_book_delete', 'uses' => 'BooksController@deleteBook', 'middleware' => ['general_auth', 'admin']]);
 //Личный кабинет преподаватля
-Route::get('Kadyrov/library/books/teacherCabinet',['as' => 'teacher_сabinet', 'uses' => 'BooksController@teacherCabinet', 'middleware' => ['general_auth', 'admin']]);
+Route::get('library/books/teacherCabinet',['as' => 'teacher_сabinet', 'uses' => 'BooksController@teacherCabinet', 'middleware' => ['general_auth', 'admin']]);
 //сохраняем настройки календаря в БД
-Route::post('Kadyrov/library/books/teacherCabinet',['as' => 'setDateCalendar', 'uses' => 'BooksController@set_Date_Calendar', 'middleware' => ['general_auth', 'admin']]);
+Route::post('library/books/teacherCabinet',['as' => 'setDateCalendar', 'uses' => 'BooksController@set_Date_Calendar', 'middleware' => ['general_auth', 'admin']]);
 //выбор даты заказа книги
 Route::get('Kadyrov/library/book/{id}/order', ['as' => 'Kadyrov_book_order', 'uses' => 'BooksController@kadyrov_book_order',
     'middleware' => ['general_auth', 'studentLibraryCabinet']]);
@@ -136,28 +133,28 @@ Route::get('Kadyrov/library/book/{id}/order', ['as' => 'Kadyrov_book_order', 'us
 Route::post('Kadyrov/library/book/{id}/order', ['as' => 'Kadyrov_book_send_order', 'uses' => 'BooksController@kadyrov_book_send_order',
     'middleware' => ['general_auth', 'studentLibraryCabinet']]);
 //Личный кабинет студента
-Route::get('Kadyrov/library/books/studentCabinet',['as' => 'student_сabinet', 'uses' => 'BooksController@studentCabinet',
+Route::get('library/books/studentCabinet',['as' => 'student_сabinet', 'uses' => 'BooksController@studentCabinet',
     'middleware' => ['general_auth', 'studentLibraryCabinet']]);
 // отмена заказов пользователем
-Route::delete('Kadyrov/library/books/studentCabinet/{id}/delete',['as' => 'Kadyrov_student_order_delete', 'uses' => 'BooksController@studentOrderDelete',
+Route::delete('library/books/studentCabinet/{id}/delete',['as' => 'Kadyrov_student_order_delete', 'uses' => 'BooksController@studentOrderDelete',
     'middleware' => ['general_auth', 'studentLibraryCabinet']]);
 // Удаление сообщений об отменённом заказе
-Route::delete('Kadyrov/library/books/studentCabinet/{id}/delete_message',['as' => 'Kadyrov_student_message_delete', 'uses' => 'BooksController@studentMessageDelete',
+Route::delete('library/books/studentCabinet/{id}/delete_message',['as' => 'Kadyrov_student_message_delete', 'uses' => 'BooksController@studentMessageDelete',
     'middleware' => ['general_auth', 'studentLibraryCabinet']]);
 // получение настроек календаря
-Route::get('Kadyrov/library/books/studentCabinet/settingCalendar',['as' => 'Kadyrov_student_setting_calendar', 'uses' => 'BooksController@studentSettingCalendar']);
+Route::get('library/books/studentCabinet/settingCalendar',['as' => 'Kadyrov_student_setting_calendar', 'uses' => 'BooksController@studentSettingCalendar']);
 // перенос даты возврата книги студентом
-Route::post('Kadyrov/library/books/studentCabinet/{id}/extendDate',['as' => 'Kadyrov_student_extend_date', 'uses' => 'BooksController@studentExtendDate']);
+Route::post('library/books/studentCabinet/{id}/extendDate',['as' => 'Kadyrov_student_extend_date', 'uses' => 'BooksController@studentExtendDate']);
 // выдача книг студентам
-Route::post('Kadyrov/library/books/teacherCabinet/{id}/issureBook',['as' => 'Kadyrov_teacher_issure_book', 'uses' => 'BooksController@teacherIssureBook', 'middleware' => ['general_auth', 'admin']]);
+Route::post('library/books/teacherCabinet/{id}/issureBook',['as' => 'Kadyrov_teacher_issure_book', 'uses' => 'BooksController@teacherIssureBook', 'middleware' => ['general_auth', 'admin']]);
 // отмена заказов Преподавателем
-Route::delete('Kadyrov/library/books/teacherCabinet/{id}/delete',['as' => 'Kadyrov_teacher_order_delete', 'uses' => 'BooksController@teacherOrderDelete', 'middleware' => ['general_auth', 'admin']]);
+Route::delete('library/books/teacherCabinet/{id}/delete',['as' => 'Kadyrov_teacher_order_delete', 'uses' => 'BooksController@teacherOrderDelete', 'middleware' => ['general_auth', 'admin']]);
 // перенос заказа преподавателем
-Route::post('Kadyrov/library/books/teacherCabinet/{id}/extendDate',['as' => 'Kadyrov_teacher_extend_date', 'uses' => 'BooksController@teacherExtendDate', 'middleware' => ['general_auth', 'admin']]);
+Route::post('library/books/teacherCabinet/{id}/extendDate',['as' => 'Kadyrov_teacher_extend_date', 'uses' => 'BooksController@teacherExtendDate', 'middleware' => ['general_auth', 'admin']]);
 // Возвращение книги
-Route::delete('Kadyrov/library/books/teacherCabinet/{id}/returnBook',['as' => 'Kadyrov_teacher_return_book', 'uses' => 'BooksController@teacherReturnBook', 'middleware' => ['general_auth', 'admin']]);
+Route::delete('library/books/teacherCabinet/{id}/returnBook',['as' => 'Kadyrov_teacher_return_book', 'uses' => 'BooksController@teacherReturnBook', 'middleware' => ['general_auth', 'admin']]);
 // Отправка сообщения студенту о вовремя не сданной книге
-Route::post('Kadyrov/library/books/teacherCabinet/{id}/sendMessage',['as' => 'Kadyrov_teacher_send_message', 'uses' => 'BooksController@teacherSendMessage', 'middleware' => ['general_auth', 'admin']]);
+Route::post('library/books/teacherCabinet/{id}/sendMessage',['as' => 'Kadyrov_teacher_send_message', 'uses' => 'BooksController@teacherSendMessage', 'middleware' => ['general_auth', 'admin']]);
 
 
 
@@ -165,7 +162,6 @@ Route::post('Kadyrov/library/books/teacherCabinet/{id}/sendMessage',['as' => 'Ka
 Route::get('library/lection/{id}', ['as' => 'lection', 'uses' => 'BooksController@lection', 'middleware' => ['general_auth', 'admin', 'access_for_library']]); //только студентам и преподавателям
 Route::get('library/ebooks', ['as' => 'ebooks', 'uses' => 'BooksController@ebookindex']); // всем пользователям
 Route::post('library/ebooks/search', ['as' => 'library_esearch', 'uses' => 'BooksController@esearch']); //всем пользователям
-Route::post('library/book/{book_id}/order', ['as' => 'book_order', 'uses' => 'BooksController@order']); //только студентам и преподавателям
 Route::get('teacher_account/library_calendar', ['as' => 'library_calendar', 'uses' => 'BooksController@library_calendar']); //только преподавателю
 Route::post('teacher_account/date_create', ['as' => 'library_date_create', 'uses' => 'BooksController@create_date']); // только преподавателю
 Route::get('teacher_account/library_order_list', ['as' => 'library_order_list', 'uses' => 'BooksController@library_order_list']); // только преподавателю

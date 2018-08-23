@@ -260,7 +260,7 @@
                                 <td id="author_book_td">{{ $book->author }}</td>
                                 <td id="date_issure_td">{{ $book->date_issure }}</td>
                                 <td id="date_return_td">{{ $book->date_return }}</td>
-                                <td>{!! Form::open(['url' => 'Kadyrov/library/books/studentCabinet/'.$book->id.'/extendDate', 'class' => 'form_extend', 'id' => $book->id]) !!}
+                                <td>{!! Form::open(['url' => 'library/books/studentCabinet/'.$book->id.'/extendDate', 'class' => 'form_extend', 'id' => $book->id]) !!}
                                     {{ csrf_field() }}
                                     <div class="form-group">
                                         <!-- элемент input с id = datetimepicker1 -->

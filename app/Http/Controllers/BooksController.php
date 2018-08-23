@@ -51,7 +51,7 @@ class BooksController extends Controller {
                     ->update(['message' => 'NO']);
             }
         }
-        return view("library.kadyrov_books", compact('books','searchquery','role','studentStatus',
+        return view("library.books", compact('books','searchquery','role','studentStatus',
             'messageFlag'));
     }
 
@@ -63,7 +63,7 @@ class BooksController extends Controller {
         //$query = "SELECT id, coverImg, title, author, format FROM `book` WHERE UPPER(`title`) LIKE UPPER('%$search%') OR UPPER(`author`) LIKE UPPER('%$search%')";
         $books = $book->get();
         $searchquery = $search;
-        return view("library.kadyrov_books", compact('books','searchquery','role'));
+        return view("library.books", compact('books','searchquery','role'));
     }
 
     public function kadyrov_getBook($id){
@@ -75,7 +75,7 @@ class BooksController extends Controller {
         $book = Book::where('id', '=', "$id");
         $book = $book->first();
 
-        return view("library.kadyrov_book", compact('book','role','studentStatus'));
+        return view("library.book", compact('book','role','studentStatus'));
     }
 
     public function add_new_book(){
@@ -97,7 +97,7 @@ class BooksController extends Controller {
 //        $book->coverImg = 'libr_pic/'.$_FILES['picture']['name'];
 //        $book->save();
 //        @copy($_FILES['picture']['tmp_name'], 'img/library/'.$book->coverImg);
-//        return redirect('Kadyrov/library/books');
+//        return redirect('library/books');
 //    }
 
 
@@ -125,7 +125,7 @@ class BooksController extends Controller {
         ]);
 
         if ($validator->fails()) {
-            return redirect('Kadyrov/library/books/create')
+            return redirect('library/books/create')
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -141,7 +141,7 @@ class BooksController extends Controller {
         $book->coverImg = 'libr_pic/'.$_FILES['picture']['name'];
         $book->save();
         @copy($_FILES['picture']['tmp_name'], 'img/library/'.$book->coverImg);
-        return redirect('Kadyrov/library/books');
+        return redirect('library/books');
     }
 
     public function kadyrov_editBook($id){
@@ -173,7 +173,7 @@ class BooksController extends Controller {
 //            'validation.unique_title_and_author' => 'Автор и название такие уже есть.',
 //        );
         $validator = \Validator::make($request->all(), [
-            'title' => "required|between:5,150|uniqueTitleAndAuthor:{$request->author}",
+            'title' => "required|between:5,150",
             'author' => 'required|between:5,50',
             'description' => 'required|between:30,1000',
             'format' => 'required|between:5,30',
@@ -182,7 +182,7 @@ class BooksController extends Controller {
 
         ]);
         if ($validator->fails()) {
-            return redirect('Kadyrov/library/books/create')
+            return redirect('Kadyrov/library/book/'.$id.'/edit')
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -200,7 +200,7 @@ class BooksController extends Controller {
         $path = 'img/library/'.$book->coverImg;
         app(Filesystem::class)->delete(public_path($path ));
      $book->delete();
-        return  redirect('Kadyrov/library/books');
+        return  redirect('library/books');
     }
 //личный кабинет учителя
     public function teacherCabinet(){
@@ -373,7 +373,7 @@ class BooksController extends Controller {
                $result['5Day'].$result['6Day'].$result['7Day'];
            $setCalendar->save();
         }
-        return redirect('Kadyrov/library/books/teacherCabinet');
+        return redirect('library/books/teacherCabinet');
 
     }
     // заказ книг
@@ -399,7 +399,7 @@ class BooksController extends Controller {
         $maxDay = DB::table('set_date_calendar')->where('id', '=', 1)
                 ->select('end_date')->get();
 
-return view('personal_account.Kadyrov_calendar_order', ["order_date" => json_encode($order_date), "possible_date" =>
+return view('personal_account.calendar_order', ["order_date" => json_encode($order_date), "possible_date" =>
   json_encode($return_possible_date), "book_id" => $id , "minDay" => json_encode($minDay[0]->start_date),
     "maxDay" => json_encode($maxDay[0]->end_date)]);
     }
@@ -412,7 +412,7 @@ return view('personal_account.Kadyrov_calendar_order', ["order_date" => json_enc
         $dateToBD = date("Y-m-d", $date);
         DB::table('order_books')->insert(array('id_user' => $user_id, 'id_book' => $id,
             'status' => $status, 'date_order' => $dateToBD));
-       return redirect('Kadyrov/library/books');
+       return redirect('library/books');
 
     }
 
@@ -533,29 +533,7 @@ return view('personal_account.Kadyrov_calendar_order', ["order_date" => json_enc
         return $request["date_extend"];
     }
 
-    public function index(){
-        $book = Book::select();
-	    $result = $book->get();
-        $searchquery = "";
-        return view("library.books", compact('result','searchquery'));
-    }
 
-
-    public function search(){
-        $search = Request::input('search');
-        $book = Book::where('title', 'like', "%$search%");
-        $book->orWhere('author', 'like', "%$search%");
-	    //$query = "SELECT id, coverImg, title, author, format FROM `book` WHERE UPPER(`title`) LIKE UPPER('%$search%') OR UPPER(`author`) LIKE UPPER('%$search%')";
-	    $result = $book->get();
-        $searchquery = $search;
-        return view("library.books", compact('result','searchquery'));
-    }
-
-    public function getBook($id){
-        $book = Book::where('id', '=', "$id");
-        $row = $book->first();
-        return view("library.book", compact('id','row'));
-    }
 
     public function getvalues($arr) {
         return $arr['date'];
@@ -601,27 +579,7 @@ return view('personal_account.Kadyrov_calendar_order', ["order_date" => json_enc
         return view("library.ebooks", compact('results','searchquery'));
     }
 
-    public function order($book_id){
-        $date = Request::input('date');
-
-        $order = new Order;
-        $order->id = NULL;
-        $order->book_id = "$book_id";
-        $order->student_id = "vasya"; //TODO: сюда прикрутить авторизацию
-        $order->date = "$date";
-        $order->save();
-        $ordered = Order::where('book_id', '=', $book_id);
-        $ordered->select('date');
-        $arr = $ordered->get()->toArray();
-        $arr_processed = [];
-        foreach($arr as $elem){
-            $arr_processed[] = $elem['date'];
-        }
-        $result1 = Lecture::whereNotIn('date', $arr_processed)->get();
-
-        $success = true;
-        return view("library.Lecture", compact('book_id','result1', 'success'));
-    }
+  
     public function library_calendar(){
         $success = false;
         return view("personal_account.library_calendar", compact('success'));

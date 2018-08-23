@@ -46,7 +46,7 @@
             </div>
             <div class="col-lg-11 col-md-11">
 
-                {!! Form::open(array('route' => 'Kadyrov_books', 'files' => true)) !!}
+                {!! Form::open(array('url' => 'library/books', 'files' => true)) !!}
                 <div class="form-group">
                    <h4> {!! Form::label('title', 'Название книги:') !!}</h4>
                     {!! Form::text('title',null,['class' => 'form-control','placeholder' => 'Введите название книги']) !!}

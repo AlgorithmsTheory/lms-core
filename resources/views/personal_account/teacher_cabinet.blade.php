@@ -48,7 +48,7 @@
             </div>
             <div class="col-lg-4">
 
-                    {!! HTML::link('Kadyrov/library/books/create','Добавить книгу',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+                    {!! HTML::link('library/books/create','Добавить книгу',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
                     {!! HTML::link('#collapseExample','Настроить календарь ',array('class' => 'btn ink-reaction btn-primary','role' => 'button',
                     'data-toggle' => 'collapse', 'aria-expanded' => 'false', 'aria-controls' => 'collapseExample')) !!}
                     <div class="collapse" id="collapseExample">

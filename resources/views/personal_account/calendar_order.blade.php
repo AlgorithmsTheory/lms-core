@@ -50,7 +50,7 @@
             </div>
             <div class="col-lg-4">
 
-                {!! HTML::link('Kadyrov/library/books/studentCabinet','Личный кабинет',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+                {!! HTML::link('library/books/studentCabinet','Личный кабинет',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
 
 
             </div>
