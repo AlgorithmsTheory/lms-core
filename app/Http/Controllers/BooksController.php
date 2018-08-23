@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Group;
+use App\Issure_book;
 use App\Set_date_calendar;
 use App\Ebook;
 use App\Http\Requests\AddBookRequest;
@@ -28,16 +30,14 @@ class BooksController extends Controller {
 
     //Контроллер для предоставления студентам списка книг
     public function Kadyrov_index(){
-//        $studentStatus = DB::table('users')//если 0- то учится в этом семе, если 1, то нет
-//            ->join('groups', 'users.group', '=', 'groups.group_id')
-//            ->select('groups.archived')
-//            ->first()->archived;
         $studentStatus = 1;
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
         if ($role == "Студент"){
-            $studentStatus = DB::select('SELECT groups.archived FROM users LEFT JOIN `groups`
- ON users.group = groups.group_id where users.id = ?', [Auth::user()['id']]);
-            $studentStatus = $studentStatus[0]->archived;
+            $studentStatus = DB::table('users')
+                ->leftJoin('groups', 'users.group', '=', 'groups.group_id')
+                ->where('users.id', '=', [Auth::user()['id']])
+                ->first();
+            $studentStatus = $studentStatus->archived;
         }
 
        $books = Book::all();
@@ -47,13 +47,12 @@ class BooksController extends Controller {
             $results = DB::select('select * from issure_book where message= ? AND id_user=?', ["YES",Auth::user()['id']]);
             if ($results){
                 $messageFlag = "YES";
-                DB::update('update issure_book set message = ? where id_user = ?', ['NO',Auth::user()['id']]);
+                DB::table('issure_book')->where('id_user', '=', Auth::user()['id'])
+                    ->update(['message' => 'NO']);
             }
         }
         return view("library.kadyrov_books", compact('books','searchquery','role','studentStatus',
             'messageFlag'));
-       // return Auth::user()['id'];
-
     }
 
     public function kadyrov_search(){
@@ -80,7 +79,6 @@ class BooksController extends Controller {
     }
 
     public function add_new_book(){
-
         return view("library.add_new_book");
     }
 
@@ -183,58 +181,43 @@ class BooksController extends Controller {
             'picture' => ['image'],
 
         ]);
-
         if ($validator->fails()) {
             return redirect('Kadyrov/library/books/create')
                 ->withErrors($validator)
                 ->withInput();
         }
-
-
         $book = Book::findOrFail($id);
         if (!empty($_FILES['picture']['name'])){
             $book->coverImg = 'libr_pic/'.$_FILES['picture']['name'];
             @copy($_FILES['picture']['tmp_name'], 'img/library/'.$book->coverImg);
         }
         $book->update($request->all());
-
-
         return redirect('Kadyrov/library/book/'.$book->id);
     }
 
-
-
-
-
-
-
-
-
-
-
     public function deleteBook($id){
-
         $book = Book::findOrFail($id);
         $path = 'img/library/'.$book->coverImg;
         app(Filesystem::class)->delete(public_path($path ));
-
      $book->delete();
         return  redirect('Kadyrov/library/books');
     }
 //личный кабинет учителя
     public function teacherCabinet(){
         //отмечаем должников
-        DB::update('update issure_book set status = ? where date_return < ? ', ["delay",date("Y-m-d")]);
+        Issure_book::where('date_return', '<' , date("Y-m-d"))
+            ->update(['status' => 'delay']);
 // для таблицы Заказы книг
-        $orders = DB::Select("SELECT  `order_books`.`id`, `order_books`.`date_order`, `order_books`.`id_user`, `order_books`.`id_book`,
- `book`.`title`, `book`.`author`, `users`.`first_name`, `users`.`last_name`, `groups`.`group_name`, `issure_book`.`status`,
- MAX(`issure_book`.`status`)
-FROM `order_books` LEFT JOIN `book` ON book.id=order_books.id_book LEFT JOIN `users` ON `order_books`.`id_user` = `users`.`id`  
-    LEFT JOIN `groups` ON `groups`.`group_id`=`users`.`group` LEFT JOIN `issure_book` ON `issure_book`.`id_user`= `order_books`.`id_user`
-     WHERE `order_books`.`status` = ? group by  `order_books`.`id`  ORDER BY date_order", ["active"]);
+        $orders = DB::table('order_books')->leftJoin('book', 'order_books.id_book', '=', 'book.id')
+            ->leftJoin('users', 'order_books.id_user', '=', 'users.id')
+            ->leftJoin('groups', 'users.group', '=', 'groups.group_id')
+            ->where('order_books.status', '=', 'active')
+            ->select('order_books.id', 'order_books.date_order', 'order_books.id_user', 'order_books.id_book',
+                'book.title', 'book.author', 'users.first_name', 'users.last_name', 'groups.group_name', 'order_books.status')
+            ->get();
 
-        $userDelays = DB::Select("SELECT  `issure_book`.`id_user`, `issure_book`.`status`FROM `issure_book` ");
-
+       $userDelays = DB::table('issure_book')->select('issure_book.id_user', 'issure_book.status')
+       ->get();
         foreach ($orders as $order){
             foreach ($userDelays as $userDelay){
                 if ($order->id_user == $userDelay->id_user && $userDelay->status=='delay'){
@@ -269,12 +252,12 @@ FROM `order_books` LEFT JOIN `book` ON book.id=order_books.id_book LEFT JOIN `us
         }
         $nameOrders = array_unique($nameOrders );
 
-        // для таблицы Выданные книги
-        $issureBooks = DB::Select("SELECT  `issure_book`.`id`, `issure_book`.`date_issure`, `issure_book`.`date_return`, `issure_book`.`id_book`,
- `book`.`title`, `book`.`author`, `users`.`first_name`, `users`.`last_name`, `groups`.`group_name`, `issure_book`.`status`
-FROM `issure_book` LEFT JOIN `book` ON book.id=issure_book.id_book LEFT JOIN `users` ON `issure_book`.`id_user` = `users`.`id`
-    LEFT JOIN `groups` ON `groups`.`group_id`=`users`.`group` 
-     ORDER BY date_return");
+        $issureBooks = DB::table('issure_book')->leftJoin('book', 'issure_book.id_book', '=', 'book.id')
+            ->leftJoin('users', 'issure_book.id_user', '=', 'users.id')
+            ->leftJoin('groups', 'groups.group_id', '=', 'users.group')
+            ->select('issure_book.id', 'issure_book.date_issure', 'issure_book.date_return',
+                'issure_book.id_book', 'book.title', 'book.author', 'users.first_name', 'users.last_name', 'groups.group_name',
+                'issure_book.status')->orderBy('date_return')->get();
         $groupIssureBooks = [];
         foreach ($issureBooks as $issureBook){
             $groupIssureBooks[] = $issureBook->group_name;
@@ -302,7 +285,8 @@ FROM `issure_book` LEFT JOIN `book` ON book.id=issure_book.id_book LEFT JOIN `us
         $dateReturnIssureBooks= array_unique($dateReturnIssureBooks);
 
         // для таблицы Книги в наличии
-        $inLibraryBooks = DB::Select("SELECT book.* FROM book  LEFT JOIN issure_book ON book.id=issure_book.id_book  WHERE issure_book.id_book IS NULL");
+        $inLibraryBooks = DB::table('book')->leftJoin('issure_book', 'book.id', '=', 'issure_book.id_book')
+            ->whereNull('issure_book.id_book')->get();
         $titleInLibraryBooks = [];
         foreach ($inLibraryBooks as $inLibraryBook){
             $titleInLibraryBooks[] = $inLibraryBook->title;
@@ -316,7 +300,7 @@ FROM `issure_book` LEFT JOIN `book` ON book.id=issure_book.id_book LEFT JOIN `us
         return view("personal_account.teacher_cabinet", compact("orders","groupOrders", "titleOrders", "authorOrders", "dateOrders",
             "issureBooks", "groupIssureBooks", "titleIssureBooks", "authorIssureBooks", "dateIssureIssureBooks", "dateReturnIssureBooks",
             "inLibraryBooks", "titleInLibraryBooks", "authorInLibraryBooks", "nameOrders"));
-       //return compact("groupOrders");
+
     }
 //Выдача книг студентам
     public function teacherIssureBook($id){
@@ -324,21 +308,17 @@ FROM `issure_book` LEFT JOIN `book` ON book.id=issure_book.id_book LEFT JOIN `us
         $issureDate = date("Y-m-d");
         $returnDate = new DateTime('+7 days');
         $returnDate = $returnDate->format('Y-m-d');
-        DB::insert('insert into issure_book (id_user, id_book, date_issure, date_return, status, message) values (?, ?, ?, ?, ?, ?)',[ $result['user_id'], $result['book_id'],
-            $issureDate, $returnDate, "notDelay", "NO" ]);
-        DB::delete('DELETE FROM order_books WHERE id = ?', [$result['order_id']]);
+        DB::table('issure_book')->insert(array('id_user' => $result['user_id'], 'id_book' => $result['book_id'],
+            'date_issure' => $issureDate, 'date_return' => $returnDate, 'status' => "notDelay", 'message' => "NO"));
 
-        //return [ "returnDate" => json_encode($returnDate)];
+        DB::table('order_books')->where('id', '=', $result['order_id'])->delete();
         return $result['order_id'];
     }
 
     //Отмена заказа преподавателем
     public function teacherOrderDelete($id){
-
-
         $request = Request::all();
-        DB::update('update `order_books` set status = ? where id = ?', ['cancel',$id]);
-
+        DB::table('order_books')->where('id', '=', $id)->update(array('status' => 'cancel'));
         return $id;
 
     }
@@ -346,19 +326,16 @@ FROM `issure_book` LEFT JOIN `book` ON book.id=issure_book.id_book LEFT JOIN `us
     // перенос заказа преподавателем
     public function teacherExtendDate($id){
         $request = Request::all();
-        //$request["date_extend"]
         $NewFormatDate = preg_replace('/\./', '-', $request["date_extend"]);
         $dateReturn = strtotime($NewFormatDate);
         $dateReturnToBD = date("Y-m-d", $dateReturn);
-//        DB::update('update order_books set date_order = ? where order_books.id = ?', [$request["date_extend"], $request["id_order"]]);
-//        DB::update('update order_books set status = ? where order_books.id_book = ? AND order_books.date_order <= ?
-//AND order_books.id_user <> ?',
-//            ["extendT",$request["id_book"], $request["date_extend"], $request["id_user"]]);
+        DB::table('order_books')->where('id', '=', $request["id_order"])->update(array('date_order' => $request["date_extend"]));
 
-        DB::update('update order_books set date_order = ? where order_books.id = ?', [$request["date_extend"], $request["id_order"]]);
-        DB::update('update order_books set status = ? where order_books.id_book = ? AND order_books.date_order <= ?
-AND order_books.id <> ?',
-            ["extendT",$request["id_book"], $request["date_extend"], $request["id_order"]]);
+        DB::table('order_books')->where([
+            ['order_books.id_book', '=', $request["id_book"]],
+            ['order_books.date_order', '<=', $request["date_extend"]],
+                ['order_books.id', '<>', $request["id_order"]]
+        ])->update(array('status' => "extendT"));
 
        return ['date_extend' => $request["date_extend"], 'id_order' => $request["id_order"], 'id_book' => $request["id_book"],
            'date_order' => $request["date_order"], 'dateReturnToBD' => $dateReturnToBD];
@@ -366,28 +343,17 @@ AND order_books.id <> ?',
 //Возврат книг
     public function teacherReturnBook($id){
         $request = Request::all();
-        DB::delete('delete from issure_book where id =?',[$id]);
+        DB::table('issure_book')->where('id', '=', $id)->delete();
         return $id;
 
     }
 // Отправка сообщения студенту о вовремя не сданной книге
     public function teacherSendMessage($id){
         $request = Request::all();
-        DB::update('update issure_book set message = ? where id = ?', ['YES',$request['id_issureBook']]);
-
+        DB::table('issure_book')->where('id', '=', $request['id_issureBook'])->update(array('message' => 'YES'));
         return $request['id_issureBook'];
 
     }
-
-
-
-
-
-
-
-
-
-
 //сохраняем параметры календаря
     public function set_Date_Calendar(){
         $result = Request::all();
@@ -410,15 +376,17 @@ AND order_books.id <> ?',
         return redirect('Kadyrov/library/books/teacherCabinet');
 
     }
-    // зазказ книг
+    // заказ книг
     public function kadyrov_book_order($id){
-        $results = DB::select('select date_order from order_books where id_book = ? AND status = ?', [$id, "active"]);
-       // $results = Order_book::where('id_book', $id)->date_order;
+        $results = DB::table('order_books')->where([
+            ['id_book', '=', $id],
+            ['status', '=', 'active']
+        ])->select('date_order')->get();
         $order_date= [];
         foreach ($results as $result) {
             $order_date[] = $result->date_order;
         }
-        $result = DB::select('select days from set_date_calendar where id = ?', [1]);
+        $result = DB::table('set_date_calendar')->where('id', '=', 1)->select('days')->get();
        $possible_date = str_split($result[0]->days);
        $allday = ["0", "1", "2", "3", "4", "5", "6"];
         $possible_date = array_diff($allday, $possible_date);
@@ -426,15 +394,14 @@ AND order_books.id <> ?',
         foreach ($possible_date as $date){
             $return_possible_date[] = $date;
         }
-        $minDay = DB::select('select start_date from set_date_calendar where id = ?', [1]);
-        $maxDay = DB::select('select end_date from set_date_calendar where id = ?', [1]);
-
+        $minDay = DB::table('set_date_calendar')->where('id', '=', 1)
+        ->select('start_date')->get();
+        $maxDay = DB::table('set_date_calendar')->where('id', '=', 1)
+                ->select('end_date')->get();
 
 return view('personal_account.Kadyrov_calendar_order', ["order_date" => json_encode($order_date), "possible_date" =>
   json_encode($return_possible_date), "book_id" => $id , "minDay" => json_encode($minDay[0]->start_date),
     "maxDay" => json_encode($maxDay[0]->end_date)]);
-
-       //return $return_possible_date;
     }
 
     public function kadyrov_book_send_order($id){
@@ -443,22 +410,27 @@ return view('personal_account.Kadyrov_calendar_order', ["order_date" => json_enc
         $order_date = Request::all();
         $date = strtotime($order_date["date_order"]);
         $dateToBD = date("Y-m-d", $date);
-        DB::insert('insert into order_books (id_user, id_book, status, date_order) values (?, ?, ?, ?)', [ $user_id, $id, $status, $dateToBD ]);
+        DB::table('order_books')->insert(array('id_user' => $user_id, 'id_book' => $id,
+            'status' => $status, 'date_order' => $dateToBD));
        return redirect('Kadyrov/library/books');
 
     }
 
 //личный кабинет студента
     public function studentCabinet(){
-        DB::update('update issure_book set status = ? where date_return < ? ', ["delay",date("Y-m-d")]);
+        DB::table('issure_book')->where('date_return', '<', date("Y-m-d"))
+            ->update(array('status' => "delay"));
 
-        $orders = DB::Select("SELECT `order_books`.`id`, `order_books`.`date_order`, `order_books`.`id_user`,`order_books`.`status`, `order_books`.`id_book`,
- `book`.`title`, `book`.`author` 
-FROM `order_books` INNER JOIN `book` ON book.id=order_books.id_book WHERE id_user = ?   ORDER BY date_order", [Auth::user()['id']]);
+        $orders = DB::table('order_books')->join('book', 'order_books.id_book', '=', 'book.id')
+            ->where('id_user', '=', Auth::user()['id'])
+            ->select('order_books.id', 'order_books.date_order', 'order_books.id_user', 'order_books.status',
+                'order_books.status', 'order_books.id_book', 'book.title', 'book.author')
+            ->orderBy('date_order')->get();
 
-        $books = DB::Select("SELECT `issure_book`.`id`, `issure_book`.`date_issure`, `issure_book`.`date_return` ,`issure_book`.`id_user`,`issure_book`.`status`, `issure_book`.`id_book`,
- `book`.`title`, `book`.`author` 
-FROM `issure_book` INNER JOIN `book` ON book.id=issure_book.id_book WHERE id_user = ?   ORDER BY date_return", [Auth::user()['id']]);
+        $books = DB::table('issure_book')->join('book', 'issure_book.id_book', '=', 'book.id')
+            ->where('id_user', '=', Auth::user()['id'])
+            ->select('issure_book.id', 'issure_book.date_issure', 'issure_book.date_return', 'issure_book.id_user',
+                'issure_book.status', 'issure_book.id_book', 'book.title', 'book.author')->orderBy('date_return')->get();
 // для таблицы мои заказы
         $dateOrders = [];
         foreach ($orders as $order){
@@ -512,31 +484,27 @@ FROM `issure_book` INNER JOIN `book` ON book.id=issure_book.id_book WHERE id_use
         }
         $dateIssureMyBooks = array_unique($dateIssureMyBooks);
 
-
-
         return view("personal_account.student_cabinet", compact("orders","books", "dateOrders", "titleOrders", "authorOrders", "titleMyBooks",
             "authorMyBooks", "dateReturnMyBooks", "dateIssureMyBooks"));
-            //return compact("dateOrders") ;
     }
 
     //Отмена заказов студентом
     public function studentOrderDelete($id){
-
         $request = Request::all();
-        DB::delete('delete from `order_books`  WHERE `order_books`.`id`= ?',[$id]);
+        DB::table('order_books')->where('id', '=', $id)->delete();
       return $id;
 
     }
     //// Удаление сообщений об отменённом заказе студентом
     public function studentMessageDelete($id){
         $request = Request::all();
-        DB::delete('delete from `order_books`  WHERE `order_books`.`id`= ?',[$id]);
+        DB::table('order_books')->where('id', '=', $id)->delete();
         return $id;
     }
     //// Настройка календаря для продления книги студентом
     public function studentSettingCalendar(){
-
-        $result = DB::select('select days from set_date_calendar where id = ?', [1]);
+        $result = DB::table('set_date_calendar')->where('id', '=', 1)
+            ->select('days')->get();
         $possible_date = str_split($result[0]->days);
         $allday = ["0", "1", "2", "3", "4", "5", "6"];
         $possible_date = array_diff($allday, $possible_date);
@@ -544,38 +512,26 @@ FROM `issure_book` INNER JOIN `book` ON book.id=issure_book.id_book WHERE id_use
         foreach ($possible_date as $date){
             $return_possible_date[] = $date;
         }
-        $minDay = DB::select('select start_date from set_date_calendar where id = ?', [1]);
-        $maxDay = DB::select('select end_date from set_date_calendar where id = ?', [1]);
-
+        $minDay =DB::table('set_date_calendar')->where('id', '=', 1)
+            ->select('start_date')->get();
+        $maxDay =DB::table('set_date_calendar')->where('id', '=', 1)
+            ->select('end_date')->get();
         return  [ "possible_date" => json_encode($return_possible_date), "minDay" => json_encode($minDay[0]->start_date),
             "maxDay" => json_encode($maxDay[0]->end_date)];
-       // return  [ "possible_date" => json_encode($possible_date)];
     }
 // перенос даты возврата книги студентом
     public function studentExtendDate($id){
         $request = Request::all();
-        //$request["date_extend"]
         $dateReturn = strtotime($request["date_extend"]);
         $dateReturnToBD = date("Y-m-d", $dateReturn);
-//        DB::update('update issure_book set date_return = ? where issure_book.id = ?', [$request["date_extend"], $id]);
-//        DB::update('update order_books set status = ? where order_books.id_book = ? AND order_books.date_order <= ?
-//AND order_books.id <> ?', ["extendS",$request["id_book"], $request["date_extend"], $request["id_user"]]);
-//      return $request["date_extend"];
-        DB::update('update issure_book set date_return = ? where issure_book.id = ?', [$request["date_extend"], $id]);
-        DB::update('update order_books set status = ? where order_books.id_book = ? AND order_books.date_order <= ? 
-', ["extendS",$request["id_book"], $request["date_extend"]]);
+        DB::table('issure_book')->where('id', '=', $id)->update(['date_return' => $request["date_extend"]]);
+        DB::table('order_books')->where([
+            ['id_book', '=', $request["id_book"]],
+            ['date_order', '<=', $request["date_extend"]
+                ]
+        ])->update(['status' => 'extendS']);
         return $request["date_extend"];
     }
-
-
-
-
-
-
-
-
-
-////Началось не моё
 
     public function index(){
         $book = Book::select();
