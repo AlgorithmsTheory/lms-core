@@ -40,7 +40,7 @@
                         <ol class="breadcrumb">
                             <!--Надо будет изменить HTML::linkRoute('library_index', 'Библиотека')-->
                             <li>{!! HTML::linkRoute('library_index', 'Библиотека') !!}</li>
-                            <li>{!! HTML::linkRoute('Kadyrov_books', 'Бронирование печатных изданий') !!}</li>
+                            <li>{!! HTML::linkRoute('books', 'Бронирование печатных изданий') !!}</li>
                             <li class="active">Заказ книги</li>
                         </ol>
                     </div><!--end .section-header -->
@@ -62,7 +62,7 @@
 
 
 
-            {!! Form::open(['url' => 'Kadyrov/library/book/'.$book_id.'/order', 'id' => 'form_date']) !!}
+            {!! Form::open(['url' => 'library/book/'.$book_id.'/order', 'id' => 'form_date']) !!}
             <div class="form-group">
                 <!-- элемент input с id = datetimepicker1 -->
                 <div class="input-group" id="datetimepicker" >

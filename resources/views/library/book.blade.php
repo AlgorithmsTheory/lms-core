@@ -33,7 +33,7 @@
                     <div class="section-header">
                         <ol class="breadcrumb">
                             <li>{!! HTML::linkRoute('library_index', 'Библиотека') !!}</li>
-                            <li>{!! HTML::linkRoute('Kadyrov_books', 'Бронирование печатных изданий') !!}</li>
+                            <li>{!! HTML::linkRoute('books', 'Бронирование печатных изданий') !!}</li>
                             <li class="active">Конкретное печатное издание</li>
                         </ol>
 
@@ -91,11 +91,11 @@
 
                                     @if($role == 'Студент' and $studentStatus == 0)
 
-                                        {!! HTML::link('Kadyrov/library/book/'.$book->id.'/order','Заказать книгу',array('class' => 'btn ink-reaction btn-primary btn-sm btn-block','role' => 'button')) !!}
+                                        {!! HTML::link('library/book/'.$book->id.'/order','Заказать книгу',array('class' => 'btn ink-reaction btn-primary btn-sm btn-block','role' => 'button')) !!}
                                     @endif
                                     @if($role == 'Админ' )
-                                    {!! HTML::link('Kadyrov/library/book/'.$book->id.'/edit','Редактировать книгу',array('class' => 'btn ink-reaction btn-primary btn-sm','role' => 'button')) !!}
-                                        <form action = "{{route('Kadyrov_book_delete',['id' => $book->id])}}" method="post" onsubmit="return ConfirmDelete()">
+                                    {!! HTML::link('library/book/'.$book->id.'/edit','Редактировать книгу',array('class' => 'btn ink-reaction btn-primary btn-sm','role' => 'button')) !!}
+                                        <form action = "{{route('book_delete',['id' => $book->id])}}" method="post" onsubmit="return ConfirmDelete()">
                                             {{method_field('DELETE')}}
                                             {{ csrf_field() }}
                                             <div class="form-group">

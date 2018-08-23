@@ -128,7 +128,7 @@ $(document).ready(function(){
     $('.cancel_order').click(function () {
         var x = confirm("Отменить заказ?");
         if (x){
-            // alert( "{{ route('Kadyrov_student_order_delete',['id' => \"+id+\"]) }}");
+            // alert( "{{ route('student_order_delete',['id' => \"+id+\"]) }}");
             var id = $( this ).attr("id");
             var regular = /\d+/;
             id = (id.match(regular));
@@ -168,7 +168,7 @@ $(document).ready(function(){
     $('.cancel_message').click(function () {
         var x = confirm("Удалить уведомление?");
         if (x){
-            // alert( "{{ route('Kadyrov_student_order_delete',['id' => \"+id+\"]) }}");
+            // alert( "{{ route('student_order_delete',['id' => \"+id+\"]) }}");
             var id = $( this ).attr("id");
             var token = $( this ).attr("value");
             var regular = /\d+/;

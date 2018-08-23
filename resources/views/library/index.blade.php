@@ -58,7 +58,7 @@
                         Книги по ТА <i class="fa fa-caret-down text-default-light"></i>
                     </button>
                     <ul class="dropdown-menu animation-expand" >
-                        <li>{!! HTML::linkRoute('Kadyrov_books', 'Бронирование печатных изданий') !!}</li>
+                        <li>{!! HTML::linkRoute('books', 'Бронирование печатных изданий') !!}</li>
                         <li>{!! HTML::linkRoute('ebooks', 'Электронные книги') !!}</li>
                     </ul>
                 </div>

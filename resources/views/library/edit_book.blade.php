@@ -31,7 +31,7 @@
                     <div class="section-header">
                         <ol class="breadcrumb">
                             <li>{!! HTML::linkRoute('library_index', 'Библиотека') !!}</li>
-                            <li>{!! HTML::linkRoute('Kadyrov_books', 'Бронирование печатных изданий') !!}</li>
+                            <li>{!! HTML::linkRoute('books', 'Бронирование печатных изданий') !!}</li>
                             <li class="active">Редактирование данных о книге</li>
                         </ol>
                     </div><!--end .section-header -->
@@ -46,7 +46,7 @@
             </div>
             <div class="col-lg-11 col-md-11">
 
-                {!! Form::model($book,array('url' => 'Kadyrov/library/book/'.$book->id, 'files' => true, 'method' => 'PATCH')) !!}
+                {!! Form::model($book,array('url' => 'library/book/'.$book->id, 'files' => true, 'method' => 'PATCH')) !!}
                 <div class="form-group">
                     <h4> {!! Form::label('title', 'Название книги:') !!}</h4>
                     {!! Form::text('title',null,['class' => 'form-control','placeholder' => 'Введите название книги']) !!}

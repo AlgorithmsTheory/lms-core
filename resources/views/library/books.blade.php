@@ -48,7 +48,7 @@
                     echo '<li class="active">Бронирование печатных изданий</li>';
                 }else{
                     echo '<li><a href="';
-                    echo URL::route('Kadyrov_library_search');
+                    echo URL::route('library_search');
                     echo '">Бронирование печатных изданий</a></li>';
                     echo '<li class="active">Поиск печатных изданий</li>';
                 }?>
@@ -78,7 +78,7 @@
         <article style="margin-left:10%; margin-right:13%; text-align: justify">
             <br>
             <center>
-                <form class="form" action="{{URL::route('Kadyrov_library_search')}}"  method="post">
+                <form class="form" action="{{URL::route('library_search')}}"  method="post">
                     <input type="text"  name="search" id="text-to-find" size="50px" value="<?php echo $searchquery?>" placeholder="Введите название книги или имя автора" />
                     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                     <button type="submit" class="btn ink-reaction btn-primary"> Искать</button></form>
@@ -168,7 +168,7 @@
                 //alert(author);
                  $('.modal').find('#modal_delete_book_title').html(title);
                 $('.modal').find('#modal_delete_book_author').html(author);
-                $('.modal').find('.ref').attr('href', 'Kadyrov/library/book/'+ id + '/delete');
+                $('.modal').find('.ref').attr('href', 'library/book/'+ id + '/delete');
                 //alert($('.modal').find('.ref').attr('href'));
             });
         });*/

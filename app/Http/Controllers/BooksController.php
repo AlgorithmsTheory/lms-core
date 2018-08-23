@@ -29,7 +29,7 @@ use MaddHatter\LaravelFullcalendar\Facades\Calendar ;
 class BooksController extends Controller {
 
     //Контроллер для предоставления студентам списка книг
-    public function Kadyrov_index(){
+    public function index(){
         $studentStatus = 1;
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
         if ($role == "Студент"){
@@ -55,7 +55,7 @@ class BooksController extends Controller {
             'messageFlag'));
     }
 
-    public function kadyrov_search(){
+    public function search(){
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
         $search = Request::input('search');
         $book = Book::where('title', 'like', "%$search%");
@@ -66,7 +66,7 @@ class BooksController extends Controller {
         return view("library.books", compact('books','searchquery','role'));
     }
 
-    public function kadyrov_getBook($id){
+    public function getBook($id){
         $studentStatus = DB::table('users')//если 0- то учится в этом семе, если 1, то нет
         ->join('groups', 'users.group', '=', 'groups.group_id')
             ->select('groups.archived')
@@ -144,7 +144,7 @@ class BooksController extends Controller {
         return redirect('library/books');
     }
 
-    public function kadyrov_editBook($id){
+    public function editBook($id){
         $book = Book::findOrFail($id);
         return view('library.edit_book', compact('book'));
     }
@@ -158,7 +158,7 @@ class BooksController extends Controller {
 //        $book->update($request->all());
 //
 //
-//        return redirect('Kadyrov/library/book/'.$book->id);
+//        return redirect('library/book/'.$book->id);
 //    }
 
     public function update_book($id, \Illuminate\Http\Request $request){
@@ -182,7 +182,7 @@ class BooksController extends Controller {
 
         ]);
         if ($validator->fails()) {
-            return redirect('Kadyrov/library/book/'.$id.'/edit')
+            return redirect('library/book/'.$id.'/edit')
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -192,7 +192,7 @@ class BooksController extends Controller {
             @copy($_FILES['picture']['tmp_name'], 'img/library/'.$book->coverImg);
         }
         $book->update($request->all());
-        return redirect('Kadyrov/library/book/'.$book->id);
+        return redirect('library/book/'.$book->id);
     }
 
     public function deleteBook($id){
@@ -377,7 +377,7 @@ class BooksController extends Controller {
 
     }
     // заказ книг
-    public function kadyrov_book_order($id){
+    public function book_order($id){
         $results = DB::table('order_books')->where([
             ['id_book', '=', $id],
             ['status', '=', 'active']
@@ -404,7 +404,7 @@ return view('personal_account.calendar_order', ["order_date" => json_encode($ord
     "maxDay" => json_encode($maxDay[0]->end_date)]);
     }
 
-    public function kadyrov_book_send_order($id){
+    public function book_send_order($id){
         $user_id = Auth::user()['id'];
         $status = "active";
         $order_date = Request::all();
@@ -579,7 +579,7 @@ return view('personal_account.calendar_order', ["order_date" => json_encode($ord
         return view("library.ebooks", compact('results','searchquery'));
     }
 
-  
+
     public function library_calendar(){
         $success = false;
         return view("personal_account.library_calendar", compact('success'));

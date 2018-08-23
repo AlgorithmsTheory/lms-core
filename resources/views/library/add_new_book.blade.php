@@ -31,7 +31,7 @@
                     <div class="section-header">
                         <ol class="breadcrumb">
                             <li>{!! HTML::linkRoute('library_index', 'Библиотека') !!}</li>
-                            <li>{!! HTML::linkRoute('Kadyrov_books', 'Бронирование печатных изданий') !!}</li>
+                            <li>{!! HTML::linkRoute('books', 'Бронирование печатных изданий') !!}</li>
                             <li class="active">Добавление новой книги</li>
                         </ol>
                     </div><!--end .section-header -->

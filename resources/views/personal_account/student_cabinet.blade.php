@@ -37,7 +37,7 @@
                         <ol class="breadcrumb">
                             <!--Надо будет изменить HTML::linkRoute('library_index', 'Библиотека')-->
                             <li>{!! HTML::linkRoute('library_index', 'Библиотека') !!}</li>
-                            <li>{!! HTML::linkRoute('Kadyrov_books', 'Бронирование печатных изданий') !!}</li>
+                            <li>{!! HTML::linkRoute('books', 'Бронирование печатных изданий') !!}</li>
                             <li class="active">Личный кабинет</li>
                         </ol>
                     </div><!--end .section-header -->

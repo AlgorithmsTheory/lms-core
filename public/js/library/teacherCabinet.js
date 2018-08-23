@@ -353,7 +353,7 @@ $( document ).ready(function() {
     $('.cancel_order').click(function () {
         var x = confirm("Отменить заказ?");
         if (x){
-            // alert( "{{ route('Kadyrov_student_order_delete',['id' => \"+id+\"]) }}");
+            // alert( "{{ route('student_order_delete',['id' => \"+id+\"]) }}");
             var id = $( this ).attr("id");
             var token = $( this ).attr("value");
             $.ajax(
