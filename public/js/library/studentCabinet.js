@@ -5,6 +5,7 @@ $(document).ready(function(){
         rows = rows.not( ".deleted" );
         $("#authorOrder").val("Автор книги");
         $("#titleOrder").val("Название книги");
+        $("#genreOrder").val("Жанр книги");
         if( $("#dateOrder option:selected").text() == "Дата заказа" ){
             rows.show();
         }else{
@@ -22,6 +23,7 @@ $(document).ready(function(){
         rows = rows.not( ".deleted" );
         $("#dateOrder").val("Дата заказа");
         $("#titleOrder").val("Название книги");
+        $("#genreOrder").val("Жанр книги");
         if( $("#authorOrder option:selected").text() == "Автор книги" ){
             rows.show();
         }else{
@@ -41,6 +43,7 @@ $(document).ready(function(){
         rows = rows.not( ".deleted" );
         $("#dateOrder").val("Дата заказа");
         $("#authorOrder").val("Автор книги");
+        $("#genreOrder").val("Жанр книги");
         if( $("#titleOrder option:selected").text() == "Название книги" ){
             rows.show();
         }else{
@@ -54,11 +57,31 @@ $(document).ready(function(){
            // rows = rows.not( "[style='display: none;']" );
         }
     });
+    $('#genreOrder').change( function(){
+        var rows = $('table.tableMyOrder tr:gt(0) ');
+        rows = rows.not( ".deleted" );
+        $("#dateOrder").val("Дата заказа");
+        $("#authorOrder").val("Автор книги");
+        $("#titleOrder").val("Название книги");
+        if( $("#genreOrder option:selected").text() == "Жанр книги" ){
+            rows.show();
+        }else{
+            rows.each(function( elem ) {
+                if($( this ).children('#genre_order_td').text() != $("#genreOrder option:selected").text()){
+                    $( this ).hide();
+                }else{
+                    $( this ).show();
+                }
+            });
+            // rows = rows.not( "[style='display: none;']" );
+        }
+    });
 //Строки таблицы Книги на руках
     var rowsMyOrder = $('table.tableMyBook tr:gt(0) ');
     $('#dateReturnBook').change( function(){
         $("#authorBook").val("Автор книги");
         $("#titleBook").val("Название книги");
+        $("#genreBook").val("Жанр книги");
         if( $("#dateReturnBook option:selected").text() == "Дата возврата" ){
             rowsMyOrder.show();
         }else{
@@ -74,6 +97,7 @@ $(document).ready(function(){
     $('#authorBook').change( function(){
         $("#dateReturnBook").val("Дата возврата");
         $("#titleBook").val("Название книги");
+        $("#genreBook").val("Жанр книги");
         if( $("#authorBook option:selected").text() == "Автор книги" ){
             rowsMyOrder.show();
         }else{
@@ -91,6 +115,7 @@ $(document).ready(function(){
     $('#titleBook').change( function(){
         $("#dateReturnBook").val("Дата возврата");
         $("#authorBook").val("Автор книги");
+        $("#genreBook").val("Жанр книги");
         if( $("#titleBook option:selected").text() == "Название книги" ){
             rowsMyOrder.show();
         }else{
@@ -107,6 +132,7 @@ $(document).ready(function(){
     $('#dateIssureBook').change( function(){
         $("#dateReturnBook").val("Дата возврата");
         $("#authorBook").val("Автор книги");
+        $("#genreBook").val("Жанр книги");
         if( $("#dateIssureBook option:selected").text() == "Дата получения" ){
             rowsMyOrder.show();
         }else{
@@ -120,7 +146,22 @@ $(document).ready(function(){
             // rows = rows.not( "[style='display: none;']" );
         }
     });
-
+    $('#genreBook').change( function(){
+        $("#dateReturnBook").val("Дата возврата");
+        $("#authorBook").val("Автор книги");
+        $("#dateIssureBook").val("Дата получения");
+        if( $("#genreBook option:selected").text() == "Жанр книги" ){
+            rowsMyOrder.show();
+        }else{
+            rowsMyOrder.each(function( elem ) {
+                if($( this ).children('#genre_book_td').text() != $("#genreBook option:selected").text()){
+                    $( this ).hide();
+                }else{
+                    $( this ).show();
+                }
+            });
+        }
+    });
 
 
 //Потверждение  и отмена заказа

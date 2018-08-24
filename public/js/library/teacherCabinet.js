@@ -47,6 +47,7 @@ $( document ).ready(function() {
         $("#groupOrder").val("Группа");
         $("#authorOrder").val("Автор книги");
         $("#dateOrder").val("Дата заказа");
+        $("#genresOrder").val("Жанр книги");
         if( $("#studentOrder option:selected").text() == "Студент" ){
             rows.show();
         }else{
@@ -69,6 +70,7 @@ $( document ).ready(function() {
         $("#titleOrder").val("Название книги");
         $("#authorOrder").val("Автор книги");
         $("#dateOrder").val("Дата заказа");
+        $("#genresOrder").val("Жанр книги");
         if( $("#groupOrder option:selected").text() == "Группа" ){
             rows.show();
         }else{
@@ -88,6 +90,7 @@ $( document ).ready(function() {
         $("#groupOrder").val("Группа");
         $("#authorOrder").val("Автор книги");
         $("#dateOrder").val("Дата заказа");
+        $("#genresOrder").val("Жанр книги");
         if( $("#titleOrder option:selected").text() == "Название книги" ){
             rows.show();
         }else{
@@ -107,6 +110,7 @@ $( document ).ready(function() {
         $("#groupOrder").val("Группа");
         $("#titleOrder").val("Название книги");
         $("#dateOrder").val("Дата заказа");
+        $("#genresOrder").val("Жанр книги");
         if( $("#authorOrder option:selected").text() == "Автор книги" ){
             rows.show();
         }else{
@@ -126,6 +130,7 @@ $( document ).ready(function() {
         $("#groupOrder").val("Группа");
         $("#titleOrder").val("Название книги");
         $("#authorOrder").val("Автор книги");
+        $("#genresOrder").val("Жанр книги");
         if( $("#dateOrder option:selected").text() == "Дата заказа" ){
             rows.show();
         }else{
@@ -138,7 +143,26 @@ $( document ).ready(function() {
             });
         }
     });
-
+    $('#genresOrder').change( function(){
+        var rows = $('table.tableOrder tr:gt(0) ');
+        rows = rows.not( ".deleted" );
+        $("#studentOrder").val("Студент");
+        $("#groupOrder").val("Группа");
+        $("#titleOrder").val("Название книги");
+        $("#authorOrder").val("Автор книги");
+        $("#dateOrder").val("Дата заказа");
+        if( $("#genresOrder option:selected").text() == "Жанр книги" ){
+            rows.show();
+        }else{
+            rows.each(function( elem ) {
+                if($( this ).children('#genre_order_td').text() != $("#genresOrder option:selected").text()){
+                    $( this ).hide();
+                }else{
+                    $( this ).show();
+                }
+            });
+        }
+    });
     // Сортировка таблицы Выданные Книги
     // $('#studentIssureBook').change( function(){
     //     var rows = $('table.tableIssureBook tr:gt(0) ');
@@ -169,6 +193,7 @@ $( document ).ready(function() {
         $("#authorIssureBook").val("Автор книги");
         $("#dateIssureBook").val("Дата выдачи");
         $("#dateReturnIssureBook").val("Дата Возврата");
+        $("#genresIssureBook").val("Жанр книги");
         if( $("#studentIssureBook option:selected").text() == "Студент" ){
             rows.show();
         }else{
@@ -191,6 +216,7 @@ $( document ).ready(function() {
         $("#authorIssureBook").val("Автор книги");
         $("#dateIssureBook").val("Дата выдачи");
         $("#dateReturnIssureBook").val("Дата Возврата");
+        $("#genresIssureBook").val("Жанр книги");
         if( $("#groupIssureBook option:selected").text() == "Группа" ){
             rows.show();
         }else{
@@ -212,6 +238,7 @@ $( document ).ready(function() {
         $("#authorIssureBook").val("Автор книги");
         $("#dateIssureBook").val("Дата выдачи");
         $("#dateReturnIssureBook").val("Дата Возврата");
+        $("#genresIssureBook").val("Жанр книги");
         if( $("#titleIssureBook option:selected").text() == "Название книги" ){
             rows.show();
         }else{
@@ -233,6 +260,7 @@ $( document ).ready(function() {
         $("#titleIssureBook").val("Название книги");
         $("#dateIssureBook").val("Дата выдачи");
         $("#dateReturnIssureBook").val("Дата Возврата");
+        $("#genresIssureBook").val("Жанр книги");
         if( $("#authorIssureBook option:selected").text() == "Автор книги" ){
             rows.show();
         }else{
@@ -253,6 +281,7 @@ $( document ).ready(function() {
         $("#titleIssureBook").val("Название книги");
         $("#authorIssureBook").val("Автор книги");
         $("#dateReturnIssureBook").val("Дата Возврата");
+        $("#genresIssureBook").val("Жанр книги");
         if( $("#dateIssureBook option:selected").text() == "Дата выдачи" ){
             rows.show();
         }else{
@@ -273,11 +302,33 @@ $( document ).ready(function() {
         $("#titleIssureBook").val("Название книги");
         $("#authorIssureBook").val("Автор книги");
         $("#dateIssureBook").val("Дата выдачи");
+        $("#genresIssureBook").val("Жанр книги");
         if( $("#dateReturnIssureBook option:selected").text() == "Дата Возврата" ){
             rows.show();
         }else{
             rows.each(function( elem ) {
                 if($( this ).children('#date_return_issure_book_td').text() != $("#dateReturnIssureBook option:selected").text()){
+                    $( this ).hide();
+                }else{
+                    $( this ).show();
+                }
+            });
+        }
+    });
+    $('#genresIssureBook').change( function(){
+        var rows = $('table.tableIssureBook tr:gt(0) ');
+        rows = rows.not( ".deleted" );
+        $("#studentIssureBook").val("Студент");
+        $("#groupIssureBook").val("Группа");
+        $("#titleIssureBook").val("Название книги");
+        $("#authorIssureBook").val("Автор книги");
+        $("#dateIssureBook").val("Дата выдачи");
+        $("#dateReturnIssureBook").val("Дата Возврата");
+        if( $("#genresIssureBook option:selected").text() == "Жанр книги" ){
+            rows.show();
+        }else{
+            rows.each(function( elem ) {
+                if($( this ).children('#genere_issure_book_td').text() != $("#genresIssureBook option:selected").text()){
                     $( this ).hide();
                 }else{
                     $( this ).show();

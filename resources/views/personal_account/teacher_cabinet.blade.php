@@ -154,6 +154,13 @@
                                 @endforeach
                             </select>
                         </th>
+                        <th scope="col"><select id ="genresOrder" style="width:90px;">
+                                <option>Жанр книги</option>
+                                @foreach($genresOrders as $genresOrder)
+                                    <option>{{$genresOrder}}</option>
+                                @endforeach
+                            </select>
+                        </th>
                         <th scope="col"><select id ="dateOrder">
                                 <option>Дата заказа</option>
                                 @foreach($dateOrders as $dateOrder)
@@ -178,8 +185,9 @@
                                 <td id="student_order_id" class="{{$order->status}}">{{$order->first_name}} {{$order->last_name}}</td>
 
                                 <td id="group_order_id">{{ $order->group_name }}</td>
-                                <td id="title_order_id" style="width:250px;">{{ $order->title }}</td>
+                                <td id="title_order_id" style="width:150px;">{{ $order->title }}</td>
                                 <td id="author_order_td" style="width:130px;">{{ $order->author }}</td>
+                                <td id="genre_order_td" style="width:90px;">{{ $order->name }}</td>
                                 <td id="date_return_order_td">{{ $order->date_order }}</td>
                                 <td>{!! Form::open(['url' => '#', 'class' => 'form_issure', 'id' => $order->id, 'method' => 'POST']) !!}
                                     {{ csrf_field() }}
@@ -266,13 +274,20 @@
                                 @endforeach
                             </select>
                         </th>
-                        <th scope="col"><select id ="dateIssureBook">
+                        <th scope="col"><select id ="genresIssureBook" style="width:100px;">
+                                <option>Жанр книги</option>
+                                @foreach($genresIssureBooks as $genresIssureBook)
+                                    <option>{{$genresIssureBook}}</option>
+                                @endforeach
+                            </select>
+                        </th>
+                        <th scope="col"><select id ="dateIssureBook" >
                                 <option>Дата выдачи</option>
                                 @foreach($dateIssureIssureBooks as $dateIssureIssureBook)
                                     <option>{{$dateIssureIssureBook}}</option>
                                 @endforeach
                             </select></th>
-                        <th scope="col"><select id ="dateReturnIssureBook">
+                        <th scope="col"><select id ="dateReturnIssureBook" >
                                 <option>Дата Возврата</option>
                                 @foreach($dateReturnIssureBooks as $dateReturnIssureBook)
                                     <option>{{$dateReturnIssureBook}}</option>
@@ -297,6 +312,7 @@
                             <td id="group_issure_book_id">{{ $issureBook->group_name }}</td>
                             <td id="title_issure_book_id">{{ $issureBook->title }}</td>
                             <td id="author_issure_book_td">{{ $issureBook->author }}</td>
+                                <td id="genere_issure_book_td">{{ $issureBook->name }}</td>
                             <td id="date_issure_book_td">{{ $issureBook->date_issure }}</td>
                             <td id="date_return_issure_book_td">{{ $issureBook->date_return }}</td>
                             <td ><button type="submit" class="btn ink-reaction btn-primary  return_book" id="{{ $issureBook->id }}" value="{{ csrf_token() }}">Возврат книги</button></td>

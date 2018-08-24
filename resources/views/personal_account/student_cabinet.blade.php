@@ -105,7 +105,13 @@
                                 @endforeach
                             </select>
                         </th>
-
+                        <th scope="col"><select id ="genreOrder" style="width:150px;">
+                                <option>Жанр книги</option>
+                                @foreach($genreOrders as $genreOrder)
+                                    <option>{{$genreOrder}}</option>
+                                @endforeach
+                            </select>
+                        </th>
                         <th scope="col"><select id ="dateOrder">
                                 <option>Дата заказа</option>
                                 @foreach($dateOrders as $dateOrder)
@@ -129,6 +135,7 @@
                             <th scope="row"><?php echo "$countOrders"?></th>
                             <td id="title_order_td">{{ $order->title }}</td>
                             <td id="author_order_td">{{ $order->author }}</td>
+                            <td id="genre_order_td">{{ $order->name }}</td>
                             <td id="date_order_td">{{ $order->date_order }}</td>
                             <td ><button type="submit" class="btn btn-warning cancel_order" id="delete{{ $order->id }}" value="{{ csrf_token() }}" >Отменить заказ</button></td>
                         </tr>
@@ -228,6 +235,13 @@
                                 @endforeach
                             </select>
                         </th>
+                        <th scope="col"><select id ="genreBook" style="width:100px;">
+                                <option>Жанр книги</option>
+                                @foreach($genreBooks as $genreBook)
+                                    <option>{{$genreBook}}</option>
+                                @endforeach
+                            </select>
+                        </th>
                         <th scope="col"><select id ="dateIssureBook">
                                 <option>Дата получения</option>
                                 @foreach($dateIssureMyBooks as $dateIssureMyBook)
@@ -257,7 +271,8 @@
                                      <th scope="row"><?php echo "$countBooks"?></th>
 
                                 <td id="title_book_id">{{ $book->title }}</td>
-                                <td id="author_book_td">{{ $book->author }}</td>
+                                <td id="author_book_td" style="width:100px;">{{ $book->author }}</td>
+                                <td id="genre_book_td" style="width:100px;">{{ $book->name }}</td>
                                 <td id="date_issure_td">{{ $book->date_issure }}</td>
                                 <td id="date_return_td">{{ $book->date_return }}</td>
                                 <td>{!! Form::open(['url' => 'library/books/studentCabinet/'.$book->id.'/extendDate', 'class' => 'form_extend', 'id' => $book->id]) !!}

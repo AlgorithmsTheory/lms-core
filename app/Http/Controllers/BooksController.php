@@ -212,9 +212,11 @@ class BooksController extends Controller {
         $orders = DB::table('order_books')->leftJoin('book', 'order_books.id_book', '=', 'book.id')
             ->leftJoin('users', 'order_books.id_user', '=', 'users.id')
             ->leftJoin('groups', 'users.group', '=', 'groups.group_id')
+            ->leftJoin('genres_books', 'book.genre_id', '=', 'genres_books.id')
             ->where('order_books.status', '=', 'active')
             ->select('order_books.id', 'order_books.date_order', 'order_books.id_user', 'order_books.id_book',
-                'book.title', 'book.author', 'users.first_name', 'users.last_name', 'groups.group_name', 'order_books.status')
+                'book.title', 'book.author', 'users.first_name', 'users.last_name', 'groups.group_name', 'order_books.status',
+                'genres_books.name')
             ->get();
 
        $userDelays = DB::table('issure_book')->select('issure_book.id_user', 'issure_book.status')
@@ -226,6 +228,12 @@ class BooksController extends Controller {
                 }
             }
         }
+
+        $genresOrders = [];
+        foreach ($orders as $order){
+            $genresOrders[] = $order->name;
+        }
+        $genresOrders = array_unique($genresOrders);
 
         $groupOrders = [];
         foreach ($orders as $order){
@@ -256,9 +264,10 @@ class BooksController extends Controller {
         $issureBooks = DB::table('issure_book')->leftJoin('book', 'issure_book.id_book', '=', 'book.id')
             ->leftJoin('users', 'issure_book.id_user', '=', 'users.id')
             ->leftJoin('groups', 'groups.group_id', '=', 'users.group')
+            ->leftJoin('genres_books', 'book.genre_id', '=', 'genres_books.id')
             ->select('issure_book.id', 'issure_book.date_issure', 'issure_book.date_return',
                 'issure_book.id_book', 'book.title', 'book.author', 'users.first_name', 'users.last_name', 'groups.group_name',
-                'issure_book.status')->orderBy('date_return')->get();
+                'issure_book.status', 'genres_books.name')->orderBy('date_return')->get();
         $groupIssureBooks = [];
         foreach ($issureBooks as $issureBook){
             $groupIssureBooks[] = $issureBook->group_name;
@@ -284,6 +293,11 @@ class BooksController extends Controller {
             $dateReturnIssureBooks[] = $issureBook->date_return;
         }
         $dateReturnIssureBooks= array_unique($dateReturnIssureBooks);
+        $genresIssureBooks = [];
+        foreach ($issureBooks as $issureBook){
+            $genresIssureBooks[] = $issureBook->name;
+        }
+        $genresIssureBooks= array_unique($genresIssureBooks);
 
         // для таблицы Книги в наличии
         $inLibraryBooks = DB::table('book')->leftJoin('issure_book', 'book.id', '=', 'issure_book.id_book')
@@ -300,8 +314,8 @@ class BooksController extends Controller {
         $authorInLibraryBooks= array_unique($authorInLibraryBooks);
         return view("personal_account.teacher_cabinet", compact("orders","groupOrders", "titleOrders", "authorOrders", "dateOrders",
             "issureBooks", "groupIssureBooks", "titleIssureBooks", "authorIssureBooks", "dateIssureIssureBooks", "dateReturnIssureBooks",
-            "inLibraryBooks", "titleInLibraryBooks", "authorInLibraryBooks", "nameOrders"));
-
+            "inLibraryBooks", "titleInLibraryBooks", "authorInLibraryBooks", "nameOrders", "genresOrders", "genresIssureBooks"));
+//return $genresOrders;
     }
 //Выдача книг студентам
     public function teacherIssureBook($id){
@@ -423,15 +437,18 @@ return view('personal_account.calendar_order', ["order_date" => json_encode($ord
             ->update(array('status' => "delay"));
 
         $orders = DB::table('order_books')->join('book', 'order_books.id_book', '=', 'book.id')
+            ->join('genres_books', 'book.genre_id', '=', 'genres_books.id')
             ->where('id_user', '=', Auth::user()['id'])
             ->select('order_books.id', 'order_books.date_order', 'order_books.id_user', 'order_books.status',
-                'order_books.status', 'order_books.id_book', 'book.title', 'book.author')
+                'order_books.status', 'order_books.id_book', 'book.title', 'book.author', 'genres_books.name')
             ->orderBy('date_order')->get();
 
         $books = DB::table('issure_book')->join('book', 'issure_book.id_book', '=', 'book.id')
+            ->join('genres_books', 'book.genre_id', '=', 'genres_books.id')
             ->where('id_user', '=', Auth::user()['id'])
             ->select('issure_book.id', 'issure_book.date_issure', 'issure_book.date_return', 'issure_book.id_user',
-                'issure_book.status', 'issure_book.id_book', 'book.title', 'book.author')->orderBy('date_return')->get();
+                'issure_book.status', 'issure_book.id_book', 'book.title', 'book.author',
+                'genres_books.name')->orderBy('date_return')->get();
 // для таблицы мои заказы
         $dateOrders = [];
         foreach ($orders as $order){
@@ -454,7 +471,13 @@ return view('personal_account.calendar_order', ["order_date" => json_encode($ord
             }
         }
         $authorOrders  = array_unique($authorOrders );
-
+        $genreOrders = [];
+        foreach ($orders as $order){
+            if ($order->status == "active") {
+                $genreOrders[] = $order->name;
+            }
+        }
+        $genreOrders = array_unique($genreOrders );
         // для таблицы книги на руках
         $titleMyBooks = [];
         foreach ($books as $book){
@@ -484,9 +507,15 @@ return view('personal_account.calendar_order', ["order_date" => json_encode($ord
 
         }
         $dateIssureMyBooks = array_unique($dateIssureMyBooks);
+        $genreBooks = [];
+        foreach ($books as $book){
 
+            $genreBooks[] = $book->name;
+
+        }
+        $genreBooks = array_unique($genreBooks);
         return view("personal_account.student_cabinet", compact("orders","books", "dateOrders", "titleOrders", "authorOrders", "titleMyBooks",
-            "authorMyBooks", "dateReturnMyBooks", "dateIssureMyBooks"));
+            "authorMyBooks", "dateReturnMyBooks", "dateIssureMyBooks", "genreOrders", "genreBooks"));
     }
 
     //Отмена заказов студентом
