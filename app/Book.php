@@ -34,5 +34,5 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 class Book extends Eloquent {
     protected $table = 'book';
     public $timestamps = false;
-    protected $fillable = ['id', 'title', 'author', 'description', 'format', 'publisher','coverImg'];
+    protected $fillable = ['id', 'title', 'author', 'description', 'format', 'publisher','coverImg', 'genre_id'];
 }

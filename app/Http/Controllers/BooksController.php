@@ -121,6 +121,7 @@ class BooksController extends Controller {
             'format' => 'required|between:5,30',
             'publisher' => 'required|between:5,30',
             'picture' => ['image','required'],
+            'genre_id' => 'required',
 
         ]);
 
@@ -179,7 +180,7 @@ class BooksController extends Controller {
             'format' => 'required|between:5,30',
             'publisher' => 'required|between:5,30',
             'picture' => ['image'],
-
+            'genre_id' => 'required',
         ]);
         if ($validator->fails()) {
             return redirect('library/book/'.$id.'/edit')
