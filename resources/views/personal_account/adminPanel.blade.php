@@ -161,9 +161,9 @@
                             </a>
                         </li>
                         <li class="tile">
-                            <a href="{{ route('library_order_list')}}" class="tile-content ink-reaction">
+                            <a href="{{ route('teacher_сabinet')}}" class="tile-content ink-reaction">
                                 <div class="tile-text">
-                                    Бронирование печатных изданий
+                                    Бронирование печатных изданий/Личный кабинет
                                 </div>
                             </a>
                         </li>
