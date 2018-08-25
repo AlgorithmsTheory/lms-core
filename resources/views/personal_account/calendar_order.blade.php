@@ -63,10 +63,12 @@
 
 
             {!! Form::open(['url' => 'library/book/'.$book_id.'/order', 'id' => 'form_date']) !!}
-            <div class="form-group">
-                <h4> {!! Form::label('comment', 'Комментарий:') !!}</h4>
-                {!! Form::textarea('comment',null,['class' => 'form-control','placeholder' => 'Введите причину заказа книги']) !!}
-            </div>
+            @if(($role == 'Студент' and $studentStatus != 0) or ($role != 'Студент' and $role != 'Админ'))
+                <div class="form-group">
+                    <h4> {!! Form::label('comment', 'Комментарий:') !!}</h4>
+                    {!! Form::textarea('comment',null,['class' => 'form-control','placeholder' => 'Введите причину заказа книги', 'required']) !!}
+                </div>
+            @endif
             <div class="form-group">
                 <!-- элемент input с id = datetimepicker1 -->
                 <div class="input-group" id="datetimepicker" >
@@ -127,6 +129,12 @@
                 if (input_date < myDate){
                     alert("Введенна не актуальная дата");
                     $(this).find('#date_order').attr('value','');
+                    event.preventDefault();
+                    return false;
+                }
+
+                if($('#comment').val().length > 500 || $('#comment').val().length < 30){
+                    alert("Введённый комментарий должен быть от 30 до 500 символов");
                     event.preventDefault();
                     return false;
                 }

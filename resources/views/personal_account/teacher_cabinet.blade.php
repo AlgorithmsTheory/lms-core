@@ -223,6 +223,12 @@
                                     {!! Form::close() !!}
                                 </td>
                             </tr>
+                            @if($order->comment != '')
+                            <tr class="info">
+                                <td colspan = "10"><b>Комментарий:  </b>{{$order->comment}}</td>
+
+                            </tr>
+                                @endif
                             <?php
                             $countBooks++  ?>
                             @endforeach

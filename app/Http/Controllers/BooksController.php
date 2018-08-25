@@ -223,7 +223,7 @@ class BooksController extends Controller {
             ->where('order_books.status', '=', 'active')
             ->select('order_books.id', 'order_books.date_order', 'order_books.id_user', 'order_books.id_book',
                 'book.title', 'book.author', 'users.first_name', 'users.last_name', 'groups.group_name', 'order_books.status',
-                'genres_books.name')
+                'genres_books.name', 'order_books.comment')
             ->get();
 
        $userDelays = DB::table('issure_book')->select('issure_book.id_user', 'issure_book.status')
@@ -421,9 +421,15 @@ class BooksController extends Controller {
         $maxDay = DB::table('set_date_calendar')->where('id', '=', 1)
                 ->select('end_date')->get();
 
+        $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
+            $studentStatus = DB::table('users')
+                ->leftJoin('groups', 'users.group', '=', 'groups.group_id')
+                ->where('users.id', '=', [Auth::user()['id']])
+                ->first();
+            $studentStatus = $studentStatus->archived;
 return view('personal_account.calendar_order', ["order_date" => json_encode($order_date), "possible_date" =>
   json_encode($return_possible_date), "book_id" => $id , "minDay" => json_encode($minDay[0]->start_date),
-    "maxDay" => json_encode($maxDay[0]->end_date)]);
+    "maxDay" => json_encode($maxDay[0]->end_date), "role" => $role, "studentStatus" => $studentStatus]);
     }
 
     public function book_send_order($id){
@@ -433,7 +439,7 @@ return view('personal_account.calendar_order', ["order_date" => json_encode($ord
         $date = strtotime($order_date["date_order"]);
         $dateToBD = date("Y-m-d", $date);
         DB::table('order_books')->insert(array('id_user' => $user_id, 'id_book' => $id,
-            'status' => $status, 'date_order' => $dateToBD));
+            'status' => $status, 'date_order' => $dateToBD, 'comment' => $order_date["comment"]));
        return redirect('library/books');
 
     }
