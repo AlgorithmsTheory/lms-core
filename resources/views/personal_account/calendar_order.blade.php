@@ -64,6 +64,10 @@
 
             {!! Form::open(['url' => 'library/book/'.$book_id.'/order', 'id' => 'form_date']) !!}
             <div class="form-group">
+                <h4> {!! Form::label('comment', 'Комментарий:') !!}</h4>
+                {!! Form::textarea('comment',null,['class' => 'form-control','placeholder' => 'Введите причину заказа книги']) !!}
+            </div>
+            <div class="form-group">
                 <!-- элемент input с id = datetimepicker1 -->
                 <div class="input-group" id="datetimepicker" >
                     <input type="text" class="form-control" name="date_order" id="date_order" required/>

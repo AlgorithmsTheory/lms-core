@@ -40,7 +40,11 @@ class BooksController extends Controller {
             $studentStatus = $studentStatus->archived;
         }
 
-       $books = Book::all();
+       //$books = Book::all();
+        $books = DB::table('book')->leftJoin('genres_books', 'book.genre_id',
+            '=','genres_books.id')->select('book.id',
+            'book.title', 'book.author', 'book.description', 'book.format',
+            'book.publisher', 'book.coverImg', 'genres_books.name')->get();
         $searchquery = "";
         $messageFlag = "NO";
         if ($role== "Студент"){
@@ -72,8 +76,10 @@ class BooksController extends Controller {
             ->select('groups.archived')
             ->first()->archived;
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
-        $book = Book::where('id', '=', "$id");
-        $book = $book->first();
+        $book = DB::table('book')->leftJoin('genres_books', 'book.genre_id',
+            '=','genres_books.id')->where('book.id', '=', "$id")
+            ->select('book.id', 'book.title', 'book.author', 'book.description', 'book.format',
+            'book.publisher', 'book.coverImg', 'genres_books.name')->first();
 
         return view("library.book", compact('book','role','studentStatus'));
     }
@@ -115,7 +121,8 @@ class BooksController extends Controller {
 //            'validation.unique_title_and_author' => 'Автор и название такие уже есть.',
 //        );
         $validator = \Validator::make($request->all(), [
-            'title' => "required|between:5,150|uniqueTitleAndAuthor:{$request->author}",
+           // 'title' => "required|between:5,150|uniqueTitleAndAuthor:{$request->author}",
+            'title' => "required|between:5,150",
             'author' => 'required|between:5,50',
             'description' => 'required|between:30,1000',
             'format' => 'required|between:5,30',

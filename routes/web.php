@@ -128,19 +128,19 @@ Route::get('library/books/teacherCabinet',['as' => 'teacher_сabinet', 'uses' =>
 Route::post('library/books/teacherCabinet',['as' => 'setDateCalendar', 'uses' => 'BooksController@set_Date_Calendar', 'middleware' => ['general_auth', 'admin']]);
 //выбор даты заказа книги
 Route::get('library/book/{id}/order', ['as' => 'book_order', 'uses' => 'BooksController@book_order',
-    'middleware' => ['general_auth', 'studentLibraryCabinet']]);
+    'middleware' => ['general_auth', 'OrderBookLibrary']]);
 //зазаз книги и перенаправление в каталог
 Route::post('library/book/{id}/order', ['as' => 'book_send_order', 'uses' => 'BooksController@book_send_order',
-    'middleware' => ['general_auth', 'studentLibraryCabinet']]);
+    'middleware' => ['general_auth']]);
 //Личный кабинет студента
 Route::get('library/books/studentCabinet',['as' => 'student_сabinet', 'uses' => 'BooksController@studentCabinet',
-    'middleware' => ['general_auth', 'studentLibraryCabinet']]);
+    'middleware' => ['general_auth']]);
 // отмена заказов пользователем
 Route::delete('library/books/studentCabinet/{id}/delete',['as' => 'student_order_delete', 'uses' => 'BooksController@studentOrderDelete',
-    'middleware' => ['general_auth', 'studentLibraryCabinet']]);
+    'middleware' => ['general_auth']]);
 // Удаление сообщений об отменённом заказе
 Route::delete('library/books/studentCabinet/{id}/delete_message',['as' => 'student_message_delete', 'uses' => 'BooksController@studentMessageDelete',
-    'middleware' => ['general_auth', 'studentLibraryCabinet']]);
+    'middleware' => ['general_auth']]);
 // получение настроек календаря
 Route::get('library/books/studentCabinet/settingCalendar',['as' => 'student_setting_calendar', 'uses' => 'BooksController@studentSettingCalendar']);
 // перенос даты возврата книги студентом

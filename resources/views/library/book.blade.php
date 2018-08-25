@@ -69,30 +69,37 @@
                             <td style="width:130px">
                                 <p>&nbsp;</p>
                             </td>
-                            <td style="text-align: left;" rowspan="2" colspan="1"><font size="4" style="font-weight: bold;">Название:&nbsp; <?php print $book["title"] ?></font>
+                            <td style="text-align: left;" rowspan="2" colspan="1"><font size="4" style="font-weight: bold;">Название:&nbsp; <?php print $book->title ?></font>
                                 <font size="3" >
                                     <?php
                                     print "
-			<p>Автор:&nbsp;" .$book["author"]."</p>";?>
+			<p>Автор:&nbsp;" .$book->author."</p>";?>
                                 </font>
                                 <font size="2" style="font-style: italic;"><br></font><font size="2" style="color: rgb(102, 102, 102);">Издательство:</font>
                                 <font size="2" style="font-style: italic; color: rgb(102, 102, 102);">
                                     <?php
                                     print "
-			".$book["publisher"]."</p>";?>
+			".$book->publisher."</p>";?>
                                 </font>
                                 <font size="2" style="color: rgb(102, 102, 102);">Формат:</font> <font size="2" style="font-style: italic;">
 	  <span style="color: rgb(102, 102, 102);">
 	  <?php
           print "
-			".$book["format"]."</p>";?>
+			".$book->format."</p>";?>
 	  </span></font>
                                 <font size="2" style="color: rgb(102, 102, 102);">
 
                                     @if($role == 'Студент' and $studentStatus == 0)
-
                                         {!! HTML::link('library/book/'.$book->id.'/order','Заказать книгу',array('class' => 'btn ink-reaction btn-primary btn-sm btn-block','role' => 'button')) !!}
                                     @endif
+                                        @if(($role == 'Студент' and $studentStatus != 0 and $book->name != "Теория алгоритмов и сложности вычислений"
+                                                and $book->name != "Дискретная математика") )
+                                            {!! HTML::link('library/book/'.$book->id.'/order','Заказать книгу',array('class' => 'btn ink-reaction btn-primary btn-sm btn-block','role' => 'button')) !!}
+                                        @endif
+                                        @if(($role != 'Студент' and $role != 'Админ' and $book->name != "Теория алгоритмов и сложности вычислений"
+                                        and $book->name != "Дискретная математика") )
+                                            {!! HTML::link('library/book/'.$book->id.'/order','Заказать книгу',array('class' => 'btn ink-reaction btn-primary btn-sm btn-block','role' => 'button')) !!}
+                                        @endif
                                     @if($role == 'Админ' )
                                     {!! HTML::link('library/book/'.$book->id.'/edit','Редактировать книгу',array('class' => 'btn ink-reaction btn-primary btn-sm','role' => 'button')) !!}
                                         <form action = "{{route('book_delete',['id' => $book->id])}}" method="post" onsubmit="return ConfirmDelete()">
@@ -114,7 +121,7 @@
                     <p><b>Аннотация</b></p>
                     <p><?php
                         print "
-			<p>".$book["description"]."</p>";
+			<p>".$book->description."</p>";
 
                         ?></p>
 

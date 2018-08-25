@@ -48,7 +48,7 @@
                     echo '<li class="active">Бронирование печатных изданий</li>';
                 }else{
                     echo '<li><a href="';
-                    echo URL::route('library_search');
+                    echo URL::route('books');
                     echo '">Бронирование печатных изданий</a></li>';
                     echo '<li class="active">Поиск печатных изданий</li>';
                 }?>
@@ -66,7 +66,7 @@
                     {!! HTML::link('library/books/create','Добавить книгу',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
                     {!! HTML::link('library/books/teacherCabinet','Личный кабинет',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
                 @endif
-                @if($role == 'Студент')
+                @if($role != 'Админ')
                         {!! HTML::link('library/books/studentCabinet','Личный кабинет',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
                     @endif
             </div>
