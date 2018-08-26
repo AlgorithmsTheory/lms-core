@@ -32,7 +32,7 @@
     <!-- BEGIN BLANK SECTION -->
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-6">
                 <section>
                     <div class="section-header">
                         <ol class="breadcrumb">
@@ -46,9 +46,10 @@
                     </div><!--end .section-body -->
                 </section>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6">
 
                     {!! HTML::link('library/books/create','Добавить книгу',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+                {!! HTML::link('library/books/manageNewsLibrary','Настройка новостей',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
                     {!! HTML::link('#collapseExample','Настроить календарь ',array('class' => 'btn ink-reaction btn-primary','role' => 'button',
                     'data-toggle' => 'collapse', 'aria-expanded' => 'false', 'aria-controls' => 'collapseExample')) !!}
                     <div class="collapse" id="collapseExample">
@@ -224,8 +225,8 @@
                                 </td>
                             </tr>
                             @if($order->comment != '')
-                            <tr class="info">
-                                <td colspan = "10"><b>Комментарий:  </b>{{$order->comment}}</td>
+                            <tr class="info" id="comment{{$order->id}}">
+                                <td colspan = "10"><b><i class="glyphicon glyphicon-comment"></i> Комментарий:  </b>{{$order->comment}}</td>
 
                             </tr>
                                 @endif

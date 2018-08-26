@@ -56,6 +56,14 @@ $( document ).ready(function() {
                     $( this ).hide();
                 }else{
                     $( this ).show();
+                    var id = $(this).find(".form_issure").attr('id');
+                    $('#comment'+ id).attr("class", "info comment");
+                }
+            });
+            rows.each(function( elem ) {
+                if($( this ).attr('class') == "info comment"){
+                    $( this ).show();
+                    $( this ).attr("class", "info");
                 }
             });
         }
@@ -79,6 +87,14 @@ $( document ).ready(function() {
                     $( this ).hide();
                 }else{
                     $( this ).show();
+                    var id = $(this).find(".form_issure").attr('id');
+                    $('#comment'+ id).attr("class", "info comment");
+                }
+            });
+            rows.each(function( elem ) {
+                if($( this ).attr('class') == "info comment"){
+                    $( this ).show();
+                    $( this ).attr("class", "info");
                 }
             });
         }
@@ -99,6 +115,14 @@ $( document ).ready(function() {
                     $( this ).hide();
                 }else{
                     $( this ).show();
+                    var id = $(this).find(".form_issure").attr('id');
+                    $('#comment'+ id).attr("class", "info comment");
+                }
+            });
+            rows.each(function( elem ) {
+                if($( this ).attr('class') == "info comment"){
+                    $( this ).show();
+                    $( this ).attr("class", "info");
                 }
             });
         }
@@ -119,6 +143,14 @@ $( document ).ready(function() {
                     $( this ).hide();
                 }else{
                     $( this ).show();
+                    var id = $(this).find(".form_issure").attr('id');
+                    $('#comment'+ id).attr("class", "info comment");
+                }
+            });
+            rows.each(function( elem ) {
+                if($( this ).attr('class') == "info comment"){
+                    $( this ).show();
+                    $( this ).attr("class", "info");
                 }
             });
         }
@@ -139,6 +171,14 @@ $( document ).ready(function() {
                     $( this ).hide();
                 }else{
                     $( this ).show();
+                    var id = $(this).find(".form_issure").attr('id');
+                    $('#comment'+ id).attr("class", "info comment");
+                }
+            });
+            rows.each(function( elem ) {
+                if($( this ).attr('class') == "info comment"){
+                    $( this ).show();
+                    $( this ).attr("class", "info");
                 }
             });
         }
@@ -155,10 +195,19 @@ $( document ).ready(function() {
             rows.show();
         }else{
             rows.each(function( elem ) {
-                if($( this ).children('#genre_order_td').text() != $("#genresOrder option:selected").text()){
+                if($( this ).children('#genre_order_td').text() != $("#genresOrder option:selected").text() ){
                     $( this ).hide();
                 }else{
                     $( this ).show();
+                    var id = $(this).find(".form_issure").attr('id');
+                    $('#comment'+ id).attr("class", "info comment");
+
+                }
+            });
+            rows.each(function( elem ) {
+                if($( this ).attr('class') == "info comment"){
+                    $( this ).show();
+                    $( this ).attr("class", "info");
                 }
             });
         }
@@ -383,13 +432,11 @@ $( document ).ready(function() {
                 data: $(this).serialize(),
                 success: function (data)
                 {
-
-                    //alert("IT is work"+data);
                     var button = $('table.tableOrder tr:gt(0) ').find("#issure"+data);
-
-                   // alert(button.attr("id"));
                     var button = button.parent().parent().parent().parent().attr('class','deleted');
                      button.hide();
+                    $('#comment'+data).attr('class','deleted');
+                    $('#comment'+data).hide();
                 }
             });
 
@@ -424,6 +471,9 @@ $( document ).ready(function() {
                         //alert(button.attr("id"));
                         button.parent().parent().attr('class','deleted');
                         button.parent().parent().hide();
+                        $('#comment'+data).attr('class','deleted');
+                        $('#comment'+data).hide();
+
                     }
                 });
         }

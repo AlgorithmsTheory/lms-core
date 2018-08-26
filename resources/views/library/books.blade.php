@@ -37,7 +37,7 @@
         @endif
 
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-6">
     <section>
         <div class="section-header">
             <ol class="breadcrumb">
@@ -61,13 +61,15 @@
 
 
 
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 @if($role == 'Админ')
                     {!! HTML::link('library/books/create','Добавить книгу',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+                    {!! HTML::link('library/books/manageNewsLibrary','Настройка новостей',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
                     {!! HTML::link('library/books/teacherCabinet','Личный кабинет',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
                 @endif
                 @if($role != 'Админ')
                         {!! HTML::link('library/books/studentCabinet','Личный кабинет',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+                        {!! HTML::link('library/books/manageNewsLibrary','Просмотр новостей',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
                     @endif
             </div>
         </div>

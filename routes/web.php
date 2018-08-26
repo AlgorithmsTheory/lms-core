@@ -134,7 +134,7 @@ Route::post('library/book/{id}/order', ['as' => 'book_send_order', 'uses' => 'Bo
     'middleware' => ['general_auth']]);
 //Личный кабинет студента
 Route::get('library/books/studentCabinet',['as' => 'student_сabinet', 'uses' => 'BooksController@studentCabinet',
-    'middleware' => ['general_auth']]);
+    'middleware' => ['general_auth', 'studentLibrary']]);
 // отмена заказов пользователем
 Route::delete('library/books/studentCabinet/{id}/delete',['as' => 'student_order_delete', 'uses' => 'BooksController@studentOrderDelete',
     'middleware' => ['general_auth']]);
@@ -155,8 +155,17 @@ Route::post('library/books/teacherCabinet/{id}/extendDate',['as' => 'teacher_ext
 Route::delete('library/books/teacherCabinet/{id}/returnBook',['as' => 'teacher_return_book', 'uses' => 'BooksController@teacherReturnBook', 'middleware' => ['general_auth', 'admin']]);
 // Отправка сообщения студенту о вовремя не сданной книге
 Route::post('library/books/teacherCabinet/{id}/sendMessage',['as' => 'teacher_send_message', 'uses' => 'BooksController@teacherSendMessage', 'middleware' => ['general_auth', 'admin']]);
-
-
+// переход на страницу управления и просмотра (для студента)библиотечными новостями
+Route::get('library/books/manageNewsLibrary',['as' => 'manage_news_library', 'uses' => 'BooksController@manageNewsLibrary', 'middleware' => ['general_auth']]);
+// добавление новой библиотечной новости и переход на страницу управления новостями
+Route::post('library/books/manageNewsLibrary/add_news', ['as' => 'add_library_news', 'uses' => 'BooksController@addLibraryNews', 'middleware' => ['general_auth', 'admin']]);
+// Удаление библиотечных новостей
+Route::delete('library/books/manageNewsLibrary/{id}/delete',['as' => 'delete_library_news', 'uses' => 'BooksController@libraryNewsDelete',
+    'middleware' => ['general_auth', 'admin']]);
+// редактирование библиотечныз новостей
+Route::get('library/manageNewsLibrary/{id}/edit', ['as' => 'library_news_edit', 'uses' => 'BooksController@editNewsLibrary', 'middleware' => ['general_auth', 'admin']]);
+// Сохранение изменений библиотечной новости и редирект на страницу библиотечных новостей
+Route::patch('library/manageNewsLibrary/{id}', ['as' => 'library_news_update', 'uses' => 'BooksController@updateLibraryNews', 'middleware' => ['general_auth', 'admin']]);
 
 
 Route::get('library/lection/{id}', ['as' => 'lection', 'uses' => 'BooksController@lection', 'middleware' => ['general_auth', 'admin', 'access_for_library']]); //только студентам и преподавателям

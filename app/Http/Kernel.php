@@ -35,7 +35,8 @@ class Kernel extends HttpKernel {
         'access_for_library' => 'App\Http\Middleware\AccessForLibrary',
         'can' => 'Illuminate\Auth\Middleware\Authorize',
         'bindings' => '\Illuminate\Routing\Middleware\SubstituteBindings',
-        'OrderBookLibrary' => 'App\Http\Middleware\OrderBookLibrary'
+        'OrderBookLibrary' => 'App\Http\Middleware\OrderBookLibrary',
+        'studentLibrary' => 'App\Http\Middleware\StudentLibraryMiddleware',
 
 
 	];

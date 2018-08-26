@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Group;
 use App\Issure_book;
+use App\LibraryNews;
 use App\Set_date_calendar;
 use App\Ebook;
 use App\Http\Requests\AddBookRequest;
@@ -575,9 +576,36 @@ return view('personal_account.calendar_order', ["order_date" => json_encode($ord
         ])->update(['status' => 'extendS']);
         return $request["date_extend"];
     }
-
-
-
+//переход на страницу управления/просмотр(для студента) библиотечными новостями
+public function manageNewsLibrary(){
+    $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
+    $news = DB::table('library_news')->get();
+    return view('library/manage_news', compact('news', 'role'));
+}
+// добавление новой библиотечной новости
+public function addLibraryNews(){
+    $title = Request::input('title');
+    $description = Request::input('description');
+    DB::table('library_news')->insert(['title' => $title, 'description' => $description]);
+    return redirect()->route('manage_news_library');
+}
+// удаление библиотечной новости
+public function libraryNewsDelete($id){
+    $request = Request::all();
+    DB::table('library_news')->where('id', '=', $id)->delete();
+    return $id;
+}
+// редактирование библиотечных ноостей
+public function editNewsLibrary($id){
+    $news = LibraryNews::findOrFail($id);
+    return view('library.edit_library_news', compact('news'));
+}
+// Сохранение изменений библиотечной новости и редирект на страницу библиотечных новостей
+public function updateLibraryNews(\Illuminate\Http\Request $request,$id){
+    $news = LibraryNews::findOrFail($id);
+    $news->update($request->all());
+    return redirect('library/books/manageNewsLibrary');
+}
     public function getvalues($arr) {
         return $arr['date'];
          }

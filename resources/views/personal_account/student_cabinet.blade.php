@@ -46,8 +46,7 @@
                 </section>
             </div>
             <div class="col-lg-4">
-
-
+                {!! HTML::link('library/books/manageNewsLibrary','Просмотр новостей',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
 
             </div>
         </div>

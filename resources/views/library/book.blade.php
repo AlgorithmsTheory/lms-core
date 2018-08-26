@@ -28,13 +28,13 @@
     <!-- BEGIN BLANK SECTION -->
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-8 col-md-6">
+            <div class="col-lg-6 col-md-6">
                 <section>
                     <div class="section-header">
                         <ol class="breadcrumb">
                             <li>{!! HTML::linkRoute('library_index', 'Библиотека') !!}</li>
                             <li>{!! HTML::linkRoute('books', 'Бронирование печатных изданий') !!}</li>
-                            <li class="active">Конкретное печатное издание</li>
+                            <li class="active">Книга</li>
                         </ol>
 
                     </div><!--end .section-header -->
@@ -42,13 +42,15 @@
                     </div><!--end .section-body -->
                 </section>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 @if($role == 'Админ')
                 {!! HTML::link('library/books/create','Добавить книгу',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+                    {!! HTML::link('library/books/manageNewsLibrary','Настройка новостей',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
                     {!! HTML::link('library/books/teacherCabinet','Личный кабинет',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
                 @endif
-                @if($role == 'Студент')
-                        {!! HTML::link('library/books/studentCabinet','Личный кабинет',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+                @if($role != 'Админ')
+                        {!! HTML::link('library/books/manageNewsLibrary','Просмотр новостей',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+                        {!! HTML::link('library/books/manageNewsLibrary','Просмотр новостей',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
                     @endif
             </div>
         </div>
