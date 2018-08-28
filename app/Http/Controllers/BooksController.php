@@ -15,7 +15,7 @@ use App\Testing\Lecture;
 use App\Order;
 use App\Order_books;
 use DB;
-
+use Illuminate\Support\Facades\Validator;
 
 
 class BooksController extends Controller {
@@ -79,15 +79,31 @@ class BooksController extends Controller {
         return view("library.add_new_book");
     }
 
-    public function store_book(\Illuminate\Http\Request $request){
-        \Validator::extend('uniqueTitleAndAuthor', function ($attribute, $value, $parameters, $validator) {
+    public function store_book(Request $request){
+        Validator::extend('uniqueTitleAndAuthor', function ($attribute, $value, $parameters, $validator) {
             $count = DB::table('book')->where('title', $value)
                 ->where('author', $parameters[0])
                 ->count();
 
             return $count === 0;
         });
-        $validator = \Validator::make($request->all(), [
+        $messages = [
+                'title.required' => 'Введите название книги.',
+                'title.between' => 'Название книги должно содержать от :min и до :max символов.',
+                'title.unique_title_and_author' => 'Книга с таким названием и автором уже существует.',
+                'author.required' => 'Введите название автора.',
+                'author.between' => 'Имя автора должно содержать от :min и до :max символов.',
+                'description.required' => 'Введите описание книги.',
+                'description.between' => 'Имя описание книги должно содержать от :min и до :max символов.',
+                'format.required' => 'Введите формат книги.',
+                'format.between' => 'формат книги должен содержать от :min и до :max символов.',
+                'publisher.required' => 'Введите издательство.',
+                'publisher.between' => 'Название издательство должно содержать от :min и до :max символов.',
+                'picture.required' => 'Выберите изображение.',
+                'picture.image' => 'Данный файл не является изображением.',
+                'genre_id.required' => 'Выберите жанр книги'
+        ];
+        $validator = Validator::make($request::all(), [
            // 'title' => "required|between:5,150|uniqueTitleAndAuthor:{$request->author}",
             'title' => "required|between:5,150",
             'author' => 'required|between:5,150',
@@ -97,14 +113,14 @@ class BooksController extends Controller {
             'picture' => ['image','required'],
             'genre_id' => 'required',
 
-        ]);
+        ], $messages);
 
         if ($validator->fails()) {
             return redirect('library/books/create')
                 ->withErrors($validator)
                 ->withInput();
         }
-        $book = new Book($request->all());
+        $book = new Book($request::all());
         $book->coverImg = 'libr_pic/'.$_FILES['picture']['name'];
         $book->save();
         @copy($_FILES['picture']['tmp_name'], 'img/library/'.$book->coverImg);
@@ -115,15 +131,30 @@ class BooksController extends Controller {
         $book = Book::findOrFail($id);
         return view('library.edit_book', compact('book'));
     }
-    public function update_book($id, \Illuminate\Http\Request $request){
-        \Validator::extend('uniqueTitleAndAuthor', function ($attribute, $value, $parameters, $validator) {
+    public function update_book(Request $request, $id){
+        Validator::extend('uniqueTitleAndAuthor', function ($attribute, $value, $parameters, $validator) {
             $count = DB::table('book')->where('title', $value)
                 ->where('author', $parameters[0])
                 ->count();
 
             return $count === 0;
         });
-        $validator = \Validator::make($request->all(), [
+        $messages = [
+            'title.required' => 'Введите название книги.',
+            'title.between' => 'Название книги должно содержать от :min и до :max символов.',
+            'title.unique_title_and_author' => 'Книга с таким названием и автором уже существует.',
+            'author.required' => 'Введите название автора.',
+            'author.between' => 'Имя автора должно содержать от :min и до :max символов.',
+            'description.required' => 'Введите описание книги.',
+            'description.between' => 'Имя описание книги должно содержать от :min и до :max символов.',
+            'format.required' => 'Введите формат книги.',
+            'format.between' => 'формат книги должен содержать от :min и до :max символов.',
+            'publisher.required' => 'Введите издательство.',
+            'publisher.between' => 'Название издательство должно содержать от :min и до :max символов.',
+            'picture.image' => 'Данный файл не является изображением.',
+            'genre_id.required' => 'Выберите жанр книги'
+        ];
+        $validator = Validator::make($request::all(), [
             'title' => "required|between:5,150",
             'author' => 'required|between:5,50',
             'description' => 'required|between:30,1000',
@@ -131,7 +162,7 @@ class BooksController extends Controller {
             'publisher' => 'required|between:5,30',
             'picture' => ['image'],
             'genre_id' => 'required',
-        ]);
+        ], $messages);
         if ($validator->fails()) {
             return redirect('library/book/'.$id.'/edit')
                 ->withErrors($validator)
@@ -142,7 +173,7 @@ class BooksController extends Controller {
             $book->coverImg = 'libr_pic/'.$_FILES['picture']['name'];
             @copy($_FILES['picture']['tmp_name'], 'img/library/'.$book->coverImg);
         }
-        $book->update($request->all());
+        $book->update($request::all());
         return redirect('library/book/'.$book->id);
     }
 
