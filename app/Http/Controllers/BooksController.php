@@ -1,19 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Group;
 use App\Issure_book;
-use App\LibraryNews;
+use App\News;
 use App\Set_date_calendar;
 use App\Ebook;
-use App\Http\Requests\AddBookRequest;
-use App\Http\Requests\UpdateBookRequest;
 use App\User;
 use Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Filesystem\Filesystem as Filesystem;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Validator;
 use Request;
 use DateTime;
 use App\Book;
@@ -21,15 +15,13 @@ use App\Testing\Lecture;
 use App\Order;
 use App\Order_books;
 use DB;
-use Carbon\Carbon;
-use Symfony\Component\DomCrawler\Image;
-use App\Order_book;
-use MaddHatter\LaravelFullcalendar\Facades\Calendar ;
+
 
 
 class BooksController extends Controller {
-
-    //Контроллер для предоставления студентам списка книг
+    /*
+    * Контроллер для предоставления студентам списка книг
+    */
     public function index(){
         $studentStatus = 1;
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
@@ -40,8 +32,6 @@ class BooksController extends Controller {
                 ->first();
             $studentStatus = $studentStatus->archived;
         }
-
-       //$books = Book::all();
         $books = DB::table('book')->leftJoin('genres_books', 'book.genre_id',
             '=','genres_books.id')->select('book.id',
             'book.title', 'book.author', 'book.description', 'book.format',
@@ -89,42 +79,18 @@ class BooksController extends Controller {
         return view("library.add_new_book");
     }
 
-//   public function store_book(AddBookRequest $request){
-//
-//
-//
-//       // $input = Request::all();
-//        //$book = new Book($input);
-//            $book = new Book($request->all());
-//        /*$book->title = $input['title'];
-//        $book->author = $input['author'];
-//        $book->description = $input['description'];
-//        $book->format = $input['format'];
-//        $book->publisher = $input['publisher'];*/
-//        $book->coverImg = 'libr_pic/'.$_FILES['picture']['name'];
-//        $book->save();
-//        @copy($_FILES['picture']['tmp_name'], 'img/library/'.$book->coverImg);
-//        return redirect('library/books');
-//    }
-
-
-
-
     public function store_book(\Illuminate\Http\Request $request){
         \Validator::extend('uniqueTitleAndAuthor', function ($attribute, $value, $parameters, $validator) {
-            $count = \DB::table('book')->where('title', $value)
+            $count = DB::table('book')->where('title', $value)
                 ->where('author', $parameters[0])
                 ->count();
 
             return $count === 0;
         });
-//        $messages = array(
-//            'validation.unique_title_and_author' => 'Автор и название такие уже есть.',
-//        );
         $validator = \Validator::make($request->all(), [
            // 'title' => "required|between:5,150|uniqueTitleAndAuthor:{$request->author}",
             'title' => "required|between:5,150",
-            'author' => 'required|between:5,50',
+            'author' => 'required|between:5,150',
             'description' => 'required|between:30,1000',
             'format' => 'required|between:5,30',
             'publisher' => 'required|between:5,30',
@@ -138,15 +104,7 @@ class BooksController extends Controller {
                 ->withErrors($validator)
                 ->withInput();
         }
-
-        // $input = Request::all();
-        //$book = new Book($input);
         $book = new Book($request->all());
-        /*$book->title = $input['title'];
-        $book->author = $input['author'];
-        $book->description = $input['description'];
-        $book->format = $input['format'];
-        $book->publisher = $input['publisher'];*/
         $book->coverImg = 'libr_pic/'.$_FILES['picture']['name'];
         $book->save();
         @copy($_FILES['picture']['tmp_name'], 'img/library/'.$book->coverImg);
@@ -157,30 +115,14 @@ class BooksController extends Controller {
         $book = Book::findOrFail($id);
         return view('library.edit_book', compact('book'));
     }
-
-//    public function update_book($id, UpdateBookRequest $request){
-//        $book = Book::findOrFail($id);
-//        if (!empty($_FILES['picture']['name'])){
-//            $book->coverImg = 'libr_pic/'.$_FILES['picture']['name'];
-//            @copy($_FILES['picture']['tmp_name'], 'img/library/'.$book->coverImg);
-//        }
-//        $book->update($request->all());
-//
-//
-//        return redirect('library/book/'.$book->id);
-//    }
-
     public function update_book($id, \Illuminate\Http\Request $request){
         \Validator::extend('uniqueTitleAndAuthor', function ($attribute, $value, $parameters, $validator) {
-            $count = \DB::table('book')->where('title', $value)
+            $count = DB::table('book')->where('title', $value)
                 ->where('author', $parameters[0])
                 ->count();
 
             return $count === 0;
         });
-//        $messages = array(
-//            'validation.unique_title_and_author' => 'Автор и название такие уже есть.',
-//        );
         $validator = \Validator::make($request->all(), [
             'title' => "required|between:5,150",
             'author' => 'required|between:5,50',
@@ -211,12 +153,15 @@ class BooksController extends Controller {
      $book->delete();
         return  redirect('library/books');
     }
-//личный кабинет учителя
+
+    /*
+    * личный кабинет учителя
+    */
     public function teacherCabinet(){
         //отмечаем должников
         Issure_book::where('date_return', '<' , date("Y-m-d"))
             ->update(['status' => 'delay']);
-// для таблицы Заказы книг
+        // для таблицы Заказы книг
         $orders = DB::table('order_books')->leftJoin('book', 'order_books.id_book', '=', 'book.id')
             ->leftJoin('users', 'order_books.id_user', '=', 'users.id')
             ->leftJoin('groups', 'users.group', '=', 'groups.group_id')
@@ -323,9 +268,11 @@ class BooksController extends Controller {
         return view("personal_account.teacher_cabinet", compact("orders","groupOrders", "titleOrders", "authorOrders", "dateOrders",
             "issureBooks", "groupIssureBooks", "titleIssureBooks", "authorIssureBooks", "dateIssureIssureBooks", "dateReturnIssureBooks",
             "inLibraryBooks", "titleInLibraryBooks", "authorInLibraryBooks", "nameOrders", "genresOrders", "genresIssureBooks"));
-//return $genresOrders;
     }
-//Выдача книг студентам
+
+    /*
+    * Выдача книг студентам
+    */
     public function teacherIssureBook($id){
         $result = Request::all();
         $issureDate = date("Y-m-d");
@@ -338,7 +285,9 @@ class BooksController extends Controller {
         return $result['order_id'];
     }
 
-    //Отмена заказа преподавателем
+    /*
+    * Отмена заказа преподавателем
+    */
     public function teacherOrderDelete($id){
         $request = Request::all();
         DB::table('order_books')->where('id', '=', $id)->update(array('status' => 'cancel'));
@@ -346,7 +295,9 @@ class BooksController extends Controller {
 
     }
 
-    // перенос заказа преподавателем
+    /*
+    * перенос заказа преподавателем
+    */
     public function teacherExtendDate($id){
         $request = Request::all();
         $NewFormatDate = preg_replace('/\./', '-', $request["date_extend"]);
@@ -363,22 +314,31 @@ class BooksController extends Controller {
        return ['date_extend' => $request["date_extend"], 'id_order' => $request["id_order"], 'id_book' => $request["id_book"],
            'date_order' => $request["date_order"], 'dateReturnToBD' => $dateReturnToBD];
     }
-//Возврат книг
+
+    /*
+    * Возврат книг
+    */
     public function teacherReturnBook($id){
         $request = Request::all();
         DB::table('issure_book')->where('id', '=', $id)->delete();
         return $id;
 
     }
-// Отправка сообщения студенту о вовремя не сданной книге
+
+    /*
+    * Отправка сообщения студенту о вовремя не сданной книге
+    */
     public function teacherSendMessage($id){
         $request = Request::all();
         DB::table('issure_book')->where('id', '=', $request['id_issureBook'])->update(array('message' => 'YES'));
         return $request['id_issureBook'];
 
     }
-//сохраняем параметры календаря
-    public function set_Date_Calendar(){
+
+    /*
+    * Сохраняем параметры календаря
+    */
+    public function setDateCalendar(){
         $result = Request::all();
        if (empty(Set_date_calendar::all()->toArray())) {
             $setCalendar = new Set_date_calendar;
@@ -399,7 +359,10 @@ class BooksController extends Controller {
         return redirect('library/books/teacherCabinet');
 
     }
-    // заказ книг
+
+    /*
+    * заказ книг
+    */
     public function book_order($id){
         $results = DB::table('order_books')->where([
             ['id_book', '=', $id],
@@ -409,8 +372,9 @@ class BooksController extends Controller {
         foreach ($results as $result) {
             $order_date[] = $result->date_order;
         }
-        $result = DB::table('set_date_calendar')->where('id', '=', 1)->select('days')->get();
-       $possible_date = str_split($result[0]->days);
+        $result = DB::table('set_date_calendar')->where('id', '=', 1)
+            ->select('days')->first()->days;
+       $possible_date = str_split($result);
        $allday = ["0", "1", "2", "3", "4", "5", "6"];
         $possible_date = array_diff($allday, $possible_date);
         $return_possible_date = [];
@@ -418,9 +382,9 @@ class BooksController extends Controller {
             $return_possible_date[] = $date;
         }
         $minDay = DB::table('set_date_calendar')->where('id', '=', 1)
-        ->select('start_date')->get();
+        ->select('start_date')->first()->start_date;
         $maxDay = DB::table('set_date_calendar')->where('id', '=', 1)
-                ->select('end_date')->get();
+                ->select('end_date')->first()->end_date;
 
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
             $studentStatus = DB::table('users')
@@ -429,8 +393,8 @@ class BooksController extends Controller {
                 ->first();
             $studentStatus = $studentStatus->archived;
 return view('personal_account.calendar_order', ["order_date" => json_encode($order_date), "possible_date" =>
-  json_encode($return_possible_date), "book_id" => $id , "minDay" => json_encode($minDay[0]->start_date),
-    "maxDay" => json_encode($maxDay[0]->end_date), "role" => $role, "studentStatus" => $studentStatus]);
+  json_encode($return_possible_date), "book_id" => $id , "minDay" => json_encode($minDay),
+    "maxDay" => json_encode($maxDay), "role" => $role, "studentStatus" => $studentStatus]);
     }
 
     public function book_send_order($id){
@@ -445,7 +409,9 @@ return view('personal_account.calendar_order', ["order_date" => json_encode($ord
 
     }
 
-//личный кабинет студента
+    /*
+    * личный кабинет студента
+    */
     public function studentCabinet(){
         DB::table('issure_book')->where('date_return', '<', date("Y-m-d"))
             ->update(array('status' => "delay"));
@@ -463,7 +429,8 @@ return view('personal_account.calendar_order', ["order_date" => json_encode($ord
             ->select('issure_book.id', 'issure_book.date_issure', 'issure_book.date_return', 'issure_book.id_user',
                 'issure_book.status', 'issure_book.id_book', 'book.title', 'book.author',
                 'genres_books.name')->orderBy('date_return')->get();
-// для таблицы мои заказы
+
+        // для таблицы мои заказы
         $dateOrders = [];
         foreach ($orders as $order){
             if ($order->status == "active"){
@@ -495,57 +462,53 @@ return view('personal_account.calendar_order', ["order_date" => json_encode($ord
         // для таблицы книги на руках
         $titleMyBooks = [];
         foreach ($books as $book){
-
                 $titleMyBooks[] = $book->title;
-
         }
         $titleMyBooks = array_unique($titleMyBooks);
         $authorMyBooks = [];
         foreach ($books as $book){
-
                 $authorMyBooks[] = $book->author;
-
         }
         $authorMyBooks = array_unique($authorMyBooks);
         $dateReturnMyBooks = [];
         foreach ($books as $book){
-
             $dateReturnMyBooks[] = $book->date_return;
-
         }
         $dateReturnMyBooks = array_unique($dateReturnMyBooks);
         $dateIssureMyBooks = [];
         foreach ($books as $book){
-
             $dateIssureMyBooks[] = $book->date_issure;
-
         }
         $dateIssureMyBooks = array_unique($dateIssureMyBooks);
         $genreBooks = [];
         foreach ($books as $book){
-
             $genreBooks[] = $book->name;
-
         }
         $genreBooks = array_unique($genreBooks);
         return view("personal_account.student_cabinet", compact("orders","books", "dateOrders", "titleOrders", "authorOrders", "titleMyBooks",
             "authorMyBooks", "dateReturnMyBooks", "dateIssureMyBooks", "genreOrders", "genreBooks"));
     }
 
-    //Отмена заказов студентом
+    /*
+    * Отмена заказов студентом
+    */
     public function studentOrderDelete($id){
-        $request = Request::all();
         DB::table('order_books')->where('id', '=', $id)->delete();
       return $id;
 
     }
-    //// Удаление сообщений об отменённом заказе студентом
+
+    /*
+    * Удаление сообщений об отменённом заказе студентом
+    */
     public function studentMessageDelete($id){
-        $request = Request::all();
         DB::table('order_books')->where('id', '=', $id)->delete();
         return $id;
     }
-    //// Настройка календаря для продления книги студентом
+
+    /*
+   * Настройка календаря для продления книги студентом
+   */
     public function studentSettingCalendar(){
         $result = DB::table('set_date_calendar')->where('id', '=', 1)
             ->select('days')->get();
@@ -563,7 +526,10 @@ return view('personal_account.calendar_order', ["order_date" => json_encode($ord
         return  [ "possible_date" => json_encode($return_possible_date), "minDay" => json_encode($minDay[0]->start_date),
             "maxDay" => json_encode($maxDay[0]->end_date)];
     }
-// перенос даты возврата книги студентом
+
+    /*
+   * перенос даты возврата книги студентом
+   */
     public function studentExtendDate($id){
         $request = Request::all();
         $dateReturn = strtotime($request["date_extend"]);
@@ -576,34 +542,47 @@ return view('personal_account.calendar_order', ["order_date" => json_encode($ord
         ])->update(['status' => 'extendS']);
         return $request["date_extend"];
     }
-//переход на страницу управления/просмотр(для студента) библиотечными новостями
+
+    /*
+   * Переход на страницу управления/просмотр(для студента) библиотечными новостями
+   */
 public function manageNewsLibrary(){
     $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
-    $news = DB::table('library_news')->get();
+    $news = News::where('type', 'library')->get();
     return view('library/manage_news', compact('news', 'role'));
 }
-// добавление новой библиотечной новости
-public function addLibraryNews(){
-    $title = Request::input('title');
-    $description = Request::input('description');
-    DB::table('library_news')->insert(['title' => $title, 'description' => $description]);
+
+    /*
+   * Добавление новой библиотечной новости
+   */
+public function addLibraryNews(Request $request){
+    $news = new News($request::all());
+    $news ->save();
     return redirect()->route('manage_news_library');
 }
-// удаление библиотечной новости
-public function libraryNewsDelete($id){
-    $request = Request::all();
-    DB::table('library_news')->where('id', '=', $id)->delete();
+
+    /*
+   * Удаление библиотечной новости
+   */
+public function libraryNewsDelete(Request $request, $id){
+    News::where('id', '=', "$id")->delete();
     return $id;
 }
-// редактирование библиотечных ноостей
+
+    /*
+   * Редактирование библиотечных ноостей
+   */
 public function editNewsLibrary($id){
-    $news = LibraryNews::findOrFail($id);
+    $news = News::findOrFail($id);
     return view('library.edit_library_news', compact('news'));
 }
-// Сохранение изменений библиотечной новости и редирект на страницу библиотечных новостей
-public function updateLibraryNews(\Illuminate\Http\Request $request,$id){
-    $news = LibraryNews::findOrFail($id);
-    $news->update($request->all());
+
+    /*
+   * Сохранение изменений библиотечной новости и редирект на страницу библиотечных новостей
+   */
+public function updateLibraryNews(Request $request,$id){
+    $news = News::findOrFail($id);
+    $news->update($request::all());
     return redirect('library/books/manageNewsLibrary');
 }
     public function getvalues($arr) {

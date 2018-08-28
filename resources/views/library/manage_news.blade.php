@@ -76,7 +76,7 @@
                             </div>
                         </div><!--end .card-head -->
                         <div class="card-body style-default-bright">
-                            <p>{{ $post->description }}</p>
+                            <p>{{ $post->body }}</p>
                         </div><!--end .card-body -->
                     </div>
                 @endforeach
@@ -88,14 +88,16 @@
                     <div class="form">
                         <div class="form-group">
                             <textarea name="title" id="title_add_news" class="form-control" rows="3" placeholder="" required></textarea>
-                            <label for="textarea1">Заголовок новости</label>
+                            <label for="title">Заголовок новости</label>
                         </div>
 
                         <div class="form-group">
-                            <textarea name="description" id="body_add_news" class="form-control" rows="3" placeholder="" required></textarea>
-                            <label for="textarea1">Текст новости</label>
+                            <textarea name="body" id="body_add_news" class="form-control" rows="3" placeholder="" required></textarea>
+                            <label for="body">Текст новости</label>
                         </div>
-
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" name="type" value = "library" >
+                        </div>
                         <div class="form-group">
                             <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить новость</button>
                         </div>

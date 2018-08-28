@@ -19,7 +19,7 @@
                     <h2 class="text-center">Личный кабинет</h2>
                     <h3 class="text-center">{{ Auth::user()['first_name'] }} {{ Auth::user()['last_name'] }} <b>{{ Auth::user()['email'] }}</b></h3>
                         <a href="{{ route('test_results')}}" class="btn btn-warning col-md-offset-3 col-md-6 ">Перейти на страницу результатов системы тестирования</a>
-        <a href="{{ route('student_сabinet')}}" class="btn btn-warning col-md-offset-3 col-md-6 " style="margin-top: 0.5%">Перейти на страницу "Бронирование печатных изданий/Личный кабинет" </a>
+        <a href="{{ route('student_сabinet')}}" class="btn btn-warning col-md-offset-3 col-md-6 " style="margin-top: 0.5%">Перейти на страницу "Заказы книг" </a>
                         <div class="col-md-12 col-sm-12 style-gray">
                             <h3 class="text-default-bright">Раздел 1</h3>
                         </div>

@@ -20,26 +20,6 @@ $( document ).ready(function() {
             }
         });
 // Сортировка таблицы Заказы книг
-//     $('#studentOrder').change( function(){
-//         var rows = $('table.tableOrder tr:gt(0) ');
-//         rows = rows.not( ".deleted" );
-//         $("#groupOrder").val("Группа");
-//         $("#titleOrder").val("Название книги");
-//         $("#authorOrder").val("Автор книги");
-//         $("#dateOrder").val("Дата заказа");
-//         if( $("#studentOrder option:selected").text() == "Студент" ){
-//             rows.show();
-//         }else{
-//             rows.each(function( elem ) {
-//                 if($( this ).children('#student_order_id').attr('class') != "delay"){
-//                     $( this ).hide();
-//                 }else{
-//                     $( this ).show();
-//                 }
-//             });
-//         }
-//     });
-
     $('#studentOrder').change( function(){
         var rows = $('table.tableOrder tr:gt(0) ');
         rows = rows.not( ".deleted" );
@@ -213,27 +193,6 @@ $( document ).ready(function() {
         }
     });
     // Сортировка таблицы Выданные Книги
-    // $('#studentIssureBook').change( function(){
-    //     var rows = $('table.tableIssureBook tr:gt(0) ');
-    //     rows = rows.not( ".deleted" );
-    //     $("#groupIssureBook").val("Группа");
-    //     $("#titleIssureBook").val("Название книги");
-    //     $("#authorIssureBook").val("Автор книги");
-    //     $("#dateIssureBook").val("Дата выдачи");
-    //     $("#dateReturnIssureBook").val("Дата Возврата");
-    //     if( $("#studentIssureBook option:selected").text() == "Студент" ){
-    //         rows.show();
-    //     }else{
-    //         rows.each(function( elem ) {
-    //             if($( this ).children('#student_issure_book_id').attr('class') != "notDelay"){
-    //                 $( this ).hide();
-    //             }else{
-    //                 $( this ).show();
-    //             }
-    //         });
-    //     }
-    // });
-
     $('#studentIssureBook').change( function(){
         var rows = $('table.tableIssureBook tr:gt(0) ');
         rows = rows.not( ".deleted" );
@@ -421,7 +380,6 @@ $( document ).ready(function() {
     $('.form_issure').on('submit', function(event){
         var x = confirm("Выдать книгу?");
         if (x){
-            //отмена действия по умолчанию для кнопки submit
             event.preventDefault();
             var id_issure_book = $( this ).attr("id");
             var button = $( this ).find('#'+$( this ).attr("id"));
@@ -451,7 +409,6 @@ $( document ).ready(function() {
     $('.cancel_order').click(function () {
         var x = confirm("Отменить заказ?");
         if (x){
-            // alert( "{{ route('student_order_delete',['id' => \"+id+\"]) }}");
             var id = $( this ).attr("id");
             var token = $( this ).attr("value");
             $.ajax(
@@ -466,9 +423,7 @@ $( document ).ready(function() {
                     },
                     success: function (data)
                     {
-                        //$('td[id=' + adId + ']')
                         var button = $('table.tableOrder tr:gt(0) ').find('.cancel_order').parent().find('#'+data);
-                        //alert(button.attr("id"));
                         button.parent().parent().attr('class','deleted');
                         button.parent().parent().hide();
                         $('#comment'+data).attr('class','deleted');
@@ -485,18 +440,6 @@ $( document ).ready(function() {
 
     $('.form_extend').on('submit', function(event) {
         //Валидация календаря
-        // $('.extend_button').on('click',function(event){
-        //     event.preventDefault();
-        //
-        //     var myDate = new Date();
-        //     // var input_date = new Date($(this).parent().parent().find('#date_extend').val());
-        //     var input_date = $(this).parent().parent().find('.datetimepicker').data("DateTimePicker").date();
-        //     if (input_date < myDate){
-        //         alert("Введенна не актуальная дата");
-        //          $(this).parent().parent().find('#date_extend').attr('value','');
-        //         event.preventDefault();
-        //     }
-        // });
         var myDate = new Date();
         var input_date = $(this).find('.datetimepicker').data("DateTimePicker").date();
         // alert(input_date);
@@ -515,10 +458,7 @@ $( document ).ready(function() {
                 url: "teacherCabinet/" + id_order_book + '/extendDate',
                 data: $(this).serialize(),
                 success: function (data) {
-                    //var form = $("form[id=extend"+id_order_book+"]");
                     var form = $("form[id=extend" + data['id_order'] + "]");
-
-                    // alert(data['id_order']);
                     var row = form.parent().parent();
                     var new_dateExtend = data['date_extend'].replace(/[\.\/]/g,'-');
                     row.find('#date_return_order_td').text(new_dateExtend);
@@ -526,39 +466,9 @@ $( document ).ready(function() {
 
                     var table = row.parent();
                     var input = table.find('input[name=id_book]');
-                   // alert(input.val());
-                   // alert(data['id_book']);
-                    var sosed = input.siblings('input[name=date_order]').val();
-                   // alert(sosed );
-                   // alert(data['date_extend']);
-                    // через php
-
-                    // input.each(function( elem ) {
-                    //     // var date_order = new Date($( this ).siblings('input[name=date_order]').val());
-                    //     // var date_extnd =  new Date(new_dateExtend);
-                    //     alert($( this ).siblings('input[name=date_order]').val()+"data_extend"+ new_dateExtend );
-                    //     if (input.siblings('input[name=date_order]').val()== data['dateReturnToBD']){
-                    //        alert("hi");
-                    //     }
-                    // });
-                    // через js
-                    // var new_dateExtend = data['date_extend'].replace(/[\.\/]/g,'-');
-                    // input.each(function( elem ) {
-                    //     // var date_order = new Date($( this ).siblings('input[name=date_order]').val());
-                    //     // var date_extnd =  new Date(new_dateExtend);
-                    //     alert($( this ).siblings('input[name=date_order]').val()+"data_extend"+ new_dateExtend );
-                    //     if($( this ).siblings('input[name=date_order]').val() == new_dateExtend){
-                    //         alert('hi');
-                    //         if ($( this ).val() == data['id_book'] ){
-                    //             //alert('hi');
-                    //             $( this ).parent().hide();
-                    //         }
-                    //     }
-                    // });
-
+                   input.siblings('input[name=date_order]').val();
                 }
             });
-            //отмена действия по умолчанию для кнопки submit
             event.preventDefault();
         }
     });
@@ -581,9 +491,7 @@ $( document ).ready(function() {
                     },
                     success: function (data)
                     {
-                        //$('td[id=' + adId + ']')
                         var button = $('table.tableIssureBook tr:gt(0) ').find('.return_book').parent().find("#"+data);
-                        //alert(button.attr("id"));
                         button.parent().parent().attr('class','deleted');
                         button.parent().parent().hide();
                     }
@@ -593,8 +501,6 @@ $( document ).ready(function() {
             return false;
     });
 //Кнопка напомнить
-
-
     $('.form_remember').on('submit', function(event) {
         var x = confirm("Отправить напоминание?");
         var id_issure_book = $(this).attr('id');
@@ -604,17 +510,10 @@ $( document ).ready(function() {
                 url: "teacherCabinet/" + id_issure_book + '/sendMessage',
                 data: $(this).serialize(),
                 success: function (data) {
-                    //var form = $("form[id=extend"+id_order_book+"]");
                     var form = $("form[id=remember" + data + "]");
-
                      var button = form.find('button').attr('disabled',true);
-                    // var row = form.parent().parent();
-                    // row.find('#date_return_order_td').text(data['date_extend']);
-                    // form.find('#date_extend').attr('value', '');
-
                 }
             });
-            //отмена действия по умолчанию для кнопки submit
             event.preventDefault();
         }else
             return false;

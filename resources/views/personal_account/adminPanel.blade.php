@@ -163,7 +163,7 @@
                         <li class="tile">
                             <a href="{{ route('teacher_сabinet')}}" class="tile-content ink-reaction">
                                 <div class="tile-text">
-                                    Бронирование печатных изданий/Личный кабинет
+                                    Бронирование печатных изданий
                                 </div>
                             </a>
                         </li>

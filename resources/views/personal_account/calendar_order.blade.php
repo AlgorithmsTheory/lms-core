@@ -113,16 +113,7 @@
 
         $(function () {
             //Валидация календаря
-//            $('.order_book_button').on('click',function(event){
-//                var myDate = new Date();
-//                var input_date = $('#datetimepicker').data("DateTimePicker").date();
-//
-//                if (input_date < myDate){
-//                    alert("Введенна не актуальная дата");
-//                    $(this).parent().parent().find('#date_order').attr('value','');
-//                    event.preventDefault();
-//                }
-//            });
+
             $('form').on('submit',function(event){
                 var myDate = new Date();
                 var input_date = $('#datetimepicker').data("DateTimePicker").date();
@@ -138,12 +129,7 @@
                     event.preventDefault();
                     return false;
                 }
-//                if ((myDate - input_date) > 86400000){
-//                    alert("Введенна не актуальная дата");
-//                    $(this).find('#date_order').attr('value','');
-//                    event.preventDefault();
-//                    return false;
-//                }
+
             });
 
 

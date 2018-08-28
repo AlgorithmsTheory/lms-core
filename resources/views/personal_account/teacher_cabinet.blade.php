@@ -455,15 +455,6 @@
             });
         });
 
-//пока пусть будет, потверждение удаления
-        function ConfirmDelete()
-        {
-            var x = confirm("Удалить книгу?");
-            if (x)
-                return true;
-            else
-                return false;
-        }
 
     </script>
     <!-- END JAVASCRIPT -->

@@ -57,8 +57,8 @@
                     'required']) !!}
                 </div>
                 <div class="form-group" >
-                    <h4> {!! Form::label('description', 'Описание новости:') !!}</h4>
-                    {!! Form::textarea('description',null,['class' => 'form-control','placeholder' => 'Введите описание книги', 'id' => 'body_edit_news',
+                    <h4> {!! Form::label('body', 'Описание новости:') !!}</h4>
+                    {!! Form::textarea('body',null,['class' => 'form-control','placeholder' => 'Введите описание книги', 'id' => 'body_edit_news',
                     'required']) !!}
                 </div>
                 <div class="form-group">

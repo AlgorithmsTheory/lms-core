@@ -105,7 +105,7 @@ Route::get('library/persons/{person}', ['as' => 'person', 'uses' => 'LibraryCont
 Route::get('library/extra', ['as' => 'library_extra', 'uses' => 'LibraryController@extra', 'middleware' => ['general_auth', 'access_for_library']]);
 
 
-//Кадыров илья, библиотека для студентов и преподавателей
+//библиотека для студентов и преподавателей
 //каталог книг
 Route::get('library/books', ['as' => 'books', 'uses' => 'BooksController@index']);
 //поиск по каталогу
@@ -125,7 +125,7 @@ Route::delete('library/book/{id}/delete',['as' => 'book_delete', 'uses' => 'Book
 //Личный кабинет преподаватля
 Route::get('library/books/teacherCabinet',['as' => 'teacher_сabinet', 'uses' => 'BooksController@teacherCabinet', 'middleware' => ['general_auth', 'admin']]);
 //сохраняем настройки календаря в БД
-Route::post('library/books/teacherCabinet',['as' => 'setDateCalendar', 'uses' => 'BooksController@set_Date_Calendar', 'middleware' => ['general_auth', 'admin']]);
+Route::post('library/books/teacherCabinet',['as' => 'setDateCalendar', 'uses' => 'BooksController@setDateCalendar', 'middleware' => ['general_auth', 'admin']]);
 //выбор даты заказа книги
 Route::get('library/book/{id}/order', ['as' => 'book_order', 'uses' => 'BooksController@book_order',
     'middleware' => ['general_auth', 'OrderBookLibrary']]);
