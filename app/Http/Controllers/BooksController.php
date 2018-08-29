@@ -101,7 +101,7 @@ class BooksController extends Controller {
                 'publisher.between' => 'Название издательство должно содержать от :min и до :max символов.',
                 'picture.required' => 'Выберите изображение.',
                 'picture.image' => 'Данный файл не является изображением.',
-                'genre_id.required' => 'Выберите жанр книги'
+                'genre_id.required' => 'Выберите жанр книги',
         ];
         $validator = Validator::make($request::all(), [
            // 'title' => "required|between:5,150|uniqueTitleAndAuthor:{$request->author}",
@@ -114,6 +114,11 @@ class BooksController extends Controller {
             'genre_id' => 'required',
 
         ], $messages);
+        if ($validator->fails()) {
+            return redirect('library/books/create')
+                ->withErrors($validator)
+                ->withInput();
+        }
         $book = new Book($request::all());
         if ($request::hasFile('picture')){
             if ($request::file('picture')->isValid()){
@@ -127,11 +132,6 @@ class BooksController extends Controller {
             }else{
                 return back()->withInput()->withErrors(['Ошибка при загрузке изображения']);
             }
-        }
-        if ($validator->fails()) {
-            return redirect('library/books/create')
-                ->withErrors($validator)
-                ->withInput();
         }
         return redirect('library/books');
     }
@@ -172,6 +172,11 @@ class BooksController extends Controller {
             'picture' => ['image'],
             'genre_id' => 'required',
         ], $messages);
+        if ($validator->fails()) {
+            return redirect('library/book/'.$id.'/edit')
+                ->withErrors($validator)
+                ->withInput();
+        }
         $book = Book::findOrFail($id);
         if ($request::hasFile('picture')){
             if ($request::file('picture')->isValid()){
@@ -186,11 +191,6 @@ class BooksController extends Controller {
             }else{
                 return back()->withInput()->withErrors(['Ошибка при загрузке изображения']);
             }
-        }
-        if ($validator->fails()) {
-            return redirect('library/book/'.$id.'/edit')
-                ->withErrors($validator)
-                ->withInput();
         }
         $book->update($request::all());
         return redirect('library/book/'.$book->id);
