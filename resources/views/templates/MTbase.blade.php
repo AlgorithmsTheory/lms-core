@@ -37,12 +37,20 @@
                     {{--                        <li><a href="{{URL::route('home')}}" class="btn">Главная</a></li>--}}
                     <li><a href="{{URL::route('tests')}}" class="btn">Тестирование</a></li>
                     <li><a href="{{URL::route('library_index')}}" class="btn">Библиотека</a></li>
-                    <li><a href="{{URL::route('MT')}}" class="btn">Тьюринг</a></li>
-                    <li><a href="{{URL::route('HAM')}}" class="btn">Марков</a></li>
-                    <li><a href="{{URL::route('recursion_index')}}" class="btn">Рекурсия</a></li>
-                    <li><a href="{{URL::route('Post')}}" class="btn">Пост</a></li>
-                    <li><a href="{{URL::route('MMT')}}" class="btn">Тьюринг (3 ленты)</a></li>
-					<li><a href="{{URL::route('RAM')}}" class="btn">RAM</a></li>
+					<li>
+						<a class="btn btn-primary dropdown-toggle" id="dropdownChoiceEmulator2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+							<span>Эмуляторы </span>
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu" aria-labelledby="dropdownChoiceEmulator2">
+							<li><a href="{{URL::route('MT')}}" class="btn">Тьюринг</a></li>
+							<li><a href="{{URL::route('HAM')}}" class="btn">Марков</a></li>
+							<li><a href="{{URL::route('recursion_index')}}" class="btn">Рекурсия</a></li>
+							<li><a href="{{URL::route('Post')}}" class="btn">Пост</a></li>
+							<li><a href="{{URL::route('MMT')}}" class="btn">Тьюринг (3 ленты)</a></li>
+							<li><a href="{{URL::route('RAM')}}" class="btn">RAM</a></li>
+						</ul>
+					</li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="{{URL::route('personal_account')}}" class="btn"><span class="glyphicon glyphicon-user"></span></a></li>
@@ -61,8 +69,10 @@
 </section>
 
 @yield('js-down')
+{!! HTML::script('js/ram/bootstrap.min.js') !!}
 {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
 {!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
 {!! HTML::script('js/libs/bootstrap/bootstrap.min.js') !!}
+
 </body>
 </html>

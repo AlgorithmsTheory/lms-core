@@ -28,12 +28,20 @@
                     <ul class="nav navbar-nav">
                         <li><a href="{{URL::route('tests')}}" class="btn">Тестирование</a></li>
                         <li><a href="{{URL::route('library_index')}}" class="btn">Библиотека</a></li>
-                        <li><a href="{{URL::route('MT')}}" class="btn">Тьюринг</a></li>
-                        <li><a href="{{URL::route('HAM')}}" class="btn">Марков</a></li>
-                        <li><a href="{{URL::route('recursion_index')}}" class="btn">Рекурсия</a></li>
-                        <li><a href="{{URL::route('Post')}}" class="btn">Пост</a></li>
-                        <li><a href="{{URL::route('MMT')}}" class="btn">Тьюринг (3 ленты)</a></li>
-						<li><a href="{{URL::route('RAM')}}" class="btn">RAM</a></li>
+						<li>
+							<a class="btn btn-primary dropdown-toggle" id="dropdownChoiceEmulator" data-toggle="dropdown">
+								<span>Эмуляторы </span>
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="dropdownChoiceEmulator">
+								<li><a href="{{URL::route('MT')}}" class="btn">Тьюринг</a></li>
+								<li><a href="{{URL::route('HAM')}}" class="btn">Марков</a></li>
+								<li><a href="{{URL::route('recursion_index')}}" class="btn">Рекурсия</a></li>
+								<li><a href="{{URL::route('Post')}}" class="btn">Пост</a></li>
+								<li><a href="{{URL::route('MMT')}}" class="btn">Тьюринг (3 ленты)</a></li>
+								<li><a href="{{URL::route('RAM')}}" class="btn">RAM</a></li>
+							</ul>
+						</li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="{{URL::route('personal_account')}}" class="btn"><span class="glyphicon glyphicon-user"></span></a></li>

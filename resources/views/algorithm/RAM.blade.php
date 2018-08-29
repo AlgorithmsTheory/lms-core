@@ -19,7 +19,7 @@
 		<div class = "container-fluid">
 			<div class="row">
 				<div class="col-lg-12">
-					<h1 class="text-primary">Random Access Machine Emulator</h1>
+					<h1 class="text-primary">Эмулятор Random Access Machine</h1>
 				</div>
 				<div class="col-lg-12">
 					<article class="margin-bottom-xxl">
@@ -175,7 +175,6 @@
 		<!-- BEGIN JAVASCRIPT -->
 		{!! HTML::script('/js/ram/jquery-2.1.1.min.js') !!}
 		{!! HTML::script('/js/ram/popper.min.js') !!}
-		{!! HTML::script('/js/ram/bootstrap.min.js') !!}
 		{!! HTML::script('/js/ram/src-noconflict/ace.js') !!}
 		
 		{!! HTML::script('/js/ram/RAM.js') !!}

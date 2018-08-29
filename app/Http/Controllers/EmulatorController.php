@@ -147,55 +147,12 @@ class EmulatorController extends Controller {
 
     }
 	
-	public function open_RAM(){
-
-        $user = Auth::user();
+	public function openRAM(){
+		$user = Auth::user();
         $id_user = $user['id'];
-        //$id_user =54;
-       //$cur_group=9;
-        $cur_group=DB::select("SELECT `id_group` FROM nam_for_group WHERE availability='1'");
-        
-        $cur_group = EmulatorController::magic($cur_group);
-    
-        $start_date_nam = DB::select("SELECT start_date FROM kontr_rab WHERE id = '2' AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) > start_date AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) < finish_date");
-        $start_date_nam = EmulatorController::magic($start_date_nam);
-        
-        $group = DB::select("SELECT `group` FROM `users` WHERE id=".$id_user);
-        $group = EmulatorController::magic($group);
-
-        $user_access = DB::select("SELECT `access` FROM `user_result_nam` WHERE Id_user=".$id_user);
-        $user_access = EmulatorController::magic($user_access);
-        $user_access = $user_access[0]['access'];
-
-
-         for ($i = 0; $i < count($cur_group); $i++) {
-            $new[$i]=$cur_group[$i]['id_group']; 
-            }   
-        
-             $available = 0;
-        if ($new != null) {
-            if (in_array($group[0]['group'], $new))
-            {
-                $available = 1;
-            }
-                 
-        }  
-            if ($available==1 or $user_access==1)   
-            {
-                //return  $cur_group;
-                //return  EmulatorController::kontrHAM();
-				return EmulatorController::RAM();
-                
-            }
-            else
-
-            {
-                //return $cur_group[1]['id_group'];
-                return EmulatorController::RAM();
-            }
-
+		$group = DB::select("SELECT `group` FROM `users` WHERE id=".$id_user);
+		return EmulatorController::RAM();
     }
-
 
 
     public function MT(){
