@@ -87,7 +87,7 @@
                     <input type="file" class="form-control-file" name="picture" >
                 </div>
                 <div class="form-group">
-                    <input type="hidden" class="form-control" name="status" value = "0" >
+                    <input type="hidden" class="form-control" name="status" value = "1" >
                 </div>
                 <div class="form-group">
                     <button type="submit" class="form-control btn ink-reaction btn-primary">Сохранить изменения</button>

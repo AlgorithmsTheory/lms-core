@@ -105,25 +105,34 @@ class BooksController extends Controller {
         ];
         $validator = Validator::make($request::all(), [
            // 'title' => "required|between:5,150|uniqueTitleAndAuthor:{$request->author}",
-            'title' => "required|between:5,150",
-            'author' => 'required|between:5,150',
-            'description' => 'required|between:30,1000',
-            'format' => 'required|between:5,30',
-            'publisher' => 'required|between:5,30',
+            'title' => "required|between:5,255",
+            'author' => 'required|between:5,255',
+            'description' => 'required|between:30,3000',
+            'format' => 'required|between:5,255',
+            'publisher' => 'required|between:5,255',
             'picture' => ['image','required'],
             'genre_id' => 'required',
 
         ], $messages);
-
+        $book = new Book($request::all());
+        if ($request::hasFile('picture')){
+            if ($request::file('picture')->isValid()){
+                $name = mt_rand(0, 10000) . $request::file('picture')->getClientOriginalName();
+                if (!copy($_FILES['picture']['tmp_name'], 'img/library/libr_pic/' . $name)){
+                    return back()->withInput()->withErrors(['Ошибка при копировании изображения']);
+                }else{
+                    $book->coverImg = 'libr_pic/' . $name;
+                    $book->save();
+                }
+            }else{
+                return back()->withInput()->withErrors(['Ошибка при загрузке изображения']);
+            }
+        }
         if ($validator->fails()) {
             return redirect('library/books/create')
                 ->withErrors($validator)
                 ->withInput();
         }
-        $book = new Book($request::all());
-        $book->coverImg = 'libr_pic/'.$_FILES['picture']['name'];
-        $book->save();
-        @copy($_FILES['picture']['tmp_name'], 'img/library/'.$book->coverImg);
         return redirect('library/books');
     }
 
@@ -155,23 +164,33 @@ class BooksController extends Controller {
             'genre_id.required' => 'Выберите жанр книги'
         ];
         $validator = Validator::make($request::all(), [
-            'title' => "required|between:5,150",
-            'author' => 'required|between:5,50',
-            'description' => 'required|between:30,1000',
-            'format' => 'required|between:5,30',
-            'publisher' => 'required|between:5,30',
+            'title' => "required|between:5,255",
+            'author' => 'required|between:5,255',
+            'description' => 'required|between:30,3000',
+            'format' => 'required|between:5,255',
+            'publisher' => 'required|between:5,255',
             'picture' => ['image'],
             'genre_id' => 'required',
         ], $messages);
+        $book = Book::findOrFail($id);
+        if ($request::hasFile('picture')){
+            if ($request::file('picture')->isValid()){
+                $name = mt_rand(0, 10000) . $request::file('picture')->getClientOriginalName();
+                if (!copy($_FILES['picture']['tmp_name'], 'img/library/libr_pic/' . $name)){
+                    return back()->withInput()->withErrors(['Ошибка при копировании изображения']);
+                }else{
+                    $pathOldPicture = 'img/library/'.$book->coverImg;
+                    app(Filesystem::class)->delete(public_path($pathOldPicture));
+                    $book->coverImg = 'libr_pic/' . $name;
+                }
+            }else{
+                return back()->withInput()->withErrors(['Ошибка при загрузке изображения']);
+            }
+        }
         if ($validator->fails()) {
             return redirect('library/book/'.$id.'/edit')
                 ->withErrors($validator)
                 ->withInput();
-        }
-        $book = Book::findOrFail($id);
-        if (!empty($_FILES['picture']['name'])){
-            $book->coverImg = 'libr_pic/'.$_FILES['picture']['name'];
-            @copy($_FILES['picture']['tmp_name'], 'img/library/'.$book->coverImg);
         }
         $book->update($request::all());
         return redirect('library/book/'.$book->id);
