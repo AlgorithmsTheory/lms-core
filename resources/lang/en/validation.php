@@ -88,7 +88,26 @@ return [
 	'custom' => [
 		'attribute-name' => [
 			'rule-name' => 'custom-message',
-		],
+		], 'book_title' => array(
+            'required' => 'Введите название книги.',
+            'between' => 'Название книги должно содержать от :min и до :max символов.',
+            'unique_title_and_author' => 'Книга с таким названием и автором уже существует.',
+        ), 'book_author' => array(
+            'required' => 'Введите название автора.',
+            'between' => 'Имя автора должно содержать от :min и до :max символов.',
+        ),'book_description' => array(
+            'required' => 'Введите описание книги.',
+            'between' => 'Описание книги должно содержать от :min и до :max символов.',
+        ),'book_format' => array(
+            'required' => 'Введите формат книги.',
+            'between' => 'формат книги должен содержать от :min и до :max символов.',
+        ),'book_publisher' => array(
+            'required' => 'Введите издательство.',
+            'between' => 'Название издательство должно содержать от :min и до :max символов.',
+        ),'picture' => array(
+            'required' => 'Выберите изображение.',
+            'image' => 'Данный файл не является изображением.',
+        ), 'book_genre_id' => array ('required' => 'Выберите жанр книги'),
 	],
 
 	/*

@@ -87,46 +87,37 @@ class BooksController extends Controller {
 
             return $count === 0;
         });
-        $messages = [
-                'title.required' => 'Введите название книги.',
-                'title.between' => 'Название книги должно содержать от :min и до :max символов.',
-                'title.unique_title_and_author' => 'Книга с таким названием и автором уже существует.',
-                'author.required' => 'Введите название автора.',
-                'author.between' => 'Имя автора должно содержать от :min и до :max символов.',
-                'description.required' => 'Введите описание книги.',
-                'description.between' => 'Имя описание книги должно содержать от :min и до :max символов.',
-                'format.required' => 'Введите формат книги.',
-                'format.between' => 'формат книги должен содержать от :min и до :max символов.',
-                'publisher.required' => 'Введите издательство.',
-                'publisher.between' => 'Название издательство должно содержать от :min и до :max символов.',
-                'picture.required' => 'Выберите изображение.',
-                'picture.image' => 'Данный файл не является изображением.',
-                'genre_id.required' => 'Выберите жанр книги',
-        ];
         $validator = Validator::make($request::all(), [
            // 'title' => "required|between:5,150|uniqueTitleAndAuthor:{$request->author}",
-            'title' => "required|between:5,255",
-            'author' => 'required|between:5,255',
-            'description' => 'required|between:30,3000',
-            'format' => 'required|between:5,255',
-            'publisher' => 'required|between:5,255',
+            'book_title' => "required|between:5,255",
+            'book_author' => 'required|between:5,255',
+            'book_description' => 'required|between:30,3000',
+            'book_format' => 'required|between:5,255',
+            'book_publisher' => 'required|between:5,255',
             'picture' => ['image','required'],
-            'genre_id' => 'required',
+            'book_genre_id' => 'required',
 
-        ], $messages);
+        ]);
         if ($validator->fails()) {
             return redirect('library/books/create')
                 ->withErrors($validator)
                 ->withInput();
         }
-        $book = new Book($request::all());
         if ($request::hasFile('picture')){
             if ($request::file('picture')->isValid()){
                 $name = mt_rand(0, 10000) . $request::file('picture')->getClientOriginalName();
                 if (!copy($_FILES['picture']['tmp_name'], 'img/library/libr_pic/' . $name)){
                     return back()->withInput()->withErrors(['Ошибка при копировании изображения']);
                 }else{
+                    $book = new Book;
                     $book->coverImg = 'libr_pic/' . $name;
+                    $book->title = $request::get('book_title');
+                    $book->author = $request::get('book_author');
+                    $book->description = $request::get('book_description');
+                    $book->format = $request::get('book_format');
+                    $book->publisher = $request::get('book_publisher');
+                    $book->genre_id = $request::get('book_genre_id');
+                    $book->status = $request::get('status');
                     $book->save();
                 }
             }else{
@@ -148,36 +139,28 @@ class BooksController extends Controller {
 
             return $count === 0;
         });
-        $messages = [
-            'title.required' => 'Введите название книги.',
-            'title.between' => 'Название книги должно содержать от :min и до :max символов.',
-            'title.unique_title_and_author' => 'Книга с таким названием и автором уже существует.',
-            'author.required' => 'Введите название автора.',
-            'author.between' => 'Имя автора должно содержать от :min и до :max символов.',
-            'description.required' => 'Введите описание книги.',
-            'description.between' => 'Имя описание книги должно содержать от :min и до :max символов.',
-            'format.required' => 'Введите формат книги.',
-            'format.between' => 'формат книги должен содержать от :min и до :max символов.',
-            'publisher.required' => 'Введите издательство.',
-            'publisher.between' => 'Название издательство должно содержать от :min и до :max символов.',
-            'picture.image' => 'Данный файл не является изображением.',
-            'genre_id.required' => 'Выберите жанр книги'
-        ];
         $validator = Validator::make($request::all(), [
-            'title' => "required|between:5,255",
-            'author' => 'required|between:5,255',
-            'description' => 'required|between:30,3000',
-            'format' => 'required|between:5,255',
-            'publisher' => 'required|between:5,255',
+            'book_title' => "required|between:5,255",
+            'book_author' => 'required|between:5,255',
+            'book_description' => 'required|between:30,3000',
+            'book_format' => 'required|between:5,255',
+            'book_publisher' => 'required|between:5,255',
             'picture' => ['image'],
-            'genre_id' => 'required',
-        ], $messages);
+            'book_genre_id' => 'required',
+        ]);
         if ($validator->fails()) {
             return redirect('library/book/'.$id.'/edit')
                 ->withErrors($validator)
                 ->withInput();
         }
         $book = Book::findOrFail($id);
+        $book->title = $request::get('book_title');
+        $book->author = $request::get('book_author');
+        $book->description = $request::get('book_description');
+        $book->format = $request::get('book_format');
+        $book->publisher = $request::get('book_publisher');
+        $book->genre_id = $request::get('book_genre_id');
+        $book->status = $request::get('status');
         if ($request::hasFile('picture')){
             if ($request::file('picture')->isValid()){
                 $name = mt_rand(0, 10000) . $request::file('picture')->getClientOriginalName();
@@ -192,7 +175,7 @@ class BooksController extends Controller {
                 return back()->withInput()->withErrors(['Ошибка при загрузке изображения']);
             }
         }
-        $book->update($request::all());
+        $book->save();
         return redirect('library/book/'.$book->id);
     }
 

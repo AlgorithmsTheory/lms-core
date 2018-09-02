@@ -48,17 +48,17 @@
 
                 {!! Form::open(array('url' => 'library/books', 'files' => true)) !!}
                 <div class="form-group">
-                   <h4> {!! Form::label('title', 'Название книги:') !!}</h4>
-                    {!! Form::text('title',null,['class' => 'form-control','placeholder' => 'Введите название книги']) !!}
+                   <h4> {!! Form::label('book_title', 'Название книги:') !!}</h4>
+                    {!! Form::text('book_title',null,['class' => 'form-control','placeholder' => 'Введите название книги']) !!}
                 </div>
                 <div class="form-group">
-                    <h4> {!! Form::label('author', 'Автор книги:') !!}</h4>
-                    {!! Form::text('author',null,['class' => 'form-control','placeholder' => 'Введите автора книги']) !!}
+                    <h4> {!! Form::label('book_author', 'Автор книги:') !!}</h4>
+                    {!! Form::text('book_author',null,['class' => 'form-control','placeholder' => 'Введите автора книги']) !!}
 
                 </div>
                 <div class="form-group">
-                    <h4> {!! Form::label('genre_id', 'Жанр книги:') !!}</h4>
-                    {!! Form::select('genre_id',array('' =>'Выберите жанр книги:',
+                    <h4> {!! Form::label('book_genre_id', 'Жанр книги:') !!}</h4>
+                    {!! Form::select('book_genre_id',array('' =>'Выберите жанр книги:',
                     '1' => 'Теория графов', '2' => 'Принятие решений и мягкие вычисления',
                     '3' => 'Логистика и экономико-математические методы',
                     '4' => 'Информационные технологии в образовании',
@@ -67,18 +67,18 @@
                     '7' => 'Теория алгоритмов и сложности вычислений'), null, ['class' => 'form-control']) !!}
                 </div>
                 <div class="form-group">
-                    <h4> {!! Form::label('description', 'Описание книги:') !!}</h4>
-                    {!! Form::textarea('description',null,['class' => 'form-control','placeholder' => 'Введите описание книги']) !!}
+                    <h4> {!! Form::label('book_description', 'Описание книги:') !!}</h4>
+                    {!! Form::textarea('book_description',null,['class' => 'form-control','placeholder' => 'Введите описание книги']) !!}
 
                 </div>
                 <div class="form-group">
-                    <h4> {!! Form::label('format', 'Формат книги:') !!}</h4>
-                    {!! Form::text('format',null,['class' => 'form-control','placeholder' => 'Введите формат книги']) !!}
+                    <h4> {!! Form::label('book_format', 'Формат книги:') !!}</h4>
+                    {!! Form::text('book_format',null,['class' => 'form-control','placeholder' => 'Введите формат книги']) !!}
 
                 </div>
                 <div class="form-group">
-                    <h4> {!! Form::label('publisher', 'Издательство:') !!}</h4>
-                    {!! Form::text('publisher',null,['class' => 'form-control','placeholder' => 'Введите издательство']) !!}
+                    <h4> {!! Form::label('book_publisher', 'Издательство:') !!}</h4>
+                    {!! Form::text('book_publisher',null,['class' => 'form-control','placeholder' => 'Введите издательство']) !!}
 
                 </div>
                 <div class="form-group">
