@@ -222,7 +222,7 @@
                     <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col"><select id ="titleBook" style="width:150px;">
+                        <th scope="col"><select id ="titleBook" style="width:120px;">
                                 <option>Название книги</option>
                                 @foreach($titleMyBooks as $titleMyBook)
                                     <option>{{$titleMyBook}}</option>
@@ -271,7 +271,7 @@
                                 @endif
                                      <th scope="row"><?php echo "$countBooks"?></th>
 
-                                <td id="title_book_id">{{ $book->title }}</td>
+                                <td id="title_book_id" style="width:120px;">{{ $book->title }}</td>
                                 <td id="author_book_td" style="width:100px;">{{ $book->author }}</td>
                                 <td id="genre_book_td" style="width:100px;">{{ $book->name }}</td>
                                 <td id="date_issure_td">{{ $book->date_issure }}</td>
