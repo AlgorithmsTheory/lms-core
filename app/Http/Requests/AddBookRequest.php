@@ -40,14 +40,13 @@ class AddBookRequest extends FormRequest
     });
 
         return [
-            'title' => 'required|between:5,150',
-            'author' => 'required|between:5,50',
-            'description' => 'required|between:30,1000',
-            'format' => 'required|between:5,30',
-            'publisher' => 'required|between:5,30',
-            'picture' => ['image','required'],
-
-
+            'book_title' => "required|between:5,255",
+            'book_author' => 'required|between:5,255',
+            'book_description' => 'required|between:30,3000',
+            'book_format' => 'required|between:5,255',
+            'book_publisher' => 'required|between:5,255',
+            'picture' => 'required|image',
+            'book_genre_id' => 'required',
         ];
     }
 }

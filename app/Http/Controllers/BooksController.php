@@ -15,8 +15,8 @@ use App\Testing\Lecture;
 use App\Order;
 use App\Order_books;
 use DB;
-use Illuminate\Support\Facades\Validator;
-
+use App\Http\Requests\AddBookRequest;
+use App\Http\Requests\UpdateBookRequest;
 
 class BooksController extends Controller {
     /*
@@ -79,45 +79,22 @@ class BooksController extends Controller {
         return view("library.add_new_book");
     }
 
-    public function store_book(Request $request){
-        Validator::extend('uniqueTitleAndAuthor', function ($attribute, $value, $parameters, $validator) {
-            $count = DB::table('book')->where('title', $value)
-                ->where('author', $parameters[0])
-                ->count();
-
-            return $count === 0;
-        });
-        $validator = Validator::make($request::all(), [
-           // 'title' => "required|between:5,150|uniqueTitleAndAuthor:{$request->author}",
-            'book_title' => "required|between:5,255",
-            'book_author' => 'required|between:5,255',
-            'book_description' => 'required|between:30,3000',
-            'book_format' => 'required|between:5,255',
-            'book_publisher' => 'required|between:5,255',
-            'picture' => ['image','required'],
-            'book_genre_id' => 'required',
-
-        ]);
-        if ($validator->fails()) {
-            return redirect('library/books/create')
-                ->withErrors($validator)
-                ->withInput();
-        }
-        if ($request::hasFile('picture')){
-            if ($request::file('picture')->isValid()){
-                $name = mt_rand(0, 10000) . $request::file('picture')->getClientOriginalName();
+    public function store_book(AddBookRequest $request){
+        if ($request->hasFile('picture')){
+            if ($request->file('picture')->isValid()){
+                $name = mt_rand(0, 10000) . $request->file('picture')->getClientOriginalName();
                 if (!copy($_FILES['picture']['tmp_name'], 'img/library/libr_pic/' . $name)){
                     return back()->withInput()->withErrors(['Ошибка при копировании изображения']);
                 }else{
                     $book = new Book;
                     $book->coverImg = 'libr_pic/' . $name;
-                    $book->title = $request::get('book_title');
-                    $book->author = $request::get('book_author');
-                    $book->description = $request::get('book_description');
-                    $book->format = $request::get('book_format');
-                    $book->publisher = $request::get('book_publisher');
-                    $book->genre_id = $request::get('book_genre_id');
-                    $book->status = $request::get('status');
+                    $book->title = $request->book_title;
+                    $book->author = $request->book_author;
+                    $book->description = $request->book_description;
+                    $book->format = $request->book_format;
+                    $book->publisher = $request->book_publisher;
+                    $book->genre_id = $request->book_genre_id;
+                    $book->status = $request->status;
                     $book->save();
                 }
             }else{
@@ -131,39 +108,18 @@ class BooksController extends Controller {
         $book = Book::findOrFail($id);
         return view('library.edit_book', compact('book'));
     }
-    public function update_book(Request $request, $id){
-        Validator::extend('uniqueTitleAndAuthor', function ($attribute, $value, $parameters, $validator) {
-            $count = DB::table('book')->where('title', $value)
-                ->where('author', $parameters[0])
-                ->count();
-
-            return $count === 0;
-        });
-        $validator = Validator::make($request::all(), [
-            'book_title' => "required|between:5,255",
-            'book_author' => 'required|between:5,255',
-            'book_description' => 'required|between:30,3000',
-            'book_format' => 'required|between:5,255',
-            'book_publisher' => 'required|between:5,255',
-            'picture' => ['image'],
-            'book_genre_id' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return redirect('library/book/'.$id.'/edit')
-                ->withErrors($validator)
-                ->withInput();
-        }
+    public function update_book(UpdateBookRequest $request, $id){
         $book = Book::findOrFail($id);
-        $book->title = $request::get('book_title');
-        $book->author = $request::get('book_author');
-        $book->description = $request::get('book_description');
-        $book->format = $request::get('book_format');
-        $book->publisher = $request::get('book_publisher');
-        $book->genre_id = $request::get('book_genre_id');
-        $book->status = $request::get('status');
-        if ($request::hasFile('picture')){
-            if ($request::file('picture')->isValid()){
-                $name = mt_rand(0, 10000) . $request::file('picture')->getClientOriginalName();
+        $book->title = $request->book_title;
+        $book->author = $request->book_author;
+        $book->description = $request->book_description;
+        $book->format = $request->book_format;
+        $book->publisher = $request->book_publisher;
+        $book->genre_id = $request->book_genre_id;
+        $book->status = $request->status;
+        if ($request->hasFile('picture')){
+            if ($request->file('picture')->isValid()){
+                $name = mt_rand(0, 10000) . $request->file('picture')->getClientOriginalName();
                 if (!copy($_FILES['picture']['tmp_name'], 'img/library/libr_pic/' . $name)){
                     return back()->withInput()->withErrors(['Ошибка при копировании изображения']);
                 }else{
