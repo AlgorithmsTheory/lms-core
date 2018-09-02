@@ -340,6 +340,7 @@
     {!! HTML::script('js/moment-with-locales.min.js') !!}
     {!! HTML::script('js/bootstrap-datetimepicker.min.js') !!}
     {{--Календарь конец --}}
+    {!! HTML::script('js/library/settingCalendare.js') !!}
     {!! HTML::script('js/library/studentCabinet.js') !!}
     <!-- END JAVASCRIPT -->
 @stop

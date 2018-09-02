@@ -33,8 +33,8 @@ class BooksController extends Controller {
             $studentStatus = $studentStatus->archived;
         }
         $books = DB::table('book')->leftJoin('genres_books', 'book.genre_id',
-            '=','genres_books.id')->select('book.id',
-            'book.title', 'book.author', 'book.description', 'book.format',
+            '=','genres_books.id')->where('book.status', '=', '1')->
+        select('book.id', 'book.title', 'book.author', 'book.description', 'book.format',
             'book.publisher', 'book.coverImg', 'genres_books.name')->get();
         $searchquery = "";
         $messageFlag = "NO";
@@ -53,8 +53,8 @@ class BooksController extends Controller {
     public function search(){
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
         $search = Request::input('search');
-        $book = Book::where('title', 'like', "%$search%");
-        $book->orWhere('author', 'like', "%$search%");
+        $book = Book::where('title', 'like', "%$search%")->where('book.status', '=', '1');
+        $book->orWhere('author', 'like', "%$search%")->where('book.status', '=', '1');
         //$query = "SELECT id, coverImg, title, author, format FROM `book` WHERE UPPER(`title`) LIKE UPPER('%$search%') OR UPPER(`author`) LIKE UPPER('%$search%')";
         $books = $book->get();
         $searchquery = $search;
