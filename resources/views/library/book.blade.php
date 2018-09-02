@@ -132,7 +132,7 @@
 
 
 
-                </article> </article>	</div></div>
+                </article></article>	</div></div>
 
     <!-- BEGIN BLANK SECTION -->
     </div><!--end #content-->

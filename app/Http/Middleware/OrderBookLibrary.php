@@ -7,13 +7,7 @@ use DB;
 use Auth;
 class OrderBookLibrary
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
+
     public function handle($request, Closure $next)
     {
         $genre_book = DB::table('book')->leftJoin('genres_books', 'book.genre_id', '=','genres_books.id')
