@@ -19,7 +19,7 @@ use App\Http\Requests\AddBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 
 class BooksController extends Controller {
-    /*
+    /**
     * Контроллер для предоставления студентам списка книг
     */
     public function index(){
@@ -143,7 +143,7 @@ class BooksController extends Controller {
         return  redirect('library/books');
     }
 
-    /*
+    /**
     * личный кабинет учителя
     */
     public function teacherCabinet(){
@@ -262,7 +262,7 @@ class BooksController extends Controller {
             "inLibraryBooks", "titleInLibraryBooks", "authorInLibraryBooks", "nameOrders", "genresOrders", "genresIssureBooks"));
     }
 
-    /*
+    /**
     * Выдача книг студентам
     */
     public function teacherIssureBook($id){
@@ -277,7 +277,7 @@ class BooksController extends Controller {
         return $result['order_id'];
     }
 
-    /*
+    /**
     * Отмена заказа преподавателем
     */
     public function teacherOrderDelete($id){
@@ -287,7 +287,7 @@ class BooksController extends Controller {
 
     }
 
-    /*
+    /**
     * перенос заказа преподавателем
     */
     public function teacherExtendDate($id){
@@ -306,7 +306,7 @@ class BooksController extends Controller {
            'date_order' => $request["date_order"], 'dateReturnToBD' => $dateReturnToBD];
     }
 
-    /*
+    /**
     * Возврат книг
     */
     public function teacherReturnBook($id){
@@ -316,7 +316,7 @@ class BooksController extends Controller {
 
     }
 
-    /*
+    /**
     * Отправка сообщения студенту о вовремя не сданной книге
     */
     public function teacherSendMessage($id){
@@ -326,7 +326,7 @@ class BooksController extends Controller {
 
     }
 
-    /*
+    /**
     * Сохраняем параметры календаря
     */
     public function setDateCalendar(){
@@ -351,7 +351,7 @@ class BooksController extends Controller {
 
     }
 
-    /*
+    /**
     * заказ книг
     */
     public function book_order($id){
@@ -400,7 +400,7 @@ return view('library/calendar_order', ["order_date" => json_encode($order_date),
 
     }
 
-    /*
+    /**
     * личный кабинет студента
     */
     public function studentCabinet(){
@@ -482,7 +482,7 @@ return view('library/calendar_order', ["order_date" => json_encode($order_date),
             "authorMyBooks", "dateReturnMyBooks", "dateIssureMyBooks", "genreOrders", "genreBooks"));
     }
 
-    /*
+    /**
     * Отмена заказов студентом
     */
     public function studentOrderDelete($id){
@@ -491,7 +491,7 @@ return view('library/calendar_order', ["order_date" => json_encode($order_date),
 
     }
 
-    /*
+    /**
     * Удаление сообщений об отменённом заказе студентом
     */
     public function studentMessageDelete($id){
@@ -499,7 +499,7 @@ return view('library/calendar_order', ["order_date" => json_encode($order_date),
         return $id;
     }
 
-    /*
+    /**
    * Настройка календаря для продления книги студентом
    */
     public function studentSettingCalendar(){
@@ -520,7 +520,7 @@ return view('library/calendar_order', ["order_date" => json_encode($order_date),
             "maxDay" => json_encode($maxDay[0]->end_date)];
     }
 
-    /*
+    /**
    * перенос даты возврата книги студентом
    */
     public function studentExtendDate($id){
@@ -536,7 +536,7 @@ return view('library/calendar_order', ["order_date" => json_encode($order_date),
         return $request["date_extend"];
     }
 
-    /*
+    /**
    * Переход на страницу управления/просмотр(для студента) библиотечными новостями
    */
 public function manageNewsLibrary(){
@@ -545,7 +545,7 @@ public function manageNewsLibrary(){
     return view('library/manage_news', compact('news', 'role'));
 }
 
-    /*
+    /**
    * Добавление новой библиотечной новости
    */
 public function addLibraryNews(Request $request){
@@ -554,7 +554,7 @@ public function addLibraryNews(Request $request){
     return redirect()->route('manage_news_library');
 }
 
-    /*
+    /**
    * Удаление библиотечной новости
    */
 public function libraryNewsDelete(Request $request, $id){
@@ -562,7 +562,7 @@ public function libraryNewsDelete(Request $request, $id){
     return $id;
 }
 
-    /*
+    /**
    * Редактирование библиотечных ноостей
    */
 public function editNewsLibrary($id){
@@ -570,7 +570,7 @@ public function editNewsLibrary($id){
     return view('library.edit_library_news', compact('news'));
 }
 
-    /*
+    /**
    * Сохранение изменений библиотечной новости и редирект на страницу библиотечных новостей
    */
 public function updateLibraryNews(Request $request,$id){
