@@ -11,7 +11,7 @@
 <div class="col-lg-6 ">
 <a href= "{{ action ('BooksController@getBook', [$book->id]) }}"><h3 class="text-left" >{{$book->title}}</h3></a>
 <h4 class="text-left" >{{$book->author}}</h4>
-
+    <h4 class="text-left" >{{$book->name}}</h4>
     @if($role == 'Студент' and $studentStatus == 0)
         {!! HTML::link('library/book/'.$book->id.'/order','Заказать книгу',array('class' => 'btn ink-reaction btn-primary btn-sm btn-block','role' => 'button')) !!}
     @endif

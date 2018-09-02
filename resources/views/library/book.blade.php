@@ -75,7 +75,9 @@
                                 <font size="3" >
                                     <?php
                                     print "
-			<p>Автор:&nbsp;" .$book->author."</p>";?>
+			<p>Автор:&nbsp;" .$book->author."</p>";
+                                    print "
+			<p>Тематика:&nbsp;" .$book->name."</p>";?>
                                 </font>
                                 <font size="2" style="font-style: italic;"><br></font><font size="2" style="color: rgb(102, 102, 102);">Издательство:</font>
                                 <font size="2" style="font-style: italic; color: rgb(102, 102, 102);">
