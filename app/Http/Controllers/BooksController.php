@@ -173,6 +173,7 @@ class BooksController extends Controller {
 
         $genresOrders = [];
         foreach ($orders as $order){
+            $order->date_order = date('d.m.Y', strtotime($order->date_order));
             $genresOrders[] = $order->name;
         }
         $genresOrders = array_unique($genresOrders);
@@ -212,6 +213,8 @@ class BooksController extends Controller {
                 'issure_book.status', 'genres_books.name')->orderBy('date_return')->get();
         $groupIssureBooks = [];
         foreach ($issureBooks as $issureBook){
+            $issureBook->date_order = date('d.m.Y', strtotime($issureBook->date_issure));
+            $issureBook->date_order = date('d.m.Y', strtotime($issureBook->date_return));
             $groupIssureBooks[] = $issureBook->group_name;
         }
         $groupIssureBooks= array_unique($groupIssureBooks);
@@ -292,11 +295,10 @@ class BooksController extends Controller {
         $NewFormatDate = preg_replace('/\./', '-', $request["date_extend"]);
         $dateReturn = strtotime($NewFormatDate);
         $dateReturnToBD = date("Y-m-d", $dateReturn);
-        DB::table('order_books')->where('id', '=', $request["id_order"])->update(array('date_order' => $request["date_extend"]));
-
+        DB::table('order_books')->where('id', '=', $request["id_order"])->update(array('date_order' => $dateReturnToBD));
         DB::table('order_books')->where([
             ['order_books.id_book', '=', $request["id_book"]],
-            ['order_books.date_order', '<=', $request["date_extend"]],
+            ['order_books.date_order', '<=', $dateReturnToBD],
                 ['order_books.id', '<>', $request["id_order"]]
         ])->update(array('status' => "extendT"));
 
@@ -411,7 +413,6 @@ return view('library/calendar_order', ["order_date" => json_encode($order_date),
             ->select('order_books.id', 'order_books.date_order', 'order_books.id_user', 'order_books.status',
                 'order_books.status', 'order_books.id_book', 'book.title', 'book.author', 'genres_books.name')
             ->orderBy('date_order')->get();
-
         $books = DB::table('issure_book')->join('book', 'issure_book.id_book', '=', 'book.id')
             ->join('genres_books', 'book.genre_id', '=', 'genres_books.id')
             ->where('id_user', '=', Auth::user()['id'])
@@ -422,6 +423,7 @@ return view('library/calendar_order', ["order_date" => json_encode($order_date),
         // для таблицы мои заказы
         $dateOrders = [];
         foreach ($orders as $order){
+            $order->date_order = date('d.m.Y', strtotime($order->date_order));
             if ($order->status == "active"){
                 $dateOrders[] = $order->date_order;
             }
@@ -451,6 +453,8 @@ return view('library/calendar_order', ["order_date" => json_encode($order_date),
         // для таблицы книги на руках
         $titleMyBooks = [];
         foreach ($books as $book){
+            $book->date_issure = date('d.m.Y', strtotime($book->date_issure));
+            $book->date_return = date('d.m.Y', strtotime($book->date_return));
                 $titleMyBooks[] = $book->title;
         }
         $titleMyBooks = array_unique($titleMyBooks);
@@ -523,7 +527,7 @@ return view('library/calendar_order', ["order_date" => json_encode($order_date),
         $request = Request::all();
         $dateReturn = strtotime($request["date_extend"]);
         $dateReturnToBD = date("Y-m-d", $dateReturn);
-        DB::table('issure_book')->where('id', '=', $id)->update(['date_return' => $request["date_extend"]]);
+        DB::table('issure_book')->where('id', '=', $id)->update(['date_return' => $dateReturnToBD]);
         DB::table('order_books')->where([
             ['id_book', '=', $request["id_book"]],
             ['date_order', '<=', $request["date_extend"]

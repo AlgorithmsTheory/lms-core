@@ -72,6 +72,8 @@
     <div class="row " style="margin-top: 2%">
     </div>
 
+        {{--Таблица мои  заказы--}}
+
         <div class="panel " style="background-color:#e5e6e6;">
     <div class="  collapse in" id="collapseOrders">
     <div class="card card-tiles style-default-light">

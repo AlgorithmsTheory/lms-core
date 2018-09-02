@@ -196,7 +196,6 @@ $(document).ready(function(){
 
 
     //Потверждение и удаление уведомления о отмене заказа
-
     $('.cancel_message').click(function () {
         var x = confirm("Удалить уведомление?");
         if (x){
@@ -225,6 +224,7 @@ $(document).ready(function(){
         else
             return false;
     });
+
 //Настройка календаря
     $.ajax(
         {
@@ -236,7 +236,7 @@ $(document).ready(function(){
             {
                 var arrayPossibleDate = JSON.parse(data["possible_date"]);
                 $('.datetimepicker').datetimepicker({
-                    format: 'YYYY.MM.DD ',
+                    format: 'DD.MM.YYYY ',
                     locale: 'ru',
                     daysOfWeekDisabled: arrayPossibleDate,
                     minDate: data["minDay"],
@@ -246,6 +246,7 @@ $(document).ready(function(){
             }
         });
 
+// Перенос даты возврата
     $('.form_extend').on('submit', function(event) {
         //Валидация календаря
         var myDate = new Date();
@@ -267,8 +268,7 @@ $(document).ready(function(){
                      success: function (data) {
                          var form = $("form[id=" + id_issure_book + "]");
                          var row = form.parent().parent();
-                         var new_dateExtend = data.replace(/[\.\/]/g,'-');
-                         row.find('#date_return_td').text(new_dateExtend);
+                         row.find('#date_return_td').text(data);
                          form.find('#date_extend').attr('value', '');
                      }
                  });

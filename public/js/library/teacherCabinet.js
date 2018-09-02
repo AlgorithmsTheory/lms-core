@@ -10,7 +10,7 @@ $( document ).ready(function() {
             {
                 var arrayPossibleDate = JSON.parse(data["possible_date"]);
                 $('.datetimepicker').datetimepicker({
-                    format: 'YYYY.MM.DD ',
+                    format: 'DD.MM.YYYY ',
                     locale: 'ru',
                     daysOfWeekDisabled: arrayPossibleDate,
                     minDate: data["minDay"],
@@ -460,10 +460,9 @@ $( document ).ready(function() {
                 success: function (data) {
                     var form = $("form[id=extend" + data['id_order'] + "]");
                     var row = form.parent().parent();
-                    var new_dateExtend = data['date_extend'].replace(/[\.\/]/g,'-');
-                    row.find('#date_return_order_td').text(new_dateExtend);
+                   // var new_dateExtend = data['date_extend'].replace(/[\.\/]/g,'-');
+                    row.find('#date_return_order_td').text(data['date_extend']);
                     form.find("input[type=text]").attr('value', '');
-
                     var table = row.parent();
                     var input = table.find('input[name=id_book]');
                    input.siblings('input[name=date_order]').val();
