@@ -339,9 +339,5 @@
     {!! HTML::script('js/bootstrap-datetimepicker.min.js') !!}
     {{--Календарь конец --}}
     {!! HTML::script('js/library/studentCabinet.js') !!}
-    <script type="text/javascript">
-
-
-    </script>
     <!-- END JAVASCRIPT -->
 @stop

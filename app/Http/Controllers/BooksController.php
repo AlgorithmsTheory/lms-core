@@ -254,7 +254,7 @@ class BooksController extends Controller {
             $authorInLibraryBooks[] = $inLibraryBook->author;
         }
         $authorInLibraryBooks= array_unique($authorInLibraryBooks);
-        return view("personal_account.teacher_cabinet", compact("orders","groupOrders", "titleOrders", "authorOrders", "dateOrders",
+        return view("Library/teacher_cabinet", compact("orders","groupOrders", "titleOrders", "authorOrders", "dateOrders",
             "issureBooks", "groupIssureBooks", "titleIssureBooks", "authorIssureBooks", "dateIssureIssureBooks", "dateReturnIssureBooks",
             "inLibraryBooks", "titleInLibraryBooks", "authorInLibraryBooks", "nameOrders", "genresOrders", "genresIssureBooks"));
     }
@@ -381,7 +381,7 @@ class BooksController extends Controller {
                 ->where('users.id', '=', [Auth::user()['id']])
                 ->first();
             $studentStatus = $studentStatus->archived;
-return view('personal_account.calendar_order', ["order_date" => json_encode($order_date), "possible_date" =>
+return view('library/calendar_order', ["order_date" => json_encode($order_date), "possible_date" =>
   json_encode($return_possible_date), "book_id" => $id , "minDay" => json_encode($minDay),
     "maxDay" => json_encode($maxDay), "role" => $role, "studentStatus" => $studentStatus]);
     }
@@ -474,7 +474,7 @@ return view('personal_account.calendar_order', ["order_date" => json_encode($ord
             $genreBooks[] = $book->name;
         }
         $genreBooks = array_unique($genreBooks);
-        return view("personal_account.student_cabinet", compact("orders","books", "dateOrders", "titleOrders", "authorOrders", "titleMyBooks",
+        return view("Library/student_cabinet", compact("orders","books", "dateOrders", "titleOrders", "authorOrders", "titleMyBooks",
             "authorMyBooks", "dateReturnMyBooks", "dateIssureMyBooks", "genreOrders", "genreBooks"));
     }
 

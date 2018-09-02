@@ -429,33 +429,5 @@
     {!! HTML::script('js/bootstrap-datetimepicker.min.js') !!}
     {{--Календарь конец --}}
     {!! HTML::script('js/library/teacherCabinet.js') !!}
-    <script type="text/javascript">
-        //Валидация формы изменения Календаря заказов
-        $( document ).ready(function(){
-
-            $('#formcheckbox').on('submit', function(event) {
-
-                if ( validateForm() ) { // если есть ошибки возвращает true
-                    alert(" Неправильно введенная дата");
-                    event.preventDefault();
-                }
-                function validateForm() {
-                    if ($('#start_date').val() >= $('#end_date').val()){
-                        var v_date = true;
-                    }
-                    $("#end_date").toggleClass('error', v_date );
-                    return (v_date);
-                }
-            });
-            var checkboxes = $("input[type='checkbox']"),
-                submitButt = $("#CalendarBatton");
-            submitButt.attr("disabled", true);
-            checkboxes.click(function() {
-                submitButt.attr("disabled", !checkboxes.is(":checked"));
-            });
-        });
-
-
-    </script>
     <!-- END JAVASCRIPT -->
 @stop
