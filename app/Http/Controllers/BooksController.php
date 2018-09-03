@@ -383,9 +383,9 @@ class BooksController extends Controller {
                 ->where('users.id', '=', [Auth::user()['id']])
                 ->first();
             $studentStatus = $studentStatus->archived;
-return view('library/calendar_order', ["order_date" => json_encode($order_date), "possible_date" =>
-  json_encode($return_possible_date), "book_id" => $id , "minDay" => json_encode($minDay),
-    "maxDay" => json_encode($maxDay), "role" => $role, "studentStatus" => $studentStatus]);
+        return view('library/calendar_order', ["order_date" => json_encode($order_date), "possible_date" =>
+            json_encode($return_possible_date), "book_id" => $id , "minDay" => json_encode($minDay),
+            "maxDay" => json_encode($maxDay), "role" => $role, "studentStatus" => $studentStatus]);
     }
 
     public function book_send_order($id){
