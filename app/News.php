@@ -18,6 +18,6 @@ class News extends Model
 {
     protected $table = 'news';
     public $timestamps = false;
-    protected $fillable = ['*'];
+    protected $fillable = ['id', 'title', 'body', 'is_visible', 'type'];
 
 }

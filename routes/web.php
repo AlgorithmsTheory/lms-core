@@ -104,13 +104,73 @@ Route::get('library/persons', ['as' => 'library_persons', 'uses' => 'LibraryCont
 Route::get('library/persons/{person}', ['as' => 'person', 'uses' => 'LibraryController@person', 'middleware' => ['general_auth', 'access_for_library']]);
 Route::get('library/extra', ['as' => 'library_extra', 'uses' => 'LibraryController@extra', 'middleware' => ['general_auth', 'access_for_library']]);
 
-Route::get('library/books', ['as' => 'books', 'uses' => 'BooksController@index', ]); //только студентам и преподавателям
-Route::post('library/books/search', ['as' => 'library_search', 'uses' => 'BooksController@search']); //только студентам и преподавателям
-Route::get('library/book/{id}', ['as' => 'book', 'uses' => 'BooksController@getBook']); //только студентам и преподавателям
+
+//библиотека для студентов и преподавателей
+//каталог книг
+Route::get('library/books', ['as' => 'books', 'uses' => 'BooksController@index']);
+//поиск по каталогу
+Route::post('library/books/search', ['as' => 'library_search', 'uses' => 'BooksController@search']);
+//добавление новой книги
+Route::get('library/books/create', ['as' => 'books_create', 'uses' => 'BooksController@add_new_book', 'middleware' => ['general_auth', 'admin']]);
+//сохранение и валидация данных о новой книге
+Route::post('library/books', ['as' => 'book_store', 'uses' => 'BooksController@store_book']);
+// просмотр конкретной книги
+Route::get('library/book/{id}', ['as' => 'book', 'uses' => 'BooksController@getBook']);
+// обновление данных о книге
+Route::patch('library/book/{id}', ['as' => 'book_update', 'uses' => 'BooksController@update_book']);
+// редактирование книг
+Route::get('library/book/{id}/edit', ['as' => 'book_edit', 'uses' => 'BooksController@editBook', 'middleware' => ['general_auth', 'admin']]);
+// Удаление книг
+Route::delete('library/book/{id}/delete',['as' => 'book_delete', 'uses' => 'BooksController@deleteBook', 'middleware' => ['general_auth', 'admin']]);
+//Личный кабинет преподаватля
+Route::get('library/books/teacherCabinet',['as' => 'teacher_сabinet', 'uses' => 'BooksController@teacherCabinet', 'middleware' => ['general_auth', 'admin']]);
+//сохраняем настройки календаря в БД
+Route::post('library/books/teacherCabinet',['as' => 'setDateCalendar', 'uses' => 'BooksController@setDateCalendar', 'middleware' => ['general_auth', 'admin']]);
+//выбор даты заказа книги
+Route::get('library/book/{id}/order', ['as' => 'book_order', 'uses' => 'BooksController@book_order',
+    'middleware' => ['general_auth', 'OrderBookLibrary']]);
+//зазаз книги и перенаправление в каталог
+Route::post('library/book/{id}/order', ['as' => 'book_send_order', 'uses' => 'BooksController@book_send_order',
+    'middleware' => ['general_auth']]);
+//Личный кабинет студента
+Route::get('library/books/studentCabinet',['as' => 'student_сabinet', 'uses' => 'BooksController@studentCabinet',
+    'middleware' => ['general_auth', 'studentLibrary']]);
+// отмена заказов пользователем
+Route::delete('library/books/studentCabinet/{id}/delete',['as' => 'student_order_delete', 'uses' => 'BooksController@studentOrderDelete',
+    'middleware' => ['general_auth']]);
+// Удаление сообщений об отменённом заказе
+Route::delete('library/books/studentCabinet/{id}/delete_message',['as' => 'student_message_delete', 'uses' => 'BooksController@studentMessageDelete',
+    'middleware' => ['general_auth']]);
+// получение настроек календаря
+Route::get('library/books/studentCabinet/settingCalendar',['as' => 'student_setting_calendar', 'uses' => 'BooksController@studentSettingCalendar']);
+// перенос даты возврата книги студентом
+Route::post('library/books/studentCabinet/{id}/extendDate',['as' => 'student_extend_date', 'uses' => 'BooksController@studentExtendDate']);
+// выдача книг студентам
+Route::post('library/books/teacherCabinet/{id}/issureBook',['as' => 'teacher_issure_book', 'uses' => 'BooksController@teacherIssureBook', 'middleware' => ['general_auth', 'admin']]);
+// отмена заказов Преподавателем
+Route::delete('library/books/teacherCabinet/{id}/delete',['as' => 'teacher_order_delete', 'uses' => 'BooksController@teacherOrderDelete', 'middleware' => ['general_auth', 'admin']]);
+// перенос заказа преподавателем
+Route::post('library/books/teacherCabinet/{id}/extendDate',['as' => 'teacher_extend_date', 'uses' => 'BooksController@teacherExtendDate', 'middleware' => ['general_auth', 'admin']]);
+// Возвращение книги
+Route::delete('library/books/teacherCabinet/{id}/returnBook',['as' => 'teacher_return_book', 'uses' => 'BooksController@teacherReturnBook', 'middleware' => ['general_auth', 'admin']]);
+// Отправка сообщения студенту о вовремя не сданной книге
+Route::post('library/books/teacherCabinet/{id}/sendMessage',['as' => 'teacher_send_message', 'uses' => 'BooksController@teacherSendMessage', 'middleware' => ['general_auth', 'admin']]);
+// переход на страницу управления и просмотра (для студента)библиотечными новостями
+Route::get('library/books/manageNewsLibrary',['as' => 'manage_news_library', 'uses' => 'BooksController@manageNewsLibrary', 'middleware' => ['general_auth']]);
+// добавление новой библиотечной новости и переход на страницу управления новостями
+Route::post('library/books/manageNewsLibrary/add_news', ['as' => 'add_library_news', 'uses' => 'BooksController@addLibraryNews', 'middleware' => ['general_auth', 'admin']]);
+// Удаление библиотечных новостей
+Route::delete('library/books/manageNewsLibrary/{id}/delete',['as' => 'delete_library_news', 'uses' => 'BooksController@libraryNewsDelete',
+    'middleware' => ['general_auth', 'admin']]);
+// редактирование библиотечныз новостей
+Route::get('library/manageNewsLibrary/{id}/edit', ['as' => 'library_news_edit', 'uses' => 'BooksController@editNewsLibrary', 'middleware' => ['general_auth', 'admin']]);
+// Сохранение изменений библиотечной новости и редирект на страницу библиотечных новостей
+Route::patch('library/manageNewsLibrary/{id}', ['as' => 'library_news_update', 'uses' => 'BooksController@updateLibraryNews', 'middleware' => ['general_auth', 'admin']]);
+
+
 Route::get('library/lection/{id}', ['as' => 'lection', 'uses' => 'BooksController@lection', 'middleware' => ['general_auth', 'admin', 'access_for_library']]); //только студентам и преподавателям
 Route::get('library/ebooks', ['as' => 'ebooks', 'uses' => 'BooksController@ebookindex']); // всем пользователям
 Route::post('library/ebooks/search', ['as' => 'library_esearch', 'uses' => 'BooksController@esearch']); //всем пользователям
-Route::post('library/book/{book_id}/order', ['as' => 'book_order', 'uses' => 'BooksController@order']); //только студентам и преподавателям
 Route::get('teacher_account/library_calendar', ['as' => 'library_calendar', 'uses' => 'BooksController@library_calendar']); //только преподавателю
 Route::post('teacher_account/date_create', ['as' => 'library_date_create', 'uses' => 'BooksController@create_date']); // только преподавателю
 Route::get('teacher_account/library_order_list', ['as' => 'library_order_list', 'uses' => 'BooksController@library_order_list']); // только преподавателю
