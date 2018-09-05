@@ -257,7 +257,7 @@ class BooksController extends Controller {
             $authorInLibraryBooks[] = $inLibraryBook->author;
         }
         $authorInLibraryBooks= array_unique($authorInLibraryBooks);
-        return view("Library/teacher_cabinet", compact("orders","groupOrders", "titleOrders", "authorOrders", "dateOrders",
+        return view("library/teacher_cabinet", compact("orders","groupOrders", "titleOrders", "authorOrders", "dateOrders",
             "issureBooks", "groupIssureBooks", "titleIssureBooks", "authorIssureBooks", "dateIssureIssureBooks", "dateReturnIssureBooks",
             "inLibraryBooks", "titleInLibraryBooks", "authorInLibraryBooks", "nameOrders", "genresOrders", "genresIssureBooks"));
     }
@@ -478,7 +478,7 @@ class BooksController extends Controller {
             $genreBooks[] = $book->name;
         }
         $genreBooks = array_unique($genreBooks);
-        return view("Library/student_cabinet", compact("orders","books", "dateOrders", "titleOrders", "authorOrders", "titleMyBooks",
+        return view("library/student_cabinet", compact("orders","books", "dateOrders", "titleOrders", "authorOrders", "titleMyBooks",
             "authorMyBooks", "dateReturnMyBooks", "dateIssureMyBooks", "genreOrders", "genreBooks"));
     }
 
