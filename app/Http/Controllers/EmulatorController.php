@@ -146,13 +146,6 @@ class EmulatorController extends Controller {
             }
 
     }
-	
-	public function openRAM(){
-		$user = Auth::user();
-        $id_user = $user['id'];
-		$group = DB::select("SELECT `group` FROM `users` WHERE id=".$id_user);
-		return EmulatorController::RAM();
-    }
 
 
     public function MT(){
@@ -181,7 +174,7 @@ class EmulatorController extends Controller {
 
 
     public function MTPOST(Request $request){
-
+		
         // $cmd = "/usr/local/bin/turing.sh";
         // $data = json_decode($request->input('task'),true);
         // $rule_file = tempnam(sys_get_temp_dir(), 'turn_r');
