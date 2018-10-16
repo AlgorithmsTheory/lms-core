@@ -213,8 +213,8 @@ class BooksController extends Controller {
                 'issure_book.status', 'genres_books.name')->orderBy('date_return')->get();
         $groupIssureBooks = [];
         foreach ($issureBooks as $issureBook){
-            $issureBook->date_order = date('d.m.Y', strtotime($issureBook->date_issure));
-            $issureBook->date_order = date('d.m.Y', strtotime($issureBook->date_return));
+            $issureBook->date_issure = date('d.m.Y', strtotime($issureBook->date_issure));
+            $issureBook->date_return = date('d.m.Y', strtotime($issureBook->date_return));
             $groupIssureBooks[] = $issureBook->group_name;
         }
         $groupIssureBooks= array_unique($groupIssureBooks);
