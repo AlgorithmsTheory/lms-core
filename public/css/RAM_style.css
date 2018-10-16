@@ -1,0 +1,28 @@
+#editor {
+	position: absolute;    
+	!min-height: 50%;
+	height: 500px;
+	margin-top:0px;
+	top:0px;
+	left:0px;
+	right:0px;
+	bottom:0px;
+}
+
+#registerContainer {
+	height : 490px;
+	overflow: auto;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+.myMarker {
+  position:absolute;
+  background:rgba(100,200,100,0.5);
+  z-index:20
+}

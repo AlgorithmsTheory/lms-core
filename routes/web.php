@@ -334,5 +334,7 @@ Route::post('api/check', ['uses' => 'APIController@checkStudentsAtSeminar']);
 //Login verification
 Route::post('check/ifExists', ['uses' => 'AdministrationController@checkEmailIfExists']);
 
+//RAM Emulator
+Route::get('algorithm/RAM', ['as' => 'RAM', 'uses' => 'EmulatorController@RAM', 'middleware' => ['general_auth']]);
 
 

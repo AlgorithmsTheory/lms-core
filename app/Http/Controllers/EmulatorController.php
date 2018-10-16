@@ -148,8 +148,6 @@ class EmulatorController extends Controller {
     }
 
 
-
-
     public function MT(){
         return view("algorithm.MT");
     }
@@ -169,10 +167,14 @@ class EmulatorController extends Controller {
     public function kontrHAM(){
         return view("algorithm.kontrHAM");
     }
+	
+	public function RAM() {
+		return view("algorithm.RAM");
+	}
 
 
     public function MTPOST(Request $request){
-
+		
         // $cmd = "/usr/local/bin/turing.sh";
         // $data = json_decode($request->input('task'),true);
         // $rule_file = tempnam(sys_get_temp_dir(), 'turn_r');
