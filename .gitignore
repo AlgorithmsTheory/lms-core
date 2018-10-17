@@ -13,7 +13,7 @@ public/archive/*
 public/img/questions/title/*
 /nbproject/private/
 .idea/
-
+*.ppt
 # ====== OS X ===========================================
 .DS_Store
 .AppleDouble
