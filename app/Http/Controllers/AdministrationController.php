@@ -5,6 +5,8 @@ use App\Group;
 use App\Controls;
 use App\Lectures;
 use App\Seminars;
+use App\Testing\Test;
+use App\Testing\TestForGroup;
 use App\Totalresults;
 use App\Statements_progress;
 use App\TeacherHasGroup;
@@ -56,8 +58,14 @@ class AdministrationController extends Controller{
         $validate = Group::whereGroup_name($name)->get();
         if(count($validate) == 0){
             Group::insert(['group_name' => $name, 'description' => $description, 'archived' => 0]);
-            $id = Group::whereGroup_name($name)->get()->first();
-            Pass_plan::insert(['group' => $id['group_id']]);
+            $group_id = Group::whereGroup_name($name)->select('group_id')->first()->group_id;
+            Pass_plan::insert(['group' => $group_id]);
+
+            // add group availability for active tests
+            $active_tests = Test::whereArchived(0)->select('id_test')->get();
+            foreach ($active_tests as $test) {
+                TestForGroup::insert(['id_test' => $test['id_test'], 'id_group' => $group_id, 'availability' => 0]);
+            }
         }
         return redirect()->route('group_set');
     }
