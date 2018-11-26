@@ -49,6 +49,7 @@ class TeacherRetestController extends Controller {
                      'groups.group_name as group',
                      'tests.id_test as id_test',
                      'tests.test_name as test',
+                     'fines.fine as fine',
                      'fines.access as access')
             ->get();
 

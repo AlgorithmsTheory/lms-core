@@ -75,8 +75,9 @@ class Fine extends Eloquent{
 
     /** Преобразует процент в уровень штрафа */
     public static function percentToLevel($percent){
-        if ($percent != 100)
-            $fine = 19 - $percent/5;
+        if ($percent != 100) {
+            $fine = 19 - $percent / 5;
+        }
         else $fine = 0;
         return $fine;
     }
