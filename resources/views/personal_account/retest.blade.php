@@ -79,7 +79,7 @@ full
                 </tr>
                 <tbody id="target">
                 @foreach ($fines as $fine)
-                <input type="hidden" name="id[]" value="{{$id[$i]}}">
+                <input type="hidden" name="id[]" value="{{ $fine['id'] }}">
                 <tr class="fine-row">
                     <td class="text-center students">{{ $fine['student'] }}</td>
                     <td class="text-center groups">{{ $fine['group'] }}</td>

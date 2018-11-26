@@ -26,13 +26,13 @@ $(retestForm).on('load', '.fine-level', function(){
 
 /** Проверка введенного значения штрафа */
 $(retestForm).on('focusout', '.fine-level', function(){
-    var allowable = [100, 90, 85, 80, 75, 70];                                                                          //массив разрешенных штрафов
+    let allowable = [100, 90, 85, 80, 75, 70];                                                                          //массив разрешенных штрафов
     if (allowable.indexOf(parseInt($(this).val())) != -1){
         $(this).attr('step', checkStep($(this).val()));
     }
     else {
         alert('Вы ввели недопустимый штраф! Штраф должен быть выбран из набора '+allowable);
-        (this).focus();
+        $(this).focusin();
     }
 });
 
