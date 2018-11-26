@@ -31,17 +31,17 @@ full
                 <div class="form-group col-md-6">
                     <select name="type" id="selected-test" class="form-control" size="1">
                         <option value="">Все</option>
-                        @for ($i=0; $i < count($all_tests); $i++)
-                            <option value="{{ $all_tests[$i] }}">{{ $all_tests[$i] }}</option>
-                        @endfor
+                        @foreach ($tests as $test)
+                            <option value="{{ $test->test_name }}">{{ $test->test_name }}</option>
+                        @endforeach
                     </select>
                     <label for="selected-test">Тесты</label>
                 </div>
                 <div class="form-group col-md-6">
                     <select name="type" id="selected-group" class="form-control" size="1">
                         <option value="">Все</option>
-                        @foreach ($distinct_groups as $group)
-                            <option value="{{ $group['group'] }}">{{ $group['group'] }}</option>
+                        @foreach ($groups as $group)
+                            <option value="{{ $group->group_name }}">{{ $group->group_name }}</option>
                         @endforeach
                     </select>
                     <label for="selected-group">Группа</label>
@@ -50,7 +50,7 @@ full
                     <select name="type" id="selected-student" class="form-control" size="1">
                         <option value="">Все</option>
                         @foreach ($users as $user)
-                        <option value="{{ $user['last_name'] }} {{ $user['first_name'] }}">{{ $user['last_name'] }} {{$user['first_name'] }}</option>
+                        <option value="{{ $user->user_name }}">{{ $user->user_name }}</option>
                         @endforeach
                     </select>
                     <label for="selected-student">Студент</label>
@@ -78,19 +78,19 @@ full
                     <td>Максимальный балл, %</td>
                 </tr>
                 <tbody id="target">
-                @for ($i=0; $i < count($accesses); $i++)
+                @foreach ($fines as $fine)
                 <input type="hidden" name="id[]" value="{{$id[$i]}}">
-                <tr>
-                    <td >{{ $student_names[$i] }}</td>
-                    <td class="text-center">{{ $groups[$i] }}</td>
-                    <td class="text-center">{{ $test_names[$i] }}</td>
-                    <td class="text-center">{{ $attempts[$i] }}</td>
-                    <td class="text-center last-marks">{{ $last_marks[$i] }}</td>
+                <tr class="fine-row">
+                    <td class="text-center students">{{ $fine['student'] }}</td>
+                    <td class="text-center groups">{{ $fine['group'] }}</td>
+                    <td class="text-center tests">{{ $fine['test'] }}</td>
+                    <td class="text-center">{{ $fine['attempts'] }}</td>
+                    <td class="text-center last-marks">{{ $fine['last_mark'] }}</td>
                     <td class="text-center">
                         <div class="checkbox checkbox-styled">
                             <label>
-                                <input type="checkbox" class="flag"  @if ($accesses[$i] == 1) checked @endif>
-                                <input class="support-checkbox" name="fines[]" type="hidden" @if ($accesses[$i] == 1) value="1"
+                                <input type="checkbox" class="flag"  @if ($fine['access'] == 1) checked @endif>
+                                <input class="support-checkbox" name="fines[]" type="hidden" @if ($fine['access'] == 1) value="1"
                                 @else value="0"
                                 @endif
                                 >
@@ -100,11 +100,11 @@ full
                     </td>
                     <td class="text-center">
                         <div class="form-group">
-                            <input type="number" min="70" max="100" step="5" name="fine-levels[]" class="form-control fine-level" value="{{$fines[$i]}}">
+                            <input type="number" min="70" max="100" step="5" name="fine-levels[]" class="form-control fine-level" value="{{$fine['fine']}}">
                         </div>
                     </td>
                 </tr>
-                @endfor
+                @endforeach
                 </tbody>
             </table>
             <div class="col-lg-offset-9"  id="change">
