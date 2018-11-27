@@ -457,11 +457,6 @@ class TestController extends Controller{
         return $response;
     }
 
-    /** Отображение адаптивного теста */
-    public function showAdaptiveTest($id_test) {
-
-    }
-
     /** Проверка теста */
     public function checkTest(Request $request){   //обработать ответ на вопрос
         $id_test = $request->input('id_test');

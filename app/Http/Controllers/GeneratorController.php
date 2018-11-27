@@ -138,8 +138,7 @@ class GeneratorController extends Controller {
             $this->headOfPdf($fpdf, $test_name, $k, $amount);
             $this->headOfPdf($answered_fpdf, $test_name, $k, $amount);
             $generator = new UsualTestGenerator();
-            $generator->buildGraphFromTest(Test::whereId_test($id_test)->first());
-            $generator->generate();
+            $generator->generate(Test::whereId_test($id_test)->first());
             for ($i=0; $i<$amount; $i++){                                                                               // показываем каждый вопрос из теста
                 $id = $generator->chooseQuestion();
                 $this->pdfQuestion($fpdf, $id, $i+1);

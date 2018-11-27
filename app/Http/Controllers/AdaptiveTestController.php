@@ -20,6 +20,37 @@ class AdaptiveTestController extends Controller {
         $this->test = $test;
     }
 
+    /** Show prepare view with self-estimation form */
+    public function prepare($id_test) {
+        $marks = ['A', 'B', 'C', 'D(хор)', 'D(удвл)', 'E', 'F'];
+        return view('adaptive_tests.prepare', compact('marks', 'id_test'));
+    }
+
+    /** Init test params, generate graph, create session, redirect to first question */
+    public function init(Request $request, $id_test) {
+
+    }
+
+    /** Choose question */
+    private function getNextQuestion() {
+
+    }
+
+    /** Show question */
+    public function showQuestion($id_question) {
+
+    }
+
+    /** Check question and redirect to next question or finish page */
+    public function checkQuestion(Request $request) {
+
+    }
+
+    /** Show page with results */
+    public function showResults() {
+
+    }
+
     public function params() {
         return view('adaptive_tests.params');
     }
