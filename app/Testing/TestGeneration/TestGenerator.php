@@ -10,28 +10,15 @@ use App\Testing\Test;
  * Time: 23:27
  */
 interface TestGenerator {
-    /**
-     * @param $restrictions
-     * @throws TestGenerationException
-     * Build dicotyledonous graph (source - records - structures - sink) with capacities and flows from teacher's restrictions
-     */
-    public function buildGraphFromRestrictions($restrictions);
 
     /**
-     * @param $test Test
-     * @throws TestGenerationException
-     * Build dicotyledonous graph (source - records - structures - sink) with capacities and flows from existence test
-     */
-    public function buildGraphFromTest(Test $test);
-
-    /**
-     *  Choose one question from final list
+     *  Choose one question from list
      */
     public function chooseQuestion();
 
     /**
-     *  @throws TestGenerationException
-     *  Create final list of questions for test
+     * Create list of questions for follow choice
+     * @param Test $test
      */
-    public function generate();
+    public function generate(Test $test);
 }
