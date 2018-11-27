@@ -11,7 +11,6 @@ use App\Group;
 use App\Testing\Fine;
 use App\Testing\Result;
 use App\Testing\Test;
-use App\Testing\TestForGroup;
 use App\User;
 use DB;
 use Illuminate\Http\Request;
@@ -20,62 +19,61 @@ use Illuminate\Routing\Controller;
 /** Модуль преподавателя для управления возможностью переписывания тестов студентами */
 class TeacherRetestController extends Controller {
     public function index(){
-        $id = [];
-        $student_names = [];
-        $test_names = [];
-        $groups = [];
-        $accesses = [];
-        $fines = [];
-        $attempts = [];
-        $last_marks = [];
-        $all_tests = [];
-        $users = [];
-        $distinct_groups = [];
+        $users = User::join('groups', 'users.group', '=', 'groups.group_id')
+            ->where('groups.archived', '=', 0)
+            ->orderBy('users.last_name', 'asc')
+            ->select(DB::raw('CONCAT(`users`.`last_name`, " ", `users`.`first_name`) as user_name'))->get();
 
-        $current_year = date('Y');
-        $users_query = User::join('fines', 'users.id', '=', 'fines.id')
-            ->where('year', '=', $current_year)
-            ->orderBy('last_name', 'asc')
-            ->distinct()
-            ->select('first_name', 'last_name')->get();
-        foreach($users_query as $user){
-            array_push($users, $user);
-        }
-
-        $groups_query = User::join('fines', 'users.id', '=', 'fines.id')
-            ->where('year', '=', $current_year)
-            ->orderBy('group', 'asc')
-            ->distinct()
-            ->select('group')
+        $groups = Group::whereArchived(0)
+            ->orderBy('group_name', 'asc')
+            ->select('group_name')
             ->get();
-        foreach($groups_query as $group){
-            array_push($distinct_groups, $group);
-        }
 
-        $fine_table = Fine::get();
-        foreach ($fine_table as $row){
-            array_push($id, $row->id_fine);
-            $user = User::whereId($row->id)->where('year', '=', $current_year)->select('first_name', 'last_name', 'group')->first();
-            array_push($student_names, $user->last_name.' '.$user->first_name);
-            $test = Test::whereId_test($row->id_test)->select('test_name')->first();
-            Group::whereGroup_id($user->group)->select('group_name')->first()->group_name;
-            array_push($groups, $user->group);
-            array_push($test_names, $test->test_name);
-            array_push($accesses, $row->access);
-            array_push($fines, Fine::levelToPercent($row->fine));
-            array_push($attempts, Result::whereId_test($row->id_test)->whereId($row->id)->where('mark_ru', '>=', 0)->count());
-            //dd(Result::whereId_test($row->id_test)->whereId_user($row->id_user)->select('mark_eu')->orderBy('id_result', 'desc')->first()->mark_eu);
+        $tests = Test::whereArchived(0)
+            ->whereOnlyForPrint(0)
+            ->whereTestType('Контрольный')
+            ->orderBy('test_name', 'asc')
+            ->select('test_name')
+            ->get();
+
+        $fine_table = Fine::join('users', 'fines.id', '=', 'users.id')
+            ->join('groups', 'groups.group_id', '=', 'users.group')
+            ->join('tests', 'tests.id_test', '=', 'fines.id_test')
+            ->where('groups.archived', '=', 0)
+            ->where('tests.test_type', '=', 'Контрольный')
+            ->where('tests.only_for_print', '=', 0)
+            ->where('groups.archived', '=', 0)
+            ->select('fines.id_fine as id_fine',
+                     'users.id as id',
+                     DB::raw('CONCAT(users.last_name, " ", users.first_name) as user'),
+                     'groups.group_name as group',
+                     'tests.id_test as id_test',
+                     'tests.test_name as test',
+                     'fines.fine as fine',
+                     'fines.access as access')
+            ->get();
+
+        $fines = [];
+
+        foreach ($fine_table as $row) {
             $result = Result::whereId_test($row->id_test)->whereId($row->id)->select('mark_eu')->orderBy('id_result', 'desc')->first()->mark_eu;
-            array_push($last_marks, preg_replace('/^absent$/', 'Отсутствие', $result));
+
+            $fine = [];
+            $fine['id'] = $row->id_fine;
+            $fine['student'] = $row->user;
+            $fine['group'] = $row->group;
+            $fine['test'] = $row->test;
+            $fine['access'] = $row->access;
+            $fine['fine'] = Fine::levelToPercent($row->fine);
+            $fine['attempts'] = Result::whereId_test($row->id_test)->whereId($row->id)->where('mark_ru', '>=', 0)->count();
+            $fine['last_mark'] = preg_replace('/^absent$/', 'Отсутствие', $result);
+
+            array_push($fines, $fine);
         }
 
         $marks = ['A', 'B', 'C', 'D', 'E', 'F'];
 
-        $tests = Test::whereTest_type('Контрольный')->select('test_name')->get();
-        foreach($tests as $test){
-            array_push($all_tests, $test->test_name);
-        }
-        return view('personal_account.retest', compact('id','student_names', 'test_names', 'groups', 'attempts', 'last_marks', 'accesses', 'fines', 'all_tests', 'users', 'distinct_groups', 'marks'));
+        return view('personal_account.retest', compact('tests', 'users', 'groups', 'marks', 'fines'));
     }
 
    /** Применение изменений на странице переписывания тестов (возможность прохождения и уровень штрафа) */
