@@ -21,12 +21,11 @@
         <form action="{{URL::route('init_adaptive_test', $id_test)}}" method="POST">
             <div class="card">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <input type="hidden" name="id-test" value="{{ $id_test }}">
                 <div class="card-body">
                     @foreach ($marks as $mark)
                         <div class="radio radio-styled text-lg">
                             <label>
-                                <input type="radio" name="expected-mark[]" id="expected-mark">
+                                <input type="radio" name="expected-mark[]" id="expected-mark" value="{{ $mark }}">
                                 <span>{{ $mark }}</span>
                             </label>
                         </div>
