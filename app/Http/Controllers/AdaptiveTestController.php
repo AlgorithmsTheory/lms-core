@@ -28,7 +28,7 @@ class AdaptiveTestController extends Controller {
 
     /** Init test params, generate graph, create session, redirect to first question */
     public function init(Request $request, $id_test) {
-
+        $expected_mark = $request->input('expected-mark')[0];
     }
 
     /** Choose question */
