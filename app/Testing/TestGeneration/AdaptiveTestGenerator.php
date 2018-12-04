@@ -9,6 +9,9 @@
 namespace App\Testing\TestGeneration;
 
 
+use App\Classwork;
+use App\Lectures;
+use App\Seminars;
 use App\Testing\Adaptive\BolognaMark;
 use App\Testing\Adaptive\KnowledgeLevel;
 use App\Testing\Adaptive\QuestionClass;
@@ -67,9 +70,10 @@ class AdaptiveTestGenerator implements TestGenerator {
 
     public function __construct($mark_expected_by_student) {
         $student_id = Auth::user()['id'];
-        $this->student_knowledge_level = User::whereId($student_id)
-            ->select('knowledge_level')->first()->knowledge_level;
-        $this->student_expected_mark = $this->evalStudentExpectedMark($mark_expected_by_student, $student_id);
+        $student = User::whereId($student_id)->select('group', 'knowledge_level')->first();
+        $this->student_knowledge_level = $student['knowledge_level'];
+        $group_id = $student['group'];
+        $this->student_expected_mark = $this->evalStudentExpectedMark($mark_expected_by_student, $student_id, $group_id);
 
 
     }
@@ -82,16 +86,16 @@ class AdaptiveTestGenerator implements TestGenerator {
 
     }
 
-    private function evalStudentExpectedMark($mark_expected_by_student, $student_id) {
-        $mark_expected_by_system = $this->evalExpectedBySystemMark($student_id);
+    private function evalStudentExpectedMark($mark_expected_by_student, $student_id, $group_id) {
+        $mark_expected_by_system = $this->evalExpectedBySystemMark($student_id, $group_id);
         if ($mark_expected_by_student == 'Нет') return $mark_expected_by_system;
         return Weights::MARK_EXPECTED_BY_STUDENT_FACTOR * $mark_expected_by_student +
                Weights::MARK_EXPECTED_BY_SYSTEM_FACTOR * $mark_expected_by_system;
     }
 
-    private function evalExpectedBySystemMark($id_student) {
+    private function evalExpectedBySystemMark($id_student, $group_id) {
         $remote_activity = $this->evalRemoteActivity($id_student);
-        $classroom_activity = $this->evalClassroomActivity();
+        $classroom_activity = $this->evalClassroomActivity($id_student, $group_id);
         return min(max(0, $remote_activity + $classroom_activity), 1);
     }
 
@@ -135,8 +139,56 @@ class AdaptiveTestGenerator implements TestGenerator {
         return $first_factor + ($test_order - 1) * $interval_length;
     }
 
-    private function evalClassroomActivity() {
+    private function evalClassroomActivity($id_student, $group_id) {
+        return $this->evalLecturesActivity($id_student, $group_id) + $this->evalSeminarsActivity($id_student, $group_id);
+    }
 
+    private function evalLecturesActivity($id_student, $group_id) {
+        $lectures_group_attendance = Lectures::whereGroup($group_id)->get();
+        $lectures_student_attendance = Lectures::whereUserID($id_student)->first();
+        $attendance_percentage = $this->getAttendancePercentage($lectures_group_attendance, $lectures_student_attendance);
+        if ($attendance_percentage > 0.8) return 0.05 * ($attendance_percentage + 1);
+        if ($attendance_percentage >= 0.5) return $attendance_percentage / 3 - 2.4;
+        return -0.1;
+    }
+
+    private function evalSeminarsActivity($id_student, $group_id) {
+        return $this->evalSeminarsAttendanceActivity($id_student, $group_id) + $this->evalSeminarsWorkActivity($id_student, $group_id);
+    }
+
+    private function evalSeminarsAttendanceActivity($id_student, $group_id) {
+        $seminars_group_attendance = Seminars::whereGroup($group_id)->get();
+        $seminars_student_attendance = Seminars::whereUserID($id_student)->first();
+        $attendance_percentage = $this->getAttendancePercentage($seminars_group_attendance, $seminars_student_attendance);
+        if ($attendance_percentage >= 0.6) return 0.5 * ($attendance_percentage -1);
+        return -0.2;
+    }
+
+    private function evalSeminarsWorkActivity($id_student, $group_id) {
+        $seminars_group_attendance = Seminars::whereGroup($group_id)->get();
+        $seminars_student_work = Classwork::whereUserID($id_student)->first();
+        $work_percentage = $this->getAttendancePercentage($seminars_group_attendance, $seminars_student_work);
+        return 0.2 * $work_percentage;
+    }
+
+    private function getAttendancePercentage($group_attendance, $student_attendance) {
+        $column_name_prefix = 'col';
+        $carried = 0;
+        $visited = 0;
+        for ($i = 1; $i <= 16; $i++) {
+            $column_name = $column_name_prefix . $i;
+            $is_carried = false;
+            foreach ($group_attendance as $student) {
+                if ((int)$student[$column_name] > 0) {
+                    $is_carried = true;
+                }
+            }
+            if ($is_carried) {
+                $carried++;
+                if ((int)$student_attendance[$column_name] > 0) $visited++;
+            }
+        }
+        return $visited / $carried;
     }
 
     private function getCurrentExpectedPointsSum() {
