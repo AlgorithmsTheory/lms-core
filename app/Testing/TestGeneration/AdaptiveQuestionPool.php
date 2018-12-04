@@ -23,4 +23,16 @@ class AdaptiveQuestionPool {
      */
     private $common_pool = [];
 
+    public function setMainPhasePool($main_phase_pool) {
+        $this->main_phase_pool = $main_phase_pool;
+    }
+
+    public function setCommonPool($common_pool) {
+        $this->common_pool = $common_pool;
+    }
+
+
+
+
+
 }

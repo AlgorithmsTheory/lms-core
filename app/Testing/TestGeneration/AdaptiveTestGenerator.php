@@ -12,11 +12,14 @@ namespace App\Testing\TestGeneration;
 use App\Classwork;
 use App\Lectures;
 use App\Seminars;
+use App\Testing\Adaptive\AdaptiveQuestion;
 use App\Testing\Adaptive\BolognaMark;
 use App\Testing\Adaptive\KnowledgeLevel;
 use App\Testing\Adaptive\QuestionClass;
 use App\Testing\Adaptive\Weights;
+use App\Testing\Question;
 use App\Testing\Result;
+use App\Testing\StructuralRecord;
 use App\Testing\Test;
 use App\User;
 use Auth;
@@ -49,9 +52,9 @@ class AdaptiveTestGenerator implements TestGenerator {
     private $current_difficulty_sum;
 
     /**
-     * @var QuestionClass student belongs to
+     * @var QuestionClass[] student visited
      */
-    private $current_class;
+    private $visited_classes = [];
 
     /**
      * @var int 0 if main phase is active, 1 if extra
@@ -68,14 +71,18 @@ class AdaptiveTestGenerator implements TestGenerator {
      */
     private $chosen_records = [];
 
-    public function __construct($mark_expected_by_student) {
+    public function __construct($mark_expected_by_student, $id_test) {
         $student_id = Auth::user()['id'];
         $student = User::whereId($student_id)->select('group', 'knowledge_level')->first();
         $this->student_knowledge_level = $student['knowledge_level'];
         $group_id = $student['group'];
         $this->student_expected_mark = $this->evalStudentExpectedMark($mark_expected_by_student, $student_id, $group_id);
-
-
+        $this->question_pool = new AdaptiveQuestionPool();
+        $this->mean_difficulty = $this->evalMeanDifficultyAndSetCommonPool($id_test);
+        $this->current_question_number = 0;
+        $this->current_difficulty_sum = 0;
+        array_push($this->visited_classes, QuestionClass::MIDDLE);
+        $this->current_phase = 0;
     }
 
     public function generate(Test $test) {
@@ -191,11 +198,47 @@ class AdaptiveTestGenerator implements TestGenerator {
         return $visited / $carried;
     }
 
+    private function evalMeanDifficultyAndSetCommonPool($id_test) {
+        $sections = StructuralRecord::whereId_test($id_test)->select('section_code')->distinct()->get();
+        $difficult_sum = 0;
+        $questions_counter = 0;
+        $common_questions_pool = [];
+        foreach ($sections as $section) {
+            $questions = Question::whereSection_code($section['section_code'])
+                ->join('types', 'questions.type_code', '=', 'types.type_code')
+                ->where('types.only_fpr_print', '=', '0')
+                ->select('id_question', 'difficulty')->get();
+            foreach ($questions as $question) {
+                $questions_counter++;
+                $difficult_sum += $question['difficulty'];
+                $adaptive_question = new AdaptiveQuestion($question['id'], $this->student_knowledge_level);
+                array_push($common_questions_pool, $adaptive_question);
+            }
+        }
+        $this->question_pool->setCommonPool($common_questions_pool);
+        return $difficult_sum / $questions_counter;
+    }
+
     private function getCurrentExpectedPointsSum() {
         return $this->mean_difficulty * $this->current_question_number;
     }
 
     private function getCurrentTrajectoryDistance() {
         return $this->current_difficulty_sum - $this->getCurrentExpectedPointsSum();
+    }
+
+    private function isReadyToFinish() {
+        $trajectory_finish_factor = $this->evalTrajectoryFinishFactor();
+        $knowledge_finish_factor = $this->evalKnowledgeFinishFactor();
+        $probability_to_fininsh = min(max(0, $trajectory_finish_factor + $knowledge_finish_factor), 1);
+
+    }
+
+    private function evalTrajectoryFinishFactor() {
+
+    }
+
+    private function evalKnowledgeFinishFactor() {
+
     }
 }
