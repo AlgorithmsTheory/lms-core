@@ -14,6 +14,7 @@ use App\Lectures;
 use App\Seminars;
 use App\Testing\Adaptive\AdaptiveQuestion;
 use App\Testing\Adaptive\BolognaMark;
+use App\Testing\Adaptive\FinishCriteria;
 use App\Testing\Adaptive\KnowledgeLevel;
 use App\Testing\Adaptive\QuestionClass;
 use App\Testing\Adaptive\Weights;
@@ -70,6 +71,11 @@ class AdaptiveTestGenerator implements TestGenerator {
      * @var AdaptiveRecord[] formed by Ford-Fulkerson algorithm
      */
     private $chosen_records = [];
+
+    /**
+     * @var AdaptiveQuestion[] already passed by student
+     */
+    private $passed_questions = [];
 
     public function __construct($mark_expected_by_student, $id_test) {
         $student_id = Auth::user()['id'];
@@ -230,15 +236,43 @@ class AdaptiveTestGenerator implements TestGenerator {
     private function isReadyToFinish() {
         $trajectory_finish_factor = $this->evalTrajectoryFinishFactor();
         $knowledge_finish_factor = $this->evalKnowledgeFinishFactor();
-        $probability_to_fininsh = min(max(0, $trajectory_finish_factor + $knowledge_finish_factor), 1);
-
+        $probability_to_finish = min(max(0, $trajectory_finish_factor + $knowledge_finish_factor), 1);
+        $rand_num = rand(0, 100);
+        return $rand_num <= $probability_to_finish * 100;
     }
 
     private function evalTrajectoryFinishFactor() {
-
+        $number_of_steps_in_two_classes = 1;
+        $max_class = end($this->visited_classes);
+        $min_class = $max_class;
+        while($max_class - $min_class < 2 && $number_of_steps_in_two_classes < 5) {
+            $number_of_steps_in_two_classes++;
+            $current_class = prev($this->visited_classes);
+            if ($current_class == false) break;
+            if ($current_class > $max_class) $max_class = $current_class;
+            if ($current_class < $min_class) $min_class = $current_class;
+        }
+        return FinishCriteria::getClassFinishFactor($number_of_steps_in_two_classes);
     }
 
     private function evalKnowledgeFinishFactor() {
+        $expected_level = KnowledgeLevel::getKnowledgeLevelFromMark($this->student_expected_mark)->getLevel();
+        $current_level = KnowledgeLevel::getKnowledgeLevelFromPoints($this->getCurrentPoints())->getLevel();
+        return FinishCriteria::getKnowledgeFinishFactor(abs($expected_level - $current_level));
+    }
 
+    private function getCurrentPoints() {
+        $current_clean_mark = $this->getCurrentCleanMark();
+        $trajectory_distance = $this->getCurrentTrajectoryDistance();
+        $normalized_mark = ($current_clean_mark + $trajectory_distance) / $this->current_difficulty_sum;
+        return min(max(0, $normalized_mark), 1);
+    }
+
+    private function getCurrentCleanMark() {
+        $points_sum = 0;
+        foreach ($this->passed_questions as $question) {
+            $points_sum += $question->getDifficulty() * $question->getRightFactor();
+        }
+        return $points_sum;
     }
 }
