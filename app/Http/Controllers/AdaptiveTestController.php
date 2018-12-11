@@ -9,6 +9,8 @@
 namespace App\Http\Controllers;
 
 
+use App\Testing\TestGeneration\AdaptiveTestGenerator;
+use Auth;
 use Illuminate\Http\Request;
 use App\Testing\Question;
 use App\Testing\Test;
@@ -29,6 +31,12 @@ class AdaptiveTestController extends Controller {
     /** Init test params, generate graph, create session, redirect to first question */
     public function init(Request $request, $id_test) {
         $expected_mark = $request->input('expected-mark')[0];
+        $student_id = Auth::user()['id'];
+        $generator = new AdaptiveTestGenerator($expected_mark, $id_test);
+        $generator->generate(Test::whereId_test($id_test)->first());
+        $request->session()->put('adaptive_test_'.$student_id, serialize($generator));
+        $first_question = $generator->chooseQuestion();
+        return redirect()->route('show_adaptive_test', $first_question);
     }
 
     /** Choose question */
