@@ -21,15 +21,14 @@ class AdaptiveQuestion {
 
     private $right_factor;
 
-    public function __construct($id, $student_knowledge_level) {
-        $this->id = $id;
-        $question = Question::whereId_question($id)->first();
-        $this->difficulty = $question->difficulty;
+    public function __construct(Question $question, $student_knowledge_level) {
+        $this->id = $question['id_question'];
+        $this->difficulty = $question['difficulty'];
         $this->right_factor = -1;
         $this->class = QuestionClass::getQuestionClass(
-            1 - $this->evalProbabilityToBeCorrect($question->difficulty,
-                                                                        $question->discriminant,
-                                                                        $question->guess,
+            1 - $this->evalProbabilityToBeCorrect($question['difficulty'],
+                                                                        $question['discriminant'],
+                                                                        $question['guess'],
                                                                         $student_knowledge_level)
         );
     }

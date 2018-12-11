@@ -28,15 +28,10 @@ class AdaptiveRecord {
      */
     private $question_ids = [];
 
-    public function __construct(RecordNode $record, $amount) {
+    public function __construct(RecordNode $record, $amount, $questions) {
         $this->record = $record;
         $this->amount_left = $amount;
-        $questions = Question::whereSection_code($record->section_code)
-            ->whereTheme_code($record->theme_code)
-            ->whereType_code($record->type_code)
-            ->select('id_question')
-            ->get();
-        foreach ($questions as $question){
+        foreach ($questions as $question) {
             array_push($this->question_ids, $question['id_question']);
         }
     }

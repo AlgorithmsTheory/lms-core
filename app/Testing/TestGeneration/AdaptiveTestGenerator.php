@@ -92,7 +92,31 @@ class AdaptiveTestGenerator implements TestGenerator {
     }
 
     public function generate(Test $test) {
+        $graph = GraphBuilder::buildGraphFromTest($test);
+        $graph->fordFulkersonMaxFlow();
+        if (!$graph->isSaturated())
+            throw new TestGenerationException("Test has unacceptable structure!");
 
+        foreach ($graph->getSource()->getNextNodes() as $record) {
+            $amount = 0;
+            foreach ($record->getNextNodes() as $struct_node) {
+                $amount += $graph->getEdge($record, $struct_node)->getFlow();
+            }
+            if ($amount > 0) {
+                $questions = Question::whereSection_code($record->section_code)
+                    ->whereTheme_code($record->theme_code)
+                    ->whereType_code($record->type_code)
+                    ->select('id_question', 'difficulty', 'discriminant', 'guess')
+                    ->get();
+                $adaptive_record = new AdaptiveRecord($record, $amount, $questions);
+                array_push($this->chosen_records, $adaptive_record);
+
+                foreach ($questions as $question) {
+                    $adaptive_question = new AdaptiveQuestion($question, $this->student_knowledge_level);
+                    $this->question_pool->addQuestionToMainPhasePool($adaptive_question);
+                }
+            }
+        }
     }
 
     public function chooseQuestion() {
@@ -217,7 +241,7 @@ class AdaptiveTestGenerator implements TestGenerator {
             foreach ($questions as $question) {
                 $questions_counter++;
                 $difficult_sum += $question['difficulty'];
-                $adaptive_question = new AdaptiveQuestion($question['id'], $this->student_knowledge_level);
+                $adaptive_question = new AdaptiveQuestion($question, $this->student_knowledge_level);
                 array_push($common_questions_pool, $adaptive_question);
             }
         }
