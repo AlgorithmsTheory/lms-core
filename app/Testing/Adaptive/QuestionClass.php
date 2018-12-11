@@ -23,4 +23,56 @@ abstract class QuestionClass {
         if ($probability_to_be_incorrect < 0.4 && $probability_to_be_incorrect >= 0.2) return self::PRE_LOW;
         else return self::LOW;
     }
+
+    public static function getNextClass($current_class, $points_for_prev_question) {
+        if ($points_for_prev_question >= 0.8) return $current_class - 1;
+        if ($points_for_prev_question >= 0.6) return $current_class;
+        else return $current_class;
+     }
+
+    public static function getNearestClasses($current_class, $try) {
+        $classes = [];
+        array_push($classes, $current_class);
+        if ($try == 2) {
+            switch ($current_class) {
+                case QuestionClass::LOW:
+                    array_push($classes, $current_class - 1);
+                    break;
+                case QuestionClass::HIGH:
+                    array_push($classes, $current_class + 1);
+                    break;
+                default:
+                    array_push($classes, $current_class - 1);
+                    array_push($classes, $current_class + 1);
+            }
+        }
+        else if ($try == 3) {
+            switch ($current_class) {
+                case QuestionClass::LOW:
+                    array_push($classes, $current_class - 1);
+                    array_push($classes, $current_class - 2);
+                    break;
+                case QuestionClass::PRE_LOW:
+                    array_push($classes, $current_class - 1);
+                    array_push($classes, $current_class - 2);
+                    array_push($classes, $current_class + 1);
+                    break;
+                case QuestionClass::PRE_HIGH:
+                    array_push($classes, $current_class + 1);
+                    array_push($classes, $current_class + 2);
+                    array_push($classes, $current_class - 1);
+                    break;
+                case QuestionClass::HIGH:
+                    array_push($classes, $current_class + 1);
+                    array_push($classes, $current_class + 2);
+                    break;
+                default:
+                    array_push($classes, $current_class - 1);
+                    array_push($classes, $current_class - 2);
+                    array_push($classes, $current_class + 1);
+                    array_push($classes, $current_class + 2);
+            }
+        }
+        return $classes;
+    }
 }

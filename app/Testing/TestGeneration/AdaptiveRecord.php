@@ -9,8 +9,6 @@
 namespace App\Testing\TestGeneration;
 
 
-use App\Testing\Question;
-
 class AdaptiveRecord {
 
     /**
@@ -36,5 +34,29 @@ class AdaptiveRecord {
         }
     }
 
+    public function remove($id_question) {
+        for ($i = 0; $i < count($this->question_ids); $i++) {
+            if ($this->question_ids[$i] == $id_question) {
+                unset($this->question_ids[$i]);
+                array_values($this->question_ids);
+                return true;
+            }
+        }
+    }
 
+    public function decreaseAmount() {
+        $this->amount_left--;
+    }
+
+    public function getAmount() {
+        return $this->amount_left;
+    }
+
+    public function getQuestionIds() {
+        return $this->question_ids;
+    }
+
+    public function isEmpty() {
+        return $this->amount_left <= 0;
+    }
 }
