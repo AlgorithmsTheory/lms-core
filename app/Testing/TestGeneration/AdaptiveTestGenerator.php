@@ -159,6 +159,10 @@ class AdaptiveTestGenerator implements TestGenerator {
         }
     }
 
+    public function setRightFactorAfterCheck($right_factor) {
+        end($this->passed_questions)->setRightFactor($right_factor);
+    }
+
     private function evalStudentExpectedMark($mark_expected_by_student, $student_id, $group_id) {
         $mark_expected_by_system = $this->evalExpectedBySystemMark($student_id, $group_id);
         if ($mark_expected_by_student == 'Нет') return $mark_expected_by_system;
