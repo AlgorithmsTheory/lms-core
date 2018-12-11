@@ -16,6 +16,7 @@ use App\Testing\Adaptive\AdaptiveQuestion;
 use App\Testing\Adaptive\BolognaMark;
 use App\Testing\Adaptive\FinishCriteria;
 use App\Testing\Adaptive\KnowledgeLevel;
+use App\Testing\Adaptive\Phase;
 use App\Testing\Adaptive\QuestionClass;
 use App\Testing\Adaptive\Weights;
 use App\Testing\Question;
@@ -43,6 +44,16 @@ class AdaptiveTestGenerator implements TestGenerator {
     private $mean_difficulty;
 
     /**
+     * @var int pre defined value by teacher
+     */
+    private $max_question_number;
+
+    /**
+     * @var int number of questions in the main phase
+     */
+    private $main_phase_amount;
+
+    /**
      * @var int
      */
     private $current_question_number;
@@ -56,11 +67,6 @@ class AdaptiveTestGenerator implements TestGenerator {
      * @var QuestionClass[] student visited
      */
     private $visited_classes = [];
-
-    /**
-     * @var int 0 if main phase is active, 1 if extra
-     */
-    private $current_phase;
 
     /**
      * @var AdaptiveQuestionPool
@@ -85,10 +91,11 @@ class AdaptiveTestGenerator implements TestGenerator {
         $this->student_expected_mark = $this->evalStudentExpectedMark($mark_expected_by_student, $student_id, $group_id);
         $this->question_pool = new AdaptiveQuestionPool();
         $this->mean_difficulty = $this->evalMeanDifficultyAndSetCommonPool($id_test);
+        $this->max_question_number = Test::whereId_test($id_test)->select('max_questions')->first()->max_questions;
         $this->current_question_number = 0;
         $this->current_difficulty_sum = 0;
         array_push($this->visited_classes, QuestionClass::MIDDLE);
-        $this->current_phase = 0;
+        $this->main_phase_amount = 0;
     }
 
     public function generate(Test $test) {
@@ -102,6 +109,7 @@ class AdaptiveTestGenerator implements TestGenerator {
             foreach ($record->getNextNodes() as $struct_node) {
                 $amount += $graph->getEdge($record, $struct_node)->getFlow();
             }
+            $this->main_phase_amount += $amount;
             if ($amount > 0) {
                 $questions = Question::whereSection_code($record->section_code)
                     ->whereTheme_code($record->theme_code)
@@ -120,7 +128,35 @@ class AdaptiveTestGenerator implements TestGenerator {
     }
 
     public function chooseQuestion() {
+        $this->current_question_number++;
+        $phase = $this->getCurrentPhase();
+        if ($phase == Phase::MAIN) {
+            if ($this->current_question_number >= $this->max_question_number) {
+                throw new TestGenerationException("Invalid test state: main phase contains more questions than test limit");
+            }
+            $possible_questions = $this->getPossibleQuestions($phase);
+            $possible_questions_count = count($possible_questions);
+            if ($possible_questions_count == 0) {
+                throw new TestGenerationException("Can't find question in main phase!");
+            }
 
+            $rand_question_index = rand(0, $possible_questions_count - 1);
+            $chosen_question = $possible_questions[$rand_question_index];
+            $this->setStateAfterChooseQuestion($chosen_question, $phase);
+            $this->handleGraphRecordsAfterChooseQuestion($chosen_question, $phase);
+            return $chosen_question->getId();
+        }
+        else {
+            if ($this->isReadyToFinish()) return -1;
+            $possible_questions = $this->getPossibleQuestions($phase);
+            $possible_questions_count = count($possible_questions);
+            if ($possible_questions_count == 0) return -1;
+
+            $rand_question_index = rand(0, $possible_questions_count - 1);
+            $chosen_question = $possible_questions[$rand_question_index];
+            $this->setStateAfterChooseQuestion($chosen_question, $phase);
+            return $chosen_question->getId();
+        }
     }
 
     private function evalStudentExpectedMark($mark_expected_by_student, $student_id, $group_id) {
@@ -258,6 +294,8 @@ class AdaptiveTestGenerator implements TestGenerator {
     }
 
     private function isReadyToFinish() {
+        if ($this->getCurrentPhase() == Phase::MAIN) return false;
+        if ($this->current_question_number >= $this->max_question_number) return true;
         $trajectory_finish_factor = $this->evalTrajectoryFinishFactor();
         $knowledge_finish_factor = $this->evalKnowledgeFinishFactor();
         $probability_to_finish = min(max(0, $trajectory_finish_factor + $knowledge_finish_factor), 1);
@@ -298,5 +336,67 @@ class AdaptiveTestGenerator implements TestGenerator {
             $points_sum += $question->getDifficulty() * $question->getRightFactor();
         }
         return $points_sum;
+    }
+
+    private function getCurrentPhase() {
+        if ($this->current_question_number <= $this->main_phase_amount) return Phase::MAIN;
+        else return Phase::EXTRA;
+    }
+
+    private function getCurrentClass() {
+        $prev_class = end($this->visited_classes);
+        $points_for_prev_question = end($this->passed_questions)->getRightFactor();
+        return QuestionClass::getNextClass($prev_class, $points_for_prev_question);
+    }
+
+    /**
+     * @return AdaptiveQuestion[]
+     */
+    private function getPossibleQuestions($phase) {
+        $class = $this->getCurrentClass();
+        $possible_questions_count = 0;
+        $try = 0;
+        $classes_questions = [];
+        while ($possible_questions_count == 0  && $try < 3) {
+            $classes_questions = [];
+            $try++;
+            $classes_for_choose[] = QuestionClass::getNearestClasses($class, $try);
+            foreach ($classes_for_choose as $class_for_choose) {
+                if ($phase == Phase::MAIN) {
+                    $questions_in_class[] = $this->question_pool->getMainPhasePool()[$class_for_choose];
+                }
+                else {
+                    $questions_in_class[] = $this->question_pool->getCommonPool()[$class_for_choose];
+                }
+                if (count($questions_in_class) != 0) {
+                    $classes_questions = array_merge($classes_questions, $questions_in_class);
+                }
+                $possible_questions_count = count($classes_questions);
+            }
+        }
+        if ($possible_questions_count == 0) {
+            $classes_questions = [];
+        }
+        return $classes_questions;
+    }
+
+    private function setStateAfterChooseQuestion(AdaptiveQuestion $chosen_question, $phase) {
+        $this->current_difficulty_sum += $chosen_question->getDifficulty();
+        array_push($this->visited_classes, $chosen_question->getClass());
+        $this->question_pool->remove($chosen_question->getId(), $phase);
+        array_push($this->passed_questions, $chosen_question);
+    }
+
+    private function handleGraphRecordsAfterChooseQuestion(AdaptiveQuestion $chosen_question, $phase) {
+        foreach ($this->chosen_records as $record) {
+            if ($record->remove($chosen_question->getId())) {
+                $record->decreaseAmount();
+                if ($record->isEmpty()) {
+                    foreach ($record->getQuestionIds() as $id) {
+                        $this->question_pool->remove($id, $phase);
+                    }
+                }
+            }
+        }
     }
 }
