@@ -130,9 +130,64 @@
 
 </div>
 
-<div class="card">
-<div class="card-body">
+<div id="accordion">
+
     <div class="row">
+        <div class="col-sm-3" >
+            <div class="card" style="padding-left: 20px">
+            <nav class="navmenu  navmenu-fixed-left">
+                <a class="navmenu-brand" href="#"><h4>Лекции</h4></a>
+                <ul class="nav navmenu-nav">
+                    <li class="active"><a href="#" data-toggle="collapse" data-target="#1_section" aria-expanded="false" aria-controls="1_section"
+                        id="1_section_link" data-parent="#accordion">
+                            <h4>Раздел 1: Формальные описания алгоритмов</h4></a></li>
+                    <li><a href="#" data-toggle="collapse" data-target="#2_section" aria-expanded="false" aria-controls="2_section"
+                           data-parent="#collapseParent" id="2_section_link" data-parent="#accordion">
+                                <h4>Раздел 2: Числовые множества и арифметические вычисления</h4></a></li>
+                    <li><a href="#"><h4>Раздел 3: Рекурсивные функции</h4></a></li>
+                    <li><a href="#"><h4>Раздел 4: Сложность вычислений</h4></a></li>
+                </ul>
+            </nav>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <div class="card" style="padding-left: 50px">
+                <div class="card-body">
+                    <div class="collapse in" id="1_section" data-parent="#accordion" aria-labelledby="1_section_link">
+                    <table class="table table-striped table-dark">
+                        <tbody>
+                        @foreach ($lectures as $lecture)
+                            @if($lecture->id_section == 1)
+                        <tr>
+                            <th scope="row"><h4>
+                                    {!! HTML::linkRoute('lecture', 'Лекция '.$lecture->lecture_number.': '.$lecture->lecture_name, array('index' => $lecture->lecture_number)) !!}
+                                </h4></td>
+                            <td>{!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning')) !!}
+                            {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info')) !!}</td>
+                        </tr>
+                            @endif
+                        @endforeach
+                    </table>
+                    </div>
+
+                    <div class="collapse" id="2_section" data-parent="#accordion" aria-labelledby="2_section_link">
+                        <table class="table table-striped table-dark">
+                            <tbody>
+                            @foreach ($lectures as $lecture)
+                                @if($lecture->id_section == 2)
+                                    <tr>
+                                        <th scope="row"><h4>
+                                                {!! HTML::linkRoute('lecture', 'Лекция '.$lecture->lecture_number.': '.$lecture->lecture_name, array('index' => $lecture->lecture_number)) !!}
+                                            </h4></td>
+                                        <td>{!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning')) !!}
+                                            {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info')) !!}</td>
+                                    </tr>
+                            @endif
+                            @endforeach
+                        </table>
+                    </div>
+                </div>
+            </div>
         <div class="col-sm-3">
             <div class="btn-group">
                 <h3 class="text-light" title="Формальные описания алгоритмов">1 раздел</h3>
@@ -186,14 +241,13 @@
             </div><!--end .btn-group -->
 
         </div><!--end .col -->
-
+        </div>
     </div><!--end .row -->
-</div><!--end .card-body -->
 
 
 
-<!-- <div class="card"> -->
-<div class="card-body">
+
+
     <div class="row">
         <div class="col-sm-3">
             <div class="btn-group">
@@ -233,11 +287,10 @@
 
         </div><!--end .col -->
     </div><!--end .row -->
-</div><!--end .card-body -->
 
 
-<!--	<div class="card"> -->
-<div class="card-body">
+
+
     <div class="row">
         <div class="col-sm-3">
             <div class="btn-group">
@@ -276,11 +329,9 @@
 
         </div><!--end .col -->
     </div><!--end .row -->
-</div><!--end .card-body -->
 
 
-<!--		<div class="card"> -->
-<div class="card-body">
+
     <div class="row">
         <div class="col-sm-3">
             <div class="btn-group">
@@ -319,10 +370,9 @@
 
         </div><!--end .col -->
     </div><!--end .row -->
-</div><!--end .card-body -->
 
-<!--	<div class="card"> -->
-<div class="card-body">
+
+
     <div class="row">
         <div class="col-sm-3">
             <div class="btn-group">
@@ -353,10 +403,9 @@
 
         </div><!--end .col -->
     </div><!--end .row -->
-</div><!--end .card-body -->
 
-<!--	<div class="card"> -->
-<div class="card-body">
+
+
     <div class="row">
         <div class="col-sm-3">
         </div><!--end .col -->
@@ -373,9 +422,9 @@
         </div><!--end .btn-group -->
         <!--end .col -->
     </div><!--end .row -->
-</div><!--end .card-body -->
 
 </div>
+
 @stop
 
 @section('js-down')

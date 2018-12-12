@@ -7,11 +7,13 @@
  */
 
 namespace App\Http\Controllers;
-
+use DB;
+use App\Testing\Lecture;
 
 class LibraryController extends Controller {
     public function index(){
-        return view('library.index');
+        $lectures = DB::table('lectures')->select()->get();
+        return view('library.index', compact('lectures'));
     }
 
     public function definitions(){
