@@ -280,7 +280,14 @@
             </div><!--end .btn-group -->
         </div><!--end .col -->
         <div class="col-sm-3">
+            <div class="btn-group">
+                <button type="button" title="" class="btn ink-reaction btn-default-light">Расписание зачётов</button>
+                <button type="button" class="btn ink-reaction btn-warning dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
+                <ul class="dropdown-menu animation-expand" >
+                    <li>{!! HTML::link('download/ppt/scheduleTests.xlsx', 'Скачать') !!}</li>
+                </ul>
 
+            </div><!--end .btn-group -->
         </div><!--end .col -->
     </div><!--end .row -->
 </div><!--end .card-body -->
