@@ -17,12 +17,17 @@ class AdaptiveQuestion {
 
     private $difficulty;
 
+    private $pass_time;
+
     private $class;
+
+    private $end_time;
 
     private $right_factor;
 
     public function __construct(Question $question, $student_knowledge_level) {
         $this->id = $question['id_question'];
+        $this->pass_time = $question['pass_time'];
         $this->difficulty = $question['difficulty'];
         $this->right_factor = -1;
         $this->class = QuestionClass::getQuestionClass(
@@ -38,6 +43,10 @@ class AdaptiveQuestion {
         return $guess + (1 - $guess) * $exp / (1 + $exp);
     }
 
+    public function setEndTime() {
+        $this->end_time = date('U') + $this->pass_time;
+    }
+
     public function setRightFactor($right_factor) {
         $this->right_factor = $right_factor;
     }
@@ -50,8 +59,16 @@ class AdaptiveQuestion {
         return $this->difficulty;
     }
 
+    public function getPassTime() {
+        return $this->pass_time;
+    }
+
     public function getClass() {
         return $this->class;
+    }
+
+    public function getEndTime() {
+        return $this->end_time;
     }
 
     public function getRightFactor() {

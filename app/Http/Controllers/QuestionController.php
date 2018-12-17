@@ -167,7 +167,7 @@ class QuestionController extends Controller{
         $questions = $questions->paginate(10);
         $widgets = [];
         foreach ($questions as $question){
-            $data = $this->question->show($question['id_question'], '');
+            $data = $this->question->show($question['id_question'], '', false);
             $widgets[] =  View::make($data['view'], $data['arguments']);
             $question['section'] = Section::whereSection_code($question['section_code'])->select('section_name')
                                     ->first()->section_name;
@@ -212,7 +212,7 @@ class QuestionController extends Controller{
         
         $widgets = [];
         foreach ($questions as $question){
-            $data = $this->question->show($question['id_question'], '');
+            $data = $this->question->show($question['id_question'], '', false);
             $widgets[] =  View::make($data['view'], $data['arguments']);
             $question['section'] = Section::whereSection_code($question['section_code'])->select('section_name')
                                     ->first()->section_name;
@@ -231,7 +231,7 @@ class QuestionController extends Controller{
 
     public function profile($id_question) {
         $question = Question::whereId_question($id_question)->first();
-        $data = $this->question->show($question['id_question'], '');
+        $data = $this->question->show($question['id_question'], '', false);
         $widget =  View::make($data['view'], $data['arguments']);
         $widgetListView = View::make('questions.teacher.profile', compact('question'))->with('widget', $widget);
         return new Response($widgetListView);
