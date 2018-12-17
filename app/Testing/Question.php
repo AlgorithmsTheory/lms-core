@@ -133,44 +133,37 @@ class Question extends Eloquent {
     }
 
     /** Показывает вопрос согласно типу */
-    public function show($id_question, $count){
+    public function show($id_question, $count, $is_adaptive){
         $type = Question::whereId_question($id_question)->join('types', 'questions.type_code', '=', 'types.type_code')
                 ->first()->type_name;
         switch($type){
             case 'Выбор одного из списка':
                 $one_choice = new OneChoice($id_question);
                 $array = $one_choice->show($count);
-                return $array;
                 break;
             case 'Выбор нескольких из списка':
                 $multi_choice = new MultiChoice($id_question);
                 $array = $multi_choice->show($count);
-                return $array;
                 break;
             case 'Текстовый вопрос':
                 $fill_gaps = new FillGaps($id_question);
                 $array = $fill_gaps->show($count);
-                return $array;
                 break;
             case 'Таблица соответствий':
                 $accordance_table = new AccordanceTable($id_question);
                 $array = $accordance_table->show($count);
-                return $array;
                 break;
             case 'Да/Нет':
                 $yes_no = new YesNo($id_question);
                 $array = $yes_no->show($count);
-                return $array;
                 break;
             case 'Определение':
                 $def = new Definition($id_question);
                 $array = $def->show($count);
-                return $array;
                 break;
             case 'Открытый тип':
                 $just = new JustAnswer($id_question);
                 $array = $just->show($count);
-                return $array;
                 break;
             case 'Теорема':
                 $theorem = new Theorem($id_question);
@@ -180,7 +173,6 @@ class Question extends Eloquent {
             case 'Три точки':
                 $three = new ThreePoints($id_question);
                 $array = $three->show($count);
-                return $array;
                 break;
             case 'Как теорема':
                 $three = new TheoremLike($id_question);
@@ -190,9 +182,12 @@ class Question extends Eloquent {
             case 'Востановить арифметический вид':
                 $clini = new FromCleene($id_question);
                 $array = $clini->show($count);
-                return $array;
                 break;
         }
+        $array['arguments']['is_adaptive'] = $is_adaptive;
+        $route = $is_adaptive ? 'check_adaptive_test' : 'question_checktest';
+        $array['arguments']['route'] = $route;
+        return $array;
     }
 
     /** Проверяет вопрос согласно типу и на выходе дает баллы за него */

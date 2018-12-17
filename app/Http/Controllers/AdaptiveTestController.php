@@ -9,11 +9,14 @@
 namespace App\Http\Controllers;
 
 
+use App\Testing\Result;
 use App\Testing\TestGeneration\AdaptiveTestGenerator;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Testing\Question;
 use App\Testing\Test;
+use View;
 
 class AdaptiveTestController extends Controller {
     private $test;
@@ -34,6 +37,8 @@ class AdaptiveTestController extends Controller {
         $student_id = Auth::user()['id'];
         $generator = new AdaptiveTestGenerator($expected_mark, $id_test);
         $generator->generate(Test::whereId_test($id_test)->first());
+        $new_result_id = Result::max('id_result') + 1;
+        Result::insert(['id_result' => $new_result_id, 'id_test' => $id_test, 'id' => $student_id]);
         $request->session()->put('adaptive_test_'.$student_id, serialize($generator));
         $first_question = $generator->chooseQuestion();
         return redirect()->route('show_adaptive_test', $first_question);
@@ -45,8 +50,23 @@ class AdaptiveTestController extends Controller {
     }
 
     /** Show question */
-    public function showQuestion($id_question) {
-
+    public function showQuestion(Request $request, $id_question) {
+        $question = Question::whereId_question($id_question)->first();
+        $student_id = Auth::user()['id'];
+        $serialized_test = $request->session()->get('adaptive_test_'.$student_id);
+        $test_instance = unserialize($serialized_test);
+        $current_question_number = $test_instance->getCurrentQuestionNumber();
+        $data = $question->show($id_question, $current_question_number, true);
+        $question_widget = View::make($data['view'], $data['arguments']);
+        $current_time = date_create();
+        $int_left_time = $test_instance->getCurrentQuestionEndTime() - date_format($current_time, 'U');
+        $left_min =  ($int_left_time > 0) ? floor($int_left_time/60) : 0;
+        $left_sec = ($int_left_time > 0) ? $int_left_time % 60 : 0;
+        $widgetListView = View::make('adaptive_tests.show_question',
+            compact('current_question_number', 'left_min', 'left_sec'))
+            ->with('question_widget', $question_widget);
+        $response = new Response($widgetListView);
+        return $response;
     }
 
     /** Check question and redirect to next question or finish page */
@@ -57,6 +77,12 @@ class AdaptiveTestController extends Controller {
     /** Show page with results */
     public function showResults() {
 
+    }
+
+    public function dropTest(Request $request) {
+        $student_id = Auth::user()['id'];
+        $request->session()->remove('adaptive_test_'.$student_id);
+        return redirect('home');
     }
 
     public function params() {

@@ -1,6 +1,6 @@
 <html>
 <body>
-{!! Form::open(['method' => 'PATCH', 'route' => 'question_checktest', 'class' => 'smart-blue']) !!}
+{!! Form::open(['method' => 'PATCH', 'route' => $route, 'class' => 'smart-blue']) !!}
 <h1>Вопрос {{ $count }}</h1>
 <h2>Дана система рекурсивных уравнений:</h2>
 <h2>
@@ -36,12 +36,14 @@
     </tr>
 </table>
 <br><br>
-<div class="checkbox checkbox-styled checkbox-warning">
-    <label>
-        <input type="checkbox" name="seeLater" class="css-checkbox">
-        <span class="css-checkbox text-lg">Вернуться позже</span>
-    </label>
-</div>
+@if (!$is_adaptive)
+    <div class="checkbox checkbox-styled checkbox-warning">
+        <label>
+            <input type="checkbox" name="seeLater" class="css-checkbox">
+            <span class="css-checkbox text-lg">Вернуться позже</span>
+        </label>
+    </div>
+@endif
 {!! Form::close() !!}
 <br>
 </body>

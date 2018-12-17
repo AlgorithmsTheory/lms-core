@@ -419,7 +419,7 @@ class TestController extends Controller{
             $generator->generate();
             for ($i=0; $i < $amount; $i++) {
                 $id = $generator->chooseQuestion();
-                $data = $question->show($id, $i+1);                                                                     //должны получать название view и необходимые параметры
+                $data = $question->show($id, $i+1, false);                                                                     //должны получать название view и необходимые параметры
                 $saved_test[] = $data;
                 $widgets[] = View::make($data['view'], $data['arguments']);
             }

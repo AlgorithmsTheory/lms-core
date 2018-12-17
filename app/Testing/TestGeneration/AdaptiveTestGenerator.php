@@ -29,6 +29,11 @@ use Auth;
 class AdaptiveTestGenerator implements TestGenerator {
 
     /**
+     * @var int result ID
+     */
+    private $id_result;
+
+    /**
      * @var KnowledgeLevel from user info
      */
     private $student_knowledge_level;
@@ -84,6 +89,7 @@ class AdaptiveTestGenerator implements TestGenerator {
     private $passed_questions = [];
 
     public function __construct($mark_expected_by_student, $id_test) {
+        $this->id_test = $id_test;
         $student_id = Auth::user()['id'];
         $student = User::whereId($student_id)->select('group', 'knowledge_level')->first();
         $this->student_knowledge_level = $student['knowledge_level'];
@@ -114,7 +120,7 @@ class AdaptiveTestGenerator implements TestGenerator {
                 $questions = Question::whereSection_code($record->section_code)
                     ->whereTheme_code($record->theme_code)
                     ->whereType_code($record->type_code)
-                    ->select('id_question', 'difficulty', 'discriminant', 'guess')
+                    ->select('id_question', 'pass_time', 'difficulty', 'discriminant', 'guess')
                     ->get();
                 $adaptive_record = new AdaptiveRecord($record, $amount, $questions);
                 array_push($this->chosen_records, $adaptive_record);
@@ -144,6 +150,7 @@ class AdaptiveTestGenerator implements TestGenerator {
             $chosen_question = $possible_questions[$rand_question_index];
             $this->setStateAfterChooseQuestion($chosen_question, $phase);
             $this->handleGraphRecordsAfterChooseQuestion($chosen_question, $phase);
+            $chosen_question->setEndTime();
             return $chosen_question->getId();
         }
         else {
@@ -155,12 +162,29 @@ class AdaptiveTestGenerator implements TestGenerator {
             $rand_question_index = rand(0, $possible_questions_count - 1);
             $chosen_question = $possible_questions[$rand_question_index];
             $this->setStateAfterChooseQuestion($chosen_question, $phase);
+            $chosen_question->setEndTime();
             return $chosen_question->getId();
         }
     }
 
+    public function setEndTimeForChosenQuestion($end_time) {
+        end($this->passed_questions)->setEndTime($end_time);
+    }
+
     public function setRightFactorAfterCheck($right_factor) {
         end($this->passed_questions)->setRightFactor($right_factor);
+    }
+
+    public function getCurrentQuestionNumber() {
+        return $this->current_question_number;
+    }
+
+    public function getIdResult() {
+        return $this->id_result;
+    }
+
+    public function getCurrentQuestionEndTime() {
+        end($this->passed_questions)->getEndTime();
     }
 
     private function evalStudentExpectedMark($mark_expected_by_student, $student_id, $group_id) {
@@ -277,7 +301,7 @@ class AdaptiveTestGenerator implements TestGenerator {
             $questions = Question::whereSection_code($section['section_code'])
                 ->join('types', 'questions.type_code', '=', 'types.type_code')
                 ->where('types.only_fpr_print', '=', '0')
-                ->select('id_question', 'difficulty')->get();
+                ->select('id_question', 'pass_time', 'difficulty')->get();
             foreach ($questions as $question) {
                 $questions_counter++;
                 $difficult_sum += $question['difficulty'];
