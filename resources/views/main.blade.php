@@ -30,6 +30,9 @@ full
                     </div>
                     <div class="card-body style-default-bright">
                         <p>{{ $post['body'] }}</p>
+                        @if($post['file_path'] != null)
+                            {!! HTML::link($post['file_path'],'Скачать файл',array('class' => 'btn btn-primary btn-raised submit-question','role' => 'button')) !!}
+                        @endif
                     </div>
                 </div>
             @endif
