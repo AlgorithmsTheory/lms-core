@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 
 use App\Testing\Result;
 use App\Testing\TestGeneration\AdaptiveTestGenerator;
+use App\Testing\TestTask;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -45,38 +46,59 @@ class AdaptiveTestController extends Controller {
     }
 
     /** Choose question */
-    private function getNextQuestion() {
+    private function getNextQuestionResponse(AdaptiveTestGenerator $test_instance, Question $question, $id_question) {
+        $current_question_number = $test_instance->getCurrentQuestionNumber();
+        $show_data = $question->show($id_question, $current_question_number, true);
+        $question_widget = View::make($show_data['view'], $show_data['arguments']);
 
+        $current_time = date_create();
+        $int_left_time = $test_instance->getCurrentQuestionEndTime() - date_format($current_time, 'U');
+        $left_min =  ($int_left_time > 0) ? floor($int_left_time/60) : 0;
+        $left_sec = ($int_left_time > 0) ? $int_left_time % 60 : 0;
+
+        $widgetListView = View::make('adaptive_tests.show_question',
+            compact('current_question_number', 'left_min', 'left_sec'))
+            ->with('question_widget', $question_widget);
+        return new Response($widgetListView);
     }
 
     /** Show question */
     public function showQuestion(Request $request, $id_question) {
         $question = Question::whereId_question($id_question)->first();
         $student_id = Auth::user()['id'];
+
         $serialized_test = $request->session()->get('adaptive_test_'.$student_id);
         $test_instance = unserialize($serialized_test);
-        $current_question_number = $test_instance->getCurrentQuestionNumber();
-        $data = $question->show($id_question, $current_question_number, true);
-        $question_widget = View::make($data['view'], $data['arguments']);
-        $current_time = date_create();
-        $int_left_time = $test_instance->getCurrentQuestionEndTime() - date_format($current_time, 'U');
-        $left_min =  ($int_left_time > 0) ? floor($int_left_time/60) : 0;
-        $left_sec = ($int_left_time > 0) ? $int_left_time % 60 : 0;
-        $widgetListView = View::make('adaptive_tests.show_question',
-            compact('current_question_number', 'left_min', 'left_sec'))
-            ->with('question_widget', $question_widget);
-        $response = new Response($widgetListView);
+        $response = $this->getNextQuestionResponse($test_instance, $question, $id_question);
         return $response;
     }
 
     /** Check question and redirect to next question or finish page */
     public function checkQuestion(Request $request) {
+        $student_id = Auth::user()['id'];
+        $serialized_test = $request->session()->get('adaptive_test_'.$student_id);
+        $test_instance = unserialize($serialized_test);
 
+        $array = [];
+        // TODO: get well-formed array from question form for next check
+
+        $question = new Question();
+        $check_data = $question->check($array);
+
+        $test_instance->setRightFactorAfterCheck($check_data['right_percent'] / 100);
+        TestTask::insert(['points' => $check_data['score'], 'id_question' => $check_data['id'], 'id_result' => $test_instance->getIdResult()]);
+
+        $next_question_id = $test_instance->chooseQuestion();
+        if ($next_question_id == -1) {
+            return redirect()->route('result_adaptive_test');
+        }
+        $response = $this->getNextQuestionResponse($test_instance, $question, $next_question_id);
+        return $response;
     }
 
     /** Show page with results */
     public function showResults() {
-
+        
     }
 
     public function dropTest(Request $request) {

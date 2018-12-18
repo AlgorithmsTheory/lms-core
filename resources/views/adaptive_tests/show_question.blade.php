@@ -2,7 +2,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Тест</title>
-    {!! HTML::script('js/superForm.js') !!}
+    {!! HTML::script('js/adaptive_tests/testPass.js') !!}
     {!! HTML::script('js/jquery.js') !!}
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
@@ -22,24 +22,21 @@
                 @endfor
             </ul>
 
-            <span id="my_timer" class="timer">{{$left_min}}:{{$left_sec}}</span> </div>
+            <span id="my_timer" class="timer">{{ $left_min }}:{{ $left_sec }}</span> </div>
     </nav>
     <br><br><br>
 
     {!! $question_widget !!}
 
     <div class="col-sm-6">
-        <input id="check" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-primary" type="submit" name="check" value="Следующий">
+        <input id="check" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-primary" type="button" name="check" value="Следующий">
     </div>
-    {!! Form::close() !!}
 
     <div class="col-sm-6">
         {!! Form::open(['method' => 'POST', 'route' => 'drop_adaptive_test', 'id' => 'drop-test', 'name' => 'drop_test']) !!}
         <input id="drop" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-danger" type="submit" name="drop_btn" value="Отказаться">
         {!! Form::close() !!}
     </div>
-
-    {!! HTML::script('js/toolbar.js') !!}
     <br>
 </section>
 </body>
