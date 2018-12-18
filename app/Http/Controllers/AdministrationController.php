@@ -16,7 +16,10 @@ use App\User;
 use Auth;
 use Illuminate\Http\Request;
 use Session;
+use Illuminate\Support\Facades\Input;
 class AdministrationController extends Controller{
+
+    const NEWS_FILE_DIR = 'download/news/';
 
     public function checkEmailIfExists(Request $request){
         $email = $request->input('email');
@@ -144,9 +147,21 @@ class AdministrationController extends Controller{
     }
 
     public function add_news(Request $request){
-        $title = $request->input('title');
-        $body = $request->input('body');
-        News::insert(['title' => $title, 'body' => $body, 'is_visible' => 1]);
+        $news = new News();
+        $news->body = $request->input('body');
+        $news->title = $request->input('title');
+        $news->is_visible = 1;
+        if ($request->hasFile('file')) {
+            if ($request->file('file')->isValid()) {
+                $file =  Input::file('file');
+                $filename = mt_rand(0, 10000). '_' . $file->getClientOriginalName();
+                $file->move($this::NEWS_FILE_DIR, $filename);
+                $news->file_path = $this::NEWS_FILE_DIR . $filename;
+            } else {
+                return back()->withInput()->withErrors(['Ошибка при загрузке файла']);
+            }
+        }
+        $news->save();
         return redirect()->route('manage_news');
     }
 
