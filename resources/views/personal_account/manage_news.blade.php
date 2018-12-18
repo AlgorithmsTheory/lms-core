@@ -31,12 +31,16 @@
                         </div><!--end .card-head -->
                         <div class="card-body style-default-bright">
                             <p>{{ $post['body'] }}</p>
+                            @if($post['file_path'] != null)
+                                {!! HTML::link($post['file_path'],'Скачать файл',array('class' => 'btn btn-primary btn-raised submit-question','role' => 'button')) !!}
+                            @endif
                         </div><!--end .card-body -->
                     </div>
                 @endforeach
 
                 <hr>
-                <form action="{{URL::route('add_news')}}" method="POST" class="form" role="form">
+                <form action="{{URL::route('add_news')}}" method="POST" class="form" role="form"
+                      enctype="multipart/form-data">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="form">
                         <div class="form-group">
@@ -50,11 +54,22 @@
                         </div>
 
                         <div class="form-group">
+                            <input type="file" class="form-control-file" name="file" >
+
+                        </div>
+
+                        <div class="form-group">
                             <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить новость</button>
                         </div>
                     </div>
                 </form>
-
+                @if ($errors->any())
+                    <ul class="alert alert-danger">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                @endif
 
             </div>
         </div>
