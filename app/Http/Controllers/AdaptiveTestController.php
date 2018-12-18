@@ -20,9 +20,11 @@ use App\Testing\Test;
 use View;
 
 class AdaptiveTestController extends Controller {
+    private $question;
     private $test;
 
-    function __construct(Test $test){
+    function __construct(Test $test, Question $question){
+        $this->question = $question;
         $this->test = $test;
     }
 
@@ -82,8 +84,7 @@ class AdaptiveTestController extends Controller {
         $array = [];
         // TODO: get well-formed array from question form for next check
 
-        $question = new Question();
-        $check_data = $question->check($array);
+        $check_data = $this->question->check($array);
 
         $test_instance->setRightFactorAfterCheck($check_data['right_percent'] / 100);
         TestTask::insert(['points' => $check_data['score'], 'id_question' => $check_data['id'], 'id_result' => $test_instance->getIdResult()]);
@@ -92,13 +93,54 @@ class AdaptiveTestController extends Controller {
         if ($next_question_id == -1) {
             return redirect()->route('result_adaptive_test');
         }
-        $response = $this->getNextQuestionResponse($test_instance, $question, $next_question_id);
+        $response = $this->getNextQuestionResponse($test_instance, $this->question, $next_question_id);
         return $response;
     }
 
     /** Show page with results */
-    public function showResults() {
-        
+    public function showResults(Request $request) {
+        $student_id = Auth::user()['id'];
+        $serialized_test = $request->session()->get('adaptive_test_'.$student_id);
+        $test_instance = unserialize($serialized_test);
+
+        $id_result = $test_instance->getIdResult();
+        $date = $date = date('Y-m-d H:i:s', time());
+
+        $id_test = Result::whereId_result($id_result)->select('id_test')->first()->id_test;
+        $total = Test::whereId_test($id_test)->select('total')->first()->total;
+
+        //TODO: perhaps we need to store question form data in AdaptiveQuestion
+        $test_tasks = TestTask::whereId_result($id_result)
+            ->join('questions', 'test_tasks.id_question', '=', 'questions.id_question')
+            ->select('questions.id_question as id', 'questions.points as points,', 'test_tasks.points as score')->get();
+
+        $points_sum = 0;
+        $score_sum = 0;
+        $right_or_wrong = [];
+        $right_percent = [];
+        $link_to_lecture = [];
+
+        foreach ($test_tasks as $task) {
+            $points_sum += $task['points'];
+            $score_sum += $task['score'];
+            if ($task['points'] > $task['score']) {
+                array_push($right_or_wrong, 'Неверно');
+            }
+            else array_push($right_or_wrong, 'Верно');
+            array_push($right_percent, 100* $task['score'] / $task['points']);
+            array_push($link_to_lecture, $this->question->linkToLecture($task['id']));
+        }
+
+        $score = $total * $test_tasks['score'] / $test_tasks['points'];
+        $score = round($score,1);
+
+        $mark_bologna = $this->test->calcMarkBologna($total, $score);                                                         //оценки
+        $mark_rus = $this->test->calcMarkRus($total, $score);
+
+        Result::whereId_result($id_result)->update(['result_date' => $date, 'result' => $score, 'mark_ru' => $mark_rus, 'mark_eu' => $mark_bologna]);
+
+        // TODO: must render test result page
+        return redirect('home');
     }
 
     public function dropTest(Request $request) {
