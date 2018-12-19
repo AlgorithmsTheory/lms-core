@@ -419,7 +419,7 @@ class TestController extends Controller{
         $left_min =  ($int_left_time > 0) ? floor($int_left_time/60) : 0;                                                                          //осталось минут
         $left_sec = ($int_left_time > 0) ? $int_left_time % 60 : 0;                                                                                //осталось секунд
 
-        $widgetListView = View::make('questions.student.widget_list',compact('current_result', 'amount', 'id_test','left_min', 'left_sec', 'test_type'))->with('widgets', $widgets);
+        $widgetListView = View::make('questions.student.widget_list',compact('amount', 'id_test','left_min', 'left_sec', 'test_type'))->with('widgets', $widgets);
         $response = new Response($widgetListView);
         return $response;
     }
@@ -498,10 +498,11 @@ class TestController extends Controller{
 
     /** Пользователь отказался от прохождения теста */
     public function dropTest(Request $request){
-        if (Result::getCurrentResult(Auth::user()['id'], $request->input('id_test') != -1)){
+        $current_result = Result::getCurrentResult(Auth::user()['id'], $request->input('id_test'));
+        if ($current_result != -1) {
             date_default_timezone_set('Europe/Moscow');
             $date = date('Y-m-d H:i:s', time());
-            Result::whereId_result($request->input('id_result'))->update(['result_date' => $date, 'result' => -1, 'mark_ru' => -1, 'mark_eu' => 'drop']);                                 //Присваиваем результату и оценке значения -1
+            Result::whereId_result($current_result)->update(['result_date' => $date, 'result' => -1, 'mark_ru' => -1, 'mark_eu' => 'drop']);                                 //Присваиваем результату и оценке значения -1
         }
         return redirect('tests');
     }
