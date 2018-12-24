@@ -837,7 +837,7 @@
                                     </td>
                                     <td class="info">
                                         <div class="dropdown">
-                                            <button class="dropbtn">Итог за 3 раздел</button>
+                                            <button class="dropbtn">Итог за 4 раздел</button>
                                             <div class="dropdown-content">
                                                 <a>От 6 до 10 баллов</a>
                                             </div>
