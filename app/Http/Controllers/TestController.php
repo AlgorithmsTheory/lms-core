@@ -14,8 +14,7 @@ use App\Testing\Section;
 use App\Testing\StructuralRecord;
 use App\Testing\Test;
 use App\Testing\TestForGroup;
-use App\Testing\TestGeneration\RecordNode;
-use App\Testing\TestGeneration\TestGenerator;
+use App\Testing\TestGeneration\GraphBuilder;
 use App\Testing\TestGeneration\UsualTestGenerator;
 use App\Testing\TestStructure;
 use App\Testing\TestTask;
@@ -83,11 +82,13 @@ class TestController extends Controller{
 
         $general_settings['test_name'] = $request->input('test-name');
         $general_settings['test_type'] = $request->input('training') ? 'Тренировочный' : 'Контрольный';
+        $general_settings['adaptive'] = $request->input('adaptive') ? 1 : 0;
         $general_settings['visibility'] = $request->input('visibility') ? 1 : 0;
         $general_settings['multilanguage'] = $request->input('multilanguage') ? 1 : 0;
         $general_settings['only_for_print'] = $request->input('only-for-print') ? 1 : 0;
         $general_settings['total'] = $request->input('total');
         $general_settings['test_time'] = $request->input('test-time');
+        $general_settings['max_questions'] = $request->input('max_questions');
 
         $availability_input = ($request->input('availability') == null) ? [] : $request->input('availability');
 
@@ -149,10 +150,9 @@ class TestController extends Controller{
             }
         }
 
-        $testGenerator = new UsualTestGenerator();
-        $testGenerator->buildGraphFromRestrictions($restrictions);
-        $testGenerator->getGraph()->fordFulkersonMaxFlow();
-        return (String) $testGenerator->getGraph()->isSaturated();
+        $graph = GraphBuilder::buildGraphFromRestrictions($restrictions);
+        $graph->fordFulkersonMaxFlow();
+        return (String) $graph->isSaturated();
     }
 
     private function getSectionOrderForThemes($themes, $section_code, $i) {
@@ -180,7 +180,9 @@ class TestController extends Controller{
             'total' => $general_settings['total'],
             'visibility' => $general_settings['visibility'],
             'multilanguage' => $general_settings['multilanguage'],
-            'only_for_print' => $general_settings['only_for_print']
+            'only_for_print' => $general_settings['only_for_print'],
+            'is_adaptive' => $general_settings['adaptive'],
+            'max_questions' => $general_settings['max_questions']
         ));
 
         $id_test = Test::max('id_test');
@@ -272,7 +274,9 @@ class TestController extends Controller{
         Test::whereId_test($request->input('id_test'))->update([
             'visibility' => $request->input('visibility'),
             'only_for_print' => $request->input('only_for_print'),
-            'multilanguage' => $request->input('multilanguage')
+            'multilanguage' => $request->input('multilanguage'),
+            'is_adaptive' => $request->input('adaptive'),
+            'max_questions' => $request->input('max_questions')
         ]);
     }
 
@@ -297,16 +301,19 @@ class TestController extends Controller{
         $id_test = $request->input('id-test');
         $test_name = $request->input('test-name');
         $test_type = $request->input('test-type');
+        $is_adaptive = $request->input('adaptive') ? 1 : 0;
         $visibility = $request->input('visibility') ? 1 : 0;
         $multilanguage = $request->input('multilanguage') ? 1 : 0;
         $only_for_print = $request->input('only-for-print') ? 1 : 0;
         $total = $request->input('total');
         $test_time = $request->input('test-time');
+        $max_questions = $request->input('max_questions');
 
         Test::whereId_test($id_test)->update([
             'test_name' => $test_name, 'test_type' => $test_type, 'test_time' => $test_time,
             'total' => $total,'visibility' => $visibility, 'archived' => 0,
-            'multilanguage' => $multilanguage, 'only_for_print' => $only_for_print]);
+            'multilanguage' => $multilanguage, 'only_for_print' => $only_for_print,
+            'is_adaptive' => $is_adaptive, 'max_questions' => $max_questions]);
 
         $availability_input = ($request->input('availability') == null) ? [] : $request->input('availability');
 

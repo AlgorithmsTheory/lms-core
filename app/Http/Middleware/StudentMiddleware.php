@@ -22,7 +22,7 @@ class StudentMiddleware {
      */
     public function handle($request, Closure $next)
     {
-        if ((Auth::user()['role'] == 'Студент')){
+        if (Auth::user()['role'] == 'Студент' || Auth::user()['role'] == 'Админ') {
             return $next($request);
         }
         else return redirect()->route('no_access');
