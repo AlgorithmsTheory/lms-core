@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\Test  whereArchived($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\Test  whereMultilanguage($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\Test  whereOnly_for_print($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Testing\Test  whereIs_adaptive($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\Test  where($column, $operator, $value)
  *
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Test  get()
