@@ -20,3 +20,15 @@ $('#finish-test').click(function () {
         $(this).parent('div').find('a')[0].click();
     }
 });
+
+$('#adaptive').change(function () {
+    let maxQuestions = $('#max_questions');
+    if ($(this).prop('checked')) {
+        maxQuestions.prop('disabled', false);
+        maxQuestions.val(10);
+    }
+    else {
+        maxQuestions.prop('disabled', true);
+        maxQuestions.val(null);
+    }
+});
