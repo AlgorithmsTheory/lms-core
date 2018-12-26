@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use App\Testing\Result;
+use App\Testing\TestForGroup;
 use App\Testing\TestGeneration\AdaptiveTestGenerator;
 use App\Testing\TestTask;
 use Auth;
@@ -26,6 +27,24 @@ class AdaptiveTestController extends Controller {
     function __construct(Test $test, Question $question){
         $this->question = $question;
         $this->test = $test;
+    }
+
+    /** Show list of available adaptive tests */
+    public function adaptiveTests() {
+        $adaptive_tests = [];
+        $query = $this->test->whereTest_type('Тренировочный')->whereIs_adaptive(1)
+            ->whereVisibility(1)->whereArchived(0)->whereOnly_for_print(0)->get();
+        foreach ($query as $test) {
+            $availability_for_group = TestForGroup::whereId_group(Auth::user()['group'])
+                ->whereId_test($test['id_test'])
+                ->select('availability')->first()->availability;
+            if ($availability_for_group) {
+                $test['amount'] = Test::getAmount($test['id_test']);
+                $test['attempts'] = Result::whereId_test($test['id_test'])->whereId(Auth::user()['id'])->where('mark_ru', '>=', 0)->count();
+                array_push($adaptive_tests, $test);
+            }
+        }
+        return view('tests.list.adaptive_tests', compact('adaptive_tests'));
     }
 
     /** Show prepare view with self-estimation form */
