@@ -36,7 +36,6 @@
 @for ($i = 0; $i < $amount; $i++)
 <input id="super{{$i}}" type="hidden" name="{{$i}}" value="">
 @endfor
-<input id="id-result" type="hidden" name="id_result" value="{{ $current_result }}">
 <input id="amount" type="hidden" name="amount" value="{{ $amount }}">
 <input type="hidden" name="id_test" value="{{ $id_test }}">
     <div class="col-sm-6">
