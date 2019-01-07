@@ -130,6 +130,17 @@
 
 </div>
 
+@if($role == 'Админ')
+<div class="row" style="margin-bottom: 10px">
+    <div class="col-sm-2" >
+        {!! HTML::link('library/lecture/create','Добавить',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+    </div>
+    <div class="col-sm-10" >
+    </div>
+
+</div>
+@endif
+
 <div id="accordion">
 
     <div class="row">
@@ -138,14 +149,12 @@
             <nav class="navmenu  navmenu-fixed-left">
                 <a class="navmenu-brand" href="#"><h4>Лекции</h4></a>
                 <ul class="nav navmenu-nav">
-                    <li class="active"><a href="#" data-toggle="collapse" data-target="#1_section" aria-expanded="false" aria-controls="1_section"
-                        id="1_section_link" data-parent="#accordion">
+                    <li class="active"><a href="#" id="1_section_link" >
                             <h4>Раздел 1: Формальные описания алгоритмов</h4></a></li>
-                    <li><a href="#" data-toggle="collapse" data-target="#2_section" aria-expanded="false" aria-controls="2_section"
-                           data-parent="#collapseParent" id="2_section_link" data-parent="#accordion">
+                    <li><a href="#" id="2_section_link" >
                                 <h4>Раздел 2: Числовые множества и арифметические вычисления</h4></a></li>
-                    <li><a href="#"><h4>Раздел 3: Рекурсивные функции</h4></a></li>
-                    <li><a href="#"><h4>Раздел 4: Сложность вычислений</h4></a></li>
+                    <li><a href="#" id="3_section_link" ><h4>Раздел 3: Рекурсивные функции</h4></a></li>
+                    <li><a href="#" id="4_section_link" ><h4>Раздел 4: Сложность вычислений</h4></a></li>
                 </ul>
             </nav>
             </div>
@@ -153,34 +162,158 @@
         <div class="col-sm-9">
             <div class="card" style="padding-left: 50px">
                 <div class="card-body">
-                    <div class="collapse in" id="1_section" data-parent="#accordion" aria-labelledby="1_section_link">
+                    <div class="collapse" id="1_section">
                     <table class="table table-striped table-dark">
                         <tbody>
+                        <?php
+                          $lectureNumber = 0;
+                        ?>
                         @foreach ($lectures as $lecture)
                             @if($lecture->id_section == 1)
+                               <?php $lectureNumber++;?>
                         <tr>
                             <th scope="row"><h4>
-                                    {!! HTML::linkRoute('lecture', 'Лекция '.$lecture->lecture_number.': '.$lecture->lecture_name, array('index' => $lecture->lecture_number)) !!}
-                                </h4></td>
-                            <td>{!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning')) !!}
-                            {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info')) !!}</td>
+                                    @if($lecture->lecture_text == null)
+                                        <?php echo "Лекция ".$lectureNumber.': '.$lecture->lecture_name?>
+                                        @endif
+                                        @if($lecture->lecture_text != null)
+                                            {!! HTML::linkRoute('getLecture', 'Лекция '.$lectureNumber.': '.$lecture->lecture_name, array('index' => $lecture->id_lecture, 'number' => $lectureNumber)) !!}
+                                        @endif
+                                </h4></th>
+                            <td>
+                                @if ($lecture->ppt_path == null)
+                                {!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning', 'disabled')) !!}
+                                @else
+                                {!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning')) !!}
+                                @endif
+                            </td>
+                            <td>
+                                @if ($lecture->ppt_path == null)
+                                    {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info', 'disabled')) !!}
+                                @else
+                                    {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info')) !!}
+                                @endif
+
+                            </td>
+                            <td><button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModalBox">
+                                    <span class="glyphicon glyphicon-pencil" style="color:orange;"></span>
+                                </button></td>
                         </tr>
                             @endif
                         @endforeach
                     </table>
                     </div>
 
-                    <div class="collapse" id="2_section" data-parent="#accordion" aria-labelledby="2_section_link">
+
+                    <div class="collapse" id="2_section">
                         <table class="table table-striped table-dark">
                             <tbody>
                             @foreach ($lectures as $lecture)
                                 @if($lecture->id_section == 2)
+                                    <?php $lectureNumber++;?>
                                     <tr>
                                         <th scope="row"><h4>
-                                                {!! HTML::linkRoute('lecture', 'Лекция '.$lecture->lecture_number.': '.$lecture->lecture_name, array('index' => $lecture->lecture_number)) !!}
-                                            </h4></td>
-                                        <td>{!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning')) !!}
-                                            {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info')) !!}</td>
+                                                @if($lecture->lecture_text == null)
+                                                    <?php echo "Лекция ".$lectureNumber.': '.$lecture->lecture_name?>
+                                                @endif
+                                                @if($lecture->lecture_text != null)
+                                                        {!! HTML::linkRoute('getLecture', 'Лекция '.$lectureNumber.': '.$lecture->lecture_name, array('index' => $lecture->id_lecture, 'number' => $lectureNumber)) !!}
+                                                @endif
+                                            </h4></th>
+                                        <td>
+                                            @if ($lecture->ppt_path == null)
+                                                {!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning', 'disabled')) !!}
+                                            @else
+                                                {!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning')) !!}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($lecture->ppt_path == null)
+                                                {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info', 'disabled')) !!}
+                                            @else
+                                                {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info')) !!}
+                                            @endif
+                                        </td>
+
+                                        <td><button type="button" class="btn btn-default btn-lg">
+                                                <span class="glyphicon glyphicon-pencil" style="color:orange;"></span>
+                                            </button></td>
+                                    </tr>
+                            @endif
+                            @endforeach
+                        </table>
+                    </div>
+
+                    <div class="collapse" id="3_section">
+                        <table class="table table-striped table-dark">
+                            <tbody>
+                            @foreach ($lectures as $lecture)
+                                @if($lecture->id_section == 3)
+                                    <?php $lectureNumber++;?>
+                                    <tr>
+                                        <th scope="row"><h4>
+                                                @if($lecture->lecture_text == null)
+                                                    <?php echo "Лекция ".$lectureNumber.': '.$lecture->lecture_name?>
+                                                @endif
+                                                @if($lecture->lecture_text != null)
+                                                        {!! HTML::linkRoute('getLecture', 'Лекция '.$lectureNumber.': '.$lecture->lecture_name, array('index' => $lecture->id_lecture, 'number' => $lectureNumber)) !!}
+                                                @endif
+                                            </h4></th>
+                                        <td>
+                                            @if ($lecture->ppt_path == null)
+                                                {!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning', 'disabled')) !!}
+                                            @else
+                                                {!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning')) !!}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($lecture->ppt_path == null)
+                                                {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info', 'disabled')) !!}
+                                            @else
+                                                {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info')) !!}
+                                            @endif
+                                        </td>
+                                        <td><button type="button" class="btn btn-default btn-lg">
+                                                <span class="glyphicon glyphicon-pencil" style="color:orange;"></span>
+                                            </button></td>
+                                    </tr>
+                            @endif
+                            @endforeach
+                        </table>
+                    </div>
+
+                    <div class="collapse" id="4_section">
+                        <table class="table table-striped table-dark">
+                            <tbody>
+                            @foreach ($lectures as $lecture)
+                                @if($lecture->id_section == 4)
+                                    <?php $lectureNumber++;?>
+                                    <tr>
+                                        <th scope="row"><h4>
+                                                @if($lecture->lecture_text == null)
+                                                    <?php echo "Лекция ".$lectureNumber.': '.$lecture->lecture_name?>
+                                                @endif
+                                                @if($lecture->lecture_text != null)
+                                                        {!! HTML::linkRoute('getLecture', 'Лекция '.$lectureNumber.': '.$lecture->lecture_name, array('index' => $lecture->id_lecture, 'number' => $lectureNumber)) !!}
+                                                @endif
+                                            </h4></th>
+                                        <td>
+                                            @if ($lecture->ppt_path == null)
+                                                {!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning', 'disabled')) !!}
+                                            @else
+                                                {!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning')) !!}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($lecture->ppt_path == null)
+                                                {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info', 'disabled')) !!}
+                                            @else
+                                                {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info')) !!}
+                                            @endif
+                                        </td>
+                                        <td><button type="button" class="btn btn-default btn-lg">
+                                                <span class="glyphicon glyphicon-pencil" style="color:orange;"></span>
+                                            </button></td>
                                     </tr>
                             @endif
                             @endforeach
@@ -188,246 +321,7 @@
                     </div>
                 </div>
             </div>
-        <div class="col-sm-3">
-            <div class="btn-group">
-                <h3 class="text-light" title="Формальные описания алгоритмов">1 раздел</h3>
-                <button type="button" title= "Основные понятия" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 1', array(1)) !!}</button>
-                <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" >
-                    <i class="fa fa-caret-down"></i>
-                </button>
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/TA_lec1.ppt', 'ppt') !!}</li>
-                    <li>{!! HTML::link('download/doc/TA_lec1.doc', 'doc') !!}</li>
-                </ul>
-
-            </div><!--end .btn-group -->
-        </div><!--end .col -->
-        <div class="col-sm-3">
-            <div class="btn-group">
-                <h3 class="text-light" title="Числовые множества и арифметические вычисления">2 раздел</h3>
-                <button type="button" title= "Множества: определение и основные свойства" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 6', array(6)) !!}</a></button>
-                <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/TA_lec6.ppt', 'ppt') !!}</li>
-                    <li>{!! HTML::link('download/doc/TA_lec1.doc', 'doc') !!}</li>
-                </ul>
-
-            </div><!--end .btn-group -->
-        </div><!--end .col -->
-        <div class="col-sm-3">
-            <div class="btn-group">
-                <h3 class="text-light" title="Рекурсивные функции">3 раздел</h3>
-                <button type="button" title = "Роль рекурсивных функций" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 12', array(12)) !!}</button>
-                <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/TA_lec12.ppt', 'ppt') !!}</li>
-                    <li>{!! HTML::link('download/doc/TA_lec12.doc', 'doc') !!}</li>
-                </ul>
-
-            </div><!--end .btn-group -->
-        </div><!--end .col -->
-        <div class="col-sm-3">
-            <div class="btn-group">
-
-                <h3 class="text-light" title="Сложность вычислений">4 раздел </h3>
-
-                <button type="button" title="Сложность вычислений" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 16', array(16)) !!}</button>
-                <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/TA_lec16.ppt', 'ppt') !!}</li>
-                    <li>{!! HTML::link('download/doc/TA_lec16.doc', 'doc') !!}</li>
-                </ul>
-
-            </div><!--end .btn-group -->
-
-        </div><!--end .col -->
         </div>
-    </div><!--end .row -->
-
-
-
-
-
-    <div class="row">
-        <div class="col-sm-3">
-            <div class="btn-group">
-                <button type="button" title="Модификации машин Тьюринга" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 2', array(2)) !!}</button>
-                <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/TA_lec2.ppt', 'ppt') !!}</li>
-                    <li>{!! HTML::link('download/doc/TA_lec2.doc', 'doc') !!}</li>
-                </ul>
-
-            </div><!--end .btn-group -->
-        </div><!--end .col -->
-        <div class="col-sm-3">
-            <div class="btn-group">
-                <button type="button" title="Счетные множества" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 7', array(7)) !!}</button>
-
-                <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/TA_lec7.ppt', 'ppt') !!}</li>
-                    <li>{!! HTML::link('download/doc/TA_lec7.doc', 'doc') !!}</li>
-                </ul>
-
-            </div><!--end .btn-group -->
-        </div><!--end .col -->
-        <div class="col-sm-3">
-            <div class="btn-group">
-                <button type="button" title="Рекурсивные функции: способы их задания" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 13', array(13)) !!}</button>
-                <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/TA_lec13.ppt', 'ppt') !!}</li>
-                    <li>{!! HTML::link('download/doc/TA_lec13.doc', 'doc') !!}</li>
-                </ul>
-
-            </div><!--end .btn-group -->
-        </div><!--end .col -->
-        <div class="col-sm-3">
-            <div class="btn-group">
-                <button type="button" title="" class="btn ink-reaction btn-default-light">Вопросы к зачету</button>
-                <button type="button" class="btn ink-reaction btn-danger dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/testDocumentation.docx', 'Скачать') !!}</li>
-                </ul>
-
-            </div><!--end .btn-group -->
-        </div><!--end .col -->
-    </div><!--end .row -->
-
-
-
-
-    <div class="row">
-        <div class="col-sm-3">
-            <div class="btn-group">
-                <button type="button" title="Теоремы Шеннона" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 3', array(3)) !!}</button>
-                <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/TA_lec3.ppt', 'ppt') !!}</li>
-                    <li>{!! HTML::link('download/doc/TA_lec3.doc', 'doc') !!}</li>
-                </ul>
-
-            </div><!--end .btn-group -->
-        </div><!--end .col -->
-        <div class="col-sm-3">
-            <div class="btn-group">
-                <button type="button" title="Несчетность множества действительных чисел (континуума)" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 8', array(8)) !!}</button>
-                <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/TA_lec8.ppt', 'ppt') !!}</li>
-                    <li>{!! HTML::link('download/doc/TA_lec8.doc', 'doc') !!}</li>
-                </ul>
-
-            </div><!--end .btn-group -->
-        </div><!--end .col -->
-        <div class="col-sm-3">
-            <div class="btn-group">
-                <button type="button" title="Эффективная перечислимость рекурсивных функций" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 14', array(14)) !!}</button>
-                <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/TA_lec14.ppt', 'ppt') !!}</li>
-                    <li>{!! HTML::link('download/doc/TA_lec14.doc', 'doc') !!}</li>
-                </ul>
-
-            </div><!--end .btn-group -->
-        </div><!--end .col -->
-        <div class="col-sm-3">
-
-        </div><!--end .col -->
-    </div><!--end .row -->
-
-
-
-    <div class="row">
-        <div class="col-sm-3">
-            <div class="btn-group">
-                <button type="button" title="Понятие алгоритмической разрешимости" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 4', array(4)) !!}</button>
-                <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/TA_lec4.ppt', 'ppt') !!}</li>
-                    <li>{!! HTML::link('download/doc/TA_lec4.doc', 'doc') !!}</li>
-                </ul>
-
-            </div><!--end .btn-group -->
-        </div><!--end .col -->
-        <div class="col-sm-3">
-            <div class="btn-group">
-                <button type="button" title="Теорема Кантора" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 9', array(9)) !!}</button>
-                <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/TA_lec9.ppt', 'ppt') !!}</li>
-                    <li>{!! HTML::link('download/doc/TA_lec9.doc', 'doc') !!}</li>
-                </ul>
-
-            </div><!--end .btn-group -->
-        </div><!--end .col -->
-        <div class="col-sm-3">
-            <div class="btn-group">
-                <button type="button" title="Нерекурсивные функции" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 15', array(15)) !!}</button>
-                <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/TA_lec15.ppt', 'ppt') !!}</li>
-                    <li>{!! HTML::link('download/doc/TA_lec15.doc', 'doc') !!}</li>
-                </ul>
-
-            </div><!--end .btn-group -->
-        </div><!--end .col -->
-        <div class="col-sm-3">
-
-        </div><!--end .col -->
-    </div><!--end .row -->
-
-
-
-    <div class="row">
-        <div class="col-sm-3">
-            <div class="btn-group">
-                <button type="button" title="Эффективная перечислимость и распознаваемость" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 5', array(5)) !!}</button>
-                <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/TA_lec5.ppt', 'ppt') !!}</li>
-                    <li>{!! HTML::link('download/doc/TA_lec5.doc', 'doc') !!}</li>
-                </ul>
-
-            </div><!--end .btn-group -->
-        </div><!--end .col -->
-        <div class="col-sm-3">
-            <div class="btn-group">
-                <button type="button" title="Арифметические функции" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 10', array(10)) !!}</button>
-                <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/TA_lec10.ppt', 'ppt') !!}</li>
-                    <li>{!! HTML::link('download/doc/TA_lec10.doc', 'doc') !!}</li>
-                </ul>
-
-            </div><!--end .btn-group -->
-        </div><!--end .col -->
-        <div class="col-sm-3">
-
-        </div><!--end .col -->
-        <div class="col-sm-3">
-
-        </div><!--end .col -->
-    </div><!--end .row -->
-
-
-
-    <div class="row">
-        <div class="col-sm-3">
-        </div><!--end .col -->
-        <div class="col-sm-3">
-            <div class="btn-group dropup">
-                <button type="button" title="Частичные арифметические функции" class="btn ink-reaction btn-default-light">{!! HTML::linkRoute('lecture', 'Лекция 11', array(11)) !!}</button>
-                <button type="button" class="btn ink-reaction btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-caret-down"></i></button>
-
-                <ul class="dropdown-menu animation-expand" >
-                    <li>{!! HTML::link('download/ppt/TA_lec11.ppt', 'ppt') !!}</li>
-                    <li>{!! HTML::link('download/doc/TA_lec11.doc', 'doc') !!}</li>
-                </ul>
-            </div>
-        </div><!--end .btn-group -->
-        <!--end .col -->
     </div><!--end .row -->
 
 </div>
@@ -447,5 +341,6 @@
 {!! HTML::script('js/core/source/AppNavSearch.js') !!}
 {!! HTML::script('js/core/source/AppVendor.js') !!}
 {!! HTML::script('js/core/demo/Demo.js') !!}
+{!! HTML::script('js/library/lecturesMenu.js') !!}
 <!-- END JAVASCRIPT -->
 @stop
