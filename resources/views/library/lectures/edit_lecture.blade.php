@@ -1,6 +1,6 @@
 @extends('templates.base')
 @section('head')
-    <title>Добавление новой лекции</title>
+    <title>Редактирование данных лекции</title>
     <!-- BEGIN META -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,9 +34,8 @@
                 <section>
                     <div class="section-header">
                         <ol class="breadcrumb">
-                            <li>{!! HTML::linkRoute('home', 'Главная') !!}</li>
                             <li>{!! HTML::linkRoute('library_index', 'Библиотека') !!}</li>
-                            <li class="active">Добавление новой лекции</li>
+                            <li class="active">Редактирование лекции</li>
                         </ol>
                     </div><!--end .section-header -->
                 </section>
@@ -50,18 +49,10 @@
             </div>
             <div class="col-lg-11 col-md-11">
 
-                {!! Form::open(array('url' => 'library/lecture/store', 'files' => true)) !!}
+                {!! Form::model($lecture,array('url' => 'library/lecture/'.$lecture->id_lecture, 'files' => true, 'method' => 'PATCH')) !!}
                 <div class="form-group">
                     <h4> {!! Form::label('lecture_name', 'Название лекции:') !!}</h4>
-                    {!! Form::text('lecture_name',null,['class' => 'form-control','placeholder' => 'Введите название лекции', 'required' => 'true']) !!}
-                </div>
-                <div class="form-group">
-                    <h4> {!! Form::label('id_section', 'Раздел:') !!}</h4>
-                    {!! Form::select('id_section',array('' =>'Выберите раздел:',
-                    '1' => 'Формальные описания алгоритмов',
-                    '2' => 'Числовые множества и арифметические вычисления',
-                    '3' => 'Рекурсивные функции',
-                    '4' => 'Сложность вычислений'), null, ['class' => 'form-control']) !!}
+                    {!! Form::text('lecture_name',$lecture->lecture_name,['class' => 'form-control','placeholder' => 'Введите название лекции']) !!}
                 </div>
                 <div class="form-group">
                     <h4> <label for="doc_file">Выберите doc файл</label></h4>
@@ -73,10 +64,10 @@
                 </div>
                 <div class="form-group">
                     <h4> {!! Form::label('lecture_text', 'Текст лекции для онлайн просмотра:') !!}</h4>
-                    {!! Form::textarea('lecture_text',null,['class' => 'form-control','id' => 'lecture_text']) !!}
+                    {!! Form::textarea('lecture_text',$lecture->lecture_text,['class' => 'form-control','id' => 'lecture_text']) !!}
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="form-control btn ink-reaction btn-primary">Добавить лекцию</button>
+                    <button type="submit" class="form-control btn ink-reaction btn-primary">Сохранить изменения</button>
                 </div>
                 {!! Form::close() !!}
                 @if ($errors->any())
@@ -105,11 +96,9 @@
     {!! HTML::script('js/core/source/AppNavSearch.js') !!}
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
-    <!-- END JAVASCRIPT -->
-
-
- {{--для редактора --}}
+    {{--для редактора --}}
     <script>
         var editor = CKEDITOR.replace( 'lecture_text' );
     </script>
+    <!-- END JAVASCRIPT -->
 @stop

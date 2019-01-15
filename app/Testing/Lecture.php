@@ -31,4 +31,5 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 class Lecture extends Eloquent{
     protected $table = 'lectures';
     public $timestamps = false;
+    protected $primaryKey = 'id_lecture';
 } 

@@ -149,12 +149,14 @@
             <nav class="navmenu  navmenu-fixed-left">
                 <a class="navmenu-brand" href="#"><h4>Лекции</h4></a>
                 <ul class="nav navmenu-nav">
-                    <li class="active"><a href="#" id="1_section_link" >
+                    <li class="active"><a href="#1_section" id="1_section_link" data-toggle="collapse"
+                                          >
                             <h4>Раздел 1: Формальные описания алгоритмов</h4></a></li>
-                    <li><a href="#" id="2_section_link" >
+                    <li><a href="#2_section" id="2_section_link" data-toggle="collapse">
                                 <h4>Раздел 2: Числовые множества и арифметические вычисления</h4></a></li>
-                    <li><a href="#" id="3_section_link" ><h4>Раздел 3: Рекурсивные функции</h4></a></li>
-                    <li><a href="#" id="4_section_link" ><h4>Раздел 4: Сложность вычислений</h4></a></li>
+                    <li><a href="#3_section" id="3_section_link" data-toggle="collapse" ><h4>Раздел 3: Рекурсивные функции</h4></a></li>
+                    <li><a href="#4_section" id="4_section_link" data-toggle="collapse"
+                           ><h4>Раздел 4: Сложность вычислений</h4></a></li>
                 </ul>
             </nav>
             </div>
@@ -162,22 +164,18 @@
         <div class="col-sm-9">
             <div class="card" style="padding-left: 50px">
                 <div class="card-body">
-                    <div class="collapse" id="1_section">
+                    <div class="collapse in" id="1_section" >
                     <table class="table table-striped table-dark">
                         <tbody>
-                        <?php
-                          $lectureNumber = 0;
-                        ?>
                         @foreach ($lectures as $lecture)
                             @if($lecture->id_section == 1)
-                               <?php $lectureNumber++;?>
                         <tr>
                             <th scope="row"><h4>
                                     @if($lecture->lecture_text == null)
-                                        <?php echo "Лекция ".$lectureNumber.': '.$lecture->lecture_name?>
+                                       Лекция {{$lecture->lecture_number.': '.$lecture->lecture_name}}
                                         @endif
                                         @if($lecture->lecture_text != null)
-                                            {!! HTML::linkRoute('getLecture', 'Лекция '.$lectureNumber.': '.$lecture->lecture_name, array('index' => $lecture->id_lecture, 'number' => $lectureNumber)) !!}
+                                            {!! HTML::linkRoute('lecture', 'Лекция '.$lecture->lecture_number.': '.$lecture->lecture_name, array('index' => $lecture->lecture_number)) !!}
                                         @endif
                                 </h4></th>
                             <td>
@@ -188,16 +186,25 @@
                                 @endif
                             </td>
                             <td>
-                                @if ($lecture->ppt_path == null)
+                                @if ($lecture->doc_path == null)
                                     {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info', 'disabled')) !!}
                                 @else
                                     {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info')) !!}
                                 @endif
 
                             </td>
-                            <td><button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModalBox">
+                            @if ($role == 'Админ')
+                            <td>
+
+                                <a type="button" class="btn btn-default btn-lg" href="library/lecture/{{$lecture->id_lecture."/edit"}}">
                                     <span class="glyphicon glyphicon-pencil" style="color:orange;"></span>
-                                </button></td>
+                                </a></td>
+                            <td>
+                                <button type="submit" class="btn btn-default btn-lg deleteLecture" id="{{ $lecture->id_lecture }}" name="delete{{ $lecture->id_lecture }}" value="{{ csrf_token() }}" >
+                                    <span class="glyphicon glyphicon-remove" style="color:red;"></span>
+                                </button>
+                                </td>
+                            @endif
                         </tr>
                             @endif
                         @endforeach
@@ -205,19 +212,18 @@
                     </div>
 
 
-                    <div class="collapse" id="2_section">
+                    <div class="collapse" id="2_section" >
                         <table class="table table-striped table-dark">
                             <tbody>
                             @foreach ($lectures as $lecture)
                                 @if($lecture->id_section == 2)
-                                    <?php $lectureNumber++;?>
                                     <tr>
                                         <th scope="row"><h4>
                                                 @if($lecture->lecture_text == null)
-                                                    <?php echo "Лекция ".$lectureNumber.': '.$lecture->lecture_name?>
+                                                    Лекция {{$lecture->lecture_number.': '.$lecture->lecture_name}}
                                                 @endif
                                                 @if($lecture->lecture_text != null)
-                                                        {!! HTML::linkRoute('getLecture', 'Лекция '.$lectureNumber.': '.$lecture->lecture_name, array('index' => $lecture->id_lecture, 'number' => $lectureNumber)) !!}
+                                                        {!! HTML::linkRoute('lecture', 'Лекция '.$lecture->lecture_number.': '.$lecture->lecture_name, array('index' => $lecture->lecture_number)) !!}
                                                 @endif
                                             </h4></th>
                                         <td>
@@ -228,35 +234,42 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if ($lecture->ppt_path == null)
+                                            @if ($lecture->doc_path == null)
                                                 {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info', 'disabled')) !!}
                                             @else
                                                 {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info')) !!}
                                             @endif
                                         </td>
 
-                                        <td><button type="button" class="btn btn-default btn-lg">
-                                                <span class="glyphicon glyphicon-pencil" style="color:orange;"></span>
-                                            </button></td>
+                                        @if ($role == 'Админ')
+                                            <td>
+                                                <a type="button" class="btn btn-default btn-lg" href="library/lecture/{{$lecture->id_lecture."/edit"}}">
+                                                    <span class="glyphicon glyphicon-pencil" style="color:orange;"></span>
+                                                </a></td>
+                                            <td>
+                                                <button type="submit" class="btn btn-default btn-lg deleteLecture" id="{{ $lecture->id_lecture }}" name="delete{{ $lecture->id_lecture }}" value="{{ csrf_token() }}" >
+                                                    <span class="glyphicon glyphicon-remove" style="color:red;"></span>
+                                                </button>
+                                            </td>
+                                        @endif
                                     </tr>
                             @endif
                             @endforeach
                         </table>
                     </div>
 
-                    <div class="collapse" id="3_section">
+                    <div class="collapse" id="3_section" >
                         <table class="table table-striped table-dark">
                             <tbody>
                             @foreach ($lectures as $lecture)
                                 @if($lecture->id_section == 3)
-                                    <?php $lectureNumber++;?>
                                     <tr>
                                         <th scope="row"><h4>
                                                 @if($lecture->lecture_text == null)
-                                                    <?php echo "Лекция ".$lectureNumber.': '.$lecture->lecture_name?>
+                                                    Лекция {{$lecture->lecture_number.': '.$lecture->lecture_name}}
                                                 @endif
                                                 @if($lecture->lecture_text != null)
-                                                        {!! HTML::linkRoute('getLecture', 'Лекция '.$lectureNumber.': '.$lecture->lecture_name, array('index' => $lecture->id_lecture, 'number' => $lectureNumber)) !!}
+                                                        {!! HTML::linkRoute('lecture', 'Лекция '.$lecture->lecture_number.': '.$lecture->lecture_name, array('index' => $lecture->lecture_number)) !!}
                                                 @endif
                                             </h4></th>
                                         <td>
@@ -267,34 +280,41 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if ($lecture->ppt_path == null)
+                                            @if ($lecture->doc_path == null)
                                                 {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info', 'disabled')) !!}
                                             @else
                                                 {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info')) !!}
                                             @endif
                                         </td>
-                                        <td><button type="button" class="btn btn-default btn-lg">
-                                                <span class="glyphicon glyphicon-pencil" style="color:orange;"></span>
-                                            </button></td>
+                                        @if ($role == 'Админ')
+                                            <td>
+                                                <a type="button" class="btn btn-default btn-lg" href="library/lecture/{{$lecture->id_lecture."/edit"}}">
+                                                    <span class="glyphicon glyphicon-pencil" style="color:orange;"></span>
+                                                </a></td>
+                                            <td>
+                                                <button type="submit" class="btn btn-default btn-lg deleteLecture" id="{{ $lecture->id_lecture }}" name="delete{{ $lecture->id_lecture }}" value="{{ csrf_token() }}" >
+                                                    <span class="glyphicon glyphicon-remove" style="color:red;"></span>
+                                                </button>
+                                            </td>
+                                        @endif
                                     </tr>
                             @endif
                             @endforeach
                         </table>
                     </div>
 
-                    <div class="collapse" id="4_section">
+                    <div class="collapse" id="4_section" >
                         <table class="table table-striped table-dark">
                             <tbody>
                             @foreach ($lectures as $lecture)
                                 @if($lecture->id_section == 4)
-                                    <?php $lectureNumber++;?>
                                     <tr>
                                         <th scope="row"><h4>
                                                 @if($lecture->lecture_text == null)
-                                                    <?php echo "Лекция ".$lectureNumber.': '.$lecture->lecture_name?>
+                                                    Лекция {{$lecture->lecture_number.': '.$lecture->lecture_name}}
                                                 @endif
                                                 @if($lecture->lecture_text != null)
-                                                        {!! HTML::linkRoute('getLecture', 'Лекция '.$lectureNumber.': '.$lecture->lecture_name, array('index' => $lecture->id_lecture, 'number' => $lectureNumber)) !!}
+                                                        {!! HTML::linkRoute('lecture', 'Лекция '.$lecture->lecture_number.': '.$lecture->lecture_name, array('index' => $lecture->lecture_number)) !!}
                                                 @endif
                                             </h4></th>
                                         <td>
@@ -305,15 +325,23 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if ($lecture->ppt_path == null)
+                                            @if ($lecture->doc_path == null)
                                                 {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info', 'disabled')) !!}
                                             @else
                                                 {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info')) !!}
                                             @endif
                                         </td>
-                                        <td><button type="button" class="btn btn-default btn-lg">
-                                                <span class="glyphicon glyphicon-pencil" style="color:orange;"></span>
-                                            </button></td>
+                                        @if ($role == 'Админ')
+                                            <td>
+                                                <a type="button" class="btn btn-default btn-lg" href="library/lecture/{{$lecture->id_lecture."/edit"}}">
+                                                    <span class="glyphicon glyphicon-pencil" style="color:orange;"></span>
+                                                </a></td>
+                                            <td>
+                                                <button type="submit" class="btn btn-default btn-lg deleteLecture" id="{{ $lecture->id_lecture }}" name="delete{{ $lecture->id_lecture }}" value="{{ csrf_token() }}" >
+                                                    <span class="glyphicon glyphicon-remove" style="color:red;"></span>
+                                                </button>
+                                            </td>
+                                        @endif
                                     </tr>
                             @endif
                             @endforeach
@@ -341,6 +369,6 @@
 {!! HTML::script('js/core/source/AppNavSearch.js') !!}
 {!! HTML::script('js/core/source/AppVendor.js') !!}
 {!! HTML::script('js/core/demo/Demo.js') !!}
-{!! HTML::script('js/library/lecturesMenu.js') !!}
+{!! HTML::script('js/library/lectureIndex.js') !!}
 <!-- END JAVASCRIPT -->
 @stop

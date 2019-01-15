@@ -1,6 +1,6 @@
 @extends('templates.base')
 @section('head')
-    <title>Добавление новой лекции</title>
+    <title>Добавление персоналии</title>
     <!-- BEGIN META -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +21,6 @@
     {!! HTML::script('js/libs/utils/html5shiv.js') !!}
     {!! HTML::script('js/libs/utils/respond.min.js') !!}
     <![endif]-->
-
     {{--Редактор текста--}}
     <script src="{{ asset('/js/ckeditor/ckeditor.js') }}"
             type="text/javascript" charset="utf-8" ></script>
@@ -36,7 +35,8 @@
                         <ol class="breadcrumb">
                             <li>{!! HTML::linkRoute('home', 'Главная') !!}</li>
                             <li>{!! HTML::linkRoute('library_index', 'Библиотека') !!}</li>
-                            <li class="active">Добавление новой лекции</li>
+                            <li>{!! HTML::linkRoute('library_persons', 'Персоналии') !!}</li>
+                            <li class="active">Добавление персоналии</li>
                         </ol>
                     </div><!--end .section-header -->
                 </section>
@@ -50,33 +50,29 @@
             </div>
             <div class="col-lg-11 col-md-11">
 
-                {!! Form::open(array('url' => 'library/lecture/store', 'files' => true)) !!}
+                {!! Form::open(array('url' => 'library/persons', 'files' => true)) !!}
                 <div class="form-group">
-                    <h4> {!! Form::label('lecture_name', 'Название лекции:') !!}</h4>
-                    {!! Form::text('lecture_name',null,['class' => 'form-control','placeholder' => 'Введите название лекции', 'required' => 'true']) !!}
+                    <h4> {!! Form::label('name_person', 'ФИО:') !!}</h4>
+                    {!! Form::text('name_person',null,['class' => 'form-control','placeholder' => 'Введите ФИО']) !!}
                 </div>
                 <div class="form-group">
-                    <h4> {!! Form::label('id_section', 'Раздел:') !!}</h4>
-                    {!! Form::select('id_section',array('' =>'Выберите раздел:',
-                    '1' => 'Формальные описания алгоритмов',
-                    '2' => 'Числовые множества и арифметические вычисления',
-                    '3' => 'Рекурсивные функции',
-                    '4' => 'Сложность вычислений'), null, ['class' => 'form-control']) !!}
+                    <h4> {!! Form::label('year_birth', 'Годы жизни:') !!}</h4>
+                    <div class="input-group">
+                    {!! Form::text('year_birth',null,['class' => 'form-control', 'placeholder' => 'С']) !!}
+                    {!! Form::text('year_death',null,['class' => 'form-control', 'placeholder' => 'По']) !!}
+                    </div>
+
                 </div>
                 <div class="form-group">
-                    <h4> <label for="doc_file">Выберите doc файл</label></h4>
-                    <input type="file" class="form-control-file" name="doc_file" >
+                    <h4> {!! Form::label('person_text', 'Текст для онлайн просмотра:') !!}</h4>
+                    {!! Form::textarea('person_text',null,['class' => 'form-control','id' => 'person_text']) !!}
                 </div>
                 <div class="form-group">
-                    <h4> <label for="ppt_file">Выберите ppt файл</label></h4>
-                    <input type="file" class="form-control-file" name="ppt_file" >
+                    <h4> <label for="picture">Выберите изображение</label></h4>
+                    <input type="file" class="form-control-file" name="picture" >
                 </div>
                 <div class="form-group">
-                    <h4> {!! Form::label('lecture_text', 'Текст лекции для онлайн просмотра:') !!}</h4>
-                    {!! Form::textarea('lecture_text',null,['class' => 'form-control','id' => 'lecture_text']) !!}
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="form-control btn ink-reaction btn-primary">Добавить лекцию</button>
+                    <button type="submit" class="form-control btn ink-reaction btn-primary">Добавить</button>
                 </div>
                 {!! Form::close() !!}
                 @if ($errors->any())
@@ -105,11 +101,9 @@
     {!! HTML::script('js/core/source/AppNavSearch.js') !!}
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
-    <!-- END JAVASCRIPT -->
-
-
- {{--для редактора --}}
+    {{--для редактора --}}
     <script>
-        var editor = CKEDITOR.replace( 'lecture_text' );
+        var editor = CKEDITOR.replace( 'person_text' );
     </script>
+    <!-- END JAVASCRIPT -->
 @stop

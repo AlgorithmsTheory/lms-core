@@ -34,7 +34,7 @@
                     <ol class="breadcrumb">
                         <li>{!! HTML::linkRoute('home', 'Главная') !!}</li>
                         <li>{!! HTML::linkRoute('library_index', 'Библиотека') !!}</li>
-                        <li class="active">Лекция {{$number}}. {{$lecture->lecture_name}}</li>
+                        <li class="active">Лекция {{$lecture->lecture_number}}. {{$lecture->lecture_name}}</li>
                     </ol>
                 </div><!--end .section-header -->
                 <div class="section-body">
@@ -42,14 +42,15 @@
             </section>
         </div>
         <div class="col-sm-3" >
-            {!! HTML::link('library/books/create','Редактировать лекцию',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+            @if($role == 'Админ')
+            {!! HTML::link('library/lecture/'.$lecture->id_lecture.'/edit','Редактировать лекцию',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+                @endif
         </div>
     </div>
     <div class="card card-tiles style-default-light" style="margin-left:2%; margin-right:2%">
         <article class="style-default-bright">
             <div class="card-body">
                 <article style="margin-left:10%; margin-right:10%; text-align: justify">
-                    <a name="1.1"></a>
 
                     {!! $lecture->lecture_text !!}
 
