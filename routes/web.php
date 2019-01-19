@@ -145,7 +145,8 @@ Route::post('library/persons', ['as' => 'person_store', 'uses' => 'LibraryContro
 Route::patch('library/persons/{id}', ['as' => 'person_update', 'uses' => 'LibraryController@updatePerson']);
 // редактирование персоналии
 Route::get('library/persons/{id}/edit', ['as' => 'person_edit', 'uses' => 'LibraryController@editPerson', 'middleware' => ['general_auth', 'admin']]);
-
+// Удаление персоналии
+Route::delete('library/persons/{id}/delete',['as' => 'person_delete', 'uses' => 'LibraryController@deletePerson', 'middleware' => ['general_auth', 'admin']]);
 
 
 Route::get('library/extra', ['as' => 'library_extra', 'uses' => 'LibraryController@extra', 'middleware' => ['general_auth', 'access_for_library']]);

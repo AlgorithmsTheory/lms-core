@@ -326,4 +326,13 @@ class LibraryController extends Controller {
         $person->save();
         return redirect('library/persons/'.$person->id);
     }
+
+    public function deletePerson($id){
+        $person = Person::findOrFail($id);
+        if (file_exists(public_path($person->image_patch))) {
+            app(Filesystem::class)->delete(public_path($person->image_patch));
+        }
+        $person->delete();
+        return  redirect('library/persons');
+    }
 } 

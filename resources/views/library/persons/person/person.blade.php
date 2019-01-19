@@ -16,7 +16,7 @@
         <div class="row">
             <div class="col-lg-8">
         {!! HTML::link('library/persons/'.$person->id.'/edit','Редактировать',array('class' => 'btn ink-reaction btn-primary btn-block','role' => 'button')) !!}
-<form action = "{{route('book_delete',['id' => $person->id])}}" method="post" onsubmit="return ConfirmDelete()">
+<form action = "{{route('person_delete',['id' => $person->id])}}" method="post" onsubmit="return ConfirmDelete()">
     {{method_field('DELETE')}}
     {{ csrf_field() }}
     <div class="form-group">

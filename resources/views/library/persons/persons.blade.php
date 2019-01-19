@@ -131,7 +131,7 @@
         function ConfirmDelete()
         {
 
-            var x = confirm("Удалить книгу?");
+            var x = confirm("Удалить персоналию?");
             if (x)
                 return true;
             else
