@@ -89,6 +89,10 @@ class LibraryController extends Controller {
                 if (!copy($_FILES['doc_file']['tmp_name'], 'download/doc/' . $nameDocFile)){
                     return back()->withInput()->withErrors(['Ошибка при копировании doc файла']);
                 }
+                $filename = 'download/doc/TA_lec16.doc';
+                $file = file_get_contents($filename);
+                $file = preg_replace("Лекция 16", "Лекция 17", $file);
+                file_put_contents($filename, $file);
             } else {
                 return back()->withInput()->withErrors(['Ошибка при загрузки doc файла']);
             }
@@ -334,5 +338,15 @@ class LibraryController extends Controller {
         }
         $person->delete();
         return  redirect('library/persons');
+    }
+
+    public function docDownload($id) {
+        $lecture = Lecture::findOrFail($id);
+        return response()->download($lecture->doc_path, 'TA_lec'.$lecture->lecture_number.'.doc');
+    }
+
+    public function pptDownload($id) {
+        $lecture = Lecture::findOrFail($id);
+        return response()->download($lecture->ppt_path, 'TA_lec'.$lecture->lecture_number.'.ppt');
     }
 } 

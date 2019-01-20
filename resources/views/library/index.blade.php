@@ -133,7 +133,7 @@
 @if($role == 'Админ')
 <div class="row" style="margin-bottom: 10px">
     <div class="col-sm-2" >
-        {!! HTML::link('library/lecture/create','Добавить',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+        {!! HTML::link('library/lecture/create','Добавить лекцию',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
     </div>
     <div class="col-sm-10" >
     </div>
@@ -180,16 +180,16 @@
                                 </h4></th>
                             <td>
                                 @if ($lecture->ppt_path == null)
-                                {!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning', 'disabled')) !!}
+                                {!! HTML::link("library/persons/".$lecture->id_lecture."/downloadPpt", 'скачать ppt', array('class' => 'btn btn-warning', 'disabled')) !!}
                                 @else
-                                {!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning')) !!}
+                                {!! HTML::link("library/persons/".$lecture->id_lecture."/downloadPpt", 'скачать ppt', array('class' => 'btn btn-warning')) !!}
                                 @endif
                             </td>
                             <td>
                                 @if ($lecture->doc_path == null)
-                                    {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info', 'disabled')) !!}
+                                    {!! HTML::link("library/persons/".$lecture->id_lecture."/downloadDoc", 'скачать doc', array('class' => 'btn btn-info', 'disabled')) !!}
                                 @else
-                                    {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info')) !!}
+                                    {!! HTML::link("library/persons/".$lecture->id_lecture."/downloadDoc", 'скачать doc', array('class' => 'btn btn-info')) !!}
                                 @endif
 
                             </td>
@@ -228,16 +228,16 @@
                                             </h4></th>
                                         <td>
                                             @if ($lecture->ppt_path == null)
-                                                {!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning', 'disabled')) !!}
+                                                {!! HTML::link("library/persons/".$lecture->id_lecture."/downloadPpt", 'скачать ppt', array('class' => 'btn btn-warning', 'disabled')) !!}
                                             @else
-                                                {!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning')) !!}
+                                                {!! HTML::link("library/persons/".$lecture->id_lecture."/downloadPpt", 'скачать ppt', array('class' => 'btn btn-warning')) !!}
                                             @endif
                                         </td>
                                         <td>
                                             @if ($lecture->doc_path == null)
-                                                {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info', 'disabled')) !!}
+                                                {!! HTML::link("library/persons/".$lecture->id_lecture."/downloadDoc", 'скачать doc', array('class' => 'btn btn-info', 'disabled')) !!}
                                             @else
-                                                {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info')) !!}
+                                                {!! HTML::link("library/persons/".$lecture->id_lecture."/downloadDoc", 'скачать doc', array('class' => 'btn btn-info')) !!}
                                             @endif
                                         </td>
 
@@ -274,16 +274,16 @@
                                             </h4></th>
                                         <td>
                                             @if ($lecture->ppt_path == null)
-                                                {!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning', 'disabled')) !!}
+                                                {!! HTML::link("library/persons/".$lecture->id_lecture."/downloadPpt", 'скачать ppt', array('class' => 'btn btn-warning', 'disabled')) !!}
                                             @else
-                                                {!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning')) !!}
+                                                {!! HTML::link("library/persons/".$lecture->id_lecture."/downloadPpt", 'скачать ppt', array('class' => 'btn btn-warning')) !!}
                                             @endif
                                         </td>
                                         <td>
                                             @if ($lecture->doc_path == null)
-                                                {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info', 'disabled')) !!}
+                                                {!! HTML::link("library/persons/".$lecture->id_lecture."/downloadDoc", 'скачать doc', array('class' => 'btn btn-info', 'disabled')) !!}
                                             @else
-                                                {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info')) !!}
+                                                {!! HTML::link("library/persons/".$lecture->id_lecture."/downloadDoc", 'скачать doc', array('class' => 'btn btn-info')) !!}
                                             @endif
                                         </td>
                                         @if ($role == 'Админ')
@@ -319,16 +319,16 @@
                                             </h4></th>
                                         <td>
                                             @if ($lecture->ppt_path == null)
-                                                {!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning', 'disabled')) !!}
+                                                {!! HTML::link("library/persons/".$lecture->id_lecture."/downloadPpt", 'скачать ppt', array('class' => 'btn btn-warning', 'disabled')) !!}
                                             @else
-                                                {!! HTML::link($lecture->ppt_path, 'скачать ppt', array('class' => 'btn btn-warning')) !!}
+                                                {!! HTML::link("library/persons/".$lecture->id_lecture."/downloadPpt", 'скачать ppt', array('class' => 'btn btn-warning')) !!}
                                             @endif
                                         </td>
                                         <td>
                                             @if ($lecture->doc_path == null)
-                                                {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info', 'disabled')) !!}
+                                                {!! HTML::link("library/persons/".$lecture->id_lecture."/downloadDoc", 'скачать doc', array('class' => 'btn btn-info', 'disabled')) !!}
                                             @else
-                                                {!! HTML::link($lecture->doc_path, 'скачать doc', array('class' => 'btn btn-info')) !!}
+                                                {!! HTML::link("library/persons/".$lecture->id_lecture."/downloadDoc", 'скачать doc', array('class' => 'btn btn-info')) !!}
                                             @endif
                                         </td>
                                         @if ($role == 'Админ')

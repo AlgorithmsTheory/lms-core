@@ -35,7 +35,7 @@
                     <div class="section-header">
                         <ol class="breadcrumb">
                             <li>{!! HTML::linkRoute('library_index', 'Библиотека') !!}</li>
-                            <li class="active">Редактирование лекции</li>
+                            <li class="active">Редактирование лекции № {{$lecture->lecture_number}}: {{$lecture->lecture_name}}</li>
                         </ol>
                     </div><!--end .section-header -->
                 </section>

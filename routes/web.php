@@ -147,7 +147,10 @@ Route::patch('library/persons/{id}', ['as' => 'person_update', 'uses' => 'Librar
 Route::get('library/persons/{id}/edit', ['as' => 'person_edit', 'uses' => 'LibraryController@editPerson', 'middleware' => ['general_auth', 'admin']]);
 // Удаление персоналии
 Route::delete('library/persons/{id}/delete',['as' => 'person_delete', 'uses' => 'LibraryController@deletePerson', 'middleware' => ['general_auth', 'admin']]);
-
+// Скачивание doc файла
+Route::get('library/persons/{id}/downloadDoc', ['as' => 'doc_download', 'uses' => 'LibraryController@docDownload', 'middleware' => ['general_auth']]);
+// Скачивание ppt файла
+Route::get('library/persons/{id}/downloadPpt', ['as' => 'ppt_download', 'uses' => 'LibraryController@pptDownload', 'middleware' => ['general_auth']]);
 
 Route::get('library/extra', ['as' => 'library_extra', 'uses' => 'LibraryController@extra', 'middleware' => ['general_auth', 'access_for_library']]);
 

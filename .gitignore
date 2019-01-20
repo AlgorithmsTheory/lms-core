@@ -15,6 +15,7 @@ public/img/questions/title/*
 .idea/
 *.ppt
 *.doc
+public/img/library/persons/*
 # ====== OS X ===========================================
 .DS_Store
 .AppleDouble
