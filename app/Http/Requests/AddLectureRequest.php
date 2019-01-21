@@ -36,8 +36,8 @@ class AddLectureRequest extends FormRequest
             'lecture_name' => "required|between:5,355",
             'lecture_text' => 'min:50',
             'id_section' => 'required',
-//            'doc_file' => 'mimes:doc',
-//            'ppt_file' => 'mimes:ppt',
+            'doc_file' => 'mimes:doc,zip,docx',
+            'ppt_file' => 'mimes:ppt,zip,pptx'
         ];
     }
 }

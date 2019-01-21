@@ -134,7 +134,7 @@ class LibraryController extends Controller {
                 if (!copy($_FILES['doc_file']['tmp_name'], 'download/doc/' . $nameDocFile)){
                     return back()->withInput()->withErrors(['Ошибка при копировании doc файла']);
                 }
-                if ($lecture->doc_path != null) {
+                if (file_exists(public_path($lecture->doc_path))) {
                     app(Filesystem::class)->delete(public_path($lecture->doc_path));
                 }
                 $lecture->doc_path = 'download/doc/' . $nameDocFile;
@@ -148,7 +148,7 @@ class LibraryController extends Controller {
                 if (!copy($_FILES['ppt_file']['tmp_name'], 'download/ppt/' . $namePptFile)){
                     return back()->withInput()->withErrors(['Ошибка при копировании ppt файла']);
                 }
-                if ($lecture->ppt_path != null) {
+                if (file_exists(public_path($lecture->ppt_path))) {
                     app(Filesystem::class)->delete(public_path($lecture->ppt_path));
                 }
                 $lecture->ppt_path = 'download/ppt/' . $namePptFile;
@@ -170,8 +170,10 @@ class LibraryController extends Controller {
         }
         DB::update('UPDATE `definition` SET `idLecture` = NULL, `nameAnchor` = NULL where `idLecture` = ?', [$id]);
 
+        DB::update('UPDATE `theorems` SET `idLecture` = NULL, `nameAnchor` = NULL where `idLecture` = ?', [$id]);
+
         DB::update('UPDATE `lectures` SET `lecture_number` = `lecture_number` - 1 where `lecture_number` > ?', [$lecture->lecture_number]);
-        // Удаление тем из баблицы themes по id лекции
+        // Удаление тем из таблицы themes по id лекции
         DB::update('UPDATE `themes` SET `id_lecture` = NULL where `id_lecture` = ?', [$id]);
         $lecture->delete();
         return  $id;

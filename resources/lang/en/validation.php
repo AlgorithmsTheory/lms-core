@@ -119,10 +119,10 @@ return [
             'required' => 'Выберите раздел.',
         ),
         'doc_file' => array(
-            'mimes' => 'Файл должен быть формата doc.'
+            'mimes' => 'Файл должен быть формата doc или docx.'
         ),
         'ppt_file' => array(
-            'mimes' => 'Файл должен быть формата ppt.'
+            'mimes' => 'Файл должен быть формата ppt или pptx.'
         ),
         'id_lecture' => array(
             'required' => 'Выберите лекцию.',
