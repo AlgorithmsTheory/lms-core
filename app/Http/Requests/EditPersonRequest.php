@@ -35,7 +35,7 @@ class EditPersonRequest extends FormRequest
             'name_person' => "required|between:5,255",
             'year_birth' => 'required|date_format:Y|size:4',
             'year_death' => 'required|date_format:Y|size:4',
-            'person_text' => 'required|between:30,5000',
+            'person_text' => 'required|min:30',
             'picture' => 'image',
         ];
     }

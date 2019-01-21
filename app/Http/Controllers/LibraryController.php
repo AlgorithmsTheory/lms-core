@@ -89,10 +89,6 @@ class LibraryController extends Controller {
                 if (!copy($_FILES['doc_file']['tmp_name'], 'download/doc/' . $nameDocFile)){
                     return back()->withInput()->withErrors(['Ошибка при копировании doc файла']);
                 }
-                $filename = 'download/doc/TA_lec16.doc';
-                $file = file_get_contents($filename);
-                $file = preg_replace("Лекция 16", "Лекция 17", $file);
-                file_put_contents($filename, $file);
             } else {
                 return back()->withInput()->withErrors(['Ошибка при загрузки doc файла']);
             }
@@ -239,6 +235,7 @@ class LibraryController extends Controller {
         $theorem->name = $request->theorem_name;
         $theorem->content = $request->theorem_content;
         $theorem->exam = $request->exam;
+        $theorem->doc = $request->doc;
         if ($request->id_lecture != null && $request->name_anchor!=null) {
             $theorem->idLecture = $request->id_lecture;
             $theorem->nameAnchor = $request->name_anchor;
@@ -266,6 +263,7 @@ class LibraryController extends Controller {
         $theorem->name = $request->theorem_name;
         $theorem->content = $request->theorem_content;
         $theorem->exam = $request->exam;
+        $theorem->doc = $request->doc;
         if ($request->id_lecture == null || $request->name_anchor == null) {
             $theorem->idLecture = null;
             $theorem->nameAnchor = null;

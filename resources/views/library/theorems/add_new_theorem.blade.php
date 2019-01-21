@@ -61,6 +61,11 @@
                     <span class="input-group-text" >&nbsp;Теорема будет на экзамене</span>
                 </div>
 
+                <div class="input-group" style="margin-bottom: 10px">
+                    <input type="checkbox" name="doc" class="form-group">
+                    <span class="input-group-text" >&nbsp;Без доказательства</span>
+                </div>
+
                 <div class="input-group" style="margin-bottom: 20px">
                 <input type="checkbox" aria-label="Checkbox for following text input" data-toggle="collapse" data-target="#addLink"
                        aria-expanded="false" aria-controls="addLink" name="addLink" class="form-group">

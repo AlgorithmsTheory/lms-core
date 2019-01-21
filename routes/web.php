@@ -122,7 +122,7 @@ Route::get('library/definitions/{id}/edit', ['as' => 'definition_edit', 'uses' =
 // Удаление определения
 Route::delete('library/definitions/{id}/delete',['as' => 'definition_delete', 'uses' => 'LibraryController@deleteDefinition', 'middleware' => ['general_auth', 'admin']]);
 //Вывод теорем
-Route::get('library/theorems', ['as' => 'library_theorems', 'uses' => 'LibraryController@theorems', 'middleware' => ['general_auth', 'admin', 'access_for_library']]);
+Route::get('library/theorems', ['as' => 'library_theorems', 'uses' => 'LibraryController@theorems', 'middleware' => ['general_auth', 'access_for_library']]);
 //создание нового определения
 Route::get('library/theorems/create', ['as' => 'theorem_create', 'uses' => 'LibraryController@addNewTheorem', 'middleware' => ['general_auth', 'access_for_library', 'admin']]);
 //сохранение и валидация данных о новой теореме

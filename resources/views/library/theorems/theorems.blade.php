@@ -54,7 +54,8 @@
                             <th scope="col" style="width: 150px"><h4>Название</h4></th>
                             <th scope="col"><h4>Формулировка (надо знать обязательно, кроме раздела «теоремы» может быть проверена в разделе «определения» или «угадайка»)</h4></th>
                             <th scope="col" style="width: 110px">Есть в лекциях</th>
-                            <th scope="col" style="width: 110px">Будет на экз</th>
+                            <th scope="col" style="width: 110px">Будет на экзамене</th>
+                            <th scope="col" style="width: 110px">Без доказательства</th>
                             <th scope="col"></th>
                             <th scope="col"></th>
                         </tr>
@@ -68,7 +69,11 @@
                                             {{$theorem->name}}
                                         @endif
                                         @if($theorem->idLecture != null)
+                                                @if($theorem->name != null)
                                             {!! link_to_route('lecture', $theorem->name, $theorem->linkToLecture)!!}
+                                                    @else
+                                                    {!! link_to_route('lecture', 'Ссылка на лекцию', $theorem->linkToLecture)!!}
+                                                    @endif
                                         @endif
                                     </h4></th>
                                 <td>
@@ -81,6 +86,11 @@
                                 </td>
                                 <td>
                                     @if($theorem->exam != null)
+                                        <span class="glyphicon glyphicon-ok" style="color:green;"></span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($theorem->doc != null)
                                         <span class="glyphicon glyphicon-ok" style="color:green;"></span>
                                     @endif
                                 </td>

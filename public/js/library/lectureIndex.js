@@ -1,7 +1,11 @@
 
 $( document ).ready(function() {
-    $('#accordion .collapse').on('show.bs.collapse', function () {
-        $('#accordion .collapse').not(this).removeClass('in');
+    // $('#accordion .collapse').on('show.bs.collapse', function () {
+    //     $('#accordion .collapse').not(this).removeClass('in');
+    // });
+    var $myGroup = $('#accordion');
+    $myGroup.on('show.bs.collapse','.collapse', function() {
+        $myGroup.find('.collapse.in').collapse('hide');
     });
 
 //Удаление лекции

@@ -33,7 +33,7 @@ class UpdateTheoremRequest extends FormRequest
     {
 
         return [
-            'theorem_name' => "required|between:5,255",
+            'theorem_name' => "between:5,255",
             'theorem_content' => 'required|between:30,500',
             'name_anchor' => 'min:2',
         ];

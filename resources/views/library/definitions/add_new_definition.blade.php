@@ -58,6 +58,10 @@
                 <div class="input-group" style="margin-bottom: 20px">
                 <input type="checkbox" aria-label="Checkbox for following text input" data-toggle="collapse" data-target="#addLink"
                        aria-expanded="false" aria-controls="addLink" name="addLink" class="form-group">
+
+
+                    {{--{{Form :: checkbox ('addLink', null, null, array ('data-toggle' => 'collapse', 'data-target' => '#addLink',--}}
+                    {{--'aria-expanded' => 'false', 'aria-controls' => 'addLink', 'aria-label' => 'Checkbox for following text input'))}}--}}
                     <span class="input-group-text" >&nbsp;Добавить ссылку на лекцию</span>
                 </div>
 

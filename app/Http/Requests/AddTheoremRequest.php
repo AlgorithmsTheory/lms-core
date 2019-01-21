@@ -34,7 +34,7 @@ class AddTheoremRequest extends FormRequest
         return [
             'name_anchor' => 'required_if:addLink,on',
             'id_lecture' => 'required_if:addLink,on',
-            'theorem_name' => "required|between:5,255",
+            'theorem_name' => "between:5,255",
             'theorem_content' => 'required|between:30,500',
         ];
     }
