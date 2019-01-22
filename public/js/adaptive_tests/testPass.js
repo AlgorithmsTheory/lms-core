@@ -6,9 +6,7 @@ function startTimer() {
     var s = arr[1];
     if (s <= 0) {
         if (m <= 0) {                                                                                                   //если время вышло
-            fillSuper();                                                                                                //собираем все данные в супер-форму
-            $('#super-form').attr('onsubmit','return sendForm(false)');                                                 //меняем обработчик на false
-            $('#super-form').trigger('submit');                                                                         //генерируем событие submit
+            $('.question-form').first().trigger('submit');                                                                         //генерируем событие submit
             return;
         }
         m--;
@@ -21,6 +19,6 @@ function startTimer() {
     setTimeout(startTimer, 1000);
 }
 
-$('#check').click(function () {
+$(document).on('click', '#check-button', function () {
     $('.question-form').submit();
 });

@@ -425,8 +425,7 @@ class TestController extends Controller{
         $test_type = $test->test_type;
         if (Result::getCurrentResult(Auth::user()['id'], $id_test) == -1) {                                             //если пользователь не имеет начатый тест                                                                                     //если в тест зайдено первый раз
             $generator = new UsualTestGenerator();
-            $generator->buildGraphFromTest($test);
-            $generator->generate();
+            $generator->generate($test);
             for ($i=0; $i < $amount; $i++) {
                 $id = $generator->chooseQuestion();
                 $data = $question->show($id, $i+1, false);                                                                     //должны получать название view и необходимые параметры
@@ -547,6 +546,6 @@ class TestController extends Controller{
             $date = date('Y-m-d H:i:s', time());
             Result::whereId_result($current_result)->update(['result_date' => $date, 'result' => -1, 'mark_ru' => -1, 'mark_eu' => 'drop']);                                 //Присваиваем результату и оценке значения -1
         }
-        return redirect('tests');
+        return redirect('home');
     }
 }

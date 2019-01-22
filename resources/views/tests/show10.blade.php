@@ -1,5 +1,3 @@
-<html>
-<body>
 {!! Form::open(['method' => 'PATCH', 'route' => $route, 'class' => 'smart-blue question-form']) !!}
 <h1>Вопрос {{ $count }}</h1>
 <h2>{{ $text }}</h2>
@@ -18,5 +16,3 @@
 @endif
 {!! Form::close() !!}
 <br>
-</body>
-</html>
