@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @method static \Illuminate\Database\Query\Builder|\App\User whereUserID($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\User whereUserid($value)
  * @method static \Illuminate\Database\Query\Builder|\App\User whereGroup($value)
  */
 

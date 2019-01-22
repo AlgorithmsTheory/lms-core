@@ -61,8 +61,8 @@ class AdaptiveTestController extends Controller {
         $generator->generate(Test::whereId_test($id_test)->first());
         $new_result_id = Result::max('id_result') + 1;
         Result::insert(['id_result' => $new_result_id, 'id_test' => $id_test, 'id' => $student_id]);
-        $request->session()->put('adaptive_test_'.$student_id, serialize($generator));
         $first_question = $generator->chooseQuestion();
+        $request->session()->put('adaptive_test_'.$student_id, serialize($generator));
         return redirect()->route('show_adaptive_test', $first_question);
     }
 
