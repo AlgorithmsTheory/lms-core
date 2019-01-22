@@ -1,6 +1,6 @@
 <html>
 <body>
-{!! Form::open(['method' => 'PATCH', 'route' => $route, 'class' => ['smart-blue', 'question-form']]) !!}
+{!! Form::open(['method' => 'PATCH', 'route' => $route, 'class' => 'smart-blue question-form']) !!}
 <h1>Вопрос {{ $count }}</h1>
 <input type="hidden" name="num" value="{{ $id }}">
 <input type="hidden" name="type" value="{{ $type }}">

@@ -8,11 +8,11 @@
 
 namespace App\Testing\TestGeneration;
 
-
 use App\Classwork;
 use App\Lectures;
 use App\Seminars;
 use App\Testing\Adaptive\AdaptiveQuestion;
+
 use App\Testing\Adaptive\BolognaMark;
 use App\Testing\Adaptive\FinishCriteria;
 use App\Testing\Adaptive\KnowledgeLevel;
@@ -210,6 +210,7 @@ class AdaptiveTestGenerator implements TestGenerator {
         $remote_activity = 0;
         $counter = 0;
         $results_size = sizeof($results);
+        if ($results_size == 0) return 0;
         $interval_length = $this->evalIntervalLength($results_size);
         $first_factor = $this->evalFirstFactor($results_size, $interval_length);
         foreach ($results as $result) {
@@ -222,6 +223,7 @@ class AdaptiveTestGenerator implements TestGenerator {
 
     private function evalIntervalLength($results_size) {
         $index_sum = 0;
+        if ($results_size == 1) return Weights::MAX_TRAIN_TEST_INTERVAL_LENGTH;
         for ($i = 1; $i <= $results_size - 1; $i++) {
             $index_sum += $i;
         }
@@ -246,7 +248,7 @@ class AdaptiveTestGenerator implements TestGenerator {
 
     private function evalLecturesActivity($id_student, $group_id) {
         $lectures_group_attendance = Lectures::whereGroup($group_id)->get();
-        $lectures_student_attendance = Lectures::whereUserID($id_student)->first();
+        $lectures_student_attendance = Lectures::whereUserid($id_student)->first();
         $attendance_percentage = $this->getAttendancePercentage($lectures_group_attendance, $lectures_student_attendance);
         if ($attendance_percentage > 0.8) return 0.05 * ($attendance_percentage + 1);
         if ($attendance_percentage >= 0.5) return $attendance_percentage / 3 - 2.4;
@@ -259,7 +261,7 @@ class AdaptiveTestGenerator implements TestGenerator {
 
     private function evalSeminarsAttendanceActivity($id_student, $group_id) {
         $seminars_group_attendance = Seminars::whereGroup($group_id)->get();
-        $seminars_student_attendance = Seminars::whereUserID($id_student)->first();
+        $seminars_student_attendance = Seminars::whereUserid($id_student)->first();
         $attendance_percentage = $this->getAttendancePercentage($seminars_group_attendance, $seminars_student_attendance);
         if ($attendance_percentage >= 0.6) return 0.5 * ($attendance_percentage -1);
         return -0.2;
@@ -267,7 +269,7 @@ class AdaptiveTestGenerator implements TestGenerator {
 
     private function evalSeminarsWorkActivity($id_student, $group_id) {
         $seminars_group_attendance = Seminars::whereGroup($group_id)->get();
-        $seminars_student_work = Classwork::whereUserID($id_student)->first();
+        $seminars_student_work = Classwork::whereUserid($id_student)->first();
         $work_percentage = $this->getAttendancePercentage($seminars_group_attendance, $seminars_student_work);
         return 0.2 * $work_percentage;
     }
@@ -289,6 +291,7 @@ class AdaptiveTestGenerator implements TestGenerator {
                 if ((int)$student_attendance[$column_name] > 0) $visited++;
             }
         }
+        if ($carried == 0) return 1;
         return $visited / $carried;
     }
 
@@ -300,8 +303,8 @@ class AdaptiveTestGenerator implements TestGenerator {
         foreach ($sections as $section) {
             $questions = Question::whereSection_code($section['section_code'])
                 ->join('types', 'questions.type_code', '=', 'types.type_code')
-                ->where('types.only_fpr_print', '=', '0')
-                ->select('id_question', 'pass_time', 'difficulty')->get();
+                ->where('types.only_for_print', '=', '0')
+                ->select('id_question', 'pass_time', 'difficulty', 'discriminant', 'guess')->get();
             foreach ($questions as $question) {
                 $questions_counter++;
                 $difficult_sum += $question['difficulty'];
@@ -372,6 +375,7 @@ class AdaptiveTestGenerator implements TestGenerator {
     }
 
     private function getCurrentClass() {
+        if ($this->current_question_number == 1) return QuestionClass::MIDDLE;
         $prev_class = end($this->visited_classes);
         $points_for_prev_question = end($this->passed_questions)->getRightFactor();
         return QuestionClass::getNextClass($prev_class, $points_for_prev_question);
@@ -388,13 +392,13 @@ class AdaptiveTestGenerator implements TestGenerator {
         while ($possible_questions_count == 0  && $try < 3) {
             $classes_questions = [];
             $try++;
-            $classes_for_choose[] = QuestionClass::getNearestClasses($class, $try);
+            $classes_for_choose = QuestionClass::getNearestClasses($class, $try);
             foreach ($classes_for_choose as $class_for_choose) {
                 if ($phase == Phase::MAIN) {
-                    $questions_in_class[] = $this->question_pool->getMainPhasePool()[$class_for_choose];
+                    $questions_in_class = $this->question_pool->getMainPhasePool()[$class_for_choose];
                 }
                 else {
-                    $questions_in_class[] = $this->question_pool->getCommonPool()[$class_for_choose];
+                    $questions_in_class = $this->question_pool->getCommonPool()[$class_for_choose];
                 }
                 if (count($questions_in_class) != 0) {
                     $classes_questions = array_merge($classes_questions, $questions_in_class);

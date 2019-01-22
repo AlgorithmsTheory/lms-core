@@ -11,7 +11,7 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 /**
- * @method static \Illuminate\Database\Query\Builder|\App\User whereUserID($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\User whereUserid($value)
  * @method static \Illuminate\Database\Query\Builder|\App\User whereGroup($value)
  */
 
