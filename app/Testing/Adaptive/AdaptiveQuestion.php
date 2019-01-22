@@ -28,18 +28,17 @@ class AdaptiveQuestion {
     public function __construct(Question $question, $student_knowledge_level) {
         $this->id = $question['id_question'];
         $this->pass_time = $question['pass_time'];
-        $this->difficulty = $question['difficulty'];
+        $this->difficulty = $question['difficulty'] + 3;
         $this->right_factor = -1;
         $this->class = QuestionClass::getQuestionClass(
-            1 - $this->evalProbabilityToBeCorrect($question['difficulty'],
-                                                                        $question['discriminant'],
+            1 - $this->evalProbabilityToBeCorrect($question['discriminant'],
                                                                         $question['guess'],
                                                                         $student_knowledge_level)
         );
     }
 
-    public function evalProbabilityToBeCorrect($difficulty, $discriminant, $guess, $student_knowledge_level) {
-        $exp = exp(1.7 + $discriminant * ($student_knowledge_level - $difficulty));
+    public function evalProbabilityToBeCorrect($discriminant, $guess, $student_knowledge_level) {
+        $exp = exp(1.7 + $discriminant * ($student_knowledge_level - $this->difficulty));
         return $guess + (1 - $guess) * $exp / (1 + $exp);
     }
 

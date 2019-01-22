@@ -135,7 +135,7 @@ class AdaptiveTestController extends Controller {
         //TODO: perhaps we need to store question form data in AdaptiveQuestion
         $test_tasks = TestTask::whereId_result($id_result)
             ->join('questions', 'test_tasks.id_question', '=', 'questions.id_question')
-            ->select('questions.id_question as id', 'questions.points as points,', 'test_tasks.points as score')->get();
+            ->select('questions.id_question as id', 'questions.points as points', 'test_tasks.points as score')->get();
 
         $points_sum = 0;
         $score_sum = 0;
@@ -154,7 +154,7 @@ class AdaptiveTestController extends Controller {
             array_push($link_to_lecture, $this->question->linkToLecture($task['id']));
         }
 
-        $score = $total * $test_tasks['score'] / $test_tasks['points'];
+        $score = $total * $score_sum / $points_sum;
         $score = round($score,1);
 
         $mark_bologna = $this->test->calcMarkBologna($total, $score);                                                         //оценки
@@ -162,8 +162,7 @@ class AdaptiveTestController extends Controller {
 
         Result::whereId_result($id_result)->update(['result_date' => $date, 'result' => $score, 'mark_ru' => $mark_rus, 'mark_eu' => $mark_bologna]);
 
-        // TODO: must render test result page
-        return redirect('home');
+        return view('adaptive_tests.results', compact('total', 'score', 'mark_bologna', 'mark_rus'));
     }
 
     public function dropTest(Request $request) {
