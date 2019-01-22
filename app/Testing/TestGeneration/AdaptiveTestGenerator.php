@@ -88,7 +88,8 @@ class AdaptiveTestGenerator implements TestGenerator {
      */
     private $passed_questions = [];
 
-    public function __construct($mark_expected_by_student, $id_test) {
+    public function __construct($mark_expected_by_student, $id_test, $id_result) {
+        $this->id_result = $id_result;
         $this->id_test = $id_test;
         $student_id = Auth::user()['id'];
         $student = User::whereId($student_id)->select('group', 'knowledge_level')->first();
@@ -184,7 +185,7 @@ class AdaptiveTestGenerator implements TestGenerator {
     }
 
     public function getCurrentQuestionEndTime() {
-        end($this->passed_questions)->getEndTime();
+        return end($this->passed_questions)->getEndTime();
     }
 
     private function evalStudentExpectedMark($mark_expected_by_student, $student_id, $group_id) {

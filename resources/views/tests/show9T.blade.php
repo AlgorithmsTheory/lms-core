@@ -1,5 +1,3 @@
-<html>
-<body>
 <div class="col-md-12 col-sm-6">
     {!! Form::open(['method' => 'PATCH', 'route' => 'question_checktest', 'class' => 'smart-blue']) !!}
     <h1>Вопрос {{ $count }}</h1>
@@ -37,5 +35,3 @@
     {!! Form::close() !!}
     <br>
 </div>
-</body>
-</html>

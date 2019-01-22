@@ -57,9 +57,9 @@ class AdaptiveTestController extends Controller {
     public function init(Request $request, $id_test) {
         $expected_mark = $request->input('expected-mark')[0];
         $student_id = Auth::user()['id'];
-        $generator = new AdaptiveTestGenerator($expected_mark, $id_test);
-        $generator->generate(Test::whereId_test($id_test)->first());
         $new_result_id = Result::max('id_result') + 1;
+        $generator = new AdaptiveTestGenerator($expected_mark, $id_test, $new_result_id);
+        $generator->generate(Test::whereId_test($id_test)->first());
         Result::insert(['id_result' => $new_result_id, 'id_test' => $id_test, 'id' => $student_id]);
         $first_question = $generator->chooseQuestion();
         $request->session()->put('adaptive_test_'.$student_id, serialize($generator));
@@ -100,18 +100,22 @@ class AdaptiveTestController extends Controller {
         $serialized_test = $request->session()->get('adaptive_test_'.$student_id);
         $test_instance = unserialize($serialized_test);
 
-        $array = [];
+        $data = $request->input('0');
+        $array = json_decode($data);
+        $id_question = $array[0];
+
         // TODO: get well-formed array from question form for next check
 
         $check_data = $this->question->check($array);
 
         $test_instance->setRightFactorAfterCheck($check_data['right_percent'] / 100);
-        TestTask::insert(['points' => $check_data['score'], 'id_question' => $check_data['id'], 'id_result' => $test_instance->getIdResult()]);
+        TestTask::insert(['points' => $check_data['score'], 'id_question' => $id_question, 'id_result' => $test_instance->getIdResult()]);
 
         $next_question_id = $test_instance->chooseQuestion();
         if ($next_question_id == -1) {
             return redirect()->route('result_adaptive_test');
         }
+        $request->session()->put('adaptive_test_'.$student_id, serialize($test_instance));
         $response = $this->getNextQuestionResponse($test_instance, $this->question, $next_question_id);
         return $response;
     }

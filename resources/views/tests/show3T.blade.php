@@ -1,5 +1,3 @@
-<html>
-<body>
 <div class="col-md-12 col-sm-6">
 {!! Form::open(['method' => 'PATCH', 'class' => 'smart-blue']) !!}
 <h1>Вопрос {{ $count }}</h1>
@@ -27,5 +25,3 @@
     {{ $text_parts[$num_slot] }} </p>
 {!! Form::close() !!}
 </div>
-</body>
-</html>

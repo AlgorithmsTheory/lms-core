@@ -47,78 +47,78 @@ function sendForm(status){
 }
 
 function fillSuper(){
-        var array = [];
+
         var amount = document.getElementById('amount').value;
         for (var i=0; i<amount; i++){
-            //alert ('i= '+i);
-            var typeOfForm = document.forms[i].type.value;
-            var k = 0;
-            var pattern = /^\d+$/;
-            var allElem = document.forms[i].elements;
-            for (var j=0; j<document.forms[i].elements.length; j++){
-                //alert (allElem[j].name);
-                if(typeOfForm == 1){   // выбор одного из списка
-                    if(allElem[j].name=='num' || (allElem[j].name=='choice' && allElem[j].checked == true)) {
-                        array[k] = allElem[j].value;
-                        k++;
-                    }
-                }
-
-                if(typeOfForm == 2){     //выбор нескольких из списка
-                    if(allElem[j].name=='num' || (allElem[j].name=='choice[]' && allElem[j].checked == true)){
-                        array[k] = allElem[j].value;
-                         k++;
-                    }
-                }
-
-                if(typeOfForm == 3){   //текстовый вопрос
-                    if(allElem[j].name=='num' || (pattern.test(allElem[j].name) && pattern.test(allElem[j].selectedIndex))){
-                        array[k] = allElem[j].value;
-                        k++;
-                    }
-                }
-
-                if(typeOfForm == 4){       //таблица соотвтествий
-                    if(allElem[j].name=='num'){
-                        array[k] = allElem[j].value;
-                        k++;
-                    }
-                    if ((pattern.test(allElem[j].name) && allElem[j].checked == true)){
-                        array[k] = allElem[j].name;
-                        k++;
-                    }
-                }
-
-                if(typeOfForm == 5){    //да-нет
-                    if(allElem[j].name=='num' || (pattern.test(allElem[j].name) && allElem[j].checked == true)){
-                        array[k] = allElem[j].value;
-                        k++;
-                    }
-                }
-
-                if(typeOfForm == 8){    //открытый тип
-                    if(allElem[j].name=='num' || (allElem[j].name=='choice')){
-                        array[k] = allElem[j].value;
-                        k++;
-                    }
-                }
-                if(typeOfForm == 9){    //три точки
-                    if(allElem[j].name=='num' || (allElem[j].name=='choice[]')){
-                        array[k] = allElem[j].value;
-                        k++;
-                    }
-                }
-                if(typeOfForm == 11){    //восстановить аналитический вид
-                    if(allElem[j].name=='num' || (allElem[j].name=='choice')){
-                        array[k] = allElem[j].value;
-                        k++;
-                    }
-                }
-
-            }
-            //alert(array);
-            document.getElementById('super'+i).value=JSON.stringify(array);   //заполнили суперформу id и выбранными вариантами
-            //alert (document.getElementById('super'+i).value);
-            array = [];
+            fill(i);
         }
+}
+
+function fill(i) {
+    var array = [];
+    var typeOfForm = document.forms[i].type.value;
+    var k = 0;
+    var pattern = /^\d+$/;
+    var allElem = document.forms[i].elements;
+    for (var j=0; j<document.forms[i].elements.length; j++){
+        if(typeOfForm == 1){   // выбор одного из списка
+            if(allElem[j].name=='num' || (allElem[j].name=='choice' && allElem[j].checked == true)) {
+                array[k] = allElem[j].value;
+                k++;
+            }
+        }
+
+        if(typeOfForm == 2){     //выбор нескольких из списка
+            if(allElem[j].name=='num' || (allElem[j].name=='choice[]' && allElem[j].checked == true)){
+                array[k] = allElem[j].value;
+                k++;
+            }
+        }
+
+        if(typeOfForm == 3){   //текстовый вопрос
+            if(allElem[j].name=='num' || (pattern.test(allElem[j].name) && pattern.test(allElem[j].selectedIndex))){
+                array[k] = allElem[j].value;
+                k++;
+            }
+        }
+
+        if(typeOfForm == 4){       //таблица соотвтествий
+            if(allElem[j].name=='num'){
+                array[k] = allElem[j].value;
+                k++;
+            }
+            if ((pattern.test(allElem[j].name) && allElem[j].checked == true)){
+                array[k] = allElem[j].name;
+                k++;
+            }
+        }
+
+        if(typeOfForm == 5){    //да-нет
+            if(allElem[j].name=='num' || (pattern.test(allElem[j].name) && allElem[j].checked == true)){
+                array[k] = allElem[j].value;
+                k++;
+            }
+        }
+
+        if(typeOfForm == 8){    //открытый тип
+            if(allElem[j].name=='num' || (allElem[j].name=='choice')){
+                array[k] = allElem[j].value;
+                k++;
+            }
+        }
+        if(typeOfForm == 9){    //три точки
+            if(allElem[j].name=='num' || (allElem[j].name=='choice[]')){
+                array[k] = allElem[j].value;
+                k++;
+            }
+        }
+        if(typeOfForm == 11){    //восстановить аналитический вид
+            if(allElem[j].name=='num' || (allElem[j].name=='choice')){
+                array[k] = allElem[j].value;
+                k++;
+            }
+        }
+
+    }
+    document.getElementById('super'+i).value=JSON.stringify(array);   //заполнили суперформу id и выбранными вариантами
 }

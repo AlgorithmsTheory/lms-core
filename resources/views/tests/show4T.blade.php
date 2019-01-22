@@ -1,5 +1,3 @@
-<html>
-<body>
 {!! Form::open(['method' => 'PATCH', 'class' => 'smart-blue']) !!}
 <h1>Вопрос {{ $count }}</h1>
 <input type="hidden" name="num" value="{{ $id }}">
@@ -41,5 +39,3 @@
     @endforeach
 </table>
 {!! Form::close() !!}
-</body>
-</html>
