@@ -85,11 +85,17 @@ class AdaptiveTestController extends Controller {
 
     /** Show question */
     public function showQuestion(Request $request, $id_question) {
-        $question = Question::whereId_question($id_question)->first();
         $student_id = Auth::user()['id'];
 
         $serialized_test = $request->session()->get('adaptive_test_'.$student_id);
         $test_instance = unserialize($serialized_test);
+
+        $expected_current_question_id = $test_instance->getCurrentQuestionId();
+        if ($id_question != $expected_current_question_id) {
+            return redirect()->route('show_adaptive_test', $expected_current_question_id);
+        }
+
+        $question = Question::whereId_question($id_question)->first();
         $response = $this->getNextQuestionResponse($test_instance, $question, $id_question);
         return $response;
     }
@@ -103,9 +109,6 @@ class AdaptiveTestController extends Controller {
         $data = $request->input('0');
         $array = json_decode($data);
         $id_question = $array[0];
-
-        // TODO: get well-formed array from question form for next check
-
         $check_data = $this->question->check($array);
 
         $test_instance->setRightFactorAfterCheck($check_data['right_percent'] / 100);
@@ -116,8 +119,7 @@ class AdaptiveTestController extends Controller {
             return redirect()->route('result_adaptive_test');
         }
         $request->session()->put('adaptive_test_'.$student_id, serialize($test_instance));
-        $response = $this->getNextQuestionResponse($test_instance, $this->question, $next_question_id);
-        return $response;
+        return redirect()->route('show_adaptive_test', $next_question_id);
     }
 
     /** Show page with results */
@@ -157,7 +159,7 @@ class AdaptiveTestController extends Controller {
         $score = $total * $score_sum / $points_sum;
         $score = round($score,1);
 
-        $mark_bologna = $this->test->calcMarkBologna($total, $score);                                                         //оценки
+        $mark_bologna = $this->test->calcMarkBologna($total, $score);
         $mark_rus = $this->test->calcMarkRus($total, $score);
 
         Result::whereId_result($id_result)->update(['result_date' => $date, 'result' => $score, 'mark_ru' => $mark_rus, 'mark_eu' => $mark_bologna]);

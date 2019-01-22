@@ -5,6 +5,7 @@
     {!! HTML::script('js/jquery.js') !!}
     {!! HTML::script('js/toolbar.js') !!}
     {!! HTML::script('js/superForm.js') !!}
+    {!! HTML::script('js/adaptive_tests/testPass.js') !!}
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     {!! HTML::style('css/materialadmin_demo.css') !!}

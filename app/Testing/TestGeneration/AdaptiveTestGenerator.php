@@ -39,7 +39,7 @@ class AdaptiveTestGenerator implements TestGenerator {
     private $student_knowledge_level;
 
     /**
-     * @var BolognaMark expected student mark fot the test
+     * @var BolognaMark expected student mark for the test
      */
     private $student_expected_mark;
 
@@ -186,6 +186,10 @@ class AdaptiveTestGenerator implements TestGenerator {
 
     public function getCurrentQuestionEndTime() {
         return end($this->passed_questions)->getEndTime();
+    }
+
+    public function getCurrentQuestionId() {
+        return end($this->passed_questions)->getId();
     }
 
     private function evalStudentExpectedMark($mark_expected_by_student, $student_id, $group_id) {
