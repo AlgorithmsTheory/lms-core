@@ -308,7 +308,7 @@ class AdaptiveTestGenerator implements TestGenerator {
                 ->select('id_question', 'pass_time', 'difficulty', 'discriminant', 'guess')->get();
             foreach ($questions as $question) {
                 $questions_counter++;
-                $difficult_sum += $question['difficulty'];
+                $difficult_sum += $question['difficulty'] + 3;
                 $adaptive_question = new AdaptiveQuestion($question, $this->student_knowledge_level);
                 array_push($common_questions_pool, $adaptive_question);
             }
