@@ -11,7 +11,7 @@ use App\Testing\Question;
 use App\Testing\Type;
 use Illuminate\Http\Request;
 
-class YesNo extends QuestionType{
+class YesNo extends QuestionType implements Checkable {
     const type_code = 5;
     public $single = false;
 
@@ -127,5 +127,9 @@ class YesNo extends QuestionType{
         }
         $html .= '</table><br>';
         $fpdf->WriteHTML($html);
+    }
+
+    public function evalGuess() {
+        return 0.5;
     }
 } 

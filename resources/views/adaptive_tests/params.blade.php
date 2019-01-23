@@ -29,6 +29,12 @@
                             <span>Дискриминант</span>
                         </label>
                     </div>
+                    <div class="checkbox checkbox-styled text-lg">
+                        <label>
+                            <input type="checkbox" name="param[]" id="guess" value="guess">
+                            <span>Параметр угадывания</span>
+                        </label>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-offset-10 col-md-10 col-sm-6">
@@ -40,5 +46,4 @@
 
 @section('js-down')
     {!! HTML::script('js/libs/dropzone/dropzone.js') !!}
-    {!! HTML::script('js/knowledge_level.js') !!}
 @stop

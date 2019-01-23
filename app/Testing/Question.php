@@ -14,6 +14,7 @@ use App\Testing\Qtypes\FromCleene;
 use App\Testing\Qtypes\JustAnswer;
 use App\Testing\Qtypes\MultiChoice;
 use App\Testing\Qtypes\OneChoice;
+use App\Testing\Qtypes\QuestionTypeFactory;
 use App\Testing\Qtypes\Theorem;
 use App\Testing\Qtypes\TheoremLike;
 use App\Testing\Qtypes\ThreePoints;
@@ -108,11 +109,11 @@ class Question extends Eloquent {
     }
 
     /** перемешивает элементы массива */
-    public function mixVariants($variants){
+    public static function mixVariants($variants){
         $num_var = count($variants);
         $new_variants = [];
         for ($i=0; $i<$num_var; $i++){                                                                                  //варианты в случайном порядке
-            $variants = $this->randomArray($variants);
+            $variants = Question::randomArray($variants);
             $chosen = array_pop($variants);
             $new_variants[$i] = $chosen;
         }
@@ -136,54 +137,8 @@ class Question extends Eloquent {
     public function show($id_question, $count, $is_adaptive){
         $type = Question::whereId_question($id_question)->join('types', 'questions.type_code', '=', 'types.type_code')
                 ->first()->type_name;
-        switch($type){
-            case 'Выбор одного из списка':
-                $one_choice = new OneChoice($id_question);
-                $array = $one_choice->show($count);
-                break;
-            case 'Выбор нескольких из списка':
-                $multi_choice = new MultiChoice($id_question);
-                $array = $multi_choice->show($count);
-                break;
-            case 'Текстовый вопрос':
-                $fill_gaps = new FillGaps($id_question);
-                $array = $fill_gaps->show($count);
-                break;
-            case 'Таблица соответствий':
-                $accordance_table = new AccordanceTable($id_question);
-                $array = $accordance_table->show($count);
-                break;
-            case 'Да/Нет':
-                $yes_no = new YesNo($id_question);
-                $array = $yes_no->show($count);
-                break;
-            case 'Определение':
-                $def = new Definition($id_question);
-                $array = $def->show($count);
-                break;
-            case 'Открытый тип':
-                $just = new JustAnswer($id_question);
-                $array = $just->show($count);
-                break;
-            case 'Теорема':
-                $theorem = new Theorem($id_question);
-                $array = $theorem->show($count);
-                return $array;
-                break;
-            case 'Три точки':
-                $three = new ThreePoints($id_question);
-                $array = $three->show($count);
-                break;
-            case 'Как теорема':
-                $three = new TheoremLike($id_question);
-                $array = $three->show($count);
-                return $array;
-                break;
-            case 'Востановить арифметический вид':
-                $clini = new FromCleene($id_question);
-                $array = $clini->show($count);
-                break;
-        }
+        $question = QuestionTypeFactory::getQuestionTypeByTypeName($id_question, $type);
+        $array = $question->show($count);
         $array['arguments']['is_adaptive'] = $is_adaptive;
         $route = $is_adaptive ? 'check_adaptive_test' : 'question_checktest';
         $array['arguments']['route'] = $route;
@@ -206,48 +161,8 @@ class Question extends Eloquent {
             $array[$i] = $array[$i+1];
         }
         array_pop($array);                                                                                              //убираем из входного массива id вопроса, чтобы остались лишь выбранные варианты ответа
-        switch($type){
-            case 'Выбор одного из списка':
-                $one_choice = new OneChoice($id);
-                $data = $one_choice->check($array);
-                return $data;
-                break;
-            case 'Выбор нескольких из списка':
-                $multi_choice = new MultiChoice($id);
-                $data = $multi_choice->check($array);
-                return $data;
-                break;
-            case 'Текстовый вопрос':
-                $fill_gaps = new FillGaps($id);
-                $data = $fill_gaps->check($array);
-                return $data;
-                break;
-            case 'Таблица соответствий':
-                $accordance_table = new AccordanceTable($id);
-                $data = $accordance_table->check($array);
-                return $data;
-                break;
-            case 'Да/Нет':
-                $yes_no = new YesNo($id);
-                $data = $yes_no->check($array);
-                return $data;
-                break;
-            case 'Открытый тип':
-                $just = new JustAnswer($id);
-                $data = $just->check($array);
-                return $data;
-                break;
-            case 'Три точки':
-                $three = new ThreePoints($id);
-                $data = $three->check($array);
-                return $data;
-                break;
-            case 'Востановить арифметический вид':
-                $three = new FromCleene($id);
-                $data = $three->check($array);
-                return $data;
-                break;
-        }
+        $question = QuestionTypeFactory::getQuestionTypeByTypeName($id, $type);
+        return $question->check($array);
     }
 
     /** По id вопроса возвращает массив, где первый элемент - номер лекции, второй - <раздел.тема> */

@@ -13,7 +13,7 @@ use App\Testing\Type;
 use Illuminate\Http\Request;
 use Input;
 use Session;
-class OneChoice extends QuestionType {
+class OneChoice extends QuestionType implements Checkable {
     const type_code = 1;
 
     function __construct($id_question){
@@ -81,7 +81,7 @@ class OneChoice extends QuestionType {
     public function show($count) {
         $parse = $this->variants;
         $variants = explode(";", $parse);
-        $new_variants = $this->question->mixVariants($variants);
+        $new_variants = Question::mixVariants($variants);
         $view = 'tests.show1';
         $array = array('view' => $view, 'arguments' => array('text' => explode('::',$this->text), "variants" => $new_variants, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
         return $array;
@@ -129,7 +129,7 @@ class OneChoice extends QuestionType {
             Session::forget('saved_variants_order');
         }
         else {                                                                                                          // без ответов
-            $new_variants = $this->question->mixVariants($variants);
+            $new_variants = Question::mixVariants($variants);
             Session::put('saved_variants_order', $new_variants);
             foreach ($new_variants as $var){
                 $html .= '<tr>';
@@ -139,5 +139,10 @@ class OneChoice extends QuestionType {
         }
         $html .= '</table><br>';
         $fpdf->WriteHTML($html);
+    }
+
+    public function evalGuess() {
+        $variants_number = count(explode(";", $this->variants));
+        return 1 / $variants_number;
     }
 } 

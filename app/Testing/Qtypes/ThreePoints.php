@@ -6,7 +6,7 @@ use App\Testing\Type;
 use Illuminate\Http\Request;
 use Session;
 
-class ThreePoints extends QuestionType {
+class ThreePoints extends QuestionType implements Checkable {
     const type_code = 9;
     function __construct($id_question){
         parent::__construct($id_question);
@@ -128,7 +128,7 @@ class ThreePoints extends QuestionType {
             Session::forget('saved_variants_order');
         }
         else {                                                                                                          // без ответов
-            $new_variants = $this->question->mixVariants($variants);
+            $new_variants = Question::mixVariants($variants);
             Session::put('saved_variants_order', $new_variants);
             foreach ($new_variants as $var){
                 $html .= '<tr>';
@@ -140,4 +140,7 @@ class ThreePoints extends QuestionType {
         $fpdf->WriteHTML($html);
     }
 
+    public function evalGuess() {
+        return 0.001;
+    }
 }

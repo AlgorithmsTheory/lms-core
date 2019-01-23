@@ -7,7 +7,7 @@ use App\Testing\Type;
 use Illuminate\Http\Request;
 use Input;
 use Session;
-class FromCleene extends QuestionType {
+class FromCleene extends QuestionType implements Checkable {
     const type_code = 11;
 
     function __construct($id_question) {
@@ -130,7 +130,7 @@ class FromCleene extends QuestionType {
             Session::forget('saved_variants_order');
         }
         else {                                                                                                          // без ответов
-            $new_variants = $this->question->mixVariants($variants);
+            $new_variants = Question::mixVariants($variants);
             Session::put('saved_variants_order', $new_variants);
             foreach ($new_variants as $var){
                 $html .= '<tr>';
@@ -140,5 +140,9 @@ class FromCleene extends QuestionType {
         }
         $html .= '</table><br>';
         $fpdf->WriteHTML($html);
+    }
+
+    public function evalGuess() {
+        return 0.001;
     }
 }
