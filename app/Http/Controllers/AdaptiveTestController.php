@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Testing\Qtypes\QuestionTypeFactory;
 use App\Testing\Result;
 use App\Testing\TestForGroup;
 use App\Testing\TestGeneration\AdaptiveTestGenerator;
@@ -179,23 +180,27 @@ class AdaptiveTestController extends Controller {
 
     public function evalParams(Request $request) {
         $params = $request->input('param');
+        $questions = Question::where('section_code', '>', 0)
+            ->whereRaw("type_code in (select type_code from types where only_for_print = 0)")
+            ->select('id_question', 'type_code')->get();
         foreach ($params as $param) {
             if ($param == 'difficulty') {
-                $questions = Question::where('section_code', '>', 0)
-                    ->whereRaw("type_code in (select type_code from types where only_for_print = 0)")
-                    ->select('id_question')->get();
                 foreach($questions as $question) {
                     $difficulty = $question->evalDifficulty($question->id_question);
                     Question::whereId_question($question->id_question)->update(['difficulty' => $difficulty]);
                 }
             }
             if ($param == 'discriminant') {
-                $questions = Question::where('section_code', '>', 0)
-                    ->whereRaw("type_code in (select type_code from types where only_for_print = 0)")
-                    ->select('id_question')->get();
                 foreach($questions as $question) {
                     $discriminant = $question->evalDiscriminant($question->id_question);
                     Question::whereId_question($question->id_question)->update(['discriminant' => $discriminant]);
+                }
+            }
+            if ($param == 'guess') {
+                foreach($questions as $question) {
+                    $question_type = QuestionTypeFactory::getQuestionTypeByTypeCode($question->id_question, $question->type_code);
+                    $guess = $question_type->evalGuess();
+                    Question::whereId_question($question->id_question)->update(['guess' => $guess]);
                 }
             }
         }

@@ -48,10 +48,6 @@ class Theorem extends QuestionType {
         return $array;
     }
 
-    public function check($array) {
-        // TODO: theorem is not checked automatically
-    }
-
     public function pdf(Mypdf $fpdf, $count, $answered=false) {
         $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
         $html .= '  Напишите или продолжите формулировку и приведите доказательство теоремы</td></tr>';

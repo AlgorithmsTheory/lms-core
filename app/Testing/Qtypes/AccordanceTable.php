@@ -11,7 +11,7 @@ use App\Testing\Question;
 use App\Testing\Type;
 use Illuminate\Http\Request;
 
-class AccordanceTable extends QuestionType {
+class AccordanceTable extends QuestionType implements Checkable {
     const type_code = 4;
 
     function __construct($id_question) {
@@ -213,5 +213,73 @@ class AccordanceTable extends QuestionType {
         }
         $html .= '</table><br>';
         $fpdf->WriteHTML($html);
+    }
+
+    public function evalGuess() {
+        $table_rows_number = count(explode(";", $this->text));
+        $table_columns_number = count(explode(";", $this->variants));
+        $row_number = 1 << $table_rows_number;
+
+        $answers = explode(";" ,$this->answer);
+        $right_answers_numbers = [];
+        array_fill(0, $table_columns_number, 0);
+        for ($i = 0; $i < count($answers); $i++) {
+            $row = intdiv($answers[$i] - 1, $table_columns_number);
+            $right_answers_numbers[$row]++;
+        }
+
+        $row_probabilities = [];
+        for ($i = 0; $i < $table_rows_number; $i++) {
+            $local_row_number = 1 << $table_columns_number;
+            $min_right_answers = ceil(0.6 * $right_answers_numbers[$i]);
+            $right_sum = 0;
+            for ($row = 1; $row < $local_row_number; $row++) {
+                $splitted_binary_matrix_value = str_split(decbin($row));
+                $first_table_raw_after_left_leading_zeroes = $table_columns_number - count($splitted_binary_matrix_value);
+                $row_sum = 0;
+                $k = 0;
+                for ($col = $first_table_raw_after_left_leading_zeroes; $col < $table_columns_number; $col++) {
+                    if ($col < $right_answers_numbers[$i]) {
+                        $row_sum += $splitted_binary_matrix_value[$k++];
+                    }
+                    else {
+                        $row_sum -= $splitted_binary_matrix_value[$k++];
+                    }
+                }
+                if ($row_sum >= $min_right_answers) {
+                    $right_sum++;
+                }
+            }
+            $row_probabilities[$i] = $right_sum / ($local_row_number - 1);
+        }
+
+        $total_probability = 0;
+        for ($row = 0; $row < $row_number; $row++) {
+            $right_row_answers = 0;
+            $row_probability = 1;
+            $splitted_binary_matrix_value = str_split(decbin($row));
+            $first_table_raw_after_left_leading_zeroes = $table_rows_number - count($splitted_binary_matrix_value);
+
+            for ($table_row = 0; $table_row < $first_table_raw_after_left_leading_zeroes; $table_row++) {
+                $row_probability *= 1 - $row_probabilities[$table_row];
+            }
+
+            $k = 0;
+            for ($table_row = $first_table_raw_after_left_leading_zeroes; $table_row < $table_rows_number; $table_row++) {
+                if ($splitted_binary_matrix_value[$k++] > 0) {
+                    $right_row_answers++;
+                    $row_probability *= $row_probabilities[$table_row];
+                }
+                else {
+                    $row_probability *= 1 - $row_probabilities[$table_row];
+                }
+            }
+
+            if ($right_row_answers >= 0.6 * $table_rows_number) {
+                $total_probability += $row_probability;
+            }
+        }
+
+        return $total_probability;
     }
 } 

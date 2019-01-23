@@ -8,6 +8,8 @@
 namespace App\Http\Controllers;
 
 use App\Testing\Qtypes\FromCleene;
+use App\Testing\Qtypes\QuestionType;
+use App\Testing\Qtypes\QuestionTypeFactory;
 use App\Testing\Qtypes\Theorem;
 use App\Testing\Qtypes\TheoremLike;
 use App\Testing\Section;
@@ -29,19 +31,14 @@ use App\Testing\Qtypes\ThreePoints;
 use App\Testing\TestGeneration\UsualTestGenerator;
 use View;
 
-class QuestionController extends Controller{
+class QuestionController extends Controller {
     private $question;
     function __construct(Question $question){
         $this->question=$question;
     }
 
-    /** главная страница модуля тестирования */
     public function index(){
-        $username =  null;
-//        $testGenerator = new UsualTestGenerator(Test::whereId_test(100)->first());
-//        $testGenerator->buildGraph();
-//        $testGenerator->generate();
-        return view('questions.teacher.index', compact('username', 'image'));
+        return redirect()->route('questions_list');
     }
 
     /** переход на страницу формы добавления */
@@ -54,97 +51,19 @@ class QuestionController extends Controller{
     public function getType(Request $request){
         if ($request->ajax()){
             $type = $request->input('choice');
+            $type_code = Type::whereType_name($type)->select('type_code')->first()->type_code;
             $sections = Section::all();
-            switch($type){
-                case 'Выбор одного из списка':
-                    return (String) view('questions.teacher.create1', compact('sections'));
-                    break;
-                case 'Выбор нескольких из списка':
-                    return (String) view('questions.teacher.create2', compact('sections'));
-                    break;
-                case 'Текстовый вопрос':
-                    return (String) view('questions.teacher.create3', compact('sections'));
-                    break;
-                case 'Таблица соответствий':
-                    return (String) view('questions.teacher.create5', compact('sections'));
-                    break;
-                case 'Да/Нет':
-                    return (String) view('questions.teacher.create4', compact('sections'));
-                    break;
-                case 'Определение':
-                    return (String) view('questions.teacher.create7', compact('sections'));
-                    break;
-                case 'Открытый тип':
-                    return (String) view('questions.teacher.create8', compact('sections'));
-                    break;
-                case 'Теорема':
-                    return (String) view('questions.teacher.create6', compact('sections'));
-                    break;
-                case 'Три точки':
-                    return (String) view('questions.teacher.create9', compact('sections'));
-                    break;
-                case 'Как теорема':
-                    return (String) view('questions.teacher.create10', compact('sections'));
-                    break;
-                case 'Востановить арифметический вид':
-                    return (String) view('questions.teacher.create11', compact('sections'));
-                    break;
-            }
+            return (String) view(QuestionType::CREATE_VIEW_PREFIX . $type_code, compact('sections'));
         }
     }
 
     /** Обработка формы добавления вопроса */
     public function add(Request $request){
-        //$code = $this->question->setCode($request);
         $type = $request->input('type');
         $query = Question::max('id_question');                                                                          //пример использования агрегатных функций!!!
         $id = $query+1;
-        switch($type){
-            case 'Выбор одного из списка':
-                $one_choice = new OneChoice($id);
-                $one_choice->add($request);
-                break;
-            case 'Выбор нескольких из списка':
-                $multi_choice = new MultiChoice($id);
-                $multi_choice->add($request);
-                break;
-            case 'Текстовый вопрос':
-                $fill_gaps = new FillGaps($id);
-                $fill_gaps->add($request);
-                break;
-            case 'Таблица соответствий':
-                $fill_gaps = new AccordanceTable($id);
-                $fill_gaps->add($request);
-                break;
-            case 'Да/Нет':
-                $fill_gaps = new YesNo($id);
-                $fill_gaps->add($request);
-                break;
-            case 'Определение':
-                $definition = new Definition($id);
-                $definition->add($request);
-                break;
-            case 'Открытый тип':
-                $just = new JustAnswer($id);
-                $just->add($request);
-                break;
-            case 'Теорема':
-                $theorem = new Theorem($id);
-                $theorem->add($request);
-                break;
-            case 'Три точки':
-                $three = new ThreePoints($id);
-                $three->add($request);
-                break;
-            case 'Как теорема':
-                $theorem = new TheoremLike($id);
-                $theorem->add($request);
-                break;
-            case 'Востановить арифметический вид':
-                $theorem = new FromCleene($id);
-                $theorem->add($request);
-                break;
-        }
+        $question = QuestionTypeFactory::getQuestionTypeByTypeName($id, $type);
+        $question->add($request);
         return redirect()->route('question_create');
     }
 
@@ -244,116 +163,20 @@ class QuestionController extends Controller{
         $type_name = Type::whereType_code($type_code)->select('type_name')->first()->type_name;
         $themes = Theme::whereSection_code($question->section_code)->get();
         $sections = Section::all();
-        switch($type_name){
-                case 'Выбор одного из списка':
-                $one_choice = new OneChoice($id_question);
-                $data = $one_choice->edit();
-                return view('questions.teacher.edit1', compact('data', 'sections', 'themes'));
-                break;
-            case 'Выбор нескольких из списка':
-                $multi_choice = new MultiChoice($id_question);
-                $data = $multi_choice->edit();
-                return view('questions.teacher.edit2', compact('data', 'sections', 'themes'));
-                break;
-            case 'Текстовый вопрос':
-                $fill_gaps = new FillGaps($id_question);
-                $data = $fill_gaps->edit();
-                return view('questions.teacher.edit3', compact('data', 'sections', 'themes'));
-                break;
-            case 'Таблица соответствий':
-                $accordance_table = new AccordanceTable($id_question);
-                $data = $accordance_table->edit();
-                return view('questions.teacher.edit5', compact('data', 'sections', 'themes'));
-                break;
-            case 'Да/Нет':
-                $yes_no = new YesNo($id_question);
-                $data = $yes_no->edit();
-                return view('questions.teacher.edit4', compact('data', 'sections', 'themes'));
-                break;
-            case 'Определение':
-                $definition = new Definition($id_question);
-                $data = $definition->edit();
-                return view('questions.teacher.edit7', compact('data', 'sections', 'themes'));
-                break;
-            case 'Открытый тип':
-                $just = new JustAnswer($id_question);
-                $data = $just->edit();
-                return view('questions.teacher.edit8', compact('data', 'sections', 'themes'));
-                break;
-            case 'Теорема':
-                $theorem = new Theorem($id_question);
-                $data = $theorem->edit();
-                return view('questions.teacher.edit6', compact('data', 'sections', 'themes'));
-                break;
-            case 'Три точки':
-                $three_points = new ThreePoints($id_question);
-                $data = $three_points->edit();
-                return view('questions.teacher.edit9', compact('data', 'sections', 'themes'));
-                break;
-            case 'Как теорема':
-                $theorem_like = new TheoremLike($id_question);
-                $data = $theorem_like->edit();
-                return view('questions.teacher.edit6', compact('data', 'sections', 'themes'));
-                break;
-            case 'Востановить арифметический вид':
-                $from_cleene = new FromCleene($id_question);
-                $data = $from_cleene->edit();
-                return view('questions.teacher.edit11', compact('data', 'sections', 'themes'));
-                break;
-            }
+
+        $question = QuestionTypeFactory::getQuestionTypeByTypeName($id_question, $type_name);
+        $data = $question->edit();
+        $view_name = QuestionType::EDIT_VIEW_PREFIX . $question->type_code;
+        return view($view_name, compact('data', 'sections', 'themes'));
     }
 
     public function update(Request $request) {
         $id_question = $request->input('id-question');
         $type_code = Question::whereId_question($id_question)->select('type_code')->first()->type_code;
         $type_name = Type::whereType_code($type_code)->select('type_name')->first()->type_name;
-        switch($type_name){
-            case 'Выбор одного из списка':
-                $one_choice = new OneChoice($id_question);
-                $one_choice->update($request);
-                break;
-            case 'Выбор нескольких из списка':
-                $multi_choice = new MultiChoice($id_question);
-                $multi_choice->update($request);
-                break;
-            case 'Текстовый вопрос':
-                $fill_gaps = new FillGaps($id_question);
-                $fill_gaps->update($request);
-                break;
-            case 'Таблица соответствий':
-                $accordance_table = new AccordanceTable($id_question);
-                $accordance_table->update($request);
-                break;
-            case 'Да/Нет':
-                $yes_no = new YesNo($id_question);
-                $yes_no->update($request);
-                break;
-            case 'Определение':
-                $definition = new Definition($id_question);
-                $definition->update($request);
-                break;
-            case 'Открытый тип':
-                $just = new JustAnswer($id_question);
-                $just->update($request);
-                break;
-            case 'Теорема':
-                $theorem = new Theorem($id_question);
-                $theorem->update($request);
-                break;
-            case 'Три точки':
-                $three_points = new ThreePoints($id_question);
-                $three_points->update($request);
-                break;
-            case 'Как теорема':
-                $theorem_like = new TheoremLike($id_question);
-                $theorem_like->update($request);
-                break;
-            case 'Востановить арифметический вид':
-                $from_cleene = new FromCleene($id_question);
-                $from_cleene->update($request);
-                break;
 
-        }
+        $question = QuestionTypeFactory::getQuestionTypeByTypeName($id_question, $type_name);
+        $question->update($request);
         return redirect()->route('questions_list');
     }
 

@@ -3,8 +3,8 @@
  */
 var tr_number=document.getElementById("table-tr").value; //были изменения
 var td_number=document.getElementById("table-td").value;
-var cols = parseInt(tr_number);
-var rows = parseInt(td_number);
+var rows = parseInt(tr_number);
+var cols = parseInt(td_number);
 
 $('#guess').val(evalGuess(rows, cols));
 
@@ -104,7 +104,7 @@ function evalGuess(rows, columns) {
             }
             else multProbability *= 1 - evalProbabilityForRow(columns, getRightAnswersCountInRow(j+1, columns));
         }
-        console.log(splittedBinaryNumber + ': ' + rightAnswers + ', ' + multProbability);
+        console.log(splittedBinaryNumber.join() + ': ' + rightAnswers + ', ' + multProbability);
         if (rightAnswers >= 0.6 * rows) totalProbability += multProbability;
     }
     return totalProbability;
@@ -123,7 +123,6 @@ function getMinWriteAnswersForRow(rightAnswersCount) {
 }
 
 function evalProbabilityForRow(count, rightAnswersCount) {
-    console.log('count=' + count, ', rightAnswerCount=' + rightAnswersCount);
     var rowNumber = 1 << count;
     var minWriteAnswers = getMinWriteAnswersForRow(rightAnswersCount);
     var rightSums = 0;
@@ -138,6 +137,5 @@ function evalProbabilityForRow(count, rightAnswersCount) {
         }
         if (sum >= minWriteAnswers) rightSums++;
     }
-    console.log('probability for row: ' + rightSums / (rowNumber - 1));
     return rightSums / (rowNumber - 1);
 }

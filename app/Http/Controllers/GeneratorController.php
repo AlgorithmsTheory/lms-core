@@ -15,6 +15,7 @@ use App\Testing\Qtypes\FillGaps;
 use App\Testing\Qtypes\JustAnswer;
 use App\Testing\Qtypes\MultiChoice;
 use App\Testing\Qtypes\OneChoice;
+use App\Testing\Qtypes\QuestionTypeFactory;
 use App\Testing\Qtypes\Theorem;
 use App\Testing\Qtypes\TheoremLike;
 use App\Testing\Qtypes\YesNo;
@@ -29,44 +30,8 @@ class GeneratorController extends Controller {
     private function pdfQuestion(Mypdf $fpdf, $id_question, $count, $answered=false){
         $type = Question::whereId_question($id_question)->join('types', 'questions.type_code', '=', 'types.type_code')
                 ->first()->type_name;
-        switch($type){
-            case 'Выбор одного из списка':
-                $one_choice = new OneChoice($id_question);
-                $one_choice->pdf($fpdf, $count, $answered);
-                break;
-            case 'Выбор нескольких из списка':
-                $multi_choice = new MultiChoice($id_question);
-                $multi_choice->pdf($fpdf, $count, $answered);
-                break;
-            case 'Текстовый вопрос':
-                $fill_gaps = new FillGaps($id_question);
-                $fill_gaps->pdf($fpdf, $count, $answered);
-                break;
-            case 'Таблица соответствий':
-                $accordance_table = new AccordanceTable($id_question);
-                $accordance_table->pdf($fpdf, $count, $answered);
-                break;
-            case 'Да/Нет':
-                $yes_no = new YesNo($id_question);
-                $yes_no->pdf($fpdf, $count, $answered);
-                break;
-            case 'Определение':
-                $def = new Definition($id_question);
-                $def->pdf($fpdf, $count, $answered);
-                break;
-            case 'Просто ответ':
-                $just = new JustAnswer($id_question);
-                $just->pdf($fpdf, $count, $answered);
-                break;
-            case 'Теорема':
-                $theorem = new Theorem($id_question);
-                $theorem->pdf($fpdf, $count, $answered);
-                break;
-            case 'Как теорема':
-                $theorem = new TheoremLike($id_question);
-                $theorem->pdf($fpdf, $count, $answered);
-                break;
-        }
+        $question = QuestionTypeFactory::getQuestionTypeByTypeName($id_question, $type);
+        $question->pdf($fpdf, $count, $answered);
     }
 
     private function headOfPdf(Mypdf $fpdf, $test_name, $variant, $num_tasks){

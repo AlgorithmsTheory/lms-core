@@ -17,8 +17,9 @@ use Input;
 abstract class QuestionType {
     const PUBLIC_DIR = 'public/';
     const IMAGES_IN_TITLE_DIR = 'img/questions/title/';
+    const CREATE_VIEW_PREFIX = 'questions.teacher.create';
+    const EDIT_VIEW_PREFIX = 'questions.teacher.edit';
 
-    public $question;
     public $id_question;
     public $text;
     public $eng_text;
@@ -33,20 +34,19 @@ abstract class QuestionType {
     public $type_code;
 
     function __construct($id_question){
-        if ($id_question != Question::max('id_question')+1){                                                            //проверка не является ли вопрос новым
-            $this->question = new Question();
-            $query = Question::whereId_question($id_question)->first();
-            $this->text = $query->title;
-            $this->eng_text = $query->title_eng;
-            $this->variants = $query->variants;
-            $this->eng_variants = $query->variants_eng;
-            $this->answer = $query->answer;
-            $this->eng_answer = $query->answer_eng;
-            $this->points = $query->points;
-            $this->control = $query->control;
-            $this->section_code = $query->section_code;
-            $this->theme_code = $query->theme_code;
-            $this->type_code = $query->type_code;
+        $question = Question::whereId_question($id_question)->first();
+        if ($question != null) {
+            $this->text = $question->title;
+            $this->eng_text = $question->title_eng;
+            $this->variants = $question->variants;
+            $this->eng_variants = $question->variants_eng;
+            $this->answer = $question->answer;
+            $this->eng_answer = $question->answer_eng;
+            $this->points = $question->points;
+            $this->control = $question->control;
+            $this->section_code = $question->section_code;
+            $this->theme_code = $question->theme_code;
+            $this->type_code = $question->type_code;
         }
         $this->id_question = $id_question;
     }
@@ -71,6 +71,8 @@ abstract class QuestionType {
         else {
             $translated = 0;
         }
+        func_get_arg(1);
+
         return ['section' => $section, 'theme' => $theme, 'type' => $type,
                 'control' => $control, 'points' => $points, 'difficulty' => $difficulty,
                 'discriminant' => $discriminant, 'guess' => $guess,
@@ -120,11 +122,6 @@ abstract class QuestionType {
      * Provide the name of the view and necessary parameters for displaying question in test
      */
     abstract function show($count);
-
-    /**
-     * Define estimate algorithm of student's answer
-     */
-    abstract function check($array);
 
     /**
      * @param Mypdf $fpdf - Library for PDF
