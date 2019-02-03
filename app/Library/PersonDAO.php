@@ -12,9 +12,7 @@ namespace App\Library;
 use App\Http\Requests\AddPersonRequest;
 use App\Http\Requests\EditPersonRequest;
 use App\Person;
-use DateTime;
 use Illuminate\Filesystem\Filesystem;
-use DB;
 
 class PersonDAO
 {

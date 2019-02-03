@@ -13,9 +13,6 @@ use App\Http\Requests\AddTheoremRequest;
 use App\Http\Requests\UpdateTheoremRequest;
 
 use App\Theorem;
-use DateTime;
-use Illuminate\Filesystem\Filesystem;
-use DB;
 
 class TheoremDAO
 {

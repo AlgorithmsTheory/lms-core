@@ -8,7 +8,6 @@
 
 namespace App\Http\Controllers;
 use App\Definition;
-use App\EducationalMaterial;
 use App\Http\Requests\AddDefinitionRequest;
 use App\Http\Requests\AddPersonRequest;
 use App\Http\Requests\AddTheoremRequest;
