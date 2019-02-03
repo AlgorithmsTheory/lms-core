@@ -28,11 +28,11 @@ class LectureDAO
 
     public function store_lecture(AddLectureRequest $request){
         $lecture = new Lecture;
-        $numberLecture = mt_rand(0, 10000);
+        $rundomNumber = mt_rand(0, 10000);
         if ($request->hasFile('doc_file')) {
             if ($request->file('doc_file')->isValid()) {
                 $mimetypes = new MimeType;
-                $nameDocFile = "TA_lec".$numberLecture;
+                $nameDocFile = "TA_lec".$rundomNumber;
                 switch ($mimetypes->guess($request->file('doc_file')->getMimeType())) {
                     case "doc":
                         $nameDocFile = $nameDocFile.".doc";
@@ -52,7 +52,7 @@ class LectureDAO
         if ($request->hasFile('ppt_file')) {
             if ($request->file('ppt_file')->isValid()) {
                 $mimetypes = new MimeType;
-                $namePptFile = "TA_lec".$numberLecture;
+                $namePptFile = "TA_lec".$rundomNumber;
                 switch ($mimetypes->guess($request->file('ppt_file')->getMimeType())) {
                     case "ppt":
                         $namePptFile = $namePptFile.".ppt";
@@ -86,11 +86,11 @@ class LectureDAO
         $lecture = Lecture::findOrFail($id);
         $lecture->lecture_name = $request->lecture_name;
         $lecture->lecture_text = $request->lecture_text;
-        $numberLecture = mt_rand(0, 10000);
+        $rundomNumber = mt_rand(0, 10000);
         if ($request->hasFile('doc_file')) {
             if ($request->file('doc_file')->isValid()) {
                 $mimetypes = new MimeType;
-                $nameDocFile = "TA_lec".$numberLecture;
+                $nameDocFile = "TA_lec".$rundomNumber;
                 switch ($mimetypes->guess($request->file('doc_file')->getMimeType())) {
                     case "doc":
                         $nameDocFile = $nameDocFile.".doc";
@@ -113,7 +113,7 @@ class LectureDAO
         if ($request->hasFile('ppt_file')) {
             if ($request->file('ppt_file')->isValid()) {
                 $mimetypes = new MimeType;
-                $namePptFile = "TA_lec".$numberLecture;
+                $namePptFile = "TA_lec".$rundomNumber;
                 switch ($mimetypes->guess($request->file('ppt_file')->getMimeType())) {
                     case "ppt":
                         $namePptFile = $namePptFile.".ppt";
