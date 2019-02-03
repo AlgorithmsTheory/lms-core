@@ -153,6 +153,20 @@ Route::get('library/persons/{id}/downloadDoc', ['as' => 'doc_download', 'uses' =
 Route::get('library/persons/{id}/downloadPpt', ['as' => 'ppt_download', 'uses' => 'LibraryController@pptDownload', 'middleware' => ['general_auth']]);
 
 Route::get('library/extra', ['as' => 'library_extra', 'uses' => 'LibraryController@extra', 'middleware' => ['general_auth', 'access_for_library']]);
+// Переход на страницу учебные материалы
+Route::get('library/educationalMaterials', ['as' => 'educational_materials', 'uses' => 'LibraryController@educationalMaterials', 'middleware' => ['general_auth']]);
+//добавление учебного материала
+Route::get('library/educationalMaterials/create', ['as' => 'educational_materials_create', 'uses' => 'LibraryController@addEducationalMaterial', 'middleware' => ['general_auth', 'admin']]);
+//сохранение и валидация данных о новой лекции
+Route::post('library/educationalMaterials/store', ['as' => 'educational_materials_store', 'uses' => 'LibraryController@storeEducationalMaterial']);
+// обновление данных о научном материале
+Route::patch('library/educationalMaterials/{id}', ['as' => 'educationalMaterial_update', 'uses' => 'LibraryController@updateEducationalMaterial']);
+// редактирование научных материалов
+Route::get('library/educationalMaterials/{id}/edit', ['as' => 'educationalMaterial_edit', 'uses' => 'LibraryController@editEducationalMaterial', 'middleware' => ['general_auth', 'admin']]);
+// Удаление научного материала
+Route::delete('library/educationalMaterials/{id}/delete',['as' => 'educationalMaterial_delete', 'uses' => 'LibraryController@deleteEducationalMaterial', 'middleware' => ['general_auth', 'admin']]);
+// Скачивание файл материала
+Route::get('library/educationalMaterials/{id}/download', ['as' => 'educationalMaterials_download', 'uses' => 'LibraryController@educationalMaterialsDownload', 'middleware' => ['general_auth']]);
 
 
 //библиотека для студентов и преподавателей

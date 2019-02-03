@@ -1,19 +1,14 @@
 
 $( document ).ready(function() {
-    var $myGroup = $('#accordion');
-    $myGroup.on('show.bs.collapse','.collapse', function() {
-        $myGroup.find('.collapse.in').collapse('hide');
-    });
-
-//Удаление лекции
-    $('.deleteLecture').click(function () {
-        var x = confirm("Удалить лекцию?");
+//Удаление материала
+    $('.deleteEducationalMaterial').click(function () {
+        var x = confirm("Удалить материал?");
         if (x) {
             var id = $(this).attr("id");
             var token = $(this).attr("value");
             $.ajax(
                 {
-                    url: "library/lecture/" + id + "/delete",
+                    url: "educationalMaterials/" + id + "/delete",
                     type: 'DELETE',
                     dataType: "JSON",
                     data: {
@@ -25,7 +20,8 @@ $( document ).ready(function() {
                         if (data.msg != 'ok') {
                             alert(data.msg)
                         } else {
-                            location.reload();
+
+                            $('[name = "delete'+data.id+'"]').parent().parent().hide();
                         }
                     }
                 });

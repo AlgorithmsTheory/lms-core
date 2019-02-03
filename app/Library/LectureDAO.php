@@ -15,8 +15,7 @@ use App\Testing\Lecture;
 use DateTime;
 use Illuminate\Filesystem\Filesystem;
 use DB;
-use Illuminate\Support\ViewErrorBag;
-
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeExtensionGuesser as MimeType;
 class LectureDAO
 {
     public function allLecture(){
@@ -32,7 +31,16 @@ class LectureDAO
         $numberLecture = mt_rand(0, 10000);
         if ($request->hasFile('doc_file')) {
             if ($request->file('doc_file')->isValid()) {
-                $nameDocFile = "TA_lec".$numberLecture.".doc";
+                $mimetypes = new MimeType;
+                $nameDocFile = "TA_lec".$numberLecture;
+                switch ($mimetypes->guess($request->file('doc_file')->getMimeType())) {
+                    case "doc":
+                        $nameDocFile = mt_rand(0, 10000) . $nameDocFile.".doc";
+                        break;
+                    case "docx":
+                        $nameDocFile = mt_rand(0, 10000) . $nameDocFile.".docx";
+                        break;
+                }
                 $lecture->doc_path = 'download/doc/' . $nameDocFile;
                 if (!copy($_FILES['doc_file']['tmp_name'], 'download/doc/' . $nameDocFile)){
                     return 'Ошибка при копировании doc файла';
@@ -43,7 +51,16 @@ class LectureDAO
         }
         if ($request->hasFile('ppt_file')) {
             if ($request->file('ppt_file')->isValid()) {
-                $namePptFile = "TA_lec".$numberLecture.".ppt";
+                $mimetypes = new MimeType;
+                $namePptFile = "TA_lec".$numberLecture;
+                switch ($mimetypes->guess($request->file('ppt_file')->getMimeType())) {
+                    case "ppt":
+                        $namePptFile = mt_rand(0, 10000) . $namePptFile.".ppt";
+                        break;
+                    case "pptx":
+                        $namePptFile = mt_rand(0, 10000) . $namePptFile.".pptx";
+                        break;
+                }
                 $lecture->ppt_path = 'download/ppt/' . $namePptFile;
                 if (!copy($_FILES['ppt_file']['tmp_name'], 'download/ppt/' . $namePptFile)){
                     return 'Ошибка при копировании ppt файла';
@@ -72,7 +89,16 @@ class LectureDAO
         $numberLecture = mt_rand(0, 10000);
         if ($request->hasFile('doc_file')) {
             if ($request->file('doc_file')->isValid()) {
-                $nameDocFile = "TA_lec".$numberLecture.".doc";
+                $mimetypes = new MimeType;
+                $nameDocFile = "TA_lec".$numberLecture;
+                switch ($mimetypes->guess($request->file('doc_file')->getMimeType())) {
+                    case "doc":
+                        $nameDocFile = mt_rand(0, 10000) . $nameDocFile.".doc";
+                        break;
+                    case "docx":
+                        $nameDocFile = mt_rand(0, 10000) . $nameDocFile.".docx";
+                        break;
+                }
                 if (!copy($_FILES['doc_file']['tmp_name'], 'download/doc/' . $nameDocFile)){
                     return 'Ошибка при копировании doc файла';
                 }
@@ -86,7 +112,16 @@ class LectureDAO
         }
         if ($request->hasFile('ppt_file')) {
             if ($request->file('ppt_file')->isValid()) {
-                $namePptFile = "TA_lec".$numberLecture.".ppt";
+                $mimetypes = new MimeType;
+                $namePptFile = "TA_lec".$numberLecture;
+                switch ($mimetypes->guess($request->file('ppt_file')->getMimeType())) {
+                    case "ppt":
+                        $namePptFile = mt_rand(0, 10000) . $namePptFile.".ppt";
+                        break;
+                    case "pptx":
+                        $namePptFile = mt_rand(0, 10000) . $namePptFile.".pptx";
+                        break;
+                }
                 if (!copy($_FILES['ppt_file']['tmp_name'], 'download/ppt/' . $namePptFile)){
                     return 'Ошибка при копировании ppt файла';
                 }
@@ -104,12 +139,12 @@ class LectureDAO
 
     public function deleteLecture($id){
         $lecture = Lecture::findOrFail($id);
-        if (file_exists(public_path($lecture->doc_path)) && $lecture->doc_path != null) {
+        if ($lecture->doc_path != null && file_exists(public_path($lecture->doc_path))) {
            if (!app(Filesystem::class)->delete(public_path($lecture->doc_path))) {
                return 'Ошибка удаления doc файла';
            }
         }
-        if (file_exists(public_path($lecture->ppt_path)) && $lecture->ppt_path != null) {
+        if ($lecture->ppt_path != null && file_exists(public_path($lecture->ppt_path))) {
             if (!app(Filesystem::class)->delete(public_path($lecture->ppt_path))) {
                 return 'Ошибка удаления ppt файла';
             }

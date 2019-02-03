@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\User;
 use Auth;
-class AddLectureRequest extends FormRequest
+class EditEducationMaterialRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -33,11 +33,9 @@ class AddLectureRequest extends FormRequest
     {
 
         return [
-            'lecture_name' => "required|between:5,355",
-            'lecture_text' => 'min:50',
-            'id_section' => 'required',
-            'doc_file' => 'mimes:doc,docx',
-            'ppt_file' => 'mimes:ppt,pptx'
+            'name' => "required|between:5,355",
+            'education_material_file' => 'mimes:doc,pdf,docx',
+
         ];
     }
 }

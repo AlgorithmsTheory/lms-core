@@ -79,31 +79,9 @@
                 <a>&nbsp;&nbsp;&nbsp;</a>
 
                 <div class="btn-group">
-                    <button type="button" class="btn ink-reaction btn-flat dropdown-toggle" data-toggle="dropdown">
-                        К экзамену <i class="fa fa-caret-down text-default-light"></i>
+                    <button type="button" class="btn ink-reaction btn-flat">
+                        {!! HTML::link('library/educationalMaterials', 'Научные материалы') !!}
                     </button>
-                    <ul class="dropdown-menu animation-expand" >
-
-                        <li>{!! HTML::link('download/material_exam/exam_2014.pdf', 'Пробный вариант') !!}</li>
-                        <li>{!! HTML::link('download/material_exam/Questions_for_exam.docx', 'Допвопросы для подготовки к экзамену') !!}</li>
-                        <li>{!! HTML::link('download/material_exam/rules.doc', 'Правила проведения экзамена') !!}</li>
-                        <li class="divider"></li>
-                        <li>{!! HTML::link('download/material_exam/material_exam.rar', 'Скачать всё') !!}</li>
-                    </ul>
-                </div>
-
-
-                <a>&nbsp;&nbsp;&nbsp;</a>
-                <div class="btn-group">
-                    <button type="button" class="btn ink-reaction btn-flat dropdown-toggle" data-toggle="dropdown">
-                        Задачи<i class="fa fa-caret-down text-default-light"></i>
-                    </button>
-                    <ul class="dropdown-menu animation-expand" >
-                        <li>{!! HTML::link('download/AM_MT/zadachi_AM.doc', 'Алгоритмы Маркова') !!}</li>
-                        <li>{!! HTML::link('download/AM_MT/zadachi_MT.doc', 'Машины Тьюринга') !!}</li>
-                        <li class="divider"></li>
-                        <li>{!! HTML::link('download/AM_MT/AM_MT.rar', 'Скачать всё') !!}</li>
-                    </ul>
                 </div>
                 <a>&nbsp;&nbsp;&nbsp;</a>
                 <div class="btn-group">

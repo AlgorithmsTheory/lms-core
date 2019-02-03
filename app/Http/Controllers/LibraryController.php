@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 use App\Definition;
+use App\EducationalMaterial;
 use App\Http\Requests\AddDefinitionRequest;
 use App\Http\Requests\AddPersonRequest;
 use App\Http\Requests\AddTheoremRequest;
@@ -16,20 +17,21 @@ use App\Http\Requests\UpdateDefinitionRequest;
 use App\Http\Requests\AddLectureRequest;
 use App\Http\Requests\UpdateLectureRequest;
 use App\Http\Requests\UpdateTheoremRequest;
+use App\Http\Requests\AddEducationMaterialRequest;
+use App\Http\Requests\EditEducationMaterialRequest;
+
 use App\Library\DefinitionDAO;
 use App\Library\LectureDAO;
 use App\Library\PersonDAO;
 use App\Library\TheoremDAO;
+use App\Library\EducationalMaterialDAO;
 use App\Person;
-use App\Testing\Theme;
 use App\Theorem;
-use DB;
 use App\Testing\Lecture;
-use DateTime;
-use Request;
 use App\User;
 use Auth;
-use Illuminate\Filesystem\Filesystem as Filesystem;
+use  Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeExtensionGuesser as MimeType;
 
 
 class LibraryController extends Controller {
@@ -110,10 +112,7 @@ class LibraryController extends Controller {
     public function deleteLecture($id){
         $lecture =  new LectureDAO;
         $resultAction = $lecture->deleteLecture($id);
-        if ($resultAction != 'ok') {
-            return back()->exceptInput()->withErrors([$resultAction]);
-        }
-        return  $id;
+        return  json_encode(array("msg" => $resultAction));
     }
 
     public function addNewDefinition(){
@@ -211,11 +210,95 @@ class LibraryController extends Controller {
 
     public function docDownload($id) {
         $lecture = Lecture::findOrFail($id);
-        return response()->download($lecture->doc_path, 'TA_lec'.$lecture->lecture_number.'.doc');
+        $file = new File($lecture->doc_path);
+        $mimetypes = new MimeType;
+        $returnName = 'TA_lec'.$lecture->lecture_number;
+        switch ($mimetypes->guess($file->getMimeType())) {
+            case "doc":
+                $returnName = $returnName.".doc";
+                break;
+            case "docx":
+                $returnName = $returnName.".docx";
+                break;
+        }
+        return response()->download($lecture->doc_path, $returnName);
     }
 
     public function pptDownload($id) {
         $lecture = Lecture::findOrFail($id);
-        return response()->download($lecture->ppt_path, 'TA_lec'.$lecture->lecture_number.'.ppt');
+        $file = new File($lecture->ppt_path);
+        $mimetypes = new MimeType;
+        $returnName = 'TA_lec'.$lecture->lecture_number;
+        switch ($mimetypes->guess($file->getMimeType())) {
+            case "ppt":
+                $returnName = $returnName.".ppt";
+                break;
+            case "pptx":
+                $returnName = $returnName.".pptx";
+                break;
+        }
+        return response()->download($lecture->ppt_path, $returnName);
     }
-} 
+
+    public function educationalMaterials() {
+        $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
+        $educationalMaterials =  new EducationalMaterialDAO();
+        $educationalMaterials = $educationalMaterials->allEducationalMaterial();
+        return view('library.educational_materials.educational_materials', compact('role' , 'educationalMaterials'));
+    }
+
+    public function addEducationalMaterial(){
+        return view("library.educational_materials.add_educational_material");
+    }
+
+    public function storeEducationalMaterial(AddEducationMaterialRequest $request){
+        $ducationalMaterial =  new EducationalMaterialDAO();
+        $resultAction = $ducationalMaterial->storeEducationalMaterial($request);
+        if ($resultAction != 'ok') {
+            return back()->exceptInput()->withErrors([$resultAction]);
+        }
+        return redirect('library/educationalMaterials');
+    }
+
+    public function educationalMaterialsDownload($id){
+        $educationalMaterial =  new EducationalMaterialDAO();
+        $educationalMaterial = $educationalMaterial->getEducationalMaterial($id);
+        $returnName = str_replace(' ', '_', $educationalMaterial->name);
+        $file = new File($educationalMaterial->file_path);
+        $mimetypes = new MimeType;
+        switch ($mimetypes->guess($file->getMimeType())) {
+            case "doc":
+                $returnName = $returnName.".doc";
+                break;
+            case "docx":
+                $returnName = $returnName.".docx";
+                break;
+            case "pdf":
+                $returnName = $returnName.".pdf";
+                break;
+        }
+        return response()->download($educationalMaterial->file_path, $returnName);
+    }
+
+
+    public function editEducationalMaterial($id){
+        $educationalMaterial =  new EducationalMaterialDAO();
+        $educationalMaterial = $educationalMaterial->getEducationalMaterial($id);
+        return view('library.educational_materials.edit_educational_material', compact('educationalMaterial'));
+    }
+
+    public function updateEducationalMaterial(EditEducationMaterialRequest $request, $id){
+        $educationalMaterial =  new EducationalMaterialDAO();
+        $resultAction = $educationalMaterial->updateEducationalMaterial($request, $id);
+        if ($resultAction != 'ok') {
+            return back()->exceptInput()->withErrors([$resultAction]);
+        }
+        return redirect('library/educationalMaterials');
+    }
+
+    public function deleteEducationalMaterial($id){
+        $educationalMaterial =  new EducationalMaterialDAO();
+        $resultAction = $educationalMaterial->deleteEducationalMaterial($id);
+        return  json_encode(array("msg" => $resultAction, "id" => $id));
+    }
+}
