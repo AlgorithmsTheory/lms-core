@@ -35,10 +35,10 @@ class LectureDAO
                 $nameDocFile = "TA_lec".$numberLecture;
                 switch ($mimetypes->guess($request->file('doc_file')->getMimeType())) {
                     case "doc":
-                        $nameDocFile = mt_rand(0, 10000) . $nameDocFile.".doc";
+                        $nameDocFile = $nameDocFile.".doc";
                         break;
                     case "docx":
-                        $nameDocFile = mt_rand(0, 10000) . $nameDocFile.".docx";
+                        $nameDocFile = $nameDocFile.".docx";
                         break;
                 }
                 $lecture->doc_path = 'download/doc/' . $nameDocFile;
@@ -55,10 +55,10 @@ class LectureDAO
                 $namePptFile = "TA_lec".$numberLecture;
                 switch ($mimetypes->guess($request->file('ppt_file')->getMimeType())) {
                     case "ppt":
-                        $namePptFile = mt_rand(0, 10000) . $namePptFile.".ppt";
+                        $namePptFile = $namePptFile.".ppt";
                         break;
                     case "pptx":
-                        $namePptFile = mt_rand(0, 10000) . $namePptFile.".pptx";
+                        $namePptFile = $namePptFile.".pptx";
                         break;
                 }
                 $lecture->ppt_path = 'download/ppt/' . $namePptFile;
@@ -93,10 +93,10 @@ class LectureDAO
                 $nameDocFile = "TA_lec".$numberLecture;
                 switch ($mimetypes->guess($request->file('doc_file')->getMimeType())) {
                     case "doc":
-                        $nameDocFile = mt_rand(0, 10000) . $nameDocFile.".doc";
+                        $nameDocFile = $nameDocFile.".doc";
                         break;
                     case "docx":
-                        $nameDocFile = mt_rand(0, 10000) . $nameDocFile.".docx";
+                        $nameDocFile = $nameDocFile.".docx";
                         break;
                 }
                 if (!copy($_FILES['doc_file']['tmp_name'], 'download/doc/' . $nameDocFile)){
@@ -116,10 +116,10 @@ class LectureDAO
                 $namePptFile = "TA_lec".$numberLecture;
                 switch ($mimetypes->guess($request->file('ppt_file')->getMimeType())) {
                     case "ppt":
-                        $namePptFile = mt_rand(0, 10000) . $namePptFile.".ppt";
+                        $namePptFile = $namePptFile.".ppt";
                         break;
                     case "pptx":
-                        $namePptFile = mt_rand(0, 10000) . $namePptFile.".pptx";
+                        $namePptFile = $namePptFile.".pptx";
                         break;
                 }
                 if (!copy($_FILES['ppt_file']['tmp_name'], 'download/ppt/' . $namePptFile)){

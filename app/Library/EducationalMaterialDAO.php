@@ -30,15 +30,16 @@ class EducationalMaterialDAO
         if ($request->hasFile('education_material_file')){
             if ($request->file('education_material_file')->isValid()){
                 $mimetypes = new MimeType;
+                $rundomNumber = mt_rand(0, 10000);
                 switch ($mimetypes->guess($request->file('education_material_file')->getMimeType())) {
                     case "doc":
-                        $name = mt_rand(0, 10000) . "EducationMaterial".".doc";
+                        $name = $rundomNumber . "EducationMaterial".".doc";
                         break;
                     case "docx":
-                        $name = mt_rand(0, 10000) . "EducationMaterial".".docx";
+                        $name = $rundomNumber . "EducationMaterial".".docx";
                         break;
                     case "pdf":
-                        $name = mt_rand(0, 10000) . "EducationMaterial".".pdf";
+                        $name = $rundomNumber . "EducationMaterial".".pdf";
                         break;
                 }
                 if (!copy($_FILES['education_material_file']['tmp_name'], 'download/educational_material/' . $name)){
@@ -62,15 +63,16 @@ class EducationalMaterialDAO
         if ($request->hasFile('education_material_file')){
             if ($request->file('education_material_file')->isValid()){
                 $mimetypes = new MimeType;
+                $rundomNumber = mt_rand(0, 10000);
                 switch ($mimetypes->guess($request->file('education_material_file')->getMimeType())) {
                     case "doc":
-                        $name = mt_rand(0, 10000) . "EducationMaterial".".doc";
+                        $name = $rundomNumber . "EducationMaterial".".doc";
                         break;
                     case "docx":
-                        $name = mt_rand(0, 10000) . "EducationMaterial".".docx";
+                        $name = $rundomNumber . "EducationMaterial".".docx";
                         break;
                     case "pdf":
-                        $name = mt_rand(0, 10000) . "EducationMaterial".".pdf";
+                        $name = $rundomNumber . "EducationMaterial".".pdf";
                         break;
                 }
                 if (!copy($_FILES['education_material_file']['tmp_name'], 'download/educational_material/' . $name)){
