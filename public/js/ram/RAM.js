@@ -41,7 +41,8 @@ class Functional_{
 		$("#btn_pause").html("Пауза");
 		btn_pause.disabled = true;
 		btn_next.disabled = true;
-		alert("Работа выполнена");
+		if(RAM.no_notice == false)
+			alert("Работа выполнена");
 		return true;
 	}
 
@@ -108,8 +109,8 @@ class TextEditor_{
 		this.is_highlight_execline = t;
 	}
 	
-	set_text(text){
-		editor.setValue(text, 0); 
+	set_text(txt){
+		editor.setValue(txt, 0); 
 	}
 	
 	get_text() {
@@ -210,6 +211,7 @@ class RAM_ {
 		this.is_halt = false;
 		this.counterOperations = 0;
 		this.is_error = false;
+		this.no_notice = false;
 	}
 	
 	set_mark(num_row, mark){
@@ -253,7 +255,7 @@ class RAM_ {
 		if(this.is_halt){
 			return;
 		}
-		if(this.counterOperations > 10000){
+		if(this.counterOperations > 300){
 			this.is_halt = this.Functional.do_halt();
 			this.is_error = true;
 			return;
@@ -261,10 +263,12 @@ class RAM_ {
 		
 		var a;
 		if(a = /^\s*\w+:/.exec(line)){
+			this.counterOperations++;
 			line = line.substr(a.index + a[0].length);
 			this.execute_line(line);
 		}
 		else if(a = /^\s*(READ|WRITE|HALT)\b/.exec(line)){
+			this.counterOperations++;
 			if(a[1] == "READ"){
 				this.Functional.do_read();
 			}
@@ -278,6 +282,7 @@ class RAM_ {
 			this.execute_line(line);
 		}
 		else if(a = /^\s*(STORE)\s*(\[[0-9]+\]|\[\[[0-9]+\]\])/.exec(line)){
+			this.counterOperations++;
 			var sym = 0;
 			while(a[2][sym] == '['){
 				sym = sym + 1;
@@ -287,6 +292,7 @@ class RAM_ {
 			this.execute_line(line);
 		}
 		else if(a = /^\s*(LOAD|ADD|SUB|MULT|DIV)\s*([0-9]+|\[[0-9]+\]|\[\[[0-9]+\]\])/.exec(line)){
+			this.counterOperations++;
 			var sym = 0;
 			while(a[2][sym] == '['){
 				sym = sym + 1;
@@ -310,15 +316,14 @@ class RAM_ {
 			this.execute_line(line);
 		}
 		else if(a = /^\s*(JUMP|JGTZ|JZERO)\b\s*(\w+)/.exec(line)){
+			this.counterOperations++;
 			if(a[1] == "JUMP"){
 				this.markerLine = this.Functional.do_jump(a[2]);
-				this.counterOperations++;
 			}
 			else if(a[1] == "JGTZ"){
 				var next_line = this.Functional.do_jgtz(a[2]);
 				if(next_line != -1){
 					this.markerLine = next_line;
-					this.counterOperations++;
 				}
 				else{
 					line = line.substr(a.index + a[0].length);
@@ -329,7 +334,6 @@ class RAM_ {
 				var next_line = this.Functional.do_jzero(a[2]);
 				if(next_line != -1){
 					this.markerLine = next_line;
-					this.counterOperations++;
 				}
 				else{
 					line = line.substr(a.index + a[0].length);
@@ -395,11 +399,15 @@ class ButtonFunctional{
 	constructor(){
 		btn_start.onclick = function() {
 			if(RAM.TextEditor.is_syntax_error()){
-				alert('Есть некоторые ошибки в коде!');
-				return;
+				if(RAM.no_notice == false){ // ignore syntax in this case
+					alert('Есть некоторые ошибки в коде!');
+					return;
+				}
 			}
 			if(!RAM.check_text()){
-				alert('Одна из команд JUMP с ошибкой!');
+				if(RAM.no_notice == false){
+					alert('Одна из команд JUMP с ошибкой!');
+				}
 				return;
 			}
 			
@@ -454,10 +462,6 @@ class ButtonFunctional{
 			btn_load_doc.disabled = false;
 			RAM.reset();
 		};
-
-		/*btn_help.onclick = function() {
-			alert('aaa');
-		};*/
 
 		btn_save_doc.onclick = function() {
 			var textToWrite = RAM.TextEditor.get_text();

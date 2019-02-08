@@ -3,6 +3,7 @@
 // GetNextState(state) => {0, 1}
 // GetNextRuleId(state) => RuleId
 function Rule(rawText, comment) {
+	this.Raw = rawText;
     this.Type = rawText[0];
     this.Comment = comment;
     
@@ -121,8 +122,8 @@ function GetResult(rules, state, position = 0, initialRule = 1) {
 
 
 function GetRules() {
-    result = {}
-    validTypes = "<>01?!";
+    result = {};
+    validTypes = ["<", ">", "0", "1", "?", "!"];
     lines = $('#p_scents > li');
     for (var i = 0; i < lines.length; i++) {
         ruleId = parseInt(lines[i].querySelector('span.input-group-addon > b').textContent);
@@ -137,7 +138,30 @@ function GetRules() {
             result[ruleId] = new Rule(ruleType + ":" + nextRuleId + ":" + alterNextRuleId, comment);
         }
     }
+	result.length = lines.length;
     return result;
+}
+
+function SetRules(rules) {
+	lines = $('#p_scents > li');
+	for(i in rules){
+		if(i == "length") continue;
+		rule = rules[i];
+		if(typeof(rule) != "undefined"){
+			lines[i - 1].querySelector('select').value = rule.Raw[0];
+			inputs = lines[i - 1].querySelectorAll('input');
+			inputs[0].value = rule.Raw.split(':')[1];
+			inputs[1].value = rule.Raw.split(':')[2];
+			inputs[2].value = rule.Comment;
+		}
+		else{
+			lines[i - 1].querySelector('select').value = " ";
+			inputs = lines[i - 1].querySelectorAll('input');
+			inputs[0].value = " ";
+			inputs[1].value = " ";
+			inputs[2].value = " ";
+		}
+	}
 }
 
 function GetInput() {
@@ -149,6 +173,10 @@ function GetInput() {
         throw Error("InvalidInput");
     
     }
+}
+
+function SetInput(value) {
+	$("#input_word").val(value);
 }
 
 function RunPost(withDebug=false) {

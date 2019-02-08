@@ -3,12 +3,21 @@
 namespace App\Http\Controllers;
 use DB;
 use Request;
+use App\User;
 use App\Tasks;
 use App\Testsequence;
 use App\Tasks_nam;
 use App\Testsequence_nam;
-use App\NamForGroup;
-
+use App\Tasks_ram;
+use App\Tasks_post;
+use App\Testsequence_ram;
+use App\Testsequence_post;
+use App\Kontr_work;
+use App\Group;
+use App\EmrForGroup;
+use App\UserResultRam;
+use App\UserResultPost;
+use Illuminate\Support\Facades\Input;
 
 
 class TasksController extends Controller {
@@ -226,99 +235,6 @@ public function editAllCoefMt($id_task){
       
     }
 
-public function edit_date(){
-
-
-        $result1 = DB::select("SELECT * from kontr_rab WHERE id = '1'");
-        $result1 = TasksController::magic($result1)[0];
-        $result2 = DB::select("SELECT * from kontr_rab WHERE id = '2'");
-        $result2 = TasksController::magic($result2)[0];
-        $result3 = DB::select("SELECT * from kontr_rab WHERE id = '3'");
-        $result3 = TasksController::magic($result3)[0];
-       //выбрать все группы из 
-        $all_groups = DB::select("SELECT * FROM `groups` i LEFT JOIN `nam_for_group` u ON u.id_group = i.group_id WHERE archived='0'");
-        $all_groups = TasksController::magic($all_groups);
-        return view("algorithm.edit_date", compact('result1','result2','result3', 'all_groups'));
-
-    }
-
-public function edit_date_mt(){
-
-
-        $result1 = DB::select("SELECT * from kontr_rab WHERE id = '1'");
-        $result1 = TasksController::magic($result1)[0];
-        $result2 = DB::select("SELECT * from kontr_rab WHERE id = '2'");
-        $result2 = TasksController::magic($result2)[0];
-        $result3 = DB::select("SELECT * from kontr_rab WHERE id = '3'");
-        $result3 = TasksController::magic($result3)[0];
-       //выбрать все группы из 
-        $all_groups = DB::select("SELECT * FROM `groups` i LEFT JOIN `mt_for_group` u ON u.id_group = i.group_id WHERE archived='0'");
-        $all_groups = TasksController::magic($all_groups);
-        return view("algorithm.edit_date_mt", compact('result1','result2','result3', 'all_groups'));
-
-    }
-  
-public function editAllDate(){
-
-       // $tur_start = Request::input("tur_start");
-       // $new_tur_finish = Request::input("new_tur_finish");
-       $new_nam_start = Request::input("new_nam_start");
-       $new_nam_finish = Request::input("new_nam_finish");
-       //$new_rec_start = Request::input("new_rec_start");
-      // $new_rec_finish = Request::input("new_rec_finish");
-       $availability_input = (Request::input("availability")== null) ? [] : Request::input("availability");
-               
-       for ($i = 0; $i < count(Request::input("id-group")); $i++) {
-            $availability = in_array(Request::input("id-group")[$i], $availability_input) ? 1 : 0;
-            $group = Request::input("id-group")[$i];
-            //return Request::input("id-group");
-            DB::insert("INSERT INTO nam_for_group (id_group, availability) VALUES ($group, $availability) ON DUPLICATE KEY UPDATE availability = '$availability'" );
-            
-        }
-          
-        
-
-     
-       DB::update("UPDATE kontr_rab SET start_date='$new_nam_start', finish_date='$new_nam_finish' WHERE id = '2'");
-      // DB::update("UPDATE kontr_rab SET start_date='$new_rec_start', finish_date='$new_rec_finish' WHERE id = '3'");
-
-
-       
-       // $tasks_and_sequences = DB::select("SELECT * FROM `testsequence` i LEFT JOIN `tasks` u ON u.id_task = i.task_id");
-       // $tasks_and_sequences = TasksController::magic($tasks_and_sequences);
-        
-      return view("algorithm.main");
-      
-    }
-
-public function editAllDate_mt(){
-
-       $tur_start = Request::input("tur_start");
-       $new_tur_finish = Request::input("new_tur_finish");
-      //$new_rec_start = Request::input("new_rec_start");
-      // $new_rec_finish = Request::input("new_rec_finish");
-       $availability_input = (Request::input("availability")== null) ? [] : Request::input("availability");
-               
-       for ($i = 0; $i < count(Request::input("id-group")); $i++) {
-            $availability = in_array(Request::input("id-group")[$i], $availability_input) ? 1 : 0;
-            $group = Request::input("id-group")[$i];
-            //return Request::input("id-group");
-            DB::insert("INSERT INTO mt_for_group (id_group, availability) VALUES ($group, $availability) ON DUPLICATE KEY UPDATE availability = '$availability'" );
-            
-        }
-          
-        DB::update("UPDATE kontr_rab SET start_date='$tur_start', finish_date='$new_tur_finish' WHERE id = '1'");
-      // DB::update("UPDATE kontr_rab SET start_date='$new_rec_start', finish_date='$new_rec_finish' WHERE id = '3'");
-
-
-       
-       // $tasks_and_sequences = DB::select("SELECT * FROM `testsequence` i LEFT JOIN `tasks` u ON u.id_task = i.task_id");
-       // $tasks_and_sequences = TasksController::magic($tasks_and_sequences);
-        
-      return view("algorithm.main");
-      
-    }  
-
     public function edit_users_nam(){
 
 
@@ -385,8 +301,209 @@ public function editAllDate_mt(){
         //return $availability_input;
         return redirect()->back();
     }
+	
+	// ---------------- RAM Emulator ------------------- //
+	
+	public function RAM_manage_task(){
+		$tasks_and_sequences = Testsequence_ram::leftJoin('tasks_ram', function($join) {
+												$join->on('testsequence_ram.task_id', '=', 'tasks_ram.task_id');})->get();
+        $tasks_and_sequences = TasksController::magic($tasks_and_sequences);
+        return view("algorithm.tasks.ram.alltasks", compact('tasks_and_sequences'));
+    }
+	
+	public function RAM_add_task(){
+		return view("algorithm.tasks.ram.addtask");
+	}
+	
+	public function RAM_delete_task($task_id) {
+		Tasks_ram::where('task_id', $task_id)->delete();
+		Testsequence_ram::where('task_id', $task_id)->delete();
+		return redirect()->route('RAM_manage_task');
+	}
+	
+	public function RAM_adding_task(){
+		$task_text = Request::input('task_text');
+		$max_mark = Request::input('max_mark');
+		$level = Request::input('level');
+		$variant = Request::input('variant');
+		$input_word = Request::input('input_word');
+		$output_word = Request::input('output_word'); 
+		$input_word1 = Request::input('input_word1');
+		$output_word1 = Request::input('output_word1'); 
+		$input_word2 = Request::input('input_word2');
+		$output_word2 = Request::input('output_word2');
+		$input_word3 = Request::input('input_word3');
+		$output_word3 = Request::input('output_word3');
+		$input_word4 = Request::input('input_word4');
+		$output_word4 = Request::input('output_word4');
+		
+		$created_task = Tasks_ram::Create(  ['level' => $level, 'mark' => $max_mark, 'variant' => $variant, 'description' => $task_text] );
+		$task_id = $created_task['id'];
+		Testsequence_ram::Create( ['input_word' => $input_word,  'output_word' => $output_word,  'task_id' => $task_id] );
+		Testsequence_ram::Create( ['input_word' => $input_word1, 'output_word' => $output_word1, 'task_id' => $task_id] );
+		Testsequence_ram::Create( ['input_word' => $input_word2, 'output_word' => $output_word2, 'task_id' => $task_id] );
+		Testsequence_ram::Create( ['input_word' => $input_word3, 'output_word' => $output_word3, 'task_id' => $task_id] );
+		Testsequence_ram::Create( ['input_word' => $input_word4, 'output_word' => $output_word4, 'task_id' => $task_id] );
+		
+		return view("algorithm.tasks.ram.addtask");
+    }
+  
+	public function RAM_edit_task($sequence_id) {
+		$sequence = Testsequence_ram::Where('sequence_id', $sequence_id)->get();
+		$sequence = TasksController::magic($sequence)[0];
+		return view("algorithm.tasks.ram.edit", compact('sequence','sequence_id'));
+	}
+	
+	public function RAM_editing_task($sequence_id){
+		$input_word6  = Request::input("input_word6");
+		$output_word6 = Request::input("output_word6");
+		Testsequence_ram::where('sequence_id', $sequence_id)
+		  			    ->update(['input_word' => $input_word6, 'output_word' => $output_word6]);
+		return redirect()->route('RAM_manage_task');
+	}
+	
+	public function RAM_edit_users(){
+		//выбрать всех студентов и результаты контрольных по RAM
+		$all_users = User::leftJoin('user_result_ram', function($join) {
+						  $join->on('user_result_ram.user_id', '=', 'users.id');})
+						 ->leftJoin('groups', function($join) {
+						  $join->on('groups.group_id', '=', 'users.group');})
+						 ->where('archived', 0)
+						 ->get();
+		$emr_type = "ram";
+        return view("algorithm.edit_users", compact('all_users', 'emr_type'));
+    }
 
-  }
+    public function RAM_editing_users(Request $request){
+
+        $availability_input = (Request::input("fines") == null) ? [] : Request::input("fines");
+
+        for ($i=0; $i < count(Request::input("id")); $i++){
+           $availability = in_array(Request::input("id")[$i], $availability_input) ? 1 : 0;
+           $user = Request::input("id")[$i];
+		   UserResultRam::updateOrInsert([ 'user_id' => $user ], [ 'access' => $availability ]);
+        }
+		
+        return redirect()->back();
+    }
+	
+	// -------------- Post Emulator ----------------------- //
+	
+	public function Post_manage_task(){
+		$tasks_and_sequences = Testsequence_post::leftJoin('tasks_post', function($join) {
+												$join->on('testsequence_post.task_id', '=', 'tasks_post.task_id');})->get();
+        $tasks_and_sequences = TasksController::magic($tasks_and_sequences);
+        return view("algorithm.tasks.post.alltasks", compact('tasks_and_sequences'));
+    }
+	
+	public function Post_add_task(){
+		return view("algorithm.tasks.post.addtask");
+	}
+	
+	public function Post_delete_task($task_id) {
+		Tasks_post::where('task_id', $task_id)->delete();
+		Testsequence_post::where('task_id', $task_id)->delete();
+		return redirect()->route('Post_manage_task');
+	}
+	
+	public function Post_adding_task(){
+		$task_text = Request::input('task_text');
+		$max_mark = Request::input('max_mark');
+		$level = Request::input('level');
+		$variant = Request::input('variant');
+		$input_word = Request::input('input_word');
+		$output_word = Request::input('output_word'); 
+		$input_word1 = Request::input('input_word1');
+		$output_word1 = Request::input('output_word1'); 
+		$input_word2 = Request::input('input_word2');
+		$output_word2 = Request::input('output_word2');
+		$input_word3 = Request::input('input_word3');
+		$output_word3 = Request::input('output_word3');
+		$input_word4 = Request::input('input_word4');
+		$output_word4 = Request::input('output_word4');
+		
+		$created_task = Tasks_post::Create(  ['level' => $level, 'mark' => $max_mark, 'variant' => $variant, 'description' => $task_text] );
+		$task_id = $created_task['id'];
+		Testsequence_post::Create( ['input_word' => $input_word,  'output_word' => $output_word,  'task_id' => $task_id] );
+		Testsequence_post::Create( ['input_word' => $input_word1, 'output_word' => $output_word1, 'task_id' => $task_id] );
+		Testsequence_post::Create( ['input_word' => $input_word2, 'output_word' => $output_word2, 'task_id' => $task_id] );
+		Testsequence_post::Create( ['input_word' => $input_word3, 'output_word' => $output_word3, 'task_id' => $task_id] );
+		Testsequence_post::Create( ['input_word' => $input_word4, 'output_word' => $output_word4, 'task_id' => $task_id] );
+		
+		return view("algorithm.tasks.post.addtask");
+    }
+  
+	public function Post_edit_task($sequence_id) {
+		$sequence = Testsequence_post::Where('sequence_id', $sequence_id)->get();
+		$sequence = TasksController::magic($sequence)[0];
+		return view("algorithm.tasks.post.edit", compact('sequence','sequence_id'));
+	}
+	
+	public function Post_editing_task($sequence_id){
+		$input_word6  = Request::input("input_word6");
+		$output_word6 = Request::input("output_word6");
+		Testsequence_post::where('sequence_id', $sequence_id)
+		  			    ->update(['input_word' => $input_word6, 'output_word' => $output_word6]);
+		return redirect()->route('Post_manage_task');
+	}
+	
+	public function Post_edit_users(){
+		//выбрать всех студентов и результаты контрольных по POST
+		$all_users = User::leftJoin('user_result_post', function($join) {
+						  $join->on('user_result_post.user_id', '=', 'users.id');})
+						 ->leftJoin('groups', function($join) {
+						  $join->on('groups.group_id', '=', 'users.group');})
+						 ->where('archived', 0)
+						 ->get();
+		$emr_type = "post";
+        return view("algorithm.edit_users", compact('all_users', 'emr_type'));
+    }
+
+    public function Post_editing_users(Request $request){
+
+        $availability_input = (Request::input("fines") == null) ? [] : Request::input("fines");
+
+        for ($i=0; $i < count(Request::input("id")); $i++){
+           $availability = in_array(Request::input("id")[$i], $availability_input) ? 1 : 0;
+           $user = Request::input("id")[$i];
+		   UserResultPost::updateOrInsert([ 'user_id' => $user ], [ 'access' => $availability ]);
+        }
+		
+        return redirect()->back();
+    }
+	
+	// -------------- Emulators common ------------------------//
+	
+	public function edit_date(){
+		// тип эмулятора
+		$name = Input::get('name');
+		// время КР для эмулятора и ID
+		$kontr_work = Kontr_work::where('name', $name)->get()[0];
+		$emr_id 	= $kontr_work['id'];
+        // доступ для групп
+		$all_groups = Group::leftJoin('emr_for_group', function($join) {
+										$join->on('groups.group_id', '=', 'emr_for_group.group_id');})->where('archived', 0)->where('emr_id', $emr_id)->get();
+										
+        return view("algorithm.edit_date", compact('emr_id', 'kontr_work', 'all_groups'));
+
+    }
+	
+	public function editAllDate(){
+		$new_start   = Request::input("new_start");
+		$new_finish  = Request::input("new_finish");
+		$emr_id		 = Request::input("emr_id");
+		$availability_input = (Request::input("availability")== null) ? [] : Request::input("availability");
+		
+		for ($i = 0; $i < count(Request::input("id-group")); $i++) {
+			$availability = in_array(Request::input("id-group")[$i], $availability_input) ? 1 : 0;
+			$group_id = Request::input("id-group")[$i];
+			EmrForGroup::updateOrInsert([ 'emr_id' => $emr_id, 'group_id' => $group_id], ['availability' => $availability]);
+		}
+		
+		Kontr_work::whereId($emr_id)->update(['start_date' => $new_start, 'finish_date' => $new_finish]);
+		return view("algorithm.main");
+    }
+}
     
      
 

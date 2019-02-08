@@ -180,7 +180,7 @@
                         <li class="tile">
                             <a href="{{ route('main_menu')}}" class="tile-content ink-reaction">
                                 <div class="tile-text">
-                                    Управление контрольными материалами эмуляторов Машины Тьюринга и Алгоритмов Маркова
+                                    Управление контрольными материалами эмуляторов
                                 </div>
                             </a>
                         </li>

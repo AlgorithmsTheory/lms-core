@@ -222,8 +222,6 @@ Route::post('get_HAM_protocol', array('as'=>'get_HAM_protocol', 'uses'=>'Emulato
 Route::get('algorithm/MT', ['as' => 'MT', 'uses' => 'EmulatorController@open_MT']);
 Route::get('algorithm/MMT', ['as' => 'MMT', 'uses' => 'EmulatorController@open_MMT']);
 Route::get('algorithm/HAM', ['as' => 'HAM', 'uses' => 'EmulatorController@open_HAM']);
-Route::get('algorithm/Post', ['as' => 'Post', 'uses' => 'EmulatorController@Post']);
-
 
 
 Route::get('algorithm/kontrMT', ['as' => 'kontrMT', 'uses' => 'EmulatorController@open_MT']);
@@ -238,11 +236,6 @@ Route::get('algorithm/kontrHAM', ['as' => 'kontrHAM', 'uses' => 'EmulatorControl
 Route::post('get-MT-kontr', array('as'=>'get_MT', 'uses'=>'EmulatorController@kontr_MTPOST'));
 
 Route::post('get-HAM-kontr', array('as'=>'get_HAM_kontr', 'uses'=>'EmulatorController@kontr_HAMPOST'));
-
-Route::get('algorithm/edit_date', ['as' => 'edit_date', 'uses' => 'TasksController@edit_date']);
-Route::get('algorithm/edit_date_mt', ['as' => 'edit_date_mt', 'uses' => 'TasksController@edit_date_mt']);
-Route::post('algorithm/edit_all_date', ['as' => 'editAllDate', 'uses' => 'TasksController@editAllDate']);
-Route::post('algorithm/edit_all_date_mt', ['as' => 'editAllDate_mt', 'uses' => 'TasksController@editAllDate_mt']);
 
 //доступ к контрольному режиму для кокретных студентов
 
@@ -334,7 +327,46 @@ Route::post('api/check', ['uses' => 'APIController@checkStudentsAtSeminar']);
 //Login verification
 Route::post('check/ifExists', ['uses' => 'AdministrationController@checkEmailIfExists']);
 
-//RAM Emulator
-Route::get('algorithm/RAM', ['as' => 'RAM', 'uses' => 'EmulatorController@RAM', 'middleware' => ['general_auth']]);
-
-
+// ----------------------- Emulators -------------------- //
+Route::prefix('algorithm')->group(function () {
+	//RAM Emulator
+	Route::prefix('RAM')->group(function () {
+		Route::middleware(['general_auth'])->group(function () {
+			Route::get('emulator',  ['as' => 'RAM', 	     'uses' => 'EmulatorController@open_RAM']);
+			Route::post('set_mark', ['as' => 'RAM_set_mark', 'uses' => 'EmulatorController@RAM_set_mark']);
+		});
+		Route::middleware(['general_auth', 'admin'])->group(function () {
+			Route::get( 'manage_task', 				 ['as' => 'RAM_manage_task',  'uses' => 'TasksController@RAM_manage_task']  );
+			Route::get( 'add_task',	   				 ['as' => 'RAM_add_task',	  'uses' => 'TasksController@RAM_add_task']     );
+			Route::post('add_task',    				 ['as' => 'RAM_adding_task',  'uses' => 'TasksController@RAM_adding_task']  );
+			Route::get( '{sequence_id}/edit_task',   ['as' => 'RAM_edit_task',    'uses' => 'TasksController@RAM_edit_task']    );
+			Route::post('{sequence_id}/edit_task',   ['as' => 'RAM_editing_task', 'uses' => 'TasksController@RAM_editing_task'] );
+			Route::get( '{sequence_id}/delete_task', ['as' => 'RAM_delete_task',  'uses' => 'TasksController@RAM_delete_task']  );
+			Route::get( 'edit_users',                ['as' => 'RAM_edit_users' ,  'uses' => 'TasksController@RAM_edit_users']   );
+			Route::post('editing_users', 			 ['as' => 'RAM_editing_users','uses' => 'TasksController@RAM_editing_users']);
+		});
+	});
+	//Post Emulator
+	Route::prefix('Post')->group(function () {
+		Route::middleware(['general_auth'])->group(function () {
+			Route::get('emulator',  ['as' => 'Post',          'uses' => 'EmulatorController@open_Post']);
+			Route::post('set_mark', ['as' => 'Post_set_mark', 'uses' => 'EmulatorController@Post_set_mark']);
+		});
+		Route::middleware(['general_auth', 'admin'])->group(function () {
+			Route::get( 'manage_task', 				 ['as' => 'Post_manage_task',   'uses' => 'TasksController@Post_manage_task'] );
+			Route::get( 'add_task',	  				 ['as' => 'Post_add_task',	    'uses' => 'TasksController@Post_add_task'] );
+			Route::post('add_task', 				 ['as' => 'Post_adding_task',   'uses' => 'TasksController@Post_adding_task'] );
+			Route::get( '{sequence_id}/edit_task',   ['as' => 'Post_edit_task',     'uses' => 'TasksController@Post_edit_task']);
+			Route::post('{sequence_id}/edit_task',   ['as' => 'Post_editing_task',  'uses' => 'TasksController@Post_editing_task']);
+			Route::get( '{sequence_id}/delete_task', ['as' => 'Post_delete_task',   'uses' => 'TasksController@Post_delete_task'] );
+			Route::get( 'edit_users',  				 ['as' => 'Post_edit_users' ,   'uses' => 'TasksController@Post_edit_users']);
+			Route::post( 'editing_users',  		     ['as' => 'Post_editing_users' ,'uses' => 'TasksController@Post_editing_users']);
+		});
+	});
+	// Emulators common
+	Route::middleware(['general_auth', 'admin'])->group(function () {
+		Route::get('edit_date',      ['as' => 'edit_date',   'uses' => 'TasksController@edit_date']);
+		Route::post('edit_all_date', ['as' => 'editAllDate', 'uses' => 'TasksController@editAllDate']);
+		Route::get( 'edit_users',    ['as' => 'edit_users',  'uses' => 'TasksController@edit_users']);
+	});
+});

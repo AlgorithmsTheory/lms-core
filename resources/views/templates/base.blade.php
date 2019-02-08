@@ -60,7 +60,7 @@
     </div>
 </div>
 
-
+{!! HTML::script('js/ram/bootstrap.min.js') !!}
 {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
 {!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
 {!! HTML::script('js/libs/bootstrap/bootstrap.min.js') !!}

@@ -1,6 +1,6 @@
 @extends('templates.base')
 @section('head')
-		<title>Добавление заданий</title>
+		<title>Редактирование выбранной последовательности</title>
 
 		<!-- BEGIN META -->
 		<meta charset="utf-8">
@@ -24,71 +24,76 @@
 		<script type="text/javascript" src="/laravel/resources/assets/js/libs/utils/html5shiv.js?1403934957"></script>
 		<script type="text/javascript" src="/laravel/resources/assets/js/libs/utils/respond.min.js?1403934956"></script>
 		<![endif]-->
-
-	@stop
+@stop
 
     @section('content')
 
-
 				<!-- BEGIN LIST SAMPLES -->
-		<section>
+				<section>
 					<div class="section-header">
 						<ol class="breadcrumb">
-												
-							<li class="active">Администрирование</li>
+							<li>{!! HTML::linkRoute('main_menu', 'Администрирование') !!}</li>
+							<li>{!! HTML::linkRoute('RAM_manage_task', 'Контрольные материалы RAM') !!}</li>
+							
+							<li class="active">Редактирование выбранной последовательности</li>
 						</ol>
 					</div>
-			<div class="section-body contain-lg">
+					<div class="section-body contain-lg">
 					
 						<div class="row">
-							<div class="col-lg-8">
-								<h1 class="text-primary">Добро пожаловать в систему управления контрольным материалом! </h1>
+							<div class="col-lg-12">
+								<h1 class="text-primary">Работа с контрольным материалом по теме "Random Access Machine"</h1>
 							</div><!--end .col -->
-							
+							<div class="col-lg-8">
+								<article class="margin-bottom-xxl">
+									<p class="lead">
+										Добавить/удалить задачи и тестовые последовательности
+									</p>
+								</article>
+							</div><!--end .col -->
 							
 						</div>
 						<!-- BEGIN NESTABLE LISTS -->
 				<div class="col-lg-12">
-					<h4>Форма для ввода новой задачи</h4>
+					<h4>Редактирование выбранной последовательности</h4>
 				</div>
-					<div class="card">
-						<div class="card-head">
-							<div class="card-body">
-								<div class="col-md-12 col-sm-12 style-gray">
-									<h3 class="text-default-bright">Эмулятор Тьюринга</h3>
-								</div> <br>
-								<h3>{!! link_to_route('alltasksmt', 'Работа с материалами') !!}</h3>
-								<h3>{!! link_to_route('edit_date', 'Редактирование дат и групп проведения контрольных мероприятий', array('name' => 'turing')) !!}</h3>
-								<h3>{!! link_to_route('edit_users_mt', 'Переписывание контрольной работы') !!}</h3> <br>
-								<div class="col-md-12 col-sm-12 style-gray">
-									<h3 class="text-default-bright">Эмулятор Маркова</h3>
-								</div> <br>
-								<h3>{!! link_to_route('alltasks', 'Работа с материалами') !!}</h3>  
-								<h3>{!! link_to_route('edit_date', 'Редактирование дат и групп для проведения контрольных мероприятий', array('name' => 'markov')) !!}</h3>
-								<h3>{!! link_to_route('edit_users_nam', 'Переписывание контрольной работы') !!}</h3> <br>
-								<div class="col-md-12 col-sm-12 style-gray">
-									<h3 class="text-default-bright">Эмулятор Поста</h3>
-								</div> <br>
-								<h3>{!! link_to_route('Post_manage_task', 'Работа с материалами') !!}</h3>  
-								<h3>{!! link_to_route('edit_date', 'Редактирование дат и групп для проведения контрольных мероприятий', array('name' => 'post')) !!}</h3>
-								<h3>{!! link_to_route('Post_edit_users', 'Переписывание контрольной работы') !!}</h3> <br>
-								<div class="col-md-12 col-sm-12 style-gray">
-									<h3 class="text-default-bright">Эмулятор RAM</h3>
-								</div> <br>	
-								<h3>{!! link_to_route('RAM_manage_task', 'Работа с материалами') !!}</h3>  
-								<h3>{!! link_to_route('edit_date', 'Редактирование дат и групп для проведения контрольных мероприятий', array('name' => 'ram')) !!}</h3>
-								<h3>{!! link_to_route('RAM_edit_users', 'Переписывание контрольной работы') !!}</h3> <br>
-							</div>
-						</div>
-					</div>							
-			</div>				
-		</section>
-			
-		@stop		
-<!--end #content-->
-		<!-- END BASE -->
+				<div class="col-lg-3 col-md-4">
+								
+				</div>
+				<div class="col-lg-offset-1 col-md-6 col-sm-6">
 
-		<!-- BEGIN JAVASCRIPT -->
+<div class="card">
+			
+			<form class="form-horizontal" method="post" action="{{URL::route('RAM_editing_task', array('sequence_id'=> $sequence_id))}}">
+				<div class="modal-body">
+					<div class="input-group">
+						<div class="input-group-content">
+							<input type="text" id="input_word6" class="form-control" placeholder="Входное слово" name="input_word6"  value="<?php echo $sequence['input_word']; ?>" />
+						</div>
+						<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+						<div class="input-group-content">
+							<input type="hidden" name="_token" value="{{ csrf_token() }}" />
+							<input type="text" id="output_word6" class="form-control" placeholder="Верное преобразование" name="output_word6" value="<?php echo $sequence['output_word']; ?>" / >
+						</div>
+					</div>
+					
+				</div>
+				
+				<button style="left:450px"class="btn ink-reaction btn-raised btn-primary" type="submit" name="submit"> Изменить</button>
+		
+			</form>
+				</br>
+</div>
+	
+		</div>
+
+				</div>					
+				</section>
+			<!--end #content-->
+@stop		
+
+		<!--end #base-->
+		<!-- END BASE -->
 @section('js-down')
 		<!-- BEGIN JAVASCRIPT -->
 		{!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
@@ -115,3 +120,5 @@
 		{!! HTML::script('js/libs/toastr/toastr.js') !!}
 		<!-- END JAVASCRIPT -->
 @stop
+
+
