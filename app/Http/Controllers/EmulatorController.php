@@ -587,7 +587,7 @@ class EmulatorController extends Controller {
         // get additional access for this user
 		$addl_access = UserResultPost::where('user_id', $user_id)->get()[0]['access'];
 		
-		if( in_array($group, $available_groups) && $available_date || $addl_access === 1 )
+		if( $available_groups != null && in_array($group, $available_groups) && $available_date || $addl_access === 1 )
 		{
 			$tasks 		 = EmulatorController::get_control_tasks_post($addl_access);
 			$remain_time = (array)(date_diff($finish_date, $now));
@@ -673,7 +673,7 @@ class EmulatorController extends Controller {
         // get additional access for this user
 		$addl_access = UserResultRam::where('user_id', $user_id)->get()[0]['access'];
 		
-		if( in_array($group, $available_groups) && $available_date || $addl_access === 1 )
+		if( $available_groups != null && in_array($group, $available_groups) && $available_date || $addl_access === 1 )
 		{
 			$tasks 		 = EmulatorController::get_control_tasks_ram($addl_access);
 			$remain_time = (array)(date_diff($finish_date, $now));
