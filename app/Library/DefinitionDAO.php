@@ -29,14 +29,14 @@ class DefinitionDAO
         return Definition::where('id',$index)->first();
     }
 
-    public function store_Definition(AddDefinitionRequest $request){
+    public function storeDefinition(AddDefinitionRequest $request){
         $definition = new Definition();
 
         $definition->name = $request->definition_name;
         $definition->content = $request->definition_content;
         if ($request->id_lecture != null && $request->name_anchor!=null) {
-            $definition->idLecture = $request->id_lecture;
-            $definition->nameAnchor = $request->name_anchor;
+            $definition->id_lecture = $request->id_lecture;
+            $definition->name_anchor = $request->name_anchor;
         }
         $definition->save();
     }
@@ -46,11 +46,11 @@ class DefinitionDAO
         $definition->name = $request->definition_name;
         $definition->content = $request->definition_content;
         if ($request->id_lecture == null || $request->name_anchor == null) {
-            $definition->idLecture = null;
-            $definition->nameAnchor = null;
+            $definition->id_lecture = null;
+            $definition->name_anchor = null;
         } else {
-            $definition->idLecture = $request->id_lecture;
-            $definition->nameAnchor = $request->name_anchor;
+            $definition->id_lecture = $request->id_lecture;
+            $definition->name_anchor = $request->name_anchor;
         }
         $definition->save();
     }

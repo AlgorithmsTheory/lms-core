@@ -98,9 +98,9 @@ Route::get('tests/groups-for-tests', ['as' => 'choose_group', 'uses' => 'TestCon
 //электронная библиотека
 Route::get('library', ['as' => 'library_index', 'uses' => 'LibraryController@index', 'middleware' => ['general_auth', 'access_for_library']]);
 //создание новой лекции
-Route::get('library/lecture/create', ['as' => 'lecture_create', 'uses' => 'LibraryController@add_new_lecture', 'middleware' => ['general_auth', 'access_for_library', 'admin']]);
+Route::get('library/lecture/create', ['as' => 'lecture_create', 'uses' => 'LibraryController@addNewLecture', 'middleware' => ['general_auth', 'access_for_library', 'admin']]);
 //сохранение и валидация данных о новой лекции
-Route::post('library/lecture/store', ['as' => 'lecture_store', 'uses' => 'LibraryController@store_lecture']);
+Route::post('library/lecture/store', ['as' => 'lecture_store', 'uses' => 'LibraryController@storeLecture']);
 // обновление данных о лекции
 Route::patch('library/lecture/{id}', ['as' => 'lecture_update', 'uses' => 'LibraryController@updateLecture']);
 // редактирование лекции

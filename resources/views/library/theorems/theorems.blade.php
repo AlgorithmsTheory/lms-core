@@ -65,10 +65,10 @@
                         @foreach ($theorems as $theorem)
                             <tr>
                                 <th scope="row"><h4>
-                                        @if($theorem->idLecture == null)
+                                        @if($theorem->id_lecture == null)
                                             {{$theorem->name}}
                                         @endif
-                                        @if($theorem->idLecture != null)
+                                        @if($theorem->id_lecture != null)
                                                 @if($theorem->name != null)
                                             {!! link_to_route('lecture', $theorem->name, $theorem->linkToLecture)!!}
                                                     @else
@@ -80,7 +80,7 @@
                                 {{$theorem->content}}
                                 </td>
                                 <td>
-                                    @if($theorem->idLecture != null)
+                                    @if($theorem->id_lecture != null)
                                         <span class="glyphicon glyphicon-ok" style="color:green;"></span>
                                     @endif
                                 </td>

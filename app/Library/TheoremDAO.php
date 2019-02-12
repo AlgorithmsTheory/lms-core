@@ -28,15 +28,15 @@ class TheoremDAO
         return Theorem::where('id',$index)->first();
     }
 
-    public function store_Theorem(AddTheoremRequest $request){
+    public function storeTheorem(AddTheoremRequest $request){
         $theorem = new Theorem();
         $theorem->name = $request->theorem_name;
         $theorem->content = $request->theorem_content;
         $theorem->exam = $request->exam;
         $theorem->doc = $request->doc;
         if ($request->id_lecture != null && $request->name_anchor!=null) {
-            $theorem->idLecture = $request->id_lecture;
-            $theorem->nameAnchor = $request->name_anchor;
+            $theorem->id_lecture = $request->id_lecture;
+            $theorem->name_anchor = $request->name_anchor;
         }
         $theorem->save();
 
@@ -49,11 +49,11 @@ class TheoremDAO
         $theorem->exam = $request->exam;
         $theorem->doc = $request->doc;
         if ($request->id_lecture == null || $request->name_anchor == null) {
-            $theorem->idLecture = null;
-            $theorem->nameAnchor = null;
+            $theorem->id_lecture = null;
+            $theorem->name_anchor = null;
         } else {
-            $theorem->idLecture = $request->id_lecture;
-            $theorem->nameAnchor = $request->name_anchor;
+            $theorem->id_lecture = $request->id_lecture;
+            $theorem->name_anchor = $request->name_anchor;
         }
         $theorem->save();
     }

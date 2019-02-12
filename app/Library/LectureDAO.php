@@ -26,7 +26,7 @@ class LectureDAO
         return Lecture::where('lecture_number',$index)->first();
     }
 
-    public function store_lecture(AddLectureRequest $request){
+    public function storeLecture(AddLectureRequest $request){
         $lecture = new Lecture;
         $rundomNumber = mt_rand(0, 10000);
         if ($request->hasFile('doc_file')) {
@@ -149,9 +149,9 @@ class LectureDAO
                 return 'Ошибка удаления ppt файла';
             }
         }
-        DB::update('UPDATE `definition` SET `idLecture` = NULL, `nameAnchor` = NULL where `idLecture` = ?', [$id]);
+        DB::update('UPDATE `definitions` SET `id_lecture` = NULL, `name_anchor` = NULL where `id_lecture` = ?', [$id]);
 
-        DB::update('UPDATE `theorems` SET `idLecture` = NULL, `nameAnchor` = NULL where `idLecture` = ?', [$id]);
+        DB::update('UPDATE `theorems` SET `id_lecture` = NULL, `name_anchor` = NULL where `id_lecture` = ?', [$id]);
 
         DB::update('UPDATE `lectures` SET `lecture_number` = `lecture_number` - 1 where `lecture_number` > ?', [$lecture->lecture_number]);
         // Удаление тем из таблицы themes по id лекции

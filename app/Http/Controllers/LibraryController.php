@@ -80,13 +80,13 @@ class LibraryController extends Controller {
         return view('library.dop');
     }
 
-    public function add_new_lecture(){
+    public function addNewLecture(){
         return view("library.lectures.add_new_lecture");
     }
 
-    public function store_lecture(AddLectureRequest $request){
+    public function storeLecture(AddLectureRequest $request){
         $lecture =  new LectureDAO;
-        $resultAction = $lecture->store_lecture($request);
+        $resultAction = $lecture->storeLecture($request);
         if ($resultAction != 'ok') {
             return back()->exceptInput()->withErrors([$resultAction]);
         }
@@ -121,13 +121,13 @@ class LibraryController extends Controller {
 
     public function storeDefinition(AddDefinitionRequest $request){
         $definitions =  new DefinitionDAO();
-        $definitions->store_Definition($request);
+        $definitions->storeDefinition($request);
         return redirect('library/definitions');
     }
 
     public function editDefinition($id){
         $definition = Definition::findOrFail($id);
-        $idSectionLecture = Lecture::where('id_lecture',$definition->idLecture)->first()->id_section;
+        $idSectionLecture = Lecture::where('id_lecture',$definition->id_lecture)->first()->id_section;
         $lectures = Lecture::all();
         return view("library.definitions.edit_definition", compact('lectures', 'definition', 'idSectionLecture'));
     }
@@ -151,7 +151,7 @@ class LibraryController extends Controller {
 
     public function storeTheorem(AddTheoremRequest $request){
         $theorems =  new TheoremDAO();
-        $theorems->store_Theorem($request);
+        $theorems->storeTheorem($request);
         return redirect('library/theorems');
     }
 
@@ -164,7 +164,7 @@ class LibraryController extends Controller {
     public function editTheorem($id){
         $theorem = Theorem::findOrFail($id);
         $lectures = Lecture::all();
-        $idSectionLecture = Lecture::where('id_lecture',$theorem->idLecture)->first()->id_section;
+        $idSectionLecture = Lecture::where('id_lecture',$theorem->id_lecture)->first()->id_section;
         return view("library.theorems.edit_theorem", compact('lectures', 'theorem', 'idSectionLecture'));
     }
 

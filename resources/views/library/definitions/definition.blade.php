@@ -62,10 +62,10 @@
                         @foreach ($definitions as $definition)
                                 <tr>
                                     <th scope="row"><h4>
-                                            @if($definition->idLecture == null)
+                                            @if($definition->id_lecture == null)
                                                 {{$definition->name}}
                                             @endif
-                                            @if($definition->idLecture != null)
+                                            @if($definition->id_lecture != null)
                                                     {!! link_to_route('lecture', $definition->name, $definition->linkToLecture)!!}
                                             @endif
                                         </h4></th>

@@ -83,7 +83,7 @@
                 <div class="collapse" id="addLink">
                     <div class="form-group">
                         <h4> {!! Form::label('name_anchor', 'Название ссылки:') !!}</h4>
-                        {!! Form::text('name_anchor',$theorem->nameAnchor,['class' => 'form-control','placeholder' => 'Введите название ссылки']) !!}
+                        {!! Form::text('name_anchor',$theorem->name_anchor,['class' => 'form-control','placeholder' => 'Введите название ссылки']) !!}
                     </div>
                     <div class="form-group">
                         <h4> {!! Form::label('id_section', 'Раздел:') !!}</h4>
@@ -100,7 +100,7 @@
                                 Выберите лекцию:
                             </option>
                             @foreach ($lectures as $lecture)
-                                @if($theorem->idLecture == $lecture->id_lecture)
+                                @if($theorem->id_lecture == $lecture->id_lecture)
                                 <option value="{{ $lecture->id_lecture }}" id_section="{{ $lecture->id_section }}" selected="selected">
                                     {{ $lecture->lecture_name }}
                                 </option>

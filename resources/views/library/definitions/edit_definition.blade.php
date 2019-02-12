@@ -81,7 +81,7 @@
                                 Выберите лекцию:
                             </option>
                             @foreach ($lectures as $lecture)
-                                @if($definition->idLecture == $lecture->id_lecture)
+                                @if($definition->id_lecture == $lecture->id_lecture)
                                 <option value="{{ $lecture->id_lecture }}" id_section="{{ $lecture->id_section }}" selected="selected">
                                     {{ $lecture->lecture_name }}
                                 </option>
