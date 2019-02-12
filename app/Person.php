@@ -5,6 +5,6 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 
 
 class Person extends Eloquent {
-    protected $table = 'person';
+    protected $table = 'persons';
     public $timestamps = false;
 }
