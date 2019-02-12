@@ -55,7 +55,7 @@
                         <tbody>
                         @foreach ($educationalMaterials as $educationalMaterial)
                             <tr>
-                                <th scope="row">
+                                <th scope="row" style="width: 650px">
                                     <h4>
                                             {{$educationalMaterial->name}}
                                     </h4>

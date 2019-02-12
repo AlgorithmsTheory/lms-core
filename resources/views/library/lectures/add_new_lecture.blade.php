@@ -23,8 +23,7 @@
     <![endif]-->
 
     {{--Редактор текста--}}
-    <script src="{{ asset('/js/ckeditor/ckeditor.js') }}"
-            type="text/javascript" charset="utf-8" ></script>
+    {!! HTML::script("https://cdn.ckeditor.com/4.11.2/full/ckeditor.js") !!}
 
 @stop
 @section('content')
@@ -110,6 +109,8 @@
 
  {{--для редактора --}}
     <script>
-        var editor = CKEDITOR.replace( 'lecture_text' );
+        var editor = CKEDITOR.replace( 'lecture_text' , {
+            customConfig: '{{ asset('/js/library/ckeditor/config.js') }}'
+        });
     </script>
 @stop

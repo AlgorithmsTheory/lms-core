@@ -22,8 +22,7 @@
     {!! HTML::script('js/libs/utils/respond.min.js') !!}
     <![endif]-->
     {{--Редактор текста--}}
-    <script src="{{ asset('/js/ckeditor/ckeditor.js') }}"
-            type="text/javascript" charset="utf-8" ></script>
+    {!! HTML::script("https://cdn.ckeditor.com/4.11.2/full/ckeditor.js") !!}
 
 @stop
 @section('content')
@@ -103,7 +102,9 @@
     {!! HTML::script('js/core/demo/Demo.js') !!}
     {{--для редактора --}}
     <script>
-        var editor = CKEDITOR.replace( 'person_text' );
+        var editor = CKEDITOR.replace( 'person_text' , {
+            customConfig: '{{ asset('/js/library/ckeditor/config.js') }}'
+        });
     </script>
     <!-- END JAVASCRIPT -->
 @stop
