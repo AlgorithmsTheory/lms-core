@@ -1,36 +1,4 @@
 
-
-// CKEDITOR.replace( 'editor1', {
-//     on: {
-//         instanceReady: function( ev ) {
-//             // Output paragraphs as <p>Text</p>.
-//             this.dataProcessor.writer.setRules( 'p', {
-//                 indent: false,
-//                 breakBeforeOpen: true,
-//                 breakAfterOpen: false,
-//                 breakBeforeClose: false,
-//                 breakAfterClose: true
-//             });
-//         }
-//     },
-//     extraPlugins: 'base64image',
-//     removePlugins:'image, iframe, flash, pagebreak, div, save, newpage,' +
-//     'language, print, bidi, wsc, scayt',
-//     disallowedContent:'h3 h2 h1 ',
-//     language: 'ru',
-//     coreStyles_bold: {
-//         element: 'font',
-//         attributes: { 'style': 'font-weight: bold;' },
-//         overrides: 'strong'
-//     },
-//     coreStyles_italic: {
-//         element: 'font',
-//         attributes: { 'style': 'font-style: italic;' },
-//         overrides: 'em'
-//     }
-// } );
-
-
 CKEDITOR.plugins.addExternal( 'base64image',
     '/js/library/ckeditor/plagins/base64image_1.2/base64image/', 'plugin.js');
 
