@@ -31,8 +31,8 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent|\App\Question  toSql()
  *
  */
-class Testsequence_nam extends Eloquent {
-    protected $table = 'testsequence_nam';
+class TasksNam extends Eloquent {
+    protected $table = 'tasks_nam';
     public $timestamps = false;
-    protected $fillable = ['sequense_id', 'input_word', 'output_word', 'task_id', 'iteration_num'];
+    protected $fillable = ['id', 'variant_number', 'task_number', 'task_text','level', 'max_mark', 'effic_coef', 'time_coef', 'min_time'];
 } 

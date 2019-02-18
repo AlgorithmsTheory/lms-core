@@ -172,7 +172,6 @@
 @section('js-down')
 		<!-- BEGIN JAVASCRIPT -->
 		@yield('js-down-addl')
-		{!! HTML::script('/js/ram/jquery-2.1.1.min.js') !!}
 		{!! HTML::script('/js/ram/popper.min.js') !!}
 		{!! HTML::script('/js/ram/src-noconflict/ace.js') !!}
 		
