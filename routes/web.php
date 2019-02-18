@@ -365,8 +365,8 @@ Route::prefix('algorithm')->group(function () {
 	});
 	// Emulators common
 	Route::middleware(['general_auth', 'admin'])->group(function () {
-		Route::get('edit_date',      ['as' => 'edit_date',   'uses' => 'TasksController@edit_date']);
-		Route::post('edit_all_date', ['as' => 'editAllDate', 'uses' => 'TasksController@editAllDate']);
-		Route::get( 'edit_users',    ['as' => 'edit_users',  'uses' => 'TasksController@edit_users']);
+		Route::get('edit_date',      ['as' => 'edit_date',   'uses' => 'EmulatorController@edit_date']);
+		Route::post('edit_all_date', ['as' => 'editAllDate', 'uses' => 'EmulatorController@editAllDate']);
+		Route::get( 'edit_users',    ['as' => 'edit_users',  'uses' => 'EmulatorController@edit_users']);
 	});
 });

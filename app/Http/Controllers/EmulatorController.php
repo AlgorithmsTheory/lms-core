@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 use App\Protocols\HAMProtocol;
 use App\Protocols\MTProtocol;
+use Input;
 use DB;
-use Illuminate\Http\Request;
+use Request;
+use App\Group;
 use App\Tasks;
 use App\Testsequence;
 use App\User;
@@ -12,7 +14,7 @@ use Auth;
 use App\Controls;
 use App\UserResultRam;
 use App\UserResultPost;
-use App\Kontr_work;
+use App\KontrWork;
 use App\EmrForGroup;
 use App\TasksRam;
 use App\TasksPost;
@@ -561,6 +563,36 @@ class EmulatorController extends Controller {
             $protocol->create();
             return;
         }
+    }
+	
+	public function edit_date(){
+		// тип эмулятора
+		$name = Input::get('name');
+		// время КР для эмулятора и ID
+		$kontr_work = KontrWork::where('name', $name)->get()[0];
+		$emr_id     = $kontr_work['id'];
+        // доступ для групп
+		$all_groups = Group::leftJoin('emr_for_group', function($join) {
+										$join->on('groups.group_id', '=', 'emr_for_group.group_id');})->where('archived', 0)->where('emr_id', $emr_id)->get();
+										
+        return view("algorithm.edit_date", compact('emr_id', 'kontr_work', 'all_groups'));
+
+    }
+	
+	public function editAllDate(){
+		$new_start   = Request::input("new_start");
+		$new_finish  = Request::input("new_finish");
+		$emr_id      = Request::input("emr_id");
+		$availability_input = (Request::input("availability")== null) ? [] : Request::input("availability");
+		
+		for ($i = 0; $i < count(Request::input("id-group")); $i++) {
+			$availability = in_array(Request::input("id-group")[$i], $availability_input) ? 1 : 0;
+			$group_id = Request::input("id-group")[$i];
+			EmrForGroup::updateOrInsert([ 'emr_id' => $emr_id, 'group_id' => $group_id], ['availability' => $availability]);
+		}
+		
+		KontrWork::whereId($emr_id)->update(['start_date' => $new_start, 'finish_date' => $new_finish]);
+		return view("algorithm.main");
     }
 
 }

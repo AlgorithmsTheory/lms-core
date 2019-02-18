@@ -11,7 +11,7 @@ use App\User;
 use Auth;
 use App\Controls;
 use App\UserResultRam;
-use App\Kontr_work;
+use App\KontrWork;
 use App\EmrForGroup;
 use App\TasksRam;
 use App\TestsequenceRam;
@@ -22,7 +22,7 @@ class RamEmulatorController extends Controller {
 		date_default_timezone_set('Europe/Moscow');
         $user_id        = Auth::user()['id'];
 		$group          = User::whereId($user_id)->get()[0]['group'];
-		$kontr_work     = Kontr_work::whereName('ram')->get()[0];
+		$kontr_work     = KontrWork::whereName('ram')->get()[0];
 		$emr_id         = $kontr_work['id'];
 		$start_date     = date_create($kontr_work['start_date']);
 		$finish_date    = date_create($kontr_work['finish_date']);
@@ -36,14 +36,12 @@ class RamEmulatorController extends Controller {
 		
 		$additional_access = UserResultRam::where('user_id', $user_id)->get()[0]['access'];
 		
-		if( $available_groups != null && in_array($group, $available_groups) && $available_date || $additional_access === 1 )
-		{
-			$tasks 		 = RamEmulatorController::get_control_tasks_ram($additional_access);
+		if( $available_groups != null && in_array($group, $available_groups) && $available_date || $additional_access === 1 ) {
+			$tasks       = RamEmulatorController::get_control_tasks_ram($additional_access);
 			$remain_time = (array)(date_diff($finish_date, $now));
 			return view( 'algorithm.kontrRAM', compact('tasks', 'remain_time') );
 		}
-		else
-		{
+		else {
 			return view("algorithm.RAM");
 		}
 	}
@@ -55,23 +53,22 @@ class RamEmulatorController extends Controller {
         if ($is_started['variant'] == null || $remake_work) {
 			$variant = TasksRam::inRandomOrder()->take(1)->get()[0]['variant'];
 		}
-		else
-		{
+		else{
 			$variant = $is_started['variant'];
 		}
 		// get task text
-		$easy2_full	 = TasksRam::whereVariant($variant)->whereLevel(1)->whereMark(2)->take(1)->get()[0]; // take easy 2 ball task
+		$easy2_full  = TasksRam::whereVariant($variant)->whereLevel(1)->whereMark(2)->take(1)->get()[0]; // take easy 2 ball task
 		$easy2       = $easy2_full['description'];
-		$easy2id 	 = $easy2_full['task_id'];
-		$easy3_full	 = TasksRam::whereVariant($variant)->whereLevel(1)->whereMark(3)->take(1)->get()[0]; // take easy 3 ball task
-		$easy3   	 = $easy3_full['description'];
-		$easy3id 	 = $easy3_full['task_id'];
-		$hard3_full	 = TasksRam::whereVariant($variant)->whereLevel(2)->whereMark(3)->take(1)->get()[0]; // take hard 3 ball task
-		$hard3	     = $hard3_full['description'];
-		$hard3id	 = $hard3_full['task_id'];
-		$hard4_full	 = TasksRam::whereVariant($variant)->whereLevel(2)->whereMark(4)->take(1)->get()[0]; // take hard 4 ball task
-		$hard4		 = $hard4_full['description'];
-		$hard4id	 = $hard4_full['task_id'];
+		$easy2id     = $easy2_full['task_id'];
+		$easy3_full  = TasksRam::whereVariant($variant)->whereLevel(1)->whereMark(3)->take(1)->get()[0]; // take easy 3 ball task
+		$easy3       = $easy3_full['description'];
+		$easy3id     = $easy3_full['task_id'];
+		$hard3_full  = TasksRam::whereVariant($variant)->whereLevel(2)->whereMark(3)->take(1)->get()[0]; // take hard 3 ball task
+		$hard3       = $hard3_full['description'];
+		$hard3id     = $hard3_full['task_id'];
+		$hard4_full  = TasksRam::whereVariant($variant)->whereLevel(2)->whereMark(4)->take(1)->get()[0]; // take hard 4 ball task
+		$hard4       = $hard4_full['description'];
+		$hard4id     = $hard4_full['task_id'];
 		if ($is_started['variant'] == null || $remake_work) {
 			UserResultRam::updateOrInsert(['user_id' => $user_id],
 			['variant' => $variant, 'task1easy_id' => $easy2id, 'task1hard_id' => $hard3id, 'task2easy_id' => $easy3id, 'task2hard_id' => $hard4id]);
@@ -168,7 +165,7 @@ class RamEmulatorController extends Controller {
         return view("algorithm.edit_users", compact('all_users', 'emr_type'));
     }
 
-    public function RAM_editing_users(Request $request){
+    public function RAM_editing_users(){
 
         $availability_input = (Request::input("fines") == null) ? [] : Request::input("fines");
 
