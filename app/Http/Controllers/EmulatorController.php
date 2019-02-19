@@ -570,7 +570,7 @@ class EmulatorController extends Controller {
 		$name = Input::get('name');
 		// время КР для эмулятора и ID
 		$kontr_work = KontrWork::where('name', $name)->get()[0];
-		$emr_id     = $kontr_work['id'];
+		$emr_id = $kontr_work['id'];
         // доступ для групп
 		$all_groups = Group::leftJoin('emr_for_group', function($join) {
 										$join->on('groups.group_id', '=', 'emr_for_group.group_id');})->where('archived', 0)->where('emr_id', $emr_id)->get();
@@ -580,9 +580,9 @@ class EmulatorController extends Controller {
     }
 	
 	public function editAllDate(){
-		$new_start   = Request::input("new_start");
-		$new_finish  = Request::input("new_finish");
-		$emr_id      = Request::input("emr_id");
+		$new_start = Request::input("new_start");
+		$new_finish = Request::input("new_finish");
+		$emr_id = Request::input("emr_id");
 		$availability_input = (Request::input("availability")== null) ? [] : Request::input("availability");
 		
 		for ($i = 0; $i < count(Request::input("id-group")); $i++) {

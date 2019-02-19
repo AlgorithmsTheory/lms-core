@@ -20,13 +20,13 @@ class PostEmulatorController extends Controller {
 	
 	public function open_Post() {
 		date_default_timezone_set('Europe/Moscow');
-        $user_id        = Auth::user()['id'];
-		$group          = User::whereId($user_id)->get()[0]['group'];
-		$kontr_work     = KontrWork::whereName('post')->get()[0];
-		$emr_id         = $kontr_work['id'];
-		$start_date     = date_create($kontr_work['start_date']);
-		$finish_date    = date_create($kontr_work['finish_date']);
-		$now            = date_create(date("Y-m-d H:i:s"));
+        $user_id = Auth::user()['id'];
+		$group = User::whereId($user_id)->get()[0]['group'];
+		$kontr_work = KontrWork::whereName('post')->get()[0];
+		$emr_id = $kontr_work['id'];
+		$start_date = date_create($kontr_work['start_date']);
+		$finish_date = date_create($kontr_work['finish_date']);
+		$now = date_create(date("Y-m-d H:i:s"));
 		$available_date = ($now >= $start_date) && ($now <= $finish_date);
 		$available_group_query = EmrForGroup::where('availability', 1)->where('emr_id', $emr_id)->get();
 		
@@ -37,7 +37,7 @@ class PostEmulatorController extends Controller {
 		$additional_access = UserResultPost::where('user_id', $user_id)->get()[0]['access'];
 		
 		if( $available_groups != null && in_array($group, $available_groups) && $available_date || $additional_access === 1 ) {
-			$tasks       = PostEmulatorController::get_control_tasks_post($additional_access);
+			$tasks = PostEmulatorController::get_control_tasks_post($additional_access);
 			$remain_time = (array)(date_diff($finish_date, $now));
 			
 			if($tasks == null){
@@ -64,27 +64,27 @@ class PostEmulatorController extends Controller {
 			$variant = $is_started['variant'];
 		}
 		// get task text
-		$easy2_full  = TasksPost::whereVariant($variant)->whereLevel(1)->whereMark(2)->take(1)->get()[0]; // take easy 2 ball task
-		$easy2       = $easy2_full['description'];
-		$easy2id     = $easy2_full['task_id'];
-		$easy3_full  = TasksPost::whereVariant($variant)->whereLevel(1)->whereMark(3)->take(1)->get()[0]; // take easy 3 ball task
-		$easy3       = $easy3_full['description'];
-		$easy3id     = $easy3_full['task_id'];
-		$hard3_full  = TasksPost::whereVariant($variant)->whereLevel(2)->whereMark(3)->take(1)->get()[0]; // take hard 3 ball task
-		$hard3       = $hard3_full['description'];
-		$hard3id     = $hard3_full['task_id'];
-		$hard4_full  = TasksPost::whereVariant($variant)->whereLevel(2)->whereMark(4)->take(1)->get()[0]; // take hard 4 ball task
-		$hard4       = $hard4_full['description'];
-		$hard4id     = $hard4_full['task_id'];
+		$easy2_full = TasksPost::whereVariant($variant)->whereLevel(1)->whereMark(2)->take(1)->get()[0]; // take easy 2 ball task
+		$easy2 = $easy2_full['description'];
+		$easy2id = $easy2_full['task_id'];
+		$easy3_full = TasksPost::whereVariant($variant)->whereLevel(1)->whereMark(3)->take(1)->get()[0]; // take easy 3 ball task
+		$easy3 = $easy3_full['description'];
+		$easy3id = $easy3_full['task_id'];
+		$hard3_full = TasksPost::whereVariant($variant)->whereLevel(2)->whereMark(3)->take(1)->get()[0]; // take hard 3 ball task
+		$hard3 = $hard3_full['description'];
+		$hard3id = $hard3_full['task_id'];
+		$hard4_full = TasksPost::whereVariant($variant)->whereLevel(2)->whereMark(4)->take(1)->get()[0]; // take hard 4 ball task
+		$hard4 = $hard4_full['description'];
+		$hard4id = $hard4_full['task_id'];
 		if ($is_started['variant'] == null || $remake_work) {
 			UserResultPost::updateOrInsert(['user_id' => $user_id],
 			['variant' => $variant, 'task1easy_id' => $easy2id, 'task1hard_id' => $hard3id, 'task2easy_id' => $easy3id, 'task2hard_id' => $hard4id]);
 		}
 		// get task check sequences
-		$easy2_seq   = TestsequencePost::where('task_id', $easy2id)->get();
-		$easy3_seq   = TestsequencePost::where('task_id', $easy3id)->get();
-		$hard3_seq   = TestsequencePost::where('task_id', $hard3id)->get();
-		$hard4_seq   = TestsequencePost::where('task_id', $hard4id)->get();
+		$easy2_seq = TestsequencePost::where('task_id', $easy2id)->get();
+		$easy3_seq = TestsequencePost::where('task_id', $easy3id)->get();
+		$hard3_seq = TestsequencePost::where('task_id', $hard3id)->get();
+		$hard4_seq = TestsequencePost::where('task_id', $hard4id)->get();
 		
 		if( $easy2_full == null || $easy3_full == null || $hard3_full == null || $hard4_full == null )
 			return null;
@@ -96,11 +96,11 @@ class PostEmulatorController extends Controller {
 	public function Post_set_mark(Request $request){
 		$user = Auth::user();
         $user_id = $user['id'];
-		$mark1      = $request->input("mark1");
-		$mark2      = $request->input("mark2");
-		$sum_mark   = $request->input("sum_mark");
-		$user_code  = $request->input("user_code");
-		$date       = date("Y-m-d H:i:s");
+		$mark1 = $request->input("mark1");
+		$mark2 = $request->input("mark2");
+		$sum_mark = $request->input("sum_mark");
+		$user_code = $request->input("user_code");
+		$date = date("Y-m-d H:i:s");
 		UserResultPost::updateOrInsert(['user_id' => $user_id], ['mark_1' => $mark1, 'mark_2' => $mark2, 'sum_mark' => $sum_mark, 'user_code' => $user_code, 'date' => $date]);
 	}
 	
@@ -157,7 +157,7 @@ class PostEmulatorController extends Controller {
 	}
 	
 	public function Post_editing_task($sequence_id){
-		$input_word6  = Request::input("input_word6");
+		$input_word6 = Request::input("input_word6");
 		$output_word6 = Request::input("output_word6");
 		TestsequencePost::where('sequence_id', $sequence_id)
 		  			    ->update(['input_word' => $input_word6, 'output_word' => $output_word6]);
