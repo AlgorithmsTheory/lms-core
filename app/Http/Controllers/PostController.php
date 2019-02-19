@@ -39,7 +39,14 @@ class PostEmulatorController extends Controller {
 		if( $available_groups != null && in_array($group, $available_groups) && $available_date || $additional_access === 1 ) {
 			$tasks       = PostEmulatorController::get_control_tasks_post($additional_access);
 			$remain_time = (array)(date_diff($finish_date, $now));
-			return view( 'algorithm.kontrPost', compact('tasks', 'remain_time') );
+			
+			if($tasks == null){
+				return view('algorithm.Post_no_data');
+			}
+			else{
+				return view( 'algorithm.kontrPost', compact('tasks', 'remain_time') );
+			}
+			
 		}
 		else {
 			return view("algorithm.Post");
@@ -78,6 +85,9 @@ class PostEmulatorController extends Controller {
 		$easy3_seq   = TestsequencePost::where('task_id', $easy3id)->get();
 		$hard3_seq   = TestsequencePost::where('task_id', $hard3id)->get();
 		$hard4_seq   = TestsequencePost::where('task_id', $hard4id)->get();
+		
+		if( $easy2_full == null || $easy3_full == null || $hard3_full == null || $hard4_full == null )
+			return null;
 		
 		return ['variant' => $variant, 'easy2' => $easy2, 'easy3' => $easy3, 'hard3' => $hard3, 'hard4' => $hard4,
 				'easy2_seq' => json_encode($easy2_seq), 'easy3_seq' => json_encode($easy3_seq), 'hard3_seq' => json_encode($hard3_seq), 'hard4_seq' => json_encode($hard4_seq)];

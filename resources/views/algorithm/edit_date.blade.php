@@ -62,7 +62,7 @@
 						@if ($emr_id == 1) Эмулятор Тьюринга:
 						@elseif ($emr_id == 2) Эмулятор Маркова:
 						@elseif ($emr_id == 4) Эмулятор RAM:
-						@else Поста Эмулятор Поста:
+						@else Эмулятор Поста:
 						@endif 
 					</label></h3>
 					<div class="input-group">
