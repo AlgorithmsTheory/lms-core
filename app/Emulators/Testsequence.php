@@ -6,7 +6,7 @@
  * Time: 15:56
  */
 
-namespace App;
+namespace App\Emulators;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 /**
@@ -31,8 +31,8 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent|\App\Question  toSql()
  *
  */
-class Tasks extends Eloquent {
-    protected $table = 'tasksmt';
+class Testsequence extends Eloquent {
+    protected $table = 'testsequence';
     public $timestamps = false;
-    protected $fillable = ['id_task', 'variant', 'number','level', 'mark', 'task'];
+    protected $fillable = ['id_sequence', 'input_word', 'output_word', 'task_id', 'iteration_num'];
 } 

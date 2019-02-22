@@ -1,20 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Protocols\HAMProtocol;
-use App\Protocols\MTProtocol;
-use DB;
-use Request;
-use App\Tasks;
-use App\Testsequence;
-use App\User;
 use Auth;
-use App\Controls;
-use App\UserResultPost;
-use App\KontrWork;
-use App\EmrForGroup;
-use App\TasksPost;
-use App\TestsequencePost;
+use Request;
+use App\User;
+use App\Emulators\UserResultPost;
+use App\Emulators\KontrWork;
+use App\Emulators\EmrForGroup;
+use App\Emulators\TasksPost;
+use App\Emulators\TestsequencePost;
 
 class PostEmulatorController extends Controller {
 	

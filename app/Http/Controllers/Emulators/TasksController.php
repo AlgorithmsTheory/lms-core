@@ -3,27 +3,13 @@
 namespace App\Http\Controllers;
 use DB;
 use Request;
-use App\User;
-use App\Tasks;
-use App\Testsequence;
-use App\TasksNam;
-use App\TestsequenceNam;
-use App\TasksRam;
-use App\TasksPost;
-use App\TestsequenceRam;
-use App\TestsequencePost;
-use App\KontrWork;
-use App\Group;
-use App\EmrForGroup;
-use App\UserResultRam;
-use App\UserResultPost;
 use Illuminate\Support\Facades\Input;
 
 
 class TasksController extends Controller {
 
 
-  public function magic($array) {
+    public static function magic($array) {
         return json_decode(json_encode($array), true);
     }
 

@@ -7,19 +7,10 @@ use Input;
 use DB;
 use Request;
 use App\Group;
-use App\Tasks;
-use App\Testsequence;
-use App\User;
 use Auth;
 use App\Controls;
-use App\UserResultRam;
-use App\UserResultPost;
-use App\KontrWork;
-use App\EmrForGroup;
-use App\TasksRam;
-use App\TasksPost;
-use App\TestsequenceRam;
-use App\TestsequencePost;
+use App\Emulators\KontrWork;
+use App\Emulators\EmrForGroup;
 
 class EmulatorController extends Controller {
 

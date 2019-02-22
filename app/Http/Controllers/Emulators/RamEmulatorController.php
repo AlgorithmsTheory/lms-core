@@ -1,20 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Protocols\HAMProtocol;
-use App\Protocols\MTProtocol;
-use DB;
-use Request;
-use App\Tasks;
-use App\Testsequence;
-use App\User;
 use Auth;
-use App\Controls;
-use App\UserResultRam;
-use App\KontrWork;
-use App\EmrForGroup;
-use App\TasksRam;
-use App\TestsequenceRam;
+use Request;
+use App\User;
+use App\Emulators\UserResultRam;
+use App\Emulators\KontrWork;
+use App\Emulators\EmrForGroup;
+use App\Emulators\TasksRam;
+use App\Emulators\TestsequenceRam;
 
 class RamEmulatorController extends Controller {
 

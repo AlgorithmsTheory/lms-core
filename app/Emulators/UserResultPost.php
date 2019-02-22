@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Emulators;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class UserResultNam extends Eloquent {
-    protected $table = 'user_result_nam';
+class UserResultPost extends Eloquent {
+    protected $table = 'user_result_post';
     public $timestamps = false;
 	protected $fillable = ['*'];
 }

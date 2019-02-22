@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Emulators;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class TasksRam extends Eloquent {
