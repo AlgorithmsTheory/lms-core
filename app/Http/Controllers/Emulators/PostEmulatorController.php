@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Emulators;
 use Auth;
 use Request;
 use App\User;
@@ -9,6 +9,8 @@ use App\Emulators\KontrWork;
 use App\Emulators\EmrForGroup;
 use App\Emulators\TasksPost;
 use App\Emulators\TestsequencePost;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\TasksController;
 
 class PostEmulatorController extends Controller {
 	

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Emulators;
 use App\Protocols\HAMProtocol;
 use App\Protocols\MTProtocol;
 use Input;
@@ -11,6 +11,7 @@ use Auth;
 use App\Controls;
 use App\Emulators\KontrWork;
 use App\Emulators\EmrForGroup;
+use App\Http\Controllers\Controller;
 
 class EmulatorController extends Controller {
 
