@@ -16,8 +16,8 @@ use App\Http\Requests\AddEducationMaterialRequest;
 use App\Http\Requests\EditEducationMaterialRequest;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeExtensionGuesser as MimeType;
 
-class EducationalMaterialDAO
-{
+class EducationalMaterialDAO {
+
     public function allEducationalMaterial(){
         return EducationalMaterial::all();
     }

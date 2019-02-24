@@ -10,6 +10,7 @@ class Definition extends Eloquent {
     protected $table = 'definitions';
     public $timestamps = false;
     protected $appends = ['link_to_lecture'];
+
     /** По id лекции возвращает строку, где первый элемент - номер лекции, второй - название якоря */
     public function getLinkToLectureAttribute(){
         $resultlink = '';

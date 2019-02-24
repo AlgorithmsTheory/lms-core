@@ -10,6 +10,7 @@ class Theorem extends Eloquent {
     protected $table = 'theorems';
     public $timestamps = false;
     protected $appends = ['link_to_lecture'];
+
     /** По id лекции возвращает строку, где первый элемент - номер лекции, второй - название якоря */
     public function getLinkToLectureAttribute(){
         $resultlink = '';

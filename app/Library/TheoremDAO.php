@@ -11,11 +11,10 @@ namespace App\Library;
 
 use App\Http\Requests\AddTheoremRequest;
 use App\Http\Requests\UpdateTheoremRequest;
-
 use App\Theorem;
 
-class TheoremDAO
-{
+class TheoremDAO {
+
     public function allTheorem(){
         $theorems = Theorem::all();
         foreach ($theorems as $theorem) {

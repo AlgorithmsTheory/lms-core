@@ -11,18 +11,16 @@ namespace App\Library;
 
 use App\Http\Requests\AddDefinitionRequest;
 use App\Http\Requests\UpdateDefinitionRequest;
-
 use App\Definition;
 
 
-class DefinitionDAO
-{
+class DefinitionDAO {
     public function allDefinition(){
-        $Definitions = Definition::all();
-        foreach ($Definitions as $Definition) {
-            $Definition->getLinkToLectureAttribute();
+        $definitions = Definition::all();
+        foreach ($definitions as $definition) {
+            $definition->getLinkToLectureAttribute();
         }
-        return  $Definitions;
+        return  $definitions;
     }
 
     public function getDefinition($index){

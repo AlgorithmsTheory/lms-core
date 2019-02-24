@@ -34,45 +34,55 @@ use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeExtensionGuesser as M
 
 
 class LibraryController extends Controller {
+
+    private $personDao;
+    private $lectureDao;
+    private $definitionDao;
+    private $theoremDao;
+    private $educationalMaterialDao;
+
+    function __construct(PersonDAO $personDao, LectureDAO $lectureDao, DefinitionDAO $definitionDao, TheoremDAO $theoremDao,
+                         EducationalMaterialDAO $educationalMaterialDAO) {
+        $this->personDao = $personDao;
+        $this->lectureDao = $lectureDao;
+        $this->definitionDao = $definitionDao;
+        $this->theoremDao = $theoremDao;
+        $this->educationalMaterialDao = $educationalMaterialDAO;
+    }
+
     public function index(){
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
-        $lectures =  new LectureDAO;
-        $lectures = $lectures->allLecture();
+        $lectures = $this->lectureDao->allLecture();
         return view('library.index', compact('lectures', 'role'));
     }
 
     public function definitions(){
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
-        $definitions =  new DefinitionDAO();
-        $definitions = $definitions->allDefinition();
+        $definitions = $this->definitionDao->allDefinition();
         return view('library.definitions.definition', compact('role' , 'definitions'));
     }
 
     public function theorems(){
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
-        $theorems =  new TheoremDAO();
-        $theorems = $theorems->allTheorem();
+        $theorems = $this->theoremDao->allTheorem();
         return view('library.theorems.theorems', compact('role', 'theorems'));
     }
 
     public function lecture($index, $anchor = null){
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
-        $lecture =  new LectureDAO;
-        $lecture = $lecture->getLecture($index);
+        $lecture = $this->lectureDao->getLecture($index);
         return view('library.lectures.lecture'.$anchor, compact('lecture', 'role'));
     }
 
     public function persons(){
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
-        $persons =  new PersonDAO();
-        $persons = $persons->allPerson();
+        $persons = $this->personDao->allPerson();
         return view('library.persons.persons', compact('role','persons'));
     }
 
     public function person($id){
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
-        $person =  new PersonDAO();
-        $person = $person->getPerson($id);
+        $person = $this->personDao->getPerson($id);
         return view('library.persons.person', compact('person', 'role'));
     }
 
@@ -85,8 +95,7 @@ class LibraryController extends Controller {
     }
 
     public function storeLecture(AddLectureRequest $request){
-        $lecture =  new LectureDAO;
-        $resultAction = $lecture->storeLecture($request);
+        $resultAction = $this->lectureDao->storeLecture($request);
         if ($resultAction != 'ok') {
             return back()->exceptInput()->withErrors([$resultAction]);
         }
@@ -100,8 +109,7 @@ class LibraryController extends Controller {
     }
 
     public function updateLecture(UpdateLectureRequest $request, $id){
-        $lecture =  new LectureDAO;
-        $resultAction = $lecture->updateLecture($request, $id);
+        $resultAction = $this->lectureDao->updateLecture($request, $id);
         if ($resultAction != 'ok') {
             return back()->exceptInput()->withErrors([$resultAction]);
         }
@@ -109,8 +117,7 @@ class LibraryController extends Controller {
     }
 
     public function deleteLecture($id){
-        $lecture =  new LectureDAO;
-        $resultAction = $lecture->deleteLecture($id);
+        $resultAction = $this->lectureDao->deleteLecture($id);
         return  json_encode(array("msg" => $resultAction));
     }
 
@@ -120,8 +127,7 @@ class LibraryController extends Controller {
     }
 
     public function storeDefinition(AddDefinitionRequest $request){
-        $definitions =  new DefinitionDAO();
-        $definitions->storeDefinition($request);
+        $this->definitionDao->storeDefinition($request);
         return redirect('library/definitions');
     }
 
@@ -133,14 +139,12 @@ class LibraryController extends Controller {
     }
 
     public function updateDefinition($id,UpdateDefinitionRequest $request){
-        $definitions =  new DefinitionDAO();
-        $definitions->updateDefinition($request, $id);
+        $this->definitionDao->updateDefinition($request, $id);
         return redirect('library/definitions');
     }
 
     public function deleteDefinition($id){
-        $definitions =  new DefinitionDAO();
-        $definitions->deleteDefinition($id);
+        $this->definitionDao->deleteDefinition($id);
         return  $id;
     }
 
@@ -150,14 +154,12 @@ class LibraryController extends Controller {
     }
 
     public function storeTheorem(AddTheoremRequest $request){
-        $theorems =  new TheoremDAO();
-        $theorems->storeTheorem($request);
+        $this->theoremDao->storeTheorem($request);
         return redirect('library/theorems');
     }
 
     public function deleteTheorem($id){
-        $theorems =  new TheoremDAO();
-        $theorems->deleteTheorem($id);
+        $this->theoremDao->deleteTheorem($id);
         return  $id;
     }
 
@@ -169,8 +171,7 @@ class LibraryController extends Controller {
     }
 
     public function updateTheorem($id,UpdateTheoremRequest $request){
-        $theorems =  new TheoremDAO();
-        $theorems->updateTheorem($request, $id);
+        $this->theoremDao->updateTheorem($request, $id);
         return redirect('library/theorems');
     }
 
@@ -179,8 +180,7 @@ class LibraryController extends Controller {
     }
 
     public function storePerson(AddPersonRequest $request){
-        $persons =  new PersonDAO();
-        $resultAction = $persons->store_Person($request);
+        $resultAction = $this->personDao->store_Person($request);
         if ($resultAction != 'ok') {
             return back()->exceptInput()->withErrors([$resultAction]);
         }
@@ -193,17 +193,15 @@ class LibraryController extends Controller {
     }
 
     public function updatePerson(EditPersonRequest $request, $id){
-        $persons = new PersonDAO();
-        $resultAction = $persons->updatePerson($request, $id);
+        $resultAction = $this->personDao->updatePerson($request, $id);
         if ($resultAction != 'ok') {
             return back()->exceptInput()->withErrors([$resultAction]);
         }
-        return redirect('library/persons/'.$persons->getPerson($id)->id);
+        return redirect('library/persons/'.$this->personDao->getPerson($id)->id);
     }
 
     public function deletePerson($id){
-        $persons = new PersonDAO();
-        $persons->deletePerson($id);
+        $this->personDao->deletePerson($id);
         return  redirect('library/persons');
     }
 
@@ -241,8 +239,7 @@ class LibraryController extends Controller {
 
     public function educationalMaterials() {
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
-        $educationalMaterials =  new EducationalMaterialDAO();
-        $educationalMaterials = $educationalMaterials->allEducationalMaterial();
+        $educationalMaterials = $this->educationalMaterialDao->allEducationalMaterial();
         return view('library.educational_materials.educational_materials', compact('role' , 'educationalMaterials'));
     }
 
@@ -251,8 +248,7 @@ class LibraryController extends Controller {
     }
 
     public function storeEducationalMaterial(AddEducationMaterialRequest $request){
-        $ducationalMaterial =  new EducationalMaterialDAO();
-        $resultAction = $ducationalMaterial->storeEducationalMaterial($request);
+        $resultAction = $this->educationalMaterialDao->storeEducationalMaterial($request);
         if ($resultAction != 'ok') {
             return back()->exceptInput()->withErrors([$resultAction]);
         }
@@ -260,8 +256,7 @@ class LibraryController extends Controller {
     }
 
     public function educationalMaterialsDownload($id){
-        $educationalMaterial =  new EducationalMaterialDAO();
-        $educationalMaterial = $educationalMaterial->getEducationalMaterial($id);
+        $educationalMaterial = $this->educationalMaterialDao->getEducationalMaterial($id);
         $returnName = str_replace(' ', '_', $educationalMaterial->name);
         $file = new File($educationalMaterial->file_path);
         $mimetypes = new MimeType;
@@ -281,14 +276,12 @@ class LibraryController extends Controller {
 
 
     public function editEducationalMaterial($id){
-        $educationalMaterial =  new EducationalMaterialDAO();
-        $educationalMaterial = $educationalMaterial->getEducationalMaterial($id);
+        $educationalMaterial = $this->educationalMaterialDao->getEducationalMaterial($id);
         return view('library.educational_materials.edit_educational_material', compact('educationalMaterial'));
     }
 
     public function updateEducationalMaterial(EditEducationMaterialRequest $request, $id){
-        $educationalMaterial =  new EducationalMaterialDAO();
-        $resultAction = $educationalMaterial->updateEducationalMaterial($request, $id);
+        $resultAction = $this->educationalMaterialDao->updateEducationalMaterial($request, $id);
         if ($resultAction != 'ok') {
             return back()->exceptInput()->withErrors([$resultAction]);
         }
@@ -296,8 +289,7 @@ class LibraryController extends Controller {
     }
 
     public function deleteEducationalMaterial($id){
-        $educationalMaterial =  new EducationalMaterialDAO();
-        $resultAction = $educationalMaterial->deleteEducationalMaterial($id);
+        $resultAction = $this->educationalMaterialDao->deleteEducationalMaterial($id);
         return  json_encode(array("msg" => $resultAction, "id" => $id));
     }
 }

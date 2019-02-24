@@ -8,11 +8,6 @@ use App\User;
 use Auth;
 class UpdateDefinitionRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
@@ -24,17 +19,12 @@ class UpdateDefinitionRequest extends FormRequest
 
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
 
         return [
             'definition_name' => "required|between:5,255",
-            'definition_content' => 'required|between:30,500',
+            'definition_content' => 'required|between:10,1000',
             'name_anchor' => 'min:2',
         ];
     }

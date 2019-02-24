@@ -9,15 +9,17 @@
 namespace App\Library;
 
 
+use App\Definition;
 use App\Http\Requests\AddLectureRequest;
 use App\Http\Requests\UpdateLectureRequest;
 use App\Testing\Lecture;
+use App\Testing\Theme;
+use App\Theorem;
 use DateTime;
 use Illuminate\Filesystem\Filesystem;
-use DB;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeExtensionGuesser as MimeType;
-class LectureDAO
-{
+class LectureDAO {
+
     public function allLecture(){
         return Lecture::all();
     }
@@ -74,7 +76,8 @@ class LectureDAO
         $lecture->id_section = $request->id_section;
 
         $currentNumber = Lecture::where('id_section','<=',$lecture->id_section)->count();
-        DB::update('UPDATE `lectures` SET `lecture_number` = `lecture_number` + 1 where `lecture_number` > ?', [$currentNumber]);
+
+        Lecture::where('lecture_number', '>', $currentNumber)->increment('lecture_number');
 
         $lecture->lecture_number = $currentNumber + 1;
         $lecture->date = new DateTime();
@@ -149,13 +152,16 @@ class LectureDAO
                 return 'Ошибка удаления ppt файла';
             }
         }
-        DB::update('UPDATE `definitions` SET `id_lecture` = NULL, `name_anchor` = NULL where `id_lecture` = ?', [$id]);
 
-        DB::update('UPDATE `theorems` SET `id_lecture` = NULL, `name_anchor` = NULL where `id_lecture` = ?', [$id]);
+        Definition::where('id_lecture', '=', $id)->update(['id_lecture' => null,
+                                                                            'name_anchor' => null]);
+        Theorem::where('id_lecture', '=', $id)->update(['id_lecture' => null,
+                                                                            'name_anchor' => null]);
 
-        DB::update('UPDATE `lectures` SET `lecture_number` = `lecture_number` - 1 where `lecture_number` > ?', [$lecture->lecture_number]);
+        Lecture::where('lecture_number', '>', $lecture->lecture_number)->decrement('lecture_number');
+
         // Удаление тем из таблицы themes по id лекции
-        DB::update('UPDATE `themes` SET `id_lecture` = NULL where `id_lecture` = ?', [$id]);
+        Theme::where('id_lecture', '=', $id)->update(['id_lecture' => null]);
         $lecture->delete();
         return 'ok';
     }

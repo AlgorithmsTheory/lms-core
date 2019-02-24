@@ -8,11 +8,6 @@ use App\User;
 use Auth;
 class AddLectureRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
@@ -24,17 +19,12 @@ class AddLectureRequest extends FormRequest
 
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
 
         return [
-            'lecture_name' => "required|between:5,355",
-            'lecture_text' => 'min:50',
+            'lecture_name' => "required|between:5,255",
+            'lecture_text' => 'min:10',
             'id_section' => 'required',
             'doc_file' => 'mimes:doc,docx',
             'ppt_file' => 'mimes:ppt,pptx'

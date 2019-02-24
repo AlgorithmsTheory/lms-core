@@ -14,8 +14,8 @@ use App\Http\Requests\EditPersonRequest;
 use App\Person;
 use Illuminate\Filesystem\Filesystem;
 
-class PersonDAO
-{
+class PersonDAO {
+
     public function allPerson(){
         return Person::all();
     }

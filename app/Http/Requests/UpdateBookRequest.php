@@ -7,11 +7,6 @@ use App\User;
 use Auth;
 class UpdateBookRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
@@ -22,17 +17,12 @@ class UpdateBookRequest extends FormRequest
         }
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [
             'book_title' => "required|between:5,255",
             'book_author' => 'required|between:5,255',
-            'book_description' => 'required|between:30,3000',
+            'book_description' => 'required|between:10,3000',
             'book_format' => 'required|between:5,255',
             'book_publisher' => 'required|between:5,255',
             'picture' => 'image',

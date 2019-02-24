@@ -8,11 +8,6 @@ use App\User;
 use Auth;
 class AddPersonRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
@@ -24,18 +19,13 @@ class AddPersonRequest extends FormRequest
 
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [
             'name_person' => "required|between:5,255",
             'year_birth' => 'date_format:Y|size:4',
             'year_death' => 'date_format:Y|size:4',
-            'person_text' => 'required|min:30',
+            'person_text' => 'required|min:10',
             'picture' => 'required|image',
         ];
     }
