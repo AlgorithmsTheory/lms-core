@@ -10,7 +10,6 @@ use App\Emulators\EmrForGroup;
 use App\Emulators\TasksRam;
 use App\Emulators\TestsequenceRam;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\TasksController;
 
 class RamEmulatorController extends Controller {
 

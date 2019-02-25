@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Emulators;
 use DB;
 use Request;
 use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\Controller;
 
 
 class TasksController extends Controller {
