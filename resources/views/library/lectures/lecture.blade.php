@@ -1,6 +1,6 @@
 @extends('templates.base')
 @section('head')
-    <title>{{$person->name}}</title>
+    <title>Лекция {{$number}}</title>
 
     <!-- BEGIN META -->
     <meta charset="utf-8">
@@ -34,8 +34,7 @@
                     <ol class="breadcrumb">
                         <li>{!! HTML::linkRoute('home', 'Главная') !!}</li>
                         <li>{!! HTML::linkRoute('library_index', 'Библиотека') !!}</li>
-                        <li>{!! HTML::linkRoute('library_persons', 'Персоналии') !!}</li>
-                        <li class="active">{{$person->name}}</li>
+                        <li class="active">Лекция {{$lecture->lecture_number}}. {{$lecture->lecture_name}}</li>
                     </ol>
                 </div><!--end .section-header -->
                 <div class="section-body">
@@ -44,8 +43,8 @@
         </div>
         <div class="col-sm-3" >
             @if($role == 'Админ')
-                {!! HTML::link('library/persons/'.$person->id.'/edit','Редактировать',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
-            @endif
+            {!! HTML::link('library/lecture/'.$lecture->id_lecture.'/edit','Редактировать лекцию',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+                @endif
         </div>
     </div>
     <div class="card card-tiles style-default-light" style="margin-left:2%; margin-right:2%">
@@ -53,7 +52,7 @@
             <div class="card-body">
                 <article style="margin-left:10%; margin-right:10%; text-align: justify">
 
-                    {!! $person->content !!}
+                    {!! $lecture->lecture_text !!}
 
                 </article>
             </div>

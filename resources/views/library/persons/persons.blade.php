@@ -1,6 +1,6 @@
 @extends('templates.base')
 @section('head')
-    <title>Бронирование печатных изданий</title>
+    <title>Персоналии</title>
     <!-- BEGIN META -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,21 +37,14 @@
         @endif
 
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-9">
     <section>
         <div class="section-header">
             <ol class="breadcrumb">
-            <!--Надо будет изменить HTML::linkRoute('library_index', 'Библиотека')-->
+                <li>{!! HTML::linkRoute('home', 'Главная') !!}</li>
                 <li>{!! HTML::linkRoute('library_index', 'Библиотека') !!}</li>
+                <li class="active">Персоналии</li>
 
-                <?php if ($searchquery == ""){
-                    echo '<li class="active">Бронирование печатных изданий</li>';
-                }else{
-                    echo '<li><a href="';
-                    echo URL::route('books');
-                    echo '">Бронирование печатных изданий</a></li>';
-                    echo '<li class="active">Поиск печатных изданий</li>';
-                }?>
             </ol>
         </div><!--end .section-header -->
         <div class="section-body">
@@ -61,16 +54,10 @@
 
 
 
-            <div class="col-lg-6">
+            <div class="col-lg-3">
                 @if($role == 'Админ')
-                    {!! HTML::link('library/books/create','Добавить книгу',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
-                    {!! HTML::link('library/books/manageNewsLibrary','Настройка новостей',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
-                    {!! HTML::link('library/books/teacherCabinet','Личный кабинет',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
+                    {!! HTML::link('library/persons/create','Добавить ',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
                 @endif
-                @if($role != 'Админ')
-                        {!! HTML::link('library/books/studentCabinet','Личный кабинет',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
-                        {!! HTML::link('library/books/manageNewsLibrary','Просмотр новостей',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
-                    @endif
             </div>
         </div>
     </div>
@@ -78,47 +65,39 @@
 
     <div class="card card-tiles style-default-light">
         <article style="margin-left:10%; margin-right:13%; text-align: justify">
-            <br>
+            <div class="card-body">
             <center>
-                <form class="form" action="{{URL::route('library_search')}}"  method="post">
-                    <input type="text"  name="search" id="text-to-find" size="50px" value="<?php echo $searchquery?>" placeholder="Введите название книги или имя автора" />
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                    <button type="submit" class="btn ink-reaction btn-primary"> Искать</button></form>
-                <!--<input type="button" onclick="javascript: FindOnPage('text-to-find'); " value="Искать" target="_blank"/> -->
-            </center>
-            <center>
-                <br>
-
                     <?php
-                         $countBook = 0   ?>
+                         $countPerson = 0   ?>
                 <div class="container">
-                @if(count($books)%2 != 0)
-                    @while($countBook < (count($books) -1))
+                @if(count($persons)%2 != 0)
+                    @while($countPerson < (count($persons) -1))
                             <div class="row">
-                                @include('library.books.book',array('book' => $books[$countBook]))
-                                @include('library.books.book',array('book' => $books[++$countBook]))
+                                @include('library.persons.person.person',array('person' => $persons[$countPerson]))
+                                @include('library.persons.person.person',array('person' => $persons[++$countPerson]))
                             </div>
                         <br>
                             <br>
-                        <?php $countBook++?>
+                        <?php $countPerson++?>
                     @endwhile
                         <div class="row">
-                    @include('library.books.book',array('book' => $books[$countBook]))
+                    @include('library.persons.person.person',array('person' => $persons[$countPerson]))
                         </div>
                 @else
-                        @while($countBook < (count($books)))
+                        @while($countPerson < (count($persons)))
                             <div class="row">
-                                @include('library.books.book',array('book' => $books[$countBook]))
-                                @include('library.books.book',array('book' => $books[++$countBook]))
+                                @include('library.persons.person.person',array('person' => $persons[$countPerson]))
+                                @include('library.persons.person.person',array('person' => $persons[++$countPerson]))
                             </div>
                             <br>
                             <br>
-                            <?php $countBook++?>
+                            <?php $countPerson++?>
                         @endwhile
                 @endif
                 </div>
                 <p>&nbsp;</p>
             </center>
+            </div>
         </article>
 
     </div>
@@ -152,7 +131,7 @@
         function ConfirmDelete()
         {
 
-            var x = confirm("Удалить книгу?");
+            var x = confirm("Удалить персоналию?");
             if (x)
                 return true;
             else

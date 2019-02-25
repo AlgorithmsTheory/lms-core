@@ -3,9 +3,10 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use App\User;
 use Auth;
-class UpdateBookRequest extends FormRequest
+class AddLectureRequest extends FormRequest
 {
     public function authorize()
     {
@@ -15,18 +16,18 @@ class UpdateBookRequest extends FormRequest
         }else{
             return false;
         }
+
     }
 
     public function rules()
     {
+
         return [
-            'book_title' => "required|between:5,255",
-            'book_author' => 'required|between:5,255',
-            'book_description' => 'required|between:10,3000',
-            'book_format' => 'required|between:5,255',
-            'book_publisher' => 'required|between:5,255',
-            'picture' => 'image',
-            'book_genre_id' => 'required',
+            'lecture_name' => "required|between:5,255",
+            'lecture_text' => 'min:10',
+            'id_section' => 'required',
+            'doc_file' => 'mimes:doc,docx',
+            'ppt_file' => 'mimes:ppt,pptx'
         ];
     }
 }

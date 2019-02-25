@@ -97,12 +97,76 @@ Route::get('tests/groups-for-tests', ['as' => 'choose_group', 'uses' => 'TestCon
 
 //электронная библиотека
 Route::get('library', ['as' => 'library_index', 'uses' => 'LibraryController@index', 'middleware' => ['general_auth', 'access_for_library']]);
-Route::get('library/definitions', ['as' => 'library_definitions', 'uses' => 'LibraryController@definitions', 'middleware' => ['general_auth', 'access_for_library']]);
-Route::get('library/theorems', ['as' => 'library_theorems', 'uses' => 'LibraryController@theorems', 'middleware' => ['general_auth', 'admin', 'access_for_library']]);
+//создание новой лекции
+Route::get('library/lecture/create', ['as' => 'lecture_create', 'uses' => 'LibraryController@addNewLecture', 'middleware' => ['general_auth', 'access_for_library', 'admin']]);
+//сохранение и валидация данных о новой лекции
+Route::post('library/lecture/store', ['as' => 'lecture_store', 'uses' => 'LibraryController@storeLecture']);
+// обновление данных о лекции
+Route::patch('library/lecture/{id}', ['as' => 'lecture_update', 'uses' => 'LibraryController@updateLecture']);
+// редактирование лекции
+Route::get('library/lecture/{id}/edit', ['as' => 'lecture_edit', 'uses' => 'LibraryController@editLecture', 'middleware' => ['general_auth', 'admin']]);
+// Удаление лекции
+Route::delete('library/lecture/{id}/delete',['as' => 'lecture_delete', 'uses' => 'LibraryController@deleteLecture', 'middleware' => ['general_auth', 'admin']]);
+// Вывод конкретной лекции
 Route::get('library/lecture/{index?}{anchor?}', ['as' => 'lecture', 'uses' => 'LibraryController@lecture', 'middleware' => ['general_auth', 'access_for_library']])->where('anchor', '[a-z0-9-]+');
+// Вывод определений
+Route::get('library/definitions', ['as' => 'library_definitions', 'uses' => 'LibraryController@definitions', 'middleware' => ['general_auth', 'access_for_library']]);
+//создание нового определения
+Route::get('library/definitions/create', ['as' => 'definition_create', 'uses' => 'LibraryController@addNewDefinition', 'middleware' => ['general_auth', 'access_for_library', 'admin']]);
+//сохранение и валидация данных о новом определении
+Route::post('library/definitions/store', ['as' => 'definition_store', 'uses' => 'LibraryController@storeDefinition']);
+// обновление данных об определении
+Route::patch('library/definitions/{id}', ['as' => 'definition_update', 'uses' => 'LibraryController@updateDefinition']);
+// редактирование определения
+Route::get('library/definitions/{id}/edit', ['as' => 'definition_edit', 'uses' => 'LibraryController@editDefinition', 'middleware' => ['general_auth', 'admin']]);
+// Удаление определения
+Route::delete('library/definitions/{id}/delete',['as' => 'definition_delete', 'uses' => 'LibraryController@deleteDefinition', 'middleware' => ['general_auth', 'admin']]);
+//Вывод теорем
+Route::get('library/theorems', ['as' => 'library_theorems', 'uses' => 'LibraryController@theorems', 'middleware' => ['general_auth', 'access_for_library']]);
+//создание нового определения
+Route::get('library/theorems/create', ['as' => 'theorem_create', 'uses' => 'LibraryController@addNewTheorem', 'middleware' => ['general_auth', 'access_for_library', 'admin']]);
+//сохранение и валидация данных о новой теореме
+Route::post('library/theorems/store', ['as' => 'theorem_store', 'uses' => 'LibraryController@storeTheorem']);
+// Удаление определения
+Route::delete('library/theorems/{id}/delete',['as' => 'theorem_delete', 'uses' => 'LibraryController@deleteTheorem', 'middleware' => ['general_auth', 'admin']]);
+// обновление данных о теореме
+Route::patch('library/theorems/{id}', ['as' => 'theorem_update', 'uses' => 'LibraryController@updateTheorem']);
+// редактирование теоремы
+Route::get('library/theorems/{id}/edit', ['as' => 'theorem_edit', 'uses' => 'LibraryController@editTheorem', 'middleware' => ['general_auth', 'admin']]);
+//вывод всех персоналий
 Route::get('library/persons', ['as' => 'library_persons', 'uses' => 'LibraryController@persons', 'middleware' => ['general_auth', 'access_for_library']]);
-Route::get('library/persons/{person}', ['as' => 'person', 'uses' => 'LibraryController@person', 'middleware' => ['general_auth', 'access_for_library']]);
+//добавление новой персоналии
+Route::get('library/persons/create', ['as' => 'person_create', 'uses' => 'LibraryController@addNewPerson', 'middleware' => ['general_auth', 'admin']]);
+//вывод конкретного персоналия
+Route::get('library/persons/{id}', ['as' => 'person', 'uses' => 'LibraryController@person', 'middleware' => ['general_auth', 'access_for_library']]);
+//сохранение и валидация данных о новой персоналии
+Route::post('library/persons', ['as' => 'person_store', 'uses' => 'LibraryController@storePerson']);
+// обновление данных о персоналии
+Route::patch('library/persons/{id}', ['as' => 'person_update', 'uses' => 'LibraryController@updatePerson']);
+// редактирование персоналии
+Route::get('library/persons/{id}/edit', ['as' => 'person_edit', 'uses' => 'LibraryController@editPerson', 'middleware' => ['general_auth', 'admin']]);
+// Удаление персоналии
+Route::delete('library/persons/{id}/delete',['as' => 'person_delete', 'uses' => 'LibraryController@deletePerson', 'middleware' => ['general_auth', 'admin']]);
+// Скачивание doc файла
+Route::get('library/persons/{id}/downloadDoc', ['as' => 'doc_download', 'uses' => 'LibraryController@docDownload', 'middleware' => ['general_auth']]);
+// Скачивание ppt файла
+Route::get('library/persons/{id}/downloadPpt', ['as' => 'ppt_download', 'uses' => 'LibraryController@pptDownload', 'middleware' => ['general_auth']]);
+
 Route::get('library/extra', ['as' => 'library_extra', 'uses' => 'LibraryController@extra', 'middleware' => ['general_auth', 'access_for_library']]);
+// Переход на страницу учебные материалы
+Route::get('library/educationalMaterials', ['as' => 'educational_materials', 'uses' => 'LibraryController@educationalMaterials', 'middleware' => ['general_auth']]);
+//добавление учебного материала
+Route::get('library/educationalMaterials/create', ['as' => 'educational_materials_create', 'uses' => 'LibraryController@addEducationalMaterial', 'middleware' => ['general_auth', 'admin']]);
+//сохранение и валидация данных о новой лекции
+Route::post('library/educationalMaterials/store', ['as' => 'educational_materials_store', 'uses' => 'LibraryController@storeEducationalMaterial']);
+// обновление данных о научном материале
+Route::patch('library/educationalMaterials/{id}', ['as' => 'educationalMaterial_update', 'uses' => 'LibraryController@updateEducationalMaterial']);
+// редактирование научных материалов
+Route::get('library/educationalMaterials/{id}/edit', ['as' => 'educationalMaterial_edit', 'uses' => 'LibraryController@editEducationalMaterial', 'middleware' => ['general_auth', 'admin']]);
+// Удаление научного материала
+Route::delete('library/educationalMaterials/{id}/delete',['as' => 'educationalMaterial_delete', 'uses' => 'LibraryController@deleteEducationalMaterial', 'middleware' => ['general_auth', 'admin']]);
+// Скачивание файл материала
+Route::get('library/educationalMaterials/{id}/download', ['as' => 'educationalMaterials_download', 'uses' => 'LibraryController@educationalMaterialsDownload', 'middleware' => ['general_auth']]);
 
 
 //библиотека для студентов и преподавателей
