@@ -332,12 +332,12 @@ Route::prefix('algorithm')->group(function () {
 	//RAM Emulator
 	Route::prefix('RAM')->group(function () {
 		Route::middleware(['general_auth'])->group(function () {
-			Route::get('emulator',  ['as' => 'RAM', 	     'uses' => 'Emulators\RamEmulatorController@openRAM']);
+			Route::get('emulator',  ['as' => 'RAM', 	   'uses' => 'Emulators\RamEmulatorController@openRAM']);
 			Route::post('set_mark', ['as' => 'ramSetMark', 'uses' => 'Emulators\RamEmulatorController@ramSetMark']);
 		});
 		Route::middleware(['general_auth', 'admin'])->group(function () {
 			Route::get( 'manage_task', 				 ['as' => 'ramManageTask',  'uses' => 'Emulators\RamEmulatorController@ramManageTask']  );
-			Route::get( 'add_task',	   				 ['as' => 'ramAddTask',	  'uses' => 'Emulators\RamEmulatorController@ramAddTask']     );
+			Route::get( 'add_task',	   				 ['as' => 'ramAddTask',	    'uses' => 'Emulators\RamEmulatorController@ramAddTask']     );
 			Route::post('add_task',    				 ['as' => 'ramAddingTask',  'uses' => 'Emulators\RamEmulatorController@ramAddingTask']  );
 			Route::get( '{sequence_id}/edit_task',   ['as' => 'ramEditTask',    'uses' => 'Emulators\RamEmulatorController@ramEditTask']    );
 			Route::post('{sequence_id}/edit_task',   ['as' => 'ramEditingTask', 'uses' => 'Emulators\RamEmulatorController@ramEditingTask'] );
@@ -349,18 +349,18 @@ Route::prefix('algorithm')->group(function () {
 	//Post Emulator
 	Route::prefix('Post')->group(function () {
 		Route::middleware(['general_auth'])->group(function () {
-			Route::get('emulator',  ['as' => 'Post',          'uses' => 'Emulators\PostEmulatorController@openPost']);
+			Route::get('emulator',  ['as' => 'Post',        'uses' => 'Emulators\PostEmulatorController@openPost']);
 			Route::post('set_mark', ['as' => 'postSetMark', 'uses' => 'Emulators\PostEmulatorController@postSetMark']);
 		});
 		Route::middleware(['general_auth', 'admin'])->group(function () {
 			Route::get( 'manage_task', 				 ['as' => 'postManageTask',   'uses' => 'Emulators\PostEmulatorController@postManageTask'] );
-			Route::get( 'add_task',	  				 ['as' => 'postAddTask',	    'uses' => 'Emulators\PostEmulatorController@postAddTask'] );
+			Route::get( 'add_task',	  				 ['as' => 'postAddTask',	  'uses' => 'Emulators\PostEmulatorController@postAddTask'] );
 			Route::post('add_task', 				 ['as' => 'postAddingTask',   'uses' => 'Emulators\PostEmulatorController@postAddingTask'] );
 			Route::get( '{sequence_id}/edit_task',   ['as' => 'postEditTask',     'uses' => 'Emulators\PostEmulatorController@postEditTask']);
 			Route::post('{sequence_id}/edit_task',   ['as' => 'postEditingTask',  'uses' => 'Emulators\PostEmulatorController@postEditingTask']);
 			Route::get( '{sequence_id}/delete_task', ['as' => 'postDeleteTask',   'uses' => 'Emulators\PostEmulatorController@postDeleteTask'] );
 			Route::get( 'edit_users',  				 ['as' => 'postEditUsers' ,   'uses' => 'Emulators\PostEmulatorController@postEditUsers']);
-			Route::post( 'editing_users',  		     ['as' => 'postEditingUsers' ,'uses' => 'Emulators\PostEmulatorController@postEditingUsers']);
+			Route::post( 'editing_users',  		     ['as' => 'postEditingUsers', 'uses' => 'Emulators\PostEmulatorController@postEditingUsers']);
 		});
 	});
 	// Emulators common
