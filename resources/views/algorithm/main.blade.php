@@ -69,15 +69,15 @@
 								<div class="col-md-12 col-sm-12 style-gray">
 									<h3 class="text-default-bright">Эмулятор Поста</h3>
 								</div> <br>
-								<h3>{!! link_to_route('Post_manage_task', 'Работа с материалами') !!}</h3>  
+								<h3>{!! link_to_route('postManageTask', 'Работа с материалами') !!}</h3>  
 								<h3>{!! link_to_route('edit_date', 'Редактирование дат и групп для проведения контрольных мероприятий', array('name' => 'post')) !!}</h3>
-								<h3>{!! link_to_route('Post_edit_users', 'Переписывание контрольной работы') !!}</h3> <br>
+								<h3>{!! link_to_route('postEditUsers', 'Переписывание контрольной работы') !!}</h3> <br>
 								<div class="col-md-12 col-sm-12 style-gray">
 									<h3 class="text-default-bright">Эмулятор RAM</h3>
 								</div> <br>	
-								<h3>{!! link_to_route('RAM_manage_task', 'Работа с материалами') !!}</h3>  
+								<h3>{!! link_to_route('ramManageTask', 'Работа с материалами') !!}</h3>  
 								<h3>{!! link_to_route('edit_date', 'Редактирование дат и групп для проведения контрольных мероприятий', array('name' => 'ram')) !!}</h3>
-								<h3>{!! link_to_route('RAM_edit_users', 'Переписывание контрольной работы') !!}</h3> <br>
+								<h3>{!! link_to_route('ramEditUsers', 'Переписывание контрольной работы') !!}</h3> <br>
 							</div>
 						</div>
 					</div>							

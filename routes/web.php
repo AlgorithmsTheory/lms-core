@@ -332,41 +332,40 @@ Route::prefix('algorithm')->group(function () {
 	//RAM Emulator
 	Route::prefix('RAM')->group(function () {
 		Route::middleware(['general_auth'])->group(function () {
-			Route::get('emulator',  ['as' => 'RAM', 	     'uses' => 'Emulators\RamEmulatorController@open_RAM']);
-			Route::post('set_mark', ['as' => 'RAM_set_mark', 'uses' => 'Emulators\RamEmulatorController@RAM_set_mark']);
+			Route::get('emulator',  ['as' => 'RAM', 	     'uses' => 'Emulators\RamEmulatorController@openRAM']);
+			Route::post('set_mark', ['as' => 'ramSetMark', 'uses' => 'Emulators\RamEmulatorController@ramSetMark']);
 		});
 		Route::middleware(['general_auth', 'admin'])->group(function () {
-			Route::get( 'manage_task', 				 ['as' => 'RAM_manage_task',  'uses' => 'Emulators\RamEmulatorController@RAM_manage_task']  );
-			Route::get( 'add_task',	   				 ['as' => 'RAM_add_task',	  'uses' => 'Emulators\RamEmulatorController@RAM_add_task']     );
-			Route::post('add_task',    				 ['as' => 'RAM_adding_task',  'uses' => 'Emulators\RamEmulatorController@RAM_adding_task']  );
-			Route::get( '{sequence_id}/edit_task',   ['as' => 'RAM_edit_task',    'uses' => 'Emulators\RamEmulatorController@RAM_edit_task']    );
-			Route::post('{sequence_id}/edit_task',   ['as' => 'RAM_editing_task', 'uses' => 'Emulators\RamEmulatorController@RAM_editing_task'] );
-			Route::get( '{sequence_id}/delete_task', ['as' => 'RAM_delete_task',  'uses' => 'Emulators\RamEmulatorController@RAM_delete_task']  );
-			Route::get( 'edit_users',                ['as' => 'RAM_edit_users' ,  'uses' => 'Emulators\RamEmulatorController@RAM_edit_users']   );
-			Route::post('editing_users', 			 ['as' => 'RAM_editing_users','uses' => 'Emulators\RamEmulatorController@RAM_editing_users']);
+			Route::get( 'manage_task', 				 ['as' => 'ramManageTask',  'uses' => 'Emulators\RamEmulatorController@ramManageTask']  );
+			Route::get( 'add_task',	   				 ['as' => 'ramAddTask',	  'uses' => 'Emulators\RamEmulatorController@ramAddTask']     );
+			Route::post('add_task',    				 ['as' => 'ramAddingTask',  'uses' => 'Emulators\RamEmulatorController@ramAddingTask']  );
+			Route::get( '{sequence_id}/edit_task',   ['as' => 'ramEditTask',    'uses' => 'Emulators\RamEmulatorController@ramEditTask']    );
+			Route::post('{sequence_id}/edit_task',   ['as' => 'ramEditingTask', 'uses' => 'Emulators\RamEmulatorController@ramEditingTask'] );
+			Route::get( '{sequence_id}/delete_task', ['as' => 'ramDeleteTask',  'uses' => 'Emulators\RamEmulatorController@ramDeleteTask']  );
+			Route::get( 'edit_users',                ['as' => 'ramEditUsers' ,  'uses' => 'Emulators\RamEmulatorController@ramEditUsers']   );
+			Route::post('editing_users', 			 ['as' => 'ramEditingUsers','uses' => 'Emulators\RamEmulatorController@ramEditingUsers']);
 		});
 	});
 	//Post Emulator
 	Route::prefix('Post')->group(function () {
 		Route::middleware(['general_auth'])->group(function () {
-			Route::get('emulator',  ['as' => 'Post',          'uses' => 'Emulators\PostEmulatorController@open_Post']);
-			Route::post('set_mark', ['as' => 'Post_set_mark', 'uses' => 'Emulators\PostEmulatorController@Post_set_mark']);
+			Route::get('emulator',  ['as' => 'Post',          'uses' => 'Emulators\PostEmulatorController@openPost']);
+			Route::post('set_mark', ['as' => 'postSetMark', 'uses' => 'Emulators\PostEmulatorController@postSetMark']);
 		});
 		Route::middleware(['general_auth', 'admin'])->group(function () {
-			Route::get( 'manage_task', 				 ['as' => 'Post_manage_task',   'uses' => 'Emulators\PostEmulatorController@Post_manage_task'] );
-			Route::get( 'add_task',	  				 ['as' => 'Post_add_task',	    'uses' => 'Emulators\PostEmulatorController@Post_add_task'] );
-			Route::post('add_task', 				 ['as' => 'Post_adding_task',   'uses' => 'Emulators\PostEmulatorController@Post_adding_task'] );
-			Route::get( '{sequence_id}/edit_task',   ['as' => 'Post_edit_task',     'uses' => 'Emulators\PostEmulatorController@Post_edit_task']);
-			Route::post('{sequence_id}/edit_task',   ['as' => 'Post_editing_task',  'uses' => 'Emulators\PostEmulatorController@Post_editing_task']);
-			Route::get( '{sequence_id}/delete_task', ['as' => 'Post_delete_task',   'uses' => 'Emulators\PostEmulatorController@Post_delete_task'] );
-			Route::get( 'edit_users',  				 ['as' => 'Post_edit_users' ,   'uses' => 'Emulators\PostEmulatorController@Post_edit_users']);
-			Route::post( 'editing_users',  		     ['as' => 'Post_editing_users' ,'uses' => 'Emulators\PostEmulatorController@Post_editing_users']);
+			Route::get( 'manage_task', 				 ['as' => 'postManageTask',   'uses' => 'Emulators\PostEmulatorController@postManageTask'] );
+			Route::get( 'add_task',	  				 ['as' => 'postAddTask',	    'uses' => 'Emulators\PostEmulatorController@postAddTask'] );
+			Route::post('add_task', 				 ['as' => 'postAddingTask',   'uses' => 'Emulators\PostEmulatorController@postAddingTask'] );
+			Route::get( '{sequence_id}/edit_task',   ['as' => 'postEditTask',     'uses' => 'Emulators\PostEmulatorController@postEditTask']);
+			Route::post('{sequence_id}/edit_task',   ['as' => 'postEditingTask',  'uses' => 'Emulators\PostEmulatorController@postEditingTask']);
+			Route::get( '{sequence_id}/delete_task', ['as' => 'postDeleteTask',   'uses' => 'Emulators\PostEmulatorController@postDeleteTask'] );
+			Route::get( 'edit_users',  				 ['as' => 'postEditUsers' ,   'uses' => 'Emulators\PostEmulatorController@postEditUsers']);
+			Route::post( 'editing_users',  		     ['as' => 'postEditingUsers' ,'uses' => 'Emulators\PostEmulatorController@postEditingUsers']);
 		});
 	});
 	// Emulators common
 	Route::middleware(['general_auth', 'admin'])->group(function () {
-		Route::get('edit_date',      ['as' => 'edit_date',   'uses' => 'Emulators\EmulatorController@edit_date']);
+		Route::get('edit_date',      ['as' => 'edit_date',   'uses' => 'Emulators\EmulatorController@editDate']);
 		Route::post('edit_all_date', ['as' => 'editAllDate', 'uses' => 'Emulators\EmulatorController@editAllDate']);
-		Route::get( 'edit_users',    ['as' => 'edit_users',  'uses' => 'Emulators\EmulatorController@edit_users']);
 	});
 });

@@ -1,13 +1,4 @@
-function sleep(milliseconds) { // danger function
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
-  }
-}
-
-function set_code(value) {
+function SetCode(value) {
 	//reset
 	$('input[type=text]').each(function(){$(this).val('');});
 	$('input[type=number]').each(function() {$(this).val('');});
@@ -16,11 +7,11 @@ function set_code(value) {
 	SetRules(JSON.parse(value.replace("&gt;",">").replace("&lt;","<")));
 }
 
-function get_code() {
+function GetCode() {
 	return JSON.stringify(GetRules());
 }
 
-function check_answer(arr){
+function CheckAnswer(arr){
 	try{
 		var count = 0;
 		for(var i=0; i < arr.length; i++){
@@ -45,26 +36,26 @@ function check_answer(arr){
 	return count;
 }
 
-function get_str(task, level){
+function GetStr(task, level){
 	if(level == "hard")
 		task++;
 		task++;
 	return level + task;
 }
 
-function swap_content(hide_str, show_str){
-	var code_old = get_code();
+function SwapContent(hide_str, show_str){
+	var code_old = GetCode();
 	var code_new = $("#" + show_str + "code").html();
-	set_code(code_new);
+	SetCode(code_new);
 	$("#" + hide_str + "code").html(code_old);
 }
 
-function change_my_task(){
+function ChangeMyTask(){
 	var task_new, task_old, level_new, level_old;
 	// old task
 	task_old  = $("#task").html();
 	level_old = $("#level").html();
-	hide_str = get_str(task_old, level_old);
+	hide_str = GetStr(task_old, level_old);
 	// new task
 	click = this.id;
 	if(click == "task1")
@@ -87,7 +78,7 @@ function change_my_task(){
 		task_new = task_old;
 		level_new = "hard";
 	}
-	show_str = get_str(task_new, level_new);
+	show_str = GetStr(task_new, level_new);
 	// action
 	if(hide_str != show_str)
 	{
@@ -95,7 +86,7 @@ function change_my_task(){
 		$("#task").html(task_new);
 		$("#" + hide_str).css('display', 'none');
 		$("#" + show_str).css('display', 'block');
-		swap_content(hide_str, show_str);
+		SwapContent(hide_str, show_str);
 		if(task_new == 1){
 			$("#task2").attr('class', '');
 			$("#task1").attr('class', 'active');
@@ -116,12 +107,12 @@ function change_my_task(){
 	}
 }
 
-function submit_task(){
-	curr_code = get_code();
+function SubmitTask(){
+	curr_code = GetCode();
 	
 	var task_old  = $("#task").html();
 	var level_old = $("#level").html();
-	var hide_str = get_str(task_old, level_old);
+	var hide_str = GetStr(task_old, level_old);
 	$("#" + hide_str + "code").html(curr_code);
 	var easy2code = $("#easy2code").html();
 	var easy3code = $("#easy3code").html();
@@ -141,27 +132,27 @@ function submit_task(){
 	var mark1 = 0, mark2 = 0;
 	
 	// some stupid, this must depend on field mark in task_ram table
-	set_code(easy2code);
-	if( check_answer(easy2seq) == easy2seq.length ){
+	SetCode(easy2code);
+	if( CheckAnswer(easy2seq) == easy2seq.length ){
 		mark1 = 2;
 	}
-	set_code(hard3code);
-	if( check_answer(hard3seq) == hard3seq.length ){
+	SetCode(hard3code);
+	if( CheckAnswer(hard3seq) == hard3seq.length ){
 		mark1 = 3;
 	}
-	set_code(easy3code);
-	if( check_answer(easy3seq) == easy3seq.length ){
+	SetCode(easy3code);
+	if( CheckAnswer(easy3seq) == easy3seq.length ){
 		mark2 = 3;
 	}
-	set_code(hard4code);
-	if( check_answer(hard4seq) == hard4seq.length ){
+	SetCode(hard4code);
+	if( CheckAnswer(hard4seq) == hard4seq.length ){
 		mark2 = 4;
 	}
 	
 	SetInput("0000");
 	// hide test output
 	
-	set_code(curr_code);
+	SetCode(curr_code);
 	
 	sum_mark  = mark1 + mark2;
 	user_code = "\n********* Задача 1 легкая *******\n" + easy2code +
@@ -199,7 +190,7 @@ $("#easy3code").html('{"length":13}');
 $("#hard3code").html('{"length":13}');
 $("#hard4code").html('{"length":13}');
 
-task1.onclick = change_my_task;
-task2.onclick = change_my_task;
-easy.onclick = change_my_task;
-hard.onclick = change_my_task;
+task1.onclick = ChangeMyTask;
+task2.onclick = ChangeMyTask;
+easy.onclick = ChangeMyTask;
+hard.onclick = ChangeMyTask;

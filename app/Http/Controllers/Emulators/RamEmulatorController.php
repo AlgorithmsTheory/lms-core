@@ -13,7 +13,7 @@ use App\Http\Controllers\Controller;
 
 class RamEmulatorController extends Controller {
 
-	public function open_RAM() {
+	public function openRAM() {
 		date_default_timezone_set('Europe/Moscow');
         $user_id = Auth::user()['id'];
 		$group = User::whereId($user_id)->get()[0]['group'];
@@ -87,36 +87,36 @@ class RamEmulatorController extends Controller {
 				'easy2_seq' => json_encode($easy2_seq), 'easy3_seq' => json_encode($easy3_seq), 'hard3_seq' => json_encode($hard3_seq), 'hard4_seq' => json_encode($hard4_seq)];
 	}
 	
-	public function RAM_set_mark(Request $request){
+	public function ramSetMark(){
 		$user_id = Auth::user()['id'];
-		$mark1 = $request->input("mark1");
-		$mark2 = $request->input("mark2");
-		$sum_mark = $request->input("sum_mark");
-		$user_code = $request->input("user_code");
+		$mark1 = Request::input("mark1");
+		$mark2 = Request::input("mark2");
+		$sum_mark = Request::input("sum_mark");
+		$user_code = Request::input("user_code");
 		$date = date("Y-m-d H:i:s");
 		UserResultRam::updateOrInsert(['user_id' => $user_id], ['mark_1' => $mark1, 'mark_2' => $mark2, 'sum_mark' => $sum_mark, 'user_code' => $user_code, 'date' => $date]);
 	}
 	
 	//---------------------- work with tasks ------------------------- //
 	
-	public function RAM_manage_task(){
+	public function ramManageTask(){
 		$tasks_and_sequences = TestsequenceRam::leftJoin('tasks_ram', function($join) {
 												$join->on('testsequence_ram.task_id', '=', 'tasks_ram.task_id');})->get();
         $tasks_and_sequences = TasksController::magic($tasks_and_sequences);
         return view("algorithm.tasks.ram.alltasks", compact('tasks_and_sequences'));
     }
 	
-	public function RAM_add_task(){
+	public function ramAddTask(){
 		return view("algorithm.tasks.ram.addtask");
 	}
 	
-	public function RAM_delete_task($task_id) {
+	public function ramDeleteTask($task_id) {
 		TasksRam::where('task_id', $task_id)->delete();
 		TestsequenceRam::where('task_id', $task_id)->delete();
-		return redirect()->route('RAM_manage_task');
+		return redirect()->route('ramManageTask');
 	}
 	
-	public function RAM_adding_task(){
+	public function ramAddingTask(){
 		$task_text = Request::input('task_text');
 		$max_mark = Request::input('max_mark');
 		$level = Request::input('level');
@@ -143,21 +143,21 @@ class RamEmulatorController extends Controller {
 		return view("algorithm.tasks.ram.addtask");
     }
   
-	public function RAM_edit_task($sequence_id) {
+	public function ramEditTask($sequence_id) {
 		$sequence = TestsequenceRam::Where('sequence_id', $sequence_id)->get();
 		$sequence = TasksController::magic($sequence)[0];
 		return view("algorithm.tasks.ram.edit", compact('sequence','sequence_id'));
 	}
 	
-	public function RAM_editing_task($sequence_id){
+	public function ramEditingTask($sequence_id){
 		$input_word6 = Request::input("input_word6");
 		$output_word6 = Request::input("output_word6");
 		TestsequenceRam::where('sequence_id', $sequence_id)
 		  			    ->update(['input_word' => $input_word6, 'output_word' => $output_word6]);
-		return redirect()->route('RAM_manage_task');
+		return redirect()->route('ramManageTask');
 	}
 	
-	public function RAM_edit_users(){
+	public function ramEditUsers(){
 		//выбрать всех студентов и результаты контрольных по RAM
 		$all_users = User::leftJoin('user_result_ram', function($join) {
 						  $join->on('user_result_ram.user_id', '=', 'users.id');})
@@ -169,7 +169,7 @@ class RamEmulatorController extends Controller {
         return view("algorithm.edit_users", compact('all_users', 'emr_type'));
     }
 
-    public function RAM_editing_users(){
+    public function ramEditingUsers(){
 
         $availability_input = (Request::input("fines") == null) ? [] : Request::input("fines");
 

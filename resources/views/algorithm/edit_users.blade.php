@@ -28,8 +28,8 @@ full
             </div>
             <br>
             <br>
-			@if ($emr_type == 'ram') <form action= "{{URL::route('RAM_editing_users')}}"  method="POST" id="retest-form" class="form">
-			@else 					 <form action= "{{URL::route('Post_editing_users')}}" method="POST" id="retest-form" class="form">
+			@if ($emr_type == 'ram') <form action= "{{URL::route('ramEditingUsers')}}"  method="POST" id="retest-form" class="form">
+			@else 					 <form action= "{{URL::route('postEditingUsers')}}" method="POST" id="retest-form" class="form">
 			@endif
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="form">

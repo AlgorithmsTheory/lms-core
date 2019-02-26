@@ -35,7 +35,7 @@
 			<div class="section-header">
 				<ol class="breadcrumb">				
 					<li>{!! HTML::linkRoute('main_menu', 'Администрирование') !!}</li>
-					<li>{!! HTML::linkRoute('Post_manage_task', 'Контрольные материалы эмулятора Поста') !!}</li>
+					<li>{!! HTML::linkRoute('postManageTask', 'Контрольные материалы эмулятора Поста') !!}</li>
 					<li class="active">Добавление контрольного материала</li>
 				</ol>
 			</div>
@@ -68,7 +68,7 @@
 					</article>
 				</div>
 				<div class="col-lg-offset-1 col-md-6 col-sm-6">
-					<form class="form form-validate floating-label" novalidate="novalidate" method="post" action="{{URL::route('Post_adding_task')}}" id="Post_tasks">
+					<form class="form form-validate floating-label" novalidate="novalidate" method="post" action="{{URL::route('postAddingTask')}}" id="Post_tasks">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 							<div class="card">
 								<div class="card-head style-primary">

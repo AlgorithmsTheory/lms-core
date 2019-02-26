@@ -33,7 +33,7 @@
 					<div class="section-header">
 						<ol class="breadcrumb">
 							<li>{!! HTML::linkRoute('main_menu', 'Администрирование') !!}</li>
-							<li>{!! HTML::linkRoute('RAM_manage_task', 'Контрольные материалы RAM') !!}</li>
+							<li>{!! HTML::linkRoute('ramManageTask', 'Контрольные материалы RAM') !!}</li>
 							
 							<li class="active">Редактирование выбранной последовательности</li>
 						</ol>
@@ -64,7 +64,7 @@
 
 <div class="card">
 			
-			<form class="form-horizontal" method="post" action="{{URL::route('RAM_editing_task', array('sequence_id'=> $sequence_id))}}">
+			<form class="form-horizontal" method="post" action="{{URL::route('ramEditingTask', array('sequence_id'=> $sequence_id))}}">
 				<div class="modal-body">
 					<div class="input-group">
 						<div class="input-group-content">

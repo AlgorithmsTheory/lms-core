@@ -1,13 +1,4 @@
-function sleep(milliseconds) { // danger function
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
-  }
-}
-
-function check_answer(arr){
+function CheckAnswer(arr){
 	var count = 0;
 	for(var i=0; i < arr.length; i++){
 		input.value  = arr[i]['input_word'];
@@ -29,14 +20,14 @@ function get_str(task, level){
 	return level + task;
 }
 
-function swap_content(hide_str, show_str){
+function SwapContent(hide_str, show_str){
 	var code_old = RAM.TextEditor.get_text();
 	var code_new = $("#" + show_str + "code").html();
 	RAM.TextEditor.set_text(code_new);
 	$("#" + hide_str + "code").html(code_old);
 }
 
-function change_my_task(){
+function ChangeMyTask(){
 	var task_new, task_old, level_new, level_old;
 	// old task
 	task_old  = $("#task").html();
@@ -72,7 +63,7 @@ function change_my_task(){
 		$("#task").html(task_new);
 		$("#" + hide_str).css('display', 'none');
 		$("#" + show_str).css('display', 'block');
-		swap_content(hide_str, show_str);
+		SwapContent(hide_str, show_str);
 		if(task_new == 1){
 			$("#task2").attr('class', '');
 			$("#task1").attr('class', 'active');
@@ -93,7 +84,7 @@ function change_my_task(){
 	}
 }
 
-function submit_task(){
+function SubmitTask(){
 	var curr_code = RAM.TextEditor.get_text();
 	var task_old  = $("#task").html();
 	var level_old = $("#level").html();
@@ -118,19 +109,19 @@ function submit_task(){
 	RAM.no_notice = true;
 	// some stupid, this must depend on field mark in task_ram table
 	RAM.TextEditor.set_text(easy2code);
-	if( check_answer(easy2seq) == easy2seq.length ){
+	if( CheckAnswer(easy2seq) == easy2seq.length ){
 		mark1 = 2;
 	}
 	RAM.TextEditor.set_text(hard3code);
-	if( check_answer(hard3seq) == hard3seq.length ){
+	if( CheckAnswer(hard3seq) == hard3seq.length ){
 		mark1 = 3;
 	}
 	RAM.TextEditor.set_text(easy3code);
-	if( check_answer(easy3seq) == easy3seq.length ){
+	if( CheckAnswer(easy3seq) == easy3seq.length ){
 		mark2 = 3;
 	}
 	RAM.TextEditor.set_text(hard4code);
-	if( check_answer(hard4seq) == hard4seq.length ){
+	if( CheckAnswer(hard4seq) == hard4seq.length ){
 		mark2 = 4;
 	}
 	input.value  = "";
@@ -143,14 +134,6 @@ function submit_task(){
 				"\n********* Задача 1 сложная ******\n" + hard3code + 
 				"\n********* Задача 2 легкая *******\n" + easy3code + 
 				"\n********* Задача 2 сложная ******\n" + hard4code;
-
-	//$.post( "/algorithm/RAM/set_mark", { mark1:     mark1,
-	//									 mark2:     mark2,
-		//								 sum_mark:  sum_mark,
-			//							 user_code: user_code} );			
-				
-
-
 	
 	$.ajax({
 		cache: false,
@@ -177,7 +160,7 @@ function submit_task(){
     });
 }
 
-task1.onclick = change_my_task;
-task2.onclick = change_my_task;
-easy.onclick = change_my_task;
-hard.onclick = change_my_task;
+task1.onclick = ChangeMyTask;
+task2.onclick = ChangeMyTask;
+easy.onclick = ChangeMyTask;
+hard.onclick = ChangeMyTask;

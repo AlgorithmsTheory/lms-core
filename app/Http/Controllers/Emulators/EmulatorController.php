@@ -557,7 +557,7 @@ class EmulatorController extends Controller {
         }
     }
 	
-	public function edit_date(){
+	public function editDate(){
 		// тип эмулятора
 		$name = Input::get('name');
 		// время КР для эмулятора и ID

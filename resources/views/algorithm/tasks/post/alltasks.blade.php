@@ -44,7 +44,7 @@
 							</article>
 						</div>
 						<div class="col-lg-2">
-							<button type="button" class="btn ink-reaction btn-raised btn-primary"> {!! HTML::linkRoute('Post_add_task', '+ Добавить задачу') !!} </button>
+							<button type="button" class="btn ink-reaction btn-raised btn-primary"> {!! HTML::linkRoute('postAddTask', '+ Добавить задачу') !!} </button>
 						</div>
 					</div>
 				</div>
@@ -77,7 +77,7 @@
 			{
 			print "
 			<td rowspan=\"5\">";
-			echo HTML::linkRoute('Post_delete_task', 'Удалить', array("task_id" => $row['task_id']));
+			echo HTML::linkRoute('postDeleteTask', 'Удалить', array("task_id" => $row['task_id']));
 			echo '</td>';
 			print "
 			<td rowspan=\"5\">".$row["description"]."</td>
@@ -91,7 +91,7 @@
 
 			
 			<td>";
-			echo HTML::linkRoute('Post_edit_task', 'Изменить', array("sequence_id" => $row['sequence_id']));
+			echo HTML::linkRoute('postEditTask', 'Изменить', array("sequence_id" => $row['sequence_id']));
 			print "</td>		
 			</tr>";
 			$i++;

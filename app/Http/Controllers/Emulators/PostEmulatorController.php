@@ -13,7 +13,7 @@ use App\Http\Controllers\Controller;
 
 class PostEmulatorController extends Controller {
 	
-	public function open_Post() {
+	public function openPost() {
 		date_default_timezone_set('Europe/Moscow');
         $user_id = Auth::user()['id'];
 		$group = User::whereId($user_id)->get()[0]['group'];
@@ -88,37 +88,37 @@ class PostEmulatorController extends Controller {
 				'easy2_seq' => json_encode($easy2_seq), 'easy3_seq' => json_encode($easy3_seq), 'hard3_seq' => json_encode($hard3_seq), 'hard4_seq' => json_encode($hard4_seq)];
 	}
 	
-	public function Post_set_mark(Request $request){
+	public function postSetMark(){
 		$user = Auth::user();
         $user_id = $user['id'];
-		$mark1 = $request->input("mark1");
-		$mark2 = $request->input("mark2");
-		$sum_mark = $request->input("sum_mark");
-		$user_code = $request->input("user_code");
+		$mark1 = Request::input("mark1");
+		$mark2 = Request::input("mark2");
+		$sum_mark = Request::input("sum_mark");
+		$user_code = Request::input("user_code");
 		$date = date("Y-m-d H:i:s");
 		UserResultPost::updateOrInsert(['user_id' => $user_id], ['mark_1' => $mark1, 'mark_2' => $mark2, 'sum_mark' => $sum_mark, 'user_code' => $user_code, 'date' => $date]);
 	}
 	
 	//---------------------- work with tasks ------------------------- //
 	
-	public function Post_manage_task(){
+	public function postManageTask(){
 		$tasks_and_sequences = TestsequencePost::leftJoin('tasks_post', function($join) {
 												$join->on('testsequence_post.task_id', '=', 'tasks_post.task_id');})->get();
         $tasks_and_sequences = TasksController::magic($tasks_and_sequences);
         return view("algorithm.tasks.post.alltasks", compact('tasks_and_sequences'));
     }
 	
-	public function Post_add_task(){
+	public function postAddTask(){
 		return view("algorithm.tasks.post.addtask");
 	}
 	
-	public function Post_delete_task($task_id) {
+	public function postDeleteTask($task_id) {
 		TasksPost::where('task_id', $task_id)->delete();
 		TestsequencePost::where('task_id', $task_id)->delete();
-		return redirect()->route('Post_manage_task');
+		return redirect()->route('postManageTask');
 	}
 	
-	public function Post_adding_task(){
+	public function postAddingTask(){
 		$task_text = Request::input('task_text');
 		$max_mark = Request::input('max_mark');
 		$level = Request::input('level');
@@ -145,21 +145,21 @@ class PostEmulatorController extends Controller {
 		return view("algorithm.tasks.post.addtask");
     }
   
-	public function Post_edit_task($sequence_id) {
+	public function postEditTask($sequence_id) {
 		$sequence = TestsequencePost::Where('sequence_id', $sequence_id)->get();
 		$sequence = TasksController::magic($sequence)[0];
 		return view("algorithm.tasks.post.edit", compact('sequence','sequence_id'));
 	}
 	
-	public function Post_editing_task($sequence_id){
+	public function postEditingTask($sequence_id){
 		$input_word6 = Request::input("input_word6");
 		$output_word6 = Request::input("output_word6");
 		TestsequencePost::where('sequence_id', $sequence_id)
 		  			    ->update(['input_word' => $input_word6, 'output_word' => $output_word6]);
-		return redirect()->route('Post_manage_task');
+		return redirect()->route('postManageTask');
 	}
 	
-	public function Post_edit_users(){
+	public function postEditUsers(){
 		//выбрать всех студентов и результаты контрольных по POST
 		$all_users = User::leftJoin('user_result_post', function($join) {
 						  $join->on('user_result_post.user_id', '=', 'users.id');})
@@ -171,7 +171,7 @@ class PostEmulatorController extends Controller {
         return view("algorithm.edit_users", compact('all_users', 'emr_type'));
     }
 
-    public function Post_editing_users(){
+    public function postEditingUsers(){
 
         $availability_input = (Request::input("fines") == null) ? [] : Request::input("fines");
 
