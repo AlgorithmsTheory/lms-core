@@ -1,4 +1,4 @@
-function CheckAnswer(arr){
+function checkAnswer(arr){
 	var count = 0;
 	for(var i=0; i < arr.length; i++){
 		input.value  = arr[i]['input_word'];
@@ -13,26 +13,26 @@ function CheckAnswer(arr){
 	return count;
 }
 
-function get_str(task, level){
+function getStr(task, level){
 	if(level == "hard")
 		task++;
 		task++;
 	return level + task;
 }
 
-function SwapContent(hide_str, show_str){
+function swapContent(hide_str, show_str){
 	var code_old = RAM.TextEditor.get_text();
 	var code_new = $("#" + show_str + "code").html();
 	RAM.TextEditor.set_text(code_new);
 	$("#" + hide_str + "code").html(code_old);
 }
 
-function ChangeMyTask(){
+function changeMyTask(){
 	var task_new, task_old, level_new, level_old;
 	// old task
 	task_old  = $("#task").html();
 	level_old = $("#level").html();
-	hide_str = get_str(task_old, level_old);
+	hide_str = getStr(task_old, level_old);
 	// new task
 	click = this.id;
 	if(click == "task1")
@@ -55,7 +55,7 @@ function ChangeMyTask(){
 		task_new = task_old;
 		level_new = "hard";
 	}
-	show_str = get_str(task_new, level_new);
+	show_str = getStr(task_new, level_new);
 	// action
 	if(hide_str != show_str)
 	{
@@ -63,7 +63,7 @@ function ChangeMyTask(){
 		$("#task").html(task_new);
 		$("#" + hide_str).css('display', 'none');
 		$("#" + show_str).css('display', 'block');
-		SwapContent(hide_str, show_str);
+		swapContent(hide_str, show_str);
 		if(task_new == 1){
 			$("#task2").attr('class', '');
 			$("#task1").attr('class', 'active');
@@ -84,11 +84,11 @@ function ChangeMyTask(){
 	}
 }
 
-function SubmitTask(){
+function submitTask(){
 	var curr_code = RAM.TextEditor.get_text();
 	var task_old  = $("#task").html();
 	var level_old = $("#level").html();
-	var hide_str = get_str(task_old, level_old);
+	var hide_str = getStr(task_old, level_old);
 	$("#" + hide_str + "code").html(curr_code);
 	var easy2code = $("#easy2code").html();
 	var easy3code = $("#easy3code").html();
@@ -109,19 +109,19 @@ function SubmitTask(){
 	RAM.no_notice = true;
 	// some stupid, this must depend on field mark in task_ram table
 	RAM.TextEditor.set_text(easy2code);
-	if( CheckAnswer(easy2seq) == easy2seq.length ){
+	if( checkAnswer(easy2seq) == easy2seq.length ){
 		mark1 = 2;
 	}
 	RAM.TextEditor.set_text(hard3code);
-	if( CheckAnswer(hard3seq) == hard3seq.length ){
+	if( checkAnswer(hard3seq) == hard3seq.length ){
 		mark1 = 3;
 	}
 	RAM.TextEditor.set_text(easy3code);
-	if( CheckAnswer(easy3seq) == easy3seq.length ){
+	if( checkAnswer(easy3seq) == easy3seq.length ){
 		mark2 = 3;
 	}
 	RAM.TextEditor.set_text(hard4code);
-	if( CheckAnswer(hard4seq) == hard4seq.length ){
+	if( checkAnswer(hard4seq) == hard4seq.length ){
 		mark2 = 4;
 	}
 	input.value  = "";
@@ -160,7 +160,7 @@ function SubmitTask(){
     });
 }
 
-task1.onclick = ChangeMyTask;
-task2.onclick = ChangeMyTask;
-easy.onclick = ChangeMyTask;
-hard.onclick = ChangeMyTask;
+task1.onclick = changeMyTask;
+task2.onclick = changeMyTask;
+easy.onclick = changeMyTask;
+hard.onclick = changeMyTask;

@@ -42,7 +42,7 @@
 	</div>
 	<div class="col-lg-2">
 		<br>
-		<button type="button" id="btn_submit" class="btn ink-reaction btn-primary" onClick="SubmitTask()">Закончить работу</button>
+		<button type="button" id="btn_submit" class="btn ink-reaction btn-primary" onClick="submitTask()">Закончить работу</button>
 	</div>
 	<div class="col-lg-12">
 		<h3 id="easy2" style="display:block">{{ $tasks['easy2'] }}</h3>
