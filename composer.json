@@ -12,8 +12,7 @@
         "guzzlehttp/guzzle": "^6.1",
 		"kendu/l5-mpdf" : "dev-master",
         "laravel/tinker": "^1.0",
-        "phpoffice/phpspreadsheet": "^1.2"
-        "laravel/tinker": "^1.0",
+        "phpoffice/phpspreadsheet": "^1.2",
         "illuminate/html": "^5.0"
     },
     "require-dev": {
