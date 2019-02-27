@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Emulators;
 use App\Protocols\HAMProtocol;
 use App\Protocols\MTProtocol;
+use Input;
 use DB;
-use Illuminate\Http\Request;
-use App\Tasks;
-use App\Testsequence;
-use App\User;
+use Request;
+use App\Group;
 use Auth;
 use App\Controls;
+use App\Emulators\KontrWork;
+use App\Emulators\EmrForGroup;
+use App\Http\Controllers\Controller;
 
 class EmulatorController extends Controller {
 
@@ -34,24 +36,15 @@ class EmulatorController extends Controller {
         return  EmulatorController::MMT();
     }
 
-
- public function Post(){
-      return view("algorithm.Post");
-    }
-
-
     public function open_MT(){
 
         $user = Auth::user();
         $id_user = $user['id'];
-        //$id_user =54;
-       //$cur_group=9;
-        $cur_group=DB::select("SELECT `id_group` FROM mt_for_group WHERE availability='1'");
-        
+
+        $cur_group=DB::select("SELECT `group_id` FROM emr_for_group WHERE availability='1' AND emr_id='1'");
         $cur_group = EmulatorController::magic($cur_group);
 
         $start_date_tur = DB::select("SELECT start_date FROM kontr_rab WHERE id = '1' AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) > start_date AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) < finish_date");
-
         $start_date_tur = EmulatorController::magic($start_date_tur);
 
         $group = DB::select("SELECT `group` FROM `users` WHERE id=".$id_user);
@@ -62,7 +55,7 @@ class EmulatorController extends Controller {
         $user_access = $user_access[0]['access'];
 
          for ($i = 0; $i < count($cur_group); $i++) {
-            $new[$i]=$cur_group[$i]['id_group']; 
+            $new[$i]=$cur_group[$i]['group_id']; 
             }   
         
              $available = 0;
@@ -103,10 +96,8 @@ class EmulatorController extends Controller {
 
         $user = Auth::user();
         $id_user = $user['id'];
-        //$id_user =54;
-       //$cur_group=9;
-        $cur_group=DB::select("SELECT `id_group` FROM nam_for_group WHERE availability='1'");
         
+        $cur_group=DB::select("SELECT `group_id` FROM emr_for_group WHERE availability='1' AND emr_id='2'");
         $cur_group = EmulatorController::magic($cur_group);
     
         $start_date_nam = DB::select("SELECT start_date FROM kontr_rab WHERE id = '2' AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) > start_date AND ADDDATE(NOW( ) , INTERVAL  '03:00' HOUR_MINUTE) < finish_date");
@@ -121,7 +112,7 @@ class EmulatorController extends Controller {
 
 
          for ($i = 0; $i < count($cur_group); $i++) {
-            $new[$i]=$cur_group[$i]['id_group']; 
+            $new[$i]=$cur_group[$i]['group_id']; 
             }   
         
              $available = 0;
@@ -167,11 +158,6 @@ class EmulatorController extends Controller {
     public function kontrHAM(){
         return view("algorithm.kontrHAM");
     }
-	
-	public function RAM() {
-		return view("algorithm.RAM");
-	}
-
 
     public function MTPOST(Request $request){
 		
@@ -569,6 +555,36 @@ class EmulatorController extends Controller {
             $protocol->create();
             return;
         }
+    }
+	
+	public function editDate(){
+		// тип эмулятора
+		$name = Input::get('name');
+		// время КР для эмулятора и ID
+		$kontr_work = KontrWork::where('name', $name)->get()[0];
+		$emr_id = $kontr_work['id'];
+        // доступ для групп
+		$all_groups = Group::leftJoin('emr_for_group', function($join) {
+										$join->on('groups.group_id', '=', 'emr_for_group.group_id');})->where('archived', 0)->where('emr_id', $emr_id)->get();
+										
+        return view("algorithm.edit_date", compact('emr_id', 'kontr_work', 'all_groups'));
+
+    }
+	
+	public function editAllDate(){
+		$new_start = Request::input("new_start");
+		$new_finish = Request::input("new_finish");
+		$emr_id = Request::input("emr_id");
+		$availability_input = (Request::input("availability")== null) ? [] : Request::input("availability");
+		
+		for ($i = 0; $i < count(Request::input("id-group")); $i++) {
+			$availability = in_array(Request::input("id-group")[$i], $availability_input) ? 1 : 0;
+			$group_id = Request::input("id-group")[$i];
+			EmrForGroup::updateOrInsert([ 'emr_id' => $emr_id, 'group_id' => $group_id], ['availability' => $availability]);
+		}
+		
+		KontrWork::whereId($emr_id)->update(['start_date' => $new_start, 'finish_date' => $new_finish]);
+		return view("algorithm.main");
     }
 
 }
