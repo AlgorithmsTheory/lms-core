@@ -270,12 +270,12 @@ Route::get('algorithm/{id_sequence}/editmt', ['as' => 'editmt', 'uses' => 'Emula
 Route::post('algorithm/{id_sequence}/editmtTask', ['as' => 'editmtTask', 'uses' => 'Emulators\TasksController@editmtTask']);
 
 //эмуляторы
-////Route::get('algorithm/MT', ['as' => 'MT', 'uses' => 'EmulatorController@MT']);
-////Route::get('algorithm/HAM', ['as' => 'HAM', 'uses' => 'EmulatorController@HAM']);
-Route::post('get-MT', array('as'=>'get_MT', 'uses'=>'EmulatorController@MTPOST'));
-Route::post('get-HAM', array('as'=>'get_HAM', 'uses'=>'EmulatorController@HAMPOST'));
-Route::post('get_control_tasks', array('as'=>'get_control_tasks', 'uses'=>'EmulatorController@get_control_tasks'));
-Route::post('get_control_tasks_nam', array('as'=>'get_control_tasks_nam', 'uses'=>'EmulatorController@get_control_tasks_nam'));
+////Route::get('algorithm/MT', ['as' => 'MT', 'uses' => 'Emulators\EmulatorController@MT']);
+////Route::get('algorithm/HAM', ['as' => 'HAM', 'uses' => 'Emulators\EmulatorController@HAM']);
+Route::post('get-MT', array('as'=>'get_MT', 'uses'=>'Emulators\EmulatorController@MTPOST'));
+Route::post('get-HAM', array('as'=>'get_HAM', 'uses'=>'Emulators\EmulatorController@HAMPOST'));
+Route::post('get_control_tasks', array('as'=>'get_control_tasks', 'uses'=>'Emulators\EmulatorController@get_control_tasks'));
+Route::post('get_control_tasks_nam', array('as'=>'get_control_tasks_nam', 'uses'=>'Emulators\EmulatorController@get_control_tasks_nam'));
 
 // новое для коэффициентов НАМ
 Route::get('algorithm/edit_coef', ['as' => 'edit_coef', 'uses' => 'Emulators\TasksController@editCoef']);
@@ -284,27 +284,27 @@ Route::post('algorithm/{id}edit_all_coef', ['as' => 'editAllCoef', 'uses' => 'Em
 // новое для коэффициентов МТ
 Route::get('algorithm/edit_coef_mt', ['as' => 'edit_coef_mt', 'uses' => 'Emulators\TasksController@editCoefMt']);
 Route::post('algorithm/{id_task}edit_all_coef_mt', ['as' => 'editAllCoefMt', 'uses' => 'Emulators\TasksController@editAllCoefMt']);
-Route::post('get_MT_protocol', array('as'=>'get_MT_protocol', 'uses'=>'EmulatorController@get_MT_protocol'));
-Route::post('get_HAM_protocol', array('as'=>'get_HAM_protocol', 'uses'=>'EmulatorController@get_HAM_protocol'));
+Route::post('get_MT_protocol', array('as'=>'get_MT_protocol', 'uses'=>'Emulators\EmulatorController@get_MT_protocol'));
+Route::post('get_HAM_protocol', array('as'=>'get_HAM_protocol', 'uses'=>'Emulators\EmulatorController@get_HAM_protocol'));
 
 
-Route::get('algorithm/MT', ['as' => 'MT', 'uses' => 'EmulatorController@open_MT']);
-Route::get('algorithm/MMT', ['as' => 'MMT', 'uses' => 'EmulatorController@open_MMT']);
-Route::get('algorithm/HAM', ['as' => 'HAM', 'uses' => 'EmulatorController@open_HAM']);
+Route::get('algorithm/MT', ['as' => 'MT', 'uses' => 'Emulators\EmulatorController@open_MT']);
+Route::get('algorithm/MMT', ['as' => 'MMT', 'uses' => 'Emulators\EmulatorController@open_MMT']);
+Route::get('algorithm/HAM', ['as' => 'HAM', 'uses' => 'Emulators\EmulatorController@open_HAM']);
 
 
-Route::get('algorithm/kontrMT', ['as' => 'kontrMT', 'uses' => 'EmulatorController@open_MT']);
-Route::get('algorithm/kontrHAM', ['as' => 'kontrHAM', 'uses' => 'EmulatorController@open_HAM']);
+Route::get('algorithm/kontrMT', ['as' => 'kontrMT', 'uses' => 'Emulators\EmulatorController@open_MT']);
+Route::get('algorithm/kontrHAM', ['as' => 'kontrHAM', 'uses' => 'Emulators\EmulatorController@open_HAM']);
 
 
 //контрольный режим эмуляторов
 
-//Route::get('algorithm/kontrMT', ['as' => 'kontrMT', 'uses' => 'EmulatorController@kontrMT']);
+//Route::get('algorithm/kontrMT', ['as' => 'kontrMT', 'uses' => 'Emulators\EmulatorController@kontrMT']);
 
-//Route::get('algorithm/kontrHAM', ['as' => 'kontrHAM', 'uses' => 'EmulatorController@kontrHAM']);
-Route::post('get-MT-kontr', array('as'=>'get_MT', 'uses'=>'EmulatorController@kontr_MTPOST'));
+//Route::get('algorithm/kontrHAM', ['as' => 'kontrHAM', 'uses' => 'Emulators\EmulatorController@kontrHAM']);
+Route::post('get-MT-kontr', array('as'=>'get_MT', 'uses'=>'Emulators\EmulatorController@kontr_MTPOST'));
 
-Route::post('get-HAM-kontr', array('as'=>'get_HAM_kontr', 'uses'=>'EmulatorController@kontr_HAMPOST'));
+Route::post('get-HAM-kontr', array('as'=>'get_HAM_kontr', 'uses'=>'Emulators\EmulatorController@kontr_HAMPOST'));
 
 //доступ к контрольному режиму для кокретных студентов
 

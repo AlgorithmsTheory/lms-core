@@ -53,17 +53,13 @@ class StudentKnowledgeLevelController extends Controller {
                         if ($data[3] != 'Экзамены') continue;
                         // parse "СОРОКИН С.В.\r\n to СОРОКИН
                         $last_name = explode('"', explode(' ', $data[2])[0])[0];
-                        if ($last_name == 'ЕНИКЕЕВ') {
-                            $a = 5;
-                        }
                         $marks[$last_name]['sum'] += $this->bolognaToPercent($data[10], substr($data[8], -1));
                         $marks[$last_name]['count']++;
                     }
                     fclose($handle);
                 }
             }
-
-            $current_year = date('Y');
+            
             foreach ($marks as $name => $student) {
                 $last_name_in_lower = mb_strtolower($name);
                 $user_id = $this->user->where('last_name', 'like', '%'.$last_name_in_lower.'%')
