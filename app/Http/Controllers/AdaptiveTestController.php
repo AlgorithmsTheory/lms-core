@@ -75,7 +75,7 @@ class AdaptiveTestController extends Controller {
 
         $current_time = date_create();
         $int_left_time = $test_instance->getCurrentQuestionEndTime() - date_format($current_time, 'U');
-        $left_min =  ($int_left_time > 0) ? floor($int_left_time/60) : 0;
+        $left_min = ($int_left_time > 0) ? floor($int_left_time/60) : 0;
         $left_sec = ($int_left_time > 0) ? $int_left_time % 60 : 0;
 
         $widgetListView = View::make('adaptive_tests.show_question',

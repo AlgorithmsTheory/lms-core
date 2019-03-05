@@ -465,6 +465,3 @@ Route::get('stat/get-question-group-success/{id_question}', ['as' => 'question_g
 Route::get('stat/get-test-results/{id_test}', ['as' => 'test_results_stat', 'uses' => 'StatisticController@getResults']);
 Route::get('stat/get-test-results/{id_test}/{id_group}', ['as' => 'test_results_stat_for_group', 'uses' => 'StatisticController@getResultsForGroup']);
 Route::get('stat/get-question-type-frequency-in-test/{id_test}', ['as' => 'question_type_freq_in_test', 'uses' => 'StatisticController@getQuestionTypeFrequencyInTest']);
-
-Route::get('data-manage/difficulty-init', ['as' => 'diff_init', 'uses' => 'DataUpdateController@initDifficulty']);
-
