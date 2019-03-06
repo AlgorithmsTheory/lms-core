@@ -29,7 +29,7 @@ class StatisticController extends Controller {
             if (Question::isAnsweredRight($task->points, $max_points)) $right_answers_count++;
             else $wrong_answers_count++;
         }
-        echo json_encode(['right' => $right_answers_count, 'wrong' => $wrong_answers_count]);
+        return json_encode(['right' => $right_answers_count, 'wrong' => $wrong_answers_count]);
     }
 
     /** Сложность и дискриминант вопроса */
@@ -51,7 +51,7 @@ class StatisticController extends Controller {
         array_push($current_difficulty, $current_question->difficulty);
         array_push($current_discriminant, $current_question->discriminant);
 
-        echo json_encode(['difficulties' => $difficulties,
+        return json_encode(['difficulties' => $difficulties,
                           'discriminants' => $discriminants,
                           'current_difficulty' => $current_difficulty,
                           'current_discriminant' => $current_discriminant]);
@@ -87,7 +87,7 @@ class StatisticController extends Controller {
                     $frequencies['others']++;
             }
         }
-        echo json_encode($frequencies);
+        return json_encode($frequencies);
     }
 
     /** Успешность решения вопроса по учебным группам  */
@@ -114,7 +114,7 @@ class StatisticController extends Controller {
             $successes[$i]['success'] = $right_answers_count;
             $i++;
         }
-        echo json_encode($successes);
+        return json_encode($successes);
     }
 
     /** Результаты за тест по Болонской системе */
@@ -124,7 +124,7 @@ class StatisticController extends Controller {
         foreach ($test_results as $result) {
             $results[$result->mark_eu]++;
         }
-        echo json_encode($results);
+        return json_encode($results);
     }
 
     /** Результаты за тест по Болонской системе для конкретной группы */
@@ -137,7 +137,7 @@ class StatisticController extends Controller {
         foreach ($test_results as $result) {
             $results[$result->mark_eu]++;
         }
-        echo json_encode($results);
+        return json_encode($results);
     }
 
     /** Частота выпадения разных типов вопросов в тесте */
@@ -158,6 +158,6 @@ class StatisticController extends Controller {
                 $type_freq[$question_type]++;
             }
         }
-        echo json_encode($type_freq);
+        return json_encode($type_freq);
     }
 }

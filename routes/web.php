@@ -372,11 +372,11 @@ Route::post('manage_groups/group_set/add', ['as' => 'add_group_to_set', 'uses' =
 Route::post('manage_groups/group_set/delete', ['as' => 'delete_group_from_set', 'uses' => 'AdministrationController@delete_group_from_set', 'middleware' => ['general_auth', 'admin']]);
 
 //архивный модуль
-Route::get('storage', ['as' => 'archive_index', 'uses' => 'ArchiveController@index']);
-Route::post('storage/{folder}', ['as' => 'archive_folder', 'uses' => 'ArchiveController@folder']);
-Route::post('storage', ['as' => 'archive_download', 'uses' => 'ArchiveController@download']);
-Route::post('storage/download-folder/folder', ['as' => 'archive_download_folder', 'uses' => 'ArchiveController@downloadFolder']);
-Route::post('storage/delete/file', ['as' => 'archive_delete', 'uses' => 'ArchiveController@delete']);
+Route::get('storage', ['as' => 'archive_index', 'uses' => 'ArchiveController@index', 'middleware' => ['general_auth', 'admin']]);
+Route::post('storage/{folder}', ['as' => 'archive_folder', 'uses' => 'ArchiveController@folder', 'middleware' => ['general_auth', 'admin']]);
+Route::post('storage', ['as' => 'archive_download', 'uses' => 'ArchiveController@download', 'middleware' => ['general_auth', 'admin']]);
+Route::post('storage/download-folder/folder', ['as' => 'archive_download_folder', 'uses' => 'ArchiveController@downloadFolder', 'middleware' => ['general_auth', 'admin']]);
+Route::post('storage/delete/file', ['as' => 'archive_delete', 'uses' => 'ArchiveController@delete', 'middleware' => ['general_auth', 'admin']]);
 
 
 //новая рекурсия
@@ -439,15 +439,15 @@ Route::prefix('algorithm')->group(function () {
 	});
 });
 // Уровень знаний студента
-Route::get('students-knowledge-level', ['as' => 'students_level', 'uses' => 'StudentKnowledgeLevelController@index']);
-Route::get('students-knowledge-level/{error}', ['as' => 'students_level_with_errors', 'uses' => 'StudentKnowledgeLevelController@indexWithErrors']);
-Route::post('students-knowledge-level', ['as' => 'set_students_level', 'uses' => 'StudentKnowledgeLevelController@setLevel']);
+Route::get('students-knowledge-level', ['as' => 'students_level', 'uses' => 'StudentKnowledgeLevelController@index', 'middleware' => ['general_auth', 'admin']]);
+Route::get('students-knowledge-level/{error}', ['as' => 'students_level_with_errors', 'uses' => 'StudentKnowledgeLevelController@indexWithErrors', 'middleware' => ['general_auth', 'admin']]);
+Route::post('students-knowledge-level', ['as' => 'set_students_level', 'uses' => 'StudentKnowledgeLevelController@setLevel', 'middleware' => ['general_auth', 'admin']]);
 
 // Пересчет параметров адаптивной модели
-Route::get('adaptive-tests/params', ['as' => 'adaptive_test_params', 'uses' => 'AdaptiveTestController@params']);
-Route::post('adaptive-tests/params', ['as' => 'eval_params', 'uses' => 'AdaptiveTestController@evalParams']);
-Route::post('adaptive-tests/reevaluate-difficulty', ['as' => 'reeval_difficulty', 'uses' => 'AdaptiveTestController@reEvalDifficulty']);
-Route::post('adaptive-tests/reevaluate-discriminant', ['as' => 'reeval_difficulty', 'uses' => 'AdaptiveTestController@reEvalDiscriminant']);
+Route::get('adaptive-tests/params', ['as' => 'adaptive_test_params', 'uses' => 'AdaptiveTestController@params', 'middleware' => ['general_auth', 'admin']]);
+Route::post('adaptive-tests/params', ['as' => 'eval_params', 'uses' => 'AdaptiveTestController@evalParams', 'middleware' => ['general_auth', 'admin']]);
+Route::post('adaptive-tests/reevaluate-difficulty', ['as' => 'reeval_difficulty', 'uses' => 'AdaptiveTestController@reEvalDifficulty', 'middleware' => ['general_auth', 'admin']]);
+Route::post('adaptive-tests/reevaluate-discriminant', ['as' => 'reeval_difficulty', 'uses' => 'AdaptiveTestController@reEvalDiscriminant', 'middleware' => ['general_auth', 'admin']]);
 
 // Прохождение адаптивного теста
 Route::get('adaptive-tests/prepare/{test_id}', ['as' => 'prepare_adaptive_test', 'uses' => 'AdaptiveTestController@prepare', 'middleware' => ['general_auth', 'student', 'admin']]);
@@ -458,10 +458,10 @@ Route::get('adaptive-tests/results', ['as' => 'result_adaptive_test', 'uses' => 
 Route::post('adaptive-tests/drop', ['as' => 'drop_adaptive_test', 'uses' => 'AdaptiveTestController@dropTest', 'middleware' => ['general_auth', 'student', 'admin']]);
 
 // Модуль статистики
-Route::get('stat/get-question-success/{id_question}', ['as' => 'question_success_stat', 'uses' => 'StatisticController@getSuccess']);
-Route::get('stat/get-questions-diff-and-det/{id_question}', ['as' => 'question_diff_and_det', 'uses' => 'StatisticController@getDifficultyAndDiscriminant']);
-Route::get('stat/get-question-frequency-by-month/{id_question}', ['as' => 'question_freq_by_month', 'uses' => 'StatisticController@getFrequencyByMonth']);
-Route::get('stat/get-question-group-success/{id_question}', ['as' => 'question_group_success_stat', 'uses' => 'StatisticController@getGroupSuccess']);
-Route::get('stat/get-test-results/{id_test}', ['as' => 'test_results_stat', 'uses' => 'StatisticController@getResults']);
-Route::get('stat/get-test-results/{id_test}/{id_group}', ['as' => 'test_results_stat_for_group', 'uses' => 'StatisticController@getResultsForGroup']);
-Route::get('stat/get-question-type-frequency-in-test/{id_test}', ['as' => 'question_type_freq_in_test', 'uses' => 'StatisticController@getQuestionTypeFrequencyInTest']);
+Route::get('stat/get-question-success/{id_question}', ['as' => 'question_success_stat', 'uses' => 'StatisticController@getSuccess', 'middleware' => ['general_auth', 'admin']]);
+Route::get('stat/get-questions-diff-and-det/{id_question}', ['as' => 'question_diff_and_det', 'uses' => 'StatisticController@getDifficultyAndDiscriminant', 'middleware' => ['general_auth', 'admin']]);
+Route::get('stat/get-question-frequency-by-month/{id_question}', ['as' => 'question_freq_by_month', 'uses' => 'StatisticController@getFrequencyByMonth', 'middleware' => ['general_auth', 'admin']]);
+Route::get('stat/get-question-group-success/{id_question}', ['as' => 'question_group_success_stat', 'uses' => 'StatisticController@getGroupSuccess', 'middleware' => ['general_auth', 'admin']]);
+Route::get('stat/get-test-results/{id_test}', ['as' => 'test_results_stat', 'uses' => 'StatisticController@getResults', 'middleware' => ['general_auth', 'admin']]);
+Route::get('stat/get-test-results/{id_test}/{id_group}', ['as' => 'test_results_stat_for_group', 'uses' => 'StatisticController@getResultsForGroup', 'middleware' => ['general_auth', 'admin']]);
+Route::get('stat/get-question-type-frequency-in-test/{id_test}', ['as' => 'question_type_freq_in_test', 'uses' => 'StatisticController@getQuestionTypeFrequencyInTest', 'middleware' => ['general_auth', 'admin']]);
