@@ -23,7 +23,7 @@ use Illuminate\Notifications\Notifiable as Notifiable;
  *
  * @method static \Illuminate\Database\Query\Builder|\App\User whereNull($value)
  * @method static \Illuminate\Database\Query\Builder|\App\User create($array)
- * @method static \Illuminate\Database\Query\Builder|\App\User where($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\User where($column, $condition, $value)
  * @method static \Illuminate\Database\Query\Builder|\App\User  join()
  * @method static \Illuminate\Database\Query\Builder|\App\User  leftJoin()
  * @method static \Illuminate\Database\Query\Builder|\App\User  on()

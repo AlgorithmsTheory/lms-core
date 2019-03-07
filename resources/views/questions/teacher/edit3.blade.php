@@ -22,13 +22,13 @@
         <input type="hidden" id="js_span_edge" value="{{ $data['js_span_edge'] }}">
         <input type="hidden" id="js_span_edge_eng" value="{{ $data['eng_js_span_edge'] }}">
         @for ($i = 1; $i <= count($data['variants']); $i++)
-            <input type="hidden" id="js_count_{{ $i }}" value="{{ count($data['variants'][$i-1])}}">
+            <input type="hidden" id="js_count_{{ $i }}" value="{{ count($data['variants'][$i-1]) - 1}}">
         @endfor
         @for ($j = $i; $j <= 50; $j++)
             <input type="hidden" id="js_count_{{ $j }}" value="5">
         @endfor
         @for ($i = 1; $i <= count($data['eng_variants']); $i++)
-        <input type="hidden" id="js_count_eng_{{ $i }}" value="{{ count($data['eng_variants'][$i-1])}}">
+        <input type="hidden" id="js_count_eng_{{ $i }}" value="{{ count($data['eng_variants'][$i-1]) - 1}}">
         @endfor
         @for ($j = $i; $j <= 50; $j++)
         <input type="hidden" id="js_count_eng_{{ $j }}" value="5">
@@ -179,9 +179,40 @@
                                 <label for="select-theme">Тема</label>
                             </div>
 
+                            <!-- Баллы за правильный ответ -->
                             <div class="form-group">
                                 <input type="number" min="1" name="points" id="points" class="form-control" value="{{ $data['question']['points'] }}">
                                 <label for="points">Баллы за верный ответ</label>
+                            </div>
+
+                            <!-- Сложность -->
+                            <div class="form-group col-md-11 col-sm-11">
+                                <textarea  name="difficulty" id="difficulty" class="form-control" rows="1" placeholder="" required readonly>{{ $data['question']['difficulty'] }}</textarea>
+                                <label for="difficulty">Сложность</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1">
+                                <button class="btn btn-warning btn-raised submit-question" type="button" id="reevaluate-difficulty">Пересчитать</button>
+                            </div>
+
+                            <!-- Дискриминант -->
+                            <div class="form-group col-md-11 col-sm-11">
+                                <textarea  name="discriminant" id="discriminant" class="form-control" rows="1" placeholder="" required readonly>{{ $data['question']['discriminant'] }}</textarea>
+                                <label for="discriminant">Дискриминант</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1">
+                                <button class="btn btn-warning btn-raised submit-question" type="button" id="reevaluate-discriminant">Пересчитать</button>
+                            </div>
+
+                            <!-- Коэффициент угадывания -->
+                            <div class="form-group col-md-12 col-sm-12">
+                                <textarea  name="guess" id="guess" class="form-control" rows="1" placeholder="" required readonly>{{ $data['question']['guess'] }}</textarea>
+                                <label for="guess">Коэффициент угадывания</label>
+                            </div>
+
+                            <!-- Время на вопрос -->
+                            <div class="form-group col-md-12 col-sm-12">
+                                <input type="number" min="30" step="1" max="3600" name="pass-time" id="pass-time" class="form-control" value="{{ $data['question']['pass_time'] }}">
+                                <label for="pass-time">Время на вопрос в секундах</label>
                             </div>
 
                             <button class="btn btn-primary btn-raised submit-question" type="submit">Применить изменения</button>
@@ -203,7 +234,7 @@
                 <h2 id="preview-text"></h2>
                 <div id="preview-container"></div>
             </form>
-            <button class="btn btn-primary btn-raised submit-question" type="submit">Применить изменения</button>
+            <button class="btn btn-primary btn-raised submit-question" type="submit" id="submit-text">Применить изменения</button>
         </div>
     </div>
 </div>
@@ -212,4 +243,5 @@
 @section('js-down')
 {!! HTML::script('js/question_create/fillGaps.js') !!}
 {!! HTML::script('js/question_create/fillGapsEng.js') !!}
+{!! HTML::script('js/question_create/questionCreate.js') !!}
 @stop

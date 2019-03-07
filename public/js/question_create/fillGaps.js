@@ -12,19 +12,20 @@ for (k = 1; k <= 50; k++){
     counts[k] = parseInt($('#js_count_'+k).val());
 }
 
+$('#guess').val(evalGuess(word_number - 1));
+
 /** Добавление варианта */
 $('#type_question_add').on('click','.add-var-3', function(){
     var idButton = $(this).attr('id');
-    var numButton;
-    numButton = idButton.substring(15);
-    //alert(numButton);
+    var numButton = idButton.substring(15);
+    counts[numButton]++;
     $('#column-'+numButton).append('\
                 <div class="form-group">\
                     <textarea  name="variants-'+numButton+'[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>\
                     <label for="textarea3">Вариант ' + counts[numButton] + '</label>\
                 </div>\
                 ');
-    counts[numButton]++;
+    $('#guess').val(evalGuess(word_number - 1));
 });
 
 /** Удаление последнего варианта */
@@ -36,6 +37,7 @@ $('#type_question_add').on('click','.del-var-3',function(){
         $('#column-'+numButton).children().last().remove();
         counts[numButton]--;
     }
+    $('#guess').val(evalGuess(word_number - 1));
 });
 
 /** по номеру блока удаляет необходимый блок и сдвигает все индексы у нижестоящих блоков */
@@ -51,7 +53,9 @@ function removeBlock(blockNum){
         $('#var-add-button-'+j).attr('id', 'var-add-button-'+(j-1));
         $('#var-del-button-'+j).attr('id', 'var-del-button-'+(j-1));
     }
+    counts[word_number] = 0;
     word_number--;
+    $('#guess').val(evalGuess(word_number - 1));
 }
 
 /** Добавляет блок. На вход принимает строку вида span-x, где x - номер спана в тексте и текст спана для автозаполнения им первого варианта блока */
@@ -86,7 +90,9 @@ function addBlock(numSpan, firstVar){
                     </div>\
                 </div>\
                 ');
+    counts[word_number] = 4;
     word_number++;
+    $('#guess').val(evalGuess(word_number - 1));
 }
 
 /** проверка, не принадлежит ли слово другой области (true - belong, false - doesn't belong) */
@@ -366,3 +372,32 @@ $('#type_question_add').on('click', '#cancel-selection', function(){
     startSpan = 0;
     endSpan = 10000;
 });
+
+$('#type_question_add').on('change', '#word-variants', function(){
+    $('#guess').val(evalGuess(word_number - 1));
+});
+
+function evalGuess(count) {
+    var rowNumber = 1 << count;
+    var totalProbability = 0;
+    for (var i = 0; i < rowNumber; i++) {
+        var splittedBinaryNumber = parseInt(i).toString(2).split('');
+        var lengthDifference = count - splittedBinaryNumber.length;
+        var sumWeight = 0;
+        var multProbability = 1;
+        for (var j = 0; j < lengthDifference; j++) {
+            multProbability *= 1 - (1 / counts[j+1]);
+        }
+        var k = 0;
+        for (j = lengthDifference; j < count; j++) {
+            if (splittedBinaryNumber[k++] > 0) {
+                sumWeight += parseFloat($($('#column-' + (j + 1) + ' textarea')[0]).val());
+                multProbability *= 1 / counts[j + 1];
+            }
+            else multProbability *= 1 - (1 / counts[j+1]);
+        }
+        console.log(splittedBinaryNumber + ': ' + sumWeight + ', ' + multProbability);
+        if (sumWeight >= 0.6) totalProbability += multProbability;
+    }
+    return totalProbability;
+}

@@ -39,6 +39,6 @@
     <br>
 
     <div class="row">
-        <a href="{{URL::route('tests')}}" class="btn btn-warning btn-lg col-md-4 col-md-offset-4" role="button">К списку тестов</a>
+        <a href="{{URL::route('home')}}" class="btn btn-warning btn-lg col-md-4 col-md-offset-4" role="button">На главную</a>
     </div>
 @stop

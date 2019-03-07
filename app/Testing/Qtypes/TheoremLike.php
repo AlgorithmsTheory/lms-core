@@ -48,10 +48,6 @@ class TheoremLike extends QuestionType {
         return $array;
     }
 
-    public function check($array) {
-        //TODO: not checked automatically
-    }
-
     public function pdf(Mypdf $fpdf, $count, $answered=false) {
         $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
         $html .= '  Ответьте на вопрос или решите задачу. Ответы без обоснования НЕ оцениваются</td></tr>';

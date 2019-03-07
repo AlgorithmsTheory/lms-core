@@ -1,4 +1,5 @@
     <input type="hidden" id="count" value="4">
+    <input type="hidden" id="right-answers" value="0">
     <div class="checkbox checkbox-styled">
         <label>
             <input type="checkbox" name="control" id="control">
@@ -115,9 +116,34 @@
             <!-- контейнер для ajax -->
         </div>
 
+        <!-- Баллы за правильный ответ -->
         <div class="form-group">
-            <input type="number" min="1" name="points" id="points" class="form-control" value="1">
+            <input type="number" min="1" step="0.1" max="2" name="points" id="points" class="form-control" value="1">
             <label for="points">Баллы за верный ответ</label>
+        </div>
+
+        <!-- Сложность -->
+        <div class="form-group">
+            <textarea  name="difficulty" id="difficulty" class="form-control" rows="1" placeholder="" required readonly>0</textarea>
+            <label for="difficulty">Сложность</label>
+        </div>
+
+        <!-- Дискриминант -->
+        <div class="form-group">
+            <textarea  name="discriminant" id="discriminant" class="form-control" rows="1" placeholder="" required readonly>0.5</textarea>
+            <label for="discriminant">Дискриминант</label>
+        </div>
+
+        <!-- Коэффициент угадывания -->
+        <div class="form-group">
+            <textarea  name="guess" id="guess" class="form-control" rows="1" placeholder="" required readonly></textarea>
+            <label for="guess">Коэффициент угадывания</label>
+        </div>
+
+        <!-- Время на вопрос -->
+        <div class="form-group">
+            <input type="number" min="30" step="1" max="3600" name="pass-time" id="pass-time" class="form-control" value="120">
+            <label for="pass-time">Время на вопрос в секундах</label>
         </div>
 
         <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить вопрос</button>

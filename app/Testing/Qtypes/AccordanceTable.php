@@ -11,7 +11,7 @@ use App\Testing\Question;
 use App\Testing\Type;
 use Illuminate\Http\Request;
 
-class AccordanceTable extends QuestionType {
+class AccordanceTable extends QuestionType implements Checkable {
     const type_code = 4;
 
     function __construct($id_question) {
@@ -51,6 +51,8 @@ class AccordanceTable extends QuestionType {
         return ['title' => $title, 'variants' => $variants,
             'answer' => $answer, 'points' => $request->input('points'),
             'control' => $options['control'], 'translated' => $options['translated'],
+            'difficulty' => $options['difficulty'], 'discriminant' => $options['discriminant'],
+            'guess' => $options['guess'], 'pass_time' => $options['pass_time'],
             'section_code' => $options['section'],
             'theme_code' => $options['theme'], 'type_code' => $options['type'],
             'title_eng' => $title_eng, 'variants_eng' => $variants_eng, 'answer_eng' => $answer_eng];
@@ -60,7 +62,8 @@ class AccordanceTable extends QuestionType {
         $data = $this->setAttributes($request);
 
         Question::insert(array('title' => $data['title'], 'variants' => $data['variants'],
-            'answer' => $data['answer'], 'points' => $data['points'],
+            'answer' => $data['answer'], 'points' => $data['points'], 'difficulty' => $data['difficulty'],
+            'discriminant' => $data['discriminant'], 'guess' => $data['guess'], 'pass_time' => $data['pass_time'],
             'control' => $data['control'], 'translated' => $data['translated'],
             'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
             'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng']));
@@ -86,7 +89,8 @@ class AccordanceTable extends QuestionType {
         $data = $this->setAttributes($request);
         Question::whereId_question($this->id_question)->update(
             array('title' => $data['title'], 'variants' => $data['variants'],
-                'answer' => $data['answer'], 'points' => $data['points'],
+                'answer' => $data['answer'], 'points' => $data['points'], 'difficulty' => $data['difficulty'],
+                'discriminant' => $data['discriminant'], 'guess' => $data['guess'], 'pass_time' => $data['pass_time'],
                 'control' => $data['control'], 'translated' => $data['translated'],
                 'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
                 'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng'])
@@ -209,5 +213,73 @@ class AccordanceTable extends QuestionType {
         }
         $html .= '</table><br>';
         $fpdf->WriteHTML($html);
+    }
+
+    public function evalGuess() {
+        $table_rows_number = count(explode(";", $this->text));
+        $table_columns_number = count(explode(";", $this->variants));
+        $row_number = 1 << $table_rows_number;
+
+        $answers = explode(";" ,$this->answer);
+        $right_answers_numbers = [];
+        array_fill(0, $table_columns_number, 0);
+        for ($i = 0; $i < count($answers); $i++) {
+            $row = intdiv($answers[$i] - 1, $table_columns_number);
+            $right_answers_numbers[$row]++;
+        }
+
+        $row_probabilities = [];
+        for ($i = 0; $i < $table_rows_number; $i++) {
+            $local_row_number = 1 << $table_columns_number;
+            $min_right_answers = ceil(0.6 * $right_answers_numbers[$i]);
+            $right_sum = 0;
+            for ($row = 1; $row < $local_row_number; $row++) {
+                $splitted_binary_matrix_value = str_split(decbin($row));
+                $first_table_raw_after_left_leading_zeroes = $table_columns_number - count($splitted_binary_matrix_value);
+                $row_sum = 0;
+                $k = 0;
+                for ($col = $first_table_raw_after_left_leading_zeroes; $col < $table_columns_number; $col++) {
+                    if ($col < $right_answers_numbers[$i]) {
+                        $row_sum += $splitted_binary_matrix_value[$k++];
+                    }
+                    else {
+                        $row_sum -= $splitted_binary_matrix_value[$k++];
+                    }
+                }
+                if ($row_sum >= $min_right_answers) {
+                    $right_sum++;
+                }
+            }
+            $row_probabilities[$i] = $right_sum / ($local_row_number - 1);
+        }
+
+        $total_probability = 0;
+        for ($row = 0; $row < $row_number; $row++) {
+            $right_row_answers = 0;
+            $row_probability = 1;
+            $splitted_binary_matrix_value = str_split(decbin($row));
+            $first_table_raw_after_left_leading_zeroes = $table_rows_number - count($splitted_binary_matrix_value);
+
+            for ($table_row = 0; $table_row < $first_table_raw_after_left_leading_zeroes; $table_row++) {
+                $row_probability *= 1 - $row_probabilities[$table_row];
+            }
+
+            $k = 0;
+            for ($table_row = $first_table_raw_after_left_leading_zeroes; $table_row < $table_rows_number; $table_row++) {
+                if ($splitted_binary_matrix_value[$k++] > 0) {
+                    $right_row_answers++;
+                    $row_probability *= $row_probabilities[$table_row];
+                }
+                else {
+                    $row_probability *= 1 - $row_probabilities[$table_row];
+                }
+            }
+
+            if ($right_row_answers >= 0.6 * $table_rows_number) {
+                $total_probability += $row_probability;
+            }
+        }
+
+        return $total_probability;
     }
 } 

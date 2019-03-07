@@ -39,23 +39,6 @@ class Graph {
      *  Set prev nodes, next nodes and capacity for each node
      */
     public function putInfoForNodes() {
-//        foreach ($this->nodes as $node) {
-//            foreach ($this->edges as $edge) {
-//                if ($edge->getNodeFrom() === $node) {
-//                    $array = $node->getNextNodes();
-//                    array_push($array, $edge->getNodeTo());
-//                    $node->setNextNodes($array);
-//                    $edge->setNodeFrom($node);
-//                    $node->setCapacity($node->getCapacity() + $edge->getCapacity());
-//                }
-//                if ($edge->getNodeTo() === $node) {
-//                    $array = $node->getPrevNodes();
-//                    array_push($array, $edge->getNodeFrom());
-//                    $node->setPrevNodes($array);
-//                    $edge->setNodeTo($node);
-//                }
-//            }
-//        }
         foreach ($this->edges as $edge) {
             $node_from = $edge->getNodeFrom();
             $node_to = $edge->getNodeTo();

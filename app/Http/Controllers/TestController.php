@@ -14,8 +14,7 @@ use App\Testing\Section;
 use App\Testing\StructuralRecord;
 use App\Testing\Test;
 use App\Testing\TestForGroup;
-use App\Testing\TestGeneration\RecordNode;
-use App\Testing\TestGeneration\TestGenerator;
+use App\Testing\TestGeneration\GraphBuilder;
 use App\Testing\TestGeneration\UsualTestGenerator;
 use App\Testing\TestStructure;
 use App\Testing\TestTask;
@@ -34,38 +33,41 @@ class TestController extends Controller{
         $this->test=$test;
     }
 
-    /** генерирует страницу со списком доступных тестов */
-    public function index(){
-        $tr_tests = [];                                                                                                 //массив тренировочных тестов
-        $ctr_tests = [];                                                                                                //массив контрольных тестов
-        $query = $this->test->whereVisibility(1)->whereArchived(0)
-            ->whereOnly_for_print(0)
-            ->get();
+    public function trainTests() {
+        $tr_tests = [];
+        $query = $this->test->whereTest_type('Тренировочный')
+            ->whereVisibility(1)->whereArchived(0)->whereOnly_for_print(0)->get();
+        foreach ($query as $test) {
+            $availability_for_group = TestForGroup::whereId_group(Auth::user()['group'])
+                ->whereId_test($test['id_test'])
+                ->select('availability')->first()->availability;
+            if ($availability_for_group) {
+                $test['amount'] = Test::getAmount($test['id_test']);
+                $test['attempts'] = Result::whereId_test($test['id_test'])->whereId(Auth::user()['id'])->where('mark_ru', '>=', 0)->count();
+                array_push($tr_tests, $test);
+            }
+        }
+        return view('tests.list.train_tests', compact('tr_tests'));
+    }
+
+    public function controlTests() {
+        $ctr_tests = [];
+        $query = $this->test->whereTest_type('Контрольный')
+            ->whereVisibility(1)->whereArchived(0)->whereOnly_for_print(0)->get();
         foreach ($query as $test){
             $availability_for_group = TestForGroup::whereId_group(Auth::user()['group'])
                 ->whereId_test($test['id_test'])
                 ->select('availability')->first()->availability;
             if ($availability_for_group) {
-                if ($test->test_type == 'Тренировочный') {
-                    array_push($tr_tests, $test);
-                } else {
-                    array_push($ctr_tests, $test);
-                    $fine = Fine::whereId_test($test['id_test'])->whereId(Auth::user()['id'])->select('access')->get();
-                    $test['access_for_student'] = count($fine) == 0 ? 1 : $fine[0]->access;
-                    $test['max_points'] = Fine::levelToPercent(Fine::whereId(Auth::user()['id'])->whereId_test($test['id_test'])->select('fine')->first()->fine) / 100 * $test['total'];
-                }
+                $fine = Fine::whereId_test($test['id_test'])->whereId(Auth::user()['id'])->select('access')->get();
+                $test['access_for_student'] = count($fine) == 0 ? 1 : $fine[0]->access;
+                $test['max_points'] = Fine::levelToPercent(Fine::whereId(Auth::user()['id'])->whereId_test($test['id_test'])->select('fine')->first()->fine) / 100 * $test['total'];
                 $test['amount'] = Test::getAmount($test['id_test']);
                 $test['attempts'] = Result::whereId_test($test['id_test'])->whereId(Auth::user()['id'])->where('mark_ru', '>=', 0)->count();
+                array_push($ctr_tests, $test);
             }
         }
-
-
-        //TODO: student's group must be not archived to be able to see control tests
-        $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
-        if ($role == '' || $role == 'Обычный')                                                                          // Обычным пользователям не доступны контрольные тесты
-            return view('tests.index', compact('tr_tests'));
-        else
-            return view('tests.index', compact('tr_tests', 'ctr_tests'));
+        return view('tests.list.control_tests', compact('ctr_tests'));
     }
 
     /** генерирует страницу создания нового теста (шаг 1 - основные настройки) */
@@ -80,11 +82,13 @@ class TestController extends Controller{
 
         $general_settings['test_name'] = $request->input('test-name');
         $general_settings['test_type'] = $request->input('training') ? 'Тренировочный' : 'Контрольный';
+        $general_settings['adaptive'] = $request->input('adaptive') ? 1 : 0;
         $general_settings['visibility'] = $request->input('visibility') ? 1 : 0;
         $general_settings['multilanguage'] = $request->input('multilanguage') ? 1 : 0;
         $general_settings['only_for_print'] = $request->input('only-for-print') ? 1 : 0;
         $general_settings['total'] = $request->input('total');
         $general_settings['test_time'] = $request->input('test-time');
+        $general_settings['max_questions'] = $request->input('max_questions');
 
         $availability_input = ($request->input('availability') == null) ? [] : $request->input('availability');
 
@@ -146,10 +150,9 @@ class TestController extends Controller{
             }
         }
 
-        $testGenerator = new UsualTestGenerator();
-        $testGenerator->buildGraphFromRestrictions($restrictions);
-        $testGenerator->getGraph()->fordFulkersonMaxFlow();
-        return (String) $testGenerator->getGraph()->isSaturated();
+        $graph = GraphBuilder::buildGraphFromRestrictions($restrictions);
+        $graph->fordFulkersonMaxFlow();
+        return (String) $graph->isSaturated();
     }
 
     private function getSectionOrderForThemes($themes, $section_code, $i) {
@@ -177,7 +180,9 @@ class TestController extends Controller{
             'total' => $general_settings['total'],
             'visibility' => $general_settings['visibility'],
             'multilanguage' => $general_settings['multilanguage'],
-            'only_for_print' => $general_settings['only_for_print']
+            'only_for_print' => $general_settings['only_for_print'],
+            'is_adaptive' => $general_settings['adaptive'],
+            'max_questions' => $general_settings['max_questions']
         ));
 
         $id_test = Test::max('id_test');
@@ -232,11 +237,46 @@ class TestController extends Controller{
         return view ('personal_account.test_list', compact('ctr_tests', 'tr_tests'));
     }
 
+    public function profile($id_test) {
+        $test = Test::whereId_test($id_test)->first();
+        $test['mean'] = Test::getMean($id_test);
+        $test['median'] = Test::getMedian($id_test);
+        $test['deviation'] = sqrt(Test::getVariance($id_test));
+        $test['reliability'] = Test::getReliability($id_test);
+
+        $structures = TestStructure::whereId_test($id_test)->select('id_structure', 'amount')->get();
+        $restrictions = [];
+        for ($i = 0; $i < count($structures); $i++) {
+            $restrictions[$i]['amount'] = $structures[$i]->amount;
+            $records = StructuralRecord::whereId_structure($structures[$i]->id_structure)->select('section_code', 'theme_code', 'type_code')->get();
+            $sections = [];
+            $themes = [];
+            $types = [];
+            foreach ($records as $record) {
+                $section_name = Section::whereSection_code($record->section_code)->select('section_name')->first()->section_name;
+                $theme_name = Theme::whereTheme_code($record->theme_code)->select('theme_name')->first()->theme_name;
+                $type_name = Type::whereType_code($record->type_code)->select('type_name')->first()->type_name;
+                if (!in_array($section_name, $sections)) array_push($sections, $section_name);
+                if (!in_array($theme_name, $themes)) array_push($themes, $theme_name);
+                if (!in_array($type_name, $types)) array_push($types, $type_name);
+            }
+            $restrictions[$i]['sections'] = $sections;
+            $restrictions[$i]['themes'] = $themes;
+            $restrictions[$i]['types'] = $types;
+
+        }
+
+        $groups = Group::whereArchived(0)->whereAcademic(1)->select('group_id', 'group_name')->get();
+        return view('tests.profile', compact('test', 'restrictions', 'groups'));
+    }
+
     public function updateSettings(Request $request) {
         Test::whereId_test($request->input('id_test'))->update([
             'visibility' => $request->input('visibility'),
             'only_for_print' => $request->input('only_for_print'),
-            'multilanguage' => $request->input('multilanguage')
+            'multilanguage' => $request->input('multilanguage'),
+            'is_adaptive' => $request->input('adaptive'),
+            'max_questions' => $request->input('max_questions')
         ]);
     }
 
@@ -261,16 +301,19 @@ class TestController extends Controller{
         $id_test = $request->input('id-test');
         $test_name = $request->input('test-name');
         $test_type = $request->input('test-type');
+        $is_adaptive = $request->input('adaptive') ? 1 : 0;
         $visibility = $request->input('visibility') ? 1 : 0;
         $multilanguage = $request->input('multilanguage') ? 1 : 0;
         $only_for_print = $request->input('only-for-print') ? 1 : 0;
         $total = $request->input('total');
         $test_time = $request->input('test-time');
+        $max_questions = $request->input('max_questions');
 
         Test::whereId_test($id_test)->update([
             'test_name' => $test_name, 'test_type' => $test_type, 'test_time' => $test_time,
             'total' => $total,'visibility' => $visibility, 'archived' => 0,
-            'multilanguage' => $multilanguage, 'only_for_print' => $only_for_print]);
+            'multilanguage' => $multilanguage, 'only_for_print' => $only_for_print,
+            'is_adaptive' => $is_adaptive, 'max_questions' => $max_questions]);
 
         $availability_input = ($request->input('availability') == null) ? [] : $request->input('availability');
 
@@ -382,11 +425,10 @@ class TestController extends Controller{
         $test_type = $test->test_type;
         if (Result::getCurrentResult(Auth::user()['id'], $id_test) == -1) {                                             //если пользователь не имеет начатый тест                                                                                     //если в тест зайдено первый раз
             $generator = new UsualTestGenerator();
-            $generator->buildGraphFromTest($test);
-            $generator->generate();
+            $generator->generate($test);
             for ($i=0; $i < $amount; $i++) {
                 $id = $generator->chooseQuestion();
-                $data = $question->show($id, $i+1);                                                                     //должны получать название view и необходимые параметры
+                $data = $question->show($id, $i+1, false);                                                                     //должны получать название view и необходимые параметры
                 $saved_test[] = $data;
                 $widgets[] = View::make($data['view'], $data['arguments']);
             }
@@ -504,6 +546,6 @@ class TestController extends Controller{
             $date = date('Y-m-d H:i:s', time());
             Result::whereId_result($current_result)->update(['result_date' => $date, 'result' => -1, 'mark_ru' => -1, 'mark_eu' => 'drop']);                                 //Присваиваем результату и оценке значения -1
         }
-        return redirect('tests');
+        return redirect('home');
     }
 }

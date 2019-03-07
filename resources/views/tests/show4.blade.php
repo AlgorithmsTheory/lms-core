@@ -1,6 +1,4 @@
-<html>
-<body>
-{!! Form::open(['method' => 'PATCH', 'class' => 'smart-blue']) !!}
+{!! Form::open(['method' => 'PATCH', 'route' => $route, 'class' => 'smart-blue question-form']) !!}
 <h1>Вопрос {{ $count }}</h1>
 <input type="hidden" name="num" value="{{ $id }}">
 <input type="hidden" name="type" value="{{ $type }}">
@@ -33,12 +31,13 @@
     </tr>
     @endforeach
 </table>
-<div class="checkbox checkbox-styled checkbox-warning">
-    <label>
-        <input type="checkbox" name="seeLater" class="css-checkbox">
-        <span class="css-checkbox text-lg">Вернуться позже</span>
-    </label>
-</div>
+@if (!$is_adaptive)
+    <div class="checkbox checkbox-styled checkbox-warning">
+        <label>
+            <input type="checkbox" name="seeLater" class="css-checkbox">
+            <span class="css-checkbox text-lg">Вернуться позже</span>
+        </label>
+    </div>
+@endif
 {!! Form::close() !!}
-</body>
-</html>
+<br>

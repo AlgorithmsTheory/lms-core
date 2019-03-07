@@ -61,10 +61,6 @@ class Definition extends QuestionType {
         return $array;
     }
 
-    public function check($array) {
-        // TODO: question is not automatically checked
-    }
-
     public function pdf(Mypdf $fpdf, $count, $answered=false) {
         $text_parse = $this->text;
         $text = explode(";" , $text_parse);

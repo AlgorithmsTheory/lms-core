@@ -139,7 +139,6 @@ return [
         Laravel\Tinker\TinkerServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Kendu\Mpdf\ServiceProvider::class,
-        MaddHatter\LaravelFullcalendar\ServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -199,8 +198,6 @@ return [
         'Form'      => Collective\Html\FormFacade::class,
         'HTML'      => Collective\Html\HtmlFacade::class,
         'PDF'       => Kendu\Mpdf\Facades\Pdf::class,
-        'Calendar' => MaddHatter\LaravelFullcalendar\Facades\Calendar::class,
-
     ],
 
     'env' => env('APP_ENV', 'production'),

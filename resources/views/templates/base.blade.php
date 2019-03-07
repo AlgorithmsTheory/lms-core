@@ -26,7 +26,17 @@
 
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="{{URL::route('tests')}}" class="btn">Тестирование</a></li>
+                        <li>
+                            <a class="btn btn-primary dropdown-toggle" id="dropdownChoiceTestMode" data-toggle="dropdown">
+                                <span>Тестирование </span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownChoiceTestMode">
+                                <li><a href="{{URL::route('train_tests')}}" class="btn">Тренировочные</a></li>
+                                <li><a href="{{URL::route('adaptive_tests')}}" class="btn">Адаптивные</a></li>
+                                <li><a href="{{URL::route('control_tests')}}" class="btn">Контрольные</a></li>
+                            </ul>
+                        </li>
                         <li><a href="{{URL::route('library_index')}}" class="btn">Библиотека</a></li>
 						<li>
 							<a class="btn btn-primary dropdown-toggle" id="dropdownChoiceEmulator" data-toggle="dropdown">
@@ -60,7 +70,6 @@
     </div>
 </div>
 
-{!! HTML::script('js/ram/bootstrap.min.js') !!}
 {!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
 {!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
 {!! HTML::script('js/libs/bootstrap/bootstrap.min.js') !!}

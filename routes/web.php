@@ -58,8 +58,11 @@ Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm
 Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.request');
 
 // Модуль тестирования - прохождение тестов
-Route::get('tests', ['as' => 'tests', 'uses' => 'TestController@index', 'middleware' => 'general_auth']);
+Route::get('tests/train', ['as' => 'train_tests', 'uses' => 'TestController@trainTests', 'middleware' => 'general_auth']);
+Route::get('tests/adaptive', ['as' => 'adaptive_tests', 'uses' => 'AdaptiveTestController@adaptiveTests', 'middleware' => ['general_auth', 'student', 'admin']]);
+Route::get('tests/control', ['as' => 'control_tests', 'uses' => 'TestController@controlTests', 'middleware' => ['general_auth', 'student', 'admin']]);
 Route::get('questions/show-test/{id_test}', ['as' => 'question_showtest', 'uses' => 'TestController@showViews', 'middleware' => ['general_auth', 'single_test', 'have_attempts', 'test_is_available']]);
+Route::get('questions/show-adaptive-test/{id_test}', ['as' => 'show_adaptive_test', 'uses' => 'TestController@showAdaptiveTest', 'middleware' => ['general_auth', 'single_test', 'have_attempts', 'test_is_available']]);
 Route::patch('questions/check-test', ['as' => 'question_checktest', 'uses' => 'TestController@checkTest']);
 Route::post('tests/drop', ['as' => 'drop_test', 'uses' => 'TestController@dropTest', 'middleware' => 'general_auth']);
 Route::post('tests/get-protocol', ['as' => 'get_protocol', 'uses' => 'TestController@getProtocol', 'middleware' => 'general_auth']);
@@ -71,6 +74,7 @@ Route::get('questions/create', ['as' => 'question_create', 'uses' => 'QuestionCo
 Route::get('questions/edit', ['as' => 'questions_list', 'uses' => 'QuestionController@editList', 'middleware' => ['general_auth','admin']]);
 Route::get('questions/edit/search', ['as' => 'questions_find', 'uses' => 'QuestionController@find', 'middleware' => ['general_auth','admin']]);
 Route::post('questions/edit/search', ['as' => 'questions_find', 'uses' => 'QuestionController@find', 'middleware' => ['general_auth','admin']]);
+Route::get('questions/profile/{id_question}', ['as' => 'question_profile', 'uses' => 'QuestionController@profile', 'middleware' => ['general_auth','admin']]);
 Route::get('questions/edit/{id_question}', ['as' => 'question_edit', 'uses' => 'QuestionController@edit', 'middleware' => ['general_auth','admin']])->where($id_question, '[0-9]+');
 Route::post('questions/edit', ['as' => 'question_update', 'uses' => 'QuestionController@update', 'middleware' => ['general_auth','admin']]);
 Route::post('questions/delete', ['as' => 'question_delete', 'uses' => 'QuestionController@delete', 'middleware' => ['general_auth','admin']]);
@@ -87,6 +91,7 @@ Route::post('get-amount', array('as'=>'get_amount', 'uses'=>'TestController@getA
 Route::get('retest', ['as' => 'retest_index', 'uses' => 'TeacherRetestController@index']);
 Route::post('retest', ['as' => 'retest_change', 'uses' => 'TeacherRetestController@change']);
 Route::get('tests/test-list', ['as' => 'tests_list', 'uses' => 'TestController@editList']);
+Route::get('tests/profile/{id_question}', ['as' => 'test_profile', 'uses' => 'TestController@profile', 'middleware' => ['general_auth','admin']]);
 Route::post('tests/update-general-settings', ['as' => 'update_general_settings', 'uses' => 'TestController@updateSettings']);
 Route::post('tests/edit', ['as' => 'test_update', 'uses' => 'TestController@update']);
 Route::get('tests/remove/{id_test}', ['as' => 'test_remove', 'uses' => 'TestController@remove']);
@@ -265,12 +270,12 @@ Route::get('algorithm/{id_sequence}/editmt', ['as' => 'editmt', 'uses' => 'Emula
 Route::post('algorithm/{id_sequence}/editmtTask', ['as' => 'editmtTask', 'uses' => 'Emulators\TasksController@editmtTask']);
 
 //эмуляторы
-////Route::get('algorithm/MT', ['as' => 'MT', 'uses' => 'EmulatorController@MT']);
-////Route::get('algorithm/HAM', ['as' => 'HAM', 'uses' => 'EmulatorController@HAM']);
-Route::post('get-MT', array('as'=>'get_MT', 'uses'=>'EmulatorController@MTPOST'));
-Route::post('get-HAM', array('as'=>'get_HAM', 'uses'=>'EmulatorController@HAMPOST'));
-Route::post('get_control_tasks', array('as'=>'get_control_tasks', 'uses'=>'EmulatorController@get_control_tasks'));
-Route::post('get_control_tasks_nam', array('as'=>'get_control_tasks_nam', 'uses'=>'EmulatorController@get_control_tasks_nam'));
+////Route::get('algorithm/MT', ['as' => 'MT', 'uses' => 'Emulators\EmulatorController@MT']);
+////Route::get('algorithm/HAM', ['as' => 'HAM', 'uses' => 'Emulators\EmulatorController@HAM']);
+Route::post('get-MT', array('as'=>'get_MT', 'uses'=>'Emulators\EmulatorController@MTPOST'));
+Route::post('get-HAM', array('as'=>'get_HAM', 'uses'=>'Emulators\EmulatorController@HAMPOST'));
+Route::post('get_control_tasks', array('as'=>'get_control_tasks', 'uses'=>'Emulators\EmulatorController@get_control_tasks'));
+Route::post('get_control_tasks_nam', array('as'=>'get_control_tasks_nam', 'uses'=>'Emulators\EmulatorController@get_control_tasks_nam'));
 
 // новое для коэффициентов НАМ
 Route::get('algorithm/edit_coef', ['as' => 'edit_coef', 'uses' => 'Emulators\TasksController@editCoef']);
@@ -279,27 +284,27 @@ Route::post('algorithm/{id}edit_all_coef', ['as' => 'editAllCoef', 'uses' => 'Em
 // новое для коэффициентов МТ
 Route::get('algorithm/edit_coef_mt', ['as' => 'edit_coef_mt', 'uses' => 'Emulators\TasksController@editCoefMt']);
 Route::post('algorithm/{id_task}edit_all_coef_mt', ['as' => 'editAllCoefMt', 'uses' => 'Emulators\TasksController@editAllCoefMt']);
-Route::post('get_MT_protocol', array('as'=>'get_MT_protocol', 'uses'=>'EmulatorController@get_MT_protocol'));
-Route::post('get_HAM_protocol', array('as'=>'get_HAM_protocol', 'uses'=>'EmulatorController@get_HAM_protocol'));
+Route::post('get_MT_protocol', array('as'=>'get_MT_protocol', 'uses'=>'Emulators\EmulatorController@get_MT_protocol'));
+Route::post('get_HAM_protocol', array('as'=>'get_HAM_protocol', 'uses'=>'Emulators\EmulatorController@get_HAM_protocol'));
 
 
-Route::get('algorithm/MT', ['as' => 'MT', 'uses' => 'EmulatorController@open_MT']);
-Route::get('algorithm/MMT', ['as' => 'MMT', 'uses' => 'EmulatorController@open_MMT']);
-Route::get('algorithm/HAM', ['as' => 'HAM', 'uses' => 'EmulatorController@open_HAM']);
+Route::get('algorithm/MT', ['as' => 'MT', 'uses' => 'Emulators\EmulatorController@open_MT']);
+Route::get('algorithm/MMT', ['as' => 'MMT', 'uses' => 'Emulators\EmulatorController@open_MMT']);
+Route::get('algorithm/HAM', ['as' => 'HAM', 'uses' => 'Emulators\EmulatorController@open_HAM']);
 
 
-Route::get('algorithm/kontrMT', ['as' => 'kontrMT', 'uses' => 'EmulatorController@open_MT']);
-Route::get('algorithm/kontrHAM', ['as' => 'kontrHAM', 'uses' => 'EmulatorController@open_HAM']);
+Route::get('algorithm/kontrMT', ['as' => 'kontrMT', 'uses' => 'Emulators\EmulatorController@open_MT']);
+Route::get('algorithm/kontrHAM', ['as' => 'kontrHAM', 'uses' => 'Emulators\EmulatorController@open_HAM']);
 
 
 //контрольный режим эмуляторов
 
-//Route::get('algorithm/kontrMT', ['as' => 'kontrMT', 'uses' => 'EmulatorController@kontrMT']);
+//Route::get('algorithm/kontrMT', ['as' => 'kontrMT', 'uses' => 'Emulators\EmulatorController@kontrMT']);
 
-//Route::get('algorithm/kontrHAM', ['as' => 'kontrHAM', 'uses' => 'EmulatorController@kontrHAM']);
-Route::post('get-MT-kontr', array('as'=>'get_MT', 'uses'=>'EmulatorController@kontr_MTPOST'));
+//Route::get('algorithm/kontrHAM', ['as' => 'kontrHAM', 'uses' => 'Emulators\EmulatorController@kontrHAM']);
+Route::post('get-MT-kontr', array('as'=>'get_MT', 'uses'=>'Emulators\EmulatorController@kontr_MTPOST'));
 
-Route::post('get-HAM-kontr', array('as'=>'get_HAM_kontr', 'uses'=>'EmulatorController@kontr_HAMPOST'));
+Route::post('get-HAM-kontr', array('as'=>'get_HAM_kontr', 'uses'=>'Emulators\EmulatorController@kontr_HAMPOST'));
 
 //доступ к контрольному режиму для кокретных студентов
 
@@ -367,11 +372,11 @@ Route::post('manage_groups/group_set/add', ['as' => 'add_group_to_set', 'uses' =
 Route::post('manage_groups/group_set/delete', ['as' => 'delete_group_from_set', 'uses' => 'AdministrationController@delete_group_from_set', 'middleware' => ['general_auth', 'admin']]);
 
 //архивный модуль
-Route::get('storage', ['as' => 'archive_index', 'uses' => 'ArchiveController@index']);
-Route::post('storage/{folder}', ['as' => 'archive_folder', 'uses' => 'ArchiveController@folder']);
-Route::post('storage', ['as' => 'archive_download', 'uses' => 'ArchiveController@download']);
-Route::post('storage/download-folder/folder', ['as' => 'archive_download_folder', 'uses' => 'ArchiveController@downloadFolder']);
-Route::post('storage/delete/file', ['as' => 'archive_delete', 'uses' => 'ArchiveController@delete']);
+Route::get('storage', ['as' => 'archive_index', 'uses' => 'ArchiveController@index', 'middleware' => ['general_auth', 'admin']]);
+Route::post('storage/{folder}', ['as' => 'archive_folder', 'uses' => 'ArchiveController@folder', 'middleware' => ['general_auth', 'admin']]);
+Route::post('storage', ['as' => 'archive_download', 'uses' => 'ArchiveController@download', 'middleware' => ['general_auth', 'admin']]);
+Route::post('storage/download-folder/folder', ['as' => 'archive_download_folder', 'uses' => 'ArchiveController@downloadFolder', 'middleware' => ['general_auth', 'admin']]);
+Route::post('storage/delete/file', ['as' => 'archive_delete', 'uses' => 'ArchiveController@delete', 'middleware' => ['general_auth', 'admin']]);
 
 
 //новая рекурсия
@@ -433,3 +438,30 @@ Route::prefix('algorithm')->group(function () {
 		Route::post('edit_all_date', ['as' => 'editAllDate', 'uses' => 'Emulators\EmulatorController@editAllDate']);
 	});
 });
+// Уровень знаний студента
+Route::get('students-knowledge-level', ['as' => 'students_level', 'uses' => 'StudentKnowledgeLevelController@index', 'middleware' => ['general_auth', 'admin']]);
+Route::get('students-knowledge-level/{error}', ['as' => 'students_level_with_errors', 'uses' => 'StudentKnowledgeLevelController@indexWithErrors', 'middleware' => ['general_auth', 'admin']]);
+Route::post('students-knowledge-level', ['as' => 'set_students_level', 'uses' => 'StudentKnowledgeLevelController@setLevel', 'middleware' => ['general_auth', 'admin']]);
+
+// Пересчет параметров адаптивной модели
+Route::get('adaptive-tests/params', ['as' => 'adaptive_test_params', 'uses' => 'AdaptiveTestController@params', 'middleware' => ['general_auth', 'admin']]);
+Route::post('adaptive-tests/params', ['as' => 'eval_params', 'uses' => 'AdaptiveTestController@evalParams', 'middleware' => ['general_auth', 'admin']]);
+Route::post('adaptive-tests/reevaluate-difficulty', ['as' => 'reeval_difficulty', 'uses' => 'AdaptiveTestController@reEvalDifficulty', 'middleware' => ['general_auth', 'admin']]);
+Route::post('adaptive-tests/reevaluate-discriminant', ['as' => 'reeval_difficulty', 'uses' => 'AdaptiveTestController@reEvalDiscriminant', 'middleware' => ['general_auth', 'admin']]);
+
+// Прохождение адаптивного теста
+Route::get('adaptive-tests/prepare/{test_id}', ['as' => 'prepare_adaptive_test', 'uses' => 'AdaptiveTestController@prepare', 'middleware' => ['general_auth', 'student', 'admin']]);
+Route::post('adaptive-tests/init/{test_id}', ['as' => 'init_adaptive_test', 'uses' => 'AdaptiveTestController@init', 'middleware' => ['general_auth', 'student', 'admin']]);
+Route::get('adaptive-tests/show/{question_id}', ['as' => 'show_adaptive_test', 'uses' => 'AdaptiveTestController@showQuestion', 'middleware' => ['general_auth', 'student', 'admin']]);
+Route::patch('adaptive-tests/check', ['as' => 'check_adaptive_test', 'uses' => 'AdaptiveTestController@checkQuestion', 'middleware' => ['general_auth', 'student', 'admin']]);
+Route::get('adaptive-tests/results', ['as' => 'result_adaptive_test', 'uses' => 'AdaptiveTestController@showResults', 'middleware' => ['general_auth', 'student', 'admin']]);
+Route::post('adaptive-tests/drop', ['as' => 'drop_adaptive_test', 'uses' => 'AdaptiveTestController@dropTest', 'middleware' => ['general_auth', 'student', 'admin']]);
+
+// Модуль статистики
+Route::get('stat/get-question-success/{id_question}', ['as' => 'question_success_stat', 'uses' => 'StatisticController@getSuccess', 'middleware' => ['general_auth', 'admin']]);
+Route::get('stat/get-questions-diff-and-det/{id_question}', ['as' => 'question_diff_and_det', 'uses' => 'StatisticController@getDifficultyAndDiscriminant', 'middleware' => ['general_auth', 'admin']]);
+Route::get('stat/get-question-frequency-by-month/{id_question}', ['as' => 'question_freq_by_month', 'uses' => 'StatisticController@getFrequencyByMonth', 'middleware' => ['general_auth', 'admin']]);
+Route::get('stat/get-question-group-success/{id_question}', ['as' => 'question_group_success_stat', 'uses' => 'StatisticController@getGroupSuccess', 'middleware' => ['general_auth', 'admin']]);
+Route::get('stat/get-test-results/{id_test}', ['as' => 'test_results_stat', 'uses' => 'StatisticController@getResults', 'middleware' => ['general_auth', 'admin']]);
+Route::get('stat/get-test-results/{id_test}/{id_group}', ['as' => 'test_results_stat_for_group', 'uses' => 'StatisticController@getResultsForGroup', 'middleware' => ['general_auth', 'admin']]);
+Route::get('stat/get-question-type-frequency-in-test/{id_test}', ['as' => 'question_type_freq_in_test', 'uses' => 'StatisticController@getQuestionTypeFrequencyInTest', 'middleware' => ['general_auth', 'admin']]);

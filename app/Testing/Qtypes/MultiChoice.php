@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Session;
 use Input;
 
-class MultiChoice extends QuestionType {
+class MultiChoice extends QuestionType implements Checkable {
     const type_code = 2;
 
     function __construct($id_question) {
@@ -54,7 +54,9 @@ class MultiChoice extends QuestionType {
             }
         }
         return ['title' => $title['ru_title'], 'variants' => $variants,
-                'answer' => $answers, 'points' => $options['points'],
+                'answer' => $answers, 'points' => $options['points'], 'difficulty' => $options['difficulty'],
+                'discriminant' => $options['discriminant'], 'guess' => $options['guess'],
+                'pass_time' => $options['pass_time'],
                 'control' => $options['control'], 'translated' => $options['translated'],
                 'section_code' => $options['section'], 'theme_code' => $options['theme'], 'type_code' => $options['type'],
                 'title_eng' => $title['eng_title'], 'variants_eng' => $eng_variants, 'answer_eng' => $eng_answers];
@@ -63,7 +65,9 @@ class MultiChoice extends QuestionType {
     public function add(Request $request) {
         $data = $this->setAttributes($request);
         Question::insert(array('title' => $data['title'], 'variants' => $data['variants'],
-            'answer' => $data['answer'], 'points' => $data['points'],
+            'answer' => $data['answer'], 'points' => $data['points'], 'difficulty' => $data['difficulty'],
+            'discriminant' => $data['discriminant'], 'guess' => $data['guess'],
+            'pass_time' => $data['pass_time'],
             'control' => $data['control'], 'translated' => $data['translated'],
             'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
             'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng']));
@@ -94,7 +98,9 @@ class MultiChoice extends QuestionType {
         $data = $this->setAttributes($request);
         Question::whereId_question($this->id_question)->update(
             array('title' => $data['title'], 'variants' => $data['variants'],
-                'answer' => $data['answer'], 'points' => $data['points'],
+                'answer' => $data['answer'], 'points' => $data['points'], 'difficulty' => $data['difficulty'],
+                'discriminant' => $data['discriminant'], 'guess' => $data['guess'],
+                'pass_time' => $data['pass_time'],
                 'control' => $data['control'], 'translated' => $data['translated'],
                 'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
                 'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng'])
@@ -104,7 +110,7 @@ class MultiChoice extends QuestionType {
     public function show($count) {
         $parse = $this->variants;
         $variants = explode(";", $parse);
-        $new_variants = $this->question->mixVariants($variants);
+        $new_variants = Question::mixVariants($variants);
         $view = 'tests.show2';
         $array = array('view' => $view, 'arguments' => array('text' => explode('::',$this->text), "variants" => $new_variants, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
         return $array;
@@ -186,8 +192,7 @@ class MultiChoice extends QuestionType {
             Session::forget('saved_variants_order');
         }
         else {                                                                                                          // без ответов
-            $question = new Question();
-            $new_variants = $question->mixVariants($variants);
+            $new_variants = Question::mixVariants($variants);
             Session::put('saved_variants_order', $new_variants);
             foreach ($new_variants as $var){
                 $html .= '<tr>';
@@ -198,4 +203,30 @@ class MultiChoice extends QuestionType {
         $html .= '</table><br>';
         $fpdf->WriteHTML($html);
     }
-} 
+
+    public function evalGuess() {
+        $variants_number = count(explode(";", $this->variants));
+        $right_answers_number = count(explode(";", $this->answer));
+        $min_right_answers = ceil(0.6 * $right_answers_number);
+        $row_number = 1 << $variants_number;
+        $right_sum = 0;
+        for ($row = 1; $row < $row_number; $row++) {
+            $splitted_binary_matrix_value = str_split(decbin($row));
+            $first_column_after_left_leading_zeroes = $variants_number - count($splitted_binary_matrix_value);
+            $row_sum = 0;
+            $k = 0;
+            for ($col = $first_column_after_left_leading_zeroes; $col < $variants_number; $col++) {
+                if ($col < $right_answers_number) {
+                    $row_sum += $splitted_binary_matrix_value[$k++];
+                }
+                else {
+                    $row_sum -= $splitted_binary_matrix_value[$k++];
+                }
+            }
+            if ($row_sum >= $min_right_answers) {
+                $right_sum++;
+            }
+        }
+        return $right_sum / ($row_number - 1);
+    }
+}

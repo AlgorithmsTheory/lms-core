@@ -22,16 +22,23 @@
             <div class="col-lg-offset-1 col-md-5 col-sm-5">
                 <div class="card">
                     <div class="card-body">
-                            <!-- название теста -->
-                            <div class="form-group dropdown-label">
-                                <textarea  name="test-name" class="form-control textarea1" rows="1" placeholder=""  required></textarea>
-                                <label for="textarea1">Название теста</label>
-                            </div>
-                            <!-- тренировочный тест -->
+                        <!-- название теста -->
+                        <div class="form-group dropdown-label">
+                            <textarea  name="test-name" class="form-control textarea1" rows="1" placeholder=""  required></textarea>
+                            <label for="textarea1">Название теста</label>
+                        </div>
+                        <!-- тренировочный тест -->
                         <div class="checkbox checkbox-styled">
                             <label>
                                 <input type="checkbox" name="training" id="training">
                                 <span>Тренировочный тест</span>
+                            </label>
+                        </div>
+                        <!-- адаптивный тест -->
+                        <div class="checkbox checkbox-styled">
+                            <label>
+                                <input type="checkbox" name="adaptive" id="adaptive" disabled>
+                                <span>Адаптивный тест</span>
                             </label>
                         </div>
                         <!-- Видимость теста -->
@@ -63,7 +70,12 @@
                         <!-- Время на прохождение теста -->
                         <div class="form-group dropdown-label">
                             <input type="number" min="1" name="test-time" id="test-time" class="form-control" required>
-                            <label for="test-time">Время на прохождение теста в минутах</label>
+                            <label for="test-time">Время на прохождение теста в минутах для традиционного режима</label>
+                        </div>
+                        <!-- Максимальное число вопросов в адаптивном тесте -->
+                        <div class="form-group dropdown-label">
+                            <input type="number" min="1" max="100" name="max_questions" id="max_questions" class="form-control" required disabled>
+                            <label for="max_questions">Максимальное число вопросов в адаптивном тесте</label>
                         </div>
                      </div>
                 </div>

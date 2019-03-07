@@ -40,3 +40,25 @@ $('.submit-test').click(function(){
         }
     }
 });
+
+$('#training').change(function () {
+   if ($(this).prop('checked')) {
+       $('#adaptive').prop('disabled', false);
+
+   }
+   else {
+       $('#adaptive').prop('disabled', true);
+   }
+});
+
+$('#adaptive').change(function () {
+    let maxQuestions = $('#max_questions');
+    if ($(this).prop('checked')) {
+        maxQuestions.prop('disabled', false);
+        maxQuestions.val(10);
+    }
+    else {
+        maxQuestions.prop('disabled', true);
+        maxQuestions.val(null);
+    }
+});

@@ -2,7 +2,9 @@
  * Created by Станислав on 22.01.16.
  */
 
-var count = $('#count').val();                                                                                                      //счетчик числа вариантов
+var count = $('#count').val();                                                                                          //счетчик числа вариантов
+var rightAnswersCount = $('#right-answers').val();
+$('#guess').val(evalGuess(count, rightAnswersCount));
 
 /** Добавление варианта */
 $('#type_question_add').on('click','#add-var-2', function(){
@@ -27,6 +29,7 @@ $('#type_question_add').on('click','#add-var-2', function(){
                 </label>\
             </div>\
             ');
+    $('#guess').val(evalGuess(count, rightAnswersCount));
 });
 
 /** Удаление последнего варианта */
@@ -36,6 +39,35 @@ $('#type_question_add').on('click','#del-var-2',function(){
         $('#eng-variants').children().last().remove();
         $('.checkbox-styled').last().remove();
         count--;
+        $('#guess').val(evalGuess(count, rightAnswersCount));
     }
 });
+
+$('#type_question_add').on('change', '#answers input', function () {
+   if ($(this).prop('checked')) rightAnswersCount++;
+   else rightAnswersCount--;
+    $('#guess').val(evalGuess(count, rightAnswersCount));
+});
+
+function getMinWriteAnswers(rightAnswersCount) {
+    return Math.ceil(rightAnswersCount * 0.6);
+}
+
+function evalGuess(count, rightAnswersCount) {
+    var rowNumber = 1 << count;
+    var minWriteAnswers = getMinWriteAnswers(rightAnswersCount);
+    var rightSums = 0;
+    for (var i = 1; i < rowNumber; i++) {
+        var splittedBinaryNumber = parseInt(i).toString(2).split('');
+        var lengthDifference = count - splittedBinaryNumber.length;
+        var sum = 0;
+        var k = 0;
+        for (var j = lengthDifference; j < count; j++) {
+            if (j < rightAnswersCount) sum += parseInt(splittedBinaryNumber[k++]);
+            else sum -= parseInt(splittedBinaryNumber[k++]);
+        }
+        if (sum >= minWriteAnswers) rightSums++;
+    }
+    return rightSums / (rowNumber - 1);
+}
 

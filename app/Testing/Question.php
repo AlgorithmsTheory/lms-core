@@ -14,10 +14,12 @@ use App\Testing\Qtypes\FromCleene;
 use App\Testing\Qtypes\JustAnswer;
 use App\Testing\Qtypes\MultiChoice;
 use App\Testing\Qtypes\OneChoice;
+use App\Testing\Qtypes\QuestionTypeFactory;
 use App\Testing\Qtypes\Theorem;
 use App\Testing\Qtypes\TheoremLike;
 use App\Testing\Qtypes\ThreePoints;
 use App\Testing\Qtypes\YesNo;
+use App\User;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Http\Request;
 
@@ -107,11 +109,11 @@ class Question extends Eloquent {
     }
 
     /** перемешивает элементы массива */
-    public function mixVariants($variants){
+    public static function mixVariants($variants){
         $num_var = count($variants);
         $new_variants = [];
         for ($i=0; $i<$num_var; $i++){                                                                                  //варианты в случайном порядке
-            $variants = $this->randomArray($variants);
+            $variants = Question::randomArray($variants);
             $chosen = array_pop($variants);
             $new_variants[$i] = $chosen;
         }
@@ -132,66 +134,15 @@ class Question extends Eloquent {
     }
 
     /** Показывает вопрос согласно типу */
-    public function show($id_question, $count){
+    public function show($id_question, $count, $is_adaptive){
         $type = Question::whereId_question($id_question)->join('types', 'questions.type_code', '=', 'types.type_code')
                 ->first()->type_name;
-        switch($type){
-            case 'Выбор одного из списка':
-                $one_choice = new OneChoice($id_question);
-                $array = $one_choice->show($count);
-                return $array;
-                break;
-            case 'Выбор нескольких из списка':
-                $multi_choice = new MultiChoice($id_question);
-                $array = $multi_choice->show($count);
-                return $array;
-                break;
-            case 'Текстовый вопрос':
-                $fill_gaps = new FillGaps($id_question);
-                $array = $fill_gaps->show($count);
-                return $array;
-                break;
-            case 'Таблица соответствий':
-                $accordance_table = new AccordanceTable($id_question);
-                $array = $accordance_table->show($count);
-                return $array;
-                break;
-            case 'Да/Нет':
-                $yes_no = new YesNo($id_question);
-                $array = $yes_no->show($count);
-                return $array;
-                break;
-            case 'Определение':
-                $def = new Definition($id_question);
-                $array = $def->show($count);
-                return $array;
-                break;
-            case 'Открытый тип':
-                $just = new JustAnswer($id_question);
-                $array = $just->show($count);
-                return $array;
-                break;
-            case 'Теорема':
-                $theorem = new Theorem($id_question);
-                $array = $theorem->show($count);
-                return $array;
-                break;
-            case 'Три точки':
-                $three = new ThreePoints($id_question);
-                $array = $three->show($count);
-                return $array;
-                break;
-            case 'Как теорема':
-                $three = new TheoremLike($id_question);
-                $array = $three->show($count);
-                return $array;
-                break;
-            case 'Востановить арифметический вид':
-                $clini = new FromCleene($id_question);
-                $array = $clini->show($count);
-                return $array;
-                break;
-        }
+        $question = QuestionTypeFactory::getQuestionTypeByTypeName($id_question, $type);
+        $array = $question->show($count);
+        $array['arguments']['is_adaptive'] = $is_adaptive;
+        $route = $is_adaptive ? 'check_adaptive_test' : 'question_checktest';
+        $array['arguments']['route'] = $route;
+        return $array;
     }
 
     /** Проверяет вопрос согласно типу и на выходе дает баллы за него */
@@ -210,48 +161,8 @@ class Question extends Eloquent {
             $array[$i] = $array[$i+1];
         }
         array_pop($array);                                                                                              //убираем из входного массива id вопроса, чтобы остались лишь выбранные варианты ответа
-        switch($type){
-            case 'Выбор одного из списка':
-                $one_choice = new OneChoice($id);
-                $data = $one_choice->check($array);
-                return $data;
-                break;
-            case 'Выбор нескольких из списка':
-                $multi_choice = new MultiChoice($id);
-                $data = $multi_choice->check($array);
-                return $data;
-                break;
-            case 'Текстовый вопрос':
-                $fill_gaps = new FillGaps($id);
-                $data = $fill_gaps->check($array);
-                return $data;
-                break;
-            case 'Таблица соответствий':
-                $accordance_table = new AccordanceTable($id);
-                $data = $accordance_table->check($array);
-                return $data;
-                break;
-            case 'Да/Нет':
-                $yes_no = new YesNo($id);
-                $data = $yes_no->check($array);
-                return $data;
-                break;
-            case 'Открытый тип':
-                $just = new JustAnswer($id);
-                $data = $just->check($array);
-                return $data;
-                break;
-            case 'Три точки':
-                $three = new ThreePoints($id);
-                $data = $three->check($array);
-                return $data;
-                break;
-            case 'Востановить арифметический вид':
-                $three = new FromCleene($id);
-                $data = $three->check($array);
-                return $data;
-                break;
-        }
+        $question = QuestionTypeFactory::getQuestionTypeByTypeName($id, $type);
+        return $question->check($array);
     }
 
     /** По id вопроса возвращает массив, где первый элемент - номер лекции, второй - <раздел.тема> */
@@ -267,5 +178,63 @@ class Question extends Eloquent {
                        '.'.Question::whereId_question($id_question)->select('theme_code')->first()->theme_code);
         }
         return $array;
+    }
+
+    public static function isAnsweredRight($score, $max_points) {
+        return ($score >= $max_points * 0.6);
+    }
+
+    public function evalDiscriminant($id_question) {
+        $points = [];
+        $levels = [];
+
+        $tasks = TestTask::whereId_question($id_question)->select('points', 'id_result')->get();
+        foreach ($tasks as $task) {
+            array_push($points, $task->points);
+            $user_id = Result::whereId_result($task->id_result)->select('id')->first()->id;
+            $level = User::whereId($user_id)->select('knowledge_level')->first()->knowledge_level;
+            array_push($levels, $level);
+        }
+
+        $number = count($points);
+        if ($number > 0) {
+
+            $sum_points = 0;
+            $sum_levels = 0;
+            $sum_points_and_levels = 0;
+            $sum_quadratic_points = 0;
+            $sum_quadratic_levels = 0;
+            for ($i = 0; $i < count($points); $i++) {
+                $sum_points += $points[$i];
+                $sum_levels += $levels[$i];
+                $sum_points_and_levels += $points[$i] * $levels[$i];
+                $sum_quadratic_points += $points[$i] * $points[$i];
+                $sum_quadratic_levels += $levels[$i] * $levels[$i];
+            }
+
+            $division = ($number * $sum_points_and_levels) - ($sum_points * $sum_levels);
+            $divider = sqrt(($number * $sum_quadratic_points - pow($sum_points, 2)) *
+                ($number * $sum_quadratic_levels - pow($sum_levels, 2)));
+
+            if ($divider != 0) return $division / $divider;
+        }
+        return Question::whereId_question($id_question)
+            ->select('discriminant')->first()->discriminant;
+    }
+
+    public function evalDifficulty($id_question) {
+        $right_answers_count = 0;
+        $wrong_answers_count = 0;
+
+        $question = Question::whereId_question($id_question)->select('points', 'difficulty')->first();
+        $max_points = $question->points;
+        $tasks = TestTask::whereId_question($id_question)->select('points')->get();
+        foreach ($tasks as $task) {
+            if (Question::isAnsweredRight($task->points, $max_points)) $right_answers_count++;
+            else $wrong_answers_count++;
+        }
+
+        if ($right_answers_count == 0 || $wrong_answers_count == 0) return $question->difficulty;
+        return log($wrong_answers_count / $right_answers_count);
     }
 } 

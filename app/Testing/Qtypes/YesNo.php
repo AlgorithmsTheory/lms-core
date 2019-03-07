@@ -11,7 +11,7 @@ use App\Testing\Question;
 use App\Testing\Type;
 use Illuminate\Http\Request;
 
-class YesNo extends QuestionType{
+class YesNo extends QuestionType implements Checkable {
     const type_code = 5;
     public $single = false;
 
@@ -32,7 +32,9 @@ class YesNo extends QuestionType{
             }
             Question::insert(array('title' => $title, 'variants' => '', 'answer' => $answer,
                 'title_eng' => $eng_title, 'variants_eng' => '', 'answer_eng' => $answer,
-                'points' => $request->input('points'), 'translated' => $options['translated'],
+                'points' => $request->input('points'), 'difficulty' => $options['difficulty'],
+                'discriminant' => $options['discriminant'], 'guess' => $options['guess'],
+                'pass_time' => $options['pass_time'], 'translated' => $options['translated'],
                 'control' => $options['control'], 'section_code' => $options['section'],
                 'theme_code' => $options['theme'], 'type_code' => $options['type']));
         }
@@ -52,7 +54,9 @@ class YesNo extends QuestionType{
 
         Question::whereId_question($this->id_question)->update(array('title' => $title, 'variants' => '', 'answer' => $answer,
             'title_eng' => $eng_title, 'variants_eng' => '', 'answer_eng' => $answer,
-            'points' => $request->input('points'), 'translated' => $options['translated'],
+            'points' => $request->input('points'), 'difficulty' => $options['difficulty'],
+            'discriminant' => $options['discriminant'], 'guess' => $options['guess'],
+            'pass_time' => $options['pass_time'], 'translated' => $options['translated'],
             'control' => $options['control'], 'section_code' => $options['section'],
             'theme_code' => $options['theme'], 'type_code' => $options['type']));
     }
@@ -123,5 +127,9 @@ class YesNo extends QuestionType{
         }
         $html .= '</table><br>';
         $fpdf->WriteHTML($html);
+    }
+
+    public function evalGuess() {
+        return 0.5;
     }
 } 

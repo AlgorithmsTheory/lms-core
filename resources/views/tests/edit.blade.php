@@ -50,6 +50,21 @@
                                 <span>Тренировочный тест</span>
                             </label>
                         </div>
+                        <!-- адаптивный тест -->
+                        <div class="checkbox checkbox-styled">
+                            <label>
+                                @if ($test['is_adaptive'] == 1)
+                                    <input type="checkbox" name="adaptive" id="adaptive" checked>
+                                @else
+                                    @if ($test['test_type'] == 'Тренировочный')
+                                        <input type="checkbox" name="adaptive" id="adaptive">
+                                    @else
+                                        <input type="checkbox" name="adaptive" id="adaptive" disabled>
+                                    @endif
+                                @endif
+                                <span>Адаптивный тест</span>
+                            </label>
+                        </div>
                         <!-- Видимый или невидимый тест -->
                         <div class="checkbox checkbox-styled">
                             <label>
@@ -92,6 +107,15 @@
                         <div class="form-group">
                             <input type="number" min="1" name="test-time" id="test-time" class="form-control" value="{{ $test['test_time'] }}" required>
                             <label for="test-time">Время на прохождение теста в минутах</label>
+                        </div>
+                        <!-- Максимальное число вопросов в адаптивном тесте -->
+                        <div class="form-group dropdown-label">
+                            @if ($test['is_adaptive'] == 1)
+                                <input type="number" min="1" max="100" name="max_questions" id="max_questions" class="form-control" value="{{ $test['max_questions'] }}" required>
+                            @else
+                                <input type="number" min="1" max="100" name="max_questions" id="max_questions" class="form-control" value="{{ $test['max_questions'] }}" required disabled>
+                            @endif
+                                <label for="max_questions">Максимальное число вопросов в адаптивном тесте</label>
                         </div>
                     </div>
                 </div>

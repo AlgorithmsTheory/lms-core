@@ -11,7 +11,7 @@ use App\Testing\Question;
 use App\Testing\Type;
 use Illuminate\Http\Request;
 
-class FillGaps extends QuestionType {
+class FillGaps extends QuestionType implements Checkable {
     const type_code = 3;
 
     function __construct($id_question){
@@ -81,7 +81,9 @@ class FillGaps extends QuestionType {
         }
 
         return ['title' => $wet_text, 'variants' => $variants,
-            'answer' => $answers, 'points' => $options['points'],
+            'answer' => $answers, 'points' => $options['points'], 'difficulty' => $options['difficulty'],
+            'discriminant' => $options['discriminant'], 'guess' => $options['guess'],
+            'pass_time' => $options['pass_time'],
             'control' => $options['control'], 'translated' => $options['translated'],
             'section_code' => $options['section'], 'theme_code' => $options['theme'], 'type_code' => $options['type'],
             'title_eng' => $eng_wet_text, 'variants_eng' => $eng_variants, 'answer_eng' => $eng_answers];
@@ -90,7 +92,8 @@ class FillGaps extends QuestionType {
     public function add(Request $request) {
         $data = $this->setAttributes($request);
         Question::insert(array('title' => $data['title'], 'variants' => $data['variants'],
-            'answer' => $data['answer'], 'points' => $data['points'],
+            'answer' => $data['answer'], 'points' => $data['points'], 'difficulty' => $data['difficulty'],
+            'discriminant' => $data['discriminant'], 'guess' => $data['guess'], 'pass_time' => $data['pass_time'],
             'control' => $data['control'], 'translated' => $data['translated'],
             'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
             'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng']));
@@ -235,7 +238,8 @@ class FillGaps extends QuestionType {
         $data = $this->setAttributes($request);
         Question::whereId_question($this->id_question)->update(
             array('title' => $data['title'], 'variants' => $data['variants'],
-                'answer' => $data['answer'], 'points' => $data['points'],
+                'answer' => $data['answer'], 'points' => $data['points'], 'difficulty' => $data['difficulty'],
+                'discriminant' => $data['discriminant'], 'guess' => $data['guess'], 'pass_time' => $data['pass_time'],
                 'control' => $data['control'], 'translated' => $data['translated'],
                 'section_code' => $data['section_code'], 'theme_code' => $data['theme_code'], 'type_code' => $data['type_code'],
                 'title_eng' => $data['title_eng'], 'variants_eng' => $data['variants_eng'], 'answer_eng' => $data['answer_eng'])
@@ -252,7 +256,7 @@ class FillGaps extends QuestionType {
         $num_var = [];
         for ($i=0; $i < count($variants); $i++){
             $parse_group_variants[$i] = explode(";",$variants[$i]);                                                     //варинаты каждого селекта
-            $group_variants[$i] = $this->question->mixVariants($parse_group_variants[$i]);                              //перемешиваем варианты
+            $group_variants[$i] = Question::mixVariants($parse_group_variants[$i]);                              //перемешиваем варианты
             $num_var[$i] = count($group_variants[$i]);
         }
         $view = 'tests.show3';
@@ -316,7 +320,7 @@ class FillGaps extends QuestionType {
             $num_var = [];
             for ($i=0; $i < count($variants); $i++){
                 $parse_group_variants[$i] = explode(";",$variants[$i]);                                                 //варинаты каждого селекта
-                $group_variants[$i] = $this->question->mixVariants($parse_group_variants[$i]);                       //перемешиваем варианты
+                $group_variants[$i] = Question::mixVariants($parse_group_variants[$i]);                       //перемешиваем варианты
                 $num_var[$i] = count($group_variants[$i]);
             }
 
@@ -333,5 +337,45 @@ class FillGaps extends QuestionType {
         }
         $html .= '<br>';
         $fpdf->WriteHTML($html);
+    }
+
+    public function evalGuess() {
+        $parse = explode("%", $this->variants);
+        $gaps = explode("<>", $parse[0]);
+        $gaps_number = count($gaps);
+        $variants_numbers = [];
+        for ($i = 0; $i < $gaps_number; $i++) {
+            $variants_numbers[$i] = count(explode(';', $gaps[$i]));
+        }
+        $weights = explode (";", $parse[1]);
+        $row_number = 1 << $gaps_number;
+
+        $total_probability = 0;
+        for ($row = 1; $row < $row_number; $row++) {
+            $row_probability = 1;
+            $splitted_binary_matrix_value = str_split(decbin($row));
+            $first_column_after_left_leading_zeroes = $gaps_number - count($splitted_binary_matrix_value);
+            $row_weight_sum = 0;
+
+            for ($col = 0; $col < $first_column_after_left_leading_zeroes; $col++) {
+                $row_probability *= 1 - (1 / $variants_numbers[$col]);
+            }
+
+            $k = 0;
+            for ($col = $first_column_after_left_leading_zeroes; $col < $gaps_number; $col++) {
+                if ($splitted_binary_matrix_value[$k++] > 0) {
+                    $row_weight_sum += $weights[$col];
+                    $row_probability *= 1 / $variants_numbers[$col];
+                }
+                else {
+                    $row_probability *= 1 - (1 / $variants_numbers[$col]);
+                }
+            }
+
+            if ($row_weight_sum > 0.6) {
+                $total_probability += $row_probability;
+            }
+        }
+        return $total_probability;
     }
 } 

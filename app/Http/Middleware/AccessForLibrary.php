@@ -9,7 +9,7 @@
 namespace App\Http\Middleware;
 
 
-use App\EmrForGroup;
+use App\Emulators\EmrForGroup;
 use App\Testing\TestForGroup;
 use Auth;
 use Closure;
