@@ -21,6 +21,17 @@ use Session;
 
 class StatementsController extends Controller{
 
+    // возвращает страницу с учебными планами
+    public function showCoursePlans() {
+        $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
+        return view('personal_account.statements.course_plans', compact('role'));
+    }
+
+    // возвращает страницу создание нового учебного плана
+    public function createCoursePlans() {
+        return view('personal_account.statements.create_course_plans');
+    }
+
     //Возвращает главную страницу для выбора типа ведомости и группы
     public function statements(){
         $user = Auth::user();

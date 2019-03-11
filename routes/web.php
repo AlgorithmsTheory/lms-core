@@ -324,6 +324,10 @@ Route::get('personal_account/student_info', ['as' => 'student_info', 'uses' => '
 Route::get('personal_account/all_test_results', ['as' => 'all_test_results', 'uses' => 'PersonalAccount@showAllTests', 'middleware' => ['general_auth', 'admin']]);
 Route::get('personal_account/tests_results', ['as' => 'test_results', 'uses' => 'PersonalAccount@showTestResults', 'middleware' => 'general_auth']);
 
+
+//учебные планы
+Route::get('course_plans', ['as' => 'course_plans', 'uses' => 'StatementsController@showCoursePlans', 'middleware' => ['general_auth', 'admin']]);
+Route::get('course_plans/create', ['as' => 'course_plans_create', 'uses' => 'StatementsController@createCoursePlans', 'middleware' => ['general_auth', 'admin']]);
 //ведомости
 Route::get('statements', ['as' => 'statements', 'uses' => 'StatementsController@statements', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/get-lectures', ['as' => 'get_lectures', 'uses' => 'StatementsController@get_lectures', 'middleware' => ['general_auth', 'admin']]);

@@ -30,6 +30,13 @@
                             </a>
                         </li>
                         <li class="tile">
+                            <a href="{{ route('course_plans')}}" class="tile-content ink-reaction">
+                                <div class="tile-text">
+                                    Работа с учебными планами
+                                </div>
+                            </a>
+                        </li>
+                        <li class="tile">
                             <a href="{{ route('verify_students')}}" class="tile-content ink-reaction">
                             <div class="tile-text">
                                 Добавление студентов
