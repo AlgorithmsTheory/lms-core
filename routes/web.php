@@ -326,8 +326,26 @@ Route::get('personal_account/tests_results', ['as' => 'test_results', 'uses' => 
 
 
 //учебные планы
+//все учебные планы
 Route::get('course_plans', ['as' => 'course_plans', 'uses' => 'StatementsController@showCoursePlans', 'middleware' => ['general_auth', 'admin']]);
+//перейти на стр создание учебного плана
 Route::get('course_plans/create', ['as' => 'course_plans_create', 'uses' => 'StatementsController@createCoursePlans', 'middleware' => ['general_auth', 'admin']]);
+//сохранение учебного плана
+Route::post('course_plans', ['as' => 'course_plan_store', 'uses' => 'StatementsController@storeCoursePlan']);
+//получить представление для добавленее раздела учебного плана
+Route::get('course_plan/get_add_section', ['as' => 'get_add_section', 'uses' => 'StatementsController@getAddSection', 'middleware' => ['general_auth', 'admin']]);
+//сохранение нового раздела
+Route::post('course_plan/{id}/section', ['as' => 'section_store', 'uses' => 'StatementsController@storeSection', 'middleware' => ['general_auth', 'admin']]);
+//Обновление нового раздела
+Route::patch('course_plan/section/update', ['as' => 'section_update', 'uses' => 'StatementsController@updateSection', 'middleware' => ['general_auth', 'admin']]);
+//Удаление раздела
+Route::delete('course_plan/section/delete', ['as' => 'section_delete', 'uses' => 'StatementsController@deleteSection', 'middleware' => ['general_auth', 'admin']]);
+//представление конкретного учебного плана
+Route::get('course_plan/{id}', ['as' => 'course_plan', 'uses' => 'StatementsController@getCoursePlan']);
+
+
+
+
 //ведомости
 Route::get('statements', ['as' => 'statements', 'uses' => 'StatementsController@statements', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/get-lectures', ['as' => 'get_lectures', 'uses' => 'StatementsController@get_lectures', 'middleware' => ['general_auth', 'admin']]);

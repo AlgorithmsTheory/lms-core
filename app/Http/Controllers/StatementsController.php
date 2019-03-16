@@ -5,6 +5,7 @@ use App\Control_test_dictionary;
 use App\Controls;
 use App\Lectures;
 use App\Seminars;
+use App\Statements\DAO\SectionPlanDAO;
 use App\Testing\Test;
 use App\Totalresults;
 use App\Statements_progress;
@@ -18,20 +19,114 @@ use Illuminate\Http\Request;
 use App\Question;
 use App\Codificator;
 use Session;
+use App\Statements\DAO\CoursePlanDAO;
+use App\Http\Requests\Statements\AddCoursePlanRequest;
 
 class StatementsController extends Controller{
 
+    private $coursePlanDao;
+    private $sectionPlanDAO;
+
+    public function __construct(CoursePlanDAO $coursePlanDAO, SectionPlanDAO $sectionPlanDAO)
+    {
+        $this->coursePlanDao = $coursePlanDAO;
+        $this->sectionPlanDAO = $sectionPlanDAO;
+    }
+
     // возвращает страницу с учебными планами
     public function showCoursePlans() {
-        $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
-        return view('personal_account.statements.course_plans', compact('role'));
+
+        $coursePlans = $this->coursePlanDao->allCoursePlan();
+        return view('personal_account.statements.course_plans.course_plans', compact('coursePlans'));
     }
 
     // возвращает страницу создание нового учебного плана
     public function createCoursePlans() {
-        return view('personal_account.statements.create_course_plans');
+
+        return view('personal_account.statements.course_plans.create_course_plans');
     }
 
+    //сохранение учебного плана
+    public function storeCoursePlan(AddCoursePlanRequest $request) {
+
+        $idCoursePlan = $this->coursePlanDao->storeCoursePlan($request);
+        return redirect('course_plan/'.$idCoursePlan);
+    }
+
+    //возвращает конкретный учебный план для просмотра и редактирования
+    public function getCoursePlan($id) {
+
+        $coursePlan = $this->coursePlanDao->getCoursePlan($id);
+        return view('personal_account.statements.course_plans.course_plan', compact('coursePlan'));
+    }
+
+    //возвращает представление для добавления раздела учебного плана
+    public function getAddSection(Request $request) {
+
+        $sectionNumForFindJs = json_decode($request->currentCount,true);
+        $idCoursePlan = json_decode($request->idCoursePlan,true);
+        return view('personal_account.statements.course_plans.sections.add_section', compact('sectionNumForFindJs', 'idCoursePlan'));
+    }
+
+    //Сохранение раздела учебного плана
+    public function storeSection(Request $request) {
+
+        $validator = $this->sectionPlanDAO->getValidateStoreSectionPlan($request);
+        //Для вставки html через js, используя число сгенерированное системой , а не написанного вручную номера раздела
+        $sectionNumForFindJs = $request->section_num_for_find_js;
+
+        if ($validator->passes()) {
+           $idSectionPlan = $this->sectionPlanDAO->storeSectionPlan($request);
+           $sectionPlan = $this->sectionPlanDAO->getSectionPlan($idSectionPlan);
+           $readOnly = true;
+           $returnHtmlString = view('personal_account.statements.course_plans.sections.view_or_update_section', compact('sectionPlan', 'readOnly',
+               'sectionNumForFindJs'))
+               ->render();
+            return response()->json(['view'=>$returnHtmlString, 'section_num_for_find_js' => $sectionNumForFindJs]);
+        } else {
+            return response()->json(['error'=>$validator->errors()->all(), 'section_num_for_find_js' => $sectionNumForFindJs]);
+        }
+
+    }
+
+    //Обновление  информации о разделе учебного плана
+    public function updateSection(Request $request) {
+
+        $validator = $this->sectionPlanDAO->getValidateUpdateSectionPlan($request);
+        //Для вставки html через js
+        $sectionNumForFindJs = $request->section_num_for_find_js;
+
+        if ($validator->passes()) {
+            $this->sectionPlanDAO->updateSectionPlan($request);
+
+            return response()->json(['section_num_for_find_js' => $sectionNumForFindJs ,
+                'real_section_num' => $request->section_num]);
+        } else {
+            return response()->json(['error'=>$validator->errors()->all(), 'section_num_for_find_js' => $sectionNumForFindJs]);
+        }
+    }
+
+    //Удаление раздела
+    public function deleteSection(Request $request) {
+        $this->sectionPlanDAO->deleteSectionPlan($request->id_section_plan);
+        return $request->section_num_for_find_js;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // не моё
     //Возвращает главную страницу для выбора типа ведомости и группы
     public function statements(){
         $user = Auth::user();

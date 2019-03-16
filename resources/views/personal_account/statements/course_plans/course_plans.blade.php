@@ -24,13 +24,11 @@
 @stop
 @section('content')
     <!-- BEGIN BLANK SECTION -->
-    <div class ="row">
+    <div class ="row section-header">
         <div class="col-sm-9" >
         </div>
         <div class="col-sm-3" >
-            @if($role == 'Админ')
                 {!! HTML::link('course_plans/create','Создать учебный план',array('class' => 'btn ink-reaction btn-primary','role' => 'button')) !!}
-            @endif
         </div>
     </div>
 
@@ -38,8 +36,35 @@
         <article class="style-default-bright">
             <div class="card-body">
                 <article style="margin-left:5%; margin-right:5%">
+                    @foreach ($coursePlans as $coursePlan)
 
 
+                    <div class="card card-bordered style-gray ">
+                        <div class="card-head">
+                            <header>{{"Учебный план: ".$coursePlan->course_plan_name}}</header>
+                            <div class="tools">
+                                <div class="btn-group ">
+                                    <a class="btn btn-icon-toggle btn-close delete" name="{{ $coursePlan->id_course_plan }}"><i class="md md-close"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body style-default-bright">
+                            <p class="card-text">
+                                {{$coursePlan->course_plan_desc}}
+                            </p>
+                            <ul>
+                                <li>{{ 'Макс балл за раздел "Контрольные мероприятия в семестре":'.$coursePlan->max_controls }}</li>
+                                <li>{{ 'Макс балл за раздел "Посещение семинаров":'.$coursePlan->max_seminars }}</li>
+                                <li>{{ 'Макс балл за раздел "Работа на семинарах":'.$coursePlan->max_seminars_work }}</li>
+                                <li>{{ 'Макс балл за раздел "Посещение лекций":'.$coursePlan->max_lecrures }}</li>
+                                <li>{{ 'Макс балл за раздел "Зачет (экзамен)":'.$coursePlan->max_exam }}</li>
+                            </ul>
+                            {!! HTML::link('course_plan/'.$coursePlan->id_course_plan,'Подробнее',
+                            array('class' => 'ink-reaction btn btn-primary','role' => 'button')) !!}
+                        </div>
+                    </div>
+
+                    @endforeach
 
 
                 </article>

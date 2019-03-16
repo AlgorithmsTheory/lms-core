@@ -44,55 +44,50 @@
             </div>
             <div class="col-lg-11 col-md-11">
 
-                {!! Form::open(array('url' => 'library/definitions/store')) !!}
+                {!! Form::open(array('url' => 'course_plans')) !!}
                 <div class="form-group">
-                    <h4> {!! Form::label('definition_name', 'Название термина:') !!}</h4>
-                    {!! Form::text('definition_name',null,['class' => 'form-control','placeholder' => 'Введите название термина']) !!}
-                </div>
-                <div class="form-group">
-                    <h4> {!! Form::label('definition_content', 'Определение термина:') !!}</h4>
-                    {!! Form::textarea('definition_content',null,['class' => 'form-control','placeholder' => 'Введите определение термина']) !!}
-                </div>
-                <div class="input-group" style="margin-bottom: 20px">
-                    <input type="checkbox" aria-label="Checkbox for following text input" data-toggle="collapse" data-target="#addLink"
-                           aria-expanded="false" aria-controls="addLink" name="addLink" class="form-group">
-
-
-                    {{--{{Form :: checkbox ('addLink', null, null, array ('data-toggle' => 'collapse', 'data-target' => '#addLink',--}}
-                    {{--'aria-expanded' => 'false', 'aria-controls' => 'addLink', 'aria-label' => 'Checkbox for following text input'))}}--}}
-                    <span class="input-group-text" >&nbsp;Добавить ссылку на лекцию</span>
-                </div>
-
-                <div class="collapse" id="addLink">
-                    <div class="form-group">
-                        <h4> {!! Form::label('name_anchor', 'Название ссылки:') !!}</h4>
-                        {!! Form::text('name_anchor',null,['class' => 'form-control','placeholder' => 'Введите название ссылки']) !!}
-                    </div>
-                    <div class="form-group">
-                        <h4> {!! Form::label('id_section', 'Раздел:') !!}</h4>
-                        {!! Form::select('id_section',array('' =>'Выберите раздел:',
-                        '1' => 'Формальные описания алгоритмов',
-                        '2' => 'Числовые множества и арифметические вычисления',
-                        '3' => 'Рекурсивные функции',
-                        '4' => 'Сложность вычислений'), null, ['id' => 'id_section','class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        <h4>{!! Form::label('id_lecture', 'Лекция:') !!}</h4>
-                        <select name="id_lecture" class="form-control">
-                            <option value="">
-                                Выберите лекцию:
-                            </option>
-                            @foreach ($lectures as $lecture)
-                                <option value="{{ $lecture->id_lecture }}" id_section="{{ $lecture->id_section }}">
-                                    {{ $lecture->lecture_name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <h4> {!! Form::label('course_plan_name', 'Название учебного плана:') !!}</h4>
+                    {!! Form::text('course_plan_name',null,['class' => 'form-control','placeholder' => 'Введите название учебного плана']) !!}
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="form-control btn ink-reaction btn-primary">Добавить определение</button>
+                    <h4> {!! Form::label('course_plan_desc', 'Описание учебного плана:') !!}</h4>
+                    {!! Form::textarea('course_plan_desc',null,['class' => 'form-control','placeholder' => 'Введите описание учебного плана']) !!}
                 </div>
+                <div class="form-group row">
+                    <h4> {!! Form::label('max_controls', 'Макс балл за раздел "Контрольные мероприятия в семестре":', ['class'=>'col-sm-6']) !!}</h4>
+                    <div class="col-sm-2">
+                        {!! Form::text('max_controls',null,['class' => 'form-control','placeholder' => 'Макс. балл', 'type'=>'number']) !!}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <h4> {!! Form::label('max_seminars', 'Макс балл за раздел "Посещение семинаров":', ['class'=>'col-sm-6']) !!}</h4>
+                    <div class="col-sm-2">
+                        {!! Form::text('max_seminars',null,['class' => 'form-control','placeholder' => 'Макс. балл', 'type'=>'number']) !!}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <h4> {!! Form::label('max_seminars_work', 'Макс балл за раздел "Работа на семинарах":', ['class'=>'col-sm-6']) !!}</h4>
+                    <div class="col-sm-2">
+                        {!! Form::text('max_seminars_work',null,['class' => 'form-control','placeholder' => 'Макс. балл', 'type'=>'number']) !!}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <h4> {!! Form::label('max_lecrures', 'Макс балл за раздел "Посещение лекций":', ['class'=>'col-sm-6']) !!}</h4>
+                    <div class="col-sm-2">
+                        {!! Form::text('max_lecrures',null,['class' => 'form-control','placeholder' => 'Макс. балл', 'type'=>'number']) !!}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <h4> {!! Form::label('max_exam', 'Макс балл за раздел "Зачет (экзамен)":', ['class'=>'col-sm-6']) !!}</h4>
+                    <div class="col-sm-2">
+                        {!! Form::text('max_exam',null,['class' => 'form-control','placeholder' => 'Макс. балл', 'type'=>'number']) !!}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class=" btn ink-reaction btn-primary">Сохранить учебный план</button>
+                </div>
+
                 {!! Form::close() !!}
                 @if ($errors->any())
                     <ul class="alert alert-danger">
@@ -120,7 +115,7 @@
     {!! HTML::script('js/core/source/AppNavSearch.js') !!}
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
-    {!! HTML::script('js/library/definition.js') !!}
+    {!! HTML::script('js/statements/statements.js') !!}
     <!-- END JAVASCRIPT -->
 
 @stop
