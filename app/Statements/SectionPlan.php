@@ -16,19 +16,19 @@ class SectionPlan extends Eloquent
     protected $primaryKey = 'id_section_plan';
     protected $appends = ['lecture_plans', 'seminar_plans', 'control_work_plans'];
 
-    /** в новое поле lecture_plans вставляется массив объектов LecturePlane */
+    /** в новое поле lecture_plans вставляется массив объектов LecturePlan */
     public function getLecturePlansAttribute(){
 
-       return LecturePlane::where('id_section_plan', $this->attributes['id_section_plan'])->get();
+       return LecturePlan::where('id_section_plan', $this->attributes['id_section_plan'])->get()->sortBy('lecture_plan_num');
     }
 
-    /** в новое поле seminar_plans вставляется массив объектов LecturePlane */
+    /** в новое поле seminar_plans вставляется массив объектов LecturePlan */
     public function getSeminarPlansAttribute(){
 
-        return SeminarPlan::where('id_section_plan', $this->attributes['id_section_plan'])->get();
+        return SeminarPlan::where('id_section_plan', $this->attributes['id_section_plan'])->get()->sortBy('seminar_plan_num');
     }
 
-    /** в новое поле seminar_plans вставляется массив объектов LecturePlane */
+    /** в новое поле seminar_plans вставляется массив объектов LecturePlan */
     public function getControlWorkPlansAttribute(){
 
         return ControlWorkPlan::where('id_section_plan', $this->attributes['id_section_plan'])->get();

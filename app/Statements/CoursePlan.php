@@ -27,6 +27,6 @@ class CoursePlan extends Eloquent
             $sectionPlan->getSeminarPlansAttribute();
             $sectionPlan->getControlWorkPlansAttribute();
         }
-        return $sectionPlans->sortBy('section_num');;
+        return $sectionPlans->sortBy('section_num');
     }
 }

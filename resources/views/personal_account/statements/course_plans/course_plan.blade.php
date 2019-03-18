@@ -91,7 +91,8 @@
     {!! HTML::script('js/core/source/AppNavSearch.js') !!}
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
-    {!! HTML::script('js/statements/sections_course_plan/sections.js') !!}
+    {!! HTML::script('js/statements/section_course_plans/sections.js') !!}
+    {!! HTML::script('js/statements/section_course_plans/lectures_or_seminars_or_controlWork.js') !!}
     <!-- END JAVASCRIPT -->
 
 @stop

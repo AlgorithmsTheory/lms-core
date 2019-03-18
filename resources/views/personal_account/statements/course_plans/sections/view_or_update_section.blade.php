@@ -1,4 +1,4 @@
-<div class="card card-bordered style-success section" id="section{{$sectionNumForFindJs}}">
+<div class="card card-bordered style-success section" id="section{{$sectionNumForFindJs}}" id_DB="{{$sectionPlan->id_section_plan}}">
     <form  method="PATCH" id="form_update_section">
     <div class="card-head">
 
@@ -45,13 +45,39 @@
 
 
 
-        <div id="content-section">
-            {{-- adding lectures, seminars, work on semenar for section--}}
+        <div class="content_section row" style="margin-top: 2%; margin-bottom: 2%">
+            {{-- добавление lectures, seminars, work on semenar для раздела--}}
+            <?php $lectureNumForFindJs = 0; $seminarNumForFindJs = 0; $controlWorkNumForFindJs = 0 ?>
+
+            <div class="lectures col-lg-4">
+            @foreach($sectionPlan->lecture_plans as $lecturePlan)
+                <?php $lectureNumForFindJs++ ?>
+                @include('personal_account.statements.course_plans.sections.lectures.view_or_update_lecture',array('lecturePlan' => $lecturePlan, 'readOnly' => true,
+                'lectureNumForFindJs' => $lectureNumForFindJs))
+            @endforeach
+            </div>
+
+            <div class="seminars col-lg-4">
+                @foreach($sectionPlan->seminar_plans as $seminarPlan)
+                    <?php $seminarNumForFindJs++ ?>
+                    @include('personal_account.statements.course_plans.sections.lectures.view_or_update_lecture',array('seminarPlan' => $seminarPlan, 'readOnly' => true,
+                    'seminarNumForFindJs' => $seminarNumForFindJs))
+                @endforeach
+            </div>
+
+            <div class="control_works col-lg-4">
+                @foreach($sectionPlan->control_work_plans as $controlWorkPlan)
+                    <?php $controlWorkNumForFindJs++ ?>
+                    @include('personal_account.statements.course_plans.sections.lectures.view_or_update_lecture',array('controlWorkPlan' => $controlWorkPlan,
+                     'readOnly' => true, 'controlWorkNumForFindJs' => $controlWorkNumForFindJs))
+                @endforeach
+            </div>
 
         </div>
-        <button type="button" class="ink-reaction btn btn-info" id="1">Добавить лекцию</button>
-        <button type="button" class="ink-reaction btn btn-warning" id="2">Добавить семинар</button>
-        <button type="button" class="ink-reaction btn btn-danger" id="3">Добавить К.М.</button>
+
+        <button type="button" class="ink-reaction btn btn-info add_lecture_or_sem_or_CW" type_card="lecture">Добавить лекцию</button>
+        <button type="button" class="ink-reaction btn btn-warning add_lecture_or_sem_or_CW" type_card="seminar">Добавить семинар</button>
+        <button type="button" class="ink-reaction btn btn-danger add_lecture_or_sem_or_CW " type_card="control_work">Добавить К.М.</button>
     </div>
     </form>
 </div>

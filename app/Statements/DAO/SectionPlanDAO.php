@@ -10,7 +10,7 @@ namespace App\Statements\DAO;
 
 
 use App\Statements\ControlWorkPlan;
-use App\Statements\LecturePlane;
+use App\Statements\LecturePlan;
 use App\Statements\SectionPlan;
 use App\Statements\SeminarPlan;
 use Illuminate\Http\Request;
@@ -75,7 +75,7 @@ public function getValidateStoreSectionPlan(Request $request) {
 
 
     public function deleteSectionPlan($id){
-        LecturePlane::where('id_section_plan', $id)->delete();
+        LecturePlan::where('id_section_plan', $id)->delete();
         SeminarPlan::where('id_section_plan', $id)->delete();
         ControlWorkPlan::where('id_section_plan', $id)->delete();
         SectionPlan::findOrFail($id)->delete();

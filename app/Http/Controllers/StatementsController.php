@@ -108,10 +108,64 @@ class StatementsController extends Controller{
 
     //Удаление раздела
     public function deleteSection(Request $request) {
+
         $this->sectionPlanDAO->deleteSectionPlan($request->id_section_plan);
         return $request->section_num_for_find_js;
     }
 
+    // Возвращает представление для добавления семинара или лекции
+    public function getAddLecOrSemOrCW(Request $request) {
+
+        $typeCard = $request->type_card;
+        $viewPath = $this->getViewPathLecSemCW($typeCard);
+        $numberNewCard = $request->number_new_card;
+
+        $returnHtmlString = view('personal_account.statements.course_plans.sections.'.$viewPath,
+            ['idNewCardForFindJs' => $request->id_new_card_for_find_js,
+                'numberNewCard' => $request->number_new_card,
+            ])->render();
+
+        return response()->json(['view' => $returnHtmlString
+            , 'idSectionForFindJs' => $request->id_section_for_find_js,
+            'numberNewCard' => $numberNewCard,
+            'typeCard' => $typeCard]);
+    }
+
+    //Сохранение семинара или лекции в разделе учебного плана
+    public function storeLecOrSemOrCW(Request $request) {
+
+        $typeCard = $request->type_card;
+        $viewPath = $this->getViewPathLecSemCW($typeCard);
+
+        if ($typeCard == 'lecture') {
+            return "hi";
+
+        } else if ($typeCard == 'seminar'){
+
+
+        } else {
+
+        }
+
+//        { form: $(this).serialize(),
+//            id_sectionDB: idSectionDB,
+//            id_section_for_find_js: idSectionForFindJs,
+//            id_card_for_find_js: idCardForFindJs,
+//            type_card: typeCard
+//        }
+
+
+    }
+
+    public function getViewPathLecSemCW($typeCard) {
+        if ($typeCard == 'lecture') {
+            return 'lectures.add_lecture';
+        } else if ($typeCard == 'seminar'){
+            return 'seminars.add_seminar';
+        } else {
+            return 'control_works.add_control_work';
+        }
+    }
 
 
 

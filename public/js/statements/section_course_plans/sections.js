@@ -62,6 +62,7 @@ $(document).on('click', '.activateEditSection', function () {
         '            </div>';
     //вставляем поле с section_num
     $(this).parent().parent().siblings("header").html(htmlInsertHeader);
+
     //выключение readonly для полей
     var currentSection = $(this).closest('.section');
     currentSection.find('input[name="section_plan_name"]').filter( ':first' ).removeAttr("readonly");
