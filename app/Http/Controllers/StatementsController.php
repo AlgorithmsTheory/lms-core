@@ -8,6 +8,7 @@ use App\Seminars;
 
 use App\Statements\DAO\LecturePlanDAO;
 use App\Statements\DAO\SectionPlanDAO;
+use App\Statements\DAO\SeminarPlanDAO;
 use App\Testing\Test;
 use App\Totalresults;
 use App\Statements_progress;
@@ -30,12 +31,15 @@ class StatementsController extends Controller{
     private $coursePlanDao;
     private $sectionPlanDAO;
     private $lecturePlanDAO;
+    private $seminarPlanDAO;
 
-    public function __construct(CoursePlanDAO $coursePlanDAO, SectionPlanDAO $sectionPlanDAO, LecturePlanDAO $lecturePlanDAO)
+    public function __construct(CoursePlanDAO $coursePlanDAO, SectionPlanDAO $sectionPlanDAO, LecturePlanDAO $lecturePlanDAO
+    , SeminarPlanDAO $seminarPlanDAO)
     {
         $this->coursePlanDao = $coursePlanDAO;
         $this->sectionPlanDAO = $sectionPlanDAO;
         $this->lecturePlanDAO = $lecturePlanDAO;
+        $this->seminarPlanDAO = $seminarPlanDAO;
     }
 
     // возвращает страницу с учебными планами
@@ -208,7 +212,7 @@ class StatementsController extends Controller{
                 $itemSectionDAO = $this->lecturePlanDAO;
                 break;
             case 'seminar':
-
+                $itemSectionDAO = $this->seminarPlanDAO;
                 break;
             case 'control_work':
 

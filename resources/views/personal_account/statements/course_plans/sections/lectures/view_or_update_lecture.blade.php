@@ -1,5 +1,5 @@
 <div class="card card-bordered style-info lecture" id="{{$idCardForFindJs}}" data-type-card="lecture">
-    <form  method="PATCH" class="form_update_lecture">
+    <form  method="PATCH" >
         <div class="card-head">
 
             <header>

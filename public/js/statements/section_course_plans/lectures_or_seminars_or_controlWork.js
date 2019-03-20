@@ -69,9 +69,6 @@ $(document).on('click', '.add_lecture_or_sem_or_CW', function () {
     var typeCard = $(this).attr('data-type-card');
 
     var currentSection = $(this).closest('.section');
-   //Номер последней карты в вообще
-   //  var numberLastCard = currentSection.find('.' + typeCard).filter( ':last' )
-   //      .find('input[name="'+ typeCard +'_plan_num"]').val();
     var numberLastCard = $('.' + typeCard).size().toString();
 
     //Номер для новой карты
@@ -81,7 +78,6 @@ $(document).on('click', '.add_lecture_or_sem_or_CW', function () {
     var idSectionForFindJs = currentSection.attr('id').match(/\d+/);
 
     // id для добавляемой карты
-    //var idLastCard = $('.'+typeCard).filter( ':last' ).attr('id');
     var idLastCard = currentSection.find('.'+typeCard).filter( ':last' ).attr('id');
     var idNewCardForFindJs;
 
@@ -116,8 +112,6 @@ $(document).on('click', '.store_lec_sem_cw', function (event) {
     var idSectionDB = currentSection.attr('data-id-DB');
     var idSectionForFindJs = currentSection.attr('id').match(/\d+/).toString();
     var idCardForFindJs = $(this).closest('.'+typeCard).attr('id');
-   // var thisForm = JSON.stringify( $(this).closest('form').serializeArray() );
-    //var thisForm = getFormData($(this).closest('form'));//Самый лучший вар возможно
     var thisForm = $(this).closest('form').serialize();
     $.ajax({
         cache: false,
@@ -145,14 +139,6 @@ $(document).on('click', '.store_lec_sem_cw', function (event) {
                 //Замена формы добавления на форму с readonly
                 currentCard.replaceWith(data.view);
 
-                // //Прибавляем +1 к номерам лекций, семам, КМ после добавленного
-                // var allCards = ('.'+data.type_card);
-                // allCards.each(function( elem ) {
-                //     var inputNumberCard = $( this ).find('input[name="'+ typeCard +'_plan_num"]');
-                //     if(inputNumberCard.val() >= data.new_card_num){
-                //         inputNumberCard.val(inputNumberCard.val() + 1);
-                //     }
-                // });
             }else{
                 //добавление в html сообщений об ошибках
                 var divError = currentCard.find('.print-error-msg').filter( ':first' );
@@ -246,7 +232,7 @@ $(document).on('click', '.update_lec_sem_cw', function () {
 
 });
 
-//Удаление раздела
+//Удаление лекции, семинара или контрольного мероприятия
 $(document).on('click', '.delete_lec_sem_cw', function () {
     var thisCard = $(this).closest('.card');
     var typeCard = thisCard.attr('data-type-card');

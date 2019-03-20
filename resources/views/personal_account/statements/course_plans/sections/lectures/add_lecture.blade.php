@@ -30,7 +30,7 @@
                 <ul></ul>
             </div>
 
-            <button type="button" class="ink-reaction btn btn-info store_lec_sem_cw" data-btn-type-card="lecture">Сохранить лекцию</button>
+            <button type="button" class="ink-reaction btn btn-info store_lec_sem_cw" data-btn-type-card="lecture">Сохранить</button>
 
         </div>
     </form>
