@@ -5,6 +5,8 @@ use App\Control_test_dictionary;
 use App\Controls;
 use App\Lectures;
 use App\Seminars;
+
+use App\Statements\DAO\LecturePlanDAO;
 use App\Statements\DAO\SectionPlanDAO;
 use App\Testing\Test;
 use App\Totalresults;
@@ -21,16 +23,19 @@ use App\Codificator;
 use Session;
 use App\Statements\DAO\CoursePlanDAO;
 use App\Http\Requests\Statements\AddCoursePlanRequest;
+use stdClass;
 
 class StatementsController extends Controller{
 
     private $coursePlanDao;
     private $sectionPlanDAO;
+    private $lecturePlanDAO;
 
-    public function __construct(CoursePlanDAO $coursePlanDAO, SectionPlanDAO $sectionPlanDAO)
+    public function __construct(CoursePlanDAO $coursePlanDAO, SectionPlanDAO $sectionPlanDAO, LecturePlanDAO $lecturePlanDAO)
     {
         $this->coursePlanDao = $coursePlanDAO;
         $this->sectionPlanDAO = $sectionPlanDAO;
+        $this->lecturePlanDAO = $lecturePlanDAO;
     }
 
     // возвращает страницу с учебными планами
@@ -113,11 +118,11 @@ class StatementsController extends Controller{
         return $request->section_num_for_find_js;
     }
 
-    // Возвращает представление для добавления семинара или лекции
+    // Возвращает представление для добавления семинара или лекции или КМ
     public function getAddLecOrSemOrCW(Request $request) {
 
         $typeCard = $request->type_card;
-        $viewPath = $this->getViewPathLecSemCW($typeCard);
+        $viewPath = $this->getPathAddViewLecSemCW($typeCard);
         $numberNewCard = $request->number_new_card;
 
         $returnHtmlString = view('personal_account.statements.course_plans.sections.'.$viewPath,
@@ -134,30 +139,95 @@ class StatementsController extends Controller{
     //Сохранение семинара или лекции в разделе учебного плана
     public function storeLecOrSemOrCW(Request $request) {
 
-        $typeCard = $request->type_card;
-        $viewPath = $this->getViewPathLecSemCW($typeCard);
-
-        if ($typeCard == 'lecture') {
-            return "hi";
-
-        } else if ($typeCard == 'seminar'){
-
-
-        } else {
-
-        }
-
-//        { form: $(this).serialize(),
-//            id_sectionDB: idSectionDB,
-//            id_section_for_find_js: idSectionForFindJs,
-//            id_card_for_find_js: idCardForFindJs,
-//            type_card: typeCard
+//        $typeCard = $request->type_card;
+        $viewPath = $this->getViewUpdatePathLecSemCW($request->type_card);
+//        $itemSectionDAO =  new stdClass();
+//        switch ($typeCard) {
+//            case 'lecture':
+//                $itemSectionDAO = $this->lecturePlanDAO;
+//                break;
+//            case 'seminar':
+//
+//                break;
+//            case 'control_work':
+//
+//                break;
 //        }
+        $itemSectionDAO = $this->getItemSectionDAO($request->type_card);
 
+        $validator = $itemSectionDAO->getStoreValidate($request);
+
+        if ($validator->passes()) {
+            $idItemSectionPlan = $itemSectionDAO->store($request);
+            $itemSectionPlan = $itemSectionDAO->get($idItemSectionPlan);
+            $readOnly = true;
+            $idCardForFindJs = $request->id_card_for_find_js;
+            $returnHtmlString = view('personal_account.statements.course_plans.sections.'.$viewPath,
+                compact('itemSectionPlan', 'readOnly',
+                'idCardForFindJs'))
+                ->render();
+            return response()->json(['view'=>$returnHtmlString, 'id_section_for_find_js' => $request->id_section_for_find_js
+                , 'id_card_for_find_js' => $request->id_card_for_find_js,'type_card' => $request->type_card]);
+        } else {
+            return response()->json(['error'=>$validator->errors()->all(), 'id_section_for_find_js' => $request->id_section_for_find_js
+                , 'id_card_for_find_js' => $request->id_card_for_find_js,'type_card' => $request->type_card]);
+        }
 
     }
 
-    public function getViewPathLecSemCW($typeCard) {
+    //Обновление лекции, семинара, контрольн. меропри в разделе учебного плана
+    public function updateLecOrSemOrCW(Request $request) {
+
+        $itemSectionDAO = $this->getItemSectionDAO($request->type_card);
+        $validator = $itemSectionDAO->getUpdateValidate($request);
+
+        if ($validator->passes()) {
+           $itemSectionDAO->update($request);
+            return response()->json(['id_section_for_find_js' => $request->id_section_for_find_js
+                , 'id_card_for_find_js' => $request->id_card_for_find_js,'type_card' => $request->type_card]);
+        } else {
+            return response()->json(['error'=>$validator->errors()->all(), 'id_section_for_find_js' => $request->id_section_for_find_js
+                , 'id_card_for_find_js' => $request->id_card_for_find_js,'type_card' => $request->type_card]);
+        }
+
+    }
+
+    public function deleteLecOrSemOrCW(Request $request)
+    {
+        $itemSectionDAO = $this->getItemSectionDAO($request->type_card);
+        $itemSectionDAO->delete($request);
+        return response()->json(['id_section_for_find_js'=>$request->id_section_for_find_js, 'id_card_for_find_js' => $request->id_card_for_find_js
+            , 'type_card' => $request->type_card]);
+    }
+
+
+    public function getItemSectionDAO ($typeCard) {
+        $itemSectionDAO =  new stdClass();
+        switch ($typeCard) {
+            case 'lecture':
+                $itemSectionDAO = $this->lecturePlanDAO;
+                break;
+            case 'seminar':
+
+                break;
+            case 'control_work':
+
+                break;
+        }
+        return $itemSectionDAO;
+    }
+
+    public function getViewUpdatePathLecSemCW($typeCard) {
+        if ($typeCard == 'lecture') {
+            return 'lectures.view_or_update_lecture';
+        } else if ($typeCard == 'seminar'){
+            return 'seminars.view_or_update_seminar';
+        } else {
+            return 'control_works.view_or_update_control_work';
+        }
+    }
+
+    public function getPathAddViewLecSemCW($typeCard) {
         if ($typeCard == 'lecture') {
             return 'lectures.add_lecture';
         } else if ($typeCard == 'seminar'){

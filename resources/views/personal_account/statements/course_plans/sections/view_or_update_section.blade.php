@@ -1,4 +1,4 @@
-<div class="card card-bordered style-success section" id="section{{$sectionNumForFindJs}}" id_DB="{{$sectionPlan->id_section_plan}}">
+<div class="card card-bordered style-success section" id="section{{$sectionNumForFindJs}}" data-id-DB="{{$sectionPlan->id_section_plan}}">
     <form  method="PATCH" id="form_update_section">
     <div class="card-head">
 
@@ -52,32 +52,32 @@
             <div class="lectures col-lg-4">
             @foreach($sectionPlan->lecture_plans as $lecturePlan)
                 <?php $lectureNumForFindJs++ ?>
-                @include('personal_account.statements.course_plans.sections.lectures.view_or_update_lecture',array('lecturePlan' => $lecturePlan, 'readOnly' => true,
-                'lectureNumForFindJs' => $lectureNumForFindJs))
+                @include('personal_account.statements.course_plans.sections.lectures.view_or_update_lecture',array('itemSectionPlan' => $lecturePlan, 'readOnly' => true,
+                'idCardForFindJs' => $lectureNumForFindJs))
             @endforeach
             </div>
 
             <div class="seminars col-lg-4">
                 @foreach($sectionPlan->seminar_plans as $seminarPlan)
                     <?php $seminarNumForFindJs++ ?>
-                    @include('personal_account.statements.course_plans.sections.lectures.view_or_update_lecture',array('seminarPlan' => $seminarPlan, 'readOnly' => true,
-                    'seminarNumForFindJs' => $seminarNumForFindJs))
+                    @include('personal_account.statements.course_plans.sections.seminars.view_or_update_seminar',array('itemSectionPlan' => $seminarPlan, 'readOnly' => true,
+                    'idCardForFindJs' => $seminarNumForFindJs))
                 @endforeach
             </div>
 
             <div class="control_works col-lg-4">
                 @foreach($sectionPlan->control_work_plans as $controlWorkPlan)
                     <?php $controlWorkNumForFindJs++ ?>
-                    @include('personal_account.statements.course_plans.sections.lectures.view_or_update_lecture',array('controlWorkPlan' => $controlWorkPlan,
-                     'readOnly' => true, 'controlWorkNumForFindJs' => $controlWorkNumForFindJs))
+                    @include('personal_account.statements.course_plans.sections.lectures.view_or_update_lecture',array('itemSectionPlan' => $controlWorkPlan,
+                     'readOnly' => true, 'idCardForFindJs' => $controlWorkNumForFindJs))
                 @endforeach
             </div>
 
         </div>
 
-        <button type="button" class="ink-reaction btn btn-info add_lecture_or_sem_or_CW" type_card="lecture">Добавить лекцию</button>
-        <button type="button" class="ink-reaction btn btn-warning add_lecture_or_sem_or_CW" type_card="seminar">Добавить семинар</button>
-        <button type="button" class="ink-reaction btn btn-danger add_lecture_or_sem_or_CW " type_card="control_work">Добавить К.М.</button>
+        <button type="button" class="ink-reaction btn btn-info add_lecture_or_sem_or_CW" data-type-card="lecture">Добавить лекцию</button>
+        <button type="button" class="ink-reaction btn btn-warning add_lecture_or_sem_or_CW" data-type-card="seminar">Добавить семинар</button>
+        <button type="button" class="ink-reaction btn btn-danger add_lecture_or_sem_or_CW " data-type-card="control_work">Добавить К.М.</button>
     </div>
     </form>
 </div>

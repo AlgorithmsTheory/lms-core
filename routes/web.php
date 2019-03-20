@@ -342,8 +342,12 @@ Route::patch('course_plan/section/update', ['as' => 'section_update', 'uses' => 
 Route::delete('course_plan/section/delete', ['as' => 'section_delete', 'uses' => 'StatementsController@deleteSection', 'middleware' => ['general_auth', 'admin']]);
 //получить представление для добавления лекции/семинара/Контрольного мероприятия в разделе учебного плана
 Route::get('course_plan/section/get_add_lec_sem_cw', ['as' => 'get_add_lec_sem_cw', 'uses' => 'StatementsController@getAddLecOrSemOrCW', 'middleware' => ['general_auth', 'admin']]);
-//сохранение новой лекции/семинара/Контрольногое мероприятия в разделе учебного плана
-Route::get('course_plan/section/lec_sem_cw/store', ['as' => 'lec_sem_cw_store', 'uses' => 'StatementsController@storeLecOrSemOrCW', 'middleware' => ['general_auth', 'admin']]);
+//сохранение лекции/семинара/Контрольногое мероприятия в разделе учебного плана
+Route::post('course_plan/section/lec_sem_cw/store', ['as' => 'lec_sem_cw_store', 'uses' => 'StatementsController@storeLecOrSemOrCW', 'middleware' => ['general_auth', 'admin']]);
+//Обновление лекции/семинара/Контрольногое мероприятия в разделе учебного плана
+Route::patch('course_plan/section/lec_sem_cw/update', ['as' => 'lec_sem_cw_update', 'uses' => 'StatementsController@updateLecOrSemOrCW', 'middleware' => ['general_auth', 'admin']]);
+//Удаление лекции/семинара/Контрольногое мероприятия в разделе учебного плана
+Route::delete('course_plan/section/lec_sem_cw/delete', ['as' => 'lec_sem_cw__delete', 'uses' => 'StatementsController@deleteLecOrSemOrCW', 'middleware' => ['general_auth', 'admin']]);
 //представление конкретного учебного плана
 Route::get('course_plan/{id}', ['as' => 'course_plan', 'uses' => 'StatementsController@getCoursePlan']);
 

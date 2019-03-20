@@ -13,6 +13,36 @@ function getConteinerTypeCard(typeCard) {
     }
 }
 
+//Стиль для карты декции сема или контр. меропр.
+function getStyleCard(typeCard) {
+    if (typeCard == 'lecture') {
+        return 'info';
+
+    }
+    if (typeCard == 'seminar') {
+        return 'warning';
+    }
+    if (typeCard == 'control_work') {
+        return 'danger';
+    }
+}
+
+//
+function getDeleteMsg(typeCard) {
+    if (typeCard == 'lecture') {
+        return 'Удалить лекцию ?';
+
+    }
+    if (typeCard == 'seminar') {
+        return 'Удалить семинар ?';
+    }
+    if (typeCard == 'control_work') {
+        return 'Удалить контрольное мероприятие';
+    }
+}
+
+
+// для генерирования id созданых на странице карт
 function return1IfEmpty(elem) {
     if($.isEmptyObject(elem)) {
         return 1;
@@ -21,14 +51,25 @@ function return1IfEmpty(elem) {
     }
 }
 
+//Преобразовывает сериализованную форму в json
+function getFormData($form){
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function(n, i){
+        indexed_array[n['name']] = n['value'];
+    });
+
+    return indexed_array;
+}
 
 //возвращает представление для добавление раздела
 $(document).on('click', '.add_lecture_or_sem_or_CW', function () {
 
-    var typeCard = $(this).attr('type_card');
+    var typeCard = $(this).attr('data-type-card');
 
     var currentSection = $(this).closest('.section');
-   //Номер последней карты в разделе
+   //Номер последней карты в вообще
    //  var numberLastCard = currentSection.find('.' + typeCard).filter( ':last' )
    //      .find('input[name="'+ typeCard +'_plan_num"]').val();
     var numberLastCard = $('.' + typeCard).size().toString();
@@ -65,156 +106,177 @@ $(document).on('click', '.add_lecture_or_sem_or_CW', function () {
     });
 });
 
-// TODO: не работает event.preventDefault(); срабатывает дефолтный action у кнопки а на него нет роута поэтому исключение MethodNotAllowedHttpException
+
 //Сохранение добаленного раздела
-$(document).on('submit', '#form_add_lecture_or_sem_or_CW', function (event) {
-    event.preventDefault();
-    var token = $('meta[name="csrf-token"]').attr('content');
-    alert(token);
-    var typeCard = $(this).attr('type_card');
-    // if ($(this).attr('type_card') == 'lecture') {
-    //     typeCard = 'lecture';
-    // } else {
-    //     typeCard = 'seminar';
-    // }
+$(document).on('click', '.store_lec_sem_cw', function (event) {
 
+    // var token = $('meta[name="csrf-token"]').attr('content');
+    var typeCard = $(this).attr('data-btn-type-card');
     var currentSection = $(this).closest('.section');
-    var idSectionDB = currentSection.attr('id_DB');
-    var idSectionForFindJs = currentSection.attr('id').match(/\d+/);
-    var idCardForFindJs = $(this).closest('.lecture');
+    var idSectionDB = currentSection.attr('data-id-DB');
+    var idSectionForFindJs = currentSection.attr('id').match(/\d+/).toString();
+    var idCardForFindJs = $(this).closest('.'+typeCard).attr('id');
+   // var thisForm = JSON.stringify( $(this).closest('form').serializeArray() );
+    //var thisForm = getFormData($(this).closest('form'));//Самый лучший вар возможно
+    var thisForm = $(this).closest('form').serialize();
+    $.ajax({
+        cache: false,
+        type: 'POST',
+            beforeSend: function (xhr) {
+                var token = $('meta[name="csrf-token"]').attr('content');
 
-    // $.ajax({
-    //     type: 'POST',
-    //     url:   '/course_plan/section/lec_sem_cw/store',
-    //     data:  { form: $(this).serialize(),
-    //         id_sectionDB: idSectionDB,
-    //         id_section_for_find_js: idSectionForFindJs,
-    //         id_card_for_find_js: idCardForFindJs,
-    //         type_card: typeCard,
-    //         "_token": token
-    //     },
-    //     success: function(data){
-    //         var currentSection = $('#section'+data.id_section_for_find_js);
-    //         var typeConteinerCards = getConteinerTypeCard(data.typeCard);
-    //         var currentCard = currentSection.find('.'+typeConteinerCards).find('#'+data.id_card_for_find_js);
-    //
-    //         if($.isEmptyObject(data.error)){
-    //             currentCard.replaceWith(data.view);
-    //             alert("hi");
-    //
-    //             //Прибавляем +1 к номерам лекций, семам, КМ после добавленного
-    //             var allCards = ('.'+data.type_card);
-    //             allCards.each(function( elem ) {
-    //                 var inputNumberCard = $( this ).find('input[name="'+ typeCard +'_plan_num"]');
-    //                 if(inputNumberCard.val() >= data.new_card_num){
-    //                     inputNumberCard.val(inputNumberCard.val() + 1);
-    //                 }
-    //             });
-    //         }else{
-    //             //добавление в html сообщений об ошибках
-    //             var divError = currentCard.find('.print-error-msg').filter( ':first' );
-    //             divError.find("ul").html('');
-    //             divError.css('display','block');
-    //             $.each( data.error, function( key, value ) {
-    //                 divError.find("ul").append('<li>'+value+'</li>');
-    //             });
-    //         }
-    //     }
-    // });
+                if (token) {
+                    return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                }
+            },
+        url:   '/course_plan/section/lec_sem_cw/store',
+        data:  { form: thisForm,
+            id_section_DB: idSectionDB,
+            id_section_for_find_js: idSectionForFindJs,
+            id_card_for_find_js: idCardForFindJs,
+            type_card: typeCard
+        },
+        success: function(data){
+            console.log(data);
+            var currentSection = $('#section'+data.id_section_for_find_js);
+            var typeConteinerCards = getConteinerTypeCard(data.type_card);
+            var currentCard = currentSection.find('.'+typeConteinerCards).find('#'+data.id_card_for_find_js);
+            if($.isEmptyObject(data.error)){
+                //Замена формы добавления на форму с readonly
+                currentCard.replaceWith(data.view);
+
+                // //Прибавляем +1 к номерам лекций, семам, КМ после добавленного
+                // var allCards = ('.'+data.type_card);
+                // allCards.each(function( elem ) {
+                //     var inputNumberCard = $( this ).find('input[name="'+ typeCard +'_plan_num"]');
+                //     if(inputNumberCard.val() >= data.new_card_num){
+                //         inputNumberCard.val(inputNumberCard.val() + 1);
+                //     }
+                // });
+            }else{
+                //добавление в html сообщений об ошибках
+                var divError = currentCard.find('.print-error-msg').filter( ':first' );
+                divError.find("ul").html('');
+                divError.css('display','block');
+                $.each( data.error, function( key, value ) {
+                    divError.find("ul").append('<li>'+value+'</li>');
+                });
+            }
+        }
+    });
 
 });
 
-// //Изменяет view_or_update_section для редактирования раздела
-// $(document).on('click', '.activateEditSection', function () {
-//     //сркрытие иконки редактировать
-//     $(this).hide();
-//     var SectionNum = parseInt($(this).closest('.section').find('header').filter( ':first' ).html());
-//     var htmlInsertHeader = '<div class="row">\n' +
-//         '                <div class="col-lg-4 col-md-4">\n' +
-//         '                    <label for="section_num">Номер раздела:</label>\n' +
-//         '                </div>\n' +
-//         '                <div class="col-lg-4 col-md-4">\n' +
-//         '                <input type="text" name="section_num" value="'+SectionNum+'" class="form-control" ' +
-//         'required style="background-color: white">' +
-//         '                </div>\n' +
-//         '            </div>';
-//     //вставляем поле с section_num
-//     $(this).parent().parent().siblings("header").html(htmlInsertHeader);
-//     //выключение readonly для полей
-//     var currentSection = $(this).closest('.section');
-//     currentSection.find('input[name="section_plan_name"]').filter( ':first' ).removeAttr("readonly");
-//     currentSection.find('input[name="section_plan_desc"]').filter( ':first' ).removeAttr("readonly");
-//     currentSection.find('#is_exam').filter( ':first' ).prop( "disabled", false );
-//     //вставка кнопки "Обновить информ. о разделе"
-//     var htmlUpdateBatton = '<button type="submit" class="ink-reaction btn btn-success" id="updateSection">Обновить информ. о разделе</button>';
-//     currentSection.find('.update_button_section').filter( ':first' ).html(htmlUpdateBatton);
-// });
-//
-// //Обновление добаленного раздела
-// $(document).on('submit', '#form_update_section', function (event) {
-//     event.preventDefault();
-//     $.ajax({
-//         type: 'PATCH',
-//         url:   '/course_plan/section/update',
-//         data:  $(this).serialize(),
-//         success: function(data){
-//             if($.isEmptyObject(data.error)){
-//                 var htmlInsertHeader = data.real_section_num +' Раздел';
-//                 var currentSection = $('#section'+data.section_num_for_find_js);
-//                 //вставляем поле с section_num
-//                 var currentHeader = $('#section'+data.section_num_for_find_js).find("header").filter( ':first' );
-//                 currentHeader.html(htmlInsertHeader);
-//                 //выключение readonly для полей
-//                 currentSection.find('input[name="section_plan_name"]').filter( ':first' ).attr('readonly', true);
-//                 currentSection.find('input[name="section_plan_desc"]').filter( ':first' ).attr('readonly', true);
-//                 currentSection.find('#is_exam').filter( ':first' ).prop( "disabled", true);
-//                 //удаление кнопки "Обновить доп. инфор о разделе"
-//                 currentSection.find('.update_button_section').filter( ':first' ).empty();
-//                 // удаление сообщений об ошибках
-//                 var currentErrorDiv = currentSection.find('.print-error-msg').filter( ':first' );
-//                 currentErrorDiv.find("ul").html('');
-//                 currentErrorDiv.css('display','none');
-//                 //отображение иконки редактировать
-//                 currentSection.find('.activateEditSection').filter( ':first' ).show();
-//             }else{
-//                 //добавление в html сообщений об ошибках
-//                 var divError = $('#section'+data.section_num_for_find_js).find('.print-error-msg').filter( ':first' );
-//                 divError.find("ul").html('');
-//                 divError.css('display','block');
-//                 $.each( data.error, function( key, value ) {
-//                     divError.find("ul").append('<li>'+value+'</li>');
-//                 });
-//             }
-//         }
-//     });
-//
-// });
-//
-// //Удаление раздела
-// $(document).on('click', '.deleteSection', function () {
-//     if (confirm("Удалить данный раздел ?")) {
-//         var currentSection = $(this).closest('.section');
-//         var sectionNumForFindJs = parseInt(currentSection.attr('id').match(/\d+/));
-//         var idSectionPlan  = currentSection.find('input[name="id_section_plan"]').filter( ':first' ).val();
-//         if($.isEmptyObject(idSectionPlan)) {
-//
-//             $('#section'+sectionNumForFindJs).remove();
-//
-//         } else {
-//
-//             var token = $('meta[name="csrf-token"]').attr('content');
-//             $.ajax({
-//                 type: 'DELETE',
-//                 url:   '/course_plan/section/delete',
-//                 data:  { "section_num_for_find_js": sectionNumForFindJs,
-//                     "id_section_plan": idSectionPlan,
-//                     "_token": token},
-//                 success: function(data){
-//                     $('#section'+data).remove();
-//                 }
-//             });
-//
-//         }
-//     }
-//
-// });
+//Изменяет view_or_update_item для редактирования лекции, сем или контр мероприятия
+$(document).on('click', '.activate_edit_lec_sem_cw', function () {
+
+    var thisCard = $(this).closest('.card');
+    var typeCard = thisCard.attr('data-type-card');
+    //сркрытие иконки редактировать
+    $(this).hide();
+
+    //выключение readonly для полей
+
+    thisCard.find('input[name="'+typeCard+'_plan_name"]').filter( ':first' ).removeAttr("readonly");
+    thisCard.find('input[name="'+typeCard+'_plan_desc"]').filter( ':first' ).removeAttr("readonly");
+    thisCard.find('input[name="'+typeCard+'_plan_num"]').filter( ':first' ).removeAttr("readonly");
+    //toDo для типа контрольное мероприятия добавить поле с  привязанными тестами
+    //вставка кнопки "Обновить информ. о разделе"
+    var htmlUpdateBatton = '<button type="button" class="ink-reaction btn btn-'+getStyleCard(typeCard)+' update_lec_sem_cw">Обновить</button>';
+    thisCard.find('.update_button_place').filter( ':first' ).html(htmlUpdateBatton);
+});
+
+//Обновление лекции семинара или контр мероприятия
+$(document).on('click', '.update_lec_sem_cw', function () {
+
+    var thisCard = $(this).closest('.card');
+    var typeCard = thisCard.attr('data-type-card');
+    var currentSection = $(this).closest('.section');
+    var idSectionForFindJs = currentSection.attr('id').match(/\d+/).toString();
+    var idCardForFindJs = thisCard.attr('id');
+    var thisForm = $(this).closest('form').serialize();
+
+    $.ajax({
+        type: 'PATCH',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf-token"]').attr('content');
+
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        url:   '/course_plan/section/lec_sem_cw/update',
+        data:  { form: thisForm,
+            id_section_for_find_js: idSectionForFindJs,
+            id_card_for_find_js: idCardForFindJs,
+            type_card: typeCard
+        },
+        success: function(data){
+            console.log(data);
+            var currentSection = $('#section'+data.id_section_for_find_js);
+            var currentCard = currentSection.find('.'+getConteinerTypeCard(data.type_card)).find('#'+data.id_card_for_find_js);
+
+            if($.isEmptyObject(data.error)){
+
+                //выключение readonly для полей
+                currentCard.find('input[name="'+typeCard+'_plan_name"]').filter( ':first' ).attr('readonly', true);
+                currentCard.find('input[name="'+typeCard+'_plan_desc"]').filter( ':first' ).attr('readonly', true);
+                currentCard.find('input[name="'+typeCard+'_plan_num"]').filter( ':first' ).prop( "readonly", true);
+                //toDo добавить ещё поле с выбором тестов для контрольного мероприятия
+
+                //удаление кнопки "Обновить доп. инфор о разделе"
+                currentCard.find('.update_button_place').filter( ':first' ).empty();
+                // удаление сообщений об ошибках
+                var currentErrorDiv = currentCard.find('.print-error-msg').filter( ':first' );
+                currentErrorDiv.find("ul").html('');
+                currentErrorDiv.css('display','none');
+                //отображение иконки редактировать
+                currentCard.find('.activate_edit_lec_sem_cw').filter( ':first' ).show();
+            }else{
+                //добавление в html сообщений об ошибках
+                var divError = currentCard.find('.print-error-msg').filter( ':first' );
+                divError.find("ul").html('');
+                divError.css('display','block');
+                $.each( data.error, function( key, value ) {
+                    divError.find("ul").append('<li>'+value+'</li>');
+                });
+            }
+        }
+    });
+
+});
+
+//Удаление раздела
+$(document).on('click', '.delete_lec_sem_cw', function () {
+    var thisCard = $(this).closest('.card');
+    var typeCard = thisCard.attr('data-type-card');
+    var idCardForFindJs = thisCard.attr('id');
+    var currentSection = $(this).closest('.section');
+    var idSectionForFindJs = parseInt(currentSection.attr('id').match(/\d+/));
+    var idItemPlan  = thisCard.find('input[name="id_'+typeCard+'_plan"]').filter( ':first' ).val();
+    if (confirm(getDeleteMsg(typeCard))) {
+        if($.isEmptyObject(idItemPlan)) {
+
+            thisCard.remove();
+
+        } else {
+            var token = $('meta[name="csrf-token"]').attr('content');
+            $.ajax({
+                type: 'DELETE',
+                url:   '/course_plan/section/lec_sem_cw/delete',
+                data:  {id_item_plan: idItemPlan,
+                    id_section_for_find_js: idSectionForFindJs,
+                    id_card_for_find_js: idCardForFindJs,
+                    type_card: typeCard,
+                    "_token": token},
+                success: function(data){
+                    console.log(data);
+                    $('#section'+data.id_section_for_find_js).find('.'+getConteinerTypeCard(data.type_card)).
+                    find('#'+data.id_card_for_find_js).remove();
+                }
+            });
+
+        }
+    }
+
+});

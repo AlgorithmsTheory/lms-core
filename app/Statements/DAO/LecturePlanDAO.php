@@ -7,66 +7,80 @@
  */
 
 namespace App\Statements\DAO;
+
 use App\Statements\LecturePlan;
-use App\Http\Requests\Request;
+
+use Illuminate\Http\Request;
 use Validator;
-use Illuminate\Validation\Rule;
-class LecturePlanDAO
+
+class LecturePlanDAO implements ItemSectionDAO
 {
-    public function getLecturePlan($id){
+    public function get($id){
         $LecturePlan = LecturePlan::where('id_lecture_plan', $id)->first();
         return $LecturePlan;
     }
 
-    public function storeLecturePlan(Request $request){
+    public function store(Request $request){
+        $form = $this->deserializationHtmlForm($request->form);
         $LecturePlan = new LecturePlan();
-        $LecturePlan->lecture_plan_name = $request->form->lecture_plan_name;
-        $LecturePlan->lecture_plan_desc = $request->form->lecture_plan_desc;
-        $LecturePlan->id_section_plan = $request->id_sectionDB;
-        $LecturePlan->lecture_plan_num = $request->form->lecture_plan_num;
+        $LecturePlan->lecture_plan_name = $form['lecture_plan_name'];
+        $LecturePlan->lecture_plan_desc = $form['lecture_plan_desc'];
+        $LecturePlan->lecture_plan_num =  $form['lecture_plan_num'];
+        $LecturePlan->id_section_plan = $request->id_section_DB;
         $LecturePlan->save();
         return $LecturePlan->id_lecture_plan;
     }
 
-//    public function updateLecturePlan(Request $request){
-//        $LecturePlan = $this->getLecturePlan($request->id_section_plan);
-//        $LecturePlan->section_plan_name = $request->section_plan_name;
-//        $LecturePlan->section_plan_desc = $request->section_plan_desc;
-//        $LecturePlan->section_num = $request->section_num;
-//        $LecturePlan->is_exam = $request->is_exam;
-//        $LecturePlan->save();
-//    }
+    public function update(Request $request){
+        $form = $this->deserializationHtmlForm($request->form);
+        $LecturePlan = $this->get($form['id_lecture_plan']);
+        $LecturePlan->lecture_plan_name = $form['lecture_plan_name'];
+        $LecturePlan->lecture_plan_desc = $form['lecture_plan_desc'];
+        $LecturePlan->lecture_plan_num =  $form['lecture_plan_num'];
+        $LecturePlan->update();
+    }
 
-    public function getValidateStoreLecturePlan(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'form.lecture_plan_name' => 'required|between:5,255',
-            'form.lecture_plan_desc' => 'between:5,5000',
-            'form.lecture_plan_num' => [ 'required',
+    public function getStoreValidate(Request $request) {
+
+        $deserializForm = $this->deserializationHtmlForm($request->form);
+
+        //toDO добавить проверку на уникальность номера лекции
+        $validator = Validator::make($deserializForm, [
+            'lecture_plan_name' => 'required|between:5,255',
+            'lecture_plan_desc' => 'between:5,5000',
+            'lecture_plan_num' => [ 'required',
                 'integer',
-                'min:1',
-                Rule::unique('lecture_plans')->where('id_section_plan', $request->id_sectionDB)
-            ],
+                'min:1']
         ]);
         return $validator;
     }
 
-//    public function getValidateUpdateLecturePlan(Request $request) {
-//        $validator = Validator::make($request->all(), [
-//            'section_plan_name' => 'required|between:5,255',
-//            'section_plan_desc' => 'between:5,5000',
-//            'is_exam' => 'required',
-//            'section_num' => [ 'required',
-//                'integer',
-//                'min:1',
-//                Rule::unique('section_plans')->where('id_course_plan', $request->id_course_plan)
-//                    ->ignore( $request->id_section_plan, 'id_section_plan')
-//            ],
-//        ]);
-//        return $validator;
-//    }
-//
-//
-//    public function deleteLecturePlan($id){
-//        LecturePlan::findOrFail($id)->delete();
-//    }
+    public function getUpdateValidate(Request $request) {
+        $deserializForm = $this->deserializationHtmlForm($request->form);
+
+        //toDO добавить проверку на уникальность номера лекции
+        $validator = Validator::make($deserializForm, [
+            'lecture_plan_name' => 'required|between:5,255',
+            'lecture_plan_desc' => 'between:5,5000',
+            'lecture_plan_num' => [ 'required',
+                'integer',
+                'min:1']
+        ]);
+        return $validator;
+    }
+
+    public function delete(Request $request){
+        LecturePlan::findOrFail($request->id_item_plan)->delete();
+    }
+
+//Десирилизация серилизованной формы html
+public function deserializationHtmlForm($serForm) {
+
+    $form =  array();
+    //Десирилизация серилизованной формы html
+    parse_str($serForm, $form);
+    return $form;
+}
+
+
 }

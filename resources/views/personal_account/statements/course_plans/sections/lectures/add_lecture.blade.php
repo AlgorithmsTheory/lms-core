@@ -1,5 +1,5 @@
-<div class="card card-bordered style-info lecture" id="{{$idNewCardForFindJs}}" >
-    <form  method="POST" class="form_add_lecture_or_sem_or_CW">
+<div class="card card-bordered style-info lecture" id="{{$idNewCardForFindJs}}"  data-type-card="lecture">
+    <form  class="form_store_sem_lec_wc">
         <div class="card-head">
             <header>
 
@@ -10,7 +10,7 @@
             </header>
             <div class="tools">
                 <div class="btn-group ">
-                    <a class="btn btn-icon-toggle delete_lecture"><i class="md md-close"></i></a>
+                    <a class="btn btn-icon-toggle delete_lec_sem_cw"><i class="md md-close"></i></a>
                 </div>
             </div>
         </div>
@@ -30,8 +30,9 @@
                 <ul></ul>
             </div>
 
-            <button type="submit" class="ink-reaction btn btn-info " >Сохранить лекцию</button>
+            <button type="button" class="ink-reaction btn btn-info store_lec_sem_cw" data-btn-type-card="lecture">Сохранить лекцию</button>
 
         </div>
     </form>
+
 </div>

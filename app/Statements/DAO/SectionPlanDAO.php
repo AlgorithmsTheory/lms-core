@@ -41,7 +41,7 @@ class SectionPlanDAO
         $sectionPlan->section_plan_desc = $request->section_plan_desc;
         $sectionPlan->section_num = $request->section_num;
         $sectionPlan->is_exam = $request->is_exam;
-        $sectionPlan->save();
+        $sectionPlan->update();
     }
 
 public function getValidateStoreSectionPlan(Request $request) {
