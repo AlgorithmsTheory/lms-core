@@ -13,7 +13,7 @@ $(document).on('click', '#addSection', function () {
         cache: false,
         type: 'GET',
         url:   '/course_plan/get_add_section',
-        data: { currentCount: currentCount, idCoursePlan: idCoursePlan },
+        data: { current_count: currentCount, id_course_plan: idCoursePlan },
         success: function(data){
             $('#sections').append(data);
         }
@@ -29,7 +29,7 @@ $(document).on('submit', '#form_add_section', function (event) {
         url:   '/course_plan/'+idCoursePlan+'/section',
         data:  $(this).serialize(),
         success: function(data){
-            var currentSection = $('#section'+data.section_num_for_find_js);
+            var currentSection = $('#section'+data.sectionNumForFindJs);
             if($.isEmptyObject(data.error)){
                 currentSection.replaceWith(data.view);
             }else{
@@ -47,7 +47,7 @@ $(document).on('submit', '#form_add_section', function (event) {
 });
 
 //Изменяет view_or_update_section для редактирования раздела
-$(document).on('click', '.activateEditSection', function () {
+$(document).on('click', '.activate_edit_section', function () {
     //сркрытие иконки редактировать
     $(this).hide();
     var SectionNum = parseInt($(this).closest('.section').find('header').filter( ':first' ).html());
@@ -82,10 +82,10 @@ $(document).on('submit', '#form_update_section', function (event) {
         data:  $(this).serialize(),
         success: function(data){
             if($.isEmptyObject(data.error)){
-                var htmlInsertHeader = data.real_section_num +' Раздел';
-                var currentSection = $('#section'+data.section_num_for_find_js);
+                var htmlInsertHeader = data.realSectionNum +' Раздел';
+                var currentSection = $('#section'+data.sectionNumForFindJs);
                 //вставляем поле с section_num
-                var currentHeader = $('#section'+data.section_num_for_find_js).find("header").filter( ':first' );
+                var currentHeader = $('#section'+data.sectionNumForFindJs).find("header").filter( ':first' );
                 currentHeader.html(htmlInsertHeader);
                 //выключение readonly для полей
                 currentSection.find('input[name="section_plan_name"]').filter( ':first' ).attr('readonly', true);
@@ -98,10 +98,10 @@ $(document).on('submit', '#form_update_section', function (event) {
                 currentErrorDiv.find("ul").html('');
                 currentErrorDiv.css('display','none');
                 //отображение иконки редактировать
-                currentSection.find('.activateEditSection').filter( ':first' ).show();
+                currentSection.find('.activate_edit_section').filter( ':first' ).show();
             }else{
                 //добавление в html сообщений об ошибках
-                var divError = $('#section'+data.section_num_for_find_js).find('.print-error-msg').filter( ':first' );
+                var divError = $('#section'+data.sectionNumForFindJs).find('.print-error-msg').filter( ':first' );
                 divError.find("ul").html('');
                 divError.css('display','block');
                 $.each( data.error, function( key, value ) {
@@ -114,7 +114,7 @@ $(document).on('submit', '#form_update_section', function (event) {
 });
 
 //Удаление раздела
-$(document).on('click', '.deleteSection', function () {
+$(document).on('click', '.delete_section', function () {
     if (confirm("Удалить данный раздел ?")) {
         var currentSection = $(this).closest('.section');
         var sectionNumForFindJs = parseInt(currentSection.attr('id').match(/\d+/));

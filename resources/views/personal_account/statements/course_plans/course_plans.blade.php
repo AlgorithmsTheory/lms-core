@@ -36,30 +36,30 @@
         <article class="style-default-bright">
             <div class="card-body">
                 <article style="margin-left:5%; margin-right:5%">
-                    @foreach ($coursePlans as $coursePlan)
+                    @foreach ($course_plans as $course_plan)
 
 
                     <div class="card card-bordered style-gray ">
                         <div class="card-head">
-                            <header>{{"Учебный план: ".$coursePlan->course_plan_name}}</header>
+                            <header>{{"Учебный план: ".$course_plan->course_plan_name}}</header>
                             <div class="tools">
                                 <div class="btn-group ">
-                                    <a class="btn btn-icon-toggle btn-close delete" name="{{ $coursePlan->id_course_plan }}"><i class="md md-close"></i></a>
+                                    <a class="btn btn-icon-toggle btn-close delete" name="{{ $course_plan->id_course_plan }}"><i class="md md-close"></i></a>
                                 </div>
                             </div>
                         </div>
                         <div class="card-body style-default-bright">
                             <p class="card-text">
-                                {{$coursePlan->course_plan_desc}}
+                                {{$course_plan->course_plan_desc}}
                             </p>
                             <ul>
-                                <li>{{ 'Макс балл за раздел "Контрольные мероприятия в семестре":'.$coursePlan->max_controls }}</li>
-                                <li>{{ 'Макс балл за раздел "Посещение семинаров":'.$coursePlan->max_seminars }}</li>
-                                <li>{{ 'Макс балл за раздел "Работа на семинарах":'.$coursePlan->max_seminars_work }}</li>
-                                <li>{{ 'Макс балл за раздел "Посещение лекций":'.$coursePlan->max_lecrures }}</li>
-                                <li>{{ 'Макс балл за раздел "Зачет (экзамен)":'.$coursePlan->max_exam }}</li>
+                                <li>{{ 'Макс балл за раздел "Контрольные мероприятия в семестре":'.$course_plan->max_controls }}</li>
+                                <li>{{ 'Макс балл за раздел "Посещение семинаров":'.$course_plan->max_seminars }}</li>
+                                <li>{{ 'Макс балл за раздел "Работа на семинарах":'.$course_plan->max_seminars_work }}</li>
+                                <li>{{ 'Макс балл за раздел "Посещение лекций":'.$course_plan->max_lecrures }}</li>
+                                <li>{{ 'Макс балл за раздел "Зачет (экзамен)":'.$course_plan->max_exam }}</li>
                             </ul>
-                            {!! HTML::link('course_plan/'.$coursePlan->id_course_plan,'Подробнее',
+                            {!! HTML::link('course_plan/'.$course_plan->id_course_plan,'Подробнее',
                             array('class' => 'ink-reaction btn btn-primary','role' => 'button')) !!}
                         </div>
                     </div>

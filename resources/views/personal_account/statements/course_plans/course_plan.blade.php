@@ -1,11 +1,9 @@
 @extends('templates.base')
 @section('head')
-    <title>Учебный план {{$coursePlane->course_plan_name}}</title>
+    <title>Учебный план {{$course_plane->course_plan_name}}</title>
     <!-- BEGIN META -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="your,keywords">
-    <meta name="description" content="Short explanation about this website">
+
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <!-- END META -->
 
@@ -39,32 +37,32 @@
         </div>
     </div>
         <div class ="container-fluid">
-            <div class="card card-bordered style-gray course_plan" id="{{ $coursePlan->id_course_plan }}">
+            <div class="card card-bordered style-gray course_plan" id="{{ $course_plan->id_course_plan }}">
                 <div class="card-head">
-                    <header>{{"Учебный план: ".$coursePlan->course_plan_name}}</header>
+                    <header>{{"Учебный план: ".$course_plan->course_plan_name}}</header>
                     <div class="tools">
                         <div class="btn-group ">
-                            <a class="btn btn-icon-toggle btn-close delete" name="{{ $coursePlan->id_course_plan }}"><i class="md md-close"></i></a>
+                            <a class="btn btn-icon-toggle btn-close delete" name="{{ $course_plan->id_course_plan }}"><i class="md md-close"></i></a>
                         </div>
                     </div>
                 </div>
                 <div class="card-body style-default-bright">
                     <p class="card-text">
-                        {{$coursePlan->course_plan_desc}}
+                        {{$course_plan->course_plan_desc}}
                     </p>
                     <ul>
-                        <li>{{ 'Макс балл за раздел "Контрольные мероприятия в семестре":'.$coursePlan->max_controls }}</li>
-                        <li>{{ 'Макс балл за раздел "Посещение семинаров":'.$coursePlan->max_seminars }}</li>
-                        <li>{{ 'Макс балл за раздел "Работа на семинарах":'.$coursePlan->max_seminars_work }}</li>
-                        <li>{{ 'Макс балл за раздел "Посещение лекций":'.$coursePlan->max_lecrures }}</li>
-                        <li>{{ 'Макс балл за раздел "Зачет (экзамен)":'.$coursePlan->max_exam }}</li>
+                        <li>{{ 'Макс балл за раздел "Контрольные мероприятия в семестре":'.$course_plan->max_controls }}</li>
+                        <li>{{ 'Макс балл за раздел "Посещение семинаров":'.$course_plan->max_seminars }}</li>
+                        <li>{{ 'Макс балл за раздел "Работа на семинарах":'.$course_plan->max_seminars_work }}</li>
+                        <li>{{ 'Макс балл за раздел "Посещение лекций":'.$course_plan->max_lecrures }}</li>
+                        <li>{{ 'Макс балл за раздел "Зачет (экзамен)":'.$course_plan->max_exam }}</li>
                     </ul>
                     <div id="sections">
-                        <?php $sectionNumForFindJs = 0 ?>
-                        @foreach($coursePlan->section_plans as $sectionPlan)
-                                <?php $sectionNumForFindJs++ ?>
-                        @include('personal_account.statements.course_plans.sections.view_or_update_section',array('sectionPlan' => $sectionPlan, 'readOnly' => true,
-                        'sectionNumForFindJs' => $sectionNumForFindJs))
+                        <?php $section_num_for_find_js = 0 ?>
+                        @foreach($course_plan->section_plans as $section_plan)
+                                <?php $section_num_for_find_js++ ?>
+                        @include('personal_account.statements.course_plans.sections.view_or_update_section',array('section_plan' => $section_plan, 'readOnly' => true,
+                        'section_num_for_find_js' => $section_num_for_find_js))
                         @endforeach
                             {{--Здесь добавляются разделы учебного плана--}}
                     </div>

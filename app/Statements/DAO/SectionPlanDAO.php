@@ -16,32 +16,31 @@ use App\Statements\SeminarPlan;
 use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Validation\Rule;
-class SectionPlanDAO
-{
+class SectionPlanDAO {
 
     public function getSectionPlan($id){
-        $sectionPlan = SectionPlan::where('id_section_plan', $id)->first();
-        return $sectionPlan;
+        $section_plan = SectionPlan::where('id_section_plan', $id)->first();
+        return $section_plan;
     }
 
     public function storeSectionPlan(Request $request){
-        $sectionPlan = new SectionPlan();
-        $sectionPlan->section_plan_name = $request->section_plan_name;
-        $sectionPlan->section_plan_desc = $request->section_plan_desc;
-        $sectionPlan->id_course_plan = $request->id_course_plan;
-        $sectionPlan->section_num = $request->section_num;
-        $sectionPlan->is_exam = $request->is_exam;
-        $sectionPlan->save();
-        return $sectionPlan->id_section_plan;
+        $section_plan = new SectionPlan();
+        $section_plan->section_plan_name = $request->input('section_plan_name');
+        $section_plan->section_plan_desc = $request->input('section_plan_desc');
+        $section_plan->id_course_plan = $request->input('id_course_plan');
+        $section_plan->section_num = $request->input('section_num');
+        $section_plan->is_exam = $request->input('is_exam');
+        $section_plan->save();
+        return $section_plan->id_section_plan;
     }
 
     public function updateSectionPlan(Request $request){
-        $sectionPlan = $this->getSectionPlan($request->id_section_plan);
-        $sectionPlan->section_plan_name = $request->section_plan_name;
-        $sectionPlan->section_plan_desc = $request->section_plan_desc;
-        $sectionPlan->section_num = $request->section_num;
-        $sectionPlan->is_exam = $request->is_exam;
-        $sectionPlan->save();
+        $section_plan = $this->getSectionPlan($request->input('id_section_plan'));
+        $section_plan->section_plan_name = $request->input('section_plan_name');
+        $section_plan->section_plan_desc = $request->input('section_plan_desc');
+        $section_plan->section_num = $request->input('section_num');
+        $section_plan->is_exam = $request->input('is_exam');
+        $section_plan->save();
     }
 
 public function getValidateStoreSectionPlan(Request $request) {
@@ -52,7 +51,7 @@ public function getValidateStoreSectionPlan(Request $request) {
         'section_num' => [ 'required',
             'integer',
             'min:1',
-            Rule::unique('section_plans')->where('id_course_plan', $request->id_course_plan)
+            Rule::unique('section_plans')->where('id_course_plan', $request->input('id_course_plan'))
         ],
     ]);
     return $validator;
@@ -66,8 +65,8 @@ public function getValidateStoreSectionPlan(Request $request) {
             'section_num' => [ 'required',
                 'integer',
                 'min:1',
-                Rule::unique('section_plans')->where('id_course_plan', $request->id_course_plan)
-                    ->ignore( $request->id_section_plan, 'id_section_plan')
+                Rule::unique('section_plans')->where('id_course_plan', $request->input('id_course_plan'))
+                    ->ignore( $request->input('id_section_plan'), 'id_section_plan')
             ],
         ]);
         return $validator;

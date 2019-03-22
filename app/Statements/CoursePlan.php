@@ -9,9 +9,6 @@
 namespace App\Statements;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-
-
-
 class CoursePlan extends Eloquent
 {
     protected $table = 'course_plans';
@@ -21,12 +18,12 @@ class CoursePlan extends Eloquent
 
     /** в новое поле section_plans вставляется массив объектов SectionPlane */
     public function getSectionPlansAttribute(){
-        $sectionPlans = SectionPlan::where('id_course_plan', $this->attributes['id_course_plan'])->get();
-        foreach ($sectionPlans as $sectionPlan) {
-            $sectionPlan->getLecturePlansAttribute();
-            $sectionPlan->getSeminarPlansAttribute();
-            $sectionPlan->getControlWorkPlansAttribute();
+        $course_plans = SectionPlan::where('id_course_plan', $this->attributes['id_course_plan'])->get();
+        foreach ($course_plans as $course_plan) {
+            $course_plan->getLecturePlansAttribute();
+            $course_plan->getSeminarPlansAttribute();
+            $course_plan->getControlWorkPlansAttribute();
         }
-        return $sectionPlans->sortBy('section_num');
+        return $course_plans->sortBy('section_num');
     }
 }

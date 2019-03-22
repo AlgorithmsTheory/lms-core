@@ -12,10 +12,8 @@ namespace App\Http\Requests\Statements;
 use Illuminate\Foundation\Http\FormRequest;
 use App\User;
 use Auth;
-class AddCoursePlanRequest extends FormRequest
-{
-    public function authorize()
-    {
+class AddCoursePlanRequest extends FormRequest {
+    public function authorize() {
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
         if ($role == 'Админ'){
             return true;
@@ -25,8 +23,7 @@ class AddCoursePlanRequest extends FormRequest
 
     }
 
-    public function rules()
-    {
+    public function rules() {
         return [
             'course_plan_name' => "required|between:5,255",
             'course_plan_desc' => 'required|between:5,5000',

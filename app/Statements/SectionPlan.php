@@ -9,8 +9,7 @@
 namespace App\Statements;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class SectionPlan extends Eloquent
-{
+class SectionPlan extends Eloquent {
     protected $table = 'section_plans';
     public $timestamps = false;
     protected $primaryKey = 'id_section_plan';

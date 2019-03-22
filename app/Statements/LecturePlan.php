@@ -9,8 +9,7 @@
 namespace App\Statements;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class LecturePlan extends Eloquent
-{
+class LecturePlan extends Eloquent {
     protected $table = 'lecture_plans';
     public $timestamps = false;
     protected $primaryKey = 'id_lecture_plan';
