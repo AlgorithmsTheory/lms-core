@@ -68,7 +68,7 @@
             <div class="control_works col-lg-4">
                 @foreach($sectionPlan->control_work_plans as $controlWorkPlan)
                     <?php $controlWorkNumForFindJs++ ?>
-                    @include('personal_account.statements.course_plans.sections.lectures.view_or_update_lecture',array('itemSectionPlan' => $controlWorkPlan,
+                    @include('personal_account.statements.course_plans.sections.control_works.view_or_update_control_work',array('itemSectionPlan' => $controlWorkPlan,
                      'readOnly' => true, 'idCardForFindJs' => $controlWorkNumForFindJs))
                 @endforeach
             </div>

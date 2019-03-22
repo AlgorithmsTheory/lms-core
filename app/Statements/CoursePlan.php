@@ -22,11 +22,6 @@ class CoursePlan extends Eloquent
     /** в новое поле section_plans вставляется массив объектов SectionPlane */
     public function getSectionPlansAttribute(){
         $sectionPlans = SectionPlan::where('id_course_plan', $this->attributes['id_course_plan'])->get();
-        foreach ($sectionPlans as $sectionPlan) {
-            $sectionPlan->getLecturePlansAttribute();
-            $sectionPlan->getSeminarPlansAttribute();
-            $sectionPlan->getControlWorkPlansAttribute();
-        }
         return $sectionPlans->sortBy('section_num');
     }
 }

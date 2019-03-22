@@ -6,9 +6,11 @@ use App\Controls;
 use App\Lectures;
 use App\Seminars;
 
+use App\Statements\DAO\ControlWorkPlanDAO;
 use App\Statements\DAO\LecturePlanDAO;
 use App\Statements\DAO\SectionPlanDAO;
 use App\Statements\DAO\SeminarPlanDAO;
+use App\Statements\SectionPlan;
 use App\Testing\Test;
 use App\Totalresults;
 use App\Statements_progress;
@@ -18,6 +20,7 @@ use App\Testing\Result;
 use App\Group;
 use App\User;
 use Auth;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Question;
 use App\Codificator;
@@ -32,14 +35,16 @@ class StatementsController extends Controller{
     private $sectionPlanDAO;
     private $lecturePlanDAO;
     private $seminarPlanDAO;
+    private $controlWorkPlanDAO;
 
     public function __construct(CoursePlanDAO $coursePlanDAO, SectionPlanDAO $sectionPlanDAO, LecturePlanDAO $lecturePlanDAO
-    , SeminarPlanDAO $seminarPlanDAO)
+    , SeminarPlanDAO $seminarPlanDAO, ControlWorkPlanDAO $controlWorkPlanDAO)
     {
         $this->coursePlanDao = $coursePlanDAO;
         $this->sectionPlanDAO = $sectionPlanDAO;
         $this->lecturePlanDAO = $lecturePlanDAO;
         $this->seminarPlanDAO = $seminarPlanDAO;
+        $this->controlWorkPlanDAO = $controlWorkPlanDAO;
     }
 
     // возвращает страницу с учебными планами
@@ -128,10 +133,13 @@ class StatementsController extends Controller{
         $typeCard = $request->type_card;
         $viewPath = $this->getPathAddViewLecSemCW($typeCard);
         $numberNewCard = $request->number_new_card;
-
+        $tests_control_work = new stdClass();
+        if($typeCard == 'control_work') {
+            $tests_control_work =  $this->testsAsArray(Test::all());
+        }
         $returnHtmlString = view('personal_account.statements.course_plans.sections.'.$viewPath,
             ['idNewCardForFindJs' => $request->id_new_card_for_find_js,
-                'numberNewCard' => $request->number_new_card,
+                'numberNewCard' => $request->number_new_card, 'tests_control_work' => $tests_control_work
             ])->render();
 
         return response()->json(['view' => $returnHtmlString
@@ -143,20 +151,7 @@ class StatementsController extends Controller{
     //Сохранение семинара или лекции в разделе учебного плана
     public function storeLecOrSemOrCW(Request $request) {
 
-//        $typeCard = $request->type_card;
         $viewPath = $this->getViewUpdatePathLecSemCW($request->type_card);
-//        $itemSectionDAO =  new stdClass();
-//        switch ($typeCard) {
-//            case 'lecture':
-//                $itemSectionDAO = $this->lecturePlanDAO;
-//                break;
-//            case 'seminar':
-//
-//                break;
-//            case 'control_work':
-//
-//                break;
-//        }
         $itemSectionDAO = $this->getItemSectionDAO($request->type_card);
 
         $validator = $itemSectionDAO->getStoreValidate($request);
@@ -204,6 +199,13 @@ class StatementsController extends Controller{
             , 'type_card' => $request->type_card]);
     }
 
+    public function testsAsArray(Collection $tests) {
+        $testArray = array();
+        foreach ($tests as $test) {
+            $testArray[$test->id_test] = $test->test_name;
+        }
+        return $testArray;
+    }
 
     public function getItemSectionDAO ($typeCard) {
         $itemSectionDAO =  new stdClass();
@@ -215,7 +217,7 @@ class StatementsController extends Controller{
                 $itemSectionDAO = $this->seminarPlanDAO;
                 break;
             case 'control_work':
-
+                $itemSectionDAO = $this->controlWorkPlanDAO;
                 break;
         }
         return $itemSectionDAO;

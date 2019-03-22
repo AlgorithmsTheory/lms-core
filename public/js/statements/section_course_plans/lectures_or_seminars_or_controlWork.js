@@ -27,7 +27,7 @@ function getStyleCard(typeCard) {
     }
 }
 
-//
+//Сообщение для удаления
 function getDeleteMsg(typeCard) {
     if (typeCard == 'lecture') {
         return 'Удалить лекцию ?';
@@ -51,17 +51,21 @@ function return1IfEmpty(elem) {
     }
 }
 
-//Преобразовывает сериализованную форму в json
-function getFormData($form){
-    var unindexed_array = $form.serializeArray();
-    var indexed_array = {};
+//Скрытие поля выбора тестов в К.М. при выборе типа WRITING, VERBAL
+$(document).on('change', 'select[name="control_work_plan_type"]', function () {
 
-    $.map(unindexed_array, function(n, i){
-        indexed_array[n['name']] = n['value'];
-    });
+    var optionSelected = $(this).find("option:selected").val();
 
-    return indexed_array;
-}
+    var selectTests = $(this).siblings('select[name="id_test"]');
+
+    if( optionSelected == 'WRITING' || optionSelected == 'VERBAL' || optionSelected == ''){
+        selectTests.hide();
+        selectTests.find("option:selected").val('');
+    } else {
+        selectTests.show();
+    }
+
+});
 
 //возвращает представление для добавление раздела
 $(document).on('click', '.add_lecture_or_sem_or_CW', function () {
@@ -94,7 +98,7 @@ $(document).on('click', '.add_lecture_or_sem_or_CW', function () {
         success: function(data){
             var thisSection = $('#section'+data.idSectionForFindJs);
             var typeConteinerCards = getConteinerTypeCard(data.typeCard);
-            //Вставка формы добавления лекции или сема
+            //Вставка формы добавления лекции или сема или к.м.
             thisSection.find('.'+typeConteinerCards).append(data.view);
 
 
@@ -113,6 +117,7 @@ $(document).on('click', '.store_lec_sem_cw', function (event) {
     var idSectionForFindJs = currentSection.attr('id').match(/\d+/).toString();
     var idCardForFindJs = $(this).closest('.'+typeCard).attr('id');
     var thisForm = $(this).closest('form').serialize();
+    var idCoursePlan = $('.course_plan').attr('id');
     $.ajax({
         cache: false,
         type: 'POST',
@@ -128,7 +133,8 @@ $(document).on('click', '.store_lec_sem_cw', function (event) {
             id_section_DB: idSectionDB,
             id_section_for_find_js: idSectionForFindJs,
             id_card_for_find_js: idCardForFindJs,
-            type_card: typeCard
+            type_card: typeCard,
+            id_course_plan: idCoursePlan
         },
         success: function(data){
             console.log(data);
