@@ -5,6 +5,7 @@ use App\Control_test_dictionary;
 use App\Controls;
 use App\Lectures;
 use App\Seminars;
+use App\Statements\DAO\SectionPlanDAO;
 use App\Testing\Test;
 use App\Totalresults;
 use App\Statements_progress;
@@ -18,8 +19,154 @@ use Illuminate\Http\Request;
 use App\Question;
 use App\Codificator;
 use Session;
+use App\Statements\DAO\CoursePlanDAO;
+use App\Http\Requests\Statements\AddCoursePlanRequest;
 
-class StatementsController extends Controller{
+class StatementsController extends Controller {
+
+    private $course_plan_dao;
+    private $section_plan_dao;
+
+    public function __construct(CoursePlanDAO $course_plan_dao, SectionPlanDAO $section_plan_dao) {
+        $this->course_plan_dao = $course_plan_dao;
+        $this->section_plan_dao = $section_plan_dao;
+    }
+
+    // возвращает страницу с учебными планами
+    public function showCoursePlans() {
+        $course_plans = $this->course_plan_dao->allCoursePlan();
+        return view('personal_account.statements.course_plans.course_plans', compact('course_plans'));
+    }
+
+    // возвращает страницу создание нового учебного плана
+    public function createCoursePlans() {
+        return view('personal_account.statements.course_plans.create_course_plans');
+    }
+
+    //сохранение учебного плана
+    public function storeCoursePlan(AddCoursePlanRequest $request) {
+        $id_course_plan = $this->course_plan_dao->storeCoursePlan($request);
+        return redirect('course_plan/' . $id_course_plan );
+    }
+
+    //возвращает конкретный учебный план для просмотра и редактирования
+    public function getCoursePlan($id) {
+        $course_plan = $this->course_plan_dao->getCoursePlan($id);
+        return view('personal_account.statements.course_plans.course_plan', compact('course_plan'));
+    }
+
+    //возвращает представление для добавления раздела учебного плана
+    public function getAddSection(Request $request) {
+        if ($request->ajax()) {
+            $section_num_for_find_js = $request->input('current_count');
+            $id_course_plan = $request->input('id_course_plan');
+            return view('personal_account.statements.course_plans.sections.add_section', compact('section_num_for_find_js', 'id_course_plan'));
+        }
+    }
+
+    //Сохранение раздела учебного плана
+    public function storeSection(Request $request) {
+        if ($request->ajax()) {
+            $validator = $this->section_plan_dao->getValidateStoreSectionPlan($request);
+            //Для вставки html через js, используя число сгенерированное системой , а не написанного вручную номера раздела
+            $section_num_for_find_js = $request->input('section_num_for_find_js');
+
+            if ($validator->passes()) {
+                $id_section_plan = $this->section_plan_dao->storeSectionPlan($request);
+                $section_plan = $this->section_plan_dao->getSectionPlan($id_section_plan);
+                $read_only = true;
+                $returnHtmlString = view('personal_account.statements.course_plans.sections.view_or_update_section', compact('section_plan', 'read_only',
+                    'section_num_for_find_js'))
+                    ->render();
+                return response()->json(['view' => $returnHtmlString, 'sectionNumForFindJs' => $section_num_for_find_js]);
+            } else {
+                return response()->json(['error' => $validator->errors()->all(), 'sectionNumForFindJs' => $section_num_for_find_js]);
+            }
+        }
+    }
+
+    //Обновление  информации о разделе учебного плана
+    public function updateSection(Request $request) {
+        if ($request->ajax()) {
+            $validator = $this->section_plan_dao->getValidateUpdateSectionPlan($request);
+            //Для вставки html через js
+            $section_num_for_find_js = $request->input('section_num_for_find_js');
+
+            if ($validator->passes()) {
+                $this->section_plan_dao->updateSectionPlan($request);
+
+                return response()->json(['sectionNumForFindJs' => $section_num_for_find_js,
+                    'realSectionNum' => $request->input('section_num')]);
+            } else {
+                return response()->json(['error' => $validator->errors()->all(), 'sectionNumForFindJs' => $section_num_for_find_js]);
+            }
+        }
+    }
+
+    //Удаление раздела
+    public function deleteSection(Request $request) {
+        if ($request->ajax()) {
+            $this->section_plan_dao->deleteSectionPlan($request->id_section_plan);
+            return $request->section_num_for_find_js;
+        }
+    }
+
+    // Возвращает представление для добавления семинара или лекции
+    public function getAddLecOrSemOrCW(Request $request) {
+        $typeCard = $request->type_card;
+        $viewPath = $this->getViewPathLecSemCW($typeCard);
+        $numberNewCard = $request->number_new_card;
+
+        $returnHtmlString = view('personal_account.statements.course_plans.sections.'.$viewPath,
+            ['idNewCardForFindJs' => $request->id_new_card_for_find_js,
+                'numberNewCard' => $request->number_new_card,
+            ])->render();
+
+        return response()->json(['view' => $returnHtmlString
+            , 'idSectionForFindJs' => $request->id_section_for_find_js,
+            'numberNewCard' => $numberNewCard,
+            'typeCard' => $typeCard]);
+    }
+
+    //Сохранение семинара или лекции в разделе учебного плана
+    public function storeLecOrSemOrCW(Request $request) {
+        $typeCard = $request->type_card;
+        $viewPath = $this->getViewPathLecSemCW($typeCard);
+
+        if ($typeCard == 'lecture') {
+            return "hi";
+
+        } else if ($typeCard == 'seminar'){
+
+
+        } else {
+
+        }
+
+    }
+
+    public function getViewPathLecSemCW($typeCard) {
+        if ($typeCard == 'lecture') {
+            return 'lectures.add_lecture';
+        } else if ($typeCard == 'seminar'){
+            return 'seminars.add_seminar';
+        } else {
+            return 'control_works.add_control_work';
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //Возвращает главную страницу для выбора типа ведомости и группы
     public function statements(){
