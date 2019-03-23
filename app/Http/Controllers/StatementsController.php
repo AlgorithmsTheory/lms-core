@@ -135,7 +135,7 @@ class StatementsController extends Controller{
         $numberNewCard = $request->number_new_card;
         $tests_control_work = new stdClass();
         if($typeCard == 'control_work') {
-            $tests_control_work =  $this->testsAsArray(Test::all());
+            $tests_control_work =  Test::all();
         }
         $returnHtmlString = view('personal_account.statements.course_plans.sections.'.$viewPath,
             ['idNewCardForFindJs' => $request->id_new_card_for_find_js,
@@ -199,13 +199,6 @@ class StatementsController extends Controller{
             , 'type_card' => $request->type_card]);
     }
 
-    public function testsAsArray(Collection $tests) {
-        $testArray = array();
-        foreach ($tests as $test) {
-            $testArray[$test->id_test] = $test->test_name;
-        }
-        return $testArray;
-    }
 
     public function getItemSectionDAO ($typeCard) {
         $itemSectionDAO =  new stdClass();

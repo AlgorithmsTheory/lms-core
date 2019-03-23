@@ -26,8 +26,13 @@ class ControlWorkPlanDAO implements ItemSectionDAO
         $controlWorkPlan = new ControlWorkPlan();
         $controlWorkPlan->control_work_plan_name = $form['control_work_plan_name'];
         $controlWorkPlan->control_work_plan_desc = $form['control_work_plan_desc'];
+        $controlWorkPlan->control_work_plan_type = $form['control_work_plan_type'];
 
-        $controlWorkPlan->id_test =  $form['id_test'];
+        if($form['control_work_plan_type'] == 'ONLINE_TEST' || $form['control_work_plan_type'] == 'OFFLINE_TEST') {
+            $controlWorkPlan->id_test =  $form['id_test'];
+        } else {
+            $controlWorkPlan->id_test = NULL;
+        }
         $controlWorkPlan->max_points =  $form['max_points'];
         $controlWorkPlan->id_section_plan = $request->id_section_DB;
         $controlWorkPlan->save();
@@ -39,23 +44,27 @@ class ControlWorkPlanDAO implements ItemSectionDAO
         $controlWorkPlan = $this->get($form['id_control_work_plan']);
         $controlWorkPlan->control_work_plan_name = $form['control_work_plan_name'];
         $controlWorkPlan->control_work_plan_desc = $form['control_work_plan_desc'];
+        $controlWorkPlan->control_work_plan_type = $form['control_work_plan_type'];
 
+        if($form['control_work_plan_type'] == 'ONLINE_TEST' || $form['control_work_plan_type'] == 'OFFLINE_TEST') {
+            $controlWorkPlan->id_test =  $form['id_test'];
+        } else {
+            $controlWorkPlan->id_test = NULL;
+        }
         $controlWorkPlan->max_points =  $form['max_points'];
-        $controlWorkPlan->id_test =  $form['id_test'];
+        $controlWorkPlan->id_section_plan = $request->id_section_DB;
         $controlWorkPlan->update();
     }
 
     public function getStoreValidate(Request $request) {
-
         $form = $this->deserializationHtmlForm($request->input('form'));
         $request_array = array();
         $request_array['control_work_plan_name'] = $form['control_work_plan_name'];
         $request_array['control_work_plan_type'] = $form['control_work_plan_type'];
         $request_array['max_points'] = $form['max_points'];
+        $request_array['id_test'] = $form['id_test'];
         $request_array['id_course_plan'] = $request->input('id_course_plan');
 
-
-        //toDO добавить проверку на уникальность номера К.М.
         $validator = Validator::make($request_array, [
             'control_work_plan_name' => 'required|between:5,255',
             'control_work_plan_type' => 'required',
@@ -68,9 +77,6 @@ class ControlWorkPlanDAO implements ItemSectionDAO
             //введённый макс балл
             $current_max_points = $validator->getData()['max_points'];
             //Кол баллов за все к.м. в курсе
-//            $max_points = SectionPlan::where('id_course_plan', $validator->getData()['id_course_plan'])
-//                ->join('control_work_plans','section_plans.id_section_plan', '=', 'control_work_plans.id_section_plan')
-//                ->sum('max_points');
             $max_points = DB::table('section_plans')
                 ->join('control_work_plans', 'section_plans.id_section_plan', '=', 'control_work_plans.id_section_plan')
                 ->where('id_course_plan', $validator->getData()['id_course_plan'])->sum('max_points');
@@ -80,8 +86,14 @@ class ControlWorkPlanDAO implements ItemSectionDAO
                 ->first()->max_controls;
 
             if($max_points + $current_max_points > $max_controls) {
-                $x = $current_max_points + $max_points;
-                $validator->errors()->add('exceeded_max_points','Сумма баллов за все К.М превышает "Контрольные мероприятия в семестре"'.$x.' '.$max_controls);
+                $validator->errors()->add('exceeded_max_points','Сумма баллов за все К.М превышает "Контрольные мероприятия в семестре"' . '(' . $max_controls . ')');
+            }
+
+            if($validator->getData()['control_work_plan_type'] == 'ONLINE_TEST'
+                || $validator->getData()['control_work_plan_type'] == 'OFFLINE_TEST') {
+                if ($validator->getData()['id_test'] == null) {
+                    $validator->errors()->add('empty_test','Выберите тест');
+                }
             }
 
         });
@@ -89,15 +101,7 @@ class ControlWorkPlanDAO implements ItemSectionDAO
     }
 
     public function getUpdateValidate(Request $request) {
-        $deserializForm = $this->deserializationHtmlForm($request->form);
-
-        //toDO добавить проверку на уникальность номера К.М.
-        $validator = Validator::make($deserializForm, [
-            'control_work_plan_name' => 'required|between:5,255',
-            'max_points' => ['required','integer', 'between:0,100'],
-
-        ]);
-        return $validator;
+        return $this->getStoreValidate($request);
     }
 
     public function delete(Request $request){

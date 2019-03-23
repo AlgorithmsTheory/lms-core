@@ -33,10 +33,19 @@
                                 'OFFLINE_TEST' => 'Печатный тест системы',
                                 'WRITING' => 'Письменная контрольная работа',
                                 'VERBAL' => 'Устный опрос'), $itemSectionPlan->control_work_plan_type,
-                                ['class' => 'form-control', 'required' => 'required', $readOnly ? 'disabled' : '']) !!}
+                                ['class' => 'form-control', 'required' => 'required', $readOnly ? 'disabled' : '', 'id' => 'control_work_plan_type']) !!}
 
-                {{ Form::select('id_test', array_merge(array('' => 'Выберите тест'), $itemSectionPlan->tests) , $itemSectionPlan->id_test
-                , ['class' => 'form-control', 'required' => 'required', $readOnly ? 'disabled' : '']) }}
+
+                <select name ="id_test"  class="{{$itemSectionPlan->id_test == null ? "test_select_hide" : ''}} form-control" required {{$readOnly ? 'disabled' : ''}}
+                id="id_test">
+                    <option value="">Выберите тест</option>
+                    @foreach($itemSectionPlan->tests as $test)
+                        <option value="{{$test->id_test}}" {{($test->id_test == $itemSectionPlan->id_test) ? 'selected' : ''}}>
+                            {{$test->test_name}}
+                        </option>
+                    @endforeach
+                </select>
+
 
                 {!! Form::label('max_points' , 'Макс балл:') !!}
                 {!! Form::text('max_points',$itemSectionPlan->max_points,['class' => 'form-control','placeholder' => 'Введите макс балл'

@@ -25,8 +25,12 @@
                 'WRITING' => 'Письменная контрольная работа',
                 'VERBAL' => 'Устный опрос'), null, ['class' => 'form-control', 'required' => 'required', $readOnly ? 'disabled' : '']) !!}
 
-                {{ Form::select('id_test', array_merge(array('' => 'Выберите тест'), $tests_control_work) , null
-                , ['class' => 'form-control', 'required' => 'required']) }}
+                <select name ="id_test" class="form-control collapse" required >
+                    <option value="">Выберите тест</option>
+                    @foreach($tests_control_work as $test)
+                        <option value="{{$test->id_test}}">{{$test->test_name}}</option>
+                    @endforeach
+                </select>
 
                 {!! Form::label('max_points' , 'Макс балл:') !!}
                 {!! Form::text('max_points',null,['class' => 'form-control','placeholder' => 'Введите макс балл'

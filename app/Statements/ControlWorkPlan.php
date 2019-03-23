@@ -19,12 +19,7 @@ class ControlWorkPlan extends Eloquent
 
     /** в новое поле tests вставляется массив объектов Tests */
     public function getTestsAttribute(){
-
-        $testArray = array();
         $tests = Test::select('id_test','test_name')->get();
-        foreach ($tests as $test) {
-            $testArray[$test->id_test] = $test->test_name;
-        }
-        return $testArray;
+        return $tests;
     }
 }

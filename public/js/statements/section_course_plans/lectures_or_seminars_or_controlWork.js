@@ -51,23 +51,29 @@ function return1IfEmpty(elem) {
     }
 }
 
+
+//Закрытие select Тестов
+$(document).ready(function(){
+    $('.test_select_hide').hide();
+});
 //Скрытие поля выбора тестов в К.М. при выборе типа WRITING, VERBAL
 $(document).on('change', 'select[name="control_work_plan_type"]', function () {
 
     var optionSelected = $(this).find("option:selected").val();
-
     var selectTests = $(this).siblings('select[name="id_test"]');
 
-    if( optionSelected == 'WRITING' || optionSelected == 'VERBAL' || optionSelected == ''){
+    if( optionSelected == 'ONLINE_TEST' || optionSelected == 'OFFLINE_TEST' ){
+        selectTests.collapse('show');
+        selectTests.show();
+
+    } else {
         selectTests.hide();
         selectTests.find("option:selected").val('');
-    } else {
-        selectTests.show();
     }
 
 });
 
-//возвращает представление для добавление раздела
+//возвращает представление для добавление лек/сем/К.М.
 $(document).on('click', '.add_lecture_or_sem_or_CW', function () {
 
     var typeCard = $(this).attr('data-type-card');
@@ -172,7 +178,11 @@ $(document).on('click', '.activate_edit_lec_sem_cw', function () {
     thisCard.find('input[name="'+typeCard+'_plan_name"]').filter( ':first' ).removeAttr("readonly");
     thisCard.find('input[name="'+typeCard+'_plan_desc"]').filter( ':first' ).removeAttr("readonly");
     thisCard.find('input[name="'+typeCard+'_plan_num"]').filter( ':first' ).removeAttr("readonly");
-    //toDo для типа контрольное мероприятия добавить поле с  привязанными тестами
+    if(typeCard == 'control_work') {
+        thisCard.find('#control_work_plan_type').filter( ':first' ).prop( "disabled", false );
+        thisCard.find('#id_test').filter( ':first' ).prop( "disabled", false );
+        thisCard.find('input[name="max_points"]').filter( ':first' ).removeAttr("readonly");
+    }
     //вставка кнопки "Обновить информ. о разделе"
     var htmlUpdateBatton = '<button type="button" class="ink-reaction btn btn-'+getStyleCard(typeCard)+' update_lec_sem_cw">Обновить</button>';
     thisCard.find('.update_button_place').filter( ':first' ).html(htmlUpdateBatton);
@@ -184,10 +194,11 @@ $(document).on('click', '.update_lec_sem_cw', function () {
     var thisCard = $(this).closest('.card');
     var typeCard = thisCard.attr('data-type-card');
     var currentSection = $(this).closest('.section');
+    var idSectionDB = currentSection.attr('data-id-DB');
     var idSectionForFindJs = currentSection.attr('id').match(/\d+/).toString();
     var idCardForFindJs = thisCard.attr('id');
     var thisForm = $(this).closest('form').serialize();
-
+    var idCoursePlan = $('.course_plan').attr('id');
     $.ajax({
         type: 'PATCH',
         beforeSend: function (xhr) {
@@ -201,7 +212,9 @@ $(document).on('click', '.update_lec_sem_cw', function () {
         data:  { form: thisForm,
             id_section_for_find_js: idSectionForFindJs,
             id_card_for_find_js: idCardForFindJs,
-            type_card: typeCard
+            type_card: typeCard,
+            id_course_plan: idCoursePlan,
+            id_section_DB: idSectionDB
         },
         success: function(data){
             console.log(data);
@@ -213,9 +226,12 @@ $(document).on('click', '.update_lec_sem_cw', function () {
                 //выключение readonly для полей
                 currentCard.find('input[name="'+typeCard+'_plan_name"]').filter( ':first' ).attr('readonly', true);
                 currentCard.find('input[name="'+typeCard+'_plan_desc"]').filter( ':first' ).attr('readonly', true);
-                currentCard.find('input[name="'+typeCard+'_plan_num"]').filter( ':first' ).prop( "readonly", true);
-                //toDo добавить ещё поле с выбором тестов для контрольного мероприятия
-
+                currentCard.find('input[name="'+typeCard+'_plan_num"]').filter( ':first' ).attr( "readonly", true);
+                if(typeCard == 'control_work') {
+                    thisCard.find('#control_work_plan_type').filter( ':first' ).prop( "disabled", true );
+                    thisCard.find('#id_test').filter( ':first' ).prop( "disabled", true );
+                    thisCard.find('input[name="max_points"]').filter( ':first' ).attr('readonly', true);;
+                }
                 //удаление кнопки "Обновить доп. инфор о разделе"
                 currentCard.find('.update_button_place').filter( ':first' ).empty();
                 // удаление сообщений об ошибках
