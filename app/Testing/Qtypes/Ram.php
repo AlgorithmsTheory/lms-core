@@ -80,7 +80,7 @@ class Ram extends QuestionType implements Checkable {
 		$debug_counter = $array[0];
 		$sequences_true = $array[1];
 		$sequences_all = $array[2];
-		$score = 0;
+		$score = $this->points;
 		
 		if($sequences_true == $sequences_all){
 			$mark = 'Верно';
@@ -89,8 +89,20 @@ class Ram extends QuestionType implements Checkable {
 			$mark = 'Неверно';
 		}
 		
-		$right_percent = ($sequences_true * 1.0) / ($sequences_all * 1.0) * 100;
-		$score = $right_percent - $debug_counter;
+        $debug_counter--;
+        if($debug_counter > 9){
+            $debug_counter = 9;
+        }
+        
+		$right_percent = ($sequences_true * 1.0) / ($sequences_all * 1.0);
+        $score_fee = 1 / ($sequences_all * 1.0) / 10;
+        
+		$score = $score * ($right_percent - $score_fee * $debug_counter);
+        if($score < 0){
+            $score = 0;
+        }
+        
+        $right_percent = $right_percent * 100;
 		
 		$data = array('mark'=>$mark, 'score'=>$score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => 0, 'right_percent' => $right_percent);
         return $data;

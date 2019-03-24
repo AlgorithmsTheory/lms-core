@@ -54,12 +54,17 @@ function sendForm(status){
 }
 
 function fillSuper(){
-		ramSubmitTask(false);
-	
-        var amount = document.getElementById('amount').value;
-        for (var i=0; i<amount; i++){
-            fill(i);
-        }
+    // Execute RAM program before send result
+    var cnt = 0;
+    $("[name^=ram-entity]").each(function(){
+        ramSubmitTask(cnt, false);
+        cnt++
+    });
+
+    var amount = document.getElementById('amount').value;
+    for (var i=0; i<amount; i++){
+        fill(i);
+    }
 }
 
 function fill(i) {
