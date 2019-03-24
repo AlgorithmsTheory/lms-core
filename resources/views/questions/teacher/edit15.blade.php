@@ -15,7 +15,7 @@
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <input type="hidden" name="id-question" value="{{ $data['question']['id_question'] }}">
         <input type="hidden" name="type" value="{{ $data['type_name'] }}">
-        
+        <input type="hidden" id="count" value="{{ $data['count'] }}">
         @for ($i = 1; $i < count($data['images']); $i += 2)
             <input type="hidden" class="images-in-text" value="{{ $data['images'][$i] }}">
         @endfor
@@ -69,12 +69,36 @@
                         </div>
                         <br>
 
-                        <!-- Номер задачи выбранного эмулятора -->
-                        <div class="form-group">
-                            <input type="number" step="1" name="task_id" id="task_id" class="form-control" value="{{ $data['task_id'] }}">
-                            <label for="task_id">Номер задачи в таблице эмулятора</label>
+                        <!-- Входящие последовательности -->
+                        <div id="variants-in" class="col-md-6 col-sm-6">
+                            @for ($i = 0; $i < $data['count']; $i++)
+                                <div class="form-group">
+                                    <textarea  name="variants-in[]" class="form-control textarea3" rows="1" required placeholder=""
+                                    @if ($i == 0)
+                                    placeholder="Этот вариант будет ответом"
+                                    @endif
+                                    >{{$data['variants-in'][$i]}}</textarea>
+                                    <label for="textarea3">Входное слово {{$i+1}}</label>
+                                </div>
+                            @endfor
                         </div>
-	                    <br>
+                        <!-- Выходящие последовательности -->
+                        <div id="variants-out" class="col-md-6 col-sm-6">
+                            @for ($i = 0; $i < $data['count']; $i++)
+                                <div class="form-group">
+                                    <textarea  name="variants-out[]"  class="form-control textarea3" rows="1" placeholder=""
+                                    @if ($i == 0)
+                                    placeholder="This variant will be the answer"
+                                    @endif
+                                    >{{$data['variants-out'][$i]}}</textarea>
+                                    <label for="textarea3">Выходное слово {{$i+1}}</label>
+                                </div>
+                            @endfor
+                        </div>
+                        <div class="col-lg-offset-10 col-md-10 col-sm-6" id="add-del-buttons">
+                            <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-var-1"><b>+</b></button>
+                            <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-var-1"><b>-</b></button>
+                        </div>
 
                         <div id="other-options" class="col-md-10 col-sm-6">
                             <div class="form-group">
@@ -101,6 +125,27 @@
                                     @endforeach
                                 </select>
                                 <label for="select-theme">Тема</label>
+                            </div>
+
+                            <!-- Баллы за правильный ответ -->
+                            <div class="form-group">
+                                <input type="number" min="1" name="points" id="points" class="form-control" value="{{ $data['question']['points'] }}">
+                                <label for="points">Баллы за верный ответ</label>
+                            </div>
+
+                            <!-- Сложность -->
+                            <div class="form-group col-md-11 col-sm-11">
+                                <textarea  name="difficulty" id="difficulty" class="form-control" rows="1" placeholder="" required readonly>{{ $data['question']['difficulty'] }}</textarea>
+                                <label for="difficulty">Сложность</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1">
+                                <button class="btn btn-warning btn-raised submit-question" type="button" id="reevaluate-difficulty">Пересчитать</button>
+                            </div>
+
+                            <!-- Дискриминант -->
+                            <div class="form-group col-md-11 col-sm-11">
+                                <textarea  name="discriminant" id="discriminant" class="form-control" rows="1" placeholder="" required readonly>{{ $data['question']['discriminant'] }}</textarea>
+                                <label for="discriminant">Дискриминант</label>
                             </div>
 
                             <!-- Время на вопрос -->
@@ -138,7 +183,7 @@
 
     @stop
     @section('js-down')
-    {!! HTML::script('js/question_create/oneChoice.js') !!}
+    {!! HTML::script('js/question_create/ram.js') !!}
     {!! HTML::script('js/question_create/imageInTitle.js') !!}
     {!! HTML::script('js/question_create/questionCreate.js') !!}
     @stop

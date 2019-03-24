@@ -1,3 +1,4 @@
+    <input type="hidden" id="count" value="4">
     <div class="checkbox checkbox-styled">
         <label>
             <input type="checkbox" name="control" id="control">
@@ -10,8 +11,8 @@
             <span>Переведен на английский язык</span>
         </label>
     </div>
-	
-	<!-- Текст на русском языке -->
+
+    <!-- Текст на русском языке -->
     <div class="form-group">
         <textarea  name="title" id="textarea1" class="form-control" rows="3" placeholder="" required></textarea>
         <label for="textarea1">Текст</label>
@@ -27,13 +28,50 @@
         <input type="file" name="text-images[]" id="text-image-input-1" class="text-image-input">
     </div>
     <br>
-	
-	<!-- Номер задачи выбранного эмулятора -->
-    <div class="form-group">
-        <input type="number" step="1" name="task_id" id="task_id" class="form-control">
-        <label for="task_id">Номер задачи в таблице эмулятора</label>
+
+    <!-- Тестовые последовательности -->
+    <!-- Входное слово -->
+    <div id="variants-in" class="col-md-6 col-sm-6">
+        <div class="form-group">
+            <textarea  name="variants-in[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
+            <label for="textarea3">Входное слово 1</label>
+        </div>
+        <div class="form-group">
+            <textarea  name="variants-in[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
+            <label for="textarea3">Входное слово 2</label>
+        </div>
+        <div class="form-group">
+            <textarea  name="variants-in[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
+            <label for="textarea3">Входное слово 3</label>
+        </div>
+        <div class="form-group">
+            <textarea  name="variants-in[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
+            <label for="textarea3">Входное слово 4</label>
+        </div>
     </div>
-	<br>
+    <!-- Выходное слово -->
+    <div id="variants-out" class="col-md-6 col-sm-6">
+        <div class="form-group">
+            <textarea  name="variants-out[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
+            <label for="textarea3">Выходное слово 1</label>
+        </div>
+        <div class="form-group">
+            <textarea  name="variants-out[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
+            <label for="textarea3">Выходное слово 2</label>
+        </div>
+        <div class="form-group">
+            <textarea  name="variants-out[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
+            <label for="textarea3">Выходное слово 3</label>
+        </div>
+        <div class="form-group">
+            <textarea  name="variants-out[]"  class="form-control textarea3" rows="1" placeholder="" required></textarea>
+            <label for="textarea3">Выходное слово 4</label>
+        </div>
+    </div>
+    <div class="col-lg-offset-10 col-md-10 col-sm-6" id="add-del-buttons">
+        <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-var-1"><b>+</b></button>
+        <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-var-1"><b>-</b></button>
+    </div>
 
     <div id="other-options" class="col-md-10 col-sm-6">
         <div class="form-group">
@@ -48,6 +86,24 @@
 
         <div class="form-group" id="container">
             <!-- контейнер для ajax -->
+        </div>
+
+        <!-- Баллы за правильный ответ -->
+        <div class="form-group">
+            <input type="number" min="1" step="0.1" max="2" name="points" id="points" class="form-control" value="1">
+            <label for="points">Баллы за верный ответ</label>
+        </div>
+
+        <!-- Сложность -->
+        <div class="form-group">
+            <textarea  name="difficulty" id="difficulty" class="form-control" rows="1" placeholder="" required readonly>0</textarea>
+            <label for="difficulty">Сложность</label>
+        </div>
+
+        <!-- Дискриминант -->
+        <div class="form-group">
+            <textarea  name="discriminant" id="discriminant" class="form-control" rows="1" placeholder="" required readonly>0.5</textarea>
+            <label for="discriminant">Дискриминант</label>
         </div>
 
         <!-- Время на вопрос -->
@@ -77,4 +133,5 @@
 </div>
 </div>
 
+{!! HTML::script('js/question_create/ram.js') !!}
 {!! HTML::script('js/question_create/imageInTitle.js') !!}

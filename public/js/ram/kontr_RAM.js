@@ -1,11 +1,11 @@
 function checkAnswer(impl, arr){
 	var count = 0;
-	for(var i=0; i < arr.length; i++){
-		envs[impl].ctx.input.val(arr[i]['input_word']);
+	for(var i=0; i < arr['input_word'].length; i++){
+		envs[impl].ctx.input.val(arr['input_word'][i]);
 		envs[impl].ctx.output.val("");
 		envs[impl].ctx.drop_run.trigger("click");
 		envs[impl].ctx.btn_start.trigger("click");
-		if( envs[impl].ctx.output.val() == " " + arr[i]['output_word'] ){
+		if( envs[impl].ctx.output.val() == " " + arr['output_word'][i] ){
 			count++;
 		}
 		envs[impl].ctx.btn_reset.trigger("click");
@@ -30,7 +30,7 @@ function ramSubmitTask(impl, notice){
 	var sequences_true = checkAnswer(impl, test_seq);
 	seq_true.val(sequences_true);
 	
-	var sequences_all  = test_seq.length;
+	var sequences_all  = test_seq['input_word'].length;
 	seq_all.val(sequences_all);
 	
 	envs[impl].ctx.input.val("");
