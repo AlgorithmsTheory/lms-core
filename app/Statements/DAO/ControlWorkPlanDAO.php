@@ -7,8 +7,6 @@
  */
 
 namespace App\Statements\DAO;
-use App\Statements\CoursePlan;
-use App\Statements\SectionPlan;
 use Illuminate\Http\Request;
 use DB;
 use Validator;

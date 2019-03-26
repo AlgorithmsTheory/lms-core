@@ -61,17 +61,42 @@ class StatementsController extends Controller{
     }
 
     //сохранение учебного плана
-    public function storeCoursePlan(AddCoursePlanRequest $request) {
+    public function storeCoursePlan(Request $request) {
+        $validator = $this->coursePlanDao->getStoreValidate($request);
+        if ($validator->passes()) {
+            $idCoursePlan = $this->coursePlanDao->storeCoursePlan($request);
+            return redirect('course_plan/'.$idCoursePlan);
+        } else {
+            return redirect()->to($this->getRedirectUrl())
+                ->withInput($request->input())->withErrors($validator->errors());
+        }
 
-        $idCoursePlan = $this->coursePlanDao->storeCoursePlan($request);
-        return redirect('course_plan/'.$idCoursePlan);
+
     }
 
     //возвращает конкретный учебный план для просмотра и редактирования
     public function getCoursePlan($id) {
-
         $coursePlan = $this->coursePlanDao->getCoursePlan($id);
-        return view('personal_account.statements.course_plans.course_plan', compact('coursePlan'));
+        $read_only = true;
+        return view('personal_account.statements.course_plans.course_plan', compact('coursePlan', 'read_only'));
+    }
+
+    //Обновление основной информации об учебном плане
+    public function updateCoursePlan(Request $request)
+    {
+        $validator = $this->coursePlanDao->getUpdateValidate($request);
+        if ($validator->passes()) {
+            $this->coursePlanDao->updateCoursePlan($request);
+            return response()->json(['courseName' => $request->course_plan_name]);
+        } else {
+            return response()->json(['error'=>$validator->errors()->all()]);
+        }
+    }
+
+    //Удаление учебного плана
+    public function deleteCoursePlan(Request $request) {
+        $this->coursePlanDao->deleteCoursePlan($request->id_course_plan);
+        return redirect('course_plans');
     }
 
     //возвращает представление для добавления раздела учебного плана

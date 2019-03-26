@@ -44,7 +44,14 @@
                             <header>{{"Учебный план: ".$coursePlan->course_plan_name}}</header>
                             <div class="tools">
                                 <div class="btn-group ">
-                                    <a class="btn btn-icon-toggle btn-close delete" name="{{ $coursePlan->id_course_plan }}"><i class="md md-close"></i></a>
+                                    <form action = "{{route('course_plan_delete')}}" method="post">
+                                        {{method_field('DELETE')}}
+                                        {{ csrf_field() }}
+                                        <input type="hidden"  name="id_course_plan" value="{{$coursePlan->id_course_plan}}" />
+                                        <div class="form-group">
+                                            <button type="submit" class="btn  btn-icon-toggle delete_couse_plan" ><i class="md md-close"></i></button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +94,7 @@
     {!! HTML::script('js/core/source/AppNavSearch.js') !!}
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
-    {!! HTML::script('js/library/definition.js') !!}
+    {!! HTML::script('js/statements/course_plans/course_plan.js') !!}
     <!-- END JAVASCRIPT -->
 @stop
 
