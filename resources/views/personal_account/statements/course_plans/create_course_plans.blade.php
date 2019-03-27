@@ -53,6 +53,10 @@
                     <h4> {!! Form::label('course_plan_desc', 'Описание учебного плана:') !!}</h4>
                     {!! Form::textarea('course_plan_desc',null,['class' => 'form-control','placeholder' => 'Введите описание учебного плана']) !!}
                 </div>
+
+                {!! Form::label('groups' , 'Назначение групп:') !!}
+                {!! Form::text('groups',null,['class' => 'form-control','placeholder' => 'Введите группы через пробел']) !!}
+
                 <div class="form-group row">
                     <h4> {!! Form::label('max_controls', 'Макс балл за раздел "Контрольные мероприятия в семестре":', ['class'=>'col-sm-6']) !!}</h4>
                     <div class="col-sm-2">

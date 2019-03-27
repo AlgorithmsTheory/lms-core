@@ -9,6 +9,7 @@
 namespace App\Statements\DAO;
 
 
+use App\Group;
 use App\Statements\ControlWorkPlan;
 use App\Statements\CoursePlan;
 use App\Statements\LecturePlan;
@@ -39,7 +40,14 @@ class CoursePlanDAO
         $coursePlane->max_seminars_work = $request->max_seminars_work;
         $coursePlane->max_lecrures = $request->max_lecrures;
         $coursePlane->max_exam = $request->max_exam;
+        $groups = strtoupper($request->input('groups'));
         $coursePlane->save();
+        if ($groups != null) {
+            $array_groups = $this->parseStringGroups($groups);
+            foreach ($array_groups as $group) {
+                Group::where('group_name', $group)->update(['id_course_plan' => $coursePlane->id_course_plan]);
+            }
+        }
         return $coursePlane->id_course_plan;
     }
 
@@ -52,6 +60,16 @@ class CoursePlanDAO
         $coursePlane->max_seminars_work = $request->max_seminars_work;
         $coursePlane->max_lecrures = $request->max_lecrures;
         $coursePlane->max_exam = $request->max_exam;
+        $groups = strtoupper($request->input('groups'));
+        $id_course_plan = $request->input('id_course_plan');
+        Group::where('id_course_plan', $id_course_plan)->update(['id_course_plan' => null]);
+        //Обнуляем ссылки на course plan в groups при удалении названий групп
+        if ($groups != null) {
+            $array_groups = $this->parseStringGroups($groups);
+            foreach ($array_groups as $group) {
+                Group::where('group_name', $group)->update(['id_course_plan' => $id_course_plan]);
+            }
+        }
         $coursePlane->update();
     }
 
@@ -72,11 +90,37 @@ class CoursePlanDAO
             $max_seminars_work = $validator->getData()['max_seminars_work'];
             $max_lecrures = $validator->getData()['max_lecrures'];
             $max_exam = $validator->getData()['max_exam'];
+            $groups = $validator->getData()['groups'];
+            $id_course_plan = $validator->getData()['id_course_plan'];
             $result_sum = $max_seminars + $max_controls + $max_seminars_work + $max_lecrures + $max_exam;
 
             if($result_sum > 100) {
                 $validator->errors()->add('exceeded_result_summ_course','Сумма баллов за весь учебный план превышает 100');
             }
+
+            if($groups != null) {
+                $array_groups = $this->parseStringGroups($groups);
+                if ($array_groups != false) {
+                    foreach ($array_groups as $group) {
+                        $group_find = Group::where('group_name', strtoupper($group))
+                            ->where('id_course_plan', '<>', '')
+                            ->where('id_course_plan', '<>', $id_course_plan)->first();
+
+                        if (!$group_find) {
+                            $group_find = Group::where('group_name', strtoupper($group))
+                                ->where('archived', 0)->first();
+                            if (!$group_find) {
+                                $validator->errors()->add('false_group' . $group,'Группа ' . $group . ' либо не существует либо архивирована');
+                            }
+                        } else {
+                            $validator->errors()->add('is_equal' . $group,'Группа ' . $group . ' уже назначена на другой учебный план');
+                        }
+                    }
+                } else {
+                    $validator->errors()->add('false_pattern_groups','Введите группы через пробел');
+                }
+            }
+
         });
         return $validator;
     }
@@ -89,6 +133,9 @@ class CoursePlanDAO
 
     public function deleteCoursePlan($id){
         $section_plans = SectionPlan::where('id_course_plan', $id)->select('id_section_plan')->get();
+
+        // Удаление (замена на null) из табл groups ссылки на id удаляемого учебного плана
+        Group::where('id_course_plan', $id)->update(['id_course_plan' => null]);
         foreach ($section_plans as $section_plan) {
             LecturePlan::where('id_section_plan', $section_plan->id_section_plan)->delete();
             SeminarPlan::where('id_section_plan', $section_plan->id_section_plan)->delete();
@@ -96,5 +143,9 @@ class CoursePlanDAO
         }
         SectionPlan::where('id_course_plan', $id)->delete();
         CoursePlan::where('id_course_plan', $id)->delete();
+    }
+
+    public function parseStringGroups($string_groups) {
+        return preg_split("/[\s]+/", trim($string_groups));
     }
 }

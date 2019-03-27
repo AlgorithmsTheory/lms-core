@@ -49,9 +49,9 @@ class StatementsController extends Controller{
 
     // возвращает страницу с учебными планами
     public function showCoursePlans() {
-
+        $read_only = true;
         $coursePlans = $this->coursePlanDao->allCoursePlan();
-        return view('personal_account.statements.course_plans.course_plans', compact('coursePlans'));
+        return view('personal_account.statements.course_plans.course_plans', compact('coursePlans', 'read_only'));
     }
 
     // возвращает страницу создание нового учебного плана
@@ -87,9 +87,9 @@ class StatementsController extends Controller{
         $validator = $this->coursePlanDao->getUpdateValidate($request);
         if ($validator->passes()) {
             $this->coursePlanDao->updateCoursePlan($request);
-            return response()->json(['courseName' => $request->course_plan_name]);
+            return response()->json(['idCoursePlan' => $request->id_course_plan,'courseName' => $request->course_plan_name]);
         } else {
-            return response()->json(['error'=>$validator->errors()->all()]);
+            return response()->json(['error'=>$validator->errors()->all(), 'idCoursePlan' => $request->id_course_plan]);
         }
     }
 

@@ -2,7 +2,8 @@
 
 //Изменяет course_plan для редактирования
 $(document).on('click', '.activate_edit_course_plan', function () {
-    var thisForm = $('.course_plan_form');
+    var thisCoursePlan = $(this).closest('.course_plan');
+    var thisForm = thisCoursePlan.find('.course_plan_form');
     $(this).hide();
     //выключение readonly для полей
     thisForm.find('input').removeAttr("readonly");
@@ -14,7 +15,8 @@ $(document).on('click', '.activate_edit_course_plan', function () {
 
 //Обновление основной информации course_plan
 $(document).on('click', '.update_course_plan', function () {
-    var thisForm = $('.course_plan_form');
+    var thisCoursePlan = $(this).closest('.course_plan');
+    var thisForm = thisCoursePlan.find('.course_plan_form');
     var formData = thisForm.serialize();
     $.ajax({
         type: 'PATCH',
@@ -28,8 +30,8 @@ $(document).on('click', '.update_course_plan', function () {
         url:   '/course_plan/update',
         data:  formData,
         success: function(data){
-            var thisCoursePlan = $('.course_plan');
-            var thisForm = $('.course_plan_form');
+            var thisCoursePlan = $('#course_plan'+data.idCoursePlan);
+            var thisForm = thisCoursePlan.find('.course_plan_form');
 
             if($.isEmptyObject(data.error)){
                 // замена header card на новое имя
@@ -61,7 +63,7 @@ $(document).on('click', '.update_course_plan', function () {
 
 //Удаление учебный план
 $(document).on('click', '.delete_couse_plan', function () {
-    if (confirm("Удалить учебный план")) {
+    if (confirm("Удалить учебный план ?")) {
 
     } else {
         return false;

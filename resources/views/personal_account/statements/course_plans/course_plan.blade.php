@@ -49,7 +49,7 @@
         </div>
     </div>
         <div class ="container-fluid">
-            <div class="card card-bordered style-gray course_plan" id="{{ $coursePlan->id_course_plan }}">
+            <div class="card card-bordered style-gray course_plan" id="course_plan{{ $coursePlan->id_course_plan }}">
                 <div class="card-head">
                     <header>Учебный план: {{$coursePlan->course_plan_name}}</header>
                     <div class="tools">
@@ -67,6 +67,11 @@
                         <h5 class="card-title">{!! Form::label('course_plan_name' , 'Учебный план:') !!}
                             {!! Form::text('course_plan_name',$coursePlan->course_plan_name,['class' => 'form-control','placeholder' => 'Введите название учебного плана',
                             'required' => 'required', $read_only ? 'readonly' : '' ]) !!}</h5>
+
+                            {!! Form::label('groups' , 'Назначение групп:') !!}
+                            {!! Form::text('groups',$coursePlan->groups,['class' => 'form-control','placeholder' => 'Введите группы через пробел'
+                            , $read_only ? 'readonly' : '' ]) !!}
+
                         </div>
                         <div class="col-lg-6">
                     {!! Form::label('course_plan_desc' , 'Описание учебного плана:') !!}
