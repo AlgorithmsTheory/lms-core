@@ -8,8 +8,8 @@
 
             </header>
 
-
-            <div class="tools">
+            @if($approved == 0)
+            <div class="tools disabled_after_approved">
                 <div class="btn-group">
                     <a class="btn btn-icon-toggle activate_edit_lec_sem_cw"><i class="glyphicon glyphicon-edit"></i></a>
                 </div>
@@ -17,6 +17,7 @@
                     <a class="btn btn-icon-toggle delete_lec_sem_cw"><i class="md md-close"></i></a>
                 </div>
             </div>
+                @endif
         </div>
         <div class="card-body style-default-bright">
 

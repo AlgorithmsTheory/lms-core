@@ -26,7 +26,7 @@
 @section('content')
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-9">
+            <div class="col-lg-8">
                 <section>
                     <div class="section-header">
                         <ol class="breadcrumb">
@@ -36,7 +36,22 @@
                     </div><!--end .section-header -->
                 </section>
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-4">
+
+                <div class="row">
+                    <div class="col-lg-5">
+                {{--Утверждение учебного плана для групп--}}
+                @if($coursePlan->approved == 0)
+                    <button type="button" class="ink-reaction btn btn-warning approve_course_plan"
+                            data-id-course-plan-approve="{{$coursePlan->id_course_plan}}">
+                        Утвердить</button>
+                @else
+                    <button type="button" class=" btn btn-success approved_course_plan">Утверждён</button>
+                @endif
+                    </div>
+
+                    @if($coursePlan->approved == 0)
+                    <div class="col-lg-7 disabled_after_approved">
                 <form action = "{{route('course_plan_delete')}}" method="post">
                     {{method_field('DELETE')}}
                     {{ csrf_field() }}
@@ -45,6 +60,9 @@
                         <button type="submit" class=" btn ink-reaction btn-danger delete_couse_plan" >Удалить учебный план</button>
                     </div>
                 </form>
+                    </div>
+                    @endif
+                </div>
             </div>
         </div>
     </div>
@@ -52,12 +70,13 @@
             <div class="card card-bordered style-gray course_plan" id="course_plan{{ $coursePlan->id_course_plan }}">
                 <div class="card-head">
                     <header>Учебный план: {{$coursePlan->course_plan_name}}</header>
-                    <div class="tools">
+                    @if($coursePlan->approved == 0)
+                    <div class="tools disabled_after_approved">
                         <div class="btn-group">
                             <a class="btn btn-icon-toggle activate_edit_course_plan"><i class="glyphicon glyphicon-edit"></i></a>
                         </div>
-
                     </div>
+                        @endif
                 </div>
                 <div class="card-body style-default-bright">
                      {!! Form::open(array('method' => 'PATCH' , ' style' => 'margin-bottom: 2%', 'class' => 'course_plan_form')) !!}
@@ -123,11 +142,13 @@
                         @foreach($coursePlan->section_plans as $sectionPlan)
                                 <?php $sectionNumForFindJs++ ?>
                         @include('personal_account.statements.course_plans.sections.view_or_update_section',array('sectionPlan' => $sectionPlan, 'readOnly' => true,
-                        'sectionNumForFindJs' => $sectionNumForFindJs))
+                        'sectionNumForFindJs' => $sectionNumForFindJs, 'approved' => $coursePlan->approved))
                         @endforeach
                             {{--Здесь добавляются разделы учебного плана--}}
                     </div>
-                    <button type="button" class="ink-reaction btn btn-success" id="addSection">Добавить раздел</button>
+                    @if($coursePlan->approved == 0)
+                    <button type="button" class="ink-reaction btn btn-success disabled_after_approved" id="addSection">Добавить раздел</button>
+                        @endif
                 </div>
 
 

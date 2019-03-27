@@ -4,8 +4,8 @@
 
             <header>{{$sectionPlan->section_num." Раздел"}}</header>
 
-
-        <div class="tools">
+        @if($approved == 0)
+        <div class="tools disabled_after_approved">
             <div class="btn-group">
                 <a class="btn btn-icon-toggle activateEditSection"><i class="glyphicon glyphicon-edit"></i></a>
             </div>
@@ -13,6 +13,7 @@
                 <a class="btn btn-icon-toggle deleteSection"><i class="md md-close"></i></a>
             </div>
         </div>
+            @endif
     </div>
     <div class="card-body style-default-bright">
 
@@ -53,7 +54,7 @@
             @foreach($sectionPlan->lecture_plans as $lecturePlan)
                 <?php $lectureNumForFindJs++ ?>
                 @include('personal_account.statements.course_plans.sections.lectures.view_or_update_lecture',array('itemSectionPlan' => $lecturePlan, 'readOnly' => true,
-                'idCardForFindJs' => $lectureNumForFindJs))
+                'idCardForFindJs' => $lectureNumForFindJs, 'approved' => $approved))
             @endforeach
             </div>
 
@@ -61,7 +62,7 @@
                 @foreach($sectionPlan->seminar_plans as $seminarPlan)
                     <?php $seminarNumForFindJs++ ?>
                     @include('personal_account.statements.course_plans.sections.seminars.view_or_update_seminar',array('itemSectionPlan' => $seminarPlan, 'readOnly' => true,
-                    'idCardForFindJs' => $seminarNumForFindJs))
+                    'idCardForFindJs' => $seminarNumForFindJs, 'approved' => $approved))
                 @endforeach
             </div>
 
@@ -69,15 +70,19 @@
                 @foreach($sectionPlan->control_work_plans as $controlWorkPlan)
                     <?php $controlWorkNumForFindJs++ ?>
                     @include('personal_account.statements.course_plans.sections.control_works.view_or_update_control_work',array('itemSectionPlan' => $controlWorkPlan,
-                     'readOnly' => true, 'idCardForFindJs' => $controlWorkNumForFindJs))
+                     'readOnly' => true, 'idCardForFindJs' => $controlWorkNumForFindJs, 'approved' => $approved))
                 @endforeach
             </div>
 
         </div>
 
+        @if($approved == 0)
+            <div class="disabled_after_approved">
         <button type="button" class="ink-reaction btn btn-info add_lecture_or_sem_or_CW" data-type-card="lecture">Добавить лекцию</button>
         <button type="button" class="ink-reaction btn btn-warning add_lecture_or_sem_or_CW" data-type-card="seminar">Добавить семинар</button>
         <button type="button" class="ink-reaction btn btn-danger add_lecture_or_sem_or_CW " data-type-card="control_work">Добавить К.М.</button>
+            </div>
+            @endif
     </div>
     </form>
 </div>

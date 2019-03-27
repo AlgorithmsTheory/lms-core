@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="keywords" content="your,keywords">
     <meta name="description" content="Short explanation about this website">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <!-- END META -->
 
     <!-- BEGIN STYLESHEETS -->
@@ -42,7 +43,9 @@
                     <div class="card card-bordered style-gray course_plan" id="course_plan{{$coursePlan->id_course_plan}}">
                         <div class="card-head">
                             <header>{{"Учебный план: ".$coursePlan->course_plan_name}}</header>
-                            <div class="tools">
+
+                            @if($coursePlan->approved == 0)
+                            <div class="tools disabled_after_approved">
                                 <div class="btn-group">
                                     <a class="btn btn-icon-toggle activate_edit_course_plan"><i class="glyphicon glyphicon-edit"></i></a>
                                 </div>
@@ -56,6 +59,8 @@
                                     </form>
                                 </div>
                             </div>
+                            @endif
+
                         </div>
                         <div class="card-body style-default-bright">
                             {!! Form::open(array('method' => 'PATCH' , ' style' => 'margin-bottom: 2%', 'class' => 'course_plan_form')) !!}
@@ -117,6 +122,16 @@
 
                             {!! HTML::link('course_plan/'.$coursePlan->id_course_plan,'Подробнее',
                             array('class' => 'ink-reaction btn btn-primary','role' => 'button')) !!}
+
+                            {{--Утверждение учебного плана для групп--}}
+                            @if($coursePlan->approved == 0)
+                            <button type="button" class="ink-reaction btn btn-warning approve_course_plan"
+                                    data-id-course-plan-approve="{{$coursePlan->id_course_plan}}">
+                                Утвердить</button>
+                            @else
+                                <button type="button" class=" btn btn-success approved_course_plan">Утверждён</button>
+                            @endif
+
                         </div>
                     </div>
 

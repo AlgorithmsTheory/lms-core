@@ -70,3 +70,40 @@ $(document).on('click', '.delete_couse_plan', function () {
     }
 
 });
+
+//Утверждение учебного плана
+$(document).on('click', '.approve_course_plan', function () {
+    var idCoursePlan = $(this).attr('data-id-course-plan-approve');
+    var thisCoursePlan = $('#course_plan'+idCoursePlan);
+    var nameCoursePlan = thisCoursePlan.find('input[name="course_plan_name"]').val();
+    var groups = thisCoursePlan.find('input[name="groups"]').val();
+    if (groups) {
+        if (confirm('Внимание. Вы уверены, что хотите назначить учебный план: "' + nameCoursePlan
+                + '" группам/группе: "' + groups + '" ? После утверждения учебный план будет невозможно редактировать/удалить')) {
+
+            var token = $('meta[name="csrf-token"]').attr('content');
+            $.ajax({
+                type: 'POST',
+                url:   '/course_plan/approved',
+                data:  {id_course_plan: idCoursePlan,
+                        _token: token},
+                success: function(data){
+                    var approveButton = $('[data-id-course-plan-approve = ' + data.idCoursePlan + ']');
+                    var approvedButtonHtml = '<button type="button" class=" btn btn-success approved_course_plan">Утверждён</button>';
+                    approveButton.replaceWith(approvedButtonHtml);
+                    //Скрытие всех редактирующих кнопок
+                    $('.disabled_after_approved').hide();
+                }
+            });
+
+        } else {
+            return false;
+        }
+    } else {
+        alert('Для утверждкния учебного плана необходимо выбрать группы');
+        return false;
+    }
+
+
+
+});

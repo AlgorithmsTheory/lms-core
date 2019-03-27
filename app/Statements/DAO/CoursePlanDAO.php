@@ -148,4 +148,9 @@ class CoursePlanDAO
     public function parseStringGroups($string_groups) {
         return preg_split("/[\s]+/", trim($string_groups));
     }
+
+    //Утверждение учебного плана для групп, статус стал 1
+    public function approvedCoursePlan($id) {
+        CoursePlan::where('id_course_plan', $id)->update(['approved' => 1]);
+    }
 }

@@ -336,6 +336,8 @@ Route::post('course_plans', ['as' => 'course_plan_store', 'uses' => 'StatementsC
 Route::patch('course_plan/update', ['as' => 'course_plan_update', 'uses' => 'StatementsController@updateCoursePlan', 'middleware' => ['general_auth', 'admin']]);
 //Удаление учебного плана
 Route::delete('course_plan/delete', ['as' => 'course_plan_delete', 'uses' => 'StatementsController@deleteCoursePlan', 'middleware' => ['general_auth', 'admin']]);
+//Утверждение учебного плана для групп
+Route::post('course_plan/approved', ['as' => 'course_plan_approved', 'uses' => 'StatementsController@approvedCoursePlan', 'middleware' => ['general_auth', 'admin']]);
 
 //получить представление для добавленее раздела учебного плана
 Route::get('course_plan/get_add_section', ['as' => 'get_add_section', 'uses' => 'StatementsController@getAddSection', 'middleware' => ['general_auth', 'admin']]);

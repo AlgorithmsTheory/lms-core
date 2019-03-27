@@ -99,6 +99,14 @@ class StatementsController extends Controller{
         return redirect('course_plans');
     }
 
+    //Утверждение учебного плана для групп
+    public function approvedCoursePlan(Request $request) {
+        if ($request->ajax()) {
+            $this->coursePlanDao->approvedCoursePlan($request->input('id_course_plan'));
+            return response()->json(['idCoursePlan' => $request->id_course_plan]);
+        }
+    }
+
     //возвращает представление для добавления раздела учебного плана
     public function getAddSection(Request $request) {
 
