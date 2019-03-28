@@ -215,7 +215,7 @@ return [
             'required' => 'Введите тип К.М..',
 
         ), 'course_plan_name'=> array(
-            'required' => 'Введите названте учебного плана',
+            'required' => 'Введите название учебного плана',
 
         ),'course_plan_desc'=> array(
             'required' => 'Введите описание учебного плана',

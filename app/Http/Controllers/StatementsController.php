@@ -126,8 +126,9 @@ class StatementsController extends Controller{
            $idSectionPlan = $this->sectionPlanDAO->storeSectionPlan($request);
            $sectionPlan = $this->sectionPlanDAO->getSectionPlan($idSectionPlan);
            $readOnly = true;
+           $approved = 0;
            $returnHtmlString = view('personal_account.statements.course_plans.sections.view_or_update_section', compact('sectionPlan', 'readOnly',
-               'sectionNumForFindJs'))
+               'sectionNumForFindJs', 'approved'))
                ->render();
             return response()->json(['view'=>$returnHtmlString, 'section_num_for_find_js' => $sectionNumForFindJs]);
         } else {

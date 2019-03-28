@@ -123,7 +123,8 @@ $(document).on('click', '.store_lec_sem_cw', function (event) {
     var idSectionForFindJs = currentSection.attr('id').match(/\d+/).toString();
     var idCardForFindJs = $(this).closest('.'+typeCard).attr('id');
     var thisForm = $(this).closest('form').serialize();
-    var idCoursePlan = $('.course_plan').attr('id');
+    //var idCoursePlan = $('.course_plan').attr('id');
+    var idCoursePlan = parseInt($(".course_plan").attr('id').match(/\d+/));
     $.ajax({
         cache: false,
         type: 'POST',
@@ -198,7 +199,8 @@ $(document).on('click', '.update_lec_sem_cw', function () {
     var idSectionForFindJs = currentSection.attr('id').match(/\d+/).toString();
     var idCardForFindJs = thisCard.attr('id');
     var thisForm = $(this).closest('form').serialize();
-    var idCoursePlan = $('.course_plan').attr('id');
+   // var idCoursePlan = $('.course_plan').attr('id');
+    var idCoursePlan = parseInt($(".course_plan").attr('id').match(/\d+/));
     $.ajax({
         type: 'PATCH',
         beforeSend: function (xhr) {

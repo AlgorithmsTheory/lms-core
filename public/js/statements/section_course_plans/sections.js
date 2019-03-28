@@ -8,7 +8,7 @@ $(document).on('click', '#addSection', function () {
         countSections = parseInt(lastSectionId.match(/\d+/));
     }
     var currentCount = countSections + 1;
-    var idCoursePlan = $(".course_plan").attr('id');
+    var idCoursePlan = parseInt($(".course_plan").attr('id').match(/\d+/));
     $.ajax({
         cache: false,
         type: 'GET',
@@ -23,7 +23,8 @@ $(document).on('click', '#addSection', function () {
 //Сохранение добаленного раздела
 $(document).on('submit', '#form_add_section', function (event) {
     event.preventDefault();
-    var idCoursePlan = $('.course_plan').attr('id');
+   // var idCoursePlan = $('.course_plan').attr('id');
+    var idCoursePlan = parseInt($(".course_plan").attr('id').match(/\d+/));
     $.ajax({
         type: 'POST',
         url:   '/course_plan/'+idCoursePlan+'/section',
