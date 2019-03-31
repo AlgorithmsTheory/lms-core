@@ -1,11 +1,50 @@
-<section>
-    <div class="section-body contain-lg">
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="text-primary">Эмулятор машины Поста</h1>
-            </div>
-            @yield('addl-info')
-        </div>
+@extends('templates.MTbase')
+@section('head')
+		<title>@yield('title')</title>
+
+		<!-- BEGIN META -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="keywords" content="your,keywords">
+		<meta name="description" content="Short explanation about this website">
+		<!-- END META -->
+
+		<!-- BEGIN STYLESHEETS -->
+		<link href='http://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css'/>
+		{!! HTML::style('css/bootstrap.css?1422792965') !!}
+		{!! HTML::style('css/materialadmin.css?1425466319') !!}
+		{!! HTML::style('css/font-awesome.min.css?1422529194') !!}
+		{!! HTML::style('css/material-design-iconic-font.min.css?1421434286') !!}
+		{!! HTML::style('css/libs/jquery-ui/jquery-ui-theme.css?1423393666') !!}
+		{!! HTML::style('css/libs/nestable/nestable.css?1423393667') !!}
+		<!-- END STYLESHEETS -->
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		<script type="text/javascript" src="/laravel/resources/assets/js/libs/utils/html5shiv.js?1403934957"></script>
+		<script type="text/javascript" src="/laravel/resources/assets/js/libs/utils/respond.min.js?1403934956"></script>
+		<![endif]-->
+@stop
+
+    @section('content')
+
+				<!-- BEGIN LIST SAMPLES -->
+				<section>
+					
+					<div class="section-body contain-lg">
+					
+						<div class="row">
+							<div class="col-lg-12">
+								<h1 class="text-primary">Эмулятор машины Поста</h1>
+							</div><!--end .col -->
+							<div class="col-lg-12">
+								<article class="margin-bottom-xxl">
+										@yield('text')
+								</article>
+							</div><!--end .col -->
+							
+						</div>
+						<!-- BEGIN NESTABLE LISTS -->
 				<div class="col-lg-12">
 					<div class="card style-default-bright">
 						<div class="card-head">
@@ -695,5 +734,89 @@
 						</div>
 					</div>
 				</div>
-                @yield('addl-blocks')
+				
+<div class="offcanvas">
+
+
+	<div id="offcanvas-demo-right" class="offcanvas-pane width-10" style="">
+		<div class="offcanvas-head">
+			<header>Что это и как с этим работать?</header>
+			
+		</div>
+		<div class="nano has-scrollbar" style="height: 318px;">
+		<div class="nano-content" tabindex="0" style="right: -17px;">
+		<div class="offcanvas-body">
+
+		<h4>Что такое машина Поста?</h4>
+			<ul class="list-divided">
+				<li>Машина Поста — это абстрактная, но очень простая вычислительная машина.</li>
+				<li>Машина Поста состоит из каретки (считывающей и записывающей головки) и ленты, разбитой на ячейки. Каждая ячейка ленты может быть либо пустой («0»), или содержать метку («1»).</li>
+				<li>Программа состоит из пронумерованных строк. В каждой строке записывается одна из следующих команд:</li>
+				<ol>1. → j – переместить каретку вправо на 1 ячейку и перейти к строке с номером j</ol>
+				<ol>2. ← j – переместить каретку влево на 1 ячейку и перейти к строке с номером j</ol>
+				<ol>3. 1 j – записать в текущую ячейку «1» (поставить метку) и перейти к строке с номером j</ol>
+				<ol>4. 0 j – записать в текущую ячейку «0» (стереть метку) и перейти к строке с номером j</ol>
+				<ol>5. ? i; j – если текущая ячейка содержит «0» (не отмечена), то перейти к строке с номером i, иначе перейти к строке j</ol>
+				<ol>6. ! – конец программы (стоп). В команде «стоп» переход на следующую строку не указывается</ol>
+			</ul>
+		<h4>Как этим пользоваться?</h4>
+			<ul class="list-divided">
+				<li>В правой части находится поле редактора, в которое можно ввести условие задачи в свободной форме.</li>
+				<li>Ниже расположено поле для ввода входного слова, которое должна обработать программа. Тут введите последовательность из нулей и единиц. Таким образом будет задана лента. </li>
+				<li>В таблице справа набирается программа. Каждая строка программы нумеруется автоматически.</li>
+				<ol>1. В каждой строке в первом поле из списка выбирается нужная команда.</ol>
+				<ol>2. Во втором вводится номер строки для перехода (если это необходимо). </ol>
+				<ol>3. В третье поле также можно ввести номер строки перехода, это требуется в случае выбора в строке команды «?».</ol>
+				<ol>4. Четвертое может содержать комментарий к каждой строчке программы. </ol>
+				<li>Добавить строки таблицы или очистить их можно с помощью кнопок, расположенных снизу от таблицы. </li>
+				<li>Программа может выполняться сразу до конца(кнопка Запуск) или по шагам (Шаг).</li>
+				<li>Задачи для машины Поста можно сохранять в файлах. Сохраняется условие задачи и программа. Для этого нажмите «Стрелку вниз».</li>
+				<li>Для загрузки сохраненного алгоритма выберите файл и нажмите «Стрелку вверх».</li>
+			</ul>
+		</div></div><div class="nano-pane"><div class="nano-slider" style="height: 199px; transform: translate(0px, 0px);"></div>
+	</div>
+</div>
 </section>
+
+
+			<!--end #content-->
+@stop		
+
+		<!--end #base-->
+		<!-- END BASE -->
+@section('js-down')
+		<!-- BEGIN JAVASCRIPT -->
+		@yield('js-down-addl')
+	
+		{!! HTML::script('js/algorithms/jquery-1.4.3.min.js') !!}
+		{!! HTML::script('js/algorithms/jquery-1.10.2.js') !!}
+		{!! HTML::script('js/algorithms/symbols_post.js') !!}
+		{!! HTML::script('js/algorithms/saving_post.js') !!}
+		{!! HTML::script('js/algorithms/superScript.js') !!}
+		{!! HTML::script('js/algorithms/post.js') !!}
+		{!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
+		{!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
+		{!! HTML::script('js/libs/jquery-ui/jquery-ui.min.js') !!}
+		{!! HTML::script('js/libs/bootstrap/bootstrap.min.js') !!}
+		{!! HTML::script('js/libs/spin.js/spin.min.js') !!}
+		{!! HTML::script('js/libs/jquery-validation/dist/jquery.validate.min.js') !!}
+		{!! HTML::script('js/libs/jquery-validation/dist/additional-methods.min.js') !!}
+		{!! HTML::script('js/libs/autosize/jquery.autosize.min.js') !!}
+		{!! HTML::script('js/libs/nestable/jquery.nestable.js') !!}
+		{!! HTML::script('js/libs/nanoscroller/jquery.nanoscroller.min.js') !!}
+		{!! HTML::script('js/core/source/App.js') !!}
+		{!! HTML::script('js/core/source/AppNavigation.js') !!}
+		{!! HTML::script('js/core/source/AppOffcanvas.js') !!}
+		{!! HTML::script('js/core/source/AppCard.js') !!}
+		{!! HTML::script('js/core/source/AppForm.js') !!}
+		{!! HTML::script('js/core/source/AppNavSearch.js') !!}
+		{!! HTML::script('js/core/source/AppVendor.js') !!}
+		{!! HTML::script('js/core/demo/Demo.js') !!}
+		{!! HTML::script('js/core/demo/DemoUILists.js') !!}
+		{!! HTML::script('js/algorithms/send.js') !!}
+		{!! HTML::script('js/core/demo/DemoUIMessages.js') !!}
+		{!! HTML::script('js/libs/toastr/toastr.js') !!}
+			<!-- END JAVASCRIPT -->
+@stop
+
+

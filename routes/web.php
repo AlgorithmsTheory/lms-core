@@ -434,17 +434,6 @@ Route::prefix('algorithm')->group(function () {
 	Route::prefix('Post')->group(function () {
 		Route::middleware(['general_auth'])->group(function () {
 			Route::get('emulator',  ['as' => 'Post',        'uses' => 'Emulators\PostEmulatorController@openPost']);
-			Route::post('set_mark', ['as' => 'postSetMark', 'uses' => 'Emulators\PostEmulatorController@postSetMark']);
-		});
-		Route::middleware(['general_auth', 'admin'])->group(function () {
-			Route::get( 'manage_task', 				 ['as' => 'postManageTask',   'uses' => 'Emulators\PostEmulatorController@postManageTask'] );
-			Route::get( 'add_task',	  				 ['as' => 'postAddTask',	  'uses' => 'Emulators\PostEmulatorController@postAddTask'] );
-			Route::post('add_task', 				 ['as' => 'postAddingTask',   'uses' => 'Emulators\PostEmulatorController@postAddingTask'] );
-			Route::get( '{sequence_id}/edit_task',   ['as' => 'postEditTask',     'uses' => 'Emulators\PostEmulatorController@postEditTask']);
-			Route::post('{sequence_id}/edit_task',   ['as' => 'postEditingTask',  'uses' => 'Emulators\PostEmulatorController@postEditingTask']);
-			Route::get( '{sequence_id}/delete_task', ['as' => 'postDeleteTask',   'uses' => 'Emulators\PostEmulatorController@postDeleteTask'] );
-			Route::get( 'edit_users',  				 ['as' => 'postEditUsers' ,   'uses' => 'Emulators\PostEmulatorController@postEditUsers']);
-			Route::post( 'editing_users',  		     ['as' => 'postEditingUsers', 'uses' => 'Emulators\PostEmulatorController@postEditingUsers']);
 		});
 	});
 	// Emulators common

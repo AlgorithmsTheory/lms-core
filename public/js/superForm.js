@@ -35,6 +35,18 @@ function sendForm(status){
                     flag[index] = true;
                 }
             }
+            if(typeOfForm == 12){
+				// Turing
+	
+			}
+            if(typeOfForm == 13){
+				// Markov
+                
+			}
+            if(typeOfForm == 14){
+				// Post
+                
+			}
 			if(typeOfForm == 15){
 				// RAM
 				var code = RAM.TextEditor.get_text();
@@ -54,6 +66,24 @@ function sendForm(status){
 }
 
 function fillSuper(){
+    // Execute Turing program before send result
+    var cnt = 0;
+    $("[name^=turing-entity]").each(function(){
+        turingSubmitTask(cnt, false);
+        cnt++
+    });
+    // Execute Markov program before send result
+    var cnt = 0;
+    $("[name^=markov-entity]").each(function(){
+        markovSubmitTask(cnt, false);
+        cnt++
+    });
+    // Execute Post program before send result
+    var cnt = 0;
+    $("[name^=post-entity]").each(function(){
+        postSubmitTask(cnt, false);
+        cnt++
+    });
     // Execute RAM program before send result
     var cnt = 0;
     $("[name^=ram-entity]").each(function(){
@@ -131,6 +161,24 @@ function fill(i) {
                 k++;
             }
         }
+        if(typeOfForm == 12){    // Turing
+		    if(allElem[j].name=='num' || (allElem[j].name=='debug_counter') || (allElem[j].name=='sequences_true') || (allElem[j].name=='sequences_all')){
+			    array[k] = allElem[j].value;
+                k++;
+			}
+		}
+        if(typeOfForm == 13){    // Markov
+		    if(allElem[j].name=='num' || (allElem[j].name=='debug_counter') || (allElem[j].name=='sequences_true') || (allElem[j].name=='sequences_all')){
+			    array[k] = allElem[j].value;
+                k++;
+			}
+		}
+        if(typeOfForm == 14){    // Post
+		    if(allElem[j].name=='num' || (allElem[j].name=='debug_counter') || (allElem[j].name=='sequences_true') || (allElem[j].name=='sequences_all')){
+			    array[k] = allElem[j].value;
+                k++;
+			}
+		}
 		if(typeOfForm == 15){    // RAM
 		    if(allElem[j].name=='num' || (allElem[j].name=='debug_counter') || (allElem[j].name=='sequences_true') || (allElem[j].name=='sequences_all')){
 			    array[k] = allElem[j].value;
