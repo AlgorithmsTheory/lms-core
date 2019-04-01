@@ -13,7 +13,7 @@
 <input type="hidden" name="debug_counter" name="debug_counter" value="0">
 <input type="hidden" name="sequences_true" name="sequences_true" value="0">
 <input type="hidden" name="sequences_all" name="sequences_all" value="0">
-@include('algorithm.Posttest')
+@include('algorithm/Posttest')
 @if (!$is_adaptive)
     <div class="checkbox checkbox-styled checkbox-warning">
         <label>
