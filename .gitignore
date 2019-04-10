@@ -7,6 +7,7 @@ Homestead.json
 /config/*
 composer.json
 composer.lock
+/public/js/modules.js
 _ide_helper.php
 public/download/*
 public/archive/*

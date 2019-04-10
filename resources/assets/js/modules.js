@@ -1,0 +1,1 @@
+global.myPlotly = require('plotly.js-dist');
