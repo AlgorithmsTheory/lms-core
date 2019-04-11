@@ -142,7 +142,7 @@
                         @foreach($coursePlan->section_plans as $sectionPlan)
                                 <?php $sectionNumForFindJs++ ?>
                         @include('personal_account.statements.course_plans.sections.view_or_update_section',array('sectionPlan' => $sectionPlan, 'readOnly' => true,
-                        'sectionNumForFindJs' => $sectionNumForFindJs, 'approved' => $coursePlan->approved))
+                        'sectionNumForFindJs' => $sectionNumForFindJs, 'approved' => $coursePlan->approved , 'tests_control_work' => $tests_control_work))
                         @endforeach
                             {{--Здесь добавляются разделы учебного плана--}}
                     </div>

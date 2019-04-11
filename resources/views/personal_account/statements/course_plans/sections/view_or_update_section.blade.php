@@ -70,7 +70,7 @@
                 @foreach($sectionPlan->control_work_plans as $controlWorkPlan)
                     <?php $controlWorkNumForFindJs++ ?>
                     @include('personal_account.statements.course_plans.sections.control_works.view_or_update_control_work',array('itemSectionPlan' => $controlWorkPlan,
-                     'readOnly' => true, 'idCardForFindJs' => $controlWorkNumForFindJs, 'approved' => $approved))
+                     'readOnly' => true, 'idCardForFindJs' => $controlWorkNumForFindJs, 'approved' => $approved, 'tests_control_work' => $tests_control_work))
                 @endforeach
             </div>
 

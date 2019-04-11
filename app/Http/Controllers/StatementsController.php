@@ -78,7 +78,8 @@ class StatementsController extends Controller{
     public function getCoursePlan($id) {
         $coursePlan = $this->coursePlanDao->getCoursePlan($id);
         $read_only = true;
-        return view('personal_account.statements.course_plans.course_plan', compact('coursePlan', 'read_only'));
+        $tests_control_work = Test::all();
+        return view('personal_account.statements.course_plans.course_plan', compact('coursePlan', 'read_only', 'tests_control_work'));
     }
 
     //Обновление основной информации об учебном плане
@@ -184,9 +185,9 @@ class StatementsController extends Controller{
 
     //Сохранение семинара или лекции в разделе учебного плана
     public function storeLecOrSemOrCW(Request $request) {
-
-        $viewPath = $this->getViewUpdatePathLecSemCW($request->type_card);
-        $itemSectionDAO = $this->getItemSectionDAO($request->type_card);
+        $typeCard = $request->type_card;
+        $viewPath = $this->getViewUpdatePathLecSemCW($typeCard);
+        $itemSectionDAO = $this->getItemSectionDAO($typeCard);
 
         $validator = $itemSectionDAO->getStoreValidate($request);
 
@@ -195,9 +196,13 @@ class StatementsController extends Controller{
             $itemSectionPlan = $itemSectionDAO->get($idItemSectionPlan);
             $readOnly = true;
             $idCardForFindJs = $request->id_card_for_find_js;
+            $tests_control_work = new stdClass();
+            if($typeCard == 'control_work') {
+                $tests_control_work =  Test::all();
+            }
             $returnHtmlString = view('personal_account.statements.course_plans.sections.'.$viewPath,
                 compact('itemSectionPlan', 'readOnly',
-                'idCardForFindJs'))
+                'idCardForFindJs', 'tests_control_work'))
                 ->render();
             return response()->json(['view'=>$returnHtmlString, 'id_section_for_find_js' => $request->id_section_for_find_js
                 , 'id_card_for_find_js' => $request->id_card_for_find_js,'type_card' => $request->type_card]);

@@ -40,10 +40,9 @@
                 <select name ="id_test"  class="{{$itemSectionPlan->id_test == null ? "test_select_hide" : ''}} form-control" required {{$readOnly ? 'disabled' : ''}}
                 id="id_test">
                     <option value="">Выберите тест</option>
-                    @foreach($itemSectionPlan->tests as $test)
-                        <option value="{{$test->id_test}}" {{($test->id_test == $itemSectionPlan->id_test) ? 'selected' : ''}}>
-                            {{$test->test_name}}
-                        </option>
+                    @foreach($tests_control_work as $test_control_work)
+                        <option value="{{$test_control_work->id_test}}"{{$test_control_work->id_test == $itemSectionPlan->id_test ? 'selected' : ''}}>
+                            {{$test_control_work->test_name}}</option>
                     @endforeach
                 </select>
 

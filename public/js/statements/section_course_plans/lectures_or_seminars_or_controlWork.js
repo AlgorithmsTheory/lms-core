@@ -67,8 +67,8 @@ $(document).on('change', 'select[name="control_work_plan_type"]', function () {
         selectTests.show();
 
     } else {
+        selectTests.prop('selectedIndex', 0);
         selectTests.hide();
-        selectTests.find("option:selected").val('');
     }
 
 });
@@ -219,20 +219,19 @@ $(document).on('click', '.update_lec_sem_cw', function () {
             id_section_DB: idSectionDB
         },
         success: function(data){
-            console.log(data);
             var currentSection = $('#section'+data.id_section_for_find_js);
             var currentCard = currentSection.find('.'+getConteinerTypeCard(data.type_card)).find('#'+data.id_card_for_find_js);
 
             if($.isEmptyObject(data.error)){
 
-                //выключение readonly для полей
+                //включение readonly для полей
                 currentCard.find('input[name="'+typeCard+'_plan_name"]').filter( ':first' ).attr('readonly', true);
                 currentCard.find('input[name="'+typeCard+'_plan_desc"]').filter( ':first' ).attr('readonly', true);
                 currentCard.find('input[name="'+typeCard+'_plan_num"]').filter( ':first' ).attr( "readonly", true);
                 if(typeCard == 'control_work') {
                     thisCard.find('#control_work_plan_type').filter( ':first' ).prop( "disabled", true );
                     thisCard.find('#id_test').filter( ':first' ).prop( "disabled", true );
-                    thisCard.find('input[name="max_points"]').filter( ':first' ).attr('readonly', true);;
+                    thisCard.find('input[name="max_points"]').filter( ':first' ).attr('readonly', true);
                 }
                 //удаление кнопки "Обновить доп. инфор о разделе"
                 currentCard.find('.update_button_place').filter( ':first' ).empty();

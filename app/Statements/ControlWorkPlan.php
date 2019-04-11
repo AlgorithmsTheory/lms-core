@@ -15,11 +15,11 @@ class ControlWorkPlan extends Eloquent
     protected $table = 'control_work_plans';
     public $timestamps = false;
     protected $primaryKey = 'id_control_work_plan';
-    protected $appends = ['tests'];
+    protected $appends = ['test'];
 
-    /** в новое поле tests вставляется массив объектов Tests */
-    public function getTestsAttribute(){
-        $tests = Test::select('id_test','test_name')->get();
-        return $tests;
+    /** в новое поле test вставляется объект типа Tests */
+    public function getTestAttribute(){
+        $test = Test::where('id_test','=', $this->attributes['id_test'])->first();
+        return $test;
     }
 }
