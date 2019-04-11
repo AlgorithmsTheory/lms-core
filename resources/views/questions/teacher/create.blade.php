@@ -31,17 +31,8 @@
                         <div id="type_question_add"></div>
 @stop
 @section('js-down')
-                    {!! HTML::script('js/question_create/questionCreate.js') !!}
-                    {!! HTML::script('js/libs/spin.js/spin.min.js') !!}
-                    {!! HTML::script('js/libs/autosize/jquery.autosize.min.js') !!}
-                    {!! HTML::script('js/libs/nanoscroller/jquery.nanoscroller.min.js') !!}
-                    {!! HTML::script('js/core/source/App.js') !!}
-                    {!! HTML::script('js/core/source/AppNavigation.js') !!}
-                    {!! HTML::script('js/core/source/AppOffcanvas.js') !!}
-                    {!! HTML::script('js/core/source/AppCard.js') !!}
-                    {!! HTML::script('js/core/source/AppForm.js') !!}
-                    {!! HTML::script('js/core/source/AppNavSearch.js') !!}
-                    {!! HTML::script('js/core/source/AppVendor.js') !!}
-                    {!! HTML::script('js/core/source/AppVendor.js') !!}
-                    {!! HTML::script('js/core/demo/Demo.js') !!}
+    {!! HTML::script('js/core/source/App.js') !!}
+    {!! HTML::script('js/core/source/AppCard.js') !!}
+    {!! HTML::script('js/core/demo/Demo.js') !!}
+    {!! HTML::script('js/question_create/questionCreate.js') !!}
 @stop

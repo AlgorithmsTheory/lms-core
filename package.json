@@ -4,8 +4,17 @@
     "gulp": "^3.8.8"
   },
   "dependencies": {
+    "bootstrap": "^4.3.1",
     "bootstrap-sass": "^3.0.0",
+    "jquery": "^3.4.0",
+    "jquery-autosize": "^1.18.18",
+    "jquery-nestable": "^0.8.0",
+    "jquery-ui": "^1.12.1",
+    "jquery-ui-browserify": "^1.11.0-pre-seelio",
+    "jquery-validation": "^1.19.0",
     "laravel-elixir": "^3.0.0",
-    "plotly.js-dist": "^1.47.0"
+    "nanoscroller": "^0.8.7",
+    "plotly.js-dist": "^1.47.0",
+    "popper.js": "^1.15.0"
   }
 }

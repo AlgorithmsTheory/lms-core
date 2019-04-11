@@ -2,8 +2,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Тест</title>
+    {!! HTML::script('js/modules.js') !!}
     {!! HTML::script('js/superForm.js') !!}
-    {!! HTML::script('js/jquery.js') !!}
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     {!! HTML::style('css/materialadmin_demo.css') !!}

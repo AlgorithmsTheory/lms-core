@@ -1,4 +1,4 @@
-@extends('templates.MTbase')
+@extends('templates.base')
 @section('head')
 		<title>Эмулятор машины Тьюринга</title>
 
@@ -668,16 +668,10 @@
 		<!-- END BASE -->
 @section('js-down')
 		<!-- BEGIN JAVASCRIPT -->
-		{!! HTML::script('js/algorithms/jquery-1.4.3.min.js') !!}
-		{!! HTML::script('js/algorithms/jquery-1.10.2.js') !!}
 		{!! HTML::script('js/algorithms/symbols.js') !!}
-		
 		{!! HTML::script('js/algorithms/saving.js') !!}
 		{!! HTML::script('js/algorithms/superScript.js') !!}
-		{!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
-		{!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
 		{!! HTML::script('js/libs/jquery-ui/jquery-ui.min.js') !!}
-		{!! HTML::script('js/libs/bootstrap/bootstrap.min.js') !!}
 		{!! HTML::script('js/libs/spin.js/spin.min.js') !!}
 		{!! HTML::script('js/libs/jquery-validation/dist/jquery.validate.min.js') !!}
 		{!! HTML::script('js/libs/jquery-validation/dist/additional-methods.min.js') !!}
