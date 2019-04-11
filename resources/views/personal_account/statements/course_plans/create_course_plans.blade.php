@@ -15,12 +15,6 @@
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     <!-- END STYLESHEETS -->
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    {!! HTML::script('js/libs/utils/html5shiv.js') !!}
-    {!! HTML::script('js/libs/utils/respond.min.js') !!}
-    <![endif]-->
 @stop
 @section('content')
     <div class="container-fluid">
@@ -103,10 +97,8 @@
     </div>
 @stop
 @section('js-down')
-    <!-- BEGIN JAVASCRIPT -->
-    {!! HTML::script('js/libs/spin.js/spin.min.js') !!}
-    {!! HTML::script('js/libs/autosize/jquery.autosize.min.js') !!}
-    {!! HTML::script('js/libs/nanoscroller/jquery.nanoscroller.min.js') !!}
+    {!! HTML::script('js/statements/statements.js') !!}
+
     {!! HTML::script('js/core/source/App.js') !!}
     {!! HTML::script('js/core/source/AppNavigation.js') !!}
     {!! HTML::script('js/core/source/AppOffcanvas.js') !!}
@@ -115,7 +107,4 @@
     {!! HTML::script('js/core/source/AppNavSearch.js') !!}
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
-    {!! HTML::script('js/statements/statements.js') !!}
-    <!-- END JAVASCRIPT -->
-
 @stop

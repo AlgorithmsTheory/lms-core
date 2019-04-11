@@ -97,9 +97,9 @@
             </div>
         </div>
     </div>
+@stop
 
+@section('js-down')
     {!! HTML::script('js/personal_account/add_student.js') !!}
     {!! HTML::script('js/personal_account/person_filter.js') !!}
-
-
 @stop

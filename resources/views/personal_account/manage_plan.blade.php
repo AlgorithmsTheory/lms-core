@@ -127,6 +127,8 @@
         </div>
 
     </div>
-    {!! HTML::script('js/personal_account/manage_plan.js') !!}
+@stop
 
+@section('js-down')
+    {!! HTML::script('js/personal_account/manage_plan.js') !!}
 @stop

@@ -53,6 +53,8 @@
         </div>
 
     </div>
-        {!! HTML::script('js/personal_account/personalAccount.js') !!}
+@stop
 
+@section('js-down')
+    {!! HTML::script('js/personal_account/personalAccount.js') !!}
 @stop

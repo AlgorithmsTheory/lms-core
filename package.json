@@ -1,13 +1,12 @@
 {
   "private": true,
   "devDependencies": {
-    "gulp": "^3.8.8",
-    "scriptjs": "^2.5.9"
+    "gulp": "^3.8.8"
   },
   "dependencies": {
     "bootstrap": "^3.3.2",
     "bootstrap-sass": "^3.0.0",
-    "ckeditor": "^4.11.4",
+    "dropzone": "^5.5.1",
     "jquery": "^3.4.0",
     "jquery-autosize": "^1.18.18",
     "jquery-nestable": "^0.8.0",
