@@ -19,17 +19,12 @@
 		{!! HTML::style('css/libs/nestable/nestable.css?1423393667') !!}
 		<!-- END STYLESHEETS -->
 
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		<script type="text/javascript" src="/laravel/resources/assets/js/libs/utils/html5shiv.js?1403934957"></script>
-		<script type="text/javascript" src="/laravel/resources/assets/js/libs/utils/respond.min.js?1403934956"></script>
-		<![endif]-->
 @stop
 
     @section('content')
 
 				<!-- BEGIN LIST SAMPLES -->
-			<section>	
+			<section id="body">
 						<div class="row">
 							<div class="col-lg-12">
 								<h1 class="text-primary">Эмулятор машины Тьюринга</h1>
@@ -99,7 +94,6 @@
 																</div> 
 																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
 																	<i class="fa fa-trash"></i>
-
 																</a>
 															</li>
 
@@ -167,7 +161,6 @@
 																</div> 
 																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
 																	<i class="fa fa-trash"></i>
-
 																</a>
 															</li>
 
@@ -671,13 +664,8 @@
 		{!! HTML::script('js/algorithms/symbols.js') !!}
 		{!! HTML::script('js/algorithms/saving.js') !!}
 		{!! HTML::script('js/algorithms/superScript.js') !!}
-		{!! HTML::script('js/libs/jquery-ui/jquery-ui.min.js') !!}
-		{!! HTML::script('js/libs/spin.js/spin.min.js') !!}
-		{!! HTML::script('js/libs/jquery-validation/dist/jquery.validate.min.js') !!}
-		{!! HTML::script('js/libs/jquery-validation/dist/additional-methods.min.js') !!}
-		{!! HTML::script('js/libs/autosize/jquery.autosize.min.js') !!}
-		{!! HTML::script('js/libs/nestable/jquery.nestable.js') !!}
-		{!! HTML::script('js/libs/nanoscroller/jquery.nanoscroller.min.js') !!}
+		{!! HTML::script('js/algorithms/send.js') !!}
+
 		{!! HTML::script('js/core/source/App.js') !!}
 		{!! HTML::script('js/core/source/AppNavigation.js') !!}
 		{!! HTML::script('js/core/source/AppOffcanvas.js') !!}
@@ -687,7 +675,7 @@
 		{!! HTML::script('js/core/source/AppVendor.js') !!}
 		{!! HTML::script('js/core/demo/Demo.js') !!}
 		{!! HTML::script('js/core/demo/DemoUILists.js') !!}
-		{!! HTML::script('js/algorithms/send.js') !!}
+
 		{!! HTML::script('js/core/demo/DemoUIMessages.js') !!}
 		{!! HTML::script('js/libs/toastr/toastr.js') !!}
 		<!-- END JAVASCRIPT -->
