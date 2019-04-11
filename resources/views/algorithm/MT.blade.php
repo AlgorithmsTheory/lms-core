@@ -24,7 +24,7 @@
     @section('content')
 
 				<!-- BEGIN LIST SAMPLES -->
-			<section id="body">
+			<section>
 						<div class="row">
 							<div class="col-lg-12">
 								<h1 class="text-primary">Эмулятор машины Тьюринга</h1>
@@ -660,25 +660,22 @@
 		<!--end #base-->
 		<!-- END BASE -->
 @section('js-down')
-		<!-- BEGIN JAVASCRIPT -->
-		{!! HTML::script('js/algorithms/symbols.js') !!}
-		{!! HTML::script('js/algorithms/saving.js') !!}
-		{!! HTML::script('js/algorithms/superScript.js') !!}
-		{!! HTML::script('js/algorithms/send.js') !!}
+	{!! HTML::script('js/algorithms/symbols.js') !!}
+	{!! HTML::script('js/algorithms/saving.js') !!}
+	{!! HTML::script('js/algorithms/superScript.js') !!}
+	{!! HTML::script('js/algorithms/send.js') !!}
 
-		{!! HTML::script('js/core/source/App.js') !!}
-		{!! HTML::script('js/core/source/AppNavigation.js') !!}
-		{!! HTML::script('js/core/source/AppOffcanvas.js') !!}
-		{!! HTML::script('js/core/source/AppCard.js') !!}
-		{!! HTML::script('js/core/source/AppForm.js') !!}
-		{!! HTML::script('js/core/source/AppNavSearch.js') !!}
-		{!! HTML::script('js/core/source/AppVendor.js') !!}
-		{!! HTML::script('js/core/demo/Demo.js') !!}
-		{!! HTML::script('js/core/demo/DemoUILists.js') !!}
-
-		{!! HTML::script('js/core/demo/DemoUIMessages.js') !!}
-		{!! HTML::script('js/libs/toastr/toastr.js') !!}
-		<!-- END JAVASCRIPT -->
+	{!! HTML::script('js/core/source/App.js') !!}
+	{!! HTML::script('js/core/source/AppNavigation.js') !!}
+	{!! HTML::script('js/core/source/AppOffcanvas.js') !!}
+	{!! HTML::script('js/core/source/AppCard.js') !!}
+	{!! HTML::script('js/core/source/AppForm.js') !!}
+	{!! HTML::script('js/core/source/AppNavSearch.js') !!}
+	{!! HTML::script('js/core/source/AppVendor.js') !!}
+	{!! HTML::script('js/core/demo/Demo.js') !!}
+	{!! HTML::script('js/core/demo/DemoUILists.js') !!}
+	{!! HTML::script('js/core/demo/DemoUIMessages.js') !!}
+	{!! HTML::script('js/libs/toastr/toastr.js') !!}
 @stop
 
 

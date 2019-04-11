@@ -5,4 +5,6 @@ require('nanoscroller');
 require('jquery-nestable');
 require('jquery-autosize');
 require('jquery-validation');
-require( "jquery-ui-browserify" );
+require('jquery-ui-browserify');
+global.$s = require('scriptjs');
+global.CK = require('ckeditor');

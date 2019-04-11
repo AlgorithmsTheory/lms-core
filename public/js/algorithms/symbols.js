@@ -10,7 +10,7 @@ $('#addScnt').on('click', function () {
     return false;
 });
 
-$('#body').on('click', '#remScnt', function () {
+$('section').on('click', '#remScnt', function () {
     if (i > 1) {
         $(this).parents('li').remove();
         i--;
