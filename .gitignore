@@ -8,6 +8,7 @@ Homestead.json
 composer.json
 composer.lock
 /public/js/modules.js
+/public/js/ram/ace.js
 _ide_helper.php
 public/download/*
 public/archive/*

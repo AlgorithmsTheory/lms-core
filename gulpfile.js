@@ -13,11 +13,6 @@ var elixir = require('laravel-elixir');
 
 elixir(function(mix) {
     mix.browserify('modules.js');
+    mix.browserify('ace.js', 'public/js/ram/ace.js');
 });
 
-let gulp = require('gulp');
-
-gulp.task('default', [], function() {
-    gulp.src("public/js/ram/mode/**")
-        .pipe(gulp.dest('node_modules/brace/mode/'));
-});

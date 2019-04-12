@@ -172,6 +172,7 @@
 @section('js-down')
 	@yield('js-down-addl')
 
+	{!! HTML::script('/js/ram/ace.js') !!}
 	{!! HTML::script('/js/ram/RAM.js') !!}
 	{!! HTML::script('js/algorithms/symbols.js') !!}
 	{!! HTML::script('js/algorithms/saving.js') !!}
