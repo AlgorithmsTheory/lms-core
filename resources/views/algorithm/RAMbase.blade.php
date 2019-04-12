@@ -172,7 +172,6 @@
 @section('js-down')
 	@yield('js-down-addl')
 
-	{!! HTML::script('/js/ram/src-noconflict/ace.js') !!}
 	{!! HTML::script('/js/ram/RAM.js') !!}
 	{!! HTML::script('js/algorithms/symbols.js') !!}
 	{!! HTML::script('js/algorithms/saving.js') !!}
@@ -189,7 +188,6 @@
 	{!! HTML::script('js/core/demo/Demo.js') !!}
 	{!! HTML::script('js/core/demo/DemoUILists.js') !!}
 	{!! HTML::script('js/core/demo/DemoUIMessages.js') !!}
-	{!! HTML::script('js/libs/toastr/toastr.js') !!}
 @stop
 
 

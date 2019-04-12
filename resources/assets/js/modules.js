@@ -10,3 +10,4 @@ require('jquery-serializejson');
 global.Dropzone = require('dropzone');
 require('moment');
 require('eonasdan-bootstrap-datetimepicker');
+require('brace');
