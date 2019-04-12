@@ -31,7 +31,7 @@ $(document).on('click', '.add_lecture_or_sem_or_CW', function () {
    //Номер последней карты в разделе
    //  var numberLastCard = currentSection.find('.' + typeCard).filter( ':last' )
    //      .find('input[name="'+ typeCard +'_plan_num"]').val();
-    var numberLastCard = $('.' + typeCard).size().toString();
+    var numberLastCard = $('.' + typeCard).length.toString();
 
     //Номер для новой карты
     var numberNewCard = return1IfEmpty(numberLastCard);

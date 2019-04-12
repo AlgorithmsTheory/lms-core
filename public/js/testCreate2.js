@@ -173,7 +173,7 @@ page.on('change', '.checkbox-section input', function () {
     var sectionNum = parseIdSection(sectionTr.attr('id'));
     var firstTheme = sectionTr.children('.theme-td');
     var otherThemeTr = $(structure).find('.theme-tr-' + sectionNum);
-    var numberOfThemes = 1 + otherThemeTr.size();
+    var numberOfThemes = 1 + otherThemeTr.length;
 
     if (!$(this).prop('checked')) {                                                                                     // when uncheck
         $(firstTheme).hide();

@@ -6,4 +6,7 @@ require('jquery-nestable');
 require('jquery-autosize');
 require('jquery-validation');
 require('jquery-ui-browserify');
+require('jquery-serializejson');
 global.Dropzone = require('dropzone');
+require('moment');
+require('eonasdan-bootstrap-datetimepicker');

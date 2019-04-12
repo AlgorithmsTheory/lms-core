@@ -122,9 +122,10 @@
 @stop
 
 @section('js-down')
+    {!! HTML::script('js/modules.js') !!}
+    {!! HTML::script('js/statistics/question_profile.js') !!}
+
     {!! HTML::script('js/core/source/App.js') !!}
     {!! HTML::script('js/core/source/AppCard.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
-    {!! HTML::script('js/modules.js') !!}
-    {!! HTML::script('js/statistics/question_profile.js') !!}
 @stop

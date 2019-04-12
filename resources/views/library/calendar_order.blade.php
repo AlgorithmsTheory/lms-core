@@ -96,8 +96,6 @@
     {!! HTML::script('js/core/source/AppNavSearch.js') !!}
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
-    {!! HTML::script('js/moment-with-locales.min.js') !!}
-    {!! HTML::script('js/bootstrap-datetimepicker.min.js') !!}
 
     <script>
         $(function () {

@@ -164,7 +164,6 @@
 
 @section('js-down')
 {!! HTML::script('js/testCreate2.js') !!}
-{!! HTML::script('js/jquery.serializejson.js') !!}
 @stop
 
 
