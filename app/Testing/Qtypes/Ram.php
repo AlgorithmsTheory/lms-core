@@ -4,11 +4,10 @@ use App\Http\Controllers\QuestionController;
 use App\Mypdf;
 use App\Testing\Question;
 use App\Testing\Type;
-use App\Emulators\TestsequenceRam;
-use App\Emulators\TasksRam;
 use Illuminate\Http\Request;
 use Input;
 use Session;
+
 class Ram extends QuestionType implements Checkable {
     const type_code = 15;
 
@@ -24,13 +23,11 @@ class Ram extends QuestionType implements Checkable {
         for ($i=1; $i<count($request->input('variants-in')); $i++){
             $variants = $variants.';'.$request->input('variants-in')[$i];
         }
-        $answer = "";
 
         $eng_variants = $request->input('variants-out')[0];
         for ($i=1; $i<count($request->input('variants-out')); $i++){
             $eng_variants = $eng_variants.';'.$request->input('variants-out')[$i];
         }
-        $eng_answer = "";
 
         return ['title' => $title['ru_title'], 'variants' => $variants,
                 'answer' => $answer, 'points' => $options['points'], 'difficulty' => $options['difficulty'],
@@ -75,7 +72,7 @@ class Ram extends QuestionType implements Checkable {
     }
 
     public function show($count) {
-        $task = "Тут может быть описание задания для студента более подробно чем в вопросе";
+        $task = "";
         $parse = $this->variants;
         $variantsIn = explode(";", $parse);
         $parse = $this->eng_variants;
@@ -102,56 +99,52 @@ class Ram extends QuestionType implements Checkable {
 		}
 		
         $debug_counter--;
-        if($debug_counter > 9){
-            $debug_counter = 9;
+        if($debug_counter > 10){
+            $debug_counter = 10;
         }
         
 		$right_percent = ($sequences_true * 1.0) / ($sequences_all * 1.0);
-        $score_fee = 1 / ($sequences_all * 1.0) / 10;
+        $score_fee = $right_percent / 2 / 10;
         
-		$score = $score * ($right_percent - $score_fee * $debug_counter);
+        $fee_percent = $score_fee * $debug_counter;
+        $last_percent = $right_percent - $fee_percent;
+        
+		$score = $score * $last_percent;
         if($score < 0){
             $score = 0;
         }
         
-        $right_percent = $right_percent * 100;
+        
+        $right_percent = $last_percent * 100;
+        $fee_percent = $fee_percent * 100;
 		
-		$data = array('mark'=>$mark, 'score'=>$score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => 0, 'right_percent' => $right_percent);
+		$data = array('mark'=>$mark, 'score'=>$score, 'id' => $this->id_question, 'points' => $this->points, 'right_percent' => $right_percent,
+                      'choice' => ['debug_counter' => $debug_counter, 'sequences_true' => $sequences_true, 'sequences_all' => $sequences_all, 'fee_percent' => $fee_percent, 'score'=>$score]);
         return $data;
     }
 
     public function pdf(Mypdf $fpdf, $count, $answered=false) {
-        $parse = $this->variants;
-        $variants = explode(";", $parse);
         $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
-        $html .= '  Выберите один вариант ответа</td></tr>';
+        $html .= '  Напишите решение задачи на Random Access Machine</td></tr>';
         $html .= '<tr><td>'.$this->text.'</td></tr></table>';
 
-        $html .= '<table border="1" style="border-collapse: collapse;" width="100%">';
-        if ($answered){                                                                                                 // пдф с ответами
-            $answer = $this->answer;
-            $new_variants = Session::get('saved_variants_order');
-            foreach ($new_variants as $var){
-                $html .= '<tr>';
-                if ($answer == $var)
-                    $html .= '<td width="5%" align="center">+</td><td width="80%">'.$var.'</td>';
-                else
-                    $html .= '<td width="5%"></td><td width="80%">'.$var.'</td>';
-                $html .= '</tr>';
-            }
-            Session::forget('saved_variants_order');
+        if ($answered){                                                                                                 // с ответами
+            $html .= '<p>Ваш алгоритм:</p>';
+            $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для алгоритма
+                        <tr><td height="250px">'.$this->answer.'</td></tr>
+                      </table><br>';
+            $fpdf->WriteHTML($html);
         }
-        else {                                                                                                          // без ответов
-            $new_variants = Question::mixVariants($variants);
-            Session::put('saved_variants_order', $new_variants);
-            foreach ($new_variants as $var){
-                $html .= '<tr>';
-                $html .= '<td width="5%"></td><td width="80%">'.$var.'</td>';
-                $html .= '</tr>';
-            }
+        else{
+            $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для алгоритма
+                            <tr><td height="80px"></td></tr>
+                      </table>';
+            $html .= '<p>Ваш алгоритм:</p>';
+            $html .= '<table border="1" style="border-collapse: collapse;" width="100%">
+                        <tr><td height="500px"></td></tr>
+                      </table><br>';
+            $fpdf->WriteHTML($html);
         }
-        $html .= '</table><br>';
-        $fpdf->WriteHTML($html);
     }
 	
 	public function evalGuess() {
