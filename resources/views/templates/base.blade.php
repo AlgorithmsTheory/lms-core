@@ -6,7 +6,6 @@
     {!! HTML::style('css/materialadmin.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     {!! HTML::style('css/materialadmin_demo.css') !!}
-    {!! HTML::script('js/jquery.js') !!}
     @yield('head')
 </head>
 <body class="@yield('background', '')">
@@ -70,9 +69,7 @@
     </div>
 </div>
 
-{!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
-{!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
-{!! HTML::script('js/libs/bootstrap/bootstrap.min.js') !!}
+{!! HTML::script('js/modules.js') !!}
 @yield('js-down')
 
 </body>

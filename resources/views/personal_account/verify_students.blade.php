@@ -12,9 +12,6 @@
     full
 @stop
 
-
-
-
 @section('content')
 <div class="col-md-12 col-sm-12">
     <div class="card">
@@ -96,8 +93,9 @@
         </div>
     </div>
 </div>
+@stop
 
-{!! HTML::script('js/personal_account/add_student.js') !!}
-{!! HTML::script('js/personal_account/person_filter.js') !!}
-
+@section('js-down')
+    {!! HTML::script('js/personal_account/add_student.js') !!}
+    {!! HTML::script('js/personal_account/person_filter.js') !!}
 @stop

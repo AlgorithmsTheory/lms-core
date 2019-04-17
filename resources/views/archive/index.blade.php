@@ -303,5 +303,5 @@
 @stop
 
 @section('js-down')
-{!! HTML::script('js/archive.js') !!}
+    {!! HTML::script('js/archive.js') !!}
 @stop

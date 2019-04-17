@@ -2,7 +2,7 @@ $(function () {
 var focusedElem;
 
 		var scntDiv = $('#p_scents');
-		var i = $('#p_scents li').size() + 1;
+		var i = $('#p_scents li').length + 1;
 
 		$('#addScnt').live('click', function() {
 			$('<li  id ="p_scnt_' + i +'" class="tile"><span class="input-group-addon"><b>' + i + '</b></span> <div class="col-md-3"> <div class="input-group-content"><select id="select_' + i +'" name="select_' + i +'" class="form-control"> <option value=">">&nbsp;</option> <option value=">">></option> <option value="<"><</option> <option value="1">1</option> <option value="0">0</option> <option value="?">?</option> <option value="!">!</option> </select> </div> </div> <div class="col-md-3" style="left: -50px;"> <div class="input-group-content"> <input type="number" min="1" id="goto1" class="form-control" required=""> </div> <div class="input-group-content"> <input type="number" min="1" id="goto2" class="form-control" required=""> </div> <span class="input-group-addon">|</span> </div> <div class="col-md-6" style="left: -40px;"> <div class="input-group-content"> <input type="text" class="form-control" name="end" placeholder="Комментарий"> <div class="form-control-line"></div> </div> </div></li>').appendTo(scntDiv);

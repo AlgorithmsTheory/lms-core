@@ -9,10 +9,6 @@
     <meta name="csrf_token" content="{{ csrf_token() }}" />
 @stop
 
-
-
-
-
 @section('content')
     <div id="main_container">
         <div class="card col-lg-12 col-md-12">
@@ -70,6 +66,8 @@
     <div id="overlay" class="none">
         <div class="loading-pulse"></div>
     </div>
+@stop
 
-        {!! HTML::script('js/statements/statements.js') !!}
+@section('js-down')
+    {!! HTML::script('js/statements/statements.js') !!}
 @stop

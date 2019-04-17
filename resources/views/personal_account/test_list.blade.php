@@ -155,6 +155,8 @@
 <div id="overlay" class="none">
     <div class="loading-pulse"></div>
 </div>
-{!! HTML::script('js/testList.js') !!}
+@stop
 
+@section('js-down')
+    {!! HTML::script('js/testList.js') !!}
 @stop

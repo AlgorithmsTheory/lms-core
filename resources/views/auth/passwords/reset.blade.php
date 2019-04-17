@@ -7,7 +7,7 @@
     {!! HTML::style('css/materialadmin.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     {!! HTML::style('css/materialadmin_demo.css') !!}
-    {!! HTML::script('js/jquery.js') !!}
+    {!! HTML::script('js/modules.js') !!}
     <title>Algorithms theory LMS</title>
 </head>
 <body class="full-no_access">
@@ -72,9 +72,7 @@
         </div>
     </div>
 </div>
-{!! HTML::script('js/libs/jquery/jquery-1.11.2.min.js') !!}
-{!! HTML::script('js/libs/jquery/jquery-migrate-1.2.1.min.js') !!}
-{!! HTML::script('js/libs/bootstrap/bootstrap.min.js') !!}
+
 <script>/* ========================================================================
      * Bootstrap (plugin): validator.js v0.9.0
      * ========================================================================

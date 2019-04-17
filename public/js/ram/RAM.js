@@ -137,7 +137,7 @@ class TextEditor_{
 		if(this.is_highlight_execline){
 			if(this.not_highlight_execline){
 				this.not_highlight_execline = false;
-				var Range = ace.require('ace/range').Range;
+				var Range = ace.acequire('ace/range').Range;
 				this.markerID = editor.session.addMarker(new Range(line, 0, line, 1), "myMarker", "fullLine");
 			}
 		}
@@ -521,7 +521,8 @@ $('.input-group').on('focus', 'input[type=number]', function (e) {
 })
 $('input-group').on('blur', 'input[type=number]', function (e) {
   $(this).off('mousewheel.disableScroll')
-})
+});
+
 // set editor
 var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
@@ -533,7 +534,7 @@ var editor = ace.edit("editor");
 		readOnly: false,
 		cursorStyle: "ace",
 		fontSize: 25,
-	})
+	});
 // create classes
 let RAM = new RAM_();
 let buttonFunctional = new ButtonFunctional();

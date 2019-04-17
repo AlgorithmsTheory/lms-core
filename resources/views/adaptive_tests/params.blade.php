@@ -43,7 +43,3 @@
         </form>
     </div>
 @stop
-
-@section('js-down')
-    {!! HTML::script('js/libs/dropzone/dropzone.js') !!}
-@stop

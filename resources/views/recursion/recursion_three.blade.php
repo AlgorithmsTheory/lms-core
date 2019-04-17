@@ -120,15 +120,11 @@
             </div>
         </div>
     </section>
+@stop
+
+@section('js-down')
     {!! HTML::script('js/recursion/recursion_three.js') !!}
 
-    {!! HTML::script('js/libs/jquery-ui/jquery-ui.min.js') !!}
-    {!! HTML::script('js/libs/spin.js/spin.min.js') !!}
-    {!! HTML::script('js/libs/jquery-validation/dist/jquery.validate.min.js') !!}
-    {!! HTML::script('js/libs/jquery-validation/dist/additional-methods.min.js') !!}
-    {!! HTML::script('js/libs/autosize/jquery.autosize.min.js') !!}
-    {!! HTML::script('js/libs/nestable/jquery.nestable.js') !!}
-    {!! HTML::script('js/libs/nanoscroller/jquery.nanoscroller.min.js') !!}
     {!! HTML::script('js/core/source/App.js') !!}
     {!! HTML::script('js/core/source/AppNavigation.js') !!}
     {!! HTML::script('js/core/source/AppOffcanvas.js') !!}
@@ -139,6 +135,4 @@
     {!! HTML::script('js/core/demo/Demo.js') !!}
     {!! HTML::script('js/core/demo/DemoUILists.js') !!}
     {!! HTML::script('js/core/demo/DemoUIMessages.js') !!}
-    {!! HTML::script('js/libs/toastr/toastr.js') !!}
-
 @stop

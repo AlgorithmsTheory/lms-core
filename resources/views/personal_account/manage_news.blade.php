@@ -75,6 +75,8 @@
         </div>
 
     </div>
-    {!! HTML::script('js/personal_account/delete_news.js') !!}
+@stop
 
+@section('js-down')
+    {!! HTML::script('js/personal_account/delete_news.js') !!}
 @stop
