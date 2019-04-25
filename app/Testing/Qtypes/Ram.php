@@ -124,21 +124,11 @@ class Ram extends QuestionType implements Checkable {
     }
 
     public function pdf(Mypdf $fpdf, $count, $answered=false) {
-        $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
-        $html .= '  Напишите решение задачи на Random Access Machine</td></tr>';
-        $html .= '<tr><td>'.$this->text.'</td></tr></table>';
-
-        if ($answered){                                                                                                 // с ответами
-            $html .= '<p>Ваш алгоритм:</p>';
-            $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для алгоритма
-                        <tr><td height="250px">'.$this->answer.'</td></tr>
-                      </table><br>';
-            $fpdf->WriteHTML($html);
-        }
-        else{
-            $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для алгоритма
-                            <tr><td height="80px"></td></tr>
-                      </table>';
+        if ($answered == false) {
+            $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
+            $html .= '  Напишите решение задачи на Random Access Machine</td></tr>';
+            $html .= '<tr><td>'.$this->text.'</td></tr></table>';
+            
             $html .= '<p>Ваш алгоритм:</p>';
             $html .= '<table border="1" style="border-collapse: collapse;" width="100%">
                         <tr><td height="500px"></td></tr>

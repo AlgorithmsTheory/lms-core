@@ -58,6 +58,7 @@
 
 {!! HTML::script('js/toolbar.js') !!}
 {!! HTML::script('js/ram/bootstrap.min.js') !!}
+{!! HTML::script('js/ram/ace.js') !!}
 {!! HTML::script('js/ram/RAM.js') !!}
 {!! HTML::script('js/ram/kontr_RAM.js') !!}
 <br>

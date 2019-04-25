@@ -97,5 +97,3 @@
         @yield('addl-blocks')
     </div>
 <!-- BEGIN JAVASCRIPT -->
-{!! HTML::script('js/ram/popper.min.js') !!}
-{!! HTML::script('js/ram/src-noconflict/ace.js') !!}
