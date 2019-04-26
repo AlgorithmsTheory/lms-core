@@ -1,6 +1,57 @@
 //...................................classes................................................
 
+class Context {
+	constructor(impl_){
+		this.impl = impl_;
+		this.timerId = 0;
+		this.no_notice = false;
+		this.btn_start = $("[name = ram-entity" + this.impl + "] [name='btn_start']");
+		this.btn_pause = $("[name = ram-entity" + this.impl + "] [name='btn_pause']");
+		this.btn_next = $("[name = ram-entity" + this.impl + "] [name='btn_next']");
+		this.btn_reset = $("[name = ram-entity" + this.impl + "] [name='btn_reset']");
+		this.btn_save_doc = $("[name = ram-entity" + this.impl + "] [name='btn_save_doc']");
+		this.btn_load_doc = $("[name = ram-entity" + this.impl + "] [name='btn_load_doc']")
+		this.drop_debug = $("[name = ram-entity" + this.impl + "] [name='drop_debug']");
+		this.drop_run = $("[name = ram-entity" + this.impl + "] [name='drop_run']");
+		this.drop_animate = $("[name = ram-entity" + this.impl + "] [name='drop_animate']");
+		this.btn_reg_plus = $("[name = ram-entity" + this.impl + "] [name='btn_reg_plus']");
+		this.btn_reg_minus = $("[name = ram-entity" + this.impl + "] [name='btn_reg_minus']");
+		this.btn_reg_default =  $("[name = ram-entity" + this.impl + "] [name='btn_reg_default']");
+		
+		this.input = $("[name = ram-entity" + this.impl + "] [name='input']");
+		this.output = $("[name = ram-entity" + this.impl + "] [name='output']");
+		this.r0 = $("[name = ram-entity" + this.impl + "] [name='r0']");
+		
+		this.registerContainer = $("[name = ram-entity" + this.impl + "] [name='registerContainer']");
+		this.mod = $("[name = ram-entity" + this.impl + "] [name='mod']");
+		this.editorField = $("[name = ram-entity" + this.impl + "] [name='editor']");
+		
+		this.editor = ace.edit(this.editorField.get(0));
+		this.editor.setTheme("ace/theme/monokai");
+		this.editor.session.setMode("ace/mode/ram");
+		this.editor.setOptions({
+			selectionStyle: "text",
+			highlightActiveLine: true,
+			highlightSelectedWord: false,
+			readOnly: false,
+			cursorStyle: "ace",
+			fontSize: 25,
+		});
+	}
+	
+	get_elem(str){
+		return $("[name = ram-entity" + this.impl + "]").find("[name='" + str + "']");
+	}
+}
+
+
+
+
 class Functional_{
+	constructor(ctx){
+		this.ctx = ctx;
+	}
+	
 	set_markers(markers_, m_lines_){
 		this.markers = markers_;
 		this.m_lines = m_lines_;
@@ -8,14 +59,14 @@ class Functional_{
 	
 	get_relate(num_relate, arg){
 		while(num_relate > 0){
-			arg = $("#r" + arg).val();
+			arg = this.ctx.get_elem("r" + arg).val();
 			num_relate--;
 		}
 		return arg;
 	}
 
 	do_read(){
-		var input_line = input.value;
+		var input_line = this.ctx.input.val();
 		var space = 0; var number = "";
 		while(space == 0){
 			space = input_line.indexOf(" ");
@@ -28,52 +79,52 @@ class Functional_{
 				input_line = input_line.substr(space + 1);
 			}
 		}
-		input.value = input_line;
-		r0.value = number;
+		this.ctx.input.val(input_line);
+		this.ctx.r0.val(number);
 	}
 
 	do_write(){
-		output.value = output.value + " " + r0.value;
+		this.ctx.output.val(this.ctx.output.val() + " " + this.ctx.r0.val());
 	}
 
 	do_halt(){
-		clearInterval(timerId);
-		$("#btn_pause").html("Пауза");
-		btn_pause.disabled = true;
-		btn_next.disabled = true;
-		if(RAM.no_notice == false)
+		clearInterval(this.ctx.timerId);
+		this.ctx.btn_pause.html("Пауза");
+		this.ctx.btn_pause.prop( "disabled", true );
+		this.ctx.btn_next.prop( "disabled", true );
+		if(this.ctx.no_notice == false)
 			alert("Работа выполнена");
 		return true;
 	}
 
 	do_store(num_relate, arg){
 		arg = this.get_relate(num_relate - 1, arg);
-		$("#r" + arg).val($("#r0").val());
+		this.ctx.get_elem("r" + arg).val(this.ctx.r0.val());
 	}
 
 	do_load(num_relate, arg){
 		arg = this.get_relate(num_relate, arg);
-		$("#r0").val(arg);
+		this.ctx.r0.val(arg);
 	}
 
 	do_add(num_relate, arg){
 		arg = this.get_relate(num_relate, arg);
-		$("#r0").val($("#r0").val()*1 + arg*1);
+		this.ctx.r0.val(this.ctx.r0.val()*1 + arg*1);
 	}
 
 	do_sub(num_relate, arg){
 		arg = this.get_relate(num_relate, arg);
-		$("#r0").val($("#r0").val() - arg);
+		this.ctx.r0.val(this.ctx.r0.val() - arg);
 	}
 
 	do_mult(num_relate, arg){
 		arg = this.get_relate(num_relate, arg);
-		$("#r0").val($("#r0").val() * arg);
+		this.ctx.r0.val(this.ctx.r0.val() * arg);
 	}
 
 	do_div(num_relate, arg){
 		arg = this.get_relate(num_relate, arg);
-		$("#r0").val(   ($("#r0").val() - $("#r0").val() % arg) / arg  );
+		this.ctx.r0.val(   (this.ctx.r0.val() - this.ctx.r0.val() % arg) / arg  );
 	}
 
 	do_jump(mark){
@@ -81,14 +132,14 @@ class Functional_{
 	}
 
 	do_jgtz(mark){
-		if($("#r0").val() > 0){
+		if(this.ctx.r0.val() > 0){
 			return this.m_lines[this.markers.indexOf(mark)] - 1;
 		}
 		return -1;
 	}
 
 	do_jzero(mark){
-		if($("#r0").val() == 0){
+		if(this.ctx.r0.val() == 0){
 			return this.m_lines[this.markers.indexOf(mark)] - 1;
 		}
 		return -1;
@@ -99,7 +150,8 @@ class Functional_{
 
 
 class TextEditor_{
-	constructor() {
+	constructor(ctx) {
+		this.ctx = ctx;
 		this.is_highlight_execline = false;
 		this.not_highlight_execline = true;
 		this.markerID = -1;
@@ -110,27 +162,27 @@ class TextEditor_{
 	}
 	
 	set_text(txt){
-		editor.setValue(txt, 0); 
+		this.ctx.editor.setValue(txt, 0); 
 	}
 	
 	get_text() {
-		return editor.getValue();
+		return this.ctx.editor.getValue();
 	}
 	
 	get_line(i) {
-		return editor.session.getLine(i);
+		return this.ctx.editor.session.getLine(i);
 	}
 	
 	get_length(){
-		return editor.session.getLength();
+		return this.ctx.editor.session.getLength();
 	}
 	
 	set_readOnly(t){
-		editor.setReadOnly(t);
+		this.ctx.editor.setReadOnly(t);
 	}
 	
 	gotoLine(i){
-		editor.gotoLine(i);
+		this.ctx.editor.gotoLine(i);
 	}
 	
 	drawLine(line){
@@ -138,7 +190,7 @@ class TextEditor_{
 			if(this.not_highlight_execline){
 				this.not_highlight_execline = false;
 				var Range = ace.acequire('ace/range').Range;
-				this.markerID = editor.session.addMarker(new Range(line, 0, line, 1), "myMarker", "fullLine");
+				this.markerID = this.ctx.editor.session.addMarker(new Range(line, 0, line, 1), "myMarker", "fullLine");
 			}
 		}
 	}
@@ -147,48 +199,49 @@ class TextEditor_{
 		if(this.is_highlight_execline){
 			if(!this.not_highlight_execline){
 				this.not_highlight_execline = true;
-				editor.session.removeMarker(this.markerID);
+				this.ctx.editor.session.removeMarker(this.markerID);
 			}
 		}
 	}
 	
 	is_syntax_error(){
-		return (editor.session.getState(editor.session.getLength()) == "error");
+		return (this.ctx.editor.session.getState(this.ctx.editor.session.getLength()) == "error");
 	}
 }
 
 
 
 class RegisterManager_ {
-	constructor(){
+	constructor(ctx){
+		this.ctx = ctx;
 		this.num_registers = 1;
 	}
 	
 	add_register(){
 		this.num_registers++;
-		$("#registerContainer").append("\n" +
+		this.ctx.registerContainer.append("\n" +
 			"<div class = \"input-group\" >" + "\n" +
 			"<span class=\"input-group-addon\"><b>R" + this.num_registers + "</b></span>" + "\n" +
-			"<input type = \"number\" class = \"form-control\" value = \"0\" id = \"r" + this.num_registers + "\">" + "\n" +
+			"<input type = \"number\" class = \"form-control\" value = \"0\" name = \"r" + this.num_registers + "\">" + "\n" +
 			"</div>" + "\n")
 	}
 	
 	del_register(){
 		if(this.num_registers > 0){
-			$("#r" + this.num_registers--).parent().remove();
+			this.ctx.get_elem("r" + this.num_registers--).parent().remove();
 		}
 	}
 	
 	reset_values(){
 		for(var i = 0; i <= this.num_registers; i++){
-			$("#r" + i).val(0);
+			this.ctx.get_elem("r" + i).val(0);
 		}
 	}
 	
 	reset(){
 		this.num_registers = 0;
-		$("#r0").val(0);
-		$("#registerContainer").html("");
+		this.ctx.r0.val(0);
+		this.ctx.registerContainer.html("");
 		for(var i=0; i < 13; i++){
 			this.add_register();
 		}
@@ -200,10 +253,11 @@ class RegisterManager_ {
 
 
 class RAM_ {
-	constructor(){
-		this.Functional = new Functional_();
-		this.TextEditor = new TextEditor_();
-		this.RegisterManager = new RegisterManager_();
+	constructor(ctx){
+		this.ctx = ctx;
+		this.Functional = new Functional_(ctx);
+		this.TextEditor = new TextEditor_(ctx);
+		this.RegisterManager = new RegisterManager_(ctx);
 		this.RegisterManager.reset();
 		this.markerLine = 0;
 		this.markers = []; 
@@ -211,7 +265,6 @@ class RAM_ {
 		this.is_halt = false;
 		this.counterOperations = 0;
 		this.is_error = false;
-		this.no_notice = false;
 	}
 	
 	set_mark(num_row, mark){
@@ -383,88 +436,89 @@ class RAM_ {
 
 
 
-
-var timerId;
-class ButtonFunctional{
-	static change_mode() {
-		$("#mod").text($(this).text());
+class EmulatorEnviroment{
+	change_mode(ptr) {
+		this.ctx.mod.text($(ptr).text());
 	}
 	
-	static run(){
-		while(!RAM.isHalt()){
-			btn_next.dispatchEvent(new Event("click"));
+	run(){
+		while(!this.RAM.isHalt()){
+			this.ctx.btn_next.trigger("click");
 		}
 	}
 	
-	constructor(){
-		btn_start.onclick = function() {
-			if(RAM.TextEditor.is_syntax_error()){
-				if(RAM.no_notice == false){ // ignore syntax in this case
+	constructor(impl_){
+		this.ctx = new Context(impl_);
+		this.RAM = new RAM_(this.ctx);
+		
+		this.ctx.btn_start.click(function() {
+			if(envs[impl_].RAM.TextEditor.is_syntax_error()){
+				if(envs[impl_].ctx.no_notice == false){ // ignore syntax in this case
 					alert('Есть некоторые ошибки в коде!');
 					return;
 				}
 			}
-			if(!RAM.check_text()){
-				if(RAM.no_notice == false){
+			if(!envs[impl_].RAM.check_text()){
+				if(envs[impl_].ctx.no_notice == false){
 					alert('Одна из команд JUMP с ошибкой!');
 				}
 				return;
 			}
 			
-			btn_start.disabled = true;
-			if($("#mod").html() == "Отладка"){
-				btn_next.disabled = false;
-				btn_pause.disabled = true;
-				btn_load_doc.disabled = true;
-				RAM.TextEditor.set_highlight(true);
-				RAM.start();
+			envs[impl_].ctx.btn_start.prop( "disabled", true );
+			if(envs[impl_].ctx.mod.html() == "Отладка"){
+				envs[impl_].ctx.btn_next.prop( "disabled", false );
+				envs[impl_].ctx.btn_pause.prop( "disabled", true );
+				envs[impl_].ctx.btn_load_doc.prop( "disabled", true );
+				envs[impl_].RAM.TextEditor.set_highlight(true);
+				envs[impl_].RAM.start();
 			}
-			else if($("#mod").html() == "Исполнение"){
-				btn_next.disabled = true;
-				btn_pause.disabled = true;
-				btn_load_doc.disabled = true;
-				RAM.TextEditor.set_highlight(false);
-				RAM.start();
-				ButtonFunctional.run();
-			}
-			else{
-				btn_next.disabled = true;
-				btn_pause.disabled = false;
-				btn_load_doc.disabled = true;
-				RAM.TextEditor.set_highlight(true);
-				RAM.start();
-				timerId = setInterval(function() { btn_next.dispatchEvent(new Event("click")); }, 500);
-			}
-		};
-		
-		btn_pause.onclick = function() {
-			if($("#btn_pause").html() == "Пауза"){
-				clearInterval(timerId);
-				$("#btn_pause").html("Продолжить");
+			else if(envs[impl_].ctx.mod.html() == "Исполнение"){
+				envs[impl_].ctx.btn_next.prop( "disabled", true );
+				envs[impl_].ctx.btn_pause.prop( "disabled", true );
+				envs[impl_].ctx.btn_load_doc.prop( "disabled", true );
+				envs[impl_].RAM.TextEditor.set_highlight(false);
+				envs[impl_].RAM.start();
+				envs[impl_].run();
 			}
 			else{
-				timerId = setInterval(function() { btn_next.dispatchEvent(new Event("click")); }, 500);
-				$("#btn_pause").html("Пауза");
+				envs[impl_].ctx.btn_next.prop( "disabled", true );
+				envs[impl_].ctx.btn_pause.prop( "disabled", false );
+				envs[impl_].ctx.btn_load_doc.prop( "disabled", true );
+				envs[impl_].RAM.TextEditor.set_highlight(true);
+				envs[impl_].RAM.start();
+				envs[impl_].ctx.timerId = setInterval(function() { envs[impl_].ctx.btn_next.trigger("click"); }, 500);
 			}
-		};
+		});
 		
-		btn_next.onclick = function() {
-			RAM.runNext();
-		};
+		this.ctx.btn_pause.click(function() {
+			if(envs[impl_].ctx.btn_pause.html() == "Пауза"){
+				clearInterval(envs[impl_].ctx.timerId);
+				envs[impl_].ctx.btn_pause.html("Продолжить");
+			}
+			else{
+				envs[impl_].ctx.timerId = setInterval(function() { envs[impl_].ctx.btn_next.trigger("click"); }, 500);
+				envs[impl_].ctx.btn_pause.html("Пауза");
+			}
+		});
+		
+		this.ctx.btn_next.click(function() {
+			envs[impl_].RAM.runNext();
+		});
 
-		btn_reset.onclick = function() {
-			clearInterval(timerId);
-			btn_pause.disabled = true;
-			$("#btn_pause").html("Пауза");
+		this.ctx.btn_reset.click(function() {
+			clearInterval(envs[impl_].ctx.timerId);
+			envs[impl_].ctx.btn_pause.prop( "disabled", true );
+			envs[impl_].ctx.btn_pause.html("Пауза");
 			
-			btn_start.disabled = false;
-			btn_next.disabled = true;
-			btn_load_doc.disabled = false;
-			RAM.reset();
-		};
-
-		btn_save_doc.onclick = function() {
-			var textToWrite = RAM.TextEditor.get_text();
+			envs[impl_].ctx.btn_start.prop( "disabled", false );
+			envs[impl_].ctx.btn_next.prop( "disabled", true );
+			envs[impl_].ctx.btn_load_doc.prop( "disabled", false );
+			envs[impl_].RAM.reset();
+		});
+		
+		this.ctx.btn_save_doc.click(function() {
+			var textToWrite = envs[impl_].RAM.TextEditor.get_text();
 			textToWrite = textToWrite.replace(/\r/g, "");
 			textToWrite = textToWrite.replace(/\n/g, "\r\n");
 			var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
@@ -490,25 +544,25 @@ class ButtonFunctional{
 			}
 
 			downloadLink.click();
-		};
+		});
 
-		btn_load_doc.onclick = function() {
-			var fileToLoad = document.getElementById("fileToLoad").files[0];
+		this.ctx.btn_load_doc.click(function() {
+			var fileToLoad =  envs[impl_].ctx.get_elem("fileToLoad")[0].files[0];
 			var fileReader = new FileReader();
 			fileReader.onload = function(fileLoadedEvent) 
 			{
 				var textFromFileLoaded = fileLoadedEvent.target.result;
-				RAM.TextEditor.set_text(textFromFileLoaded)
+				envs[impl_].RAM.TextEditor.set_text(textFromFileLoaded);
 			};
 			fileReader.readAsText(fileToLoad, "UTF-8");
-		};
+		});
 		
-		drop_debug.onclick = ButtonFunctional.change_mode;
-		drop_run.onclick = ButtonFunctional.change_mode;
-		drop_animate.onclick = ButtonFunctional.change_mode;
-		btn_reg_plus.onclick = function() { RAM.RegisterManager.add_register(); }
-		btn_reg_minus.onclick = function() { RAM.RegisterManager.del_register(); }
-		btn_reg_default.onclick = function() { RAM.RegisterManager.reset(); }
+		this.ctx.drop_debug.click( function(){ envs[impl_].change_mode(this) });
+		this.ctx.drop_run.click( function(){ envs[impl_].change_mode(this) });
+		this.ctx.drop_animate.click( function(){ envs[impl_].change_mode(this) });
+		this.ctx.btn_reg_plus.click( function() { envs[impl_].RAM.RegisterManager.add_register(); } );
+		this.ctx.btn_reg_minus.click( function() { envs[impl_].RAM.RegisterManager.del_register(); } );
+		this.ctx.btn_reg_default.click( function() { envs[impl_].RAM.RegisterManager.reset(); } );
 	}
 }
 
@@ -523,18 +577,13 @@ $('input-group').on('blur', 'input[type=number]', function (e) {
   $(this).off('mousewheel.disableScroll')
 });
 
-// set editor
-var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.session.setMode("ace/mode/ram");
-	editor.setOptions({
-		selectionStyle: "text",
-		highlightActiveLine: true,
-		highlightSelectedWord: false,
-		readOnly: false,
-		cursorStyle: "ace",
-		fontSize: 25,
-	});
-// create classes
-let RAM = new RAM_();
-let buttonFunctional = new ButtonFunctional();
+
+// create emulator enviroment
+var env_counter = 0;
+var envs = [];
+
+$("[name=ram-entity]").each(function(){
+	$(this).attr('name', 'ram-entity' + env_counter);
+	envs.push(new EmulatorEnviroment(env_counter));
+	env_counter++;
+});
