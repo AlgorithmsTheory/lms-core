@@ -61,6 +61,7 @@
 {!! HTML::script('js/ram/ace.js') !!}
 {!! HTML::script('js/ram/RAM.js') !!}
 {!! HTML::script('js/ram/kontr_RAM.js') !!}
+{!! HTML::script('js/algorithms/kontr_post.js') !!}
 <br>
 </section>
 </body>

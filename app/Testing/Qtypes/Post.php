@@ -101,21 +101,27 @@ class Post extends QuestionType implements Checkable {
 		}
 		
         $debug_counter--;
-        if($debug_counter > 9){
-            $debug_counter = 9;
+        if($debug_counter > 10){
+            $debug_counter = 10;
         }
         
 		$right_percent = ($sequences_true * 1.0) / ($sequences_all * 1.0);
-        $score_fee = 1 / ($sequences_all * 1.0) / 10;
+        $score_fee = $right_percent / 2 / 10;
         
-		$score = $score * ($right_percent - $score_fee * $debug_counter);
+        $fee_percent = $score_fee * $debug_counter;
+        $last_percent = $right_percent - $fee_percent;
+        
+		$score = $score * $last_percent;
         if($score < 0){
             $score = 0;
         }
         
-        $right_percent = $right_percent * 100;
+        
+        $right_percent = $last_percent * 100;
+        $fee_percent = $fee_percent * 100;
 		
-		$data = array('mark'=>$mark, 'score'=>$score, 'id' => $this->id_question, 'points' => $this->points, 'choice' => 0, 'right_percent' => $right_percent);
+		$data = array('mark'=>$mark, 'score'=>$score, 'id' => $this->id_question, 'points' => $this->points, 'right_percent' => $right_percent,
+                      'choice' => ['debug_counter' => $debug_counter, 'sequences_true' => $sequences_true, 'sequences_all' => $sequences_all, 'fee_percent' => $fee_percent, 'score'=>$score]);
         return $data;
     }
 

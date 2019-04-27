@@ -1,6 +1,6 @@
 @extends('algorithm.Postbase')
 
-@section('addl-info')
+@section('addl-info-post')
     <div class="col-lg-12">
         <article class="margin-bottom-xxl">
             <p class = 'lead'>
@@ -12,7 +12,7 @@
 	</div>
 @stop
 
-@section('addl-blocks')
+@section('addl-blocks-post')
 <div class="offcanvas">
 	<div id="offcanvas-demo-right" class="offcanvas-pane width-10" style="">
 		<div class="offcanvas-head">

@@ -19,9 +19,9 @@ function ramSubmitTask(impl, notice){
 	
 	envs[impl].ctx.no_notice = true;
 	
-	deb_cnt = $("form").eq(impl).find("[name=debug_counter]").first();
-	seq_true = $("form").eq(impl).find("[name=sequences_true]").first();
-	seq_all = $("form").eq(impl).find("[name=sequences_all]").first();
+	deb_cnt = $("[name=type][value=15]").eq(impl).parent().find("[name=debug_counter]").first();
+	seq_true = $("[name=type][value=15]").eq(impl).parent().find("[name=sequences_true]").first();
+	seq_all = $("[name=type][value=15]").eq(impl).parent().find("[name=sequences_all]").first();
 	
 	var debug_counter = deb_cnt.val();
 	debug_counter++;

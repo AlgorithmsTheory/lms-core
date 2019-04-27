@@ -1,6 +1,6 @@
 @extends('algorithm.Postbase')
 
-@section('addl-info')
+@section('addl-info-post')
     <div class="col-lg-12">
         <article class="margin-bottom-xxl">
             <div name="test_seq"  style="display:none">{{ $test_seq }}</div>
@@ -12,5 +12,5 @@
     </div>
 @stop
 
-@section('addl-blocks')
+@section('addl-blocks-post')
 @stop

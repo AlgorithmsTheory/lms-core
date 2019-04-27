@@ -1,5 +1,5 @@
 @extends('algorithm.RAMbase')
-@section('addl-info')
+@section('addl-info-ram')
     <div class="col-lg-12">
         <article class="margin-bottom-xxl">
             <div name="test_seq"  style="display:none">{{ $test_seq }}</div>
@@ -10,5 +10,5 @@
         </article>
     </div>
 @stop
-@section('addl-blocks')
+@section('addl-blocks-ram')
 @stop
