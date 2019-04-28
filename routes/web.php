@@ -250,68 +250,14 @@ Route::get('student_lib_account2', ['as' => 'student_lib_account2', 'uses' => 'B
 Route::get('teacher_account/library_order_list/{order_id}/edit_order_status0', ['as' => 'edit_order_status0', 'uses' => 'BooksController@edit_order_status0']); // только преподавателю
 Route::get('teacher_account/library_order_list/{order_id}/edit_order_status1', ['as' => 'edit_order_status1', 'uses' => 'BooksController@edit_order_status1']); // только преподавателю
 
-//модуль маркова - задачи и работа с ними
-Route::get('emulator/administration', ['as' => 'main_menu', 'uses' => 'Emulators\TasksController@main']);
 
-Route::get('alltasks', ['as' => 'alltasks', 'uses' => 'Emulators\TasksController@index']);
-//Route::get('alltasksmt', ['as' => 'alltasks_MT', 'uses' => 'Emulators\TasksController@index']);
-Route::get('delete/{id}', ['as' => 'delete', 'uses' => 'Emulators\TasksController@deleteTask']);
-Route::get('algorithm/addtask', ['as' => 'addtask', 'uses' => 'Emulators\TasksController@addtask']);
-Route::get('algorithm/{sequense_id}/edit', ['as' => 'edit', 'uses' => 'Emulators\TasksController@edit']);
-Route::post('algorithm/{sequense_id}/editTask', ['as' => 'editTask', 'uses' => 'Emulators\TasksController@editTask']);
-Route::post('algorithm/addind', ['as' => 'adding', 'uses' => 'Emulators\TasksController@adding']);
 
-// модуль МТ
-Route::get('alltasksmt', ['as' => 'alltasksmt', 'uses' => 'Emulators\TasksController@alltasksmt']);
-Route::get('algorithm/addtaskmt', ['as' => 'addtaskmt', 'uses' => 'Emulators\TasksController@addtaskmt']);
-Route::post('algorithm/addingmt', ['as' => 'addingmt', 'uses' => 'Emulators\TasksController@addingmt']);
-Route::get('deletemt/{id}', ['as' => 'deletemt', 'uses' => 'Emulators\TasksController@deletemtTask']);
-Route::get('algorithm/{id_sequence}/editmt', ['as' => 'editmt', 'uses' => 'Emulators\TasksController@editmt']);
-Route::post('algorithm/{id_sequence}/editmtTask', ['as' => 'editmtTask', 'uses' => 'Emulators\TasksController@editmtTask']);
-
-//эмуляторы
-////Route::get('algorithm/MT', ['as' => 'MT', 'uses' => 'Emulators\EmulatorController@MT']);
-////Route::get('algorithm/HAM', ['as' => 'HAM', 'uses' => 'Emulators\EmulatorController@HAM']);
-Route::post('get-MT', array('as'=>'get_MT', 'uses'=>'Emulators\EmulatorController@MTPOST'));
-Route::post('get-HAM', array('as'=>'get_HAM', 'uses'=>'Emulators\EmulatorController@HAMPOST'));
-Route::post('get_control_tasks', array('as'=>'get_control_tasks', 'uses'=>'Emulators\EmulatorController@get_control_tasks'));
-Route::post('get_control_tasks_nam', array('as'=>'get_control_tasks_nam', 'uses'=>'Emulators\EmulatorController@get_control_tasks_nam'));
-
-// новое для коэффициентов НАМ
-Route::get('algorithm/edit_coef', ['as' => 'edit_coef', 'uses' => 'Emulators\TasksController@editCoef']);
-Route::post('algorithm/{id}edit_all_coef', ['as' => 'editAllCoef', 'uses' => 'Emulators\TasksController@editAllCoef']);
-
-// новое для коэффициентов МТ
-Route::get('algorithm/edit_coef_mt', ['as' => 'edit_coef_mt', 'uses' => 'Emulators\TasksController@editCoefMt']);
-Route::post('algorithm/{id_task}edit_all_coef_mt', ['as' => 'editAllCoefMt', 'uses' => 'Emulators\TasksController@editAllCoefMt']);
 Route::post('get_MT_protocol', array('as'=>'get_MT_protocol', 'uses'=>'Emulators\EmulatorController@get_MT_protocol'));
 Route::post('get_HAM_protocol', array('as'=>'get_HAM_protocol', 'uses'=>'Emulators\EmulatorController@get_HAM_protocol'));
-
-
-Route::get('algorithm/MT', ['as' => 'MT', 'uses' => 'Emulators\EmulatorController@open_MT']);
-Route::get('algorithm/MMT', ['as' => 'MMT', 'uses' => 'Emulators\EmulatorController@open_MMT']);
-Route::get('algorithm/HAM', ['as' => 'HAM', 'uses' => 'Emulators\EmulatorController@open_HAM']);
-
-
-Route::get('algorithm/kontrMT', ['as' => 'kontrMT', 'uses' => 'Emulators\EmulatorController@open_MT']);
-Route::get('algorithm/kontrHAM', ['as' => 'kontrHAM', 'uses' => 'Emulators\EmulatorController@open_HAM']);
-
-
-//контрольный режим эмуляторов
-
-//Route::get('algorithm/kontrMT', ['as' => 'kontrMT', 'uses' => 'Emulators\EmulatorController@kontrMT']);
-
-//Route::get('algorithm/kontrHAM', ['as' => 'kontrHAM', 'uses' => 'Emulators\EmulatorController@kontrHAM']);
 Route::post('get-MT-kontr', array('as'=>'get_MT', 'uses'=>'Emulators\EmulatorController@kontr_MTPOST'));
-
 Route::post('get-HAM-kontr', array('as'=>'get_HAM_kontr', 'uses'=>'Emulators\EmulatorController@kontr_HAMPOST'));
 
-//доступ к контрольному режиму для кокретных студентов
 
-Route::get('algorithm/edit_users_nam', ['as' => 'edit_users_nam', 'uses' => 'Emulators\TasksController@edit_users_nam']);
-Route::post('algorithm/edit_users_nam_change', ['as' => 'edit_users_nam_change', 'uses' => 'Emulators\TasksController@edit_users_nam_change']);
-Route::get('algorithm/edit_users_mt', ['as' => 'edit_users_mt', 'uses' => 'Emulators\TasksController@edit_users_mt']);
-Route::post('algorithm/edit_users_mt', ['as' => 'edit_users_mt_change', 'uses' => 'Emulators\TasksController@edit_users_mt_change']);
 
 //модуль генерации вариантов
 Route::get('generator', ['as' => 'generator_index', 'uses' => 'GeneratorController@index', 'middleware' => ['general_auth', 'admin']]);
@@ -422,26 +368,17 @@ Route::post('api/check', ['uses' => 'APIController@checkStudentsAtSeminar']);
 //Login verification
 Route::post('check/ifExists', ['uses' => 'AdministrationController@checkEmailIfExists']);
 
-// ----------------------- Emulators -------------------- //
-Route::prefix('algorithm')->group(function () {
-	//RAM Emulator
-	Route::prefix('RAM')->group(function () {
-		Route::middleware(['general_auth'])->group(function () {
-			Route::get('emulator',  ['as' => 'RAM', 'uses' => 'Emulators\RamEmulatorController@openRAM']);
-		});
-	});
-	//Post Emulator
-	Route::prefix('Post')->group(function () {
-		Route::middleware(['general_auth'])->group(function () {
-			Route::get('emulator',  ['as' => 'Post',        'uses' => 'Emulators\PostEmulatorController@openPost']);
-		});
-	});
-	// Emulators common
-	Route::middleware(['general_auth', 'admin'])->group(function () {
-		Route::get('edit_date',      ['as' => 'edit_date',   'uses' => 'Emulators\EmulatorController@editDate']);
-		Route::post('edit_all_date', ['as' => 'editAllDate', 'uses' => 'Emulators\EmulatorController@editAllDate']);
-	});
+// Эмуляторы
+Route::prefix('algorithm')->group(function (){
+    Route::middleware(['general_auth'])->group(function(){
+        Route::get('MT', ['as' => 'MT', 'uses' => 'Emulators\EmulatorController@openMT']);
+        Route::get('MMT', ['as' => 'MMT', 'uses' => 'Emulators\EmulatorController@openMMT']);
+        Route::get('HAM', ['as' => 'HAM', 'uses' => 'Emulators\EmulatorController@openHAM']);
+        Route::get('RAM', ['as' => 'RAM', 'uses' => 'Emulators\RamEmulatorController@openRAM']);
+        Route::get('Post', ['as' => 'Post', 'uses' => 'Emulators\PostEmulatorController@openPost']);
+    });
 });
+
 // Уровень знаний студента
 Route::get('students-knowledge-level', ['as' => 'students_level', 'uses' => 'StudentKnowledgeLevelController@index', 'middleware' => ['general_auth', 'admin']]);
 Route::get('students-knowledge-level/{error}', ['as' => 'students_level_with_errors', 'uses' => 'StudentKnowledgeLevelController@indexWithErrors', 'middleware' => ['general_auth', 'admin']]);
