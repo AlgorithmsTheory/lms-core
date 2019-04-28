@@ -19,6 +19,10 @@
 <div class="col-md-12 col-sm-12">
     <div class="card">
         <div class="card-body">
+            {{--Вывод ошибок валидации--}}
+            <div class="alert alert-danger print-error-msg" style="display:none">
+                <ul></ul>
+            </div>
             <h2 class="text-center">Отметить студентов</h2>
             <div class="form">
                 <div class="form-group col-md-4">

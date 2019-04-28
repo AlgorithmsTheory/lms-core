@@ -27,7 +27,7 @@
             <h5 class="card-title">{!! Form::label('lecture_plan_name' , 'Название лекции:') !!}
                 {!! Form::text('lecture_plan_name',$itemSectionPlan->lecture_plan_name,['class' => 'form-control','placeholder' => 'Введите название лекции',
                 'required' => 'required', $readOnly ? 'readonly' : '' ]) !!}</h5>
-            <p class="card-text">{!! Form::label('lecture_plan_desc' , 'Описание раздела:') !!}
+            <p class="card-text">{!! Form::label('lecture_plan_desc' , 'Описание лекции:') !!}
                 {!! Form::text('lecture_plan_desc',$itemSectionPlan->lecture_plan_desc,['class' => 'form-control','placeholder' => 'Введите описание лекции',
                  $readOnly ? 'readonly' : '' ]) !!}
             </p>

@@ -18,7 +18,19 @@ $(".student").click(function() {
         },
         data: { id: id, token: 'token' },
         success: function(data){
-            $('#' + data).attr('style', 'display: none;');
+            var divError = $('.print-error-msg');
+            if($.isEmptyObject(data.error)) {
+                // удаление сообщений об ошибках
+                divError.find("ul").html('');
+                divError.css('display','none');
+                $('#' + data.id).attr('style', 'display: none;');
+            } else {
+                //добавление в html сообщений об ошибках
+                divError.find("ul").html('');
+                divError.css('display','block');
+                divError.find("ul").append('<li>'+ data.error +'</li>');
+            }
+
         }
     });
     return false;

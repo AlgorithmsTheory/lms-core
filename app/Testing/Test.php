@@ -7,12 +7,11 @@
  */
 
 namespace App\Testing;
-use App\Control_test_dictionary;
-use App\Controls;
 use App\Group;
-use App\Totalresults;
+use App\Statements\ControlWorkPlan;
+use App\Statements\Passes\ControlWorkPasses;
 use App\User;
-use Auth;
+
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 /**
@@ -179,21 +178,19 @@ class Test extends Eloquent {
 
     /**  метод, проверяющий, является ли тест одним из контрольных. В случаи если является, добавляет его результат в ведомость. */
     public static function addToStatements($id_test, $id_user, $score){
-        $dictionary = Control_test_dictionary::where('id', 1)->first();
-        switch ($id_test) {
-            case $dictionary['test1']:
-                Controls::where('userID', $id_user)->update(['test1' => $score]);
-                break;
-            case $dictionary['test2']:
-                Controls::where('userID', $id_user)->update(['test2' => $score]);
-                break;
-            case $dictionary['test3']:
-                Controls::where('userID', $id_user)->update(['test3' => $score]);
-                break;
-            case $dictionary['exam']:
-                Totalresults::where('userID', $id_user)->update(['exam' => $score]);
-                break;
-        }
+        //toDo необходимо переделать см карточку в трелло
+        $control_work_plan = ControlWorkPlan::where('control_work_plans.id_test', '=', $id_test)
+            ->leftJoin('tests', 'tests.id_test', '=', 'control_work_plans.id_test')
+            ->first();
+        $id_control_work_plan = $control_work_plan->id_control_work_plan;
+        $total_test = $control_work_plan->total;
+        $control_work_max_point =  $control_work_plan->max_points;
+        $fraction_score = $score / $total_test;
+        $control_work_score = $control_work_max_point * $fraction_score;
+        ControlWorkPasses::where([
+            ['id_control_work_plan', '=', $id_control_work_plan],
+            ['id_user', '=', $id_user]])
+            ->update(['points' => $control_work_score]);
         return 0;
     }
 

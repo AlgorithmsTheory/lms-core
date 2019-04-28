@@ -2,8 +2,11 @@
     <form  method="PATCH" id="form_update_section">
     <div class="card-head">
 
+        @if($sectionPlan->is_exam == 0)
             <header>{{$sectionPlan->section_num." Раздел"}}</header>
-
+        @else
+            <header>Экзамен(Зачёт)</header>
+        @endif
         @if($approved == 0)
         <div class="tools disabled_after_approved">
             <div class="btn-group">
@@ -27,12 +30,12 @@
 
                 {!! Form::select('is_exam',array('' =>'Выберите тип:',
                 '0' => 'Раздел курса',
-                '1' => 'Экзамен',
-                '2' => 'Зачёт'), $sectionPlan->is_exam, ['id' => 'is_exam','class' => 'form-control', 'required' => 'required', $readOnly ? 'disabled' : '']) !!}
+                '1' => 'Экзамен(Зачёт)'), $sectionPlan->is_exam, ['id' => 'is_exam','class' => 'form-control', 'required' => 'required', 'disabled']) !!}
             </p>
             <input type="hidden"  name="id_course_plan" value="{{$sectionPlan->id_course_plan}}" />
             <input type="hidden"  name="id_section_plan" value="{{$sectionPlan->id_section_plan}}" />
             <input type="hidden"  name="section_num_for_find_js" value="{{$sectionNumForFindJs}}" />
+            <input type="hidden"  name="is_exam" value="{{$sectionPlan->is_exam}}" />
 
             {{--Вывод ошибок валидации--}}
             <div class="alert alert-danger print-error-msg" style="display:none">
@@ -78,8 +81,10 @@
 
         @if($approved == 0)
             <div class="disabled_after_approved">
+                @if($sectionPlan->is_exam == 0)
         <button type="button" class="ink-reaction btn btn-info add_lecture_or_sem_or_CW" data-type-card="lecture">Добавить лекцию</button>
         <button type="button" class="ink-reaction btn btn-warning add_lecture_or_sem_or_CW" data-type-card="seminar">Добавить семинар</button>
+                @endif
         <button type="button" class="ink-reaction btn btn-danger add_lecture_or_sem_or_CW " data-type-card="control_work">Добавить К.М.</button>
             </div>
             @endif

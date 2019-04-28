@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ishun
- * Date: 13.03.2019
- * Time: 17:46
- */
+
 
 namespace App\Statements;
 use App\Group;
@@ -18,12 +13,22 @@ class CoursePlan extends Eloquent
     protected $table = 'course_plans';
     public $timestamps = false;
     protected $primaryKey = 'id_course_plan';
-    protected $appends = ['section_plans', 'groups'];
+    protected $appends = ['section_plans', 'exam_plans', 'groups'];
 
-    /** в новое поле section_plans вставляется массив объектов SectionPlane */
+    /** в новое поле section_plans вставляется массив (разделов) объектов SectionPlane */
     public function getSectionPlansAttribute(){
-        $sectionPlans = SectionPlan::where('id_course_plan', $this->attributes['id_course_plan'])->get();
+        $sectionPlans = SectionPlan::where('id_course_plan', $this->attributes['id_course_plan'])
+            ->where('is_exam', '=', 0)
+            ->get();
         return $sectionPlans->sortBy('section_num');
+    }
+
+    /** в новое поле section_plans вставляется массив (Экзаменов/Зачётов) объектов SectionPlane */
+    public function getExamPlansAttribute(){
+        $sectionPlans = SectionPlan::where('id_course_plan', $this->attributes['id_course_plan'])
+            ->where('is_exam', '=', 1)
+            ->get();
+        return $sectionPlans->sortBy('id_section_plan');
     }
 
     /** в новое поле groups вставляется строка содержащая группы через пробел */

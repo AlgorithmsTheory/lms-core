@@ -3,10 +3,10 @@
  */
 
 $('.was').on('change', function() {
+    var thisCell = $(this).closest('td');
+    var idSeminarPass = thisCell.attr('id');
+    var inputClassWork = thisCell.find('.classwork');
     if (this.checked) {
-        var userID = this.name;
-        var column = String(this.id);
-        token = $('#forma').children().eq(0).val();
         myBlurFunction(1);
         $.ajax({
             cache: false,
@@ -19,17 +19,16 @@ $('.was').on('change', function() {
                     return xhr.setRequestHeader('X-CSRF-TOKEN', token);
                 }
             },
-            data: { id: userID, column: column, token: 'token' },
+            data: { id_seminar_pass: idSeminarPass, token: 'token' },
             success: function(data){
+                //Разблокирование input classwork при отметки присутствия
+                inputClassWork.prop('disabled', false);
                 myBlurFunction(0);
             }
         });
         return false;
     }
     else{
-        var userID = this.name;
-        var column = String(this.id);
-        token = $('#forma').children().eq(0).val();
         myBlurFunction(1);
         $.ajax({
             cache: false,
@@ -42,8 +41,11 @@ $('.was').on('change', function() {
                     return xhr.setRequestHeader('X-CSRF-TOKEN', token);
                 }
             },
-            data: { id: userID, column: column, token: 'token' },
+            data: { id_seminar_pass: idSeminarPass, token: 'token' },
             success: function(data){
+                //Блокирование input classwork при отсутсвии студента на семинаре и обнулкние его балла
+                inputClassWork.prop('disabled', true);
+                inputClassWork.val(0);
                 myBlurFunction(0);
             }
         });
@@ -70,9 +72,8 @@ var myBlurFunction = function(state) {
 };
 
 $(".all").click(function() {
-    var column = String(this.id);
-    var group = this.name;
-    token = $('#forma').children().eq(0).val();
+    var idSeminarPlan = $(this).attr('data-id-seminar');
+    var idGroup = this.name;
     myBlurFunction(1);
     $.ajax({
         cache: false,
@@ -84,12 +85,55 @@ $(".all").click(function() {
                 return xhr.setRequestHeader('X-CSRF-TOKEN', token);
             }
         },
-        data: { column: column, group: group, token: 'token' },
+        data: { id_seminar_plan: idSeminarPlan, id_group: idGroup, token: 'token' },
         success: function(data){
-            $( ".was").filter(function(index) {
-                return String(this.id) === column;
-            }).prop( "checked", true )
+            var cells = $('.was').closest('td');
+            var sortedCells = cells.filter(function(index) {
+                return $(this).attr('data-id-seminar') === idSeminarPlan;
+            });
+            sortedCells.find('.was').prop( "checked", true );
+            sortedCells.find('.classwork').prop('disabled', false);
             myBlurFunction(0);
+        }
+    });
+    return false;
+});
+
+$('.classwork').on('change', function() {
+    var thisCell = $(this).closest('td');
+    var idSeminarPass = thisCell.attr('id');
+    var classWorkPoint = $( this ).val();
+    var idCoursePlan = $('table').attr('data-id-course_plan');
+    myBlurFunction(1);
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url:   '/statements/seminar/classwork/change',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        data: { id_seminar_pass: idSeminarPass, token: 'token', class_work_point: classWorkPoint, id_course_plan: idCoursePlan },
+        success: function(data){
+            myBlurFunction(0);
+            var divError = $('.print-error-msg');
+            if($.isEmptyObject(data.error)) {
+                // удаление сообщений об ошибках
+                divError.find("ul").html('');
+                divError.css('display','none');
+                thisCell.attr('style', 'border-color:rgba(163, 168, 168, 0.2);');
+            } else {
+                //добавление в html сообщений об ошибках
+                divError.find("ul").html('');
+                divError.css('display','block');
+                $.each( data.error, function( key, value ) {
+                    divError.find("ul").append('<li>'+value+'</li>');
+                });
+                thisCell.attr('style', 'border-color:#ff0000;');
+            }
         }
     });
     return false;

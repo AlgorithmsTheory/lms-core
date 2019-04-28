@@ -145,6 +145,14 @@
                         'sectionNumForFindJs' => $sectionNumForFindJs, 'approved' => $coursePlan->approved , 'tests_control_work' => $tests_control_work))
                         @endforeach
                             {{--Здесь добавляются разделы учебного плана--}}
+
+                            @foreach($coursePlan->exam_plans as $sectionPlan)
+                                <?php $sectionNumForFindJs++ ?>
+                                @include('personal_account.statements.course_plans.sections.view_or_update_section',array('sectionPlan' => $sectionPlan, 'readOnly' => true,
+                                'sectionNumForFindJs' => $sectionNumForFindJs, 'approved' => $coursePlan->approved , 'tests_control_work' => $tests_control_work))
+                            @endforeach
+                            {{--Здесь добавляются разделы учебного плана типа Экзамен(Зачёт)--}}
+
                     </div>
                     @if($coursePlan->approved == 0)
                     <button type="button" class="ink-reaction btn btn-success disabled_after_approved" id="addSection">Добавить раздел</button>

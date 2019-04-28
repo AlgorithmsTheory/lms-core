@@ -49,11 +49,10 @@
 
                     <div class="form-group">
                         <select name="type" id="select-type" class="form-control" size="1">
-                            <option value="lectures">Лекции</option>
-                            <option value="seminars">Семинары</option>
-                            <option value="class">Работа на семинарах</option>
-                            <option value="control">Контрольные работы</option>
+                            <option value="lectures">Посещение лекций</option>
+                            <option value="seminars">Работа на семинарах</option>
                             <option value="resulting">Итоги</option>
+
                         </select>
                         <label for="select-type">Тип ведомости</label>
                     </div>

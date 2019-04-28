@@ -31,6 +31,50 @@ class CoursePlanDAO
         return $coursePlan;
     }
 
+    public function getAllLectures($id_course_plan){
+        $all_lectures = collect([]);
+        $course_plan = CoursePlan::where('id_course_plan', $id_course_plan)->first();
+        foreach ($course_plan->section_plans as $section_plan) {
+            foreach ($section_plan->lecture_plans as $lecture_plan) {
+                $all_lectures->push($lecture_plan);
+            }
+        }
+        return $all_lectures;
+    }
+
+    public function getAllSeminars($id_course_plan){
+        $all_seminars = collect([]);
+        $course_plan = CoursePlan::where('id_course_plan', $id_course_plan)->first();
+        foreach ($course_plan->section_plans as $section_plan) {
+            foreach ($section_plan->seminar_plans as $seminar_plan) {
+                $all_seminars->push($seminar_plan);
+            }
+        }
+        return $all_seminars;
+    }
+
+    public function getAllControlWorks($id_course_plan){
+        $all_control_work_plans = collect([]);
+        $course_plan = CoursePlan::where('id_course_plan', $id_course_plan)->first();
+        foreach ($course_plan->section_plans as $section_plan) {
+            foreach ($section_plan->control_work_plans as $control_work_plan) {
+                $all_control_work_plans->push($control_work_plan);
+            }
+        }
+        return $all_control_work_plans;
+    }
+
+    public function getAllExamWorks($id_course_plan){
+        $all_exam_work_plans = collect([]);
+        $course_plan = CoursePlan::where('id_course_plan', $id_course_plan)->first();
+        foreach ($course_plan->exam_plans as $section_plan) {
+            foreach ($section_plan->control_work_plans as $control_work_plan) {
+                $all_exam_work_plans->push($control_work_plan);
+            }
+        }
+        return $all_exam_work_plans;
+    }
+
     public function storeCoursePlan(Request $request){
         $coursePlane = new CoursePlan();
         $coursePlane->course_plan_name = $request->course_plan_name;
@@ -94,8 +138,8 @@ class CoursePlanDAO
             $id_course_plan = $validator->getData()['id_course_plan'];
             $result_sum = $max_seminars + $max_controls + $max_seminars_work + $max_lecrures + $max_exam;
 
-            if($result_sum > 100) {
-                $validator->errors()->add('exceeded_result_summ_course','Сумма баллов за весь учебный план превышает 100');
+            if($result_sum != 100) {
+                $validator->errors()->add('incorrect_result_summ_course','Сумма баллов (' . $result_sum . ') за весь учебный план не равна 100');
             }
 
             if($groups != null) {

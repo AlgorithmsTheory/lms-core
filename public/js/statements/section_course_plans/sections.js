@@ -49,26 +49,28 @@ $(document).on('submit', '#form_add_section', function (event) {
 
 //Изменяет view_or_update_section для редактирования раздела
 $(document).on('click', '.activateEditSection', function () {
+    var currentSection = $(this).closest('.section');
     //сркрытие иконки редактировать
     $(this).hide();
-    var SectionNum = parseInt($(this).closest('.section').find('header').filter( ':first' ).html());
-    var htmlInsertHeader = '<div class="row">\n' +
-        '                <div class="col-lg-4 col-md-4">\n' +
-        '                    <label for="section_num">Номер раздела:</label>\n' +
-        '                </div>\n' +
-        '                <div class="col-lg-4 col-md-4">\n' +
-        '                <input type="text" name="section_num" value="'+SectionNum+'" class="form-control" ' +
-        'required style="background-color: white">' +
-        '                </div>\n' +
-        '            </div>';
-    //вставляем поле с section_num
-    $(this).parent().parent().siblings("header").html(htmlInsertHeader);
+    var isExam = currentSection.find('#is_exam').filter( ':first' ).val();
+    if(isExam == 0) {
+        var SectionNum = parseInt($(this).closest('.section').find('header').filter( ':first' ).html());
+        var htmlInsertHeader = '<div class="row">\n' +
+            '                <div class="col-lg-4 col-md-4">\n' +
+            '                    <label for="section_num">Номер раздела:</label>\n' +
+            '                </div>\n' +
+            '                <div class="col-lg-4 col-md-4">\n' +
+            '                <input type="text" name="section_num" value="'+SectionNum+'" class="form-control" ' +
+            'required style="background-color: white">' +
+            '                </div>\n' +
+            '            </div>';
+        //вставляем поле с section_num
+        $(this).parent().parent().siblings("header").html(htmlInsertHeader);
+    }
 
     //выключение readonly для полей
-    var currentSection = $(this).closest('.section');
     currentSection.find('input[name="section_plan_name"]').filter( ':first' ).removeAttr("readonly");
     currentSection.find('input[name="section_plan_desc"]').filter( ':first' ).removeAttr("readonly");
-    currentSection.find('#is_exam').filter( ':first' ).prop( "disabled", false );
     //вставка кнопки "Обновить информ. о разделе"
     var htmlUpdateBatton = '<button type="submit" class="ink-reaction btn btn-success" id="updateSection">Обновить информ. о разделе</button>';
     currentSection.find('.update_button_section').filter( ':first' ).html(htmlUpdateBatton);
@@ -82,16 +84,18 @@ $(document).on('submit', '#form_update_section', function (event) {
         url:   '/course_plan/section/update',
         data:  $(this).serialize(),
         success: function(data){
+            var currentSection = $('#section'+data.section_num_for_find_js);
             if($.isEmptyObject(data.error)){
-                var htmlInsertHeader = data.real_section_num +' Раздел';
-                var currentSection = $('#section'+data.section_num_for_find_js);
-                //вставляем поле с section_num
-                var currentHeader = $('#section'+data.section_num_for_find_js).find("header").filter( ':first' );
-                currentHeader.html(htmlInsertHeader);
+                var isExam = currentSection.find('#is_exam').filter( ':first' ).val();
+                if(isExam == 0) {
+                    var htmlInsertHeader = data.real_section_num +' Раздел';
+                    //вставляем поле с section_num
+                    var currentHeader = $('#section'+data.section_num_for_find_js).find("header").filter( ':first' );
+                    currentHeader.html(htmlInsertHeader);
+                }
                 //выключение readonly для полей
                 currentSection.find('input[name="section_plan_name"]').filter( ':first' ).attr('readonly', true);
                 currentSection.find('input[name="section_plan_desc"]').filter( ':first' ).attr('readonly', true);
-                currentSection.find('#is_exam').filter( ':first' ).prop( "disabled", true);
                 //удаление кнопки "Обновить доп. инфор о разделе"
                 currentSection.find('.update_button_section').filter( ':first' ).empty();
                 // удаление сообщений об ошибках

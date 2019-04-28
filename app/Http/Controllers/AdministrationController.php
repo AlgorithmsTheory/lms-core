@@ -1,25 +1,30 @@
 <?php
 namespace App\Http\Controllers;
-use App\Classwork;
 use App\Group;
-use App\Controls;
-use App\Lectures;
-use App\Seminars;
+use App\Statements\CoursePlan;
+use App\Statements\DAO\CoursePlanDAO;
+use App\Statements\Passes\ControlWorkPasses;
+use App\Statements\Passes\LecturePasses;
+use App\Statements\Passes\SeminarPasses;
 use App\Testing\Test;
 use App\Testing\TestForGroup;
-use App\Totalresults;
-use App\Statements_progress;
 use App\TeacherHasGroup;
 use App\Pass_plan;
 use App\News;
 use App\User;
 use Auth;
 use Illuminate\Http\Request;
-use Session;
 use Illuminate\Support\Facades\Input;
 class AdministrationController extends Controller{
 
     const NEWS_FILE_DIR = 'download/news/';
+    private $course_plan_DAO;
+
+
+    public function __construct(CoursePlanDAO $course_plan_DAO)
+    {
+        $this->course_plan_DAO = $course_plan_DAO;
+    }
 
     public function checkEmailIfExists(Request $request){
         $email = $request->input('email');
@@ -52,15 +57,17 @@ class AdministrationController extends Controller{
 
     public function add_groups(){
         $groups = Group::orderBy('group_id', 'desc')->get();
-        return view('personal_account/add_groups', compact('groups'));
+        $course_plans = CoursePlan::all('id_course_plan', 'course_plan_name');
+        return view('personal_account/add_groups', compact('groups', 'course_plans'));
     }
 
     public function add_group_to_set(Request $request){
         $name = $request->input('name');
         $description = $request->input('description');
+        $id_course_plan = $request->input('id_course_plan');
         $validate = Group::whereGroup_name($name)->get();
         if(count($validate) == 0){
-            Group::insert(['group_name' => $name, 'description' => $description, 'archived' => 0]);
+            Group::insert(['group_name' => $name, 'description' => $description, 'archived' => 0, 'id_course_plan' => $id_course_plan]);
             $group_id = Group::whereGroup_name($name)->select('group_id')->first()->group_id;
             Pass_plan::insert(['group' => $group_id]);
 
@@ -169,48 +176,42 @@ class AdministrationController extends Controller{
     public function add_student(Request $request){
         $id = json_decode($request->input('id'),true);
         $user = User::find($id);
-        if($user['role'] != 'Студент') {
-            $user->role = 'Студент';
-            $user->save();
+        //Если группа привязана к учебному плану, то создаём для студентов ведомости
+        $group = Group::whereGroup_id($user->group)->first();
+        $id_course_plan = $group->id_course_plan;
+        if ($id_course_plan != null) {
+            if ($user['role'] != 'Студент') {
+                $user->role = 'Студент';
+                $user->save();
+                //Заполняем нулями ведомость по посещаемости лекций
+                $all_lectures = $this->course_plan_DAO->getAllLectures($id_course_plan);
+                foreach ($all_lectures as $lecture) {
+                    LecturePasses::insert(['id_lecture_plan' => $lecture->id_lecture_plan,
+                        'id_user' => $user->id, 'presence' => 0]);
+                }
 
-            //Добавляем новую запись в ведомости по лекциям
-            $lectures = new Lectures();
-            $lectures->userID = $id;
-            $lectures->group = $user->group;
-            $lectures->save();
+                //Заполняем нулями ведомость работы на семинаре
+                $all_seminars = $this->course_plan_DAO->getAllSeminars($id_course_plan);
+                foreach ($all_seminars as $seminar) {
+                    SeminarPasses::insert(['id_seminar_plan' => $seminar->id_seminar_plan,
+                        'id_user' => $user->id, 'presence' => 0, 'work_points' => 0]);
+                }
 
-            //Добавляем новую запись в ведомости по лекциям
-            $seminars = new Seminars();
-            $seminars->userID = $id;
-            $seminars->group = $user->group;
-            $seminars->save();
+                //Заполняем нулями итоговую ведомость
+                $all_works = $this->course_plan_DAO->getAllControlWorks($id_course_plan)
+                    ->merge($this->course_plan_DAO->getAllExamWorks($id_course_plan));
+                foreach ($all_works as $control_work) {
+                   ControlWorkPasses::insert(['id_control_work_plan' => $control_work->id_control_work_plan,
+                        'id_user' => $user->id, 'presence' => 0, 'points' => 0]);
+                }
 
-            //Добавляем новую запись в ведомости по лекциям
-            $classwork = new Classwork();
-            $classwork->userID = $id;
-            $classwork->group = $user->group;
-            $classwork->save();
-
-            //Добавляем новую запись в ведомости по контрольным
-            $controls = new Controls();
-            $controls->userID = $id;
-            $controls->group = $user->group;
-            $controls->save();
-
-            //Добавляем новую запись в итоговые ведомости
-            $total = new Totalresults();
-            $total->userID = $id;
-            $total->group = $user->group;
-            $total->save();
-
-            //Добавляем новую запись в итоговые ведомости
-            $progress = new Statements_progress();
-            $progress->userID = $id;
-            $progress->group = $user->group;
-            $progress->save();
+            }
+            return response()->json(['id' => $id]);
+        }else {
+            return response()->json(['error' => 'Назначьте учебный план для группы: ' . $group->group_name]);
         }
-        return $id;
     }
+
     public function add_admin(Request $request){
         $id = json_decode($request->input('id'),true);
         $user = User::find($id);

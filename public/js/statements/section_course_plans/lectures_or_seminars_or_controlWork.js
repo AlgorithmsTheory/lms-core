@@ -144,7 +144,6 @@ $(document).on('click', '.store_lec_sem_cw', function (event) {
             id_course_plan: idCoursePlan
         },
         success: function(data){
-            console.log(data);
             var currentSection = $('#section'+data.id_section_for_find_js);
             var typeConteinerCards = getConteinerTypeCard(data.type_card);
             var currentCard = currentSection.find('.'+typeConteinerCards).find('#'+data.id_card_for_find_js);
@@ -279,7 +278,6 @@ $(document).on('click', '.delete_lec_sem_cw', function () {
                     type_card: typeCard,
                     "_token": token},
                 success: function(data){
-                    console.log(data);
                     $('#section'+data.id_section_for_find_js).find('.'+getConteinerTypeCard(data.type_card)).
                     find('#'+data.id_card_for_find_js).remove();
                 }

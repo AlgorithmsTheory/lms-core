@@ -1,32 +1,21 @@
 <?php
 namespace App\Http\Controllers;
-use App\Classwork;
-use App\Control_test_dictionary;
-use App\Controls;
-use App\Lectures;
-use App\Seminars;
-
 use App\Statements\DAO\ControlWorkPlanDAO;
 use App\Statements\DAO\LecturePlanDAO;
 use App\Statements\DAO\SectionPlanDAO;
 use App\Statements\DAO\SeminarPlanDAO;
-use App\Statements\SectionPlan;
+use App\Statements\LectureStatementManage;
+use App\Statements\ResultStatementManage;
+use App\Statements\SeminarStatementManage;
 use App\Testing\Test;
-use App\Totalresults;
-use App\Statements_progress;
 use App\TeacherHasGroup;
 use App\Pass_plan;
-use App\Testing\Result;
 use App\Group;
-use App\User;
 use Auth;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Question;
 use App\Codificator;
-use Session;
 use App\Statements\DAO\CoursePlanDAO;
-use App\Http\Requests\Statements\AddCoursePlanRequest;
 use stdClass;
 
 class StatementsController extends Controller{
@@ -36,15 +25,22 @@ class StatementsController extends Controller{
     private $lecturePlanDAO;
     private $seminarPlanDAO;
     private $controlWorkPlanDAO;
+    private $lecture_statement_manage;
+    private $seminar_statement_manage;
+    private $result_statement_manage;
 
     public function __construct(CoursePlanDAO $coursePlanDAO, SectionPlanDAO $sectionPlanDAO, LecturePlanDAO $lecturePlanDAO
-    , SeminarPlanDAO $seminarPlanDAO, ControlWorkPlanDAO $controlWorkPlanDAO)
+    , SeminarPlanDAO $seminarPlanDAO, ControlWorkPlanDAO $controlWorkPlanDAO, LectureStatementManage $lecture_statement_manage
+, SeminarStatementManage $seminar_statement_manage, ResultStatementManage $result_statement_manage)
     {
         $this->coursePlanDao = $coursePlanDAO;
         $this->sectionPlanDAO = $sectionPlanDAO;
         $this->lecturePlanDAO = $lecturePlanDAO;
         $this->seminarPlanDAO = $seminarPlanDAO;
         $this->controlWorkPlanDAO = $controlWorkPlanDAO;
+        $this->lecture_statement_manage = $lecture_statement_manage;
+        $this->seminar_statement_manage = $seminar_statement_manage;
+        $this->result_statement_manage = $result_statement_manage;
     }
 
     // возвращает страницу с учебными планами
@@ -78,7 +74,11 @@ class StatementsController extends Controller{
     public function getCoursePlan($id) {
         $coursePlan = $this->coursePlanDao->getCoursePlan($id);
         $read_only = true;
-        $tests_control_work = Test::all();
+        $tests_control_work = Test::whereTest_type('Контрольный')
+            ->where('archived', '<>', '1')
+            ->orderByDesc('id_test')
+            ->select()
+            ->get();
         return view('personal_account.statements.course_plans.course_plan', compact('coursePlan', 'read_only', 'tests_control_work'));
     }
 
@@ -170,7 +170,11 @@ class StatementsController extends Controller{
         $numberNewCard = $request->number_new_card;
         $tests_control_work = new stdClass();
         if($typeCard == 'control_work') {
-            $tests_control_work =  Test::all();
+            $tests_control_work = Test::whereTest_type('Контрольный')
+                ->where('archived', '<>', '1')
+                ->orderByDesc('id_test')
+                ->select()
+                ->get();
         }
         $returnHtmlString = view('personal_account.statements.course_plans.sections.'.$viewPath,
             ['idNewCardForFindJs' => $request->id_new_card_for_find_js,
@@ -188,7 +192,6 @@ class StatementsController extends Controller{
         $typeCard = $request->type_card;
         $viewPath = $this->getViewUpdatePathLecSemCW($typeCard);
         $itemSectionDAO = $this->getItemSectionDAO($typeCard);
-
         $validator = $itemSectionDAO->getStoreValidate($request);
 
         if ($validator->passes()) {
@@ -198,7 +201,11 @@ class StatementsController extends Controller{
             $idCardForFindJs = $request->id_card_for_find_js;
             $tests_control_work = new stdClass();
             if($typeCard == 'control_work') {
-                $tests_control_work =  Test::all();
+                $tests_control_work = Test::whereTest_type('Контрольный')
+                    ->where('archived', '<>', '1')
+                    ->orderByDesc('id_test')
+                    ->select()
+                    ->get();
             }
             $returnHtmlString = view('personal_account.statements.course_plans.sections.'.$viewPath,
                 compact('itemSectionPlan', 'readOnly',
@@ -275,20 +282,6 @@ class StatementsController extends Controller{
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // не моё
     //Возвращает главную страницу для выбора типа ведомости и группы
     public function statements(){
         $user = Auth::user();
@@ -296,7 +289,7 @@ class StatementsController extends Controller{
             ->join('groups', 'groups.group_id', '=', 'teacher_has_group.group')
             ->where('groups.archived', 0)
             ->get();
-        $group_set = Group::where('groups.archived', 0)->get();
+        $group_set = Group::where('groups.archived', 0)->where('groups.id_course_plan', '<>', null)->get();
         return view('personal_account/statements', compact('groups', 'user', 'group_set'));
     }
 
@@ -322,24 +315,13 @@ class StatementsController extends Controller{
     public function showStudentInfo()
     {
         $user = Auth::user();
-        $this->calc_first(0, $user['id'], false);
-        $this->calc_second(0, $user['id'], false);
-        $this->calc_third(0, $user['id'], false);
-        $this->calc_fourth(0, $user['id'], false);
-        $this->calc_term(0, $user['id'], false);
-        $this->calc_final(0, $user['id'], false);
-        $lectures = Lectures::where('userID', $user['id'])->first();
-        $seminars = Seminars::where('userID', $user['id'])->first();
-        $classwork = Classwork::where('userID', $user['id'])->first();
-        $controls = Controls::where('userID', $user['id'])->first();
-        $results = Totalresults::where('userID', $user['id'])->first();
-        $progress = Statements_progress::where('userID', $user['id'])->first();
-        $dictionary = Control_test_dictionary::where('id', $user['id'])->first();
-        $plan = Pass_plan::where('group', $user['group'])->first();
-        $test1 = Result::where('id_test', $dictionary['test1'])->where('id', $user['id'])->orderBy('id_result', 'desc')->first();
-        $test2 = Result::where('id_test', $dictionary['test2'])->where('id', $user['id'])->orderBy('id_result', 'desc')->first();
-        $test3 = Result::where('id_test', $dictionary['test3'])->where('id', $user['id'])->orderBy('id_result', 'desc')->first();
-        return view('personal_account/student_account', compact('lectures', 'seminars', 'classwork', 'controls', 'results', 'progress', 'test1', 'test2', 'test3', 'plan'));
+        $id_course_plan = Group::where('group_id', $user->group)->select('id_course_plan')
+            ->first()->id_course_plan;
+        $course_plan = $this->coursePlanDao->getCoursePlan( $id_course_plan);
+        $statement_lecture = $this->lecture_statement_manage->getStatementByUser($id_course_plan, $user);
+        $statement_seminar = $this->seminar_statement_manage->getStatementByUser($id_course_plan, $user);
+        $statement_result = $this->result_statement_manage->getStatementByUser($id_course_plan, $user);
+        return view('personal_account/student_account',  compact('course_plan','statement_lecture','statement_seminar', 'statement_result'));
     }
 
     public function manage_plan(Request $request){
@@ -373,431 +355,117 @@ class StatementsController extends Controller{
 
     //Возвращают представление соответствующей ведомости
     public function get_lectures(Request $request){
-        $group = json_decode($request->input('group'),true);
-        $statement = Lectures::where('statements_lectures.group', $group)->join('users', 'statements_lectures.userID', '=', 'users.id')->join('groups', 'groups.group_id', '=', 'statements_lectures.group')->orderBy('users.last_name', 'asc')->distinct()->get();
-        $last_names = [];
-        $first_names = [];
-        foreach ($statement as $state){
-            $user = User::whereId($state->userID)->get();
-            array_push($last_names, $user[0]->last_name);
-            array_push($first_names, $user[0]->first_name);
-        }
-        return view('personal_account/statements/lectures', compact('statement', 'first_names', 'last_names', 'group'));
+        $id_group = $request->input('group');
+        $statement_lecture = $this->lecture_statement_manage->getStatementByGroup($id_group);
+        $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
+            ->first()->id_course_plan;
+        $course_plan = $this->coursePlanDao->getCoursePlan( $id_course_plan);
+        return view('personal_account/statements/lectures', compact('course_plan','id_group', 'statement_lecture'));
     }
+
     public function get_seminars(Request $request){
-        $group = json_decode($request->input('group'),true);
-        $statement = Seminars::where('seminars.group', $group)->join('users', 'seminars.userID', '=', 'users.id')->join('groups', 'groups.group_id', '=', 'seminars.group')->orderBy('users.last_name', 'asc')->distinct()->get();
-        $last_names = [];
-        $first_names = [];
-        foreach ($statement as $state){
-            $user = User::whereId($state->userID)->get();
-            array_push($last_names, $user[0]->last_name);
-            array_push($first_names, $user[0]->first_name);
-        }
-        return view('personal_account/statements/seminars', compact('statement', 'first_names', 'last_names', 'group'));
+        $id_group = $request->input('group');
+        $statement_seminar = $this->seminar_statement_manage->getStatementByGroup($id_group);
+        $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
+            ->first()->id_course_plan;
+        $course_plan = $this->coursePlanDao->getCoursePlan($id_course_plan);
+        return view('personal_account/statements/seminars', compact('course_plan','id_group', 'statement_seminar'));
     }
-    public function get_classwork(Request $request){
-        $group = json_decode($request->input('group'),true);
-        $statement = Classwork::where('classwork.group', $group)->join('users', 'classwork.userID', '=', 'users.id')->join('groups', 'groups.group_id', '=', 'classwork.group')->orderBy('users.last_name', 'asc')->distinct()->get();
-        $last_names = [];
-        $first_names = [];
-        foreach ($statement as $state){
-            $user = User::whereId($state->userID)->get();
-            array_push($last_names, $user[0]->last_name);
-            array_push($first_names, $user[0]->first_name);
-        }
-        return view('personal_account/statements/classwork', compact('statement', 'first_names', 'last_names'));
-    }
-    public function get_controls(Request $request){
-        $group = json_decode($request->input('group'),true);
-        $statement = Controls::where('controls.group', $group)->join('users', 'controls.userID', '=', 'users.id')->join('groups', 'groups.group_id', '=', 'controls.group')->orderBy('users.last_name', 'asc')->distinct()->get();
-        $last_names = [];
-        $first_names = [];
-        foreach ($statement as $state){
-            $user = User::whereId($state->userID)->get();
-            array_push($last_names, $user[0]->last_name);
-            array_push($first_names, $user[0]->first_name);
-        }
-        return view('personal_account/statements/control', compact('statement', 'first_names', 'last_names'));
-    }
+
     public function get_resulting(Request $request){
-        $group = json_decode($request->input('group'),true);
-        $this->calc_first($group, 0, true);
-        $this->calc_second($group, 0, true);
-        $this->calc_third($group, 0, true);
-        $this->calc_fourth($group, 0, true);
-        $this->calc_term($group, 0, true);
-        $this->calc_final($group, 0, true);
-        $statement =Totalresults::where('totalresults.group', $group)->join('users', 'totalresults.userID', '=', 'users.id')->join('groups', 'groups.group_id', '=', 'totalresults.group')->orderBy('users.last_name', 'asc')->distinct()->get();
-//        $progress =Statements_progress::whereGroup($group)->get();
-        $last_names = [];
-        $first_names = [];
-        $progress1 = [];
-        $progress2 = [];
-        $progress3 = [];
-        $progress4 = [];
-        foreach ($statement as $state){
-            $user = User::whereId($state->userID)->get();
-            $p = Statements_progress::where('userID', $state->userID)->get();
-            array_push($last_names, $user[0]->last_name);
-            array_push($first_names, $user[0]->first_name);
-            array_push($progress1, $p[0]->section1);
-            array_push($progress2, $p[0]->section2);
-            array_push($progress3, $p[0]->section3);
-            array_push($progress4, $p[0]->section4);
-        }
-        return view('personal_account/statements/results', compact('statement', 'first_names', 'last_names', 'progress1', 'progress2', 'progress3', 'progress4'));
+        $id_group = $request->input('group');
+        $statement_result = $this->result_statement_manage->getStatementByGroup($id_group);
+        $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
+            ->first()->id_course_plan;
+        $course_plan = $this->coursePlanDao->getCoursePlan($id_course_plan);
+        return view('personal_account/statements/results',  compact('course_plan','id_group', 'statement_result'));
     }
 
 
     //Отмечает или раз-отмечает студента на лекции
     public function lecture_was(Request $request){
-        $id = json_decode($request->input('id'),true);
-        $column = $request->input('column');
-        Lectures::where('userID', $id)->update([$column => 1]);
+        $this->lecture_statement_manage->lectureWas($request);
         return 0;
     }
     public function lecture_wasnot(Request $request){
-        $id = json_decode($request->input('id'),true);
-        $column = $request->input('column');
-        Lectures::where('userID', $id)->update([$column => 0]);
+        $this->lecture_statement_manage->lectureWasNot($request);
         return 0;
     }
 
     //NEW 05.09.2016
     public function lecture_was_all(Request $request){
-        $column = $request->input('column');
-        $group = json_decode($request->input('group'),true);
-        Lectures::where('group', $group)->update([$column => 1]);
+        $this->lecture_statement_manage->lectureWasAll($request);
         return 0;
     }
     public function seminar_was_all(Request $request){
-        $column = $request->input('column');
-        $group = json_decode($request->input('group'),true);
-        Seminars::where('group', $group)->update([$column => 1]);
+        $this->seminar_statement_manage->seminarWasAll($request);
         return 0;
     }
 
     //Отмечает или раз-отмечает студента на семинаре
     public function seminar_was(Request $request){
-        $id = json_decode($request->input('id'),true);
-        $column = $request->input('column');
-        Seminars::where('userID', $id)->update([$column => 1]);
+        $this->seminar_statement_manage->seminarWas($request);
         return 0;
     }
     public function seminar_wasnot(Request $request){
-        $id = json_decode($request->input('id'),true);
-        $column = $request->input('column');
-        Seminars::where('userID', $id)->update([$column => 0]);
+        $this->seminar_statement_manage->seminarWasNot($request);
         return 0;
     }
+
     //Изменяет балл студента за работу на семинаре
     public function classwork_change(Request $request){
-        $id = json_decode($request->input('id'),true);
-        $column = $request->input('column');
-        $value = $request->input('value');
-        Classwork::where('userID', $id)->update([$column => $value]);
+        $validator = $this->seminar_statement_manage->getClassworkChangeValidate($request);
+        if ($validator->passes()) {
+            $this->seminar_statement_manage->classworkChange($request);
+            return 0;
+        } else {
+            return response()->json(['error'=>$validator->errors()->all()]);
+        }
+    }
+
+    //Отмечает или раз-отмечает студента на Контрольном мероприятии
+    public function result_was(Request $request){
+        $this->result_statement_manage->resultWas($request);
+        return 0;
+    }
+    public function result_wasnot(Request $request){
+        $this->result_statement_manage->resultWasNot($request);
         return 0;
     }
 
-    //Изменяет балл студента за контрольную работу
-    public function controls_change(Request $request){
-        $id = json_decode($request->input('id'),true);
-        $column = $request->input('column');
-        $value = $request->input('value');
-        Controls::where('userID', $id)->update([$column => $value]);
-        return 0;
+    //Изменяет балл студента за контр мероприятие
+    public function result_change(Request $request){
+        $validator = $this->result_statement_manage->getResultChangeValidate($request);
+        if ($validator->passes()) {
+            $this->result_statement_manage->resultChange($request);
+            $id_user = $request->input('id_user');
+            $id_course_plan = $request->input('id_course_plan');
+            $section_result = $this->result_statement_manage->getResultSectionByNumber($request->input('section_num'),
+                $id_user);
+            $sum_result_control_works = $this->result_statement_manage->getSumResultSectionControlWork($id_course_plan, $id_user);
+            $sum_result_exam_works = $this->result_statement_manage->getSumResultSectionExamWork($id_course_plan, $id_user);
+            $class_work = $this->result_statement_manage->getResultWorkSeminar($id_course_plan, $id_user);
+            $seminar_pass = $this->result_statement_manage->getResultSeminar($id_course_plan, $id_user);
+            $lecture_pass = $this->result_statement_manage->getResultLecture($id_course_plan, $id_user);
+            if ($request->input('work_status') == 'section') {
+                $sum_result_section = $sum_result_control_works;
+            } else {
+                $sum_result_section = $sum_result_exam_works;
+            }
+            $result_all_course = $sum_result_exam_works +  $sum_result_control_works + $class_work
+                + $seminar_pass + $lecture_pass;
+
+            $markRus = Test::calcMarkRus(100, $result_all_course);
+            $markBologna = Test::calcMarkBologna(100, $result_all_course);
+            return response()->json(['sectionResult' => $section_result, 'sumResultSection' => $sum_result_section,
+                'resultAllCourse' => $result_all_course, 'markRus' => $markRus, 'markBologna' => $markBologna]);
+        } else {
+            return response()->json(['error' => $validator->errors()->all()]);
+        }
     }
 
-    //Изменяет балл студента в итоговой ведомости
-    public function resulting_change(Request $request){
-        $id = json_decode($request->input('id'),true);
-        $column = $request->input('column');
-        $value = $request->input('value');
-        Totalresults::where('userID', $id)->update([$column => $value]);
-        return 0;
-    }
-
-    //метод, подсчитывающий итоги за первый раздел
-    //1 раздел = КР1 + КР2 + Тест1Авт + Тест1Письм + 7 недель(каждый тип кроме работы в классе делится на 7)
-    public function calc_first($group, $user_id, $flag){
-        //инициализация констант: коэффициентов и макс. балла
-        $k_lec = 7;
-        $k_sem = 7;
-        $max_score = 22;
-        //проверка флага (если true, то подсчет будет проводится для группы, иначе для одного пользователя)
-        if ($flag == true) {
-            $results = Totalresults::whereGroup($group)->get();
-        }
-        else {
-            $results = Totalresults::where('userID', $user_id)->get();
-        }
-        $id = 0;
-        foreach ($results as $result){
-            $score = 0;
-            $id = $result['userID'];
-            //поск необходимых записей в таблицах
-            $control = Controls::where('userID', $id)->first();
-            $lecture = Lectures::where('userID', $id)->first();
-            $seminar = Seminars::where('userID', $id)->first();
-            $classwork = Classwork::where('userID', $id)->first();
-            //подсчет балла
-            $score += $control['control1'] + $control['control2'] + $control['test1'] + $control['test1quiz'];
-            $score += ($lecture['col1'] + $lecture['col2'] + $lecture['col3'] + $lecture['col4'] + $lecture['col5'] + $lecture['col6'] + $lecture['col7']) / $k_lec;
-            $score += $classwork['col1'] + $classwork['col2'] + $classwork['col3'] + $classwork['col4'] + $classwork['col5'] + $classwork['col6'] + $classwork['col7'];
-            $score += ($seminar['col1'] + $seminar['col2'] + $seminar['col3'] + $seminar['col4'] + $seminar['col5'] + $seminar['col6'] + $seminar['col7']) / $k_sem;
-            //проверка на превышение максимального балла
-            if ($score > $max_score) $score = $max_score;
-            //запись результата
-            Totalresults::where('userID', $id)->update(['section1' => round($score)]);
-            //отмечаем в програссе, преодолели ли проходной балл
-            if ($control['control1'] >= 4.2){
-                Statements_progress::where('userID', $id)->update(['control1' => 1]);
-            }
-            else {
-                Statements_progress::where('userID', $id)->update(['control1' => 0]);
-            }
-            if ($control['control2'] >= 4.2){
-                Statements_progress::where('userID', $id)->update(['control2' => 1]);
-            }
-            else {
-                Statements_progress::where('userID', $id)->update(['control2' => 0]);
-            }
-            if ($control['test1'] >= 0.6){
-                Statements_progress::where('userID', $id)->update(['test1' => 1]);
-            }
-            else {
-                Statements_progress::where('userID', $id)->update(['test1' => 0]);
-            }
-            if ($control['test1quiz'] >= 2.4){
-                Statements_progress::where('userID', $id)->update(['test1quiz' => 1]);
-            }
-            else {
-                Statements_progress::where('userID', $id)->update(['test1quiz' => 0]);
-            }
-            if (($control['test1'] + $control['test1quiz'] >= 3) and ($control['control2'] >= 4.2) and ($control['control1'] >= 4.2) and (round($score) >= 13)){
-                Statements_progress::where('userID', $id)->update(['section1' => 1]);
-            }
-            else {
-                Statements_progress::where('userID', $id)->update(['section1' => 0]);
-            }
-        }
-        return 0;
-    }
-    //метод, подсчитывающий итоги за второй раздел
-    //2 раздел = Тест2Авт + Тест2Письм + 4 недели(каждый тип кроме работы в классе делится на 4)
-    public function calc_second($group, $user_id, $flag){
-        //инициализация констант: коэффициентов и макс. балла
-        $k_lec = 4;
-        $k_sem = 4;
-        $max_score = 12;
-        //проверка флага (если true, то подсчет будет проводится для группы, иначе для одного пользователя)
-        if ($flag == true) {
-            $results = Totalresults::whereGroup($group)->get();
-        }
-        else {
-            $results = Totalresults::where('userID', $user_id)->get();
-        }
-        $id = 0;
-        foreach ($results as $result){
-            $score = 0;
-            $id = $result['userID'];
-            //поск необходимых записей в таблицах
-            $control = Controls::where('userID', $id)->first();
-            $lecture = Lectures::where('userID', $id)->first();
-            $seminar = Seminars::where('userID', $id)->first();
-            $classwork = Classwork::where('userID', $id)->first();
-            //подсчет балла
-            $score += $control['test2'] + $control['test2quiz'];
-            $score += ($lecture['col8'] + $lecture['col9'] + $lecture['col10'] + $lecture['col11']) / $k_lec;
-            $score += $classwork['col8'] + $classwork['col9'] + $classwork['col10'] + $classwork['col11'];
-            $score += ($seminar['col8'] + $seminar['col9'] + $seminar['col10'] + $seminar['col11']) / $k_sem;
-            //проверка на превышение максимального балла
-            if ($score > $max_score) $score = $max_score;
-            //запись результата
-            Totalresults::where('userID', $id)->update(['section2' => round($score)]);
-            //отмечаем в програссе, преодолели ли проходной балл
-            if ($control['test2'] >= 3.6){
-                Statements_progress::where('userID', $id)->update(['test2' => 1]);
-            }
-            else {
-                Statements_progress::where('userID', $id)->update(['test2' => 0]);
-            }
-            if ($control['test2quiz'] >= 1.8){
-                Statements_progress::where('userID', $id)->update(['test2quiz' => 1]);
-            }
-            else {
-                Statements_progress::where('userID', $id)->update(['test2quiz' => 0]);
-            }
-            if (($control['test2'] + $control['test2quiz'] >= 5.4) and (round($score) >= 7)){
-                Statements_progress::where('userID', $id)->update(['section2' => 1]);
-            }
-            else {
-                Statements_progress::where('userID', $id)->update(['section2' => 0]);
-            }
-        }
-        return 0;
-    }
-    //метод, подсчитывающий итоги за третий раздел
-    //3 раздел = КР3Эмуляторы + КР3Письм + Тест3Авт + Тест3Письм + 4 недели(каждый тип кроме работы в классе делится на 4)
-    public function calc_third($group, $user_id, $flag){
-        //инициализация констант: коэффициентов и макс. балла
-        $k_lec = 4;
-        $k_sem = 4;
-        $max_score = 16;
-        //проверка флага (если true, то подсчет будет проводится для группы, иначе для одного пользователя)
-        if ($flag == true) {
-            $results = Totalresults::whereGroup($group)->get();
-        }
-        else {
-            $results = Totalresults::where('userID', $user_id)->get();
-        }
-        $id = 0;
-        foreach ($results as $result){
-            $score = 0;
-            $id = $result['userID'];
-            //поск необходимых записей в таблицах
-            $control = Controls::where('userID', $id)->first();
-            $lecture = Lectures::where('userID', $id)->first();
-            $seminar = Seminars::where('userID', $id)->first();
-            $classwork = Classwork::where('userID', $id)->first();
-            //подсчет балла
-//            $score += $control['control3'] + $control['control3quiz'] + $control['test3'] + $control['test3quiz'];
-            $score += $control['control3'] + $control['test3'] + $control['test3quiz'];
-            $score += ($lecture['col12'] + $lecture['col13'] + $lecture['col14'] + $lecture['col15']) / $k_lec;
-            $score += $classwork['col12'] + $classwork['col13'] + $classwork['col14'] + $classwork['col15'];
-            $score += ($seminar['col12'] + $seminar['col13'] + $seminar['col14'] + $seminar['col15']) / $k_sem;
-            //проверка на превышение максимального балла
-            if ($score > $max_score) $score = $max_score;
-            //запись результата
-            Totalresults::where('userID', $id)->update(['section3' => round($score)]);
-            //отмечаем в програссе, преодолели ли проходной балл
-            if ($control['control3'] >= 4.2){
-                Statements_progress::where('userID', $id)->update(['control3' => 1]);
-            }
-            else {
-                Statements_progress::where('userID', $id)->update(['control3' => 0]);
-            }
-//            if ($control['control3quiz'] >= 1.8){
-//                Statements_progress::where('userID', $id)->update(['control3quiz' => 1]);
-//            }
-//            else {
-//                Statements_progress::where('userID', $id)->update(['control3quiz' => 0]);
-//            }
-            if ($control['test3'] >= 1.8){
-                Statements_progress::where('userID', $id)->update(['test3' => 1]);
-            }
-            else {
-                Statements_progress::where('userID', $id)->update(['test3' => 0]);
-            }
-            if ($control['test3quiz'] >= 1.8){
-                Statements_progress::where('userID', $id)->update(['test3quiz' => 1]);
-            }
-            else {
-                Statements_progress::where('userID', $id)->update(['test3quiz' => 0]);
-            }
-            if (($control['control3'] >= 2.4) and ($control['control3quiz'] >= 1.8) and ($control['test3'] + $control['test3quiz'] >= 3.6) and (round($score) >= 10)){
-                Statements_progress::where('userID', $id)->update(['section3' => 1]);
-            }
-            else {
-                Statements_progress::where('userID', $id)->update(['section3' => 0]);
-            }
-        }
-        return 0;
-    }
-    //метод, подсчитывающий итоги за четвертый раздел
-    //4 раздел = Опрос + 1 неделя
-    public function calc_fourth($group, $user_id, $flag){
-        //инициализация констант: макс. балла
-        $max_score = 10;
-        //проверка флага (если true, то подсчет будет проводится для группы, иначе для одного пользователя)
-        if ($flag == true) {
-            $results = Totalresults::whereGroup($group)->get();
-        }
-        else {
-            $results = Totalresults::where('userID', $user_id)->get();
-        }
-        $id = 0;
-        foreach ($results as $result){
-            $score = 0;
-            $id = $result['userID'];
-            //поск необходимых записей в таблицах
-            $control = Controls::where('userID', $id)->first();
-//            $lecture = Lectures::where('userID', $id)->first();
-//            $seminar = Seminars::where('userID', $id)->first();
-//            $classwork = Classwork::where('userID', $id)->first();
-            //подсчет балла
-            $score += $control['lastquiz'];
-//            $score += $lecture['col16'];
-//            $score += $classwork['col16'];
-//            $score += $seminar['col16'];
-            //проверка на превышение максимального балла
-            if ($score > $max_score) $score = $max_score;
-            //запись результата
-            Totalresults::where('userID', $id)->update(['section4' => round($score)]);
-            if ($control['lastquiz'] >= 6){
-                $progress = Statements_progress::where('userID', $id)->update(['lastquiz' => 1]);
-            }
-            else {
-                $progress = Statements_progress::where('userID', $id)->update(['lastquiz' => 0]);
-            }
-            if ($control['lastquiz'] >= 6){
-                $progress = Statements_progress::where('userID', $id)->update(['section4' => 1]);
-            }
-            else {
-                $progress = Statements_progress::where('userID', $id)->update(['section4' => 0]);
-            }
-        }
-        return 0;
-    }
-    //метод, подсчитывающий итоги работу в семестре
-    //Итог за семестр = разде1 + раздел2 + раздел3 + раздел4
-    public function calc_term($group, $user_id, $flag){
-        //инициализация констант: макс. балла
-        $max_score = 60;
-        //проверка флага (если true, то подсчет будет проводится для группы, иначе для одного пользователя)
-        if ($flag == true) {
-            $results = Totalresults::whereGroup($group)->get();
-        }
-        else {
-            $results = Totalresults::where('userID', $user_id)->get();
-        }
-        foreach ($results as $result){
-            $score = 0;
-            //поск необходимых записей в таблицах
-            $id = $result['userID'];
-            //подсчет балла
-            $score += $result['section1'] + $result['section2'] + $result['section3'] + $result['section4'];
-            //проверка на превышение максимального балла
-            if ($score > $max_score) $score = $max_score;
-            //запись результата
-            Totalresults::where('userID', $id)->update(['termResult' => round($score)]);
-        }
-        return 0;
-    }
-    //метод, подсчитывающий итоги за весь раздел
-    //Итог  = ИтогЗаСеместр + Экзамен
-    public function calc_final($group, $user_id, $flag){
-        //проверка флага (если true, то подсчет будет проводится для группы, иначе для одного пользователя)
-        if ($flag == true) {
-            $results = Totalresults::whereGroup($group)->get();
-        }
-        else {
-            $results = Totalresults::where('userID', $user_id)->get();
-        }
-        $max_score = 100;
-        foreach ($results as $result){
-            $score = 0;
-            //поск необходимых записей в таблицах
-            $id = $result['userID'];
-            //подсчет балла и оценок
-            $score += $result['termResult'] + $result['exam'] + $result['exam2'];
-            if ($score > $max_score) $score = $max_score;
-            $markRU = Test::calcMarkRus(100, $score);
-            $markEU = Test::calcMarkBologna(100, $score);
-            //запись результата
-            Totalresults::where('userID', $id)->update(['finalResult' => round($score), 'markRU' => $markRU, 'markEU' => $markEU]);
-        }
+    public function resultWasAll(Request $request){
+        $this->result_statement_manage->resultWasAll($request);
         return 0;
     }
 }

@@ -24,11 +24,11 @@
         <div class="card-body style-default-bright">
 
             {{ csrf_field() }}
-            <h5 class="card-title">{!! Form::label('seminar_plan_name' , 'Название лекции:') !!}
-                {!! Form::text('seminar_plan_name',$itemSectionPlan->seminar_plan_name,['class' => 'form-control','placeholder' => 'Введите название лекции',
+            <h5 class="card-title">{!! Form::label('seminar_plan_name' , 'Название семинара:') !!}
+                {!! Form::text('seminar_plan_name',$itemSectionPlan->seminar_plan_name,['class' => 'form-control','placeholder' => 'Введите название семинара',
                 'required' => 'required', $readOnly ? 'readonly' : '' ]) !!}</h5>
-            <p class="card-text">{!! Form::label('seminar_plan_desc' , 'Описание раздела:') !!}
-                {!! Form::text('seminar_plan_desc',$itemSectionPlan->seminar_plan_desc,['class' => 'form-control','placeholder' => 'Введите описание лекции',
+            <p class="card-text">{!! Form::label('seminar_plan_desc' , 'Описание семинара:') !!}
+                {!! Form::text('seminar_plan_desc',$itemSectionPlan->seminar_plan_desc,['class' => 'form-control','placeholder' => 'Введите описание семинара',
                  $readOnly ? 'readonly' : '' ]) !!}
             </p>
             <input type="hidden"  name="id_seminar_plan" value="{{$itemSectionPlan->id_seminar_plan}}" />

@@ -29,8 +29,7 @@
 
             {!! Form::select('is_exam',array('' =>'Выберите тип:',
             '0' => 'Раздел курса',
-            '1' => 'Экзамен',
-            '2' => 'Зачёт'), null, ['id' => 'is_exam','class' => 'form-control', 'required' => 'required']) !!}
+            '1' => 'Экзамен(Зачёт)'), null, ['id' => 'is_exam','class' => 'form-control', 'required' => 'required']) !!}
         </p>
             <input type="hidden"  name="id_course_plan" value="{{$idCoursePlan}}" />
             <input type="hidden"  name="section_num_for_find_js" value="{{$sectionNumForFindJs}}" />

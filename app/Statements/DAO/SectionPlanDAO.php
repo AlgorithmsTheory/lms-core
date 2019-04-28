@@ -29,7 +29,7 @@ class SectionPlanDAO
         $sectionPlan->section_plan_name = $request->section_plan_name;
         $sectionPlan->section_plan_desc = $request->section_plan_desc;
         $sectionPlan->id_course_plan = $request->id_course_plan;
-        $sectionPlan->section_num = $request->section_num;
+        $sectionPlan->section_num = $request->is_exam == 0 ? $request->section_num : null;
         $sectionPlan->is_exam = $request->is_exam;
         $sectionPlan->save();
         return $sectionPlan->id_section_plan;
@@ -39,8 +39,7 @@ class SectionPlanDAO
         $sectionPlan = $this->getSectionPlan($request->id_section_plan);
         $sectionPlan->section_plan_name = $request->section_plan_name;
         $sectionPlan->section_plan_desc = $request->section_plan_desc;
-        $sectionPlan->section_num = $request->section_num;
-        $sectionPlan->is_exam = $request->is_exam;
+        $sectionPlan->section_num = $request->is_exam == 0 ? $request->section_num : null;
         $sectionPlan->update();
     }
 
@@ -49,7 +48,7 @@ public function getValidateStoreSectionPlan(Request $request) {
         'section_plan_name' => 'required|between:5,255',
         'section_plan_desc' => 'between:5,5000',
         'is_exam' => 'required',
-        'section_num' => [ 'required',
+        'section_num' => [ 'required_if:is_exam,0',
             'integer',
             'min:1',
             Rule::unique('section_plans')->where('id_course_plan', $request->id_course_plan)
@@ -63,7 +62,7 @@ public function getValidateStoreSectionPlan(Request $request) {
             'section_plan_name' => 'required|between:5,255',
             'section_plan_desc' => 'between:5,5000',
             'is_exam' => 'required',
-            'section_num' => [ 'required',
+            'section_num' => [ 'required_if:is_exam,0',
                 'integer',
                 'min:1',
                 Rule::unique('section_plans')->where('id_course_plan', $request->id_course_plan)

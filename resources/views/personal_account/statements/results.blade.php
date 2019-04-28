@@ -1,196 +1,227 @@
 <h2>Итоговые результаты</h2>
+{{--Вывод ошибок валидации--}}
+<div class="alert alert-danger print-error-msg" style="display:none">
+    <ul></ul>
+</div>
 <br>
-<table class="table table-condensed table-bordered">
+{{--{{$statement_result[0]['exam_work_groupBy_sections']}}--}}
+<table class="table table-condensed table-bordered"
+       data-id-course_plan="{{$course_plan->id_course_plan}}"
+        data-id_group="{{$id_group}}">
     <tr class="info">
-        <td rowspan="2">Группа</td>
-        <td rowspan="2">Фамилия</td>
-        <td rowspan="2">Имя</td>
-        <td colspan="2">Раздел 1</td>
-        <td colspan="2">Раздел 2</td>
-        <td colspan="2">Раздел 3</td>
-        <td colspan="2">Раздел 4</td>
-        <td colspan="2">Итог за семестр</td>
-        <td colspan="2">Экзамен (авт.)</td>
-        <td colspan="2">Экзамен (письм.)</td>
-        <td colspan="2">Суммарный итог</td>
-        <td rowspan="2">Оценка(A-F)</td>
-        <td rowspan="2">Оценка(2-5)</td>
+        <td rowspan="3" class="warning">Группа</td>
+        <td rowspan="3" class="warning">Фамилия</td>
+        <td rowspan="3" class="warning">Имя</td>
+        @foreach($course_plan->section_plans as $section_plan)
+            <td colspan="{{$section_plan->control_work_plans->count() + 1}}" class="info">
+                    {{$section_plan->section_num . ' Раздел'}}
+            </td>
+        @endforeach
+
+        <td colspan="1" rowspan="2" class="info">Итог за разделы</td>
+
+        @foreach($course_plan->exam_plans as $exam_plan)
+            <td colspan="{{$exam_plan->control_work_plans->count()}}" class="info">
+                    Экзамен(Зачёт)
+            </td>
+        @endforeach
+
+        <td colspan="1" rowspan="2" class="info">Итог за Экзамен(Зачёт)</td>
+
+        <td colspan="1" rowspan="2" class="info">Пос. лек.</td>
+        <td colspan="1" rowspan="2" class="info">Пос. сем.</td>
+        <td colspan="1" rowspan="2" class="info">Раб. сем.</td>
+        <td colspan="1" rowspan="2" class="info">Суммарный итог</td>
+        <td rowspan="3" class="info">Оценка(A-F)</td>
+        <td rowspan="3" class="info">Оценка(2-5)</td>
     </tr>
     <tr class="active">
-        <td>min 13</td>
-        <td>max 22</td>
+        @foreach($course_plan->section_plans as $section_plan)
+            @foreach($section_plan->control_work_plans as $control_work_plan)
+                    <td>{{$control_work_plan->control_work_plan_name}}</td>
+            @endforeach
+                <td class="info" rowspan="2">Итог</td>
+        @endforeach
 
-        <td>min 7</td>
-        <td>max 12</td>
+            @foreach($course_plan->exam_plans as $exam_plan)
+                @foreach($exam_plan->control_work_plans as $control_work_plan)
+                    <td>{{$control_work_plan->control_work_plan_name}}</td>
+                @endforeach
+            @endforeach
+    </tr>
+    <tr class="active">
+            {{--Вывод макс баллов К.М в обычных разделов--}}
+        @foreach($course_plan->section_plans as $section_plan)
+            @foreach($section_plan->control_work_plans as $control_work_plan)
+                <td>max {{":".$control_work_plan->max_points}}</td>
+            @endforeach
+        @endforeach
 
-        <td>min 10</td>
-        <td>max 16</td>
+        <td>max {{":".$course_plan->max_controls}}</td>
 
-        <td>min 6</td>
-        <td>max 10</td>
+        {{--Вывод макс баллов К.М в разделе Экзамен(Зачёт)--}}
+            @foreach($course_plan->exam_plans as $exam_plan)
+                @foreach($exam_plan->control_work_plans as $control_work_plan)
+                    <td>max {{":".$control_work_plan->max_points}}</td>
+                @endforeach
+            @endforeach
 
-        <td>min 36</td>
-        <td>max 60</td>
+            <td>max {{":".$course_plan->max_exam}}</td>
 
-        <td>min 12</td>
-        <td>max 20</td>
+            <td>max {{":".$course_plan->max_lecrures}}</td>
+            <td>max {{":".$course_plan->max_seminars}}</td>
+            <td>max {{":".$course_plan->max_seminars_work}}</td>
+            <td>max :100</td>
 
-        <td>min 12</td>
-        <td>max 20</td>
-
-        <td>min 60</td>
-        <td>max 100</td>
     </tr>
     <tbody id="target">
-    <?php
-    $count = 0;
-    ?>
-    @foreach($statement as $state)
-        <tr id="{{ $state['userID'] }}">
-            <td>
-                {{ $state['group_name'] }}
+    @foreach($statement_result as $statement)
+        <tr id ="{{$statement['user']->id}}">
+            <td>{{$statement['user']->group_name}}</td>
+            <td>{{$statement['user']->last_name}}</td>
+            <td>{{$statement['user']->first_name}}</td>
+            {{--Вывод контрольных мероприятий по разделам + итоги в каждом разделе--}}
+            @if(!$statement['control_work_groupBy_sections']->isEmpty())
+
+                @foreach($course_plan->section_plans as $section_plan)
+                    @foreach($statement['control_work_groupBy_sections'][$section_plan->section_num] as $control_work_passes)
+
+                    <td id="{{$control_work_passes->id_control_work_pass}}"
+                        data-id-control_work="{{$control_work_passes->id_control_work_plan}}"
+                        data-status="section"
+                        data-section_num="{{$control_work_passes->section_num}}">
+                        <div class='checkbox checkbox-inline checkbox-styled'>
+                            <label>
+                                <input type='checkbox'
+                                       {{$control_work_passes->presence == 1 ? 'checked' : ''}}
+                                       class='was'>
+                                <span></span>
+                            </label>
+                        </div>
+                        <input type="number"
+                               value="{{$control_work_passes->points}}"
+                               class="result_control_work"
+                               style="width: 50px;"
+                               step="any"
+                                {{$control_work_passes->presence == 0 ? 'disabled' : ''}}/>
+                    </td>
+                @endforeach
+                    {{--Итог за раздел--}}
+                <td data-result-section_num="{{$section_plan->section_num}}"
+                    class="{{$statement['result_control_work_sections']->get($section_plan->section_num) < $section_plan->max_points * 0.6
+                    ? 'danger' : 'success'}}"
+                    data-section-max_points="{{$section_plan->max_points}}">
+                    {{$statement['result_control_work_sections']->get($section_plan->section_num)}}
+                </td>
+            @endforeach
+
+
+
+            {{--Вывод итогов всех К.М. за все разделы--}}
+            <td class="sum_result_section {{$statement['sum_result_section_control_work'] < $course_plan->max_controls * 0.6
+                ? 'danger' : 'success'}}"
+                data-max_controls="{{$course_plan->max_controls}}">
+                {{$statement['sum_result_section_control_work']}}
             </td>
-            <td>
-                {{ $last_names[$count] }}
-            </td>
-            <td>
-                {{ $first_names[$count] }}
-            </td>
-            <td colspan="2" class="
-                @if ($progress1[$count] == 0)
-                    danger
-                @else
-                    success
-                @endif
-            ">
-                <div>
-                   {{ $state['section1'] }}
-                </div>
-{{--                <input type="number" value="{{ $state['section1'] }}" name="{{ $state['userID'] }}" id="section1" class="resulting" style="width: 50px;">--}}
-            </td>
-            <td colspan="2" class="
-                @if ($progress2[$count] == 0)
-                    danger
-                @else
-                    success
-                @endif
-            ">
-                <div>
-                    {{ $state['section2'] }}
-                </div>
-{{--                <input type="number" value="{{ $state['section2'] }}" name="{{ $state['userID'] }}" id="section2" class="resulting" style="width: 50px;">--}}
-            </td>
-            <td colspan="2" class="
-                @if ($progress3[$count] == 0)
-                    danger
-                @else
-                    success
-                @endif
-            ">
-                <div>
-                    {{ $state['section3'] }}
-                </div>
-{{--                <input type="number" value="{{ $state['section3'] }}" name="{{ $state['userID'] }}" id="section3" class="resulting" style="width: 50px;">--}}
-            </td>
-            <td colspan="2" class="
-                @if ($progress4[$count] == 0)
-                    danger
-                @else
-                    success
-                @endif
-            ">
-                <div>
-                    {{ $state['section4'] }}
-                </div>
-{{--                <input type="number" value="{{ $state['section4'] }}" name="{{ $state['userID'] }}" id="section4" class="resulting" style="width: 50px;">--}}
-            </td>
-            <td colspan="2" class="
-                @if (($progress1[$count] == 0) || ($progress2[$count] == 0) || ($progress3[$count] == 0) || ($progress4[$count] == 0))
-                    danger
-                @else
-                    success
-                @endif
-            ">
-                <div>
-                    {{ $state['termResult'] }}
-                </div>
-                {{--<input type="number" value="{{ $state['termResult'] }}" name="{{ $state['userID'] }}" id="termResult" class="resulting" style="width: 50px;">--}}
-            </td>
-            <td colspan="2" class="
-                @if ($state['exam'] < 12)
-                    danger
-                @else
-                    success
-                @endif
-            ">
-                <input type="number" value="{{ $state['exam'] }}" name="{{ $state['userID'] }}" id="exam" class="resulting" style="width: 50px;">
-            </td>
-            <td colspan="2" class="
-                @if ($state['exam2'] < 12)
-                    danger
-                @else
-                    success
-                @endif
-                    ">
-                <input type="number" value="{{ $state['exam2'] }}" name="{{ $state['userID'] }}" id="exam2" class="resulting" style="width: 50px;">
-            </td>
-            <td colspan="2" class="
-                @if ($state['finalResult'] < 60)
-                    danger
-                @else
-                    success
-                @endif
-            ">
-                <div>
-                    {{ $state['finalResult'] }}
-                </div>
-                {{--<input type="number" value="{{ $state['finalResult'] }}" name="{{ $state['ID'] }}" id="finalResult" class="resulting" style="width: 50px;">--}}
-            </td>
-            <td class="
-                @if ($state['markEU'] === 'F')
-                    danger
-                @else
-                    success
-                @endif
-            ">
-                <div>
-                    {{ $state['markEU'] }}
-                </div>
-                {{--<input type="number" value="{{ $state['markEU'] }}" name="{{ $state['userID'] }}" id="markEU" class="resulting" style="width: 50px;">--}}
-            </td>
-            <td class="
-                @if ($state['markRU'] < 3)
-                    danger
-                @else
-                    success
-                @endif
-            ">
-                <div>
-                    {{ $state['markRU'] }}
-                </div>
-                {{--<input type="number" value="{{ $state['markRU'] }}" name="{{ $state['userID'] }}" id="markRU" class="resulting" style="width: 50px;">--}}
-            </td>
+            @endif
+
+            {{--Вывод экзаменационных мероприятий --}}
+            @if(!$statement['exam_work_groupBy_sections']->isEmpty())
+
+            @foreach($course_plan->exam_plans as $exam_plan)
+                @foreach($statement['exam_work_groupBy_sections'][$exam_plan->id_section_plan] as $control_work_passes)
+
+                    <td id="{{$control_work_passes->id_control_work_pass}}"
+                        data-id-control_work="{{$control_work_passes->id_control_work_plan}}"
+                        data-status="exam">
+                        <div class='checkbox checkbox-inline checkbox-styled'>
+                            <label>
+                                <input type='checkbox'
+                                       {{$control_work_passes->presence == 1 ? 'checked' : ''}}
+                                       class='was'>
+                                <span></span>
+                            </label>
+                        </div>
+                        <input type="number"
+                               value="{{$control_work_passes->points}}"
+                               class="result_control_work"
+                               style="width: 50px;"
+                               step="any"
+                                {{$control_work_passes->presence == 0 ? 'disabled' : ''}}>
+                    </td>
+                @endforeach
+            @endforeach
+
+            {{--Итог за Экзамен(Зачёт)--}}
+                <td class="sum_result_exam {{$statement['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6
+                ? 'danger' : 'success'}}"
+                data-max_exam="{{$course_plan->max_exam}}">
+                    {{$statement['sum_result_section_exam_work']}}
+                </td>
+
+            {{--Пос. лек.--}}
+
+                <td>{{$statement['result_lecture']}}</td>
+
+            {{--Пос. Семинаров.--}}
+
+                <td>{{$statement['result_seminar']}}</td>
+
+            {{--Раб. на сем--}}
+
+                <td>{{$statement['result_work_seminar']}}</td>
+
+            {{--Суммарный итог--}}
+
+                <td class="result_all_course {{$statement['sum_result'] < 60 ? 'danger' : 'success'}}">
+                    {{$statement['sum_result']}}
+                </td>
+
+                {{--Оценка(A-F)--}}
+
+                <td class="mark_bologna {{$statement['sum_result'] < 60 ? 'danger' : 'success'}}">
+                    {{$statement['markBologna']}}
+                </td>
+
+                {{--Оценка(2-5)--}}
+
+                <td class="mark_rus {{$statement['sum_result'] < 60 ? 'danger' : 'success'}}">
+                    {{$statement['markRus']}}
+                </td>
+
+            @endif
         </tr>
-        <?php
-        $count++;
-        ?>
     @endforeach
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        @foreach($course_plan->section_plans as $section_plan)
+            @foreach($section_plan->control_work_plans as $control_work_plan)
+                <td>
+                    <button class="btn btn-warning btn-raised all"
+                            name="{{ $id_group }}"
+                            data-id-control_work="{{$control_work_plan->id_control_work_plan}}">
+                        Все
+                    </button>
+                </td>
+            @endforeach
+            <td></td>
+        @endforeach
+        <td></td>
+        @foreach($course_plan->exam_plans as $exam_plan)
+            @foreach($exam_plan->control_work_plans as $control_work_plan)
+                <td>
+                    <button class="btn btn-warning btn-raised all"
+                            name="{{ $id_group }}"
+                            data-id-control_work="{{$control_work_plan->id_control_work_plan}}">
+                        Все
+                    </button>
+                </td>
+            @endforeach
+        @endforeach
+    </tr>
     </tbody>
 </table>
-{{--<br>--}}
-{{--<br>--}}
-{{--<button class="btn btn-accent-bright btn-raised submit-question" id="calc1">Посчитать итоги за 1 раздел</button>--}}
 
-{{--<button class="btn btn-accent-bright btn-raised submit-question" id="calc2">Посчитать итоги за 2 раздел</button>--}}
-
-{{--<button class="btn btn-accent-bright btn-raised submit-question" id="calc3">Посчитать итоги за 3 раздел</button>--}}
-
-{{--<button class="btn btn-accent-bright btn-raised submit-question" id="calc4">Посчитать итоги за 4 раздел</button>--}}
-{{--<br>--}}
-{{--<br>--}}
-{{--<button class="btn btn-accent-bright btn-raised submit-question" id="calc5">Посчитать итоги за семестр</button>--}}
-
-{{--<button class="btn btn-accent-bright btn-raised submit-question" id="calc6">Посчитать финальные итоги</button>--}}
-{{--<br>--}}
-
-{!! HTML::script('js/statements/resulting.js') !!}
+{!! HTML::script('js/statements/results.js') !!}
