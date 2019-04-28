@@ -7,6 +7,8 @@ function sendForm(status){
     var elementNumber;
     var flag = [true];
     var countChecked = 0;
+    let ramCounter = 0;
+    let postCounter = 0;
     for (index = 0; index < formsCount; ++index) {
         flag[index] = false;
         typeOfForm = document.forms[index].type.value;
@@ -45,14 +47,22 @@ function sendForm(status){
 			}
             if(typeOfForm == 14){
 				// Post
-                
+                let ctx = $('[name ^= post-entity]').eq(postCounter);
+                let code = JSON.stringify(GetRules(ctx));
+                if(code.indexOf('Raw') != -1) {
+                    flag[index] = true;
+                }
+                postCounter++;
+                break;
 			}
 			if(typeOfForm == 15){
 				// RAM
-				var code = RAM.TextEditor.get_text();
+				let code = envs[ramCounter].RAM.TextEditor.get_text();
 				if( /^\s*\w+/.test(code) ){
 					flag[index] = true;
 				}
+                ramCounter++;
+                break;
 			}
         }
     }

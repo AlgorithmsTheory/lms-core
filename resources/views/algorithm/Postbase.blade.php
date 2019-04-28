@@ -5,6 +5,7 @@
             <div class="col-lg-12">
                 <h1 class="text-primary">Эмулятор машины Поста</h1>
             </div>
+            <div name="test_seq"  style="display:none">{{ $test_seq }}</div>
             @yield('addl-info-post')
         </div>
         <div class="col-lg-12">

@@ -1,22 +1,9 @@
-function postSetCode(value) {
-	//reset
-	$('input[type=text]').each(function(){$(this).val('');});
-	$('input[type=number]').each(function() {$(this).val('');});
-	$('select').each(function(){$(this).val('');});
-	//set
-	SetRules(JSON.parse(value.replace("&gt;",">").replace("&lt;","<")));
-}
-
-function postGetCode() {
-	return JSON.stringify(GetRules());
-}
-
-function postCheckAnswer(arr){
+function postCheckAnswer(ctx, arr){
 	try{
 		var count = 0;
 		for(var i=0; i < arr['input_word'].length; i++){
             
-			rules = GetRules();
+			rules = GetRules(ctx);
 			input = arr['input_word'][i];
 			
 			result_log = GetResult(rules, input);
@@ -36,30 +23,24 @@ function postCheckAnswer(arr){
 }
 
 function postSubmitTask(cnt, notice) {
-	var curr_code = postGetCode();
-	var test_seq = JSON.parse($("[name^=post-entity] [name=test_seq]").html());
+    let ctx = $('[name = post-entity' + cnt + ']').first();
+	let test_seq = JSON.parse(ctx.find("[name=test_seq]").html());
     
-    deb_cnt = $("[name=type][value=14]").eq(0).parent().find("[name=debug_counter]").first();
-	seq_true = $("[name=type][value=14]").eq(0).parent().find("[name=sequences_true]").first();
-	seq_all = $("[name=type][value=14]").eq(0).parent().find("[name=sequences_all]").first();
-    
-    //alert(test_seq['input_word'].length);
-    //alert(deb_cnt.val());
-    //alert(seq_true);
-    //alert(seq_all);
+    deb_cnt = $("[name=type][value=14]").eq(cnt).parent().find("[name=debug_counter]").first();
+	seq_true = $("[name=type][value=14]").eq(cnt).parent().find("[name=sequences_true]").first();
+	seq_all = $("[name=type][value=14]").eq(cnt).parent().find("[name=sequences_all]").first();
     
     var debug_counter = deb_cnt.val();
 	debug_counter++;
 	deb_cnt.val(debug_counter);
     
-    var sequences_true = postCheckAnswer(test_seq);
+    var sequences_true = postCheckAnswer(ctx, test_seq);
 	seq_true.val(sequences_true);
 	
 	var sequences_all  = test_seq['input_word'].length;
 	seq_all.val(sequences_all);
 	
-	SetInput("0000");
-	postSetCode(curr_code);
+	SetInput(ctx, "0000");
 	
     /*
 	$.ajax({
@@ -92,17 +73,13 @@ function postSubmitTask(cnt, notice) {
 	}
 }
 
-class PostContextControl{
-    constructor(ptr, cnt){
-        $(ptr).click(function(){ postSubmitTask(cnt, true); });
-    }
+function PostContextControl(ptr, cnt) {
+    $(ptr).click(function(){ postSubmitTask(cnt, true); });
 }
 
-var postCtxCtrls = [];
-var cnt = 0;
+j = 0;
 
 $("[name^=post-entity] [name=btn_submit]").each(function(){
-   postCtxCtrls.push( new PostContextControl(this, cnt) );
-   cnt++;
+   PostContextControl(this, j);
+   j++;
 });
-

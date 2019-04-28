@@ -126,36 +126,17 @@ class Post extends QuestionType implements Checkable {
     }
 
     public function pdf(Mypdf $fpdf, $count, $answered=false) {
-        $parse = $this->variants;
-        $variants = explode(";", $parse);
         $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
-        $html .= '  Выберите один вариант ответа</td></tr>';
+        $html .= '  Напишите решение задачи на Машине Поста</td></tr>';
         $html .= '<tr><td>'.$this->text.'</td></tr></table>';
-
-        $html .= '<table border="1" style="border-collapse: collapse;" width="100%">';
-        if ($answered){                                                                                                 // пдф с ответами
-            $answer = $this->answer;
-            $new_variants = Session::get('saved_variants_order');
-            foreach ($new_variants as $var){
-                $html .= '<tr>';
-                if ($answer == $var)
-                    $html .= '<td width="5%" align="center">+</td><td width="80%">'.$var.'</td>';
-                else
-                    $html .= '<td width="5%"></td><td width="80%">'.$var.'</td>';
-                $html .= '</tr>';
-            }
-            Session::forget('saved_variants_order');
+        
+        if ($answered == false) {
+            $html .= '<p>Ваш алгоритм:</p>';
+            $html .= '<table border="1" style="border-collapse: collapse;" width="100%">
+                        <tr><td height="500px"></td></tr>
+                      </table><br>';
         }
-        else {                                                                                                          // без ответов
-            $new_variants = Question::mixVariants($variants);
-            Session::put('saved_variants_order', $new_variants);
-            foreach ($new_variants as $var){
-                $html .= '<tr>';
-                $html .= '<td width="5%"></td><td width="80%">'.$var.'</td>';
-                $html .= '</tr>';
-            }
-        }
-        $html .= '</table><br>';
+        
         $fpdf->WriteHTML($html);
     }
 	

@@ -57,11 +57,29 @@
 @endif
 
 {!! HTML::script('js/toolbar.js') !!}
-{!! HTML::script('js/ram/bootstrap.min.js') !!}
+{!! HTML::script('js/algorithms/superScript.js') !!}
+
 {!! HTML::script('js/ram/ace.js') !!}
 {!! HTML::script('js/ram/RAM.js') !!}
 {!! HTML::script('js/ram/kontr_RAM.js') !!}
+
+{!! HTML::script('js/algorithms/symbols_post.js') !!}
+{!! HTML::script('js/algorithms/saving_post.js') !!}
+{!! HTML::script('js/algorithms/post.js') !!}
 {!! HTML::script('js/algorithms/kontr_post.js') !!}
+
+{!! HTML::script('js/core/source/App.js') !!}
+{!! HTML::script('js/core/source/AppNavigation.js') !!}
+{!! HTML::script('js/core/source/AppOffcanvas.js') !!}
+{!! HTML::script('js/core/source/AppCard.js') !!}
+{!! HTML::script('js/core/source/AppForm.js') !!}
+{!! HTML::script('js/core/source/AppNavSearch.js') !!}
+{!! HTML::script('js/core/source/AppVendor.js') !!}
+{!! HTML::script('js/core/demo/Demo.js') !!}
+{!! HTML::script('js/core/demo/DemoUILists.js') !!}
+{!! HTML::script('js/core/demo/DemoUIMessages.js') !!}
+        
+{!! HTML::script('js/algorithms/send.js') !!}
 <br>
 </section>
 </body>
