@@ -15,6 +15,7 @@ use App\User;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Validator;
 class AdministrationController extends Controller{
 
     const NEWS_FILE_DIR = 'download/news/';
@@ -179,7 +180,8 @@ class AdministrationController extends Controller{
         //Если группа привязана к учебному плану, то создаём для студентов ведомости
         $group = Group::whereGroup_id($user->group)->first();
         $id_course_plan = $group->id_course_plan;
-        if ($id_course_plan != null) {
+        $validator = $this->getValidateAddStudent($id_course_plan, $group);
+        if ($validator->passes()) {
             if ($user['role'] != 'Студент') {
                 $user->role = 'Студент';
                 $user->save();
@@ -208,8 +210,27 @@ class AdministrationController extends Controller{
             }
             return response()->json(['id' => $id]);
         }else {
-            return response()->json(['error' => 'Назначьте учебный план для группы: ' . $group->group_name]);
+            return response()->json(['errors' => $validator->errors()->all()]);
         }
+    }
+
+    public function getValidateAddStudent($id_course_plan, $group) {
+        $validator = Validator::make(['id_course_plan' => $id_course_plan,
+                                    ['group_name' => $group->group_name]], []);
+        $validator->after(function ($validator) {
+            $id_course_plan = $validator->getData()['id_course_plan'];
+            $group_name = $validator->getData()['group_name'];
+            if($id_course_plan == null) {
+                $validator->errors()->add('without_course_plan', 'Назначьте учебный план для группы: ' . $group_name);
+            } else {
+                if (!CoursePlanDAO::checkPointsCoursePlan($id_course_plan)->passes()) {
+                $course_plan_name = CoursePlan::where('id_course_plan', $id_course_plan)
+                    ->first()->course_plan_name;
+                $validator->errors()->add('not_valid_points', 'Баллы учебного плана('.$course_plan_name.') не корректны');
+                }
+            }
+        });
+        return $validator;
     }
 
     public function add_admin(Request $request){

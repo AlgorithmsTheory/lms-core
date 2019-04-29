@@ -101,10 +101,14 @@ class StatementsController extends Controller{
     }
 
     //Утверждение учебного плана для групп
-    public function approvedCoursePlan(Request $request) {
+    public function checkPointsCoursePlan(Request $request) {
         if ($request->ajax()) {
-            $this->coursePlanDao->approvedCoursePlan($request->input('id_course_plan'));
-            return response()->json(['idCoursePlan' => $request->id_course_plan]);
+            $validator = $this->coursePlanDao->checkPointsCoursePlan($request->input('id_course_plan'));
+            if ($validator->passes()) {
+                return 0;
+            } else {
+                return response()->json(['error'=>$validator->errors()->all()]);
+            }
         }
     }
 
@@ -280,6 +284,11 @@ class StatementsController extends Controller{
         } else {
             return 'control_works.add_control_work';
         }
+    }
+
+    public function copyCoursePlan(Request $request) {
+        $id_new_course_plan = $this->coursePlanDao->copyCoursePlan($request->input('id_course_plan'));
+        return redirect('course_plan/' .  $id_new_course_plan);
     }
 
     //Возвращает главную страницу для выбора типа ведомости и группы

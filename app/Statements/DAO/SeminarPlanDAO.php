@@ -7,6 +7,7 @@
  */
 
 namespace App\Statements\DAO;
+use App\Statements\SectionPlan;
 use Illuminate\Http\Request;
 use App\Statements\SeminarPlan;
 use Validator;
@@ -39,25 +40,41 @@ class SeminarPlanDAO implements ItemSectionDAO
     }
 
     public function getStoreValidate(Request $request) {
-
-        $deserializForm = $this->deserializationHtmlForm($request->form);
-
-        //toDO добавить проверку на уникальность номера семинара в учебном плане
-        $validator = Validator::make($deserializForm, [
-            'seminar_plan_name' => 'required|between:5,255',
-            'seminar_plan_desc' => 'between:5,5000',
-            'seminar_plan_num' => [ 'required',
-                'integer',
-                'min:1']
-        ]);
-        return $validator;
+        return $this->getValidate($request)->after(function ($validator) {
+            //ПРоверка на уникальность номера семинара
+            $count_seminar = SectionPlan::where('id_course_plan', $validator->getData()['id_course_plan'])
+                ->join('seminar_plans', 'section_plans.id_section_plan', '=', 'seminar_plans.id_section_plan')
+                ->where('seminar_plans.seminar_plan_num', '=', $validator->getData()['seminar_plan_num'])
+                ->count();
+            if ($count_seminar != 0) {
+                $validator->errors()->add('unique_lecture_plan','Выбранный номер уже существует в данном учебном плане');
+            }
+        });
     }
 
     public function getUpdateValidate(Request $request) {
-        $deserializForm = $this->deserializationHtmlForm($request->form);
+        return $this->getValidate($request)->after(function ($validator) {
+            //ПРоверка на уникальность номера семинара
+            $count_seminar = SectionPlan::where('id_course_plan', $validator->getData()['id_course_plan'])
+                ->join('seminar_plans', 'section_plans.id_section_plan', '=', 'seminar_plans.id_section_plan')
+                ->where('seminar_plans.seminar_plan_num', '=', $validator->getData()['seminar_plan_num'])
+                ->where('seminar_plans.id_seminar_plan', '<>', $validator->getData()['id_seminar_plan'])
+                ->count();
+            if ($count_seminar != 0) {
+                $validator->errors()->add('unique_lecture_plan','Выбранный номер уже существует в данном учебном плане');
+            }
+        });
+    }
 
-        //toDO добавить проверку на уникальность номера семинара в учебном плане
-        $validator = Validator::make($deserializForm, [
+    public function getValidate(Request $request) {
+        $form = $this->deserializationHtmlForm($request->input('form'));
+        $request_array = array();
+        $request_array['seminar_plan_name'] = $form['seminar_plan_name'];
+        $request_array['seminar_plan_desc'] = $form['seminar_plan_desc'];
+        $request_array['seminar_plan_num'] = $form['seminar_plan_num'];
+        $request_array['id_seminar_plan'] = $form['id_seminar_plan'];
+        $request_array['id_course_plan'] = $request->input('id_course_plan');
+        $validator = Validator::make($request_array, [
             'seminar_plan_name' => 'required|between:5,255',
             'seminar_plan_desc' => 'between:5,5000',
             'seminar_plan_num' => [ 'required',

@@ -193,8 +193,68 @@ class CoursePlanDAO
         return preg_split("/[\s]+/", trim($string_groups));
     }
 
-    //Утверждение учебного плана для групп, статус стал 1
-    public function approvedCoursePlan($id) {
-        CoursePlan::where('id_course_plan', $id)->update(['approved' => 1]);
+    //Проверка баллов учебного плана для всех контрольных мероприятий
+    public static function checkPointsCoursePlan($id_course_plan) {
+        $validator = Validator::make(['id_course_plan' => $id_course_plan], []);
+        $validator->after(function ($validator) {
+        $course_plan = CoursePlan::where('id_course_plan', $validator->getData()['id_course_plan'])->first();
+        $max_controls = $course_plan->max_controls;
+        $max_exam = $course_plan->max_exam;
+        $current_max_controls = 0;
+        $current_max_exam = 0;
+        $current_max_controls = $course_plan->section_plans
+            ->sum(function ($section) {
+                return $section->control_work_plans
+                    ->sum(function ($control_work) {
+                    return $control_work->max_points;
+                });
+            });
+        if ($current_max_controls < $max_controls) {
+            $different = $max_controls - $current_max_controls;
+            $validator->errors()->add('<max_controls','Сумма баллов за все контрольные мероприятия (' . $current_max_controls .') меньше ' . $max_controls . ' на ' . $different);
+        }
+        $current_max_exam = $course_plan->exam_plans
+            ->sum(function ($section) {
+                return $section->control_work_plans
+                    ->sum(function ($control_work) {
+                    return $control_work->max_points;
+                });
+            });
+        if ($current_max_exam < $max_exam) {
+                $different = $max_exam - $current_max_exam;
+                $validator->errors()->add('<max_controls','Сумма баллов за все экзаменационные мероприятия (' . $current_max_exam .') меньше ' . $max_exam . ' на ' . $different);
+            }
+        });
+        return $validator;
     }
+
+    public function copyCoursePlan($id_course_plan) {
+        $course_plan = $this->getCoursePlan($id_course_plan);
+        $new_course_plan = $course_plan->replicate();
+        $new_course_plan->course_plan_name .= '(Копия)';
+        $new_course_plan->save();
+        $all_section_plans = $course_plan->section_plans->merge($course_plan->exam_plans);
+        foreach ($all_section_plans as $section_plan) {
+            $new_section_plan = $section_plan->replicate();
+            $new_section_plan->id_course_plan = $new_course_plan->id_course_plan;
+            $new_section_plan->save();
+            foreach ($section_plan->control_work_plans as $control_work_plan) {
+                $new_control_work_plan = $control_work_plan->replicate();
+                $new_control_work_plan->id_section_plan = $new_section_plan->id_section_plan;
+                $new_control_work_plan->save();
+            }
+            foreach ($section_plan->lecture_plans as $lecture_plan) {
+                $lecture_plan = $lecture_plan->replicate();
+                $lecture_plan->id_section_plan = $new_section_plan->id_section_plan;
+                $lecture_plan->save();
+            }
+            foreach ($section_plan->seminar_plans as $seminar_plan) {
+                $seminar_plan = $seminar_plan->replicate();
+                $seminar_plan->id_section_plan = $new_section_plan->id_section_plan;
+                $seminar_plan->save();
+            }
+        }
+        return $new_course_plan->id_course_plan;
+    }
+
 }

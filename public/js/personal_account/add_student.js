@@ -19,7 +19,7 @@ $(".student").click(function() {
         data: { id: id, token: 'token' },
         success: function(data){
             var divError = $('.print-error-msg');
-            if($.isEmptyObject(data.error)) {
+            if($.isEmptyObject(data.errors)) {
                 // удаление сообщений об ошибках
                 divError.find("ul").html('');
                 divError.css('display','none');
@@ -28,7 +28,9 @@ $(".student").click(function() {
                 //добавление в html сообщений об ошибках
                 divError.find("ul").html('');
                 divError.css('display','block');
-                divError.find("ul").append('<li>'+ data.error +'</li>');
+                $.each( data.errors, function( key, value ) {
+                    divError.find("ul").append('<li>'+value+'</li>');
+                });
             }
 
         }

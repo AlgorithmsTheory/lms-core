@@ -72,38 +72,33 @@ $(document).on('click', '.delete_couse_plan', function () {
 });
 
 //Утверждение учебного плана
-$(document).on('click', '.approve_course_plan', function () {
-    var idCoursePlan = $(this).attr('data-id-course-plan-approve');
+$(document).on('click', '.check_points_course_plan', function () {
+    var idCoursePlan = $(this).attr('data-id-course-plan');
     var thisCoursePlan = $('#course_plan'+idCoursePlan);
     var nameCoursePlan = thisCoursePlan.find('input[name="course_plan_name"]').val();
-    var groups = thisCoursePlan.find('input[name="groups"]').val();
-    if (groups) {
-        if (confirm('Внимание. Вы уверены, что хотите назначить учебный план: "' + nameCoursePlan
-                + '" группам/группе: "' + groups + '" ? После утверждения учебный план будет невозможно редактировать/удалить')) {
-
             var token = $('meta[name="csrf-token"]').attr('content');
             $.ajax({
                 type: 'POST',
-                url:   '/course_plan/approved',
+                url:   '/course_plan/check_points',
                 data:  {id_course_plan: idCoursePlan,
                         _token: token},
                 success: function(data){
-                    var approveButton = $('[data-id-course-plan-approve = ' + data.idCoursePlan + ']');
-                    var approvedButtonHtml = '<button type="button" class=" btn btn-success approved_course_plan">Утверждён</button>';
-                    approveButton.replaceWith(approvedButtonHtml);
-                    //Скрытие всех редактирующих кнопок
-                    $('.disabled_after_approved').hide();
+                    var divError = $('.course_plan').closest('.container-fluid')
+                        .find('.print-error-msg').filter( ':first' );
+                    if($.isEmptyObject(data.error)){
+                        // удаление сообщений об ошибках
+                        divError.find("ul").html('');
+                        divError.css('display','none');
+                        alert('Баллы корректны');
+                    } else {
+                        //добавление в html сообщений об ошибках
+                        divError.find("ul").html('');
+                        divError.css('display','block');
+                        $.each( data.error, function( key, value ) {
+                            divError.find("ul").append('<li>'+value+'</li>');
+                        });
+                    }
                 }
             });
-
-        } else {
-            return false;
-        }
-    } else {
-        alert('Для утверждкния учебного плана необходимо выбрать группы');
-        return false;
-    }
-
-
 
 });

@@ -90,9 +90,10 @@ class ControlWorkPlanDAO implements ItemSectionDAO
                 $max_controls = DB::table('course_plans')->select('max_controls')
                     ->where('id_course_plan', $validator->getData()['id_course_plan'])
                     ->first()->max_controls;
-
+                $different = $max_points + $current_max_points - $max_controls;
                 if ($max_points + $current_max_points > $max_controls) {
-                    $validator->errors()->add('exceeded_max_points', 'Сумма баллов за все К.М превышает Макс балл за раздел "Контрольные мероприятия в семестре"' . '(' . $max_controls . ')');
+                    $validator->errors()->add('exceeded_max_points', 'Сумма баллов за все К.М превышает Макс балл за раздел "Контрольные мероприятия в семестре"' . '(' . $max_controls . ')
+                     на '. $different);
                 }
             } else {
                 //Кол баллов за все к.м. в курсе (Экзамены(Зачёты))
@@ -106,9 +107,10 @@ class ControlWorkPlanDAO implements ItemSectionDAO
                 $max_exam = DB::table('course_plans')->select('max_exam')
                     ->where('id_course_plan', $validator->getData()['id_course_plan'])
                     ->first()->max_exam;
-
+                $different = $max_points + $current_max_points - $max_exam;
                 if ($max_points + $current_max_points > $max_exam) {
-                    $validator->errors()->add('exceeded_max_points', 'Сумма баллов за все К.М превышает Макс балл за раздел "Зачет (экзамен)"' . '(' . $max_exam . ')');
+                    $validator->errors()->add('exceeded_max_points', 'Сумма баллов за все К.М превышает Макс балл за раздел "Зачет (экзамен)"' . '(' . $max_exam . ')
+                     на ' . $different);
                 }
             }
             if($validator->getData()['control_work_plan_type'] == 'ONLINE_TEST'

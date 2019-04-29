@@ -337,7 +337,7 @@ Route::patch('course_plan/update', ['as' => 'course_plan_update', 'uses' => 'Sta
 //Удаление учебного плана
 Route::delete('course_plan/delete', ['as' => 'course_plan_delete', 'uses' => 'StatementsController@deleteCoursePlan', 'middleware' => ['general_auth', 'admin']]);
 //Утверждение учебного плана для групп
-Route::post('course_plan/approved', ['as' => 'course_plan_approved', 'uses' => 'StatementsController@approvedCoursePlan', 'middleware' => ['general_auth', 'admin']]);
+Route::post('course_plan/check_points', ['as' => 'course_plan_check_points', 'uses' => 'StatementsController@checkPointsCoursePlan', 'middleware' => ['general_auth', 'admin']]);
 
 //получить представление для добавленее раздела учебного плана
 Route::get('course_plan/get_add_section', ['as' => 'get_add_section', 'uses' => 'StatementsController@getAddSection', 'middleware' => ['general_auth', 'admin']]);
@@ -357,6 +357,8 @@ Route::patch('course_plan/section/lec_sem_cw/update', ['as' => 'lec_sem_cw_updat
 Route::delete('course_plan/section/lec_sem_cw/delete', ['as' => 'lec_sem_cw__delete', 'uses' => 'StatementsController@deleteLecOrSemOrCW', 'middleware' => ['general_auth', 'admin']]);
 //представление конкретного учебного плана
 Route::get('course_plan/{id}', ['as' => 'course_plan', 'uses' => 'StatementsController@getCoursePlan']);
+//копирование учебного плана
+Route::post('course_plan/copy', ['as' => 'course_plan_copy', 'uses' => 'StatementsController@copyCoursePlan']);
 
 
 

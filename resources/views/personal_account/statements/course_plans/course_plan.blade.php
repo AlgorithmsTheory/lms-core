@@ -26,7 +26,7 @@
 @section('content')
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-5">
                 <section>
                     <div class="section-header">
                         <ol class="breadcrumb">
@@ -36,22 +36,29 @@
                     </div><!--end .section-header -->
                 </section>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-7">
 
                 <div class="row">
-                    <div class="col-lg-5">
+                    <div class="col-lg-3">
+                        <form action = "{{route('course_plan_copy')}}" method="post">
+                            {{ csrf_field() }}
+                            <input type="hidden"  name="id_course_plan" value="{{$coursePlan->id_course_plan}}" />
+                            <div class="form-group">
+                                <button type="submit" class=" btn ink-reaction btn-primary " >Скопировать</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-3">
                 {{--Утверждение учебного плана для групп--}}
                 @if($coursePlan->approved == 0)
-                    <button type="button" class="ink-reaction btn btn-warning approve_course_plan"
-                            data-id-course-plan-approve="{{$coursePlan->id_course_plan}}">
-                        Утвердить</button>
-                @else
-                    <button type="button" class=" btn btn-success approved_course_plan">Утверждён</button>
+                    <button type="button" class="ink-reaction btn btn-primary check_points_course_plan"
+                            data-id-course-plan="{{$coursePlan->id_course_plan}}">
+                        Проверить баллы</button>
                 @endif
                     </div>
 
                     @if($coursePlan->approved == 0)
-                    <div class="col-lg-7 disabled_after_approved">
+                    <div class="col-lg-5 disabled_after_approved">
                 <form action = "{{route('course_plan_delete')}}" method="post">
                     {{method_field('DELETE')}}
                     {{ csrf_field() }}
@@ -67,6 +74,10 @@
         </div>
     </div>
         <div class ="container-fluid">
+            {{--Вывод ошибок Проверки баллов учебного плана--}}
+            <div class="alert alert-danger print-error-msg" style="display:none">
+                <ul></ul>
+            </div>
             <div class="card card-bordered style-gray course_plan" id="course_plan{{ $coursePlan->id_course_plan }}">
                 <div class="card-head">
                     <header>Учебный план: {{$coursePlan->course_plan_name}}</header>

@@ -88,10 +88,7 @@ $(document).on('click', '.add_lecture_or_sem_or_CW', function () {
     var idSectionForFindJs = currentSection.attr('id').match(/\d+/);
 
     // id для добавляемой карты
-    var idLastCard = currentSection.find('.'+typeCard).filter( ':last' ).attr('id');
-    var idNewCardForFindJs;
-
-    idNewCardForFindJs = return1IfEmpty(idLastCard);
+    var idNewCardForFindJs =  Math.floor(Math.random() * 1000) + Date.now();
 
     $.ajax({
         cache: false,
@@ -113,17 +110,14 @@ $(document).on('click', '.add_lecture_or_sem_or_CW', function () {
 });
 
 
-//Сохранение добаленного раздела
+//Сохранение добаленной лекции/семинара/контрольного мероприятия
 $(document).on('click', '.store_lec_sem_cw', function (event) {
-
-    // var token = $('meta[name="csrf-token"]').attr('content');
     var typeCard = $(this).attr('data-btn-type-card');
     var currentSection = $(this).closest('.section');
     var idSectionDB = currentSection.attr('data-id-DB');
     var idSectionForFindJs = currentSection.attr('id').match(/\d+/).toString();
     var idCardForFindJs = $(this).closest('.'+typeCard).attr('id');
     var thisForm = $(this).closest('form').serialize();
-    //var idCoursePlan = $('.course_plan').attr('id');
     var idCoursePlan = parseInt($(".course_plan").attr('id').match(/\d+/));
     $.ajax({
         cache: false,

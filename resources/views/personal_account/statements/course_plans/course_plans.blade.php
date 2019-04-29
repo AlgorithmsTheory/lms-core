@@ -120,18 +120,23 @@
                             </div>
                             {!! Form::close() !!}
 
+                            <div class="row">
+                                <div class="col-lg-2">
                             {!! HTML::link('course_plan/'.$coursePlan->id_course_plan,'Подробнее',
                             array('class' => 'ink-reaction btn btn-primary','role' => 'button')) !!}
+                                </div>
 
-                            {{--Утверждение учебного плана для групп--}}
-                            @if($coursePlan->approved == 0)
-                            <button type="button" class="ink-reaction btn btn-warning approve_course_plan"
-                                    data-id-course-plan-approve="{{$coursePlan->id_course_plan}}">
-                                Утвердить</button>
-                            @else
-                                <button type="button" class=" btn btn-success approved_course_plan">Утверждён</button>
-                            @endif
+                            <div class="col-lg-2">
+                                <form action = "{{route('course_plan_copy')}}" method="post">
+                                    {{ csrf_field() }}
+                                    <input type="hidden"  name="id_course_plan" value="{{$coursePlan->id_course_plan}}" />
+                                    <div class="form-group">
+                                        <button type="submit" class=" btn ink-reaction btn-primary " >Скопировать</button>
+                                    </div>
+                                </form>
+                            </div>
 
+                            </div>
                         </div>
                     </div>
 
