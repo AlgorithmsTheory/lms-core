@@ -35,6 +35,13 @@ function sendForm(status){
                     flag[index] = true;
                 }
             }
+			if(typeOfForm == 15){
+				// RAM
+				var code = RAM.TextEditor.get_text();
+				if( /^\s*\w+/.test(code) ){
+					flag[index] = true;
+				}
+			}
         }
     }
     if (status == true){
@@ -47,11 +54,17 @@ function sendForm(status){
 }
 
 function fillSuper(){
+    // Execute RAM program before send result
+    var cnt = 0;
+    $("[name^=ram-entity]").each(function(){
+        ramSubmitTask(cnt, false);
+        cnt++
+    });
 
-        var amount = document.getElementById('amount').value;
-        for (var i=0; i<amount; i++){
-            fill(i);
-        }
+    var amount = document.getElementById('amount').value;
+    for (var i=0; i<amount; i++){
+        fill(i);
+    }
 }
 
 function fill(i) {
@@ -118,7 +131,12 @@ function fill(i) {
                 k++;
             }
         }
-
+		if(typeOfForm == 15){    // RAM
+		    if(allElem[j].name=='num' || (allElem[j].name=='debug_counter') || (allElem[j].name=='sequences_true') || (allElem[j].name=='sequences_all')){
+			    array[k] = allElem[j].value;
+                k++;
+			}
+		}
     }
     document.getElementById('super'+i).value=JSON.stringify(array);   //заполнили суперформу id и выбранными вариантами
 }

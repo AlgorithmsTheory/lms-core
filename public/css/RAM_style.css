@@ -1,4 +1,4 @@
-#editor {
+div[name=editor] {
 	position: absolute;    
 	!min-height: 50%;
 	height: 500px;
@@ -9,7 +9,7 @@
 	bottom:0px;
 }
 
-#registerContainer {
+div[name = registerContainer] {
 	height : 490px;
 	overflow: auto;
 }

@@ -115,6 +115,8 @@ full
     </div>
 
 </div>
-{!! HTML::script('js/retest.js') !!}
+@stop
 
+@section('js-down')
+    {!! HTML::script('js/retest.js') !!}
 @stop

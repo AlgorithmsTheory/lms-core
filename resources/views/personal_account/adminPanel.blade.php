@@ -6,7 +6,6 @@
     {!! HTML::style('css/materialadmin.css') !!}
     {!! HTML::style('css/full.css') !!}
     {!! HTML::style('css/tests_list.css') !!}
-
 @stop
 
 @section('background')

@@ -5,10 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\User;
 use Auth;
-class UpdateBookRequest extends FormRequest
-{
-    public function authorize()
-    {
+class UpdateBookRequest extends FormRequest {
+    public function authorize() {
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
         if ($role == 'Админ'){
             return true;
@@ -17,8 +15,7 @@ class UpdateBookRequest extends FormRequest
         }
     }
 
-    public function rules()
-    {
+    public function rules() {
         return [
             'book_title' => "required|between:5,255",
             'book_author' => 'required|between:5,255',

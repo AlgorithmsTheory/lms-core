@@ -440,18 +440,7 @@ Route::prefix('algorithm')->group(function () {
 	//RAM Emulator
 	Route::prefix('RAM')->group(function () {
 		Route::middleware(['general_auth'])->group(function () {
-			Route::get('emulator',  ['as' => 'RAM', 	   'uses' => 'Emulators\RamEmulatorController@openRAM']);
-			Route::post('set_mark', ['as' => 'ramSetMark', 'uses' => 'Emulators\RamEmulatorController@ramSetMark']);
-		});
-		Route::middleware(['general_auth', 'admin'])->group(function () {
-			Route::get( 'manage_task', 				 ['as' => 'ramManageTask',  'uses' => 'Emulators\RamEmulatorController@ramManageTask']  );
-			Route::get( 'add_task',	   				 ['as' => 'ramAddTask',	    'uses' => 'Emulators\RamEmulatorController@ramAddTask']     );
-			Route::post('add_task',    				 ['as' => 'ramAddingTask',  'uses' => 'Emulators\RamEmulatorController@ramAddingTask']  );
-			Route::get( '{sequence_id}/edit_task',   ['as' => 'ramEditTask',    'uses' => 'Emulators\RamEmulatorController@ramEditTask']    );
-			Route::post('{sequence_id}/edit_task',   ['as' => 'ramEditingTask', 'uses' => 'Emulators\RamEmulatorController@ramEditingTask'] );
-			Route::get( '{sequence_id}/delete_task', ['as' => 'ramDeleteTask',  'uses' => 'Emulators\RamEmulatorController@ramDeleteTask']  );
-			Route::get( 'edit_users',                ['as' => 'ramEditUsers' ,  'uses' => 'Emulators\RamEmulatorController@ramEditUsers']   );
-			Route::post('editing_users', 			 ['as' => 'ramEditingUsers','uses' => 'Emulators\RamEmulatorController@ramEditingUsers']);
+			Route::get('emulator',  ['as' => 'RAM', 'uses' => 'Emulators\RamEmulatorController@openRAM']);
 		});
 	});
 	//Post Emulator

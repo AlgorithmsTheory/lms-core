@@ -56,7 +56,7 @@ $.ajax({
             xaxis: {title: "Тип вопроса"},
             yaxis: {title: "Частота"}
         };
-        Plotly.newPlot('types_freq', histData, layout);
+        myPlotly.newPlot('types_freq', histData, layout);
 
         $('#stat-down-button').css('display', 'inline');
     }
@@ -104,7 +104,7 @@ function getTestResults(idTest, idGroup) {
                 width: 500
             };
 
-            Plotly.newPlot('test_results_pie', chartData, layout);
+            myPlotly.newPlot('test_results_pie', chartData, layout);
         }
     });
 }

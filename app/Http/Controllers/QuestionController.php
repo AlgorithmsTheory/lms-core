@@ -28,6 +28,7 @@ use App\Testing\Qtypes\YesNo;
 use App\Testing\Qtypes\Definition;
 use App\Testing\Qtypes\JustAnswer;
 use App\Testing\Qtypes\ThreePoints;
+use App\Testing\Qtypes\Ram;
 use App\Testing\TestGeneration\UsualTestGenerator;
 use View;
 

@@ -5,9 +5,6 @@ namespace App\Statements;
 use App\Group;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-
-
-
 class CoursePlan extends Eloquent
 {
     protected $table = 'course_plans';

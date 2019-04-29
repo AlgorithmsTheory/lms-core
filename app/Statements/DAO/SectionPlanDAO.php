@@ -16,8 +16,7 @@ use App\Statements\SeminarPlan;
 use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Validation\Rule;
-class SectionPlanDAO
-{
+class SectionPlanDAO {
 
     public function getSectionPlan($id){
         $sectionPlan = SectionPlan::where('id_section_plan', $id)->first();

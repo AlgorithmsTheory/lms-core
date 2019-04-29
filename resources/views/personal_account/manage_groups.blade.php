@@ -72,6 +72,8 @@
         </div>
 
     </div>
-    {!! HTML::script('js/personal_account/manage_groups.js') !!}
+@stop
 
+@section('js-down')
+    {!! HTML::script('js/personal_account/manage_groups.js') !!}
 @stop

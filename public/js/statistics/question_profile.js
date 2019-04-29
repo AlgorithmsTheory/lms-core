@@ -38,7 +38,7 @@ $.ajax({
             width: 500
         };
 
-        Plotly.newPlot('success_pie', chartData, layout);
+        myPlotly.newPlot('success_pie', chartData, layout);
     }
 });
 
@@ -105,7 +105,7 @@ $.ajax({
             title:'Диаграмма рассеяния сложности и дискриминанта вопросов'
         };
 
-        Plotly.newPlot('diff_and_disc_scatter', chartData, layout);
+        myPlotly.newPlot('diff_and_disc_scatter', chartData, layout);
     }
 });
 
@@ -157,7 +157,7 @@ $.ajax({
             xaxis: {title: "Месяц"},
             yaxis: {title: "Частота"}
         };
-        Plotly.newPlot('month_hist_frequency', histData, layout);
+        myPlotly.newPlot('month_hist_frequency', histData, layout);
     }
 });
 
@@ -221,7 +221,7 @@ $.ajax({
             xaxis: {title: "Группа"},
             yaxis: {title: "Количество"}
         };
-        Plotly.newPlot('success_group_hist', chartData, layout);
+        myPlotly.newPlot('success_group_hist', chartData, layout);
 
         $('#stat-down-button').css('display', 'inline');
     }

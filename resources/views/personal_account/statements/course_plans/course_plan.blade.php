@@ -3,9 +3,7 @@
     <title>Учебный план</title>
     <!-- BEGIN META -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="your,keywords">
-    <meta name="description" content="Short explanation about this website">
+
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <!-- END META -->
 
@@ -16,12 +14,6 @@
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     <!-- END STYLESHEETS -->
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    {!! HTML::script('js/libs/utils/html5shiv.js') !!}
-    {!! HTML::script('js/libs/utils/respond.min.js') !!}
-    <![endif]-->
 @stop
 @section('content')
     <div class="container-fluid">

@@ -140,8 +140,6 @@ full
 @stop
 
 @section('js-down')
-{!! HTML::script('js/retest.js') !!}
-{!! HTML::script('js/core/source/AppOffcanvas.js') !!}
-{!! HTML::script('js/libs/nanoscroller/jquery.nanoscroller.min.js') !!}
-
+    {!! HTML::script('js/retest.js') !!}
+    {!! HTML::script('js/core/source/AppOffcanvas.js') !!}
 @stop

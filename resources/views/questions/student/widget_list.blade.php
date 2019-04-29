@@ -2,8 +2,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Тест</title>
+    {!! HTML::script('js/modules.js') !!}
     {!! HTML::script('js/superForm.js') !!}
-    {!! HTML::script('js/jquery.js') !!}
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     {!! HTML::style('css/materialadmin_demo.css') !!}
@@ -29,8 +29,8 @@
 <?php $i=1;?>
 @foreach($widgets as $widget)
 <br id="form{{$i}}">
-<?php $i++;?>
 {!! $widget !!}
+<?php $i++;?>
 @endforeach
 {!! Form::open(['method' => 'PATCH', 'route' => 'question_checktest', 'id' => 'super-form', 'name' => 'super', 'onsubmit' => 'return sendForm(true);']) !!}
 @for ($i = 0; $i < $amount; $i++)
@@ -57,6 +57,10 @@
 @endif
 
 {!! HTML::script('js/toolbar.js') !!}
+{!! HTML::script('js/ram/bootstrap.min.js') !!}
+{!! HTML::script('js/ram/ace.js') !!}
+{!! HTML::script('js/ram/RAM.js') !!}
+{!! HTML::script('js/ram/kontr_RAM.js') !!}
 <br>
 </section>
 </body>

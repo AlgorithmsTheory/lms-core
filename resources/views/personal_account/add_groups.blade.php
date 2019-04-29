@@ -77,5 +77,9 @@
             </div>
         </div>
     </div>
+
+@stop
+
+@section('js-down')
     {!! HTML::script('js/personal_account/delete_group.js') !!}
 @stop
