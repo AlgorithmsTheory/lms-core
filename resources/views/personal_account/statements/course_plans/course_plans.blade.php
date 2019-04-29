@@ -37,15 +37,15 @@
         <article class="style-default-bright">
             <div class="card-body">
                 <article style="margin-left:5%; margin-right:5%">
-                    @foreach ($coursePlans as $coursePlan)
+                    @foreach ($course_plans as $course_plan)
 
 
-                    <div class="card card-bordered style-gray course_plan" id="course_plan{{$coursePlan->id_course_plan}}">
+                    <div class="card card-bordered style-gray course_plan" id="course_plan{{$course_plan['course_plan']->id_course_plan}}">
                         <div class="card-head">
-                            <header>{{"Учебный план: ".$coursePlan->course_plan_name}}</header>
+                            <header>{{"Учебный план: ".$course_plan['course_plan']->course_plan_name}}</header>
 
-                            @if($coursePlan->approved == 0)
-                            <div class="tools disabled_after_approved">
+                            @if($course_plan['exist_statements'] == false)
+                            <div class="tools">
                                 <div class="btn-group">
                                     <a class="btn btn-icon-toggle activate_edit_course_plan"><i class="glyphicon glyphicon-edit"></i></a>
                                 </div>
@@ -53,7 +53,7 @@
                                     <form action = "{{route('course_plan_delete')}}" method="post">
                                         {{method_field('DELETE')}}
                                         {{ csrf_field() }}
-                                        <input type="hidden"  name="id_course_plan" value="{{$coursePlan->id_course_plan}}" />
+                                        <input type="hidden"  name="id_course_plan" value="{{$course_plan['course_plan']->id_course_plan}}" />
                                             <button type="submit" class="btn  btn-icon-toggle delete_couse_plan" ><i class="md md-close"></i></button>
 
                                     </form>
@@ -68,17 +68,17 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <h5 class="card-title">{!! Form::label('course_plan_name' , 'Учебный план:') !!}
-                                        {!! Form::text('course_plan_name',$coursePlan->course_plan_name,['class' => 'form-control','placeholder' => 'Введите название учебного плана',
+                                        {!! Form::text('course_plan_name',$course_plan['course_plan']->course_plan_name,['class' => 'form-control','placeholder' => 'Введите название учебного плана',
                                         'required' => 'required', $read_only ? 'readonly' : '' ]) !!}</h5>
 
                                     {!! Form::label('groups' , 'Назначение групп:') !!}
-                                    {!! Form::text('groups',$coursePlan->groups,['class' => 'form-control','placeholder' => 'Введите группы через пробел'
+                                    {!! Form::text('groups',$course_plan['course_plan']->groups,['class' => 'form-control','placeholder' => 'Введите группы через пробел'
                                     , $read_only ? 'readonly' : '' ]) !!}
 
                                 </div>
                                 <div class="col-lg-6">
                                     {!! Form::label('course_plan_desc' , 'Описание учебного плана:') !!}
-                                    {!! Form::textarea('course_plan_desc',$coursePlan->course_plan_desc,['class' => 'form-control', 'rows'=>'5', 'cols' => '5'
+                                    {!! Form::textarea('course_plan_desc',$course_plan['course_plan']->course_plan_desc,['class' => 'form-control', 'rows'=>'5', 'cols' => '5'
                                     , 'placeholder' => 'Введите описание учебного плана',
                                     'required' => 'required', $read_only ? 'readonly' : '' ]) !!}
                                 </div>
@@ -86,26 +86,26 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     {!! Form::label('max_controls' , 'Макс балл за раздел "Контрольные мероприятия в семестре":') !!}
-                                    {!! Form::text('max_controls',$coursePlan->max_controls,['class' => 'form-control',
+                                    {!! Form::text('max_controls',$course_plan['course_plan']->max_controls,['class' => 'form-control',
                                      $read_only ? 'readonly' : '' ]) !!}
 
                                     {!! Form::label('max_seminars' , 'Макс балл за раздел "Посещение семинаров":') !!}
-                                    {!! Form::text('max_seminars',$coursePlan->max_seminars,['class' => 'form-control',
+                                    {!! Form::text('max_seminars',$course_plan['course_plan']->max_seminars,['class' => 'form-control',
                                      $read_only ? 'readonly' : '' ]) !!}
 
                                     {!! Form::label('max_seminars_work' , 'Макс балл за раздел "Работа на семинарах":') !!}
-                                    {!! Form::text('max_seminars_work',$coursePlan->max_seminars_work,['class' => 'form-control',
+                                    {!! Form::text('max_seminars_work',$course_plan['course_plan']->max_seminars_work,['class' => 'form-control',
                                     $read_only ? 'readonly' : '' ]) !!}
                                 </div>
                                 <div class="col-lg-6">
                                     {!! Form::label('max_lecrures' , 'Макс балл за раздел "Посещение лекций":') !!}
-                                    {!! Form::text('max_lecrures',$coursePlan->max_lecrures,['class' => 'form-control',
+                                    {!! Form::text('max_lecrures',$course_plan['course_plan']->max_lecrures,['class' => 'form-control',
                                      $read_only ? 'readonly' : '' ]) !!}
 
                                     {!! Form::label('max_exam' , 'Макс балл за раздел "Зачет (экзамен)":') !!}
-                                    {!! Form::text('max_exam',$coursePlan->max_exam,['class' => 'form-control',
+                                    {!! Form::text('max_exam',$course_plan['course_plan']->max_exam,['class' => 'form-control',
                                      $read_only ? 'readonly' : '' ]) !!}
-                                    <input type="hidden"  name="id_course_plan" value="{{$coursePlan->id_course_plan}}" />
+                                    <input type="hidden"  name="id_course_plan" value="{{$course_plan['course_plan']->id_course_plan}}" />
                                 </div>
                             </div>
 
@@ -122,14 +122,14 @@
 
                             <div class="row">
                                 <div class="col-lg-2">
-                            {!! HTML::link('course_plan/'.$coursePlan->id_course_plan,'Подробнее',
+                            {!! HTML::link('course_plan/'.$course_plan['course_plan']->id_course_plan,'Подробнее',
                             array('class' => 'ink-reaction btn btn-primary','role' => 'button')) !!}
                                 </div>
 
                             <div class="col-lg-2">
                                 <form action = "{{route('course_plan_copy')}}" method="post">
                                     {{ csrf_field() }}
-                                    <input type="hidden"  name="id_course_plan" value="{{$coursePlan->id_course_plan}}" />
+                                    <input type="hidden"  name="id_course_plan" value="{{$course_plan['course_plan']->id_course_plan}}" />
                                     <div class="form-group">
                                         <button type="submit" class=" btn ink-reaction btn-primary " >Скопировать</button>
                                     </div>

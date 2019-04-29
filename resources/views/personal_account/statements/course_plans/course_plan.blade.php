@@ -39,26 +39,14 @@
             <div class="col-lg-7">
 
                 <div class="row">
+                    {{--Проверка, что существования ведомостей по данному учебному плану--}}
+                    @if($exist_statements == false)
                     <div class="col-lg-3">
-                        <form action = "{{route('course_plan_copy')}}" method="post">
-                            {{ csrf_field() }}
-                            <input type="hidden"  name="id_course_plan" value="{{$coursePlan->id_course_plan}}" />
-                            <div class="form-group">
-                                <button type="submit" class=" btn ink-reaction btn-primary " >Скопировать</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-lg-3">
-                {{--Утверждение учебного плана для групп--}}
-                @if($coursePlan->approved == 0)
                     <button type="button" class="ink-reaction btn btn-primary check_points_course_plan"
                             data-id-course-plan="{{$coursePlan->id_course_plan}}">
                         Проверить баллы</button>
-                @endif
                     </div>
-
-                    @if($coursePlan->approved == 0)
-                    <div class="col-lg-5 disabled_after_approved">
+                    <div class="col-lg-5 ">
                 <form action = "{{route('course_plan_delete')}}" method="post">
                     {{method_field('DELETE')}}
                     {{ csrf_field() }}
@@ -68,7 +56,19 @@
                     </div>
                 </form>
                     </div>
+                        @else
+                        <div class="col-lg-8">
+                        </div>
                     @endif
+                    <div class="col-lg-3">
+                        <form action = "{{route('course_plan_copy')}}" method="post">
+                            {{ csrf_field() }}
+                            <input type="hidden"  name="id_course_plan" value="{{$coursePlan->id_course_plan}}" />
+                            <div class="form-group">
+                                <button type="submit" class=" btn ink-reaction btn-primary " >Скопировать</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -81,8 +81,8 @@
             <div class="card card-bordered style-gray course_plan" id="course_plan{{ $coursePlan->id_course_plan }}">
                 <div class="card-head">
                     <header>Учебный план: {{$coursePlan->course_plan_name}}</header>
-                    @if($coursePlan->approved == 0)
-                    <div class="tools disabled_after_approved">
+                    @if($exist_statements == false)
+                    <div class="tools ">
                         <div class="btn-group">
                             <a class="btn btn-icon-toggle activate_edit_course_plan"><i class="glyphicon glyphicon-edit"></i></a>
                         </div>
@@ -153,20 +153,20 @@
                         @foreach($coursePlan->section_plans as $sectionPlan)
                                 <?php $sectionNumForFindJs++ ?>
                         @include('personal_account.statements.course_plans.sections.view_or_update_section',array('sectionPlan' => $sectionPlan, 'readOnly' => true,
-                        'sectionNumForFindJs' => $sectionNumForFindJs, 'approved' => $coursePlan->approved , 'tests_control_work' => $tests_control_work))
+                        'sectionNumForFindJs' => $sectionNumForFindJs, 'exist_statements' => $exist_statements , 'tests_control_work' => $tests_control_work))
                         @endforeach
                             {{--Здесь добавляются разделы учебного плана--}}
 
                             @foreach($coursePlan->exam_plans as $sectionPlan)
                                 <?php $sectionNumForFindJs++ ?>
                                 @include('personal_account.statements.course_plans.sections.view_or_update_section',array('sectionPlan' => $sectionPlan, 'readOnly' => true,
-                                'sectionNumForFindJs' => $sectionNumForFindJs, 'approved' => $coursePlan->approved , 'tests_control_work' => $tests_control_work))
+                                'sectionNumForFindJs' => $sectionNumForFindJs, 'exist_statements' => $exist_statements , 'tests_control_work' => $tests_control_work))
                             @endforeach
                             {{--Здесь добавляются разделы учебного плана типа Экзамен(Зачёт)--}}
 
                     </div>
-                    @if($coursePlan->approved == 0)
-                    <button type="button" class="ink-reaction btn btn-success disabled_after_approved" id="addSection">Добавить раздел</button>
+                    @if($exist_statements == false)
+                    <button type="button" class="ink-reaction btn btn-success" id="addSection">Добавить раздел</button>
                         @endif
                 </div>
 

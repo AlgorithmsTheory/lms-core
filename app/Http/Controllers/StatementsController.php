@@ -46,13 +46,17 @@ class StatementsController extends Controller{
     // возвращает страницу с учебными планами
     public function showCoursePlans() {
         $read_only = true;
-        $coursePlans = $this->coursePlanDao->allCoursePlan();
-        return view('personal_account.statements.course_plans.course_plans', compact('coursePlans', 'read_only'));
+        $course_plans = $this->coursePlanDao->allCoursePlan()
+            ->map( function ($course_plan) {
+                $exist_statements = $this->coursePlanDao->existStatements($course_plan->id_course_plan);
+                return ['course_plan' => $course_plan,
+                        'exist_statements' => $exist_statements];
+            });
+        return view('personal_account.statements.course_plans.course_plans', compact('course_plans', 'read_only'));
     }
 
     // возвращает страницу создание нового учебного плана
     public function createCoursePlans() {
-
         return view('personal_account.statements.course_plans.create_course_plans');
     }
 
@@ -79,7 +83,8 @@ class StatementsController extends Controller{
             ->orderByDesc('id_test')
             ->select()
             ->get();
-        return view('personal_account.statements.course_plans.course_plan', compact('coursePlan', 'read_only', 'tests_control_work'));
+        $exist_statements = $this->coursePlanDao->existStatements($id);
+        return view('personal_account.statements.course_plans.course_plan', compact('coursePlan', 'read_only', 'tests_control_work', 'exist_statements'));
     }
 
     //Обновление основной информации об учебном плане
@@ -100,7 +105,7 @@ class StatementsController extends Controller{
         return redirect('course_plans');
     }
 
-    //Утверждение учебного плана для групп
+    //Проверка баллов за конт. меропр. всего учебного плана
     public function checkPointsCoursePlan(Request $request) {
         if ($request->ajax()) {
             $validator = $this->coursePlanDao->checkPointsCoursePlan($request->input('id_course_plan'));
@@ -114,7 +119,6 @@ class StatementsController extends Controller{
 
     //возвращает представление для добавления раздела учебного плана
     public function getAddSection(Request $request) {
-
         $sectionNumForFindJs = json_decode($request->currentCount,true);
         $idCoursePlan = json_decode($request->idCoursePlan,true);
         return view('personal_account.statements.course_plans.sections.add_section', compact('sectionNumForFindJs', 'idCoursePlan'));
@@ -122,7 +126,6 @@ class StatementsController extends Controller{
 
     //Сохранение раздела учебного плана
     public function storeSection(Request $request) {
-
         $validator = $this->sectionPlanDAO->getValidateStoreSectionPlan($request);
         //Для вставки html через js, используя число сгенерированное системой , а не написанного вручную номера раздела
         $sectionNumForFindJs = $request->section_num_for_find_js;
@@ -131,9 +134,8 @@ class StatementsController extends Controller{
            $idSectionPlan = $this->sectionPlanDAO->storeSectionPlan($request);
            $sectionPlan = $this->sectionPlanDAO->getSectionPlan($idSectionPlan);
            $readOnly = true;
-           $approved = 0;
            $returnHtmlString = view('personal_account.statements.course_plans.sections.view_or_update_section', compact('sectionPlan', 'readOnly',
-               'sectionNumForFindJs', 'approved'))
+               'sectionNumForFindJs'))
                ->render();
             return response()->json(['view'=>$returnHtmlString, 'section_num_for_find_js' => $sectionNumForFindJs]);
         } else {
@@ -144,7 +146,6 @@ class StatementsController extends Controller{
 
     //Обновление  информации о разделе учебного плана
     public function updateSection(Request $request) {
-
         $validator = $this->sectionPlanDAO->getValidateUpdateSectionPlan($request);
         //Для вставки html через js
         $sectionNumForFindJs = $request->section_num_for_find_js;
@@ -161,7 +162,6 @@ class StatementsController extends Controller{
 
     //Удаление раздела
     public function deleteSection(Request $request) {
-
         $this->sectionPlanDAO->deleteSectionPlan($request->id_section_plan);
         return $request->section_num_for_find_js;
     }

@@ -8,8 +8,8 @@
 
             </header>
 
-            @if($approved == 0)
-            <div class="tools disabled_after_approved">
+            @if($exist_statements == false)
+            <div class="tools ">
                 <div class="btn-group">
                     <a class="btn btn-icon-toggle activate_edit_lec_sem_cw"><i class="glyphicon glyphicon-edit"></i></a>
                 </div>

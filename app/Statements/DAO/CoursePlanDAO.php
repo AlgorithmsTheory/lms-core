@@ -257,4 +257,14 @@ class CoursePlanDAO
         return $new_course_plan->id_course_plan;
     }
 
+    public function existStatements($id_course_plan) {
+        return SectionPlan::where('section_plans.id_course_plan', $id_course_plan)
+            ->limit(1)
+            ->rightJoin('lecture_plans', 'lecture_plans.id_section_plan', '=' , 'section_plans.id_section_plan')
+            ->rightJoin('lecture_passes', 'lecture_passes.id_lecture_plan', '=', 'lecture_plans.id_lecture_plan')
+            ->exists();
+    }
+
+
+
 }

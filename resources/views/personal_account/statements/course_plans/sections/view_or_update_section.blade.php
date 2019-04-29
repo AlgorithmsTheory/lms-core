@@ -7,8 +7,8 @@
         @else
             <header>Экзамен(Зачёт)</header>
         @endif
-        @if($approved == 0)
-        <div class="tools disabled_after_approved">
+        @if($exist_statements == false)
+        <div class="tools ">
             <div class="btn-group">
                 <a class="btn btn-icon-toggle activateEditSection"><i class="glyphicon glyphicon-edit"></i></a>
             </div>
@@ -57,7 +57,7 @@
             @foreach($sectionPlan->lecture_plans as $lecturePlan)
                 <?php $lectureNumForFindJs++ ?>
                 @include('personal_account.statements.course_plans.sections.lectures.view_or_update_lecture',array('itemSectionPlan' => $lecturePlan, 'readOnly' => true,
-                'idCardForFindJs' => $lectureNumForFindJs, 'approved' => $approved))
+                'idCardForFindJs' => $lectureNumForFindJs, 'exist_statements' => $exist_statements))
             @endforeach
             </div>
 
@@ -65,7 +65,7 @@
                 @foreach($sectionPlan->seminar_plans as $seminarPlan)
                     <?php $seminarNumForFindJs++ ?>
                     @include('personal_account.statements.course_plans.sections.seminars.view_or_update_seminar',array('itemSectionPlan' => $seminarPlan, 'readOnly' => true,
-                    'idCardForFindJs' => $seminarNumForFindJs, 'approved' => $approved))
+                    'idCardForFindJs' => $seminarNumForFindJs, 'exist_statements' => $exist_statements))
                 @endforeach
             </div>
 
@@ -73,20 +73,18 @@
                 @foreach($sectionPlan->control_work_plans as $controlWorkPlan)
                     <?php $controlWorkNumForFindJs++ ?>
                     @include('personal_account.statements.course_plans.sections.control_works.view_or_update_control_work',array('itemSectionPlan' => $controlWorkPlan,
-                     'readOnly' => true, 'idCardForFindJs' => $controlWorkNumForFindJs, 'approved' => $approved, 'tests_control_work' => $tests_control_work))
+                     'readOnly' => true, 'idCardForFindJs' => $controlWorkNumForFindJs, 'exist_statements' => $exist_statements, 'tests_control_work' => $tests_control_work))
                 @endforeach
             </div>
 
         </div>
 
-        @if($approved == 0)
-            <div class="disabled_after_approved">
+        @if($exist_statements == false)
                 @if($sectionPlan->is_exam == 0)
         <button type="button" class="ink-reaction btn btn-info add_lecture_or_sem_or_CW" data-type-card="lecture">Добавить лекцию</button>
         <button type="button" class="ink-reaction btn btn-warning add_lecture_or_sem_or_CW" data-type-card="seminar">Добавить семинар</button>
                 @endif
         <button type="button" class="ink-reaction btn btn-danger add_lecture_or_sem_or_CW " data-type-card="control_work">Добавить К.М.</button>
-            </div>
             @endif
     </div>
     </form>
