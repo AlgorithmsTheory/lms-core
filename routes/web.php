@@ -401,9 +401,6 @@ Route::post('manage_news/add_news', ['as' => 'add_news', 'uses' => 'Administrati
 Route::post('manage_news/delete', ['as' => 'delete_news', 'uses' => 'AdministrationController@delete_news', 'middleware' => ['general_auth', 'admin']]);
 Route::post('manage_news/hide', ['as' => 'hide_news', 'uses' => 'AdministrationController@hide_news', 'middleware' => ['general_auth', 'admin']]);
 
-Route::get('manage_plan', ['as' => 'manage_plan', 'uses' => 'StatementsController@manage_plan', 'middleware' => ['general_auth', 'admin']]);
-Route::post('manage_plan/is', ['as' => 'change_plan', 'uses' => 'StatementsController@plan_is', 'middleware' => ['general_auth', 'admin']]);
-Route::post('manage_plan/is_not', ['as' => 'change_plan', 'uses' => 'StatementsController@plan_is_not', 'middleware' => ['general_auth', 'admin']]);
 Route::get('pashalka', ['as' => 'pashalka', 'uses' => 'AdministrationController@pashalka']);
 
 Route::get('manage_groups/group_set', ['as' => 'group_set', 'uses' => 'AdministrationController@add_groups', 'middleware' => ['general_auth', 'admin']]);

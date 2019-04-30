@@ -9,7 +9,6 @@ use App\Statements\Passes\SeminarPasses;
 use App\Testing\Test;
 use App\Testing\TestForGroup;
 use App\TeacherHasGroup;
-use App\Pass_plan;
 use App\News;
 use App\User;
 use Auth;
@@ -70,7 +69,6 @@ class AdministrationController extends Controller{
         if(count($validate) == 0){
             Group::insert(['group_name' => $name, 'description' => $description, 'archived' => 0, 'id_course_plan' => $id_course_plan]);
             $group_id = Group::whereGroup_name($name)->select('group_id')->first()->group_id;
-            Pass_plan::insert(['group' => $group_id]);
 
             // add group availability for active tests
             $active_tests = Test::whereArchived(0)->select('id_test')->get();
