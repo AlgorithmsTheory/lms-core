@@ -9,10 +9,10 @@
 namespace App\Statements\DAO;
 
 
-use App\Statements\ControlWorkPlan;
-use App\Statements\LecturePlan;
-use App\Statements\SectionPlan;
-use App\Statements\SeminarPlan;
+use App\Statements\Plans\ControlWorkPlan;
+use App\Statements\Plans\LecturePlan;
+use App\Statements\Plans\SectionPlan;
+use App\Statements\Plans\SeminarPlan;
 use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Validation\Rule;
@@ -24,28 +24,27 @@ class SectionPlanDAO {
     }
 
     public function storeSectionPlan(Request $request){
-        $sectionPlan = new SectionPlan();
-        $sectionPlan->section_plan_name = $request->section_plan_name;
-        $sectionPlan->section_plan_desc = $request->section_plan_desc;
-        $sectionPlan->id_course_plan = $request->id_course_plan;
-        $sectionPlan->section_num = $request->is_exam == 0 ? $request->section_num : null;
-        $sectionPlan->is_exam = $request->is_exam;
-        $sectionPlan->save();
-        return $sectionPlan->id_section_plan;
+        $section_plan = new SectionPlan();
+        $section_plan->section_plan_name = $request->section_plan_name;
+        $section_plan->section_plan_desc = $request->section_plan_desc;
+        $section_plan->id_course_plan = $request->id_course_plan;
+        $section_plan->section_num = $request->is_exam == 0 ? $request->section_num : null;
+        $section_plan->is_exam = $request->is_exam;
+        $section_plan->save();
+        return $section_plan->id_section_plan;
     }
 
     public function updateSectionPlan(Request $request){
-        $sectionPlan = $this->getSectionPlan($request->id_section_plan);
-        $sectionPlan->section_plan_name = $request->section_plan_name;
-        $sectionPlan->section_plan_desc = $request->section_plan_desc;
-        $sectionPlan->section_num = $request->is_exam == 0 ? $request->section_num : null;
-        $sectionPlan->update();
+        $section_plan = $this->getSectionPlan($request->id_section_plan);
+        $section_plan->section_plan_name = $request->section_plan_name;
+        $section_plan->section_plan_desc = $request->section_plan_desc;
+        $section_plan->section_num = $request->is_exam == 0 ? $request->section_num : null;
+        $section_plan->update();
     }
 
 public function getValidateStoreSectionPlan(Request $request) {
     $validator = Validator::make($request->all(), [
-        'section_plan_name' => 'required|between:5,255',
-        'section_plan_desc' => 'between:5,5000',
+        'section_plan_name' => 'required',
         'is_exam' => 'required',
         'section_num' => [ 'required_if:is_exam,0',
             'integer',
@@ -58,8 +57,7 @@ public function getValidateStoreSectionPlan(Request $request) {
 
     public function getValidateUpdateSectionPlan(Request $request) {
         $validator = Validator::make($request->all(), [
-            'section_plan_name' => 'required|between:5,255',
-            'section_plan_desc' => 'between:5,5000',
+            'section_plan_name' => 'required',
             'is_exam' => 'required',
             'section_num' => [ 'required_if:is_exam,0',
                 'integer',

@@ -1,12 +1,12 @@
-<div class="card card-bordered style-warning seminar" id="{{$idCardForFindJs}}" data-type-card="seminar">
+<div class="card card-bordered style-warning seminar" id="{{$item_section_plan->id_seminar_plan}}" data-type-card="seminar">
     <form  method="PATCH" >
         <div class="card-head">
 
             <header>
 
                 {!! Form::label('seminar_plan_num' , 'Номер семинара:') !!}
-                {!! Form::text('seminar_plan_num',$itemSectionPlan->seminar_plan_num,['class' => 'form-control','placeholder' => 'Номер лекции',
-            'required' => 'required', 'style' => 'background-color: white' , $readOnly ? 'readonly' : '']) !!}
+                {!! Form::text('seminar_plan_num',$item_section_plan->seminar_plan_num,['class' => 'form-control','placeholder' => 'Номер лекции',
+            'required' => 'required', 'style' => 'background-color: white' , $read_only ? 'readonly' : '']) !!}
 
             </header>
 
@@ -25,13 +25,13 @@
 
             {{ csrf_field() }}
             <h5 class="card-title">{!! Form::label('seminar_plan_name' , 'Название семинара:') !!}
-                {!! Form::text('seminar_plan_name',$itemSectionPlan->seminar_plan_name,['class' => 'form-control','placeholder' => 'Введите название семинара',
-                'required' => 'required', $readOnly ? 'readonly' : '' ]) !!}</h5>
+                {!! Form::text('seminar_plan_name',$item_section_plan->seminar_plan_name,['class' => 'form-control','placeholder' => 'Введите название семинара',
+                'required' => 'required', $read_only ? 'readonly' : '' ]) !!}</h5>
             <p class="card-text">{!! Form::label('seminar_plan_desc' , 'Описание семинара:') !!}
-                {!! Form::text('seminar_plan_desc',$itemSectionPlan->seminar_plan_desc,['class' => 'form-control','placeholder' => 'Введите описание семинара',
-                 $readOnly ? 'readonly' : '' ]) !!}
+                {!! Form::text('seminar_plan_desc',$item_section_plan->seminar_plan_desc,['class' => 'form-control','placeholder' => 'Введите описание семинара',
+                 $read_only ? 'readonly' : '' ]) !!}
             </p>
-            <input type="hidden"  name="id_seminar_plan" value="{{$itemSectionPlan->id_seminar_plan}}" />
+            <input type="hidden"  name="id_seminar_plan" value="{{$item_section_plan->id_seminar_plan}}" />
 
             {{--Вывод ошибок валидации--}}
             <div class="alert alert-danger print-error-msg" style="display:none">

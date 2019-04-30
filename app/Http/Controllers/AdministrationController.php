@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Group;
-use App\Statements\CoursePlan;
+use App\Statements\Plans\CoursePlan;
 use App\Statements\DAO\CoursePlanDAO;
 use App\Statements\Passes\ControlWorkPasses;
 use App\Statements\Passes\LecturePasses;

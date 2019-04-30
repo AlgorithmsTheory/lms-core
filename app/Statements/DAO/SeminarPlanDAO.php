@@ -7,9 +7,9 @@
  */
 
 namespace App\Statements\DAO;
-use App\Statements\SectionPlan;
+use App\Statements\Plans\SectionPlan;
 use Illuminate\Http\Request;
-use App\Statements\SeminarPlan;
+use App\Statements\Plans\SeminarPlan;
 use Validator;
 
 class SeminarPlanDAO implements ItemSectionDAO
@@ -21,22 +21,22 @@ class SeminarPlanDAO implements ItemSectionDAO
 
     public function store(Request $request){
         $form = $this->deserializationHtmlForm($request->form);
-        $seminarPlan = new SeminarPlan();
-        $seminarPlan->seminar_plan_name = $form['seminar_plan_name'];
-        $seminarPlan->seminar_plan_desc = $form['seminar_plan_desc'];
-        $seminarPlan->seminar_plan_num =  $form['seminar_plan_num'];
-        $seminarPlan->id_section_plan = $request->id_section_DB;
-        $seminarPlan->save();
-        return $seminarPlan->id_seminar_plan;
+        $seminar_plan = new SeminarPlan();
+        $seminar_plan->seminar_plan_name = $form['seminar_plan_name'];
+        $seminar_plan->seminar_plan_desc = $form['seminar_plan_desc'];
+        $seminar_plan->seminar_plan_num =  $form['seminar_plan_num'];
+        $seminar_plan->id_section_plan = $request->input('id_section_plan');
+        $seminar_plan->save();
+        return $seminar_plan->id_seminar_plan;
     }
 
     public function update(Request $request){
         $form = $this->deserializationHtmlForm($request->form);
-        $seminarPlan = $this->get($form['id_seminar_plan']);
-        $seminarPlan->seminar_plan_name = $form['seminar_plan_name'];
-        $seminarPlan->seminar_plan_desc = $form['seminar_plan_desc'];
-        $seminarPlan->seminar_plan_num =  $form['seminar_plan_num'];
-        $seminarPlan->update();
+        $seminar_plan = $this->get($form['id_seminar_plan']);
+        $seminar_plan->seminar_plan_name = $form['seminar_plan_name'];
+        $seminar_plan->seminar_plan_desc = $form['seminar_plan_desc'];
+        $seminar_plan->seminar_plan_num =  $form['seminar_plan_num'];
+        $seminar_plan->update();
     }
 
     public function getStoreValidate(Request $request) {
@@ -75,8 +75,7 @@ class SeminarPlanDAO implements ItemSectionDAO
         $request_array['id_seminar_plan'] = $form['id_seminar_plan'];
         $request_array['id_course_plan'] = $request->input('id_course_plan');
         $validator = Validator::make($request_array, [
-            'seminar_plan_name' => 'required|between:5,255',
-            'seminar_plan_desc' => 'between:5,5000',
+            'seminar_plan_name' => 'required',
             'seminar_plan_num' => [ 'required',
                 'integer',
                 'min:1']
@@ -85,7 +84,7 @@ class SeminarPlanDAO implements ItemSectionDAO
     }
 
     public function delete(Request $request){
-        SeminarPlan::findOrFail($request->id_item_plan)->delete();
+        SeminarPlan::findOrFail($request->input('id_item_plan'))->delete();
     }
 
 //Десирилизация серилизованной формы html

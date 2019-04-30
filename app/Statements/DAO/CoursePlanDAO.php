@@ -10,11 +10,11 @@ namespace App\Statements\DAO;
 
 
 use App\Group;
-use App\Statements\ControlWorkPlan;
-use App\Statements\CoursePlan;
-use App\Statements\LecturePlan;
-use App\Statements\SectionPlan;
-use App\Statements\SeminarPlan;
+use App\Statements\Plans\ControlWorkPlan;
+use App\Statements\Plans\CoursePlan;
+use App\Statements\Plans\LecturePlan;
+use App\Statements\Plans\SectionPlan;
+use App\Statements\Plans\SeminarPlan;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -22,13 +22,13 @@ class CoursePlanDAO
 {
 
     public function allCoursePlan() {
-        $coursePlans = CoursePlan::all();
-        return  $coursePlans;
+        $course_plans = CoursePlan::all();
+        return  $course_plans;
     }
 
     public function getCoursePlan($id){
-        $coursePlan = CoursePlan::where('id_course_plan', $id)->first();
-        return $coursePlan;
+        $course_plan = CoursePlan::where('id_course_plan', $id)->first();
+        return $course_plan;
     }
 
     public function getAllLectures($id_course_plan){
@@ -76,34 +76,34 @@ class CoursePlanDAO
     }
 
     public function storeCoursePlan(Request $request){
-        $coursePlane = new CoursePlan();
-        $coursePlane->course_plan_name = $request->course_plan_name;
-        $coursePlane->course_plan_desc = $request->course_plan_desc;
-        $coursePlane->max_controls = $request->max_controls;
-        $coursePlane->max_seminars = $request->max_seminars;
-        $coursePlane->max_seminars_work = $request->max_seminars_work;
-        $coursePlane->max_lecrures = $request->max_lecrures;
-        $coursePlane->max_exam = $request->max_exam;
+        $course_plan = new CoursePlan();
+        $course_plan->course_plan_name = $request->course_plan_name;
+        $course_plan->course_plan_desc = $request->course_plan_desc;
+        $course_plan->max_controls = $request->max_controls;
+        $course_plan->max_seminars = $request->max_seminars;
+        $course_plan->max_seminars_work = $request->max_seminars_work;
+        $course_plan->max_lecrures = $request->max_lecrures;
+        $course_plan->max_exam = $request->max_exam;
         $groups = strtoupper($request->input('groups'));
-        $coursePlane->save();
+        $course_plan->save();
         if ($groups != null) {
             $array_groups = $this->parseStringGroups($groups);
             foreach ($array_groups as $group) {
-                Group::where('group_name', $group)->update(['id_course_plan' => $coursePlane->id_course_plan]);
+                Group::where('group_name', $group)->update(['id_course_plan' => $course_plan->id_course_plan]);
             }
         }
-        return $coursePlane->id_course_plan;
+        return $course_plan->id_course_plan;
     }
 
         public function updateCoursePlan(Request $request){
-        $coursePlane = CoursePlan::findOrFail($request->input('id_course_plan'));
-        $coursePlane->course_plan_name = $request->course_plan_name;
-        $coursePlane->course_plan_desc = $request->course_plan_desc;
-        $coursePlane->max_controls = $request->max_controls;
-        $coursePlane->max_seminars = $request->max_seminars;
-        $coursePlane->max_seminars_work = $request->max_seminars_work;
-        $coursePlane->max_lecrures = $request->max_lecrures;
-        $coursePlane->max_exam = $request->max_exam;
+        $course_plan = CoursePlan::findOrFail($request->input('id_course_plan'));
+        $course_plan->course_plan_name = $request->course_plan_name;
+        $course_plan->course_plan_desc = $request->course_plan_desc;
+        $course_plan->max_controls = $request->max_controls;
+        $course_plan->max_seminars = $request->max_seminars;
+        $course_plan->max_seminars_work = $request->max_seminars_work;
+        $course_plan->max_lecrures = $request->max_lecrures;
+        $course_plan->max_exam = $request->max_exam;
         $groups = strtoupper($request->input('groups'));
         $id_course_plan = $request->input('id_course_plan');
         Group::where('id_course_plan', $id_course_plan)->update(['id_course_plan' => null]);
@@ -114,7 +114,7 @@ class CoursePlanDAO
                 Group::where('group_name', $group)->update(['id_course_plan' => $id_course_plan]);
             }
         }
-        $coursePlane->update();
+        $course_plan->update();
     }
 
     public function getStoreValidate(Request $request) {

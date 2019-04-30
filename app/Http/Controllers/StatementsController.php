@@ -20,24 +20,24 @@ use stdClass;
 
 class StatementsController extends Controller{
 
-    private $coursePlanDao;
-    private $sectionPlanDAO;
-    private $lecturePlanDAO;
-    private $seminarPlanDAO;
-    private $controlWorkPlanDAO;
+    private $course_plan_DAO;
+    private $section_plan_DAO;
+    private $lecture_plan_DAO;
+    private $seminar_plan_DAO;
+    private $control_work_plan_DAO;
     private $lecture_statement_manage;
     private $seminar_statement_manage;
     private $result_statement_manage;
 
-    public function __construct(CoursePlanDAO $coursePlanDAO, SectionPlanDAO $sectionPlanDAO, LecturePlanDAO $lecturePlanDAO
-    , SeminarPlanDAO $seminarPlanDAO, ControlWorkPlanDAO $controlWorkPlanDAO, LectureStatementManage $lecture_statement_manage
+    public function __construct(CoursePlanDAO $course_plan_DAO, SectionPlanDAO $section_plan_DAO, LecturePlanDAO $lecture_plan_DAO
+    , SeminarPlanDAO $seminar_plan_DAO, ControlWorkPlanDAO $control_work_plan_DAO, LectureStatementManage $lecture_statement_manage
 , SeminarStatementManage $seminar_statement_manage, ResultStatementManage $result_statement_manage)
     {
-        $this->coursePlanDao = $coursePlanDAO;
-        $this->sectionPlanDAO = $sectionPlanDAO;
-        $this->lecturePlanDAO = $lecturePlanDAO;
-        $this->seminarPlanDAO = $seminarPlanDAO;
-        $this->controlWorkPlanDAO = $controlWorkPlanDAO;
+        $this->course_plan_DAO = $course_plan_DAO;
+        $this->section_plan_DAO = $section_plan_DAO;
+        $this->lecture_plan_DAO = $lecture_plan_DAO;
+        $this->seminar_plan_DAO = $seminar_plan_DAO;
+        $this->control_work_plan_DAO = $control_work_plan_DAO;
         $this->lecture_statement_manage = $lecture_statement_manage;
         $this->seminar_statement_manage = $seminar_statement_manage;
         $this->result_statement_manage = $result_statement_manage;
@@ -46,9 +46,9 @@ class StatementsController extends Controller{
     // возвращает страницу с учебными планами
     public function showCoursePlans() {
         $read_only = true;
-        $course_plans = $this->coursePlanDao->allCoursePlan()
+        $course_plans = $this->course_plan_DAO->allCoursePlan()
             ->map( function ($course_plan) {
-                $exist_statements = $this->coursePlanDao->existStatements($course_plan->id_course_plan);
+                $exist_statements = $this->course_plan_DAO->existStatements($course_plan->id_course_plan);
                 return ['course_plan' => $course_plan,
                         'exist_statements' => $exist_statements];
             });
@@ -62,10 +62,10 @@ class StatementsController extends Controller{
 
     //сохранение учебного плана
     public function storeCoursePlan(Request $request) {
-        $validator = $this->coursePlanDao->getStoreValidate($request);
+        $validator = $this->course_plan_DAO->getStoreValidate($request);
         if ($validator->passes()) {
-            $idCoursePlan = $this->coursePlanDao->storeCoursePlan($request);
-            return redirect('course_plan/'.$idCoursePlan);
+            $id_course_plan = $this->course_plan_DAO->storeCoursePlan($request);
+            return redirect('course_plan/'.$id_course_plan);
         } else {
             return redirect()->to($this->getRedirectUrl())
                 ->withInput($request->input())->withErrors($validator->errors());
@@ -76,23 +76,23 @@ class StatementsController extends Controller{
 
     //возвращает конкретный учебный план для просмотра и редактирования
     public function getCoursePlan($id) {
-        $coursePlan = $this->coursePlanDao->getCoursePlan($id);
+        $course_plan = $this->course_plan_DAO->getCoursePlan($id);
         $read_only = true;
         $tests_control_work = Test::whereTest_type('Контрольный')
             ->where('archived', '<>', '1')
             ->orderByDesc('id_test')
             ->select()
             ->get();
-        $exist_statements = $this->coursePlanDao->existStatements($id);
-        return view('personal_account.statements.course_plans.course_plan', compact('coursePlan', 'read_only', 'tests_control_work', 'exist_statements'));
+        $exist_statements = $this->course_plan_DAO->existStatements($id);
+        return view('personal_account.statements.course_plans.course_plan', compact('course_plan', 'read_only', 'tests_control_work', 'exist_statements'));
     }
 
     //Обновление основной информации об учебном плане
     public function updateCoursePlan(Request $request)
     {
-        $validator = $this->coursePlanDao->getUpdateValidate($request);
+        $validator = $this->course_plan_DAO->getUpdateValidate($request);
         if ($validator->passes()) {
-            $this->coursePlanDao->updateCoursePlan($request);
+            $this->course_plan_DAO->updateCoursePlan($request);
             return response()->json(['idCoursePlan' => $request->id_course_plan,'courseName' => $request->course_plan_name]);
         } else {
             return response()->json(['error'=>$validator->errors()->all(), 'idCoursePlan' => $request->id_course_plan]);
@@ -101,14 +101,14 @@ class StatementsController extends Controller{
 
     //Удаление учебного плана
     public function deleteCoursePlan(Request $request) {
-        $this->coursePlanDao->deleteCoursePlan($request->id_course_plan);
+        $this->course_plan_DAO->deleteCoursePlan($request->id_course_plan);
         return redirect('course_plans');
     }
 
     //Проверка баллов за конт. меропр. всего учебного плана
     public function checkPointsCoursePlan(Request $request) {
         if ($request->ajax()) {
-            $validator = $this->coursePlanDao->checkPointsCoursePlan($request->input('id_course_plan'));
+            $validator = $this->course_plan_DAO->checkPointsCoursePlan($request->input('id_course_plan'));
             if ($validator->passes()) {
                 return 0;
             } else {
@@ -119,167 +119,157 @@ class StatementsController extends Controller{
 
     //возвращает представление для добавления раздела учебного плана
     public function getAddSection(Request $request) {
-        $sectionNumForFindJs = json_decode($request->currentCount,true);
-        $idCoursePlan = json_decode($request->idCoursePlan,true);
-        return view('personal_account.statements.course_plans.sections.add_section', compact('sectionNumForFindJs', 'idCoursePlan'));
+        $section_num = $request->input('section_num');
+        $id_course_plan = $request->input('id_course_plan');
+        $id_section_plan_js = $request->input('id_section_plan_js');
+        return view('personal_account.statements.course_plans.sections.add_section', compact('section_num', 'id_course_plan', 'id_section_plan_js'));
     }
 
     //Сохранение раздела учебного плана
     public function storeSection(Request $request) {
-        $validator = $this->sectionPlanDAO->getValidateStoreSectionPlan($request);
-        //Для вставки html через js, используя число сгенерированное системой , а не написанного вручную номера раздела
-        $sectionNumForFindJs = $request->section_num_for_find_js;
+        $validator = $this->section_plan_DAO->getValidateStoreSectionPlan($request);
+        //Для вставки html через js, используя число сгенерированное js
+        $id_section_plan_js = $request->input('id_section_plan_js');
 
         if ($validator->passes()) {
-           $idSectionPlan = $this->sectionPlanDAO->storeSectionPlan($request);
-           $sectionPlan = $this->sectionPlanDAO->getSectionPlan($idSectionPlan);
-           $readOnly = true;
-           $returnHtmlString = view('personal_account.statements.course_plans.sections.view_or_update_section', compact('sectionPlan', 'readOnly',
-               'sectionNumForFindJs'))
+           $id_section_plan = $this->section_plan_DAO->storeSectionPlan($request);
+           $section_plan = $this->section_plan_DAO->getSectionPlan($id_section_plan);
+           $read_only = true;
+           $returnHtmlString = view('personal_account.statements.course_plans.sections.view_or_update_section', compact('section_plan', 'read_only'))
                ->render();
-            return response()->json(['view'=>$returnHtmlString, 'section_num_for_find_js' => $sectionNumForFindJs]);
+            return response()->json(['view'=>$returnHtmlString, 'idSectionPlanJs' => $id_section_plan_js]);
         } else {
-            return response()->json(['error'=>$validator->errors()->all(), 'section_num_for_find_js' => $sectionNumForFindJs]);
+            return response()->json(['error'=>$validator->errors()->all(), 'idSectionPlanJs' => $id_section_plan_js]);
         }
 
     }
 
     //Обновление  информации о разделе учебного плана
     public function updateSection(Request $request) {
-        $validator = $this->sectionPlanDAO->getValidateUpdateSectionPlan($request);
+        $validator = $this->section_plan_DAO->getValidateUpdateSectionPlan($request);
         //Для вставки html через js
-        $sectionNumForFindJs = $request->section_num_for_find_js;
+        $id_section_plan = $request->input('id_section_plan');
 
         if ($validator->passes()) {
-            $this->sectionPlanDAO->updateSectionPlan($request);
+            $this->section_plan_DAO->updateSectionPlan($request);
 
-            return response()->json(['section_num_for_find_js' => $sectionNumForFindJs ,
-                'real_section_num' => $request->section_num]);
+            return response()->json(['idSectionPlan' => $id_section_plan ,
+                'sectionNum' => $request->input('section_num')]);
         } else {
-            return response()->json(['error'=>$validator->errors()->all(), 'section_num_for_find_js' => $sectionNumForFindJs]);
+            return response()->json(['error'=>$validator->errors()->all(), 'idSectionPlan' => $id_section_plan]);
         }
     }
 
     //Удаление раздела
     public function deleteSection(Request $request) {
-        $this->sectionPlanDAO->deleteSectionPlan($request->id_section_plan);
-        return $request->section_num_for_find_js;
+        $this->section_plan_DAO->deleteSectionPlan($request->input('id_section_plan'));
+        return $request->input('id_section_plan');
     }
 
     // Возвращает представление для добавления семинара или лекции или КМ
     public function getAddLecOrSemOrCW(Request $request) {
-
-        $typeCard = $request->type_card;
-        $viewPath = $this->getPathAddViewLecSemCW($typeCard);
-        $numberNewCard = $request->number_new_card;
+        $type_card = $request->input('type_card');
+        $view_path = $this->getPathAddViewLecSemCW($type_card);
+        $section_item_num = $request->input('section_item_num');
         $tests_control_work = new stdClass();
-        if($typeCard == 'control_work') {
+        $id_new_section_item_js = $request->input('id_new_section_item_js');
+        if($type_card == 'control_work') {
             $tests_control_work = Test::whereTest_type('Контрольный')
                 ->where('archived', '<>', '1')
                 ->orderByDesc('id_test')
                 ->select()
                 ->get();
         }
-        $returnHtmlString = view('personal_account.statements.course_plans.sections.'.$viewPath,
-            ['idNewCardForFindJs' => $request->id_new_card_for_find_js,
-                'numberNewCard' => $request->number_new_card, 'tests_control_work' => $tests_control_work
+        $returnHtmlString = view('personal_account.statements.course_plans.sections.'.$view_path,
+            ['id_new_section_item_js' => $id_new_section_item_js,
+                'section_item_num' => $section_item_num, 'tests_control_work' => $tests_control_work
             ])->render();
 
-        return response()->json(['view' => $returnHtmlString
-            , 'idSectionForFindJs' => $request->id_section_for_find_js,
-            'numberNewCard' => $numberNewCard,
-            'typeCard' => $typeCard]);
+        return response()->json(['view' => $returnHtmlString]);
     }
 
     //Сохранение семинара или лекции в разделе учебного плана
     public function storeLecOrSemOrCW(Request $request) {
-        $typeCard = $request->type_card;
-        $viewPath = $this->getViewUpdatePathLecSemCW($typeCard);
-        $itemSectionDAO = $this->getItemSectionDAO($typeCard);
-        $validator = $itemSectionDAO->getStoreValidate($request);
-
+        $type_card = $request->input('type_card');
+        $view_path = $this->getViewUpdatePathLecSemCW($type_card);
+        $item_section_DAO = $this->getItemSectionDAO($type_card);
+        $validator = $item_section_DAO->getStoreValidate($request);
+        $id_item_section_js = $request->input('id_item_section_js');
         if ($validator->passes()) {
-            $idItemSectionPlan = $itemSectionDAO->store($request);
-            $itemSectionPlan = $itemSectionDAO->get($idItemSectionPlan);
-            $readOnly = true;
-            $idCardForFindJs = $request->id_card_for_find_js;
+            $id_item_section_plan = $item_section_DAO->store($request);
+            $item_section_plan = $item_section_DAO->get($id_item_section_plan);
+            $read_only = true;
             $tests_control_work = new stdClass();
-            if($typeCard == 'control_work') {
+            if($type_card == 'control_work') {
                 $tests_control_work = Test::whereTest_type('Контрольный')
                     ->where('archived', '<>', '1')
                     ->orderByDesc('id_test')
                     ->select()
                     ->get();
             }
-            $returnHtmlString = view('personal_account.statements.course_plans.sections.'.$viewPath,
-                compact('itemSectionPlan', 'readOnly',
-                'idCardForFindJs', 'tests_control_work'))
+            $return_html_string = view('personal_account.statements.course_plans.sections.'.$view_path,
+                compact('item_section_plan', 'read_only', 'tests_control_work'))
                 ->render();
-            return response()->json(['view'=>$returnHtmlString, 'id_section_for_find_js' => $request->id_section_for_find_js
-                , 'id_card_for_find_js' => $request->id_card_for_find_js,'type_card' => $request->type_card]);
+            return response()->json(['view'=>$return_html_string]);
         } else {
-            return response()->json(['error'=>$validator->errors()->all(), 'id_section_for_find_js' => $request->id_section_for_find_js
-                , 'id_card_for_find_js' => $request->id_card_for_find_js,'type_card' => $request->type_card]);
+            return response()->json(['error'=>$validator->errors()->all()]);
         }
 
     }
 
     //Обновление лекции, семинара, контрольн. меропри в разделе учебного плана
     public function updateLecOrSemOrCW(Request $request) {
-
-        $itemSectionDAO = $this->getItemSectionDAO($request->type_card);
-        $validator = $itemSectionDAO->getUpdateValidate($request);
+        $type_item_section = $request->input('type_item_section');
+        $item_section_DAO = $this->getItemSectionDAO($type_item_section);
+        $validator = $item_section_DAO->getUpdateValidate($request);
 
         if ($validator->passes()) {
-           $itemSectionDAO->update($request);
-            return response()->json(['id_section_for_find_js' => $request->id_section_for_find_js
-                , 'id_card_for_find_js' => $request->id_card_for_find_js,'type_card' => $request->type_card]);
+           $item_section_DAO->update($request);
+            return 0;
         } else {
-            return response()->json(['error'=>$validator->errors()->all(), 'id_section_for_find_js' => $request->id_section_for_find_js
-                , 'id_card_for_find_js' => $request->id_card_for_find_js,'type_card' => $request->type_card]);
+            return response()->json(['error'=>$validator->errors()->all()]);
         }
 
     }
 
     public function deleteLecOrSemOrCW(Request $request)
     {
-        $itemSectionDAO = $this->getItemSectionDAO($request->type_card);
-        $itemSectionDAO->delete($request);
-        return response()->json(['id_section_for_find_js'=>$request->id_section_for_find_js, 'id_card_for_find_js' => $request->id_card_for_find_js
-            , 'type_card' => $request->type_card]);
+        $item_section_DAO = $this->getItemSectionDAO($request->input('type_item_section'));
+        $item_section_DAO->delete($request);
+        return 0;
     }
 
 
-    public function getItemSectionDAO ($typeCard) {
-        $itemSectionDAO =  new stdClass();
-        switch ($typeCard) {
+    public function getItemSectionDAO ($type_card) {
+        $item_section_DAO =  new stdClass();
+        switch ($type_card) {
             case 'lecture':
-                $itemSectionDAO = $this->lecturePlanDAO;
+                $item_section_DAO = $this->lecture_plan_DAO;
                 break;
             case 'seminar':
-                $itemSectionDAO = $this->seminarPlanDAO;
+                $item_section_DAO = $this->seminar_plan_DAO;
                 break;
             case 'control_work':
-                $itemSectionDAO = $this->controlWorkPlanDAO;
+                $item_section_DAO = $this->control_work_plan_DAO;
                 break;
         }
-        return $itemSectionDAO;
+        return $item_section_DAO;
     }
 
-    public function getViewUpdatePathLecSemCW($typeCard) {
-        if ($typeCard == 'lecture') {
+    public function getViewUpdatePathLecSemCW($type_card) {
+        if ($type_card == 'lecture') {
             return 'lectures.view_or_update_lecture';
-        } else if ($typeCard == 'seminar'){
+        } else if ($type_card == 'seminar'){
             return 'seminars.view_or_update_seminar';
         } else {
             return 'control_works.view_or_update_control_work';
         }
     }
 
-    public function getPathAddViewLecSemCW($typeCard) {
-        if ($typeCard == 'lecture') {
+    public function getPathAddViewLecSemCW($type_card) {
+        if ($type_card == 'lecture') {
             return 'lectures.add_lecture';
-        } else if ($typeCard == 'seminar'){
+        } else if ($type_card == 'seminar'){
             return 'seminars.add_seminar';
         } else {
             return 'control_works.add_control_work';
@@ -287,7 +277,7 @@ class StatementsController extends Controller{
     }
 
     public function copyCoursePlan(Request $request) {
-        $id_new_course_plan = $this->coursePlanDao->copyCoursePlan($request->input('id_course_plan'));
+        $id_new_course_plan = $this->course_plan_DAO->copyCoursePlan($request->input('id_course_plan'));
         return redirect('course_plan/' .  $id_new_course_plan);
     }
 
@@ -326,7 +316,7 @@ class StatementsController extends Controller{
         $user = Auth::user();
         $id_course_plan = Group::where('group_id', $user->group)->select('id_course_plan')
             ->first()->id_course_plan;
-        $course_plan = $this->coursePlanDao->getCoursePlan( $id_course_plan);
+        $course_plan = $this->course_plan_DAO->getCoursePlan( $id_course_plan);
         $statement_lecture = $this->lecture_statement_manage->getStatementByUser($id_course_plan, $user);
         $statement_seminar = $this->seminar_statement_manage->getStatementByUser($id_course_plan, $user);
         $statement_result = $this->result_statement_manage->getStatementByUser($id_course_plan, $user);
@@ -368,7 +358,7 @@ class StatementsController extends Controller{
         $statement_lecture = $this->lecture_statement_manage->getStatementByGroup($id_group);
         $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
             ->first()->id_course_plan;
-        $course_plan = $this->coursePlanDao->getCoursePlan( $id_course_plan);
+        $course_plan = $this->course_plan_DAO->getCoursePlan( $id_course_plan);
         return view('personal_account/statements/lectures', compact('course_plan','id_group', 'statement_lecture'));
     }
 
@@ -377,7 +367,7 @@ class StatementsController extends Controller{
         $statement_seminar = $this->seminar_statement_manage->getStatementByGroup($id_group);
         $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
             ->first()->id_course_plan;
-        $course_plan = $this->coursePlanDao->getCoursePlan($id_course_plan);
+        $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
         return view('personal_account/statements/seminars', compact('course_plan','id_group', 'statement_seminar'));
     }
 
@@ -386,7 +376,7 @@ class StatementsController extends Controller{
         $statement_result = $this->result_statement_manage->getStatementByGroup($id_group);
         $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
             ->first()->id_course_plan;
-        $course_plan = $this->coursePlanDao->getCoursePlan($id_course_plan);
+        $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
         return view('personal_account/statements/results',  compact('course_plan','id_group', 'statement_result'));
     }
 

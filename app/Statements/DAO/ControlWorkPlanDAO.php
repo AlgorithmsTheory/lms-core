@@ -7,52 +7,51 @@
  */
 
 namespace App\Statements\DAO;
-use App\Statements\SectionPlan;
+use App\Statements\Plans\SectionPlan;
 use Illuminate\Http\Request;
 use DB;
 use Validator;
-use App\Statements\ControlWorkPlan;
+use App\Statements\Plans\ControlWorkPlan;
 
 class ControlWorkPlanDAO implements ItemSectionDAO
 {
     public function get($id){
-        $controlWorkPlan = ControlWorkPlan::where('id_control_work_plan', $id)->first();
-        return $controlWorkPlan;
+        $control_work_plan = ControlWorkPlan::where('id_control_work_plan', $id)->first();
+        return $control_work_plan;
     }
 
     public function store(Request $request){
         $form = $this->deserializationHtmlForm($request->form);
-        $controlWorkPlan = new ControlWorkPlan();
-        $controlWorkPlan->control_work_plan_name = $form['control_work_plan_name'];
-        $controlWorkPlan->control_work_plan_desc = $form['control_work_plan_desc'];
-        $controlWorkPlan->control_work_plan_type = $form['control_work_plan_type'];
+        $control_work_plan = new ControlWorkPlan();
+        $control_work_plan->control_work_plan_name = $form['control_work_plan_name'];
+        $control_work_plan->control_work_plan_desc = $form['control_work_plan_desc'];
+        $control_work_plan->control_work_plan_type = $form['control_work_plan_type'];
 
         if($form['control_work_plan_type'] == 'ONLINE_TEST' || $form['control_work_plan_type'] == 'OFFLINE_TEST') {
-            $controlWorkPlan->id_test =  $form['id_test'];
+            $control_work_plan->id_test =  $form['id_test'];
         } else {
-            $controlWorkPlan->id_test = NULL;
+            $control_work_plan->id_test = NULL;
         }
-        $controlWorkPlan->max_points =  $form['max_points'];
-        $controlWorkPlan->id_section_plan = $request->id_section_DB;
-        $controlWorkPlan->save();
-        return $controlWorkPlan->id_control_work_plan;
+        $control_work_plan->max_points =  $form['max_points'];
+        $control_work_plan->id_section_plan = $request->input('id_section_plan');
+        $control_work_plan->save();
+        return $control_work_plan->id_control_work_plan;
     }
 
     public function update(Request $request){
         $form = $this->deserializationHtmlForm($request->form);
-        $controlWorkPlan = $this->get($form['id_control_work_plan']);
-        $controlWorkPlan->control_work_plan_name = $form['control_work_plan_name'];
-        $controlWorkPlan->control_work_plan_desc = $form['control_work_plan_desc'];
-        $controlWorkPlan->control_work_plan_type = $form['control_work_plan_type'];
+        $control_work_plan = $this->get($form['id_control_work_plan']);
+        $control_work_plan->control_work_plan_name = $form['control_work_plan_name'];
+        $control_work_plan->control_work_plan_desc = $form['control_work_plan_desc'];
+        $control_work_plan->control_work_plan_type = $form['control_work_plan_type'];
 
         if($form['control_work_plan_type'] == 'ONLINE_TEST' || $form['control_work_plan_type'] == 'OFFLINE_TEST') {
-            $controlWorkPlan->id_test =  $form['id_test'];
+            $control_work_plan->id_test =  $form['id_test'];
         } else {
-            $controlWorkPlan->id_test = NULL;
+            $control_work_plan->id_test = NULL;
         }
-        $controlWorkPlan->max_points =  $form['max_points'];
-        $controlWorkPlan->id_section_plan = $request->id_section_DB;
-        $controlWorkPlan->update();
+        $control_work_plan->max_points =  $form['max_points'];
+        $control_work_plan->update();
     }
 
     public function getValidate(Request $request) {
@@ -64,10 +63,10 @@ class ControlWorkPlanDAO implements ItemSectionDAO
         $request_array['id_test'] = $form['id_test'];
         $request_array['id_control_work_plan'] = $form['id_control_work_plan'];
         $request_array['id_course_plan'] = $request->input('id_course_plan');
-        $request_array['id_section_plan'] = $request->input('id_section_DB');
+        $request_array['id_section_plan'] = $request->input('id_section_plan');
 
         $validator = Validator::make($request_array, [
-            'control_work_plan_name' => 'required|between:5,255',
+            'control_work_plan_name' => 'required',
             'control_work_plan_type' => 'required',
             'max_points' => ['required',
                 'integer',
@@ -158,7 +157,7 @@ class ControlWorkPlanDAO implements ItemSectionDAO
     }
 
     public function delete(Request $request){
-        ControlWorkPlan::findOrFail($request->id_item_plan)->delete();
+        ControlWorkPlan::findOrFail($request->input('id_item_plan'))->delete();
     }
 
 //Десирилизация серилизованной формы html

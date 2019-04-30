@@ -1,4 +1,4 @@
-<div class="card card-bordered style-danger control_work" id="{{$idNewCardForFindJs}}"  data-type-card="control_work">
+<div class="card card-bordered style-danger control_work" id="{{$id_new_section_item_js}}"  data-type-card="control_work">
     <form  class="form_store_sem_lec_wc">
         <div class="card-head">
             <header>

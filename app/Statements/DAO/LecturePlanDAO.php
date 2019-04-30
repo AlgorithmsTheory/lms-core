@@ -2,9 +2,9 @@
 
 namespace App\Statements\DAO;
 
-use App\Statements\LecturePlan;
+use App\Statements\Plans\LecturePlan;
 
-use App\Statements\SectionPlan;
+use App\Statements\Plans\SectionPlan;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -17,22 +17,22 @@ class LecturePlanDAO implements ItemSectionDAO
 
     public function store(Request $request){
         $form = $this->deserializationHtmlForm($request->form);
-        $LecturePlan = new LecturePlan();
-        $LecturePlan->lecture_plan_name = $form['lecture_plan_name'];
-        $LecturePlan->lecture_plan_desc = $form['lecture_plan_desc'];
-        $LecturePlan->lecture_plan_num =  $form['lecture_plan_num'];
-        $LecturePlan->id_section_plan = $request->id_section_DB;
-        $LecturePlan->save();
-        return $LecturePlan->id_lecture_plan;
+        $lecture_plan = new LecturePlan();
+        $lecture_plan->lecture_plan_name = $form['lecture_plan_name'];
+        $lecture_plan->lecture_plan_desc = $form['lecture_plan_desc'];
+        $lecture_plan->lecture_plan_num =  $form['lecture_plan_num'];
+        $lecture_plan->id_section_plan = $request->input('id_section_plan');
+        $lecture_plan->save();
+        return $lecture_plan->id_lecture_plan;
     }
 
     public function update(Request $request){
         $form = $this->deserializationHtmlForm($request->form);
-        $LecturePlan = $this->get($form['id_lecture_plan']);
-        $LecturePlan->lecture_plan_name = $form['lecture_plan_name'];
-        $LecturePlan->lecture_plan_desc = $form['lecture_plan_desc'];
-        $LecturePlan->lecture_plan_num =  $form['lecture_plan_num'];
-        $LecturePlan->update();
+        $lecture_plan = $this->get($form['id_lecture_plan']);
+        $lecture_plan->lecture_plan_name = $form['lecture_plan_name'];
+        $lecture_plan->lecture_plan_desc = $form['lecture_plan_desc'];
+        $lecture_plan->lecture_plan_num =  $form['lecture_plan_num'];
+        $lecture_plan->update();
     }
 
     public function getStoreValidate(Request $request) {
@@ -71,8 +71,7 @@ class LecturePlanDAO implements ItemSectionDAO
         $request_array['id_lecture_plan'] = $form['id_lecture_plan'];
         $request_array['id_course_plan'] = $request->input('id_course_plan');
         $validator = Validator::make($request_array, [
-            'lecture_plan_name' => 'required|between:5,255',
-            'lecture_plan_desc' => 'between:5,5000',
+            'lecture_plan_name' => 'required',
             'lecture_plan_num' => [ 'required',
                 'integer',
                 'min:1']
@@ -81,7 +80,7 @@ class LecturePlanDAO implements ItemSectionDAO
     }
 
     public function delete(Request $request){
-        LecturePlan::findOrFail($request->id_item_plan)->delete();
+        LecturePlan::findOrFail($request->input('id_item_plan'))->delete();
     }
 
 //Десирилизация серилизованной формы html

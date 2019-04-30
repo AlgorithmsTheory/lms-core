@@ -1,4 +1,4 @@
-<div class="card card-bordered style-success section" id="section{{$section_num_for_find_js}}">
+<div class="card card-bordered style-success section" id="section{{$id_section_plan_js}}">
     <form  method="POST" id="form_add_section">
     <div class="card-head">
         <header>
@@ -7,7 +7,7 @@
                     {!! Form::label('section_num' , 'Номер раздела:') !!}
                 </div>
                 <div class="col-lg-4 col-md-4">
-                {!! Form::text('section_num',$section_num_for_find_js,['class' => 'form-control','placeholder' => 'Номер раздела',
+                {!! Form::text('section_num',$section_num,['class' => 'form-control','placeholder' => 'Номер раздела',
             'required' => 'required', 'style' => 'background-color: white']) !!}
                 </div>
             </div>
@@ -32,7 +32,7 @@
             '1' => 'Экзамен(Зачёт)'), null, ['id' => 'is_exam','class' => 'form-control', 'required' => 'required']) !!}
         </p>
             <input type="hidden"  name="id_course_plan" value="{{$id_course_plan}}" />
-            <input type="hidden"  name="section_num_for_find_js" value="{{$section_num_for_find_js}}" />
+            <input type="hidden"  name="id_section_plan_js" value="{{$id_section_plan_js}}" />
 
         {{--Вывод ошибок валидации--}}
         <div class="alert alert-danger print-error-msg" style="display:none">

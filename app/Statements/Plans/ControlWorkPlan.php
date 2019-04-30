@@ -6,7 +6,7 @@
  * Time: 22:19
  */
 
-namespace App\Statements;
+namespace App\Statements\Plans;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use App\Testing\Test;
 

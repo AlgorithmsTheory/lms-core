@@ -6,7 +6,7 @@
  * Time: 20:09
  */
 
-namespace App\Statements;
+namespace App\Statements\Plans;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class SectionPlan extends Eloquent {

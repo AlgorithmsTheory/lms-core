@@ -1,19 +1,16 @@
 //возвращает представление для добавление раздела
 $(document).on('click', '#addSection', function () {
-    var lastSectionId = $('.section').filter( ':last' ).attr('id');
-    var countSections;
-    if($.isEmptyObject(lastSectionId)) {
-        countSections = 0;
-    } else {
-        countSections = parseInt(lastSectionId.match(/\d+/));
-    }
-    var currentCount = countSections + 1;
+    var sectionNum = $('.section').filter(function(index) {
+        return $(this).find("input[name='is_exam']").val() != 1;
+    }).length;
+    sectionNum++;
     var idCoursePlan = parseInt($(".course_plan").attr('id').match(/\d+/));
+    var idSectionPlanJs = Math.floor(Math.random() * 1000) + Date.now();
     $.ajax({
         cache: false,
         type: 'GET',
         url:   '/course_plan/get_add_section',
-        data: { currentCount: currentCount, idCoursePlan: idCoursePlan },
+        data: { section_num: sectionNum, id_course_plan: idCoursePlan, id_section_plan_js: idSectionPlanJs },
         success: function(data){
             $('#sections').append(data);
         }
@@ -23,14 +20,13 @@ $(document).on('click', '#addSection', function () {
 //Сохранение добаленного раздела
 $(document).on('submit', '#form_add_section', function (event) {
     event.preventDefault();
-   // var idCoursePlan = $('.course_plan').attr('id');
     var idCoursePlan = parseInt($(".course_plan").attr('id').match(/\d+/));
     $.ajax({
         type: 'POST',
         url:   '/course_plan/'+idCoursePlan+'/section',
         data:  $(this).serialize(),
         success: function(data){
-            var currentSection = $('#section'+data.section_num_for_find_js);
+            var currentSection = $('#section'+data.idSectionPlanJs);
             if($.isEmptyObject(data.error)){
                 currentSection.replaceWith(data.view);
             }else{
@@ -48,7 +44,7 @@ $(document).on('submit', '#form_add_section', function (event) {
 });
 
 //Изменяет view_or_update_section для редактирования раздела
-$(document).on('click', '.activateEditSection', function () {
+$(document).on('click', '.activate_edit_section', function () {
     var currentSection = $(this).closest('.section');
     //сркрытие иконки редактировать
     $(this).hide();
@@ -84,13 +80,13 @@ $(document).on('submit', '#form_update_section', function (event) {
         url:   '/course_plan/section/update',
         data:  $(this).serialize(),
         success: function(data){
-            var currentSection = $('#section'+data.section_num_for_find_js);
+            var currentSection = $('#section'+data.idSectionPlan);
             if($.isEmptyObject(data.error)){
                 var isExam = currentSection.find('#is_exam').filter( ':first' ).val();
                 if(isExam == 0) {
-                    var htmlInsertHeader = data.real_section_num +' Раздел';
+                    var htmlInsertHeader = data.sectionNum +' Раздел';
                     //вставляем поле с section_num
-                    var currentHeader = $('#section'+data.section_num_for_find_js).find("header").filter( ':first' );
+                    var currentHeader = currentSection.find("header").filter( ':first' );
                     currentHeader.html(htmlInsertHeader);
                 }
                 //выключение readonly для полей
@@ -103,10 +99,10 @@ $(document).on('submit', '#form_update_section', function (event) {
                 currentErrorDiv.find("ul").html('');
                 currentErrorDiv.css('display','none');
                 //отображение иконки редактировать
-                currentSection.find('.activateEditSection').filter( ':first' ).show();
+                currentSection.find('.activate_edit_section').filter( ':first' ).show();
             }else{
                 //добавление в html сообщений об ошибках
-                var divError = $('#section'+data.section_num_for_find_js).find('.print-error-msg').filter( ':first' );
+                var divError = currentSection.find('.print-error-msg').filter( ':first' );
                 divError.find("ul").html('');
                 divError.css('display','block');
                 $.each( data.error, function( key, value ) {
@@ -119,14 +115,14 @@ $(document).on('submit', '#form_update_section', function (event) {
 });
 
 //Удаление раздела
-$(document).on('click', '.deleteSection', function () {
+$(document).on('click', '.delete_section', function () {
     if (confirm("Удалить данный раздел ?")) {
         var currentSection = $(this).closest('.section');
-        var sectionNumForFindJs = parseInt(currentSection.attr('id').match(/\d+/));
-        var idSectionPlan  = currentSection.find('input[name="id_section_plan"]').filter( ':first' ).val();
-        if($.isEmptyObject(idSectionPlan)) {
+        var idSectionPlan = parseInt(currentSection.attr('id').match(/\d+/));
+        var idSectionPlanInput  = currentSection.find('input[name="id_section_plan"]').filter( ':first' ).val();
+        if($.isEmptyObject(idSectionPlanInput)) {
 
-            $('#section'+sectionNumForFindJs).remove();
+            $('#section'+idSectionPlan).remove();
 
         } else {
 
@@ -134,7 +130,7 @@ $(document).on('click', '.deleteSection', function () {
             $.ajax({
                 type: 'DELETE',
                 url:   '/course_plan/section/delete',
-                data:  { "section_num_for_find_js": sectionNumForFindJs,
+                data:  {
                     "id_section_plan": idSectionPlan,
                     "_token": token},
                 success: function(data){

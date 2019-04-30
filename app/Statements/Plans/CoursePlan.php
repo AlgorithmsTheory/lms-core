@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Statements;
+namespace App\Statements\Plans;
 use App\Group;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 

@@ -1,10 +1,10 @@
-<div class="card card-bordered style-warning seminar" id="{{$idNewCardForFindJs}}"  data-type-card="seminar">
+<div class="card card-bordered style-warning seminar" id="{{$id_new_section_item_js}}"  data-type-card="seminar">
     <form  class="form_store_sem_lec_wc">
         <div class="card-head">
             <header>
 
                 {!! Form::label('seminar_plan_num' , 'Номер семинара:') !!}
-                {!! Form::text('seminar_plan_num',$numberNewCard,['class' => 'form-control','placeholder' => 'Номер семинара',
+                {!! Form::text('seminar_plan_num',$section_item_num,['class' => 'form-control','placeholder' => 'Номер семинара',
             'required' => 'required', 'style' => 'background-color: white']) !!}
 
             </header>

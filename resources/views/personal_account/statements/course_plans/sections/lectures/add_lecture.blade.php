@@ -1,10 +1,10 @@
-<div class="card card-bordered style-info lecture" id="{{$idNewCardForFindJs}}"  data-type-card="lecture">
+<div class="card card-bordered style-info lecture" id="{{$id_new_section_item_js}}"  data-type-card="lecture">
     <form  class="form_store_sem_lec_wc">
         <div class="card-head">
             <header>
 
                         {!! Form::label('lecture_plan_num' , 'Номер лекции:') !!}
-                        {!! Form::text('lecture_plan_num',$numberNewCard,['class' => 'form-control','placeholder' => 'Номер лекции',
+                        {!! Form::text('lecture_plan_num',$section_item_num,['class' => 'form-control','placeholder' => 'Номер лекции',
                     'required' => 'required', 'style' => 'background-color: white']) !!}
 
             </header>

@@ -1,19 +1,19 @@
-<div class="card card-bordered style-success section" id="section{{$sectionNumForFindJs}}" data-id-DB="{{$sectionPlan->id_section_plan}}">
+<div class="card card-bordered style-success section" id="section{{$section_plan->id_section_plan}}">
     <form  method="PATCH" id="form_update_section">
     <div class="card-head">
 
-        @if($sectionPlan->is_exam == 0)
-            <header>{{$sectionPlan->section_num." Раздел"}}</header>
+        @if($section_plan->is_exam == 0)
+            <header>{{$section_plan->section_num." Раздел"}}</header>
         @else
             <header>Экзамен(Зачёт)</header>
         @endif
         @if($exist_statements == false)
         <div class="tools ">
             <div class="btn-group">
-                <a class="btn btn-icon-toggle activateEditSection"><i class="glyphicon glyphicon-edit"></i></a>
+                <a class="btn btn-icon-toggle activate_edit_section"><i class="glyphicon glyphicon-edit"></i></a>
             </div>
             <div class="btn-group ">
-                <a class="btn btn-icon-toggle deleteSection"><i class="md md-close"></i></a>
+                <a class="btn btn-icon-toggle delete_section"><i class="md md-close"></i></a>
             </div>
         </div>
             @endif
@@ -22,20 +22,19 @@
 
             {{ csrf_field() }}
             <h5 class="card-title">{!! Form::label('section_plan_name' , 'Название раздела:') !!}
-                {!! Form::text('section_plan_name',$sectionPlan->section_plan_name,['class' => 'form-control','placeholder' => 'Введите название учебного плана',
-                'required' => 'required', $readOnly ? 'readonly' : '' ]) !!}</h5>
+                {!! Form::text('section_plan_name',$section_plan->section_plan_name,['class' => 'form-control','placeholder' => 'Введите название учебного плана',
+                'required' => 'required', $read_only ? 'readonly' : '' ]) !!}</h5>
             <p class="card-text">{!! Form::label('section_plan_desc' , 'Описание раздела:') !!}
-                {!! Form::text('section_plan_desc',$sectionPlan->section_plan_desc,['class' => 'form-control','placeholder' => 'Введите описание учебного плана',
-                 $readOnly ? 'readonly' : '' ]) !!}
+                {!! Form::text('section_plan_desc',$section_plan->section_plan_desc,['class' => 'form-control','placeholder' => 'Введите описание учебного плана',
+                 $read_only ? 'readonly' : '' ]) !!}
 
                 {!! Form::select('is_exam',array('' =>'Выберите тип:',
                 '0' => 'Раздел курса',
-                '1' => 'Экзамен(Зачёт)'), $sectionPlan->is_exam, ['id' => 'is_exam','class' => 'form-control', 'required' => 'required', 'disabled']) !!}
+                '1' => 'Экзамен(Зачёт)'), $section_plan->is_exam, ['id' => 'is_exam','class' => 'form-control', 'required' => 'required', 'disabled']) !!}
             </p>
-            <input type="hidden"  name="id_course_plan" value="{{$sectionPlan->id_course_plan}}" />
-            <input type="hidden"  name="id_section_plan" value="{{$sectionPlan->id_section_plan}}" />
-            <input type="hidden"  name="section_num_for_find_js" value="{{$sectionNumForFindJs}}" />
-            <input type="hidden"  name="is_exam" value="{{$sectionPlan->is_exam}}" />
+            <input type="hidden"  name="id_course_plan" value="{{$section_plan->id_course_plan}}" />
+            <input type="hidden"  name="id_section_plan" value="{{$section_plan->id_section_plan}}" />
+            <input type="hidden"  name="is_exam" value="{{$section_plan->is_exam}}" />
 
             {{--Вывод ошибок валидации--}}
             <div class="alert alert-danger print-error-msg" style="display:none">
@@ -51,36 +50,32 @@
 
         <div class="content_section row" style="margin-top: 2%; margin-bottom: 2%">
             {{-- добавление lectures, seminars, work on semenar для раздела--}}
-            <?php $lectureNumForFindJs = 0; $seminarNumForFindJs = 0; $controlWorkNumForFindJs = 0 ?>
 
             <div class="lectures col-lg-4">
-            @foreach($sectionPlan->lecture_plans as $lecturePlan)
-                <?php $lectureNumForFindJs++ ?>
-                @include('personal_account.statements.course_plans.sections.lectures.view_or_update_lecture',array('itemSectionPlan' => $lecturePlan, 'readOnly' => true,
-                'idCardForFindJs' => $lectureNumForFindJs, 'exist_statements' => $exist_statements))
+            @foreach($section_plan->lecture_plans as $lecture_plan)
+                @include('personal_account.statements.course_plans.sections.lectures.view_or_update_lecture',array('item_section_plan' => $lecture_plan, 'read_only' => true,
+                 'exist_statements' => $exist_statements))
             @endforeach
             </div>
 
             <div class="seminars col-lg-4">
-                @foreach($sectionPlan->seminar_plans as $seminarPlan)
-                    <?php $seminarNumForFindJs++ ?>
-                    @include('personal_account.statements.course_plans.sections.seminars.view_or_update_seminar',array('itemSectionPlan' => $seminarPlan, 'readOnly' => true,
-                    'idCardForFindJs' => $seminarNumForFindJs, 'exist_statements' => $exist_statements))
+                @foreach($section_plan->seminar_plans as $seminar_plan)
+                    @include('personal_account.statements.course_plans.sections.seminars.view_or_update_seminar',array('item_section_plan' => $seminar_plan, 'read_only' => true,
+                     'exist_statements' => $exist_statements))
                 @endforeach
             </div>
 
             <div class="control_works col-lg-4">
-                @foreach($sectionPlan->control_work_plans as $controlWorkPlan)
-                    <?php $controlWorkNumForFindJs++ ?>
-                    @include('personal_account.statements.course_plans.sections.control_works.view_or_update_control_work',array('itemSectionPlan' => $controlWorkPlan,
-                     'readOnly' => true, 'idCardForFindJs' => $controlWorkNumForFindJs, 'exist_statements' => $exist_statements, 'tests_control_work' => $tests_control_work))
+                @foreach($section_plan->control_work_plans as $control_work_plan)
+                    @include('personal_account.statements.course_plans.sections.control_works.view_or_update_control_work',array('item_section_plan' => $control_work_plan,
+                     'read_only' => true, 'exist_statements' => $exist_statements, 'tests_control_work' => $tests_control_work))
                 @endforeach
             </div>
 
         </div>
 
         @if($exist_statements == false)
-                @if($sectionPlan->is_exam == 0)
+                @if($section_plan->is_exam == 0)
         <button type="button" class="ink-reaction btn btn-info add_lecture_or_sem_or_CW" data-type-card="lecture">Добавить лекцию</button>
         <button type="button" class="ink-reaction btn btn-warning add_lecture_or_sem_or_CW" data-type-card="seminar">Добавить семинар</button>
                 @endif
