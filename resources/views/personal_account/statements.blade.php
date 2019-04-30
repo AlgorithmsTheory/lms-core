@@ -1,10 +1,6 @@
 @extends('templates.base')
 @section('head')
     <title>Ведомости</title>
-    {!! HTML::style('css/bootstrap.css') !!}
-    {!! HTML::style('css/materialadmin.css') !!}
-    {!! HTML::style('css/full.css') !!}
-    {!! HTML::script('js/jquery.js') !!}
     {!! HTML::style('css/loading_blur.css') !!}
     <meta name="csrf_token" content="{{ csrf_token() }}" />
 @stop

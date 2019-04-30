@@ -3,9 +3,6 @@
     <title>Создание учебного плана</title>
     <!-- BEGIN META -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="your,keywords">
-    <meta name="description" content="Short explanation about this website">
     <!-- END META -->
 
     <!-- BEGIN STYLESHEETS -->
@@ -101,7 +98,6 @@
     </div>
 @stop
 @section('js-down')
-    {!! HTML::script('js/statements/statements.js') !!}
 
     {!! HTML::script('js/core/source/App.js') !!}
     {!! HTML::script('js/core/source/AppNavigation.js') !!}
