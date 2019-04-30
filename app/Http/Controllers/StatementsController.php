@@ -323,35 +323,6 @@ class StatementsController extends Controller{
         return view('personal_account/student_account',  compact('course_plan','statement_lecture','statement_seminar', 'statement_result'));
     }
 
-    public function manage_plan(Request $request){
-        $user = Auth::user();
-        if($user['role'] == 'Админ') {
-            $plans = Pass_plan::join('groups', 'groups.group_id', '=', 'pass_plan.group')->where('groups.archived', 0)->get();
-        } else {
-            $plans = TeacherHasGroup::join('pass_plan', 'teacher_has_group.group', '=', 'pass_plan.group')
-                ->join('groups', 'groups.group_id', '=', 'pass_plan.group')
-                ->where('groups.archived', 0)
-                ->where('teacher_has_group.user_id', $user['id'])
-                ->get();
-        }
-        return view('personal_account/manage_plan', compact('plans'));
-    }
-
-    public function plan_is(Request $request){
-        $column = $request->input('column');
-        $group = $request->input('group');
-        Pass_plan::where('group', $group)->update([$column => 1]);
-        return 0;
-    }
-    public function plan_is_not(Request $request){
-        $column = $request->input('column');
-        $group = $request->input('group');
-        Pass_plan::where('group', $group)->update([$column => 0]);
-        return 0;
-    }
-
-
-
     //Возвращают представление соответствующей ведомости
     public function get_lectures(Request $request){
         $id_group = $request->input('group');
