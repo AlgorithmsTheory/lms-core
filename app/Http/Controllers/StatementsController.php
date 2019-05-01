@@ -9,7 +9,6 @@ use App\Statements\ResultStatementManage;
 use App\Statements\SeminarStatementManage;
 use App\Testing\Test;
 use App\TeacherHasGroup;
-use App\Pass_plan;
 use App\Group;
 use Auth;
 use Illuminate\Http\Request;
