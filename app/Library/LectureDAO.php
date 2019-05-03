@@ -165,4 +165,14 @@ class LectureDAO {
         $lecture->delete();
         return 'ok';
     }
+
+    public function ckeditorThemeAnchorsSetting($id_lecture) {
+        $anchor_names = Theme::whereId_lecture($id_lecture)
+            ->get()
+            ->map(function ($theme) {
+                return ['theme_name' => $theme['theme_name'],
+                    'anchor_name' => $theme['section_code'] . '.' . $theme['theme_code']];
+            });
+        return $anchor_names->toJson();
+    }
 }

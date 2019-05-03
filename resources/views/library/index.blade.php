@@ -330,8 +330,7 @@
 @stop
 
 @section('js-down')
-    {!! HTML::script('js/library/lectureIndex.js') !!}
-
+    {!! HTML::script('js/library/lectures/lectureIndex.js') !!}
     {!! HTML::script('js/core/source/App.js') !!}
     {!! HTML::script('js/core/source/AppNavigation.js') !!}
     {!! HTML::script('js/core/source/AppOffcanvas.js') !!}

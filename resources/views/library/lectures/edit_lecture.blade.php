@@ -23,7 +23,7 @@
     <![endif]-->
 
     {{--Редактор текста--}}
-    {!! HTML::script("https://cdn.ckeditor.com/4.11.2/full/ckeditor.js") !!}
+    {!! HTML::script("https://cdn.ckeditor.com/4.11.4/full/ckeditor.js") !!}
 
 @stop
 @section('content')
@@ -79,14 +79,12 @@
 
             </div>
         </div>
-
+<input id="ckeditor_theme_anchors" value="{{$ckeditor_theme_anchors}}" hidden/>
+<input id="path_ckeditor_config" value="{{ asset('/js/library/ckeditor/config.js') }}" hidden/>
     </div>
 @stop
 @section('js-down')
     <!-- BEGIN JAVASCRIPT -->
-    {!! HTML::script('js/libs/spin.js/spin.min.js') !!}
-    {!! HTML::script('js/libs/autosize/jquery.autosize.min.js') !!}
-    {!! HTML::script('js/libs/nanoscroller/jquery.nanoscroller.min.js') !!}
     {!! HTML::script('js/core/source/App.js') !!}
     {!! HTML::script('js/core/source/AppNavigation.js') !!}
     {!! HTML::script('js/core/source/AppOffcanvas.js') !!}
@@ -96,10 +94,6 @@
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
     {{--для редактора --}}
-    <script>
-        var editor = CKEDITOR.replace( 'lecture_text' , {
-            customConfig: '{{ asset('/js/library/ckeditor/config.js') }}'
-        });
-    </script>
+    {!! HTML::script('js/library/lectures/ckeditorSetting.js') !!}
     <!-- END JAVASCRIPT -->
 @stop

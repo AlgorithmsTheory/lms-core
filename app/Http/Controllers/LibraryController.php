@@ -104,8 +104,9 @@ class LibraryController extends Controller {
 
 
     public function editLecture($id){
+        $ckeditor_theme_anchors = $this->lectureDao->ckeditorThemeAnchorsSetting($id);
         $lecture = Lecture::findOrFail($id);
-        return view('library.lectures.edit_lecture', compact('lecture'));
+        return view('library.lectures.edit_lecture', compact('lecture', 'ckeditor_theme_anchors'));
     }
 
     public function updateLecture(UpdateLectureRequest $request, $id){
