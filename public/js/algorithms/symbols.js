@@ -1,7 +1,7 @@
 function SymbolsMtContext(imp){
     let ctx = $('[name = mt-entity' + imp + ']').first();
     let scntDiv = ctx.find('[name = p_scents]');
-    var i = scntDiv.find('li').length + 1;
+    let i = scntDiv.find('li').length + 1;
     let focusedElem = null;
     
     ctx.find('[name = addScnt]').on('click', function () {
@@ -29,13 +29,13 @@ function SymbolsMtContext(imp){
         return false;
     });
 
-    /*ctx.on('click', '[name = remScnt]', function () {
+    ctx.on('click', '[name = remScnt]', function () {
         if (i > 1) {
             $(this).parents('li').remove();
             i--;
         }
         return false;
-    });*/       // first fix error with save and load 
+    });
 
     ctx.on('focus', 'input[type=text]', function () {
         focusedElem = $(this);

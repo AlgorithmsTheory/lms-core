@@ -3,22 +3,27 @@ function SavingMtContext(inst)
     let ctx = $('[name = mt-entity' + inst + ']');
     
     ctx.find('[name = saveTextAsFile]').click(function(){
-        var textToWrite = ctx.find("[name = task_text]").val();
-        var i=0;
-        var DataMassSt=[];
-        var DataMassEnd=[];
-            while( ctx.find('[name = st_' + (i+1) + ']').length != 0 ){
-                DataMassSt.push(ctx.find('[name = st_' + (i+1) + ']').val());
-                DataMassEnd.push(ctx.find('[name = end_' + (i+1) + ']').val());
-                i++;
-                }
-            var data={task:textToWrite, "DataMassSt":DataMassSt, "DataMassEnd":DataMassEnd}	
+        let textToWrite = ctx.find("[name = task_text]").val();
+        let i=0;
+        let DataMassSt=[];
+        let DataMassEnd=[];
+            
+            let rowsStart = ctx.find('[name ^= st_]');
+            let rowsEnd = ctx.find('[name ^= end_]');
+            let countRows = rowsStart.length;
         
-        var json=JSON.stringify(data);
-        var textFileAsBlob = new Blob([json], {type:'application/json'});
-        var fileNameToSaveAs = ctx.find("[name = inputFileNameToSaveAs]").val();
+            while( i < countRows ){
+                DataMassSt.push( rowsStart.eq(i).val() );
+                DataMassEnd.push( rowsEnd.eq(i).val() );
+                i++;
+            }
+            let data={task:textToWrite, "DataMassSt":DataMassSt, "DataMassEnd":DataMassEnd}	
+        
+        let json=JSON.stringify(data);
+        let textFileAsBlob = new Blob([json], {type:'application/json'});
+        let fileNameToSaveAs = ctx.find("[name = inputFileNameToSaveAs]").val();
 
-        var downloadLink = document.createElement("a");
+        let downloadLink = document.createElement("a");
         downloadLink.download = fileNameToSaveAs;
         downloadLink.innerHTML = "Download File";
         if (window.webkitURL != null)
@@ -41,20 +46,24 @@ function SavingMtContext(inst)
     });
     
     ctx.find('[name = loadFileAsText]').click(function(){
-        var fileToLoad = ctx.find("[name = fileToLoad]")[0].files[0];
-        var fileReader = new FileReader();
+        let fileToLoad = ctx.find("[name = fileToLoad]")[0].files[0];
+        let fileReader = new FileReader();
         fileReader.onload = function(fileLoadedEvent) 
         {
-            var textFromFileLoaded = fileLoadedEvent.target.result;
-            var doc = eval('(' + textFromFileLoaded + ')');
-            var i=0;
+            let textFromFileLoaded = fileLoadedEvent.target.result;
+            let doc = eval('(' + textFromFileLoaded + ')');
+            let i=0;
             
-            while( ctx.find('[name = st_' + (i+1) + ']').length != 0 ){
-                ctx.find('[name = st_' + (i+1) + ']').val( doc.DataMassSt[i] );
-                ctx.find('[name = end_' + (i+1) + ']').val( doc.DataMassEnd[i] );
+            let rowsStart = ctx.find('[name ^= st_]');
+            let rowsEnd = ctx.find('[name ^= end_]');
+            let countRows = rowsStart.length;
+        
+            while( i < countRows ){
+                rowsStart.eq(i).val( doc.DataMassSt[i] );
+                rowsEnd.eq(i).val( doc.DataMassEnd[i] );
                 i++;
-                }
-                ctx.find("[name = task_text]").val( doc.task );
+            }
+            ctx.find("[name = task_text]").val( doc.task );
         };
         fileReader.readAsText(fileToLoad, "UTF-8");
     });

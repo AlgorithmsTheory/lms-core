@@ -99,7 +99,7 @@
                             <div class="form" role="form">
                                 <div class="form-group floating-label">
                                     <textarea name="task_text" class="form-control" rows="3" placeholder="Для Вашего удобства здесь можно написать условие задачи"></textarea>
-                                    <label for="textarea2" style="top:-15px">Условие задачи: </label> 
+                                    <label style="top:-15px">Условие задачи: </label> 
                                 </div>
                             </div>
                         </div>
@@ -110,7 +110,7 @@
                             <div class="form" role="form">
                                 <div class="form-group floating-label">
                                     <textarea name="textarea2" class="form-control" rows="1">∂</textarea>
-                                    <label for="textarea2" style="top:-15px">Входное слово:</label>
+                                    <label style="top:-15px">Входное слово:</label>
                                 </div>
                             </div>
                         </div>
