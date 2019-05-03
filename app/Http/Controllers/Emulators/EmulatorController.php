@@ -36,7 +36,7 @@ class EmulatorController extends Controller {
         fclose($fd);
     }
     
-    public function MTPOST(Request $request){  // выполняет Тьюринга на данных и возвращает ответ
+    public function MTPOST(Request $request){  // выполняет Тьюринга на данных и возвращает ответ   (ОБЫЧНОЕ ИСПОЛНЕНИЕ)
         $cmd = "/usr/local/bin/turing.sh";
         $data = $request->input('task');
         $task_file = tempnam(sys_get_temp_dir(), 'turn_'); 
@@ -48,7 +48,7 @@ class EmulatorController extends Controller {
         return $data;
     }
 
-    public function HAMPOST(Request $request){ // выполняет Маркова на данных и возвращает ответ
+    public function HAMPOST(Request $request){ // выполняет Маркова на данных и возвращает ответ    (ОБЫЧНОЕ ИСПОЛНЕНИЕ)
         $cmd = "/usr/local/bin/normal.sh";
         $data = $request->input('task');
         $task_file = tempnam(sys_get_temp_dir(), 'norm_'); 

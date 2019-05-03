@@ -22,7 +22,7 @@
 
 @section('content')
 @include('algorithm.MTview')
-@stop        
+@stop
 
 @section('js-down')
     {!! HTML::script('js/algorithms/superScript.js') !!}
