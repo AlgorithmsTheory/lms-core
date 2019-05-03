@@ -95,8 +95,8 @@ CKEDITOR.dialog.add( 'anchor', function( editor ) {
 				fullySelected = getSelectedAnchor( sel ),
 				fakeSelected = fullySelected && fullySelected.data( 'cke-realelement' ),
 				linkElement = fakeSelected ?
-					CKEDITOR.plugins.mylink.tryRestoreFakeAnchor( editor, fullySelected ) :
-					CKEDITOR.plugins.mylink.getSelectedLink( editor );
+					CKEDITOR.plugins.linkMephi22.tryRestoreFakeAnchor( editor, fullySelected ) :
+					CKEDITOR.plugins.linkMephi22.getSelectedLink( editor );
 
 			if ( linkElement ) {
 				loadElements.call( this, linkElement );
@@ -119,7 +119,7 @@ CKEDITOR.dialog.add( 'anchor', function( editor ) {
 				label: 'Обычный якорь',
 				required: true,
 				validate: function() {
-                    var anchor_array = CKEDITOR.plugins.mylink.getEditorAnchors(editor);
+                    var anchor_array = CKEDITOR.plugins.linkMephi22.getEditorAnchors(editor);
                     var result_search = anchor_array.find(anchor => anchor.name === this.getValue());
                     if (result_search) {
                         alert( 'Якорь с именем "' + result_search.name +  '" в данной лекции уже существует' ); // jshint ignore:line
@@ -134,7 +134,7 @@ CKEDITOR.dialog.add( 'anchor', function( editor ) {
                     label: 'Якоря тем',
                     items : [ ['', ''] ],
                     validate: function() {
-                        var anchor_array = CKEDITOR.plugins.mylink.getEditorAnchors(editor);
+                        var anchor_array = CKEDITOR.plugins.linkMephi22.getEditorAnchors(editor);
                         var result_search = anchor_array.find(anchor => anchor.name === this.getValue());
                         if (result_search) {
                             alert( 'Данный якорь темы уже существует' ); // jshint ignore:line

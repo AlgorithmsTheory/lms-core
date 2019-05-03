@@ -7,7 +7,7 @@
 
 ( function() {
 	CKEDITOR.dialog.add( 'link', function( editor ) {
-		var plugin = CKEDITOR.plugins.mylink,
+		var plugin = CKEDITOR.plugins.linkMephi22,
 			initialLinkText;
 
 		function createRangeForLink( editor, link ) {

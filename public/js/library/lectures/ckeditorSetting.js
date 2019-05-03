@@ -41,7 +41,7 @@ $(document).ready(function(){
 function validStoreLecture(editor, anchorThemes) {
     var errorArray = [];
      if (ckEditorInstanceReady)  {
-         var allAnchorsLecture = CKEDITOR.plugins.mylink.getEditorAnchors(editor);
+         var allAnchorsLecture = CKEDITOR.plugins.linkMephi22.getEditorAnchors(editor);
          $.each(anchorThemes,function(index,anchorThemesValue){
              var resultSearch = allAnchorsLecture.find(anchor => anchor.name === anchorThemesValue.anchor_name);
              if (!resultSearch) {

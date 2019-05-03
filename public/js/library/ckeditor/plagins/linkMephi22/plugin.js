@@ -6,7 +6,7 @@
 'use strict';
 
 ( function() {
-	CKEDITOR.plugins.add( 'mylink', {
+	CKEDITOR.plugins.add( 'linkMephi22', {
 		requires: 'dialog,fakeobjects',
 		// jscs:disable maximumLineLength
 		lang: 'en,ru', // %REMOVE_LINE_CORE%
@@ -107,7 +107,7 @@
 
 						// Pass the link to be selected along with event data.
 						evt.data.link = element;
-					} else if ( CKEDITOR.plugins.mylink.tryRestoreFakeAnchor( editor, element ) ) {
+					} else if ( CKEDITOR.plugins.linkMephi22.tryRestoreFakeAnchor( editor, element ) ) {
 						evt.data.dialog = 'anchor';
 					}
 				}
@@ -159,9 +159,9 @@
 					if ( !element || element.isReadOnly() )
 						return null;
 
-					var anchor = CKEDITOR.plugins.mylink.tryRestoreFakeAnchor( editor, element );
+					var anchor = CKEDITOR.plugins.linkMephi22.tryRestoreFakeAnchor( editor, element );
 
-					if ( !anchor && !( anchor = CKEDITOR.plugins.mylink.getSelectedLink( editor ) ) )
+					if ( !anchor && !( anchor = CKEDITOR.plugins.linkMephi22.getSelectedLink( editor ) ) )
 						return null;
 
 					var menu = {};
@@ -199,7 +199,7 @@
 			if ( pathFilters ) {
 				pathFilters.push( function( element, name ) {
 					if ( name == 'a' ) {
-						if ( CKEDITOR.plugins.mylink.tryRestoreFakeAnchor( editor, element ) || ( element.getAttribute( 'name' ) && ( !element.getAttribute( 'href' ) || !element.getChildCount() ) ) )
+						if ( CKEDITOR.plugins.linkMephi22.tryRestoreFakeAnchor( editor, element ) || ( element.getAttribute( 'name' ) && ( !element.getAttribute( 'href' ) || !element.getChildCount() ) ) )
 							return 'anchor';
 					}
 				} );
@@ -259,7 +259,7 @@
 	}
 
 	function protectEmailLinkAsFunction( editor, email ) {
-		var plugin = editor.plugins.mylink,
+		var plugin = CKEDITOR.plugins.linkMephi22,
 			name = plugin.compiledProtectionFunction.name,
 			params = plugin.compiledProtectionFunction.params,
 			paramName, paramValue, retval;
@@ -302,11 +302,11 @@
 	 * @class
 	 * @singleton
 	 */
-	CKEDITOR.plugins.mylink = {
+	CKEDITOR.plugins.linkMephi22 = {
 		/**
 		 * Get the surrounding link element of the current selection.
 		 *
-		 *		CKEDITOR.plugins.mylink.getSelectedLink( editor );
+		 *		CKEDITOR.plugins.linkMephi22.getSelectedLink( editor );
 		 *
 		 *		// The following selections will all return the link element.
 		 *
@@ -457,7 +457,7 @@
 		 */
 		parseLinkAttributes: function( editor, element ) {
 			var href = ( element && ( element.data( 'cke-saved-href' ) || element.getAttribute( 'href' ) ) ) || '',
-				compiledProtectionFunction = editor.plugins.mylink.compiledProtectionFunction,
+				compiledProtectionFunction = CKEDITOR.plugins.linkMephi22.compiledProtectionFunction,
 				emailProtection = editor.config.emailProtection,
 				javascriptMatch, emailMatch, anchorMatch, urlMatch, telMatch,
 				retval = {};
@@ -837,10 +837,10 @@
 			var sel = editor.getSelection(),
 				bms = sel.createBookmarks(),
 				anchor;
-			if ( sel && ( anchor = sel.getSelectedElement() ) && ( !anchor.getChildCount() ? CKEDITOR.plugins.mylink.tryRestoreFakeAnchor( editor, anchor ) : anchor.is( 'a' ) ) )
+			if ( sel && ( anchor = sel.getSelectedElement() ) && ( !anchor.getChildCount() ? CKEDITOR.plugins.linkMephi22.tryRestoreFakeAnchor( editor, anchor ) : anchor.is( 'a' ) ) )
 				anchor.remove( 1 );
 			else {
-				if ( ( anchor = CKEDITOR.plugins.mylink.getSelectedLink( editor ) ) ) {
+				if ( ( anchor = CKEDITOR.plugins.linkMephi22.getSelectedLink( editor ) ) ) {
 					if ( anchor.hasAttribute( 'href' ) ) {
 						anchor.removeAttributes( { name: 1, 'data-cke-saved-name': 1 } );
 						anchor.removeClass( 'cke_anchor' );
