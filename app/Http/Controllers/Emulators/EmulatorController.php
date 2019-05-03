@@ -36,7 +36,7 @@ class EmulatorController extends Controller {
         fclose($fd);
     }
     
-    public function MTPOST(Request $request){
+    public function MTPOST(Request $request){  // выполняет Тьюринга на данных и возвращает ответ
         $cmd = "/usr/local/bin/turing.sh";
         $data = $request->input('task');
         $task_file = tempnam(sys_get_temp_dir(), 'turn_'); 
@@ -48,7 +48,7 @@ class EmulatorController extends Controller {
         return $data;
     }
 
-    public function HAMPOST(Request $request){
+    public function HAMPOST(Request $request){ // выполняет Маркова на данных и возвращает ответ
         $cmd = "/usr/local/bin/normal.sh";
         $data = $request->input('task');
         $task_file = tempnam(sys_get_temp_dir(), 'norm_'); 
@@ -60,7 +60,7 @@ class EmulatorController extends Controller {
         return $data;
     }
 
-    function run($data){
+    function run($data){ // выполняет Тьюринга на данных и возвращает ответ     data -> json_decode -> MT -> json_encode(True) -> data
         $cmd = "/usr/local/bin/turing.sh";
         $task_file = tempnam(sys_get_temp_dir(), 'turn_');
         file_put_contents($task_file, json_encode($data));
@@ -70,7 +70,7 @@ class EmulatorController extends Controller {
         return $res;
     }
 
-    function runHAM($data){
+    function runHAM($data){ // выполняет Маркова на данных и возвращает ответ     data -> json_decode -> MT -> json_encode(True) -> data
         $cmd = "/usr/local/bin/normal.sh";
         $task_file = tempnam(sys_get_temp_dir(), 'norm_');
         file_put_contents($task_file, json_encode($data));
@@ -164,7 +164,6 @@ class EmulatorController extends Controller {
     Controls::where('userID', $id_user)->update(['control2' => $score_2]);
 
         return $repost;
-        //    return $sqnc[0]['input_word'];
     }
 
     public function kontr_MTPOST(Request $request){
