@@ -68,6 +68,10 @@
 {!! HTML::script('js/algorithms/post.js') !!}
 {!! HTML::script('js/algorithms/kontr_post.js') !!}
 
+{!! HTML::script('js/algorithms/symbols.js') !!}
+{!! HTML::script('js/algorithms/saving.js') !!}
+{!! HTML::script('js/algorithms/send.js') !!}
+
 {!! HTML::script('js/core/source/App.js') !!}
 {!! HTML::script('js/core/source/AppNavigation.js') !!}
 {!! HTML::script('js/core/source/AppOffcanvas.js') !!}

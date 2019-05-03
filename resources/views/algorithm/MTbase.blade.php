@@ -18,8 +18,8 @@
                             <div class="tools">
                                 <div class="btn-group">
                                     <input type="hidden" name="inputFileNameToSaveAs" value="Алгоритм МТ" ></input>
-                                    <button type="button" title="" data-original-title="Сохранить в файл алгоритм и условие задачи" data-toggle="tooltip" data-placement="top" class="btn btn-default-bright btn-raised" onclick="saveTextAsFile()"><i class="md md-file-download"></i></button>
-                                    <button type="button" onclick="loadFileAsText()" style="left:5px" title="" data-original-title="Загрузить в эмулятор ранее сохраненный алгоритм. Перед этим выберите файл" data-toggle="tooltip" data-placement="top" class="btn btn-default-bright btn-raised"><i class="md md-file-upload"></i></button>
+                                    <button type="button" title="" data-original-title="Сохранить в файл алгоритм и условие задачи" data-toggle="tooltip" data-placement="top" class="btn btn-default-bright btn-raised" name="saveTextAsFile"><i class="md md-file-download"></i></button>
+                                    <button type="button" name="loadFileAsText" style="left:5px" title="" data-original-title="Загрузить в эмулятор ранее сохраненный алгоритм. Перед этим выберите файл" data-toggle="tooltip" data-placement="top" class="btn btn-default-bright btn-raised"><i class="md md-file-upload"></i></button>
                                     <input type="file"  style="left:15px" class="btn ink-reaction btn-raised btn-xs btn-primary" name="fileToLoad"></input>
                                 </div>
                             </div>
@@ -37,11 +37,11 @@
                                             <li name="p_scnt" class="tile">
                                                 <div class="input-group">
                                                     <div class="input-group-content">
-                                                        <input type="text"  onchange="superScript(this);" name="st_1"  class="form-control" name="start" value="S₀.∂">
+                                                        <input type="text"  onchange="superScript(this);" name="st_1"  class="form-control" value="S₀.∂">
                                                     </div>
                                                     <span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
                                                     <div class="input-group-content">
-                                                        <input type="text" onchange="superScript(this);" name="end_1"  class="form-control" name="end" value="∂.R.S₀">
+                                                        <input type="text" onchange="superScript(this);" name="end_1"  class="form-control" value="∂.R.S₀">
                                                     </div>
                                                 </div> 
                                                 <a class="btn btn-flat ink-reaction btn-default" href="#" name="remScnt">
@@ -52,11 +52,11 @@
                                             <li name="p_scnt_{{$i}}" class="tile">
                                                 <div class="input-group">
                                                     <div class="input-group-content">
-                                                        <input type="text" name="st_{{$i}}" class="form-control" name="start">
+                                                        <input type="text" name="st_{{$i}}" class="form-control">
                                                     </div>
                                                     <span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
                                                     <div class="input-group-content">
-                                                        <input type="text" name="end_{{$i}}" class="form-control" name="end">
+                                                        <input type="text" name="end_{{$i}}" class="form-control">
                                                     </div>
                                                 </div> 
                                                 <a class="btn btn-flat ink-reaction btn-default" href="#" name="remScnt">
@@ -96,23 +96,23 @@
                             </a>
                         </div>
                         <div class="col-lg-12">
-                            <form class="form" role="form">
+                            <div class="form" role="form">
                                 <div class="form-group floating-label">
-                                    <textarea name="task_text" name="task_text" class="form-control" rows="3" placeholder="Для Вашего удобства здесь можно написать условие задачи"></textarea>
+                                    <textarea name="task_text" class="form-control" rows="3" placeholder="Для Вашего удобства здесь можно написать условие задачи"></textarea>
                                     <label for="textarea2" style="top:-15px">Условие задачи: </label> 
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="col-sm-6">
                         <div class="card-body">
-                            <form class="form" role="form">
+                            <div class="form" role="form">
                                 <div class="form-group floating-label">
-                                    <textarea name="textarea_src" name="textarea2" class="form-control" rows="1">∂</textarea>
+                                    <textarea name="textarea2" class="form-control" rows="1">∂</textarea>
                                     <label for="textarea2" style="top:-15px">Входное слово:</label>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                         <div class="card">
                             <div class="col-sm-6">
@@ -165,12 +165,12 @@
                                     </tbody>
                                 </table>
                                 <br>
-                                <form class="form" role="form">
+                                <div class="form" role="form">
                                     <div class="form-group floating-label">
                                         <input type="text" class="form-control" name="disabled6" disabled>
                                         <label for="disabled6" style="top:-15px">Результат: </label>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
