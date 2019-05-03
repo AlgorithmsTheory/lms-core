@@ -23,7 +23,7 @@
     <![endif]-->
 
     {{--Редактор текста--}}
-    {!! HTML::script("https://cdn.ckeditor.com/4.11.2/full/ckeditor.js") !!}
+    {!! HTML::script("https://cdn.ckeditor.com/4.11.4/full/ckeditor.js") !!}
 
 @stop
 @section('content')

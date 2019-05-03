@@ -7,10 +7,10 @@ $(document).ready(function(){
     editor.on( 'instanceReady', function() {
         ckEditorInstanceReady = true;
     } );
-    var ckeditorThemeAnchors = $('#ckeditor_theme_anchors');
-    if (ckeditorThemeAnchors) {
+    var ckeditorThemeAnchors = $('#ckeditor_theme_anchors').val();
+    if (typeof ckeditorThemeAnchors != 'undefined') {
         //Вставка тем в select диалога дбавления якоря
-        var anchorThemes = JSON.parse(ckeditorThemeAnchors.val());
+        var anchorThemes = JSON.parse(ckeditorThemeAnchors);
         CKEDITOR.on( 'dialogDefinition', function( ev ) {
             var dialogName = ev.data.name;
             var dialogDefinition = ev.data.definition;
