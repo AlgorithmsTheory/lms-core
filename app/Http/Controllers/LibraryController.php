@@ -19,6 +19,7 @@ use App\Http\Requests\UpdateTheoremRequest;
 use App\Http\Requests\AddEducationMaterialRequest;
 use App\Http\Requests\EditEducationMaterialRequest;
 
+use App\Library\DAO\ExtraDAO;
 use App\Library\DefinitionDAO;
 use App\Library\LectureDAO;
 use App\Library\PersonDAO;
@@ -29,6 +30,7 @@ use App\Theorem;
 use App\Testing\Lecture;
 use App\User;
 use Auth;
+use Illuminate\Http\Request;
 use  Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeExtensionGuesser as MimeType;
 
@@ -40,14 +42,16 @@ class LibraryController extends Controller {
     private $definitionDao;
     private $theoremDao;
     private $educationalMaterialDao;
+    private $extra_DAO;
 
     function __construct(PersonDAO $personDao, LectureDAO $lectureDao, DefinitionDAO $definitionDao, TheoremDAO $theoremDao,
-                         EducationalMaterialDAO $educationalMaterialDAO) {
+                         EducationalMaterialDAO $educationalMaterialDAO, ExtraDAO $extra_DAO) {
         $this->personDao = $personDao;
         $this->lectureDao = $lectureDao;
         $this->definitionDao = $definitionDao;
         $this->theoremDao = $theoremDao;
         $this->educationalMaterialDao = $educationalMaterialDAO;
+        $this->extra_DAO = $extra_DAO;
     }
 
     public function index(){
@@ -86,8 +90,40 @@ class LibraryController extends Controller {
         return view('library.persons.person', compact('person', 'role'));
     }
 
-    public function extra(){
-        return view('library.dop');
+    public function extras(){
+        $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
+        $extras = $this->extra_DAO->allExtras();
+        return view('library.extras.extras', compact('extras','role'));
+    }
+
+    public function extraStore(Request $request) {
+        $validator = $this->extra_DAO->validate($request);
+        if ($validator->passes()) {
+            $this->extra_DAO->storeExtra($request);
+            return redirect('library/extras');
+        } else {
+            return back()->withInput($request->all())->withErrors($validator);
+        }
+    }
+
+    public function extraEdit($id_extra) {
+        $extra = $this->extra_DAO->getExtra($id_extra);
+        return view('library.extras.edit_extra', compact('extra'));
+    }
+
+    public function extraUpdate(Request $request, $id_extra) {
+        $validator = $this->extra_DAO->validate($request);
+        if ($validator->passes()) {
+            $this->extra_DAO->updateExtra($request, $id_extra);
+            return redirect('library/extras');
+        } else {
+            return back()->withInput($request->all())->withErrors($validator);
+        }
+    }
+
+    public function extraDelete($id_extra) {
+        $this->extra_DAO->deleteExtra($id_extra);
+        return 0;
     }
 
     public function addNewLecture(){

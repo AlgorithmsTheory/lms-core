@@ -156,8 +156,16 @@ Route::delete('library/persons/{id}/delete',['as' => 'person_delete', 'uses' => 
 Route::get('library/persons/{id}/downloadDoc', ['as' => 'doc_download', 'uses' => 'LibraryController@docDownload', 'middleware' => ['general_auth']]);
 // Скачивание ppt файла
 Route::get('library/persons/{id}/downloadPpt', ['as' => 'ppt_download', 'uses' => 'LibraryController@pptDownload', 'middleware' => ['general_auth']]);
-
-Route::get('library/extra', ['as' => 'library_extra', 'uses' => 'LibraryController@extra', 'middleware' => ['general_auth', 'access_for_library']]);
+//Вывод доп материалов
+Route::get('library/extras', ['as' => 'library_extras', 'uses' => 'LibraryController@extras', 'middleware' => ['general_auth', 'access_for_library']]);
+//Сохранение доп материала
+Route::post('library/extra/store', ['as' => 'library_extra_store', 'uses' => 'LibraryController@extraStore', 'middleware' => ['general_auth', 'admin']]);
+//переход на страницу редактирования доп материала
+Route::get('library/extra/edit/{id}', ['as' => 'library_extra_edit', 'uses' => 'LibraryController@extraEdit', 'middleware' => ['general_auth', 'admin']]);
+//Обновление доп материала
+Route::patch('library/extra/update/{id}', ['as' => 'library_extra_update', 'uses' => 'LibraryController@extraUpdate', 'middleware' => ['general_auth', 'admin']]);
+// Удаление доп. материала
+Route::delete('library/extra/delete/{id}',['as' => 'library_extra_delete', 'uses' => 'LibraryController@extraDelete', 'middleware' => ['general_auth', 'admin']]);
 // Переход на страницу учебные материалы
 Route::get('library/educationalMaterials', ['as' => 'educational_materials', 'uses' => 'LibraryController@educationalMaterials', 'middleware' => ['general_auth']]);
 //добавление учебного материала
