@@ -17,7 +17,9 @@
 @stop
 
 @section('content')
+<section>
 @include('algorithm.Postview')
+</section>
 @stop		
 
 @section('js-down')
@@ -38,5 +40,3 @@
 		{!! HTML::script('js/core/demo/DemoUILists.js') !!}
 		{!! HTML::script('js/core/demo/DemoUIMessages.js') !!}
 @stop
-
-

@@ -1,4 +1,3 @@
-<section>
 <div name="post-entity">
     <div class="section-body container-fluid">
         <div class="row">
@@ -11,7 +10,7 @@
         <div class="col-lg-12">
             <div class="card style-default-bright">
                 <div class="card-head">
-                    <div class="col-lg-6">
+                    <div class="col-lg-8">
                         </br>
                         <div class="card card-bordered style-primary" style="top: -40px; height: 700px;">
                             <div class="card-head">
@@ -95,94 +94,65 @@
                         </div><!--end .card -->
                     </div>
                     
-                    <div class="col-lg-6">    
-                        <div class="card-body" >
-                            <div class="col-lg-2" style="left:400px">
-                                <a class="btn btn-raised ink-reaction btn-primary" href="#offcanvas-demo-right" data-toggle="offcanvas">
-                                    <i class="md md-help"></i>
-                                </a>
+                    <div class="col-lg-4">
+                        <div class="card-body">
+                            <div class="form" role="form">
+                                <div class="form-group floating-label">
+                                    <textarea name="input_word" class="form-control" rows="1" placeholder=""></textarea>
+                                    <label for="textarea2" style="top:-30px">Входное слово:</label>
+                                </div>
                             </div>
-                            <div class="col-lg-12"><!--
-                                                <form class="form" role="form">
-                                                    <div class="form-group floating-label">
-                                                        <textarea name="task_text" name="task_text" class="form-control" rows="3" placeholder="Для Вашего удобства здесь можно написать условие задачи"></textarea>
-                                                        <label for="task_text" style="top:-15px">Условие задачи: </label> 
-                                                    </div>
-                                                </form> -->
-                            </div>                    
-                        </div><!--end .card-body -->
-                                
-                        <div class="col-sm-6">
-                            <div class="card-body">
-                                <div class="form" role="form">
-                                    <div class="form-group floating-label">
-                                        <textarea name="input_word" class="form-control" rows="1" placeholder=""></textarea>
-                                        <label for="textarea2" style="top:-50px">Входное слово:</label>
-                                    </div>
-                                </div>
-                            </div><!--end .card-body -->
-                            <div class="card">
-                                <div class="col-sm-6">
-                                    <button type="button" name="runPost" class="btn ink-reaction btn-primary" title="" data-original-title="Отладить до конца" data-toggle="tooltip" data-placement="top" >Запуск</button>    
-                                </div>
-                                <div class="col-sm-6">                                    
-                                    <button  type="button" name="runPostTrue" class="btn ink-reaction btn-primary"  title="" data-original-title="Шаг для отладки алгоритма" data-toggle="tooltip" data-placement="top"><i class="md md-play-arrow"></i></button>
-                                </div>
-                                <br>
-                            </div>        
-                                            <!-- <div class="card">
-                                            <div class="card-head card-head-xs">
-                                            <header>Спецсимволы:</header>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn ink-reaction btn-default-bright" name="sh">#</button>
-                                                    <button type="button" class="btn ink-reaction btn-default-bright" name="one_tild">Õ</button>
-                                                    <button type="button" class="btn ink-reaction btn-default-bright" name="big_lambda">&lambda;</button>
-                                                    <button type="button" class="btn ink-reaction btn-default-bright" name="bull">H</button>
-                                                    
-                                                                                                
-                                                </div> 
-                                            </div>
-                                            </div> -->
                         </div>
                         
-                        <div class="col-sm-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <table class="table no-margin">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>Процесс:</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody name="debug">
-                                            <tr>
-                                                <td>1</td>
-                                                <td name="input1"></td>    
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td name="input2"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <br>
-                                    <div class="form" role="form">
-                                        <div class="form-group floating-label">
-                                            <input type="text" class="form-control" name="result_word" disabled value="">
-                                            <label for="disabled6" style="top:-15px">Результат: </label>
-                                        </div>
+                        <div class="card" style="top: -25px;">
+                            <div class="card-body">
+                                <div class="col-sm-4">
+                                    <button type="button" name="runPost" class="btn ink-reaction btn-primary" title="" data-original-title="Отладить до конца" data-toggle="tooltip" data-placement="top" >Запуск</button>    
+                                </div>
+                                <div class="col-sm-4">                                    
+                                    <button  type="button" name="runPostTrue" class="btn ink-reaction btn-primary"  title="" data-original-title="Шаг для отладки алгоритма" data-toggle="tooltip" data-placement="top"><i class="md md-play-arrow"></i></button>
+                                </div>
+                                <div class="col-sm-4">
+                                    <a class="btn btn-raised ink-reaction btn-primary" href="#offcanvas-demo-right" data-toggle="offcanvas">
+                                        <i class="md md-help"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card" style="top: -25px">
+                            <div class="card-body">
+                                <table class="table no-margin">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Процесс:</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody name="debug">
+                                        <tr>
+                                            <td>1</td>
+                                            <td name="input1"></td>    
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td name="input2"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                                <div class="form" role="form">
+                                    <div class="form-group floating-label">
+                                        <input type="text" class="form-control" name="result_word" disabled value="">
+                                        <label for="disabled6" style="top:-15px">Результат: </label>
                                     </div>
                                 </div>
                             </div>
-                        </div>    
-                    </div>                        
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         @yield('addl-blocks-post')
     </div>
 </div>
-</section>
