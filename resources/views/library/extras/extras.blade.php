@@ -40,6 +40,7 @@
 						'rows' => 3]) !!}
 					</div>
 					<div class="form-group">
+						{!! Form::label('extra_file', 'Выберите файл в формате doc,docx,pdf') !!}
 						<input type="file"  name="extra_file" >
 					</div>
 					<div class="form-group">
@@ -83,7 +84,7 @@
 						<p>{{$extra['extra_desc']}}</p>
 					</blockquote>
 						@if($extra['path_file'] != null)
-					{!! HTML::link($extra['path_file'], 'Скачать', array('class' => 'btn btn-default')) !!}
+					{!! HTML::link($dir_parent_module . $extra['path_file'], 'Скачать', array('class' => 'btn btn-default')) !!}
 						@endif
 					<p>&nbsp;</p>
 					</div>
@@ -102,5 +103,5 @@
 	{!! HTML::script('js/core/source/AppNavSearch.js') !!}
 	{!! HTML::script('js/core/source/AppVendor.js') !!}
 	{!! HTML::script('js/core/demo/Demo.js') !!}
-	{!! HTML::script('js/library/extra.js') !!}
+	{!! HTML::script('js/library/extra/extra.js') !!}
 @stop

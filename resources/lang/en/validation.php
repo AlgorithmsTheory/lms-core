@@ -200,6 +200,20 @@ return [
         ),'extra_file' => array(
             'file' => 'Файл не был загружен.',
             'mimes' => 'Файл должен быть формата doc,pdf,docx',
+        ),'ebook_title' => array(
+            'required' => 'Введите название книги',
+            'max' => 'Название должно содержать максимум :max символов'
+        ),'ebook_img' => array(
+            'required' => 'Добавьте изображение книги',
+            'image' => 'Файл должен быть изображением'
+        ),'ebook_file' => array(
+            'required' => 'Добавьте файл книги',
+            'mimes' => 'Файл должен быть в формате doc,docx,pdf,djvu'
+        ),'ebook_author' => array(
+            'required' => 'Введите автора книги',
+            'max' => 'Автора должнен содержать максимум :max символов'
+        ),'id_genre' => array(
+            'required' => 'Выберите жанр книги'
         )
 	],
 

@@ -19,6 +19,7 @@ use App\Http\Requests\UpdateTheoremRequest;
 use App\Http\Requests\AddEducationMaterialRequest;
 use App\Http\Requests\EditEducationMaterialRequest;
 
+use App\Library\DAO\EbookDAO;
 use App\Library\DAO\ExtraDAO;
 use App\Library\DefinitionDAO;
 use App\Library\LectureDAO;
@@ -43,15 +44,17 @@ class LibraryController extends Controller {
     private $theoremDao;
     private $educationalMaterialDao;
     private $extra_DAO;
+    private $ebook_DAO;
 
     function __construct(PersonDAO $personDao, LectureDAO $lectureDao, DefinitionDAO $definitionDao, TheoremDAO $theoremDao,
-                         EducationalMaterialDAO $educationalMaterialDAO, ExtraDAO $extra_DAO) {
+                         EducationalMaterialDAO $educationalMaterialDAO, ExtraDAO $extra_DAO, EbookDAO $ebook_DAO) {
         $this->personDao = $personDao;
         $this->lectureDao = $lectureDao;
         $this->definitionDao = $definitionDao;
         $this->theoremDao = $theoremDao;
         $this->educationalMaterialDao = $educationalMaterialDAO;
         $this->extra_DAO = $extra_DAO;
+        $this->ebook_DAO = $ebook_DAO;
     }
 
     public function index(){
@@ -93,7 +96,8 @@ class LibraryController extends Controller {
     public function extras(){
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
         $extras = $this->extra_DAO->allExtras();
-        return view('library.extras.extras', compact('extras','role'));
+        $dir_parent_module = ExtraDAO::DIR_PARENT_MODULE ;
+        return view('library.extras.extras', compact('extras','role', 'dir_parent_module'));
     }
 
     public function extraStore(Request $request) {
@@ -327,5 +331,63 @@ class LibraryController extends Controller {
     public function deleteEducationalMaterial($id){
         $resultAction = $this->educationalMaterialDao->deleteEducationalMaterial($id);
         return  json_encode(array("msg" => $resultAction, "id" => $id));
+    }
+
+    public function ebooks() {
+        $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
+        $ebooks_groupBy_genre = $this->ebook_DAO->allEbooksGroupByGenre();
+        $search_query = "";
+        $dir_parent_module = EbookDAO::DIR_PARENT_MODULE ;
+        return view("library.ebooks.ebooks", compact('ebooks_groupBy_genre',
+            'search_query', 'role', 'dir_parent_module'));
+    }
+
+    public function searchEbooks(Request $request){
+        $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
+        $search_query = $request->input('search');
+        $ebooks_groupBy_genre = $this->ebook_DAO->searchEbooks($search_query);
+        $dir_parent_module = EbookDAO::DIR_PARENT_MODULE ;
+        return view("library.ebooks.ebooks", compact('ebooks_groupBy_genre','search_query', 'role', 'dir_parent_module'));
+    }
+
+    public function addEbook() {
+        return view('library.ebooks.add_ebook');
+    }
+
+    public function storeEbook(Request $request) {
+        $validator = $this->ebook_DAO->validateStore($request);
+        if ($validator->passes()) {
+            $id_ebook = $this->ebook_DAO->storeEbook($request);
+            return redirect()->route('get_ebook', ['id_ebook' => $id_ebook]);
+        } else {
+            return back()->withInput($request->all())->withErrors($validator);
+        }
+    }
+
+    public function getEbook($id_ebook) {
+        $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
+        $ebook = $this->ebook_DAO->getEbook($id_ebook);
+        $dir_parent_module = EbookDAO::DIR_PARENT_MODULE ;
+        return view('library.ebooks.ebook', compact('ebook', 'role', 'dir_parent_module'));
+    }
+
+    public function editEbook($id_ebook) {
+        $ebook = $this->ebook_DAO->getEbook($id_ebook);
+        return view('library.ebooks.edit_ebook', compact('ebook'));
+    }
+
+    public function updateEbook(Request $request, $id_ebook) {
+        $validator = $this->ebook_DAO->validateUpdate($request);
+        if ($validator->passes()) {
+            $this->ebook_DAO->updateEbook($request, $id_ebook);
+            return redirect()->route('get_ebook', ['id_ebook' => $id_ebook]);
+        } else {
+            return back()->withInput($request->all())->withErrors($validator);
+        }
+    }
+
+    public function deleteEbook($id_ebook) {
+        $this->ebook_DAO->deleteEbook($id_ebook);
+        return redirect()->route('ebooks');
     }
 }

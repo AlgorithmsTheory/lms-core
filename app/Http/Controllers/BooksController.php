@@ -597,32 +597,6 @@ public function updateLibraryNews(Request $request,$id){
     return view("library.lection", compact('book_id','result1', 'success'));
      }
 
-    public function ebookindex(){
-        $ebook=Ebook::select();
-        $results=$ebook->get();
-        /*$link = mysqli_connect('localhost','root','root','libr');
-        $link->query("SET CHARACTER SET utf8");*/
-        //$results = array();
-        for ($i = 0; $i < 5; $i++){
-            //$query = "SELECT * FROM ebook WHERE section=$i";
-            $query=Ebook::where('section', '=', "$i");
-            $results[$i] = $query->get();
-        }
-        $searchquery = "";
-        return view("library.ebooks", compact('results','searchquery'));
-    }
-    public function esearch(){
-        $search = Request::input('search');
-        $ebook=Ebook::where('title', 'like', "%$search%");
-        $ebook->orWhere('author', 'like', "%$search%");
-        //$query = "SELECT * FROM `ebook` WHERE UPPER(`title`) LIKE UPPER('%$search%') OR UPPER(`author`) LIKE UPPER('%$search%')";
-        //$results = $link->query($query);
-        $results= $ebook->get();
-        $searchquery = $search;
-        return view("library.ebooks", compact('results','searchquery'));
-    }
-
-
     public function library_calendar(){
         $success = false;
         return view("personal_account.library_calendar", compact('success'));
