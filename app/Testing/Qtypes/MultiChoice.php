@@ -153,7 +153,7 @@ class MultiChoice extends QuestionType implements Checkable {
         return $data;
     }
 
-    public function pdf(Mypdf $fpdf, $count, $answered=false) {
+    public function pdf(Mypdf $fpdf, $count, $answered=false, $paper_savings=false) {
         $text_parse = explode('::', $this->text);
         $text = "";
         for ($i=0; $i < count($text_parse); $i++){                                                                      //обработка картинки в тексте вопроса

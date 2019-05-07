@@ -41,6 +41,12 @@
                             <textarea  name="protocol-date" id="protocol-date" class="form-control" rows="1" placeholder="Например, 15.12.2017"></textarea>
                             <label for="textarea1">Дата протокола</label>
                         </div>
+
+                        <!-- Экономия бумаги -->
+                        {{ Form::label('paper_savings', 'Экономия бумаги') }}
+                        {{ Form::checkbox('paper_savings', true , true, array('data-toggle' => 'tooltip', 'data-placement' => 'right',
+                         'title' => 'Не будут создаваться большие пустые поля для ответов типов: теоремы, как теоремы, RAM)')) }}
+
                     </div>
                 </div>
             </div>
@@ -49,4 +55,9 @@
             </div>
         </form>
     </div>
+@stop
+
+@section('js-down')
+    {!! HTML::script('js/personal_account/variation_generation/variation_generation.js') !!}
+
 @stop

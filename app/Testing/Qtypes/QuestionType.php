@@ -19,6 +19,7 @@ abstract class QuestionType {
     const IMAGES_IN_TITLE_DIR = 'img/questions/title/';
     const CREATE_VIEW_PREFIX = 'questions.teacher.create';
     const EDIT_VIEW_PREFIX = 'questions.teacher.edit';
+    const PAPER_SAVING_HEIGHT_ANSWER = '50px';
 
     public $id_question;
     public $text;
@@ -128,5 +129,5 @@ abstract class QuestionType {
      * @param int $count - Ordered number of the question
      * @param bool $answered - true if needed to generate PDF with correct answers (for teachers), false - for students
      */
-    abstract function pdf(Mypdf $fpdf, $count, $answered=false);
+    abstract function pdf(Mypdf $fpdf, $count, $answered=false, $paper_savings=false);
 }
