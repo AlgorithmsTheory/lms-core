@@ -11,7 +11,7 @@
 <input type="hidden" name="num" value="{{ $id }}" />
 <input type="hidden" name="type" value="{{ $type }}" />
 
-<h4><b>Эмулятор RAM</b></h4>
+<h4><b>Эмулятор Поста</b></h4>
 <h4>Тестов прошло: {{$choice['sequences_true']}} / {{$choice['sequences_all']}}</h4>
 <h4>Количество отладок: {{$choice['debug_counter']}}</h4>
 <h4>Штраф за отладки составил: {{$choice['fee_percent']}}%</h4>
