@@ -23,16 +23,13 @@ function to_multi_tape_dst_rule(rule) {
     return '{' + symbol + '}{' + action + '}' + state;
 }
 
-function debag(resp){
-	//$('td[id=input1]').text(resp.logs[0]);
-	//$('td[id=input2]').text(resp.logs[1]);
+function debug(ctx, resp){
 	for (var i = 0; i < resp.logs.length; i++) {
 		row = $('<tr>');
 		col = $('<td>').text(i+1);
 		col2 = $('<td>').text(resp.logs[i]);
 		row.append(col, col2);
-		$('#debug');
-		$('#debug').append(row);
+		ctx.find('[name = debug]').append(row);
 	}
 }
 
@@ -74,12 +71,12 @@ function run_all_normal(j){
 				alert("Программа зациклилась!");
 				$('input[id=disabled6]').val("Ошибка!");
 				if (step == true){
-					debag(resp);
+					debug(resp);
 				}
 			} else {
 				$('input[id=disabled6]').val(resp.result);
 				if (step == true){
-					debag(resp);
+					debug(resp);
 				}
 			}
 		}
@@ -131,7 +128,7 @@ function run_all_mmt(j){
 			if ( resp.error != 'ok' ) {
 				$('input[id=disabled6]').val("Ошибка!");
 				if (step == true){
-					debag(resp);
+					debug(resp);
 				}
 			} else {
 				$('#output1').text(resp.result.split(' ')[0]);
@@ -143,14 +140,14 @@ function run_all_mmt(j){
 	return false;
 }
 
-function run_all_turing(j){
+function run_all_turing(ctx, j){
 	var step = j;
 	var task = new Object()
 	task.rule = new Array()
 
-	task.str = [$('textarea[name=textarea_src]').val()]
-	var src = $('input[name=start]').toArray()
-	var dst = $('input[name=end]').toArray()
+	task.str = [ctx.find('textarea[name = textarea_src]').val()]
+	var src = ctx.find('input[name ^= st_]').toArray()
+	var dst = ctx.find('input[name ^= end_]').toArray()
 
 	for ( var i = 0; i < src.length; i++) {
 		tmp = new Object()
@@ -162,12 +159,12 @@ function run_all_turing(j){
 	}
 
   
-	$("#debug > tr").remove();
-	token = $('#forma').children().eq(0).val();
+	ctx.find("[name = debug] > tr").remove();
+    
 	$.ajax({
 		cache: false,
 		type: 'POST',
-		url:   '/get-MT',
+		url:   '/algorithm/MT',
 		beforeSend: function (xhr) {
 			var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -177,19 +174,46 @@ function run_all_turing(j){
 		},
 		data: { task: JSON.stringify(task), token: 'token' },
 		success: function(data){
+            
 			var resp = JSON.parse(data);
 			if ( resp.error != 'ok' ) {
-				$('input[id=disabled6]').val("Ошибка!");
+				ctx.find('input[name = disabled6]').val("Ошибка!");
 				if (step == true){
-					debag(resp);
+					debug(ctx, resp);
 				}
 			} else {
-				$('input[id=disabled6]').val(resp.result);
+				ctx.find('input[name = disabled6]').val(resp.result);
 				if (step == true){
-					debag(resp);
+					debug(ctx, resp);
 				}
 			}
+               
 		}
 	});
 	return false;
 }
+
+
+function SendMtContext(inst) {
+    let ctx = $('[name = mt-entity' + inst + ']');
+    
+    ctx.find('[name = run_turing_true]').click(function(){
+        event.stopPropagation();
+        run_all_turing(ctx, true);
+        return false;
+    });
+    
+    ctx.find('[name = run_turing_false]').click(function(){
+        event.stopPropagation();
+        run_all_turing(ctx, false);
+        return false;
+    });
+}
+
+
+j = 0;
+
+$("[name^=mt-entity]").each(function(){
+	SendMtContext(j);
+	j++;
+});

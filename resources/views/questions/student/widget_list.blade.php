@@ -1,6 +1,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="csrf_token" content="{{ csrf_token() }}" />
     <title>Тест</title>
     {!! HTML::script('js/modules.js') !!}
     {!! HTML::script('js/superForm.js') !!}
@@ -70,7 +71,7 @@
 
 {!! HTML::script('js/algorithms/symbols.js') !!}
 {!! HTML::script('js/algorithms/saving.js') !!}
-{!! HTML::script('js/algorithms/send.js') !!}
+{!! HTML::script('js/algorithms/kontr_mt.js') !!}
 
 {!! HTML::script('js/core/source/App.js') !!}
 {!! HTML::script('js/core/source/AppNavigation.js') !!}

@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="keywords" content="your,keywords">
     <meta name="description" content="Short explanation about this website">
+    <meta name="csrf_token" content="{{ csrf_token() }}" />
     <!-- END META -->
 
     <!-- BEGIN STYLESHEETS -->

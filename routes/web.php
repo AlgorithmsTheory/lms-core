@@ -372,8 +372,14 @@ Route::post('check/ifExists', ['uses' => 'AdministrationController@checkEmailIfE
 Route::prefix('algorithm')->group(function (){
     Route::middleware(['general_auth'])->group(function(){
         Route::get('MT', ['as' => 'MT', 'uses' => 'Emulators\EmulatorController@openMT']);
-        Route::get('MMT', ['as' => 'MMT', 'uses' => 'Emulators\EmulatorController@openMMT']);
+        Route::post('MT', ['as' => 'MTRun', 'uses' => 'Emulators\EmulatorController@MTPOST']);
+        Route::post('MTCheck', ['as' => 'MTCheck', 'uses' => 'Emulators\EmulatorController@MTCheck']);
+        
         Route::get('HAM', ['as' => 'HAM', 'uses' => 'Emulators\EmulatorController@openHAM']);
+        Route::post('HAM', ['as' => 'HAMRun', 'uses' => 'Emulators\EmulatorController@HAMPOST']);
+        Route::post('HAMCheck', ['as' => 'HAMCheck', 'uses' => 'Emulators\EmulatorController@HAMCheck']);
+        
+        Route::get('MMT', ['as' => 'MMT', 'uses' => 'Emulators\EmulatorController@openMMT']);
         Route::get('RAM', ['as' => 'RAM', 'uses' => 'Emulators\RamEmulatorController@openRAM']);
         Route::get('Post', ['as' => 'Post', 'uses' => 'Emulators\PostEmulatorController@openPost']);
     });

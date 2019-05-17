@@ -4,8 +4,7 @@
         <div class="col-lg-12">
             <h1 class="text-primary">Эмулятор машины Тьюринга</h1>
         </div>
-        <div name="test_seq"  style="display:none">{{ $test_seq }}</div>
-        @yield('addl-info-mt')
+        @yield('addl-info-mt');
     </div>
     
     <div class="col-lg-12">
@@ -109,17 +108,17 @@
                         <div class="card-body">
                             <div class="form" role="form">
                                 <div class="form-group floating-label">
-                                    <textarea name="textarea2" class="form-control" rows="1">∂</textarea>
+                                    <textarea name="textarea_src" class="form-control" rows="1">∂</textarea>
                                     <label style="top:-15px">Входное слово:</label>
                                 </div>
                             </div>
                         </div>
                         <div class="card">
                             <div class="col-sm-6">
-                                <button type="button" class="btn ink-reaction btn-primary" title="" data-original-title="Увидеть только результат преобразования" data-toggle="tooltip" data-placement="top" onClick="run_all_turing(false)">Запуск</button>    
+                                <button name = "run_turing_false" type="button" class="btn ink-reaction btn-primary" title="" data-original-title="Увидеть только результат преобразования" data-toggle="tooltip" data-placement="top">Запуск</button>    
                             </div>
                             <div class="col-sm-6">                                    
-                                <button  type="button" class="btn ink-reaction btn-primary" onClick="run_all_turing(true)" title="" data-original-title="Отладить до конца" data-toggle="tooltip" data-placement="top"><i class="md md-play-arrow"></i></button>
+                                <button name="run_turing_true" type="button" class="btn ink-reaction btn-primary" title="" data-original-title="Отладить до конца" data-toggle="tooltip" data-placement="top"><i class="md md-play-arrow"></i></button>
                             </div>
                             <br>
                         </div>
