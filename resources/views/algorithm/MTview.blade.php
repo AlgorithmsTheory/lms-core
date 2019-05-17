@@ -12,6 +12,19 @@
     </div>
 @stop
 
+@section('task-mt')
+    <div class="card-body">
+        <div class="col-lg-12">
+            <div class="form" role="form">
+                <div class="form-group floating-label">
+                    <textarea name="task_text" class="form-control" rows="3" placeholder="Для Вашего удобства здесь можно написать условие задачи"></textarea>
+                    <label style="top:-15px">Условие задачи: </label> 
+                </div>
+            </div>
+        </div>
+    </div>
+@stop
+
 @section('addl-blocks-mt')
     <div class="offcanvas">
         <div id="offcanvas-demo-right" class="offcanvas-pane width-10" style="">

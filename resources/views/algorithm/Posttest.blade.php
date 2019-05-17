@@ -9,5 +9,8 @@
     </div>
 @stop
 
+@section('task-post')
+@stop
+
 @section('addl-blocks-post')
 @stop

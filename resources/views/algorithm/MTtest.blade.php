@@ -10,5 +10,8 @@
     </div>
 @stop
 
+@section('task-mt')
+@stop
+
 @section('addl-blocks-mt')
 @stop
