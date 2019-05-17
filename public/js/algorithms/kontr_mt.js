@@ -1,16 +1,12 @@
 function mtSubmitTask(cnt, notice) {
     let ctx = $('[name = mt-entity' + cnt + ']').first();
     
-    /* Get fields and counters */
-    deb_cnt = $("[name=type][value=12]").eq(cnt).parent().find("[name=debug_counter]").first();
+    /* Get variables */
     task_form = $("[name=type][value=12]").eq(cnt).parent().find("[name=task]").first();
+    debug_form = $("[name=type][value=12]").eq(cnt).parent().find("[name=debug_counter]").first();
     task_id = $("[name=type][value=12]").eq(cnt).parent().find("[name=num]").first().val();
-    
-    if(notice){
-        var debug_counter = deb_cnt.val();
-        debug_counter++;
-        deb_cnt.val(debug_counter);
-    }
+    counter = $("[name=type][value=12]").eq(cnt).parent().find("[name=counter]").first().val();
+    test_id = $("#id_test").val();
     
     /* Create rules from emulator view */
     var task = new Object();
@@ -46,14 +42,18 @@ function mtSubmitTask(cnt, notice) {
                     return xhr.setRequestHeader('X-CSRF-TOKEN', token);
                 }
             },
-            data: { task_id: task_id,
-                    debug_counter: debug_counter,
+            data: { counter: counter,
+                    task_id: task_id,
+                    test_id: test_id,
                     task: JSON.stringify(task),
                     token: 'token' },
             success: function(data){
                 
                 sequences_true = data['choice']['sequences_true'];
                 sequences_all = data['choice']['sequences_all'];
+                debug_counter = data['choice']['debug_counter'];
+                
+                debug_form.val(debug_counter);
 
                 alert("Текущий результат отправки: " + sequences_true + " тестов сработало из " + sequences_all + 
                       " . Количество отправок: " + debug_counter + "\n");                

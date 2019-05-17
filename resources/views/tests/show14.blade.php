@@ -8,9 +8,10 @@
     @endfor
 </h2>
 <br><br><br>
+<input type="hidden" name="counter" value="{{ $count }}">
 <input type="hidden" name="num" value="{{ $id }}">
 <input type="hidden" name="type" value="{{ $type }}">
-<input type="hidden" name="debug_counter" value="0">
+<input type="hidden" name="debug_counter" value="{{ $debug_counter }}">
 <input type="hidden" name="sequences_true" value="0">
 <input type="hidden" name="sequences_all" value="0">
 @include('algorithm/Posttest')

@@ -11,6 +11,7 @@ use Auth;
 use App\Controls;
 use App\Http\Controllers\Controller;
 use App\Testing\Question;
+use App\Testing\Result;
 use Illuminate\Support\Facades\Log;
 
 class EmulatorController extends Controller {
@@ -112,15 +113,34 @@ class EmulatorController extends Controller {
     }
     
     public function MTCheck(Request $request) {
-        $debug_counter = Request::input('debug_counter');
         $task = Request::input('task');
         $task_id = Request::input('task_id');
-
-        $question = new Question();
+        $test_id = Request::input('test_id');
+        $counter = Request::input('counter') - 1;
+        $current_test = Result::getCurrentResult(Auth::user()['id'], $test_id);
         
-        $result = $question->check([$task_id, $debug_counter, $task]);
+        if($current_test != -1){
+            /* Get current saved test */
+            $test = Result::whereId_result($current_test)->first();
+            $saved_test = $test->saved_test;
+            $saved_test = unserialize($saved_test);
+            
+            /* Modify saved data with use question->check() */
+            $question = new Question();
+            $debug_counter = $saved_test[$counter]['arguments']['debug_counter'];
+            
+            $result_check = $question->check([$task_id, $debug_counter + 1, $task]);
+            
+            $saved_test[$counter]['arguments']['debug_counter'] = $result_check['choice']['debug_counter'];
+            
+            /* Save new data */
+            $saved_test = serialize($saved_test);
+            $test->saved_test = $saved_test;
+            $test->save();
         
-        return $result;   
+        }
+        
+        return $result_check;   
     }
     
     

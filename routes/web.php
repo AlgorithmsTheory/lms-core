@@ -380,8 +380,12 @@ Route::prefix('algorithm')->group(function (){
         Route::post('HAMCheck', ['as' => 'HAMCheck', 'uses' => 'Emulators\EmulatorController@HAMCheck']);
         
         Route::get('MMT', ['as' => 'MMT', 'uses' => 'Emulators\EmulatorController@openMMT']);
+        
         Route::get('RAM', ['as' => 'RAM', 'uses' => 'Emulators\RamEmulatorController@openRAM']);
+        Route::post('RAMCheck', ['as' => 'RAMCheck', 'uses' => 'Emulators\RamEmulatorController@RAMCheck']);
+        
         Route::get('Post', ['as' => 'Post', 'uses' => 'Emulators\PostEmulatorController@openPost']);
+        Route::post('PostCheck', ['as' => 'PostCheck', 'uses' => 'Emulators\PostEmulatorController@PostCheck']);
     });
 });
 

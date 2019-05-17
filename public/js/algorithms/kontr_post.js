@@ -24,17 +24,14 @@ function postCheckAnswer(ctx, arr){
 
 function postSubmitTask(cnt, notice) {
     let ctx = $('[name = post-entity' + cnt + ']').first();
-	let test_seq = JSON.parse(ctx.find("[name=test_seq]").html());
-    
-    deb_cnt = $("[name=type][value=14]").eq(cnt).parent().find("[name=debug_counter]").first();
-	seq_true = $("[name=type][value=14]").eq(cnt).parent().find("[name=sequences_true]").first();
+	
+    let test_seq = JSON.parse(ctx.find("[name=test_seq]").html());
+    seq_true = $("[name=type][value=14]").eq(cnt).parent().find("[name=sequences_true]").first();
 	seq_all = $("[name=type][value=14]").eq(cnt).parent().find("[name=sequences_all]").first();
-    
-    if(notice){
-        var debug_counter = deb_cnt.val();
-        debug_counter++;
-        deb_cnt.val(debug_counter);
-    }
+    debug_form = $("[name=type][value=14]").eq(cnt).parent().find("[name=debug_counter]").first();
+    task_id = $("[name=type][value=14]").eq(cnt).parent().find("[name=num]").first().val();
+    counter = $("[name=type][value=14]").eq(cnt).parent().find("[name=counter]").first().val();
+    test_id = $("#id_test").val();
     
     var sequences_true = postCheckAnswer(ctx, test_seq);
 	seq_true.val(sequences_true);
@@ -44,35 +41,34 @@ function postSubmitTask(cnt, notice) {
 	
 	SetInput(ctx, "0000");
 	
-    /*
-	$.ajax({
-		cache: false,
-        type: 'POST',
-        url: '/algorithm/Post/set_mark',
-		beforeSend: function (xhr) {
-            var token = $('meta[name="csrf_token"]').attr('content');
-
-            if (token) {
-                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-            }
-        },
-        data: { mark1:     mark1,
-				mark2:     mark2,
-				sum_mark:  sum_mark,
-				user_code: user_code,
-				token:     'token' },
-        success: function(data){
-			alert("Ваша работа была успешно отправлена!");
-			alert("Ваша оценка за первую работу: " + mark1 + " из 3 баллов\n" +
-				  "Ваша оценка за вторую работу: " + mark2 + " из 4 баллов\n" +
-				  "Ваша общая оценка: " + (mark1 * 1 + mark2 * 1) + " из 7 баллов");
-        }
-    });*/
-    
     if(notice){
-		alert("Текущий результат отправки: " + sequences_true + " тестов сработало из " + sequences_all + 
-			  " . Количество отправок: " + debug_counter + "\n");
-	}
+        $.ajax({
+            cache: false,
+            type: 'POST',
+            url: '/algorithm/PostCheck',
+            beforeSend: function (xhr) {
+                var token = $('meta[name="csrf_token"]').attr('content');
+
+                if (token) {
+                    return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                }
+            },
+            data: { counter: counter,
+                    task_id: task_id,
+                    test_id: test_id,
+                    seq_true: sequences_true,
+                    seq_all: sequences_all,
+                    token: 'token' },
+            success: function(data){
+                
+                debug_counter = data['choice']['debug_counter'];
+                debug_form.val(debug_counter);
+                
+                alert("Текущий результат отправки: " + sequences_true + " тестов сработало из " + sequences_all + 
+                      " . Количество отправок: " + debug_counter + "\n");
+            }
+        });
+    }   
 }
 
 function PostContextControl(ptr, cnt) {

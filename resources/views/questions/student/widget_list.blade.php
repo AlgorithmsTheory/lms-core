@@ -38,7 +38,7 @@
 <input id="super{{$i}}" type="hidden" name="{{$i}}" value="">
 @endfor
 <input id="amount" type="hidden" name="amount" value="{{ $amount }}">
-<input type="hidden" name="id_test" value="{{ $id_test }}">
+<input id="id_test" type="hidden" name="id_test" value="{{ $id_test }}">
     <div class="col-sm-6">
         <input id="check" onClick="fillSuper()" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-primary" type="submit" name="check" value="Отправить">
     </div>

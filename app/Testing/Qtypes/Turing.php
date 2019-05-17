@@ -76,7 +76,7 @@ class Turing extends QuestionType implements Checkable {
 
     public function show($count) {
         $view = 'tests.show12';
-        $array = array('view' => $view, 'arguments' => array('text' => explode('::',$this->text), "type" => self::type_code, "id" => $this->id_question, "count" => $count));
+        $array = array('view' => $view, 'arguments' => array('text' => explode('::',$this->text), "debug_counter" => 0, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
         return $array;
     }
 
