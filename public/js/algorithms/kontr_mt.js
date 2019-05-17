@@ -6,9 +6,11 @@ function mtSubmitTask(cnt, notice) {
     task_form = $("[name=type][value=12]").eq(cnt).parent().find("[name=task]").first();
     task_id = $("[name=type][value=12]").eq(cnt).parent().find("[name=num]").first().val();
     
-    var debug_counter = deb_cnt.val();
-	debug_counter++;
-	deb_cnt.val(debug_counter);
+    if(notice){
+        var debug_counter = deb_cnt.val();
+        debug_counter++;
+        deb_cnt.val(debug_counter);
+    }
     
     /* Create rules from emulator view */
     var task = new Object();

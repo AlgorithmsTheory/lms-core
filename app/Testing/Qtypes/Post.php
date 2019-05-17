@@ -100,7 +100,6 @@ class Post extends QuestionType implements Checkable {
 			$mark = 'Неверно';
 		}
 		
-        $debug_counter--;
         if($debug_counter > 10){
             $debug_counter = 10;
         }

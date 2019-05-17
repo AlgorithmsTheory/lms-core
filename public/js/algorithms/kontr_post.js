@@ -30,9 +30,11 @@ function postSubmitTask(cnt, notice) {
 	seq_true = $("[name=type][value=14]").eq(cnt).parent().find("[name=sequences_true]").first();
 	seq_all = $("[name=type][value=14]").eq(cnt).parent().find("[name=sequences_all]").first();
     
-    var debug_counter = deb_cnt.val();
-	debug_counter++;
-	deb_cnt.val(debug_counter);
+    if(notice){
+        var debug_counter = deb_cnt.val();
+        debug_counter++;
+        deb_cnt.val(debug_counter);
+    }
     
     var sequences_true = postCheckAnswer(ctx, test_seq);
 	seq_true.val(sequences_true);
