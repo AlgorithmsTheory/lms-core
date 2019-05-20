@@ -150,7 +150,8 @@
             <button class="btn btn-primary btn-raised submit-test" type="button" id="add-test-button">Добавить тест</button>
             <br><br>
         </div>
-        <div class="col-md-2 col-sm-2" id="add-del-buttons">
+        
+        <div class="col-sm-2" id="add-del-buttons">
             <button type="button" class="btn ink-reaction btn-floating-action btn-success" id="add-structure"><b>+</b>   </button>
             <button type="button" class="btn ink-reaction btn-floating-action btn-danger" id="del-structure"><b>-</b></button>
         </div>

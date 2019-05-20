@@ -16,10 +16,52 @@ function parseIdSection(htmlTrId) {
     return htmlTrId.substr(11);
 }
 
+function reindicate(){
+    let indx = 0;
+    $('.structure').each(function(){
+        $(this).find('header').html('Структура №' + (indx + 1));
+        
+        $(this).find('[name ^= sections\\[ ]').each(function(){
+            let name = $(this).attr('name');
+            let a = name.indexOf('[');
+            let b = name.indexOf(']');
+            name = name.substring(0, a + 1)  +  indx  +  name.substring(b, name.length);
+            $(this).attr('name', name);
+        });
+        
+        $(this).find('[name ^= themes\\[ ]').each(function(){
+            let name = $(this).attr('name');
+            let a = name.indexOf('[');
+            let b = name.indexOf(']');
+            name = name.substring(0, a + 1)  +  indx  +  name.substring(b, name.length);
+            $(this).attr('name', name);
+        });
+        
+        $(this).find('[name ^= types\\[ ]').each(function(){
+            let name = $(this).attr('name');
+            let a = name.indexOf('[');
+            let b = name.indexOf(']');
+            name = name.substring(0, a + 1)  +  indx  +  name.substring(b, name.length);
+            $(this).attr('name', name);
+        });
+        
+        indx++;
+    });
+}
+
  /** add new structure */
 page.on('click','#add-structure', function(){
     numberOfStructures++;
     var newStructureHtml = '\
+        <div class="row" style="margin-bottom: 45px;">\
+            <div class="col-sm-11">\
+            </div>\
+            <div class="col-sm-1" name="add-del-buttons">\
+                <button type="button" class="btn ink-reaction btn-floating-action btn-danger" name="del-structure"><b>-</b></button>\
+            </div>\
+        </div>';
+        
+    newStructureHtml += '\
         <div class="col-md-12 structure" id="structure-' + (numberOfStructures - 1) + '">\
             <div class="card card-bordered style-primary card-collapsed">\
                 <div class="card-head">\
@@ -155,6 +197,7 @@ page.on('click','#add-structure', function(){
                     </div>\
                 </div>\
             </div>';
+            
     $('#structures').append(newStructureHtml);
 });
 
@@ -162,8 +205,18 @@ page.on('click','#add-structure', function(){
 page.on('click','#del-structure', function(){
     if (numberOfStructures > 1){
         $('#structures').children().last().remove();
+        $('#structures').children().last().remove();
         numberOfStructures--;
     }
+});
+
+/** delete middle structure */
+page.on('click', '[name = del-structure]', function() {
+    row = $(this).closest('.row');
+    row.prev().remove();
+    row.remove();
+    reindicate();
+    numberOfStructures--;
 });
 
 /** show and hide themes of the section when this section checked and unchecked */
