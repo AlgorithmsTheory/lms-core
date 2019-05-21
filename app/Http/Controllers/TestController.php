@@ -325,6 +325,7 @@ class TestController extends Controller{
         }
         
         $general_settings = [];
+        $general_settings['id_test'] = $id_test;
         $general_settings['test_name'] = $test_name;
         $general_settings['test_type'] = $test_type;
         $general_settings['only_for_print'] = $only_for_print;
@@ -395,7 +396,33 @@ class TestController extends Controller{
     }
     
     public function changeStructure(Request $request) {
+        $general_settings = $request->session()->get('general_settings');
+        $id_test = $general_settings['id_test'];
         
+        StructuralRecord::where('id_test', $id_test)->delete();
+        TestStructure::where('id_test', $id_test)->delete();
+
+        for ($i = 0; $i < count($request->input('sections')); $i++) {
+            $id_structure = TestStructure::max('id_structure') + 1;
+            TestStructure::insert(array('id_structure' => $id_structure, 'id_test' => $id_test, 'amount' => $request->input('number-of-questions')[$i]));
+            for ($j = 0; $j < count($request->input('sections')[$i]); $j++) {
+                $restrictions['structures'][$i]['sections'][$j]['section_code'] = $request->input('sections')[$i][$j];
+                $theme_index = $this->getSectionOrderForThemes($request->input('themes'), $request->input('sections')[$i][$j], $i);
+                for ($k = 0; $k < count($request->input('themes')[$i][$theme_index]); $k++) {
+                    for ($l = 0; $l < count($request->input('types')[$i]); $l++) {
+                        StructuralRecord::insert(array(
+                            'theme_code' => $request->input('themes')[$i][$theme_index][$k],
+                            'section_code' => $request->input('sections')[$i][$j],
+                            'type_code' => $request->input('types')[$i][$l],
+                            'id_test' => $id_test,
+                            'id_structure' => $id_structure
+                        ));
+                    }
+                }
+            }
+        }
+        //TODO: flush session
+        return redirect()->route('tests_list');
     }
 
     /** Завершает выбранный тест для всех учебных групп */

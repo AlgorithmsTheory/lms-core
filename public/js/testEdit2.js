@@ -34,3 +34,5 @@ for(s = 0; s < structures_data.length; s++){
 }
 
 page.on('change', '.checkbox-section, .checkbox-theme, .checkbox-type', get_amount);
+
+page.find(".structure").trigger('focusout');
