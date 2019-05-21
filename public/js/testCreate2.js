@@ -52,14 +52,18 @@ function reindicate(){
  /** add new structure */
 page.on('click','#add-structure', function(){
     numberOfStructures++;
-    var newStructureHtml = '\
-        <div class="row" style="margin-bottom: 45px;">\
-            <div class="col-sm-11">\
-            </div>\
-            <div class="col-sm-1" name="add-del-buttons">\
-                <button type="button" class="btn ink-reaction btn-floating-action btn-danger" name="del-structure"><b>-</b></button>\
-            </div>\
-        </div>';
+    var newStructureHtml = '';
+    
+    if(numberOfStructures > 1) {
+        newStructureHtml += '\
+            <div class="row" style="margin-bottom: 45px;">\
+                <div class="col-sm-11">\
+                </div>\
+                <div class="col-sm-1" name="add-del-buttons">\
+                    <button type="button" class="btn ink-reaction btn-floating-action btn-danger" name="del-structure"><b>-</b></button>\
+                </div>\
+            </div>';
+    }
         
     newStructureHtml += '\
         <div class="col-md-12 structure" id="structure-' + (numberOfStructures - 1) + '">\
@@ -247,7 +251,7 @@ page.on('change', '.checkbox-section input', function () {
 });
 
 /** count all accessible questions with specified restrictions in the structure */
-page.on('change', '.checkbox-section, .checkbox-theme, .checkbox-type', function () {
+function get_amount() {
     var structure = $(this).parents('.structure');
     var maxNumberOfQuestionsInput = $(structure).find('.number-of-access-questions').first();
     var numberOfQuestionsInput = $(structure).find('.number-of-questions').first();
@@ -286,7 +290,9 @@ page.on('change', '.checkbox-section, .checkbox-theme, .checkbox-type', function
 
         }
     });
-});
+}
+
+page.on('change', '.checkbox-section, .checkbox-theme, .checkbox-type', get_amount);
 
 /** When structure block focused out */
 page.on('focusout', '.structure', function () {
