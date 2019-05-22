@@ -1,7 +1,7 @@
 /**
  * Created by Станислав on 31.05.17.
  */
-var numberOfStructures = 1;
+var numberOfStructures = 0;
 var sections = JSON.parse($('#sections-info').val());
 var types = JSON.parse($('#types-info').val());
 var generalSettings = JSON.parse($('#general-settings').val());

@@ -106,6 +106,7 @@ class TestController extends Controller{
     /** генерирует страницу создания нового теста (шаг 2 - создание структур) */
     public function createSndStep(Request $request) {
         $general_settings = $request->session()->get('general_settings');
+        $structures_data = $request->session()->get('structures_data');
         $sections = [];
         $sections_db = Section::where('section_code', '<', 10)->where('section_code', '>', 0)->select('section_code', 'section_name')->get();
         for ($i=0; $i < sizeof($sections_db); $i++) {
@@ -127,7 +128,7 @@ class TestController extends Controller{
         $json_sections = json_encode($sections);
         $json_types = json_encode($types);
         $general_settings = json_encode($general_settings);
-        return view('tests.create2',compact('general_settings', 'sections', 'types', 'json_sections', 'json_types'));
+        return view('tests.create2', compact('general_settings', 'sections', 'types', 'json_sections', 'json_types', 'structures_data'));
     }
 
     public function validateTestStructure(Request $request) {
@@ -210,7 +211,9 @@ class TestController extends Controller{
                 }
             }
         }
-        //TODO: flush session
+        $request->session()->forget('general_settings');
+        $request->session()->forget('test_for_groups');
+        $request->session()->forget('structures_data');
         return redirect()->route('test_create');
     }
 
@@ -308,22 +311,30 @@ class TestController extends Controller{
         $total = $request->input('total');
         $test_time = $request->input('test-time');
         $max_questions = $request->input('max_questions');
+        
+        if ($request->input('go-to-create-extended-test') == 0) {
+            /* Update test and test_for_group */
+            Test::whereId_test($id_test)->update([
+                'test_name' => $test_name, 'test_type' => $test_type, 'test_time' => $test_time,
+                'total' => $total,'visibility' => $visibility, 'archived' => 0,
+                'multilanguage' => $multilanguage, 'only_for_print' => $only_for_print,
+                'is_adaptive' => $is_adaptive, 'max_questions' => $max_questions]);
 
-        Test::whereId_test($id_test)->update([
-            'test_name' => $test_name, 'test_type' => $test_type, 'test_time' => $test_time,
-            'total' => $total,'visibility' => $visibility, 'archived' => 0,
-            'multilanguage' => $multilanguage, 'only_for_print' => $only_for_print,
-            'is_adaptive' => $is_adaptive, 'max_questions' => $max_questions]);
+            $availability_input = ($request->input('availability') == null) ? [] : $request->input('availability');
 
-        $availability_input = ($request->input('availability') == null) ? [] : $request->input('availability');
-
-        for ($i = 0; $i < count($request->input('id-group')); $i++) {
-            $availability = in_array($request->input('id-group')[$i], $availability_input) ? 1 : 0;
-            TestForGroup::whereId_test($id_test)
-                ->whereId_group($request->input('id-group')[$i])
-                ->update(['id_test' => $id_test, 'id_group' => $request->input('id-group')[$i], 'availability' => $availability]);
+            for ($i = 0; $i < count($request->input('id-group')); $i++) {
+                $availability = in_array($request->input('id-group')[$i], $availability_input) ? 1 : 0;
+                TestForGroup::whereId_test($id_test)
+                    ->whereId_group($request->input('id-group')[$i])
+                    ->update(['id_test' => $id_test, 'id_group' => $request->input('id-group')[$i], 'availability' => $availability]);
+            }
+            
+            if($request->input('go-to-edit-structure') == 0){
+                return redirect()->route('tests_list');
+            }
         }
         
+        /* Get general settings for update structure or create new test based on it */
         $general_settings = [];
         $general_settings['id_test'] = $id_test;
         $general_settings['test_name'] = $test_name;
@@ -331,42 +342,7 @@ class TestController extends Controller{
         $general_settings['only_for_print'] = $only_for_print;
         $request->session()->put('general_settings', $general_settings);
         
-        if ($request->input('go-to-edit-structure')) {
-            return redirect()->route('test_edit_structure', ['id_test' => $id_test]);
-        }
-        else {
-            return redirect()->route('tests_list');
-        }
-    }
-    
-    /** Редактирование структуры теста */
-    public function editStructure(Request $request, $id_test) {
-        
-        /* Get all sections and themes and types */
-        $general_settings = $request->session()->get('general_settings');
-        $sections = [];
-        $sections_db = Section::where('section_code', '<', 10)->where('section_code', '>', 0)->select('section_code', 'section_name')->get();
-        for ($i=0; $i < sizeof($sections_db); $i++) {
-            $sections[$i]['name'] = $sections_db[$i]->section_name;
-            $sections[$i]['code'] = $sections_db[$i]->section_code;
-            $themes_in_section = Theme::whereSection_code($sections_db[$i]->section_code)->select('theme_name', 'theme_code')->get();
-            for ($j=0; $j < count($themes_in_section); $j++) {
-                $sections[$i]['themes'][$j] = $themes_in_section[$j];
-            }
-        }
-
-        if ($general_settings['only_for_print']) {
-            $types = Type::all();
-        }
-        else {
-            $types = Type::whereOnly_for_print(0)->get();
-        }
-
-        $json_sections = json_encode($sections);
-        $json_types = json_encode($types);
-        $general_settings = json_encode($general_settings);
-        
-        /* Get structures data for id_test*/
+        /* Get structures data for id_test */
         $structures = TestStructure::whereId_test($id_test)->select('id_structure', 'amount')->get();
         
         $structures_data = [];
@@ -391,6 +367,46 @@ class TestController extends Controller{
         }
         
         $structures_data = json_encode($structures_data);
+        $request->session()->put('structures_data', $structures_data);
+        
+        
+        if ($request->input('go-to-edit-structure')) {
+            return redirect()->route('test_edit_structure', ['id_test' => $id_test]);
+        }
+        else {
+            $groups = Group::whereArchived(0)->get();
+            $test = Test::whereId_test($id_test)->first();
+            return view('tests.create', compact('groups', 'test'));
+        }
+    }
+    
+    /** Редактирование структуры теста */
+    public function editStructure(Request $request, $id_test) {
+        
+        /* Get all sections and themes and types */
+        $structures_data = $request->session()->get('structures_data');
+        $general_settings = $request->session()->get('general_settings');
+        $sections = [];
+        $sections_db = Section::where('section_code', '<', 10)->where('section_code', '>', 0)->select('section_code', 'section_name')->get();
+        for ($i=0; $i < sizeof($sections_db); $i++) {
+            $sections[$i]['name'] = $sections_db[$i]->section_name;
+            $sections[$i]['code'] = $sections_db[$i]->section_code;
+            $themes_in_section = Theme::whereSection_code($sections_db[$i]->section_code)->select('theme_name', 'theme_code')->get();
+            for ($j=0; $j < count($themes_in_section); $j++) {
+                $sections[$i]['themes'][$j] = $themes_in_section[$j];
+            }
+        }
+
+        if ($general_settings['only_for_print']) {
+            $types = Type::all();
+        }
+        else {
+            $types = Type::whereOnly_for_print(0)->get();
+        }
+
+        $json_sections = json_encode($sections);
+        $json_types = json_encode($types);
+        $general_settings = json_encode($general_settings);
         
         return view('tests.edit2', compact('general_settings', 'sections', 'types', 'json_sections', 'json_types', 'structures_data'));
     }
@@ -421,7 +437,9 @@ class TestController extends Controller{
                 }
             }
         }
-        //TODO: flush session
+        $request->session()->forget('general_settings');
+        $request->session()->forget('test_for_groups');
+        $request->session()->forget('structures_data');
         return redirect()->route('tests_list');
     }
 

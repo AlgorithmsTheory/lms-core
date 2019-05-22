@@ -30,54 +30,82 @@
                         <!-- тренировочный тест -->
                         <div class="checkbox checkbox-styled">
                             <label>
-                                <input type="checkbox" name="training" id="training">
+                                @if ($test['test_type'] == 'Тренировочный')
+                                    <input type="checkbox" name="training" id="training" checked>
+                                @else
+                                    <input type="checkbox" name="training" id="training">
+                                @endif
                                 <span>Тренировочный тест</span>
                             </label>
                         </div>
                         <!-- адаптивный тест -->
                         <div class="checkbox checkbox-styled">
                             <label>
-                                <input type="checkbox" name="adaptive" id="adaptive" disabled>
+                                @if ($test['is_adaptive'] == 1)
+                                    <input type="checkbox" name="adaptive" id="adaptive" checked>
+                                @else
+                                    @if ($test['test_type'] == 'Тренировочный')
+                                        <input type="checkbox" name="adaptive" id="adaptive">
+                                    @else
+                                        <input type="checkbox" name="adaptive" id="adaptive" disabled>
+                                    @endif
+                                @endif
                                 <span>Адаптивный тест</span>
                             </label>
                         </div>
                         <!-- Видимость теста -->
                         <div class="checkbox checkbox-styled">
                             <label>
+                                @if ($test['visibility'] == 1)
                                 <input type="checkbox" name="visibility" id="visibility" checked>
+                                @else
+                                <input type="checkbox" name="visibility" id="visibility">
+                                @endif
                                 <span>Видимость</span>
                             </label>
                         </div>
                         <!-- Доступен на английском языке -->
                         <div class="checkbox checkbox-styled">
                             <label>
+                                @if ($test['multilanguage'] == 1)
+                                <input type="checkbox" name="multilanguage" id="multilanguage" checked>
+                                @else
                                 <input type="checkbox" name="multilanguage" id="multilanguage">
+                                @endif
                                 <span>Доступен на английском языке</span>
                             </label>
                         </div>
                         <!-- Только для печатной версии -->
                         <div class="checkbox checkbox-styled">
                             <label>
+                                @if ($test['only_for_print'] == 1)
+                                <input type="checkbox" name="only-for-print" id="only-for-print" checked>
+                                @else
                                 <input type="checkbox" name="only-for-print" id="only-for-print">
+                                @endif
                                 <span>Только для печатной версии</span>
                             </label>
                         </div>
                         <!-- Максимум баллов за тест -->
                         <div class="form-group dropdown-label">
-                            <input type="number" min="1" step="0.5" name="total" id="total" class="form-control" required>
+                            <input type="number" min="1" step="0.5" name="total" id="total" class="form-control" value="{{ $test['total'] }}" required>
                             <label for="total">Максимум баллов за тест</label>
                         </div>
                         <!-- Время на прохождение теста -->
                         <div class="form-group dropdown-label">
-                            <input type="number" min="1" name="test-time" id="test-time" class="form-control" required>
-                            <label for="test-time">Время на прохождение теста в минутах для традиционного режима</label>
+                            <input type="number" min="1" name="test-time" id="test-time" class="form-control" value="{{ $test['test_time'] }}" required>
+                            <label for="test-time">Время на прохождение теста в минутах</label>
                         </div>
                         <!-- Максимальное число вопросов в адаптивном тесте -->
                         <div class="form-group dropdown-label">
-                            <input type="number" min="1" max="100" name="max_questions" id="max_questions" class="form-control" required disabled>
-                            <label for="max_questions">Максимальное число вопросов в адаптивном тесте</label>
+                            @if ($test['is_adaptive'] == 1)
+                                <input type="number" min="1" max="100" name="max_questions" id="max_questions" class="form-control" value="{{ $test['max_questions'] }}" required>
+                            @else
+                                <input type="number" min="1" max="100" name="max_questions" id="max_questions" class="form-control" value="{{ $test['max_questions'] }}" required disabled>
+                            @endif
+                                <label for="max_questions">Максимальное число вопросов в адаптивном тесте</label>
                         </div>
-                     </div>
+                    </div>
                 </div>
             </div>
             <div class="col-md-5 col-sm-5">
