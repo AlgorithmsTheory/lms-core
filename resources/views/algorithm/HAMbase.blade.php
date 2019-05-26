@@ -136,6 +136,7 @@
                         </div>
                                     
                         <div class="col-sm-6">
+                            </br>
                             <div class="card">
                                 <div class="card-body">
                                     <table class="table no-margin">
