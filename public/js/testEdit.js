@@ -32,3 +32,9 @@ $('#adaptive').change(function () {
         maxQuestions.val(null);
     }
 });
+
+$('#create-extended-test').click(function(){
+    $('#go-to-create-extended-test').val(1);
+    $('.form').submit();
+});
+

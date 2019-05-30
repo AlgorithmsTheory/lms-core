@@ -94,12 +94,14 @@ Route::get('tests/test-list', ['as' => 'tests_list', 'uses' => 'TestController@e
 Route::get('tests/profile/{id_question}', ['as' => 'test_profile', 'uses' => 'TestController@profile', 'middleware' => ['general_auth','admin']]);
 Route::post('tests/update-general-settings', ['as' => 'update_general_settings', 'uses' => 'TestController@updateSettings']);
 Route::post('tests/edit', ['as' => 'test_update', 'uses' => 'TestController@update']);
-Route::get('tests/remove/{id_test}', ['as' => 'test_remove', 'uses' => 'TestController@remove']);
-Route::get('tests/edit/{id_test}', ['as' => 'test_edit', 'uses' => 'TestController@edit']);
+Route::get('tests/remove/{id_test}', ['as' => 'test_remove', 'uses' => 'TestController@remove', 'middleware' => ['general_auth', 'admin']]);
+Route::get('tests/edit/{id_test}', ['as' => 'test_edit', 'uses' => 'TestController@edit', 'middleware' => ['general_auth', 'admin']]);
 Route::get('tests/finish/{id_test}', ['as' => 'finish_test', 'uses' => 'TestController@finishTest']);
 Route::get('tests/finish-for-group/{id_test}/{id_group}', ['as' => 'finish_test_for_group', 'uses' => 'TestController@finishTestForGroup']);
 Route::get('tests/groups-for-tests', ['as' => 'choose_group', 'uses' => 'TestController@chooseGroup']);
 Route::get('tests/monitor', ['as' => 'test_monitor', 'uses' => 'TestController@monitor', 'middleware' => ['general_auth','admin']]);
+Route::get('tests/edit-structure/{id_test}', ['as' => 'test_edit_structure', 'uses' => 'TestController@editStructure', 'middleware' => ['general_auth', 'admin']]);
+Route::post('tests/edit-structure', ['as' => 'test_change_structure', 'uses' => 'TestController@changeStructure', 'middleware' => ['general_auth', 'admin']]);
 
 //электронная библиотека
 Route::get('library', ['as' => 'library_index', 'uses' => 'LibraryController@index', 'middleware' => ['general_auth', 'access_for_library']]);
