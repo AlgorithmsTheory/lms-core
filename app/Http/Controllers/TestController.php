@@ -548,4 +548,9 @@ class TestController extends Controller{
         }
         return redirect('home');
     }
+    
+    /* Отображение состояния тестов */
+    public function monitor(){
+        return view('tests.monitor');
+    }
 }

@@ -99,6 +99,7 @@ Route::get('tests/edit/{id_test}', ['as' => 'test_edit', 'uses' => 'TestControll
 Route::get('tests/finish/{id_test}', ['as' => 'finish_test', 'uses' => 'TestController@finishTest']);
 Route::get('tests/finish-for-group/{id_test}/{id_group}', ['as' => 'finish_test_for_group', 'uses' => 'TestController@finishTestForGroup']);
 Route::get('tests/groups-for-tests', ['as' => 'choose_group', 'uses' => 'TestController@chooseGroup']);
+Route::get('tests/monitor', ['as' => 'test_monitor', 'uses' => 'TestController@monitor', 'middleware' => ['general_auth','admin']]);
 
 //электронная библиотека
 Route::get('library', ['as' => 'library_index', 'uses' => 'LibraryController@index', 'middleware' => ['general_auth', 'access_for_library']]);
