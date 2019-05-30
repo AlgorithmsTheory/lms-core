@@ -10,6 +10,7 @@ function sendForm(status){
     let ramCounter = 0;
     let postCounter = 0;
     let mtCounter = 0;
+    let hamCounter = 0;
     for (index = 0; index < formsCount; ++index) {
         flag[index] = false;
         typeOfForm = document.forms[index].type.value;
@@ -49,7 +50,12 @@ function sendForm(status){
 			}
             if(typeOfForm == 13){
 				// Markov
+                let ctx = $('[name ^= ham-entity]').eq(hamCounter);
                 
+                flag[index] = true;
+                
+                hamCounter++;
+                break;
 			}
             if(typeOfForm == 14){
 				// Post
@@ -91,7 +97,7 @@ function fillSuper(){
     // Execute Markov program before send result
     var cnt = 0;
     $("[name^=ham-entity]").each(function(){
-        markovSubmitTask(cnt, false);
+        hamSubmitTask(cnt, false);
         cnt++
     });
     // Execute Post program before send result

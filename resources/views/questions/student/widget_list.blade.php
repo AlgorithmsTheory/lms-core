@@ -72,6 +72,7 @@
 {!! HTML::script('js/algorithms/symbols.js') !!}
 {!! HTML::script('js/algorithms/saving.js') !!}
 {!! HTML::script('js/algorithms/kontr_mt.js') !!}
+{!! HTML::script('js/algorithms/kontr_ham.js') !!}
 
 {!! HTML::script('js/core/source/App.js') !!}
 {!! HTML::script('js/core/source/AppNavigation.js') !!}

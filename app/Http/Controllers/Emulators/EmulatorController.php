@@ -41,12 +41,12 @@ class EmulatorController extends Controller {
     
     public static function MTRun($data) {
         // эмуляция ответа
-        //$data = json_decode($data, true);
-        //if( rand(0, 1) == 0 )
-        //    $answer = '{ "error":"ok", "logs":["la", "lala", "lalala"], "cycle":1, "result":"'.$data['str'][0].'" }';
-        //else
-        //    $answer = '{ "error":"notOK", "cycle":1 }';
-        //return $answer;
+        $data = json_decode($data, true);
+        if( true ) //rand(0, 1) == 0 )
+            $answer = '{ "error":"ok", "logs":["Шаг 1", "Шаг 2", "Шаг 3"], "cycle":1, "result":"'.$data['str'][0].'" }';
+        else
+            $answer = '{ "error":"notOK", "cycle":1 }';
+        return $answer;
         
         $cmd = "/usr/local/bin/turing.sh";
         $task_file = tempnam(sys_get_temp_dir(), 'turn_'); 
@@ -61,8 +61,8 @@ class EmulatorController extends Controller {
     public static function HAMRun($data) {
         // эмуляция ответа
         $data = json_decode($data, true);
-        if( rand(0, 1) == 0 )
-            $answer = '{ "error":"ok", "logs":["la", "lala", "lalala"], "result":"'.$data['str'][0].'" }';
+        if( true ) //rand(0, 1) == 0 )
+            $answer = '{ "error":"ok", "logs":["Шаг 1", "Шаг 2", "Шаг 3"], "cycle":1, "result":"'.$data['str'][0].'" }';
         else
             $answer = '{ "error":"notOK"}';
         return $answer;
@@ -112,6 +112,31 @@ class EmulatorController extends Controller {
         return [$seq_true, $seq_all, $total_cycle];
     }
     
+    public static function HAMCheckSequence($data, $test_seq) {
+        Log::info('Checking');
+        $seq_true = 0;
+        $seq_all = count($test_seq['input_word']);
+        $total_cycle = 0;
+        
+        for($i = 0; $i < $seq_all; $i++){
+            $data = json_decode($data, true);
+            $data['str'][0] = $test_seq['input_word'][$i];
+            $data = json_encode($data);
+            Log::info('Input: '.$data);
+            $answer = EmulatorController::HAMRun($data);
+            Log::info('Output: '.$answer);
+            $answer = json_decode($answer, true);
+            
+            $total_cycle += $answer['cycle'];
+            //Log::info($answer['result'].' ----- '.$test_seq['output_word'][$i]);
+            if($answer['result'] == $test_seq['output_word'][$i]){
+                $seq_true++;
+            }
+        }
+        
+        return [$seq_true, $seq_all, $total_cycle];
+    }
+    
     public function MTCheck(Request $request) {
         $task = Request::input('task');
         $task_id = Request::input('task_id');
@@ -143,7 +168,36 @@ class EmulatorController extends Controller {
         return $result_check;   
     }
     
-    
+    public function HAMCheck(Request $request) {
+        $task = Request::input('task');
+        $task_id = Request::input('task_id');
+        $test_id = Request::input('test_id');
+        $counter = Request::input('counter') - 1;
+        $current_test = Result::getCurrentResult(Auth::user()['id'], $test_id);
+        
+        if($current_test != -1){
+            /* Get current saved test */
+            $test = Result::whereId_result($current_test)->first();
+            $saved_test = $test->saved_test;
+            $saved_test = unserialize($saved_test);
+            
+            /* Modify saved data with use question->check() */
+            $question = new Question();
+            $debug_counter = $saved_test[$counter]['arguments']['debug_counter'];
+            
+            $result_check = $question->check([$task_id, $debug_counter + 1, $task]);
+            
+            $saved_test[$counter]['arguments']['debug_counter'] = $result_check['choice']['debug_counter'];
+            
+            /* Save new data */
+            $saved_test = serialize($saved_test);
+            $test->saved_test = $saved_test;
+            $test->save();
+        
+        }
+        
+        return $result_check;   
+    }
     
      
 

@@ -7,6 +7,7 @@ use App\Testing\Type;
 use Illuminate\Http\Request;
 use Input;
 use Session;
+use App\Http\Controllers\Emulators\EmulatorController;
 
 class Markov extends QuestionType implements Checkable {
     const type_code = 13;
@@ -74,23 +75,29 @@ class Markov extends QuestionType implements Checkable {
     }
 
     public function show($count) {
-        $task = "";
+        $view = 'tests.show13';
+        $array = array('view' => $view, 'arguments' => array('text' => explode('::',$this->text), "debug_counter" => 0, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
+        return $array;
+    }
+
+    public function check($array) {
+        $debug_counter = $array[0];
+        $data = $array[1];
+        
         $parse = $this->variants;
         $variantsIn = explode(";", $parse);
         $parse = $this->eng_variants;
         $variantsOut = explode(";", $parse);
         $test_seq = ['input_word' => $variantsIn, 'output_word' => $variantsOut];
-        $test_seq = json_encode($test_seq);
         
-        $view = 'tests.show13';
-        $array = array('view' => $view, 'arguments' => array('text' => explode('::',$this->text), "task" => $task, "test_seq" => $test_seq, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
-        return $array;
-    }
-
-    public function check($array) {
-		$debug_counter = $array[0];
-		$sequences_true = $array[1];
-		$sequences_all = $array[2];
+        $array = EmulatorController::HAMCheckSequence($data, $test_seq);
+        
+        //--------------------------------------------------------------
+        
+		$sequences_true = $array[0];
+		$sequences_all = $array[1];
+        $total_cycle = $array[2];
+        
 		$score = $this->points;
 		
 		if($sequences_true == $sequences_all){
@@ -100,7 +107,6 @@ class Markov extends QuestionType implements Checkable {
 			$mark = 'Неверно';
 		}
 		
-        $debug_counter--;
         if($debug_counter > 10){
             $debug_counter = 10;
         }
@@ -121,7 +127,7 @@ class Markov extends QuestionType implements Checkable {
         $fee_percent = $fee_percent * 100;
 		
 		$data = array('mark'=>$mark, 'score'=>$score, 'id' => $this->id_question, 'points' => $this->points, 'right_percent' => $right_percent,
-                      'choice' => ['debug_counter' => $debug_counter, 'sequences_true' => $sequences_true, 'sequences_all' => $sequences_all, 'fee_percent' => $fee_percent, 'score'=>$score]);
+                      'choice' => ['debug_counter' => $debug_counter, 'sequences_true' => $sequences_true, 'sequences_all' => $sequences_all, 'fee_percent' => $fee_percent, 'score'=>$score, 'total_cycle'=>$total_cycle]);
         return $data;
     }
 

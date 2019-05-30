@@ -1,7 +1,5 @@
-function SavingMtContext(inst)
-{
-    let ctx = $('[name = mt-entity' + inst + ']');
-    
+function SavingMtContext(ctx)
+{   
     ctx.find('[name = saveTextAsFile]').click(function(){
         let textToWrite = ctx.find("[name = task_text]").val();
         let i=0;
@@ -74,9 +72,13 @@ function destroyClickedElement(event)
 	document.body.removeChild(event.target);
 }
 
-j = 0;
 
 $("[name^=mt-entity]").each(function(){
-	new SavingMtContext(j);
-	j++;
+	new SavingMtContext( $(this) );
 });
+
+
+$("[name^=ham-entity]").each(function(){
+	new SavingMtContext( $(this) );
+});
+

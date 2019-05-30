@@ -1,5 +1,4 @@
-function SymbolsMtContext(imp){
-    let ctx = $('[name = mt-entity' + imp + ']').first();
+function SymbolsMtContext(ctx){
     let scntDiv = ctx.find('[name = p_scents]');
     let i = scntDiv.find('li').length + 1;
     let focusedElem = null;
@@ -98,6 +97,17 @@ j = 0;
 
 $("[name=mt-entity]").each(function(){
 	$(this).attr('name', 'mt-entity' + j);
-	SymbolsMtContext(j);
+    
+	SymbolsMtContext( $(this) );
 	j++;
 });
+
+j = 0;
+
+$("[name=ham-entity]").each(function(){
+	$(this).attr('name', 'ham-entity' + j);
+    
+	SymbolsMtContext( $(this) );
+	j++;
+});
+

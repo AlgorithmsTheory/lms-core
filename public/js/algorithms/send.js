@@ -33,16 +33,14 @@ function debug(ctx, resp){
 	}
 }
 
-function run_all_normal(j){
+function run_all_normal(ctx, j){
 	var step = j;
 	var task = new Object()
 	task.rule = new Array()
-	task.str = 'Λ'+$('textarea[name=textarea_src]').val()
-	var src = $('input[name=start]').toArray()
-	var dst = $('input[name=end]').toArray()
+	task.str = ['Λ' + ctx.find('textarea[name = textarea_src]').val()]
+	var src = ctx.find('input[name ^= st_]').toArray()
+	var dst = ctx.find('input[name ^= end_]').toArray()
 
-
-	$("tr").remove();
 	for ( var i = 0; i < src.length; i++) {
 		tmp = new Object()
 		tmp.src = drop_sup(src[i].value)
@@ -51,12 +49,13 @@ function run_all_normal(j){
 			task.rule.push(tmp)
 		}
 	}
-
-	token = $('#forma').children().eq(0).val();
+    
+    ctx.find("[name = debug] > tr").remove();
+    
 	$.ajax({
 		cache: false,
 		type: 'POST',
-		url:   '/get-HAM',
+		url:   '/algorithm/HAM',
 		beforeSend: function (xhr) {
 			var token = $('meta[name="csrf_token"]').attr('content');
 
@@ -66,19 +65,20 @@ function run_all_normal(j){
 		},
 		data: { task: JSON.stringify(task), token: 'token' },
 		success: function(data){
+            
 			var resp = JSON.parse(data);
 			if ( resp.error != 'ok' ) {
-				alert("Программа зациклилась!");
-				$('input[id=disabled6]').val("Ошибка!");
+				ctx.find('input[name = disabled6]').val("Ошибка!");
 				if (step == true){
-					debug(resp);
+					debug(ctx, resp);
 				}
 			} else {
-				$('input[id=disabled6]').val(resp.result);
+				ctx.find('input[name = disabled6]').val(resp.result);
 				if (step == true){
-					debug(resp);
+					debug(ctx, resp);
 				}
 			}
+            
 		}
 	});
 	return false;
@@ -210,10 +210,33 @@ function SendMtContext(inst) {
     });
 }
 
+function SendHAMContext(inst) {
+    let ctx = $('[name = ham-entity' + inst + ']');
+    
+    ctx.find('[name = run_markov_true]').click(function(){
+        event.stopPropagation();
+        run_all_normal(ctx, true);
+        return false;
+    });
+    
+    ctx.find('[name = run_markov_false]').click(function(){
+        event.stopPropagation();
+        run_all_normal(ctx, false);
+        return false;
+    });
+}
+
 
 j = 0;
 
 $("[name^=mt-entity]").each(function(){
 	SendMtContext(j);
+	j++;
+});
+
+j = 0;
+
+$("[name^=ham-entity]").each(function(){
+	SendHAMContext(j);
 	j++;
 });
