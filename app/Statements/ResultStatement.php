@@ -13,12 +13,10 @@ use App\Statements\Passes\ControlWorkPasses;
 use Illuminate\Support\Collection;
 use Validator;
 
-class ResultStatementManage
-{
+class ResultStatement {
     private $course_plan_DAO;
 
-    public function __construct(CoursePlanDAO $course_plan_DAO)
-    {
+    public function __construct(CoursePlanDAO $course_plan_DAO) {
         $this->course_plan_DAO = $course_plan_DAO;
     }
 
@@ -45,7 +43,7 @@ class ResultStatementManage
             return $value->is_exam == 1;
         });
         $control_work_groupBy_sections = $this->getControlWorksGroupBySec($control_works);
-        $exam_work_groupBy_sections = $this->getExamWorksGroupBySec($exam_works);
+        $exam_work_groupBy_sections = $this->getExamWorksGroupBySection($exam_works);
         $result_control_work_sections = $this->getResultControlWorkSections($control_work_groupBy_sections, $user->id);
         $result_exam_work_sections = $this->getResultExamWorkSections($exam_work_groupBy_sections, $user->id);
         $sum_result_section_control_work = $result_control_work_sections->sum();
@@ -90,7 +88,7 @@ class ResultStatementManage
         $exam_works =$all_works->filter(function ($value, $key)  {
             return $value->is_exam == 1;
         });
-        $exam_work_groupBy_sections = $this->getExamWorksGroupBySec($exam_works);
+        $exam_work_groupBy_sections = $this->getExamWorksGroupBySection($exam_works);
         $result_exam_work_sections = $this->getResultExamWorkSections($exam_work_groupBy_sections, $id_user);
         return $result_exam_work_sections->sum();
     }
@@ -129,8 +127,7 @@ class ResultStatementManage
            });
     }
 
-
-    public function getExamWorksGroupBySec(Collection $exam_works) {
+    public function getExamWorksGroupBySection(Collection $exam_works) {
         $exam_work_groupBy_sections = $exam_works
             ->groupBy('id_section_plan')
             ->sortBy(function ($value, $key) {
@@ -234,17 +231,17 @@ class ResultStatementManage
     }
 
     //Отметка присутствия на контр меропр
-    public function resultWas(Request $request){
+    public function markPresent(Request $request){
         $id_control_work_pass = $request->input('id_control_work_pass');
-        ControlWorkPasses::where('id_control_work_pass', $id_control_work_pass)
-            ->update(['presence' => 1]);
-    }
+        $is_presence = $request->input('is_presence');
+        if ($is_presence == 'true') {
+            ControlWorkPasses::where('id_control_work_pass', $id_control_work_pass)
+                ->update(['presence' => 1]);
+        } else {
+            ControlWorkPasses::where('id_control_work_pass', $id_control_work_pass)
+                ->update(['presence' => 0]);
+        }
 
-    //Отметка отсутствия на контр мероп
-    public function resultWasNot(Request $request){
-        $id_control_work_pass = $request->input('id_control_work_pass');
-        ControlWorkPasses::where('id_control_work_pass', $id_control_work_pass)
-            ->update(['presence' => 0]);
     }
 
     public function resultChange(Request $request){
@@ -277,7 +274,7 @@ class ResultStatementManage
         return $validator;
     }
 
-    public function resultWasAll(Request $request) {
+    public function markPresentAll(Request $request) {
         $id_control_work_plan = $request->input('id_control_work_plan');
         $id_group = $request->input('id_group');
         $users_group = User::where('group', '=', $id_group)->get()

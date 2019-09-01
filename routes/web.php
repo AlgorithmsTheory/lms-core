@@ -369,17 +369,14 @@ Route::post('statements/get-lectures', ['as' => 'get_lectures', 'uses' => 'State
 Route::post('statements/get-seminars', ['as' => 'get_seminars', 'uses' => 'StatementsController@get_seminars', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/get-resulting', ['as' => 'get_resulting', 'uses' => 'StatementsController@get_resulting', 'middleware' => ['general_auth', 'admin']]);
 
-Route::post('statements/lecture/was', ['as' => 'lecture_was', 'uses' => 'StatementsController@lecture_was', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/lecture/wasnot', ['as' => 'lecture_wasnot', 'uses' => 'StatementsController@lecture_wasnot', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/seminar/was', ['as' => 'seminar_was', 'uses' => 'StatementsController@seminar_was', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/seminar/wasnot', ['as' => 'seminar_wasnot', 'uses' => 'StatementsController@seminar_wasnot', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/lecture/mark_present', ['as' => 'lecture_mark_present', 'uses' => 'StatementsController@lecture_mark_present', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/seminar/mark_present', ['as' => 'seminar_mark_present', 'uses' => 'StatementsController@seminar_mark_present', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/seminar/classwork/change', ['as' => 'classwork_change', 'uses' => 'StatementsController@classwork_change', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/result/was', ['as' => 'result_was', 'uses' => 'StatementsController@result_was', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/result/wasnot', ['as' => 'result_wasnot', 'uses' => 'StatementsController@result_wasnot', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/result/mark_present', ['as' => 'result_mark_present', 'uses' => 'StatementsController@result_mark_present', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/result/control_work/change', ['as' => 'result_change', 'uses' => 'StatementsController@result_change', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/result/wasall', ['as' => 'result_wasall', 'uses' => 'StatementsController@resultWasAll', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/lecture/wasall', ['as' => 'lecture_wasall', 'uses' => 'StatementsController@lecture_was_all', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/seminar/wasall', ['as' => 'seminar_wasall', 'uses' => 'StatementsController@seminar_was_all', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/result/mark_present_all', ['as' => 'result_mark_present_all', 'uses' => 'StatementsController@result_mark_present_all', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/lecture/mark_present_all', ['as' => 'lecture_mark_present_all', 'uses' => 'StatementsController@lecture_mark_present_all', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/seminar/mark_present_all', ['as' => 'seminar_mark_present_all', 'uses' => 'StatementsController@seminar_mark_present_all', 'middleware' => ['general_auth', 'admin']]);
 Route::post('verify_students/change_user_l_name', ['as' => 'change_l_name', 'uses' => 'AdministrationController@change_l_name', 'middleware' => ['general_auth', 'admin']]);
 Route::post('verify_students/change_user_f_name', ['as' => 'change_f_name', 'uses' => 'AdministrationController@change_f_name', 'middleware' => ['general_auth', 'admin']]);
 

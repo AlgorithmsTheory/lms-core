@@ -12,8 +12,7 @@ use Illuminate\Http\Request;
 use App\Statements\Plans\SeminarPlan;
 use Validator;
 
-class SeminarPlanDAO implements ItemSectionDAO
-{
+class SeminarPlanDAO implements ItemSectionDAO {
     public function get($id){
         $seminarPlan = SeminarPlan::where('id_seminar_plan', $id)->first();
         return $seminarPlan;

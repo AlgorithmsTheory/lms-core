@@ -6,51 +6,37 @@ $('.was').on('change', function() {
     var thisCell = $(this).closest('td');
     var idSeminarPass = thisCell.attr('id');
     var inputClassWork = thisCell.find('.classwork');
+    var isPresence = false;
+    myBlurFunction(1);
     if (this.checked) {
-        myBlurFunction(1);
-        $.ajax({
-            cache: false,
-            type: 'POST',
-            url:   '/statements/seminar/was',
-            beforeSend: function (xhr) {
-                var token = $('meta[name="csrf_token"]').attr('content');
+        isPresence = true;
+    }
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url:   '/statements/seminar/mark_present',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
 
-                if (token) {
-                    return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-                }
-            },
-            data: { id_seminar_pass: idSeminarPass, token: 'token' },
-            success: function(data){
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        data: { id_seminar_pass: idSeminarPass, token: 'token', is_presence: isPresence },
+        success: function(data){
+            if (isPresence) {
                 //Разблокирование input classwork при отметки присутствия
                 inputClassWork.prop('disabled', false);
                 myBlurFunction(0);
-            }
-        });
-        return false;
-    }
-    else{
-        myBlurFunction(1);
-        $.ajax({
-            cache: false,
-            type: 'POST',
-            url:   '/statements/seminar/wasnot',
-            beforeSend: function (xhr) {
-                var token = $('meta[name="csrf_token"]').attr('content');
-
-                if (token) {
-                    return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-                }
-            },
-            data: { id_seminar_pass: idSeminarPass, token: 'token' },
-            success: function(data){
-                //Блокирование input classwork при отсутсвии студента на семинаре и обнулкние его балла
+            } else {
                 inputClassWork.prop('disabled', true);
                 inputClassWork.val(0);
                 myBlurFunction(0);
             }
-        });
-        return false;
-    }
+
+        }
+    });
+    return false;
 });
 
 var myBlurFunction = function(state) {
@@ -78,7 +64,7 @@ $(".all").click(function() {
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/statements/seminar/wasall',
+        url:   '/statements/seminar/mark_present_all',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
             if (token) {

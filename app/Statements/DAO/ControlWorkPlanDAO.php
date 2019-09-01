@@ -13,8 +13,7 @@ use DB;
 use Validator;
 use App\Statements\Plans\ControlWorkPlan;
 
-class ControlWorkPlanDAO implements ItemSectionDAO
-{
+class ControlWorkPlanDAO implements ItemSectionDAO {
     public function get($id){
         $control_work_plan = ControlWorkPlan::where('id_control_work_plan', $id)->first();
         return $control_work_plan;

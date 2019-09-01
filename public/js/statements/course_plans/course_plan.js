@@ -8,6 +8,7 @@ $(document).on('click', '.activate_edit_course_plan', function () {
     //выключение readonly для полей
     thisForm.find('input').removeAttr("readonly");
     thisForm.find('textarea').removeAttr("readonly");
+    thisForm.find('select').prop('disabled', false);
     //вставка кнопки "Обновить информ. о разделе"
     var htmlUpdateBatton = '<button type="button" class="ink-reaction btn btn-gray update_course_plan">Обновить</button>';
     thisForm.find('.update_button_course_plan').filter( ':first' ).html(htmlUpdateBatton);
@@ -39,6 +40,7 @@ $(document).on('click', '.update_course_plan', function () {
                 //включение readonly для полей
                 thisForm.find('input').attr('readonly', true);
                 thisForm.find('textarea').attr('readonly', true);
+                thisForm.find('select').prop('disabled', true);
                 //удаление кнопки "Обновить доп. инфор о разделе"
                 thisForm.find('.update_button_course_plan').empty();
                 // удаление сообщений об ошибках

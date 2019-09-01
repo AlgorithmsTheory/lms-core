@@ -15,6 +15,7 @@
     {!! HTML::style('css/materialadmin.css') !!}
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
     <!-- END STYLESHEETS -->
 @stop
 @section('content')
@@ -40,9 +41,6 @@
 
                             @if($course_plan['exist_statements'] == false)
                             <div class="tools">
-                                <div class="btn-group">
-                                    <a class="btn btn-icon-toggle activate_edit_course_plan"><i class="glyphicon glyphicon-edit"></i></a>
-                                </div>
                                 <div class="btn-group ">
                                     <form action = "{{route('course_plan_delete')}}" method="post">
                                         {{method_field('DELETE')}}
@@ -66,8 +64,14 @@
                                         'required' => 'required', $read_only ? 'readonly' : '' ]) !!}</h5>
 
                                     {!! Form::label('groups' , 'Назначение групп:') !!}
-                                    {!! Form::text('groups',$course_plan['course_plan']->groups,['class' => 'form-control','placeholder' => 'Введите группы через пробел'
-                                    , $read_only ? 'readonly' : '' ]) !!}
+                                    <select name="groups[]" multiple class="form-control select-multiple" {{$read_only ? 'disabled' : ''}} >
+                                        @foreach($course_plan['course_plan']->groups as  $group)
+                                            <option value="{{$group['group_id']}}"
+                                                    {{$course_plan['course_plan']->groups->contains('group_id', $group['group_id']) ? 'selected' : '' }} >
+                                                {{$group['group_name']}}
+                                            </option>
+                                        @endforeach
+                                    </select>
 
                                 </div>
                                 <div class="col-lg-6">
@@ -154,6 +158,12 @@
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
     {!! HTML::script('js/statements/course_plans/course_plan.js') !!}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select-multiple').select2();
+        });
+    </script>
     <!-- END JAVASCRIPT -->
 @stop
 

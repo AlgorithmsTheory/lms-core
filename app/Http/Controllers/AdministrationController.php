@@ -15,14 +15,13 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Validator;
-class AdministrationController extends Controller{
 
+class AdministrationController extends Controller{
     const NEWS_FILE_DIR = 'download/news/';
     private $course_plan_DAO;
 
 
-    public function __construct(CoursePlanDAO $course_plan_DAO)
-    {
+    public function __construct(CoursePlanDAO $course_plan_DAO){
         $this->course_plan_DAO = $course_plan_DAO;
     }
 

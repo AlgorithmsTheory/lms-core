@@ -4,9 +4,9 @@ use App\Statements\DAO\ControlWorkPlanDAO;
 use App\Statements\DAO\LecturePlanDAO;
 use App\Statements\DAO\SectionPlanDAO;
 use App\Statements\DAO\SeminarPlanDAO;
-use App\Statements\LectureStatementManage;
-use App\Statements\ResultStatementManage;
-use App\Statements\SeminarStatementManage;
+use App\Statements\LectureStatement;
+use App\Statements\ResultStatement;
+use App\Statements\SeminarStatement;
 use App\Testing\Test;
 use App\TeacherHasGroup;
 use App\Group;
@@ -24,22 +24,22 @@ class StatementsController extends Controller{
     private $lecture_plan_DAO;
     private $seminar_plan_DAO;
     private $control_work_plan_DAO;
-    private $lecture_statement_manage;
-    private $seminar_statement_manage;
-    private $result_statement_manage;
+    private $lecture_statement;
+    private $seminar_statement;
+    private $result_statement;
 
     public function __construct(CoursePlanDAO $course_plan_DAO, SectionPlanDAO $section_plan_DAO, LecturePlanDAO $lecture_plan_DAO
-    , SeminarPlanDAO $seminar_plan_DAO, ControlWorkPlanDAO $control_work_plan_DAO, LectureStatementManage $lecture_statement_manage
-, SeminarStatementManage $seminar_statement_manage, ResultStatementManage $result_statement_manage)
+    , SeminarPlanDAO $seminar_plan_DAO, ControlWorkPlanDAO $control_work_plan_DAO, LectureStatement $lecture_statement
+, SeminarStatement $seminar_statement, ResultStatement $result_statement)
     {
         $this->course_plan_DAO = $course_plan_DAO;
         $this->section_plan_DAO = $section_plan_DAO;
         $this->lecture_plan_DAO = $lecture_plan_DAO;
         $this->seminar_plan_DAO = $seminar_plan_DAO;
         $this->control_work_plan_DAO = $control_work_plan_DAO;
-        $this->lecture_statement_manage = $lecture_statement_manage;
-        $this->seminar_statement_manage = $seminar_statement_manage;
-        $this->result_statement_manage = $result_statement_manage;
+        $this->lecture_statement = $lecture_statement;
+        $this->seminar_statement = $seminar_statement;
+        $this->result_statement = $result_statement;
     }
 
     // возвращает страницу с учебными планами
@@ -56,7 +56,8 @@ class StatementsController extends Controller{
 
     // возвращает страницу создание нового учебного плана
     public function createCoursePlans() {
-        return view('personal_account.statements.course_plans.create_course_plans');
+        $groups = Group::where(['archived' => 0, 'id_course_plan' => null, 'academic' => 1])->get(['group_name', 'group_id']);
+        return view('personal_account.statements.course_plans.create_course_plans', compact('groups', $groups));
     }
 
     //сохранение учебного плана
@@ -69,8 +70,6 @@ class StatementsController extends Controller{
             return redirect()->to($this->getRedirectUrl())
                 ->withInput($request->input())->withErrors($validator->errors());
         }
-
-
     }
 
     //возвращает конкретный учебный план для просмотра и редактирования
@@ -82,8 +81,10 @@ class StatementsController extends Controller{
             ->orderByDesc('id_test')
             ->select()
             ->get();
+        $all_groups = Group::where(['archived' => 0, 'id_course_plan' => null, 'academic' => 1])->orWhere('id_course_plan', $id)->get(['group_name', 'group_id']);
         $exist_statements = $this->course_plan_DAO->existStatements($id);
-        return view('personal_account.statements.course_plans.course_plan', compact('course_plan', 'read_only', 'tests_control_work', 'exist_statements'));
+        return view('personal_account.statements.course_plans.course_plan', compact('course_plan', 'read_only', 'tests_control_work', 'exist_statements',
+            'all_groups'));
     }
 
     //Обновление основной информации об учебном плане
@@ -316,16 +317,16 @@ class StatementsController extends Controller{
         $id_course_plan = Group::where('group_id', $user->group)->select('id_course_plan')
             ->first()->id_course_plan;
         $course_plan = $this->course_plan_DAO->getCoursePlan( $id_course_plan);
-        $statement_lecture = $this->lecture_statement_manage->getStatementByUser($id_course_plan, $user);
-        $statement_seminar = $this->seminar_statement_manage->getStatementByUser($id_course_plan, $user);
-        $statement_result = $this->result_statement_manage->getStatementByUser($id_course_plan, $user);
+        $statement_lecture = $this->lecture_statement->getStatementByUser($id_course_plan, $user);
+        $statement_seminar = $this->seminar_statement->getStatementByUser($id_course_plan, $user);
+        $statement_result = $this->result_statement->getStatementByUser($id_course_plan, $user);
         return view('personal_account/student_account',  compact('course_plan','statement_lecture','statement_seminar', 'statement_result'));
     }
 
     //Возвращают представление соответствующей ведомости
     public function get_lectures(Request $request){
         $id_group = $request->input('group');
-        $statement_lecture = $this->lecture_statement_manage->getStatementByGroup($id_group);
+        $statement_lecture = $this->lecture_statement->getStatementByGroup($id_group);
         $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
             ->first()->id_course_plan;
         $course_plan = $this->course_plan_DAO->getCoursePlan( $id_course_plan);
@@ -334,7 +335,7 @@ class StatementsController extends Controller{
 
     public function get_seminars(Request $request){
         $id_group = $request->input('group');
-        $statement_seminar = $this->seminar_statement_manage->getStatementByGroup($id_group);
+        $statement_seminar = $this->seminar_statement->getStatementByGroup($id_group);
         $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
             ->first()->id_course_plan;
         $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
@@ -343,7 +344,7 @@ class StatementsController extends Controller{
 
     public function get_resulting(Request $request){
         $id_group = $request->input('group');
-        $statement_result = $this->result_statement_manage->getStatementByGroup($id_group);
+        $statement_result = $this->result_statement->getStatementByGroup($id_group);
         $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
             ->first()->id_course_plan;
         $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
@@ -352,40 +353,32 @@ class StatementsController extends Controller{
 
 
     //Отмечает или раз-отмечает студента на лекции
-    public function lecture_was(Request $request){
-        $this->lecture_statement_manage->lectureWas($request);
-        return 0;
-    }
-    public function lecture_wasnot(Request $request){
-        $this->lecture_statement_manage->lectureWasNot($request);
+    public function lecture_mark_present(Request $request){
+        $this->lecture_statement->markPresent($request);
         return 0;
     }
 
     //NEW 05.09.2016
-    public function lecture_was_all(Request $request){
-        $this->lecture_statement_manage->lectureWasAll($request);
+    public function lecture_mark_present_all(Request $request){
+        $this->lecture_statement->markPresentAll($request);
         return 0;
     }
-    public function seminar_was_all(Request $request){
-        $this->seminar_statement_manage->seminarWasAll($request);
+    public function seminar_mark_present_all(Request $request){
+        $this->seminar_statement->markPresentAll($request);
         return 0;
     }
 
     //Отмечает или раз-отмечает студента на семинаре
-    public function seminar_was(Request $request){
-        $this->seminar_statement_manage->seminarWas($request);
-        return 0;
-    }
-    public function seminar_wasnot(Request $request){
-        $this->seminar_statement_manage->seminarWasNot($request);
+    public function seminar_mark_present(Request $request){
+        $this->seminar_statement->markPresent($request);
         return 0;
     }
 
     //Изменяет балл студента за работу на семинаре
     public function classwork_change(Request $request){
-        $validator = $this->seminar_statement_manage->getClassworkChangeValidate($request);
+        $validator = $this->seminar_statement->getClassworkChangeValidate($request);
         if ($validator->passes()) {
-            $this->seminar_statement_manage->classworkChange($request);
+            $this->seminar_statement->classworkChange($request);
             return 0;
         } else {
             return response()->json(['error'=>$validator->errors()->all()]);
@@ -393,29 +386,25 @@ class StatementsController extends Controller{
     }
 
     //Отмечает или раз-отмечает студента на Контрольном мероприятии
-    public function result_was(Request $request){
-        $this->result_statement_manage->resultWas($request);
-        return 0;
-    }
-    public function result_wasnot(Request $request){
-        $this->result_statement_manage->resultWasNot($request);
+    public function result_mark_present(Request $request){
+        $this->result_statement->markPresent($request);
         return 0;
     }
 
     //Изменяет балл студента за контр мероприятие
     public function result_change(Request $request){
-        $validator = $this->result_statement_manage->getResultChangeValidate($request);
+        $validator = $this->result_statement->getResultChangeValidate($request);
         if ($validator->passes()) {
-            $this->result_statement_manage->resultChange($request);
+            $this->result_statement->resultChange($request);
             $id_user = $request->input('id_user');
             $id_course_plan = $request->input('id_course_plan');
-            $section_result = $this->result_statement_manage->getResultSectionByNumber($request->input('section_num'),
+            $section_result = $this->result_statement->getResultSectionByNumber($request->input('section_num'),
                 $id_user);
-            $sum_result_control_works = $this->result_statement_manage->getSumResultSectionControlWork($id_course_plan, $id_user);
-            $sum_result_exam_works = $this->result_statement_manage->getSumResultSectionExamWork($id_course_plan, $id_user);
-            $class_work = $this->result_statement_manage->getResultWorkSeminar($id_course_plan, $id_user);
-            $seminar_pass = $this->result_statement_manage->getResultSeminar($id_course_plan, $id_user);
-            $lecture_pass = $this->result_statement_manage->getResultLecture($id_course_plan, $id_user);
+            $sum_result_control_works = $this->result_statement->getSumResultSectionControlWork($id_course_plan, $id_user);
+            $sum_result_exam_works = $this->result_statement->getSumResultSectionExamWork($id_course_plan, $id_user);
+            $class_work = $this->result_statement->getResultWorkSeminar($id_course_plan, $id_user);
+            $seminar_pass = $this->result_statement->getResultSeminar($id_course_plan, $id_user);
+            $lecture_pass = $this->result_statement->getResultLecture($id_course_plan, $id_user);
             if ($request->input('work_status') == 'section') {
                 $sum_result_section = $sum_result_control_works;
             } else {
@@ -433,8 +422,8 @@ class StatementsController extends Controller{
         }
     }
 
-    public function resultWasAll(Request $request){
-        $this->result_statement_manage->resultWasAll($request);
+    public function result_mark_present_all(Request $request){
+        $this->result_statement->markPresentAll($request);
         return 0;
     }
 }

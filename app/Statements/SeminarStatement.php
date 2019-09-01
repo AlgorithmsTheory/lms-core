@@ -10,12 +10,10 @@ use App\Statements\DAO\CoursePlanDAO;
 use App\Statements\Passes\SeminarPasses;
 use Validator;
 
-class SeminarStatementManage
-{
+class SeminarStatement {
     private $course_plan_DAO;
 
-    public function __construct(CoursePlanDAO $course_plan_DAO)
-    {
+    public function __construct(CoursePlanDAO $course_plan_DAO) {
         $this->course_plan_DAO = $course_plan_DAO;
     }
 
@@ -60,21 +58,21 @@ class SeminarStatementManage
     }
 
     //Отметка присутствия на семинаре
-    public function seminarWas(Request $request){
+    public function markPresent(Request $request){
         $id_seminar_pass = $request->input('id_seminar_pass');
-        SeminarPasses::where('id_seminar_pass', $id_seminar_pass)
-            ->update(['presence' => 1]);
-    }
+        $is_presence = $request->input('is_presence');
+        if ($is_presence == 'true') {
+            SeminarPasses::where('id_seminar_pass', $id_seminar_pass)
+                ->update(['presence' => 1]);
+        } else {
+            SeminarPasses::where('id_seminar_pass', $id_seminar_pass)
+                ->update(['presence' => 0, 'work_points' => 0]);
+        }
 
-    //Отметка отсутствия на семинаре
-    public function seminarWasNot(Request $request){
-        $id_seminar_pass = $request->input('id_seminar_pass');
-        SeminarPasses::where('id_seminar_pass', $id_seminar_pass)
-            ->update(['presence' => 0, 'work_points' => 0]);
     }
 
     //Отмечаем всех на семинаре
-    public function seminarWasAll(Request $request){
+    public function markPresentAll(Request $request){
         $id_seminar_plan = $request->input('id_seminar_plan');
         $id_group = $request->input('id_group');
         $users_group = User::where('group', '=', $id_group)->get()

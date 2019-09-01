@@ -13,13 +13,11 @@ use App\Statements\Passes\LecturePasses;
 use App\User;
 use App\Group;
 
-class LectureStatementManage
-{
+class LectureStatement {
 
     private $course_plan_DAO;
 
-    public function __construct(CoursePlanDAO $course_plan_DAO)
-    {
+    public function __construct(CoursePlanDAO $course_plan_DAO) {
         $this->course_plan_DAO = $course_plan_DAO;
     }
 
@@ -63,23 +61,22 @@ class LectureStatementManage
     }
 
     //Отметка присутствия на лекции
-    public function lectureWas(Request $request){
+    public function markPresent(Request $request){
         $id_user = $request->input('id_user');
         $id_lecture_plan = $request->input('id_lecture_plan');
-        LecturePasses::where('id_user', $id_user)
+        $is_presence = $request->input('is_presence');
+        if ($is_presence == 'true') {
+            LecturePasses::where('id_user', $id_user)
                 ->where('id_lecture_plan', $id_lecture_plan)->update(['presence' => 1]);
-    }
+        } else {
+            LecturePasses::where('id_user', $id_user)
+                ->where('id_lecture_plan', $id_lecture_plan)->update(['presence' => 0]);
+        }
 
-    //Отметка отсутствия на лекции
-    public function lectureWasNot(Request $request){
-        $id_user = $request->input('id_user');
-        $id_lecture_plan = $request->input('id_lecture_plan');
-        LecturePasses::where('id_user', $id_user)
-            ->where('id_lecture_plan', $id_lecture_plan)->update(['presence' => 0]);
     }
 
     //Отмечаем всех на лекции
-    public function lectureWasAll(Request $request){
+    public function markPresentAll(Request $request){
         $id_lecture_plan = $request->input('id_lecture_plan');
         $id_group = $request->input('id_group');
         $users_group = User::where('group', '=', $id_group)->get()

@@ -9,8 +9,7 @@
 namespace App\Statements\DAO;
 use Illuminate\Http\Request;
 
-interface ItemSectionDAO
-{
+interface ItemSectionDAO {
     public function get($id);
     public function store(Request $request);
     public function update(Request $request);

@@ -14,6 +14,7 @@
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     <!-- END STYLESHEETS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
 @stop
 @section('content')
     <div class="container-fluid">
@@ -91,8 +92,14 @@
                             'required' => 'required', $read_only ? 'readonly' : '' ]) !!}</h5>
 
                             {!! Form::label('groups' , 'Назначение групп:') !!}
-                            {!! Form::text('groups',$course_plan->groups,['class' => 'form-control','placeholder' => 'Введите группы через пробел'
-                            , $read_only ? 'readonly' : '' ]) !!}
+                            <select name="groups[]" multiple class="form-control select-multiple" {{$read_only ? 'disabled' : ''}} >
+                                @foreach($all_groups as  $group)
+                                    <option value="{{$group->group_id}}"
+                                            {{$course_plan->groups->contains('group_id', $group->group_id) ? 'selected' : '' }} >
+                                        {{$group->group_name}}
+                                    </option>
+                                @endforeach
+                            </select>
 
                         </div>
                         <div class="col-lg-6">
@@ -104,24 +111,24 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-6">
-                        {!! Form::label('max_controls' , 'Макс балл за раздел "Контрольные мероприятия в семестре":') !!}
+                        {!! Form::label('max_controls' , 'Макс балл за контрольные мероприятия :') !!}
                             {!! Form::text('max_controls',$course_plan->max_controls,['class' => 'form-control',
                              $read_only ? 'readonly' : '' ]) !!}
 
-                    {!! Form::label('max_seminars' , 'Макс балл за раздел "Посещение семинаров":') !!}
+                    {!! Form::label('max_seminars' , 'Макс балл за посещение семинаров:') !!}
                     {!! Form::text('max_seminars',$course_plan->max_seminars,['class' => 'form-control',
                      $read_only ? 'readonly' : '' ]) !!}
 
-                    {!! Form::label('max_seminars_work' , 'Макс балл за раздел "Работа на семинарах":') !!}
+                    {!! Form::label('max_seminars_work' , 'Макс балл за работу на семинарах":') !!}
                     {!! Form::text('max_seminars_work',$course_plan->max_seminars_work,['class' => 'form-control',
                     $read_only ? 'readonly' : '' ]) !!}
                         </div>
                         <div class="col-lg-6">
-                    {!! Form::label('max_lecrures' , 'Макс балл за раздел "Посещение лекций":') !!}
+                    {!! Form::label('max_lecrures' , 'Макс балл за посещение лекций:') !!}
                     {!! Form::text('max_lecrures',$course_plan->max_lecrures,['class' => 'form-control',
                      $read_only ? 'readonly' : '' ]) !!}
 
-                    {!! Form::label('max_exam' , 'Макс балл за раздел "Зачет (экзамен)":') !!}
+                    {!! Form::label('max_exam' , 'Макс балл за зачет (экзамен):') !!}
                     {!! Form::text('max_exam',$course_plan->max_exam,['class' => 'form-control',
                      $read_only ? 'readonly' : '' ]) !!}
                     <input type="hidden"  name="id_course_plan" value="{{$course_plan->id_course_plan}}" />
@@ -182,6 +189,12 @@
     {!! HTML::script('js/statements/course_plans/course_plan.js') !!}
     {!! HTML::script('js/statements/section_course_plans/sections.js') !!}
     {!! HTML::script('js/statements/section_course_plans/lectures_or_seminars_or_controlWork.js') !!}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select-multiple').select2();
+        });
+    </script>
     <!-- END JAVASCRIPT -->
 
 @stop

@@ -5,44 +5,27 @@
 $('.was').on('change', function() {
     var idLecturePlan = $(this).attr('data-id-lecture');
     var idUser = $(this).closest('tr').attr('id');
+    var isPresence = false;
     myBlurFunction(1);
     if (this.checked) {
-        $.ajax({
-            cache: false,
-            type: 'POST',
-            url:   '/statements/lecture/was',
-            beforeSend: function (xhr) {
-                var token = $('meta[name="csrf_token"]').attr('content');
-                if (token) {
-                    return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-                }
-            },
-            data: { id_user: idUser, id_lecture_plan: idLecturePlan, token: 'token' },
-            success: function(data){
-                myBlurFunction(0);
-            }
-        });
-        return false;
+        isPresence = true;
     }
-    else{
-        $.ajax({
-            cache: false,
-            type: 'POST',
-            url:   '/statements/lecture/wasnot',
-            beforeSend: function (xhr) {
-                var token = $('meta[name="csrf_token"]').attr('content');
-
-                if (token) {
-                    return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-                }
-            },
-            data: { id_user: idUser, id_lecture_plan: idLecturePlan, token: 'token' },
-            success: function(data){
-                myBlurFunction(0);
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url:   '/statements/lecture/mark_present',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
             }
-        });
-        return false;
-    }
+        },
+        data: { id_user: idUser, id_lecture_plan: idLecturePlan, token: 'token', is_presence: isPresence},
+        success: function(data){
+            myBlurFunction(0);
+        }
+    });
+    return false;
 });
 
 var myBlurFunction = function(state) {
@@ -71,7 +54,7 @@ $(".all").click(function() {
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/statements/lecture/wasall',
+        url:   '/statements/lecture/mark_present_all',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
             if (token) {

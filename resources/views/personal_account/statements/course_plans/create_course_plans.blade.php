@@ -12,6 +12,8 @@
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     <!-- END STYLESHEETS -->
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
 @stop
 @section('content')
     <div class="container-fluid">
@@ -45,8 +47,14 @@
                     {!! Form::textarea('course_plan_desc',null,['class' => 'form-control','placeholder' => 'Введите описание учебного плана']) !!}
                 </div>
 
-                {!! Form::label('groups' , 'Назначение групп:') !!}
-                {!! Form::text('groups',null,['class' => 'form-control','placeholder' => 'Введите группы через пробел']) !!}
+                <h4>{!! Form::label('groups' , 'Назначение групп:') !!}</h4>
+                <select name="groups[]"  multiple class="form-control select-multiple" >
+                    @foreach($groups as  $group)
+                    <option value="{{$group->group_id}}"
+                        {{ !empty(old('groups')) && in_array($group->group_id, old('groups')) ? ' selected="selected"' : ''}}>
+                        {{$group->group_name}}</option>
+                    @endforeach
+                </select>
 
                 <div class="form-group row">
                     <h4> {!! Form::label('max_controls', 'Макс балл за раздел "Контрольные мероприятия в семестре":', ['class'=>'col-sm-6']) !!}</h4>
@@ -107,4 +115,10 @@
     {!! HTML::script('js/core/source/AppNavSearch.js') !!}
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select-multiple').select2();
+        });
+    </script>
 @stop

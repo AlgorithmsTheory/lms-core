@@ -8,8 +8,7 @@ use App\Statements\Plans\SectionPlan;
 use Illuminate\Http\Request;
 use Validator;
 
-class LecturePlanDAO implements ItemSectionDAO
-{
+class LecturePlanDAO implements ItemSectionDAO {
     public function get($id){
         $LecturePlan = LecturePlan::where('id_lecture_plan', $id)->first();
         return $LecturePlan;

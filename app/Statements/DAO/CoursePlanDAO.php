@@ -84,13 +84,12 @@ class CoursePlanDAO
         $course_plan->max_seminars_work = $request->max_seminars_work;
         $course_plan->max_lecrures = $request->max_lecrures;
         $course_plan->max_exam = $request->max_exam;
-        $groups = strtoupper($request->input('groups'));
+        $groups = $request->input('groups');
         $course_plan->save();
         if ($groups != null) {
-            $array_groups = $this->parseStringGroups($groups);
-            foreach ($array_groups as $group) {
-                Group::where('group_name', $group)->update(['id_course_plan' => $course_plan->id_course_plan]);
-            }
+         foreach ($groups as $group_id) {
+             Group::where('group_id', $group_id)->update(['id_course_plan' => $course_plan->id_course_plan]);
+         }
         }
         return $course_plan->id_course_plan;
     }
@@ -104,14 +103,13 @@ class CoursePlanDAO
         $course_plan->max_seminars_work = $request->max_seminars_work;
         $course_plan->max_lecrures = $request->max_lecrures;
         $course_plan->max_exam = $request->max_exam;
-        $groups = strtoupper($request->input('groups'));
+        $groups = $request->input('groups');
         $id_course_plan = $request->input('id_course_plan');
         Group::where('id_course_plan', $id_course_plan)->update(['id_course_plan' => null]);
         //Обнуляем ссылки на course plan в groups при удалении названий групп
         if ($groups != null) {
-            $array_groups = $this->parseStringGroups($groups);
-            foreach ($array_groups as $group) {
-                Group::where('group_name', $group)->update(['id_course_plan' => $id_course_plan]);
+            foreach ($groups as $group_id) {
+                Group::where('group_id', $group_id)->update(['id_course_plan' => $id_course_plan]);
             }
         }
         $course_plan->update();
@@ -141,30 +139,6 @@ class CoursePlanDAO
             if($result_sum != 100) {
                 $validator->errors()->add('incorrect_result_summ_course','Сумма баллов (' . $result_sum . ') за весь учебный план не равна 100');
             }
-
-            if($groups != null) {
-                $array_groups = $this->parseStringGroups($groups);
-                if ($array_groups != false) {
-                    foreach ($array_groups as $group) {
-                        $group_find = Group::where('group_name', strtoupper($group))
-                            ->where('id_course_plan', '<>', '')
-                            ->where('id_course_plan', '<>', $id_course_plan)->first();
-
-                        if (!$group_find) {
-                            $group_find = Group::where('group_name', strtoupper($group))
-                                ->where('archived', 0)->first();
-                            if (!$group_find) {
-                                $validator->errors()->add('false_group' . $group,'Группа ' . $group . ' либо не существует либо архивирована');
-                            }
-                        } else {
-                            $validator->errors()->add('is_equal' . $group,'Группа ' . $group . ' уже назначена на другой учебный план');
-                        }
-                    }
-                } else {
-                    $validator->errors()->add('false_pattern_groups','Введите группы через пробел');
-                }
-            }
-
         });
         return $validator;
     }
@@ -189,10 +163,6 @@ class CoursePlanDAO
         CoursePlan::where('id_course_plan', $id)->delete();
     }
 
-    public function parseStringGroups($string_groups) {
-        return preg_split("/[\s]+/", trim($string_groups));
-    }
-
     //Проверка баллов учебного плана для всех контрольных мероприятий
     public static function checkPointsCoursePlan($id_course_plan) {
         $validator = Validator::make(['id_course_plan' => $id_course_plan], []);
@@ -210,8 +180,7 @@ class CoursePlanDAO
                 });
             });
         if ($current_max_controls < $max_controls) {
-            $different = $max_controls - $current_max_controls;
-            $validator->errors()->add('<max_controls','Сумма баллов за все контрольные мероприятия (' . $current_max_controls .') меньше ' . $max_controls . ' на ' . $different);
+            $validator->errors()->add('<max_controls','Сумма баллов за все контрольные мероприятия (' . $current_max_controls .') меньше ' . $max_controls);
         }
         $current_max_exam = $course_plan->exam_plans
             ->sum(function ($section) {
@@ -221,8 +190,7 @@ class CoursePlanDAO
                 });
             });
         if ($current_max_exam < $max_exam) {
-                $different = $max_exam - $current_max_exam;
-                $validator->errors()->add('<max_controls','Сумма баллов за все экзаменационные мероприятия (' . $current_max_exam .') меньше ' . $max_exam . ' на ' . $different);
+                $validator->errors()->add('<max_controls','Сумма баллов за все экзаменационные мероприятия (' . $current_max_exam .') меньше ' . $max_exam);
             }
         });
         return $validator;

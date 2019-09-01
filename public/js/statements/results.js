@@ -3,50 +3,37 @@ $('.was').on('change', function() {
     var thisCell = $(this).closest('td');
     var idControlWorkPass = thisCell.attr('id');
     var inputResultControlWork = thisCell.find('.result_control_work');
+    var isPresence = false;
+    myBlurFunction(1);
     if (this.checked) {
-        myBlurFunction(1);
-        $.ajax({
-            cache: false,
-            type: 'POST',
-            url:   '/statements/result/was',
-            beforeSend: function (xhr) {
-                var token = $('meta[name="csrf_token"]').attr('content');
+        isPresence = true;
+    }
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url:   '/statements/result/mark_present',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
 
-                if (token) {
-                    return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-                }
-            },
-            data: { id_control_work_pass: idControlWorkPass, token: 'token' },
-            success: function(data){
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        data: { id_control_work_pass: idControlWorkPass, token: 'token', is_presence: isPresence },
+        success: function(data){
+            if (isPresence) {
                 //Разблокирование input result_control_work при отметки присутствия
                 inputResultControlWork.prop('disabled', false);
                 myBlurFunction(0);
-            }
-        });
-        return false;
-    }
-    else{
-        myBlurFunction(1);
-        $.ajax({
-            cache: false,
-            type: 'POST',
-            url:   '/statements/result/wasnot',
-            beforeSend: function (xhr) {
-                var token = $('meta[name="csrf_token"]').attr('content');
-
-                if (token) {
-                    return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-                }
-            },
-            data: { id_control_work_pass: idControlWorkPass, token: 'token' },
-            success: function(data){
+            } else {
                 //Блокирование input classwork при отсутсвии студента на семинаре
                 inputResultControlWork.prop('disabled', true);
                 myBlurFunction(0);
             }
-        });
-        return false;
-    }
+
+        }
+    });
+    return false;
 });
 
 $('.result_control_work').on('change', function() {
@@ -142,7 +129,7 @@ $(".all").click(function() {
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/statements/result/wasall',
+        url:   '/statements/result/mark_present_all',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
             if (token) {
