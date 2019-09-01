@@ -10,27 +10,24 @@ use Validator;
 use DateTime;
 use Illuminate\Filesystem\Filesystem;
 
-class ExtraDAO
-{
+class ExtraDAO {
      const DIR_PARENT_MODULE = 'download/library/';
      const DIR_THIS_MODULE_DOCS = 'extra/docs/';
      private $dir_save_docs;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->dir_save_docs = $this::DIR_PARENT_MODULE . $this::DIR_THIS_MODULE_DOCS;
     }
 
-    public function allExtras(){
+    public function allExtras() {
         return Extra::all()->sortByDesc('id_extra');
     }
 
-    public function getExtra($id_extra){
+    public function getExtra($id_extra) {
         return Extra::where('id_extra',$id_extra)->first();
     }
 
-    public function validate(Request $request)
-    {
+    public function validate(Request $request) {
         return Validator::make($request->all(), [
             'extra_header' => 'required|max:355',
             'extra_file' => 'file|mimes:doc,docx,pdf'
@@ -49,7 +46,7 @@ class ExtraDAO
         }
     }
 
-    public function deleteFileIfExist($dir_parent_module,$path_file){
+    public function deleteFileIfExist($dir_parent_module,$path_file) {
         $all_path = $dir_parent_module . $path_file;
         if ($path_file != null && file_exists(public_path($all_path))) {
             if (!app(Filesystem::class)->delete(public_path($all_path))) {
@@ -86,6 +83,4 @@ class ExtraDAO
         $this->deleteFileIfExist($this::DIR_PARENT_MODULE, $extra['path_file']);
         $extra->delete();
     }
-
-
 }

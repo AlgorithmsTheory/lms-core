@@ -9,8 +9,7 @@
 namespace App\Library\Models;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class Extra extends Eloquent
-{
+class Extra extends Eloquent {
     protected $table = 'extras';
     protected $primaryKey = 'id_extra';
     public $timestamps = false;

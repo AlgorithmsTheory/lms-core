@@ -16,16 +16,14 @@ use DateTime;
 use App\Mypdf;
 use Illuminate\Filesystem\Filesystem;
 
-class EbookDAO
-{
+class EbookDAO {
     const DIR_PARENT_MODULE = 'download/library/';
     const DIR_THIS_MODULE_DOCS = 'ebook/docs/';
     const DIR_THIS_MODULE_IMAGES = 'ebook/images/';
     private $dir_save_docs;
     private $dir_save_images;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->dir_save_docs = $this::DIR_PARENT_MODULE . $this::DIR_THIS_MODULE_DOCS;
         $this->dir_save_images = $this::DIR_PARENT_MODULE . $this::DIR_THIS_MODULE_IMAGES;
     }
@@ -56,8 +54,7 @@ class EbookDAO
             ->first();
     }
 
-    public function validateStore(Request $request)
-    {
+    public function validateStore(Request $request) {
         return Validator::make($request->all(), [
             'ebook_title' => 'required|max:255',
             'ebook_author' => 'required|max:255',
@@ -67,8 +64,7 @@ class EbookDAO
         ]);
     }
 
-    public function validateUpdate(Request $request)
-    {
+    public function validateUpdate(Request $request) {
         return Validator::make($request->all(), [
             'ebook_title' => 'required|max:255',
             'ebook_author' => 'required|max:255',
