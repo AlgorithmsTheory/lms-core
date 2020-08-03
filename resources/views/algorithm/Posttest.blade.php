@@ -1,5 +1,5 @@
-@extends('algorithm.RAMbase')
-@section('addl-info-ram')
+@extends('algorithm.Postbase')
+@section('addl-info-post')
     <div class="col-lg-12">
         <article class="margin-bottom-xxl">
             <p class = 'lead'>
@@ -9,5 +9,5 @@
     </div>
 @stop
 
-@section('addl-blocks-ram')
+@section('addl-blocks-post')
 @stop

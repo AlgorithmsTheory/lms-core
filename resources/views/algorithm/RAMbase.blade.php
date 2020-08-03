@@ -5,7 +5,8 @@
                 <div class="col-lg-12">
                     <h1 class="text-primary">Эмулятор Random Access Machine</h1>
                 </div>
-                @yield('addl-info')
+                <div name="test_seq"  style="display:none">{{ $test_seq }}</div>
+                @yield('addl-info-ram')
             </div>
         </div>
         <div class = "container-fluid">
@@ -94,6 +95,6 @@
                 </div>
             </div>
         </div>
-        @yield('addl-blocks')
+        @yield('addl-blocks-ram')
     </div>
 <!-- BEGIN JAVASCRIPT -->
