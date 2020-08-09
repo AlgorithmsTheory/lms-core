@@ -68,7 +68,7 @@ class ControlWorkPlanDAO implements ItemSectionDAO {
             'control_work_plan_name' => 'required',
             'control_work_plan_type' => 'required',
             'max_points' => ['required',
-                'integer',
+                'numeric',
                 'between:0,100']
         ]);
 

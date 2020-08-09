@@ -22,7 +22,7 @@ class ResultStatement {
 
     //Вывод итоговой ведомости  по группе
     public function getStatementByGroup($id_group) {
-        $users = User::where('group', $id_group)->join('groups', 'groups.group_id', '=', 'users.group')
+        $users = User::where([['group', '=', $id_group], ['role', '=', 'Студент']])->join('groups', 'groups.group_id', '=', 'users.group')
             ->orderBy('users.last_name', 'asc')->distinct()->get();
         $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
             ->first()->id_course_plan;
@@ -254,7 +254,7 @@ class ResultStatement {
     public function getResultChangeValidate(Request $request) {
         $validator = Validator::make($request->toArray(), [
             'control_work_points' => ['required',
-                'integer',
+                'numeric',
                 'between:0,100']
         ]);
         $validator->after(function ($validator) {

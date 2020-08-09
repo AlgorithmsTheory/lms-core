@@ -111,7 +111,7 @@
                     class="{{$statement['result_control_work_sections']->get($section_plan->section_num) < $section_plan->max_points * 0.6
                     ? 'danger' : 'success'}}"
                     data-section-max_points="{{$section_plan->max_points}}">
-                    {{$statement['result_control_work_sections']->get($section_plan->section_num)}}
+                    {{round($statement['result_control_work_sections']->get($section_plan->section_num), 1)}}
                 </td>
             @endforeach
 
@@ -121,7 +121,7 @@
             <td class="sum_result_section {{$statement['sum_result_section_control_work'] < $course_plan->max_controls * 0.6
                 ? 'danger' : 'success'}}"
                 data-max_controls="{{$course_plan->max_controls}}">
-                {{$statement['sum_result_section_control_work']}}
+                {{round($statement['sum_result_section_control_work'], 1)}}
             </td>
             @endif
 
@@ -143,7 +143,7 @@
                             </label>
                         </div>
                         <input type="number"
-                               value="{{$control_work_passes->points}}"
+                               value="{{round($control_work_passes->points, 1)}}"
                                class="result_control_work"
                                style="width: 50px;"
                                step="any"
@@ -156,36 +156,36 @@
                 <td class="sum_result_exam {{$statement['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6
                 ? 'danger' : 'success'}}"
                 data-max_exam="{{$course_plan->max_exam}}">
-                    {{$statement['sum_result_section_exam_work']}}
+                    {{round($statement['sum_result_section_exam_work'], 1)}}
                 </td>
 
             {{--Пос. лек.--}}
 
-                <td>{{$statement['result_lecture']}}</td>
+                <td>{{round($statement['result_lecture'], 1)}}</td>
 
             {{--Пос. Семинаров.--}}
 
-                <td>{{$statement['result_seminar']}}</td>
+                <td>{{round($statement['result_seminar'], 1)}}</td>
 
             {{--Раб. на сем--}}
 
-                <td>{{$statement['result_work_seminar']}}</td>
+                <td>{{round($statement['result_work_seminar'], 1)}}</td>
 
             {{--Суммарный итог--}}
 
-                <td class="result_all_course {{$statement['sum_result'] < 60 ? 'danger' : 'success'}}">
-                    {{$statement['sum_result']}}
+                <td class="result_all_course {{$statement['sum_result'] < 60 || $statement['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6 ? 'danger' : 'success'}}">
+                    {{round($statement['sum_result'], 1)}}
                 </td>
 
                 {{--Оценка(A-F)--}}
 
-                <td class="mark_bologna {{$statement['sum_result'] < 60 ? 'danger' : 'success'}}">
+                <td class="mark_bologna {{$statement['sum_result'] < 60 || $statement['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6 ? 'danger' : 'success'}}">
                     {{$statement['markBologna']}}
                 </td>
 
                 {{--Оценка(2-5)--}}
 
-                <td class="mark_rus {{$statement['sum_result'] < 60 ? 'danger' : 'success'}}">
+                <td class="mark_rus {{$statement['sum_result'] < 60 || $statement['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6 ? 'danger' : 'success'}}">
                     {{$statement['markRus']}}
                 </td>
 

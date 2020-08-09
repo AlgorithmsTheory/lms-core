@@ -2,6 +2,7 @@
 @section('head')
     <title>Отметить студенитов</title>
     {!! HTML::style('css/full.css') !!}
+    {!! HTML::style('css/loading_blur.css') !!}
     <meta name="csrf_token" content="{{ csrf_token() }}" />
 @stop
 
@@ -10,7 +11,8 @@
 @stop
 
 @section('content')
-<div class="col-md-12 col-sm-12">
+    <div id="main_container">
+<div class="col-md-12 col-sm-12" >
     <div class="card">
         <div class="card-body">
             {{--Вывод ошибок валидации--}}
@@ -94,6 +96,10 @@
         </div>
     </div>
 </div>
+    </div>
+    <div id="overlay" class="none">
+        <div class="loading-pulse"></div>
+    </div>
 @stop
 
 @section('js-down')

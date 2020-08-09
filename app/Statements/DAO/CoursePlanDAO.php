@@ -119,11 +119,11 @@ class CoursePlanDAO
         $validator = Validator::make($request->all(), [
             'course_plan_name' => "required",
             'course_plan_desc' => 'required',
-            'max_controls' => 'required|integer|between:0,100',
-            'max_seminars' => 'required|integer|between:0,100',
-            'max_seminars_work' => 'required|integer|between:0,100',
-            'max_lecrures' => 'required|integer|between:0,100',
-            'max_exam' => 'required|integer|between:0,100',
+            'max_controls' => 'required|numeric|between:0,100',
+            'max_seminars' => 'required|numeric|between:0,100',
+            'max_seminars_work' => 'required|numeric|between:0,100',
+            'max_lecrures' => 'required|numeric|between:0,100',
+            'max_exam' => 'required|numeric|between:0,100',
         ]);
 
         $validator->after(function ($validator) {

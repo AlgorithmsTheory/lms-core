@@ -8,8 +8,9 @@
 
 namespace App\Testing;
 use App\Group;
-use App\Statements\ControlWorkPlan;
+use App\Statements\Plans\ControlWorkPlan;
 use App\Statements\Passes\ControlWorkPasses;
+use App\Statements\Plans\SectionPlan;
 use App\User;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
@@ -177,20 +178,25 @@ class Test extends Eloquent {
 
 
     /**  метод, проверяющий, является ли тест одним из контрольных. В случаи если является, добавляет его результат в ведомость. */
-    public static function addToStatements($id_test, $id_user, $score){
+     public static function addToStatements($id_test, $id_user, $fraction_score){
         //toDo необходимо переделать см карточку в трелло
-        $control_work_plan = ControlWorkPlan::where('control_work_plans.id_test', '=', $id_test)
-            ->leftJoin('tests', 'tests.id_test', '=', 'control_work_plans.id_test')
+
+        $id_group = User::where('id', '=', $id_user)->select('group')->first()->group;
+        $id_course_plan = Group::whereGroup_id($id_group)->select('id_course_plan')->first()->id_course_plan;
+        $id_section_arr = SectionPlan::where('id_course_plan', '=', $id_course_plan)
+            ->pluck('id_section_plan')->toArray();
+
+        $control_work_plan = ControlWorkPlan::whereIn('id_section_plan', $id_section_arr)
+            ->where('id_test', '=', $id_test)
             ->first();
         $id_control_work_plan = $control_work_plan->id_control_work_plan;
-        $total_test = $control_work_plan->total;
         $control_work_max_point =  $control_work_plan->max_points;
-        $fraction_score = $score / $total_test;
-        $control_work_score = $control_work_max_point * $fraction_score;
+        $control_work_score = round($control_work_max_point * $fraction_score, 1);
         ControlWorkPasses::where([
             ['id_control_work_plan', '=', $id_control_work_plan],
             ['id_user', '=', $id_user]])
-            ->update(['points' => $control_work_score]);
+            ->update(['points' => $control_work_score,
+                'presence' => 1]);
         return 0;
     }
 

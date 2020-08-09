@@ -106,7 +106,7 @@
                                 class="success"
                                 @endif
                         >
-                            {{ $control_work_pass->points }}
+                            {{ round($control_work_pass->points, 1) }}
                         </td>
                         @endforeach
                         <td
@@ -116,7 +116,7 @@
                                 class="success"
                                 @endif
                         >
-                            {{ $statement_result['result_control_work_sections'][$section_plan->section_num] }}
+                            {{ round($statement_result['result_control_work_sections'][$section_plan->section_num],1) }}
                         </td>
                     </tr>
                     </tbody>
@@ -196,7 +196,7 @@
                            class="success"
                             @endif
                     >
-                        {{ $statement_result['sum_result_section_control_work'] }}
+                        {{ round($statement_result['sum_result_section_control_work'],1) }}
                     </td>
                     <td
                             @if ($statement_result['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6)
@@ -214,7 +214,7 @@
                             class="success"
                             @endif
                     >
-                        {{ $statement_result['result_lecture'] }}
+                        {{ round($statement_result['result_lecture'],1) }}
                     </td>
                     <td
                             @if ($statement_result['result_seminar'] < $course_plan->max_seminars * 0.6)
@@ -223,25 +223,28 @@
                             class="success"
                             @endif
                     >
-                        {{ $statement_result['result_seminar'] }}
+                        {{ round($statement_result['result_seminar'],1) }}
                     </td>
                     <td
-                            class="success"
-
-                    >
-                        {{ $statement_result['result_work_seminar'] }}
-                    </td>
-                    <td
-                            @if ($statement_result['sum_result'] < 60)
+                            @if ($statement_result['result_seminar'] < $course_plan->max_seminars_work * 0.6)
                             class="danger"
                             @else
                             class="success"
                             @endif
                     >
-                        {{ $statement_result['sum_result'] }}
+                        {{ round($statement_result['result_work_seminar'],1) }}
                     </td>
                     <td
-                            @if ($statement_result['sum_result'] < 60)
+                            @if ($statement_result['sum_result'] < 60 || $statement_result['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6)
+                            class="danger"
+                            @else
+                            class="success"
+                            @endif
+                    >
+                        {{ round($statement_result['sum_result'],1) }}
+                    </td>
+                    <td
+                            @if ($statement_result['sum_result'] < 60 || $statement_result['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6)
                             class="danger"
                             @else
                             class="success"
