@@ -3,6 +3,7 @@
  */
 
 $(".student").click(function() {
+    $($(this)).prop('disabled', true);
     var id = this.name;
     token = $('#forma').children().eq(0).val();
     myBlurFunction(1);
