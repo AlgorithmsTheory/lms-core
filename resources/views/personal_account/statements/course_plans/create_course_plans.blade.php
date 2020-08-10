@@ -3,9 +3,6 @@
     <title>Создание учебного плана</title>
     <!-- BEGIN META -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="your,keywords">
-    <meta name="description" content="Short explanation about this website">
     <!-- END META -->
 
     <!-- BEGIN STYLESHEETS -->
@@ -15,6 +12,8 @@
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     <!-- END STYLESHEETS -->
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
 @stop
 @section('content')
     <div class="container-fluid">
@@ -47,6 +46,16 @@
                     <h4> {!! Form::label('course_plan_desc', 'Описание учебного плана:') !!}</h4>
                     {!! Form::textarea('course_plan_desc',null,['class' => 'form-control','placeholder' => 'Введите описание учебного плана']) !!}
                 </div>
+
+                <h4>{!! Form::label('groups' , 'Назначение групп:') !!}</h4>
+                <select name="groups[]"  multiple class="form-control select-multiple" >
+                    @foreach($groups as  $group)
+                    <option value="{{$group->group_id}}"
+                        {{ !empty(old('groups')) && in_array($group->group_id, old('groups')) ? ' selected="selected"' : ''}}>
+                        {{$group->group_name}}</option>
+                    @endforeach
+                </select>
+
                 <div class="form-group row">
                     <h4> {!! Form::label('max_controls', 'Макс балл за раздел "Контрольные мероприятия в семестре":', ['class'=>'col-sm-6']) !!}</h4>
                     <div class="col-sm-2">
@@ -97,7 +106,6 @@
     </div>
 @stop
 @section('js-down')
-    {!! HTML::script('js/statements/statements.js') !!}
 
     {!! HTML::script('js/core/source/App.js') !!}
     {!! HTML::script('js/core/source/AppNavigation.js') !!}
@@ -107,4 +115,10 @@
     {!! HTML::script('js/core/source/AppNavSearch.js') !!}
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select-multiple').select2();
+        });
+    </script>
 @stop

@@ -7,12 +7,12 @@
  */
 
 namespace App\Testing;
-use App\Control_test_dictionary;
-use App\Controls;
 use App\Group;
-use App\Totalresults;
+use App\Statements\Plans\ControlWorkPlan;
+use App\Statements\Passes\ControlWorkPasses;
+use App\Statements\Plans\SectionPlan;
 use App\User;
-use Auth;
+
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 /**
@@ -178,22 +178,25 @@ class Test extends Eloquent {
 
 
     /**  метод, проверяющий, является ли тест одним из контрольных. В случаи если является, добавляет его результат в ведомость. */
-    public static function addToStatements($id_test, $id_user, $score){
-        $dictionary = Control_test_dictionary::where('id', 1)->first();
-        switch ($id_test) {
-            case $dictionary['test1']:
-                Controls::where('userID', $id_user)->update(['test1' => $score]);
-                break;
-            case $dictionary['test2']:
-                Controls::where('userID', $id_user)->update(['test2' => $score]);
-                break;
-            case $dictionary['test3']:
-                Controls::where('userID', $id_user)->update(['test3' => $score]);
-                break;
-            case $dictionary['exam']:
-                Totalresults::where('userID', $id_user)->update(['exam' => $score]);
-                break;
-        }
+     public static function addToStatements($id_test, $id_user, $fraction_score){
+        //toDo необходимо переделать см карточку в трелло
+
+        $id_group = User::where('id', '=', $id_user)->select('group')->first()->group;
+        $id_course_plan = Group::whereGroup_id($id_group)->select('id_course_plan')->first()->id_course_plan;
+        $id_section_arr = SectionPlan::where('id_course_plan', '=', $id_course_plan)
+            ->pluck('id_section_plan')->toArray();
+
+        $control_work_plan = ControlWorkPlan::whereIn('id_section_plan', $id_section_arr)
+            ->where('id_test', '=', $id_test)
+            ->first();
+        $id_control_work_plan = $control_work_plan->id_control_work_plan;
+        $control_work_max_point =  $control_work_plan->max_points;
+        $control_work_score = round($control_work_max_point * $fraction_score, 1);
+        ControlWorkPasses::where([
+            ['id_control_work_plan', '=', $id_control_work_plan],
+            ['id_user', '=', $id_user]])
+            ->update(['points' => $control_work_score,
+                'presence' => 1]);
         return 0;
     }
 

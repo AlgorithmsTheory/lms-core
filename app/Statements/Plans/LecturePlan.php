@@ -6,7 +6,7 @@
  * Time: 20:34
  */
 
-namespace App\Statements;
+namespace App\Statements\Plans;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class LecturePlan extends Eloquent {

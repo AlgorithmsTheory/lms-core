@@ -332,6 +332,13 @@ Route::get('course_plans', ['as' => 'course_plans', 'uses' => 'StatementsControl
 Route::get('course_plans/create', ['as' => 'course_plans_create', 'uses' => 'StatementsController@createCoursePlans', 'middleware' => ['general_auth', 'admin']]);
 //сохранение учебного плана
 Route::post('course_plans', ['as' => 'course_plan_store', 'uses' => 'StatementsController@storeCoursePlan']);
+//Редактирование основ информации учебного плана
+Route::patch('course_plan/update', ['as' => 'course_plan_update', 'uses' => 'StatementsController@updateCoursePlan', 'middleware' => ['general_auth', 'admin']]);
+//Удаление учебного плана
+Route::delete('course_plan/delete', ['as' => 'course_plan_delete', 'uses' => 'StatementsController@deleteCoursePlan', 'middleware' => ['general_auth', 'admin']]);
+//Утверждение учебного плана для групп
+Route::post('course_plan/check_points', ['as' => 'course_plan_check_points', 'uses' => 'StatementsController@checkPointsCoursePlan', 'middleware' => ['general_auth', 'admin']]);
+
 //получить представление для добавленее раздела учебного плана
 Route::get('course_plan/get_add_section', ['as' => 'get_add_section', 'uses' => 'StatementsController@getAddSection', 'middleware' => ['general_auth', 'admin']]);
 //сохранение нового раздела
@@ -342,10 +349,16 @@ Route::patch('course_plan/section/update', ['as' => 'section_update', 'uses' => 
 Route::delete('course_plan/section/delete', ['as' => 'section_delete', 'uses' => 'StatementsController@deleteSection', 'middleware' => ['general_auth', 'admin']]);
 //получить представление для добавления лекции/семинара/Контрольного мероприятия в разделе учебного плана
 Route::get('course_plan/section/get_add_lec_sem_cw', ['as' => 'get_add_lec_sem_cw', 'uses' => 'StatementsController@getAddLecOrSemOrCW', 'middleware' => ['general_auth', 'admin']]);
-//сохранение новой лекции/семинара/Контрольногое мероприятия в разделе учебного плана
-Route::get('course_plan/section/lec_sem_cw/store', ['as' => 'lec_sem_cw_store', 'uses' => 'StatementsController@storeLecOrSemOrCW', 'middleware' => ['general_auth', 'admin']]);
+//сохранение лекции/семинара/Контрольногое мероприятия в разделе учебного плана
+Route::post('course_plan/section/lec_sem_cw/store', ['as' => 'lec_sem_cw_store', 'uses' => 'StatementsController@storeLecOrSemOrCW', 'middleware' => ['general_auth', 'admin']]);
+//Обновление лекции/семинара/Контрольногое мероприятия в разделе учебного плана
+Route::patch('course_plan/section/lec_sem_cw/update', ['as' => 'lec_sem_cw_update', 'uses' => 'StatementsController@updateLecOrSemOrCW', 'middleware' => ['general_auth', 'admin']]);
+//Удаление лекции/семинара/Контрольногое мероприятия в разделе учебного плана
+Route::delete('course_plan/section/lec_sem_cw/delete', ['as' => 'lec_sem_cw__delete', 'uses' => 'StatementsController@deleteLecOrSemOrCW', 'middleware' => ['general_auth', 'admin']]);
 //представление конкретного учебного плана
 Route::get('course_plan/{id}', ['as' => 'course_plan', 'uses' => 'StatementsController@getCoursePlan']);
+//копирование учебного плана
+Route::post('course_plan/copy', ['as' => 'course_plan_copy', 'uses' => 'StatementsController@copyCoursePlan']);
 
 
 
@@ -354,19 +367,16 @@ Route::get('course_plan/{id}', ['as' => 'course_plan', 'uses' => 'StatementsCont
 Route::get('statements', ['as' => 'statements', 'uses' => 'StatementsController@statements', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/get-lectures', ['as' => 'get_lectures', 'uses' => 'StatementsController@get_lectures', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/get-seminars', ['as' => 'get_seminars', 'uses' => 'StatementsController@get_seminars', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/get-classwork', ['as' => 'get_classwork', 'uses' => 'StatementsController@get_classwork', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/get-controls', ['as' => 'get_controls', 'uses' => 'StatementsController@get_controls', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/get-resulting', ['as' => 'get_resulting', 'uses' => 'StatementsController@get_resulting', 'middleware' => ['general_auth', 'admin']]);
 
-Route::post('statements/lecture/was', ['as' => 'lecture_was', 'uses' => 'StatementsController@lecture_was', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/lecture/wasnot', ['as' => 'lecture_wasnot', 'uses' => 'StatementsController@lecture_wasnot', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/seminar/was', ['as' => 'seminar_was', 'uses' => 'StatementsController@seminar_was', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/seminar/wasnot', ['as' => 'seminar_wasnot', 'uses' => 'StatementsController@seminar_wasnot', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/classwork/change', ['as' => 'classwork_change', 'uses' => 'StatementsController@classwork_change', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/controls/change', ['as' => 'controls_change', 'uses' => 'StatementsController@controls_change', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/resulting/change', ['as' => 'resulting_change', 'uses' => 'StatementsController@resulting_change', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/lecture/wasall', ['as' => 'lecture_wasall', 'uses' => 'StatementsController@lecture_was_all', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/seminar/wasall', ['as' => 'seminar_wasall', 'uses' => 'StatementsController@seminar_was_all', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/lecture/mark_present', ['as' => 'lecture_mark_present', 'uses' => 'StatementsController@lecture_mark_present', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/seminar/mark_present', ['as' => 'seminar_mark_present', 'uses' => 'StatementsController@seminar_mark_present', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/seminar/classwork/change', ['as' => 'classwork_change', 'uses' => 'StatementsController@classwork_change', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/result/mark_present', ['as' => 'result_mark_present', 'uses' => 'StatementsController@result_mark_present', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/result/control_work/change', ['as' => 'result_change', 'uses' => 'StatementsController@result_change', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/result/mark_present_all', ['as' => 'result_mark_present_all', 'uses' => 'StatementsController@result_mark_present_all', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/lecture/mark_present_all', ['as' => 'lecture_mark_present_all', 'uses' => 'StatementsController@lecture_mark_present_all', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/seminar/mark_present_all', ['as' => 'seminar_mark_present_all', 'uses' => 'StatementsController@seminar_mark_present_all', 'middleware' => ['general_auth', 'admin']]);
 Route::post('verify_students/change_user_l_name', ['as' => 'change_l_name', 'uses' => 'AdministrationController@change_l_name', 'middleware' => ['general_auth', 'admin']]);
 Route::post('verify_students/change_user_f_name', ['as' => 'change_f_name', 'uses' => 'AdministrationController@change_f_name', 'middleware' => ['general_auth', 'admin']]);
 
@@ -388,9 +398,6 @@ Route::post('manage_news/add_news', ['as' => 'add_news', 'uses' => 'Administrati
 Route::post('manage_news/delete', ['as' => 'delete_news', 'uses' => 'AdministrationController@delete_news', 'middleware' => ['general_auth', 'admin']]);
 Route::post('manage_news/hide', ['as' => 'hide_news', 'uses' => 'AdministrationController@hide_news', 'middleware' => ['general_auth', 'admin']]);
 
-Route::get('manage_plan', ['as' => 'manage_plan', 'uses' => 'StatementsController@manage_plan', 'middleware' => ['general_auth', 'admin']]);
-Route::post('manage_plan/is', ['as' => 'change_plan', 'uses' => 'StatementsController@plan_is', 'middleware' => ['general_auth', 'admin']]);
-Route::post('manage_plan/is_not', ['as' => 'change_plan', 'uses' => 'StatementsController@plan_is_not', 'middleware' => ['general_auth', 'admin']]);
 Route::get('pashalka', ['as' => 'pashalka', 'uses' => 'AdministrationController@pashalka']);
 
 Route::get('manage_groups/group_set', ['as' => 'group_set', 'uses' => 'AdministrationController@add_groups', 'middleware' => ['general_auth', 'admin']]);

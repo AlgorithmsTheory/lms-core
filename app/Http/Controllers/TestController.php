@@ -529,7 +529,8 @@ class TestController extends Controller{
             $widgetListView = View::make('tests.ctrresults',compact('total','score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'id_test', 'id_user'))->with('widgets', $widgets);
             $fine = new Fine();
             $fine->updateFine(Auth::user()['id'], $id_test, $mark_rus);                                                 //вносим в таблицу штрафов необходимую инфу
-            Test::addToStatements($id_test, $id_user, $score);                                                          //занесение балла в ведомость
+            $fraction_score = $score / $total;
+            Test::addToStatements($id_test, $id_user, $fraction_score);                                                          //занесение балла в ведомость
         }
         else {                                                                                                          //тест тренировочный
             $widgetListView = View::make('questions.student.training_test',compact('total','score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'link_to_lecture'))->with('widgets', $widgets);
