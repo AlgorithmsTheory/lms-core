@@ -3,7 +3,7 @@
  */
 
 $(".student").click(function() {
-    $($(this)).prop('disabled', true);
+    $(this).attr("disabled", true);
     var id = this.name;
     token = $('#forma').children().eq(0).val();
     myBlurFunction(1);
@@ -35,7 +35,7 @@ $(".student").click(function() {
                     divError.find("ul").append('<li>'+value+'</li>');
                 });
             }
-
+            $('#' + data.id).find(".student").attr("disabled", false);
         }
     });
     return false;

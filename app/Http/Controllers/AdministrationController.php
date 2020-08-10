@@ -207,7 +207,7 @@ class AdministrationController extends Controller{
             }
             return response()->json(['id' => $id]);
         }else {
-            return response()->json(['errors' => $validator->errors()->all()]);
+            return response()->json(['errors' => $validator->errors()->all(), 'id' => $id]);
         }
     }
 
