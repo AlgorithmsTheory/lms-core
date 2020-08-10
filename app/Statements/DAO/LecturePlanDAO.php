@@ -70,7 +70,6 @@ class LecturePlanDAO implements ItemSectionDAO {
         $request_array['id_lecture_plan'] = $form['id_lecture_plan'];
         $request_array['id_course_plan'] = $request->input('id_course_plan');
         $validator = Validator::make($request_array, [
-            'lecture_plan_name' => 'required',
             'lecture_plan_num' => [ 'required',
                 'integer',
                 'min:1']

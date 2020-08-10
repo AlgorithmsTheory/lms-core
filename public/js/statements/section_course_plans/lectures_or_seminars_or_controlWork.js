@@ -75,6 +75,7 @@ $(document).on('change', 'select[name="control_work_plan_type"]', function () {
 
 //возвращает представление для добавление лек/сем/К.М.
 $(document).on('click', '.add_lecture_or_sem_or_CW', function () {
+    $(".add_lecture_or_sem_or_CW").attr("disabled", true);
     var typeCard = $(this).attr('data-type-card');
     var currentSection = $(this).closest('.section');
     var numberLastCard = $('.' + typeCard).length.toString();
@@ -97,8 +98,7 @@ $(document).on('click', '.add_lecture_or_sem_or_CW', function () {
             var typeConteinerCards = getConteinerTypeCard(typeCard);
             //Вставка формы добавления лекции или сема или к.м.
             currentSection.find('.'+typeConteinerCards).append(data.view);
-
-
+            $(".add_lecture_or_sem_or_CW").attr("disabled", false);
         }
     });
 });
