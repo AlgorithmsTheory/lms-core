@@ -11,7 +11,11 @@
 <input type="hidden" name="num" value="{{ $id }}" />
 <input type="hidden" name="type" value="{{ $type }}" />
 
-Эмулятор решенный тут: {{ $task_id }}
+<h4><b>Эмулятор RAM</b></h4>
+<h4>Тестов прошло: {{$choice['sequences_true']}} / {{$choice['sequences_all']}}</h4>
+<h4>Количество отладок: {{$choice['debug_counter']}}</h4>
+<h4>Штраф за отладки составил: {{$choice['fee_percent']}}%</h4>
+<h4>Количество баллов: {{$choice['score']}}</h4>
 
 {!! Form::close() !!}
 <br>

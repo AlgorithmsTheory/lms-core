@@ -8,7 +8,6 @@ use DB;
 use Request;
 use App\Group;
 use Auth;
-use App\Controls;
 use App\Emulators\KontrWork;
 use App\Emulators\EmrForGroup;
 use App\Http\Controllers\Controller;
@@ -324,7 +323,6 @@ class EmulatorController extends Controller {
     $mark_info_2 = DB::select("SELECT * FROM user_result_nam WHERE id_user=".$id_user);
         $mark_info_2 = EmulatorController::magic($mark_info_2)[0];
     $score_2 = $mark_info_2['mark_1']+$mark_info_2['mark_2'];
-    Controls::where('userID', $id_user)->update(['control2' => $score_2]);
 
         return $repost;
         //    return $sqnc[0]['input_word'];
@@ -436,7 +434,6 @@ class EmulatorController extends Controller {
     $mark_info = DB::select("SELECT * FROM user_result_tur WHERE id_user=".$id_user);
         $mark_info = EmulatorController::magic($mark_info)[0];
     $score = $mark_info['mark_1']+$mark_info['mark_2'];
-    Controls::where('userID', $id_user)->update(['control1' => $score]);
 
         return $repost;
 

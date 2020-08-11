@@ -3,52 +3,29 @@
  */
 
 $('.was').on('change', function() {
+    var idLecturePlan = $(this).attr('data-id-lecture');
+    var idUser = $(this).closest('tr').attr('id');
+    var isPresence = false;
+    myBlurFunction(1);
     if (this.checked) {
-        var userID = this.name;
-        var column = String(this.id);
-        token = $('#forma').children().eq(0).val();
-        myBlurFunction(1);
-        $.ajax({
-            cache: false,
-            type: 'POST',
-            url:   '/statements/lecture/was',
-            beforeSend: function (xhr) {
-                var token = $('meta[name="csrf_token"]').attr('content');
-
-                if (token) {
-                    return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-                }
-            },
-            data: { id: userID, column: column, token: 'token' },
-            success: function(data){
-                myBlurFunction(0);
-            }
-        });
-        return false;
+        isPresence = true;
     }
-    else{
-        var userID = this.name;
-        var column = String(this.id);
-        token = $('#forma').children().eq(0).val();
-        myBlurFunction(1);
-        $.ajax({
-            cache: false,
-            type: 'POST',
-            url:   '/statements/lecture/wasnot',
-            beforeSend: function (xhr) {
-                var token = $('meta[name="csrf_token"]').attr('content');
-
-                if (token) {
-                    return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-                }
-            },
-            data: { id: userID, column: column, token: 'token' },
-            success: function(data){
-                myBlurFunction(0);
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url:   '/statements/lecture/mark_present',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
             }
-        });
-        return false;
-    }
+        },
+        data: { id_user: idUser, id_lecture_plan: idLecturePlan, token: 'token', is_presence: isPresence},
+        success: function(data){
+            myBlurFunction(0);
+        }
+    });
+    return false;
 });
 
 var myBlurFunction = function(state) {
@@ -71,25 +48,24 @@ var myBlurFunction = function(state) {
 
 
 $(".all").click(function() {
-    var column = String(this.id);
-    var group = this.name;
-    token = $('#forma').children().eq(0).val();
+    var idLecturePlan = $(this).attr('data-id-lecture');
+    var idGroup = this.name;
     myBlurFunction(1);
     $.ajax({
         cache: false,
         type: 'POST',
-        url:   '/statements/lecture/wasall',
+        url:   '/statements/lecture/mark_present_all',
         beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
             if (token) {
                 return xhr.setRequestHeader('X-CSRF-TOKEN', token);
             }
         },
-        data: { column: column, group: group, token: 'token' },
+        data: { id_lecture_plan: idLecturePlan, id_group: idGroup, token: 'token' },
         success: function(data){
             $( ".was").filter(function(index) {
-                return String(this.id) === column;
-            }).prop( "checked", true )
+                return $(this).attr('data-id-lecture') === idLecturePlan;
+            }).prop( "checked", true );
             myBlurFunction(0);
         }
     });

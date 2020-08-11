@@ -72,7 +72,6 @@ abstract class QuestionType {
         else {
             $translated = 0;
         }
-        //func_get_arg(1);
 
         return ['section' => $section, 'theme' => $theme, 'type' => $type,
                 'control' => $control, 'points' => $points, 'difficulty' => $difficulty,

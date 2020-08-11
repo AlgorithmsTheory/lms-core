@@ -1,5 +1,5 @@
 @extends('algorithm.RAMbase')
-@section('addl-info')
+@section('addl-info-ram')
     <div class="col-lg-12">
         <article class="margin-bottom-xxl">
             <p class = 'lead'>
@@ -8,7 +8,7 @@
         </article>
     </div>
 @stop
-@section('addl-blocks')
+@section('addl-blocks-ram')
         <div class="offcanvas">
             <div id="offcanvas-demo-right" class="offcanvas-pane width-10" style="">
             <div class="offcanvas-head">
