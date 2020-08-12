@@ -13,4 +13,11 @@ class ControlWorkPasses extends Eloquent {
     protected $table = 'control_work_passes';
     public $timestamps = false;
     protected $primaryKey = 'id_control_work_pass';
+
+    public static function existPasses($id_user, $id_control_work_plan) {
+        return ControlWorkPasses::where([
+            ['id_control_work_plan', '=', $id_control_work_plan],
+            ['id_user', '=', $id_user]
+        ])->exists();
+    }
 }

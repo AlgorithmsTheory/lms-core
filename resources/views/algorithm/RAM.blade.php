@@ -14,7 +14,7 @@
 @stop
 		
 @section('content')
-@include('algorithm/RAMview')
+@include('algorithm.RAMview')
 @stop		
 
 @section('js-down')

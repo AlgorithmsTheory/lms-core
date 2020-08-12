@@ -3,8 +3,10 @@
  */
 
 $(".student").click(function() {
+    $(this).attr("disabled", true);
     var id = this.name;
     token = $('#forma').children().eq(0).val();
+    myBlurFunction(1);
     $.ajax({
         cache: false,
         type: 'POST',
@@ -18,7 +20,22 @@ $(".student").click(function() {
         },
         data: { id: id, token: 'token' },
         success: function(data){
-            $('#' + data).attr('style', 'display: none;');
+            myBlurFunction(0);
+            var divError = $('.print-error-msg');
+            if($.isEmptyObject(data.errors)) {
+                // удаление сообщений об ошибках
+                divError.find("ul").html('');
+                divError.css('display','none');
+                $('#' + data.id).attr('style', 'display: none;');
+            } else {
+                //добавление в html сообщений об ошибках
+                divError.find("ul").html('');
+                divError.css('display','block');
+                $.each( data.errors, function( key, value ) {
+                    divError.find("ul").append('<li>'+value+'</li>');
+                });
+            }
+            $('#' + data.id).find(".student").attr("disabled", false);
         }
     });
     return false;
@@ -135,3 +152,22 @@ $('.f_name_change').on('change', function() {
     });
     return false;
 });
+
+
+var myBlurFunction = function(state) {
+    /* state can be 1 or 0 */
+    var containerElement = document.getElementById('main_container');
+    var overlayEle = document.getElementById('overlay');
+
+    if (state) {
+        var winHeight = $(window).height()/2 - 24;
+        winHeight = winHeight.toString()
+
+        overlayEle.style.display = 'block';
+        overlayEle.style.top = winHeight.concat('px');
+        containerElement.setAttribute('class', 'blur');
+    } else {
+        overlayEle.style.display = 'none';
+        containerElement.setAttribute('class', null);
+    }
+};

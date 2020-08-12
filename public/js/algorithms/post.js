@@ -2,6 +2,7 @@
 // GetNextMove(state) => {-1, 0, 1}
 // GetNextState(state) => {0, 1}
 // GetNextRuleId(state) => RuleId
+
 function Rule(rawText, comment) {
 	this.Raw = rawText;
     this.Type = rawText[0];
@@ -121,10 +122,10 @@ function GetResult(rules, state, position = 0, initialRule = 1) {
 }
 
 
-function GetRules() {
+function GetRules(ctx) {
     result = {};
     validTypes = ["<", ">", "0", "1", "?", "!"];
-    lines = $('#p_scents > li');
+    lines = ctx.find('[name = p_scents] > li');
     for (var i = 0; i < lines.length; i++) {
         ruleId = parseInt(lines[i].querySelector('span.input-group-addon > b').textContent);
         ruleType = lines[i].querySelector('select').value;
@@ -142,8 +143,8 @@ function GetRules() {
     return result;
 }
 
-function SetRules(rules) {
-	lines = $('#p_scents > li');
+function SetRules(ctx, rules) {
+	lines = ctx.find('[name = p_scents] > li');
 	for(i in rules){
 		if(i == "length") continue;
 		rule = rules[i];
@@ -164,8 +165,8 @@ function SetRules(rules) {
 	}
 }
 
-function GetInput() {
-    input = $("#input_word").val();
+function GetInput(ctx) {
+    input = ctx.find("[name = input_word]").val();
     validator = /[01]+/;
     if (validator.test(input)) {
         return input;
@@ -175,27 +176,41 @@ function GetInput() {
     }
 }
 
-function SetInput(value) {
-	$("#input_word").val(value);
+function SetInput(ctx, value) {
+	ctx.find("[name = input_word]").val(value);
 }
 
-function RunPost(withDebug=false) {
-    rules = GetRules();
-    input = GetInput();
+function RunPost(ctx, withDebug=false) {
+    rules = GetRules(ctx);
+    input = GetInput(ctx);
     result = GetResult(rules, input)
     
-    var logTable = document.getElementById("debug");
-    logTable.innerHTML = "";
+    var logTable = ctx.find('[name = debug]');
+    logTable.html("");
 
-    $("#result_word").val(result[result.length - 1]);
+    ctx.find("[name = result_word]").val(result[result.length - 1]);
     if (withDebug) {
         for (var i = 0; i < result.length; i++) {
-            var row = logTable.insertRow(i);
-            cellNumer = row.insertCell(0);
-            cellState = row.insertCell(1);
-
-            cellNumer.innerText = i + 1;
-            cellState.innerText = result[i];
+            logTable.append('<tr><td>' + (i + 1) + '</td><td>' + result[i] + '</td></tr>');
         }
     }
 }
+
+function PostContext(imp){
+        let ctx = $('[name = post-entity' + imp + ']').first();
+        
+        ctx.find('[name = runPost]').click(function(){
+            RunPost(ctx, false);
+        });
+        
+        ctx.find('[name = runPostTrue]').click(function(){
+            RunPost(ctx, true);
+        });
+}
+
+j = 0;
+
+$("[name^=post-entity]").each(function(){
+	PostContext(j);
+	j++;
+});

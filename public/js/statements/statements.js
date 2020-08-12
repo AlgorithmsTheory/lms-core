@@ -45,42 +45,6 @@ $('#show').click(function(){
                 }
             });
             break;
-        case 'control':
-            $.ajax({
-                cache: false,
-                type: 'POST',
-                url:   '/statements/get-controls',
-                beforeSend: function (xhr) {
-                    var token = $('meta[name="csrf_token"]').attr('content');
-                    if (token) {
-                        return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-                    }
-                },
-                data: { group: group, token: 'token' },
-                success: function(data){
-                    myBlurFunction(0);
-                    $('#statement').html(data);
-                }
-            });
-            break;
-        case 'class':
-            $.ajax({
-                cache: false,
-                type: 'POST',
-                url:   '/statements/get-classwork',
-                beforeSend: function (xhr) {
-                    var token = $('meta[name="csrf_token"]').attr('content');
-                    if (token) {
-                        return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-                    }
-                },
-                data: { group: group, token: 'token' },
-                success: function(data){
-                    myBlurFunction(0);
-                    $('#statement').html(data);
-                }
-            });
-            break;
         default:
             $.ajax({
                 cache: false,
