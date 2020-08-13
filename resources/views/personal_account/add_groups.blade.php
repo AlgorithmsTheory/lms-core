@@ -58,8 +58,8 @@
                         </div>
 
                         <div class="form-group">
-                        <label for="course_plan">Выберите учебный план (обязательно)</label>
-                        <select name ="id_course_plan"  class="form-control" required>
+                        <label for="course_plan">Выберите учебный план</label>
+                        <select name ="id_course_plan"  class="form-control">
                             <option value=""></option>
                             @foreach($course_plans as $course_plan)
                                 <option value="{{$course_plan->id_course_plan}}"}}>

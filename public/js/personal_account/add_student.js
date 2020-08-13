@@ -41,7 +41,15 @@ $(".student").click(function() {
     return false;
 });
 
+function deleteMsgError () {
+    var divError = $('.print-error-msg');
+    // удаление сообщений об ошибках
+    divError.find("ul").html('');
+    divError.css('display','none');
+}
+
 $(".average").click(function() {
+    deleteMsgError();
     var id = this.name;
     token = $('#forma').children().eq(0).val();
     $.ajax({
@@ -64,6 +72,7 @@ $(".average").click(function() {
 });
 
 $(".admin").click(function() {
+    deleteMsgError();
     var id = this.name;
     token = $('#forma').children().eq(0).val();
     $.ajax({
@@ -86,6 +95,7 @@ $(".admin").click(function() {
 });
 
 $(".tutor").click(function() {
+    deleteMsgError();
     var id = this.name;
     token = $('#forma').children().eq(0).val();
     $.ajax({

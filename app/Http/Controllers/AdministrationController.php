@@ -64,6 +64,9 @@ class AdministrationController extends Controller{
         $name = $request->input('name');
         $description = $request->input('description');
         $id_course_plan = $request->input('id_course_plan');
+        if (empty($id_course_plan)) {
+            $id_course_plan = null;
+        }
         $validate = Group::whereGroup_name($name)->get();
         if(count($validate) == 0){
             Group::insert(['group_name' => $name, 'description' => $description, 'archived' => 0, 'id_course_plan' => $id_course_plan]);
