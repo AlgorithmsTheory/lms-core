@@ -185,26 +185,29 @@ class AdministrationController extends Controller{
             if ($user['role'] != 'Студент') {
                 $user->role = 'Студент';
                 $user->save();
-                //Заполняем нулями ведомость по посещаемости лекций
-                $all_lectures = $this->course_plan_DAO->getAllLectures($id_course_plan);
-                foreach ($all_lectures as $lecture) {
+                //Проверка, что ведомости для студента были созданы, для случая изменения роли пользователя с возвратом на "студент" (чтоб дубликатов не было)
+                if (! LecturePasses::where('id_user', '=', $user->id)->exists()) {
+                    //Заполняем нулями ведомость по посещаемости лекций
+                    $all_lectures = $this->course_plan_DAO->getAllLectures($id_course_plan);
+                    foreach ($all_lectures as $lecture) {
                         LecturePasses::insert(['id_lecture_plan' => $lecture->id_lecture_plan,
                             'id_user' => $user->id, 'presence' => 0]);
-                }
+                    }
 
-                //Заполняем нулями ведомость работы на семинаре
-                $all_seminars = $this->course_plan_DAO->getAllSeminars($id_course_plan);
-                foreach ($all_seminars as $seminar) {
+                    //Заполняем нулями ведомость работы на семинаре
+                    $all_seminars = $this->course_plan_DAO->getAllSeminars($id_course_plan);
+                    foreach ($all_seminars as $seminar) {
                         SeminarPasses::insert(['id_seminar_plan' => $seminar->id_seminar_plan,
                             'id_user' => $user->id, 'presence' => 0, 'work_points' => 0]);
-                }
+                    }
 
-                //Заполняем нулями итоговую ведомость
-                $all_works = $this->course_plan_DAO->getAllControlWorks($id_course_plan)
-                    ->merge($this->course_plan_DAO->getAllExamWorks($id_course_plan));
-                foreach ($all_works as $control_work) {
+                    //Заполняем нулями итоговую ведомость
+                    $all_works = $this->course_plan_DAO->getAllControlWorks($id_course_plan)
+                        ->merge($this->course_plan_DAO->getAllExamWorks($id_course_plan));
+                    foreach ($all_works as $control_work) {
                         ControlWorkPasses::insert(['id_control_work_plan' => $control_work->id_control_work_plan,
                             'id_user' => $user->id, 'presence' => 0, 'points' => 0]);
+                    }
                 }
 
             }
