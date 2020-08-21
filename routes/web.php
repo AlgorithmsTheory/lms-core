@@ -156,8 +156,16 @@ Route::delete('library/persons/{id}/delete',['as' => 'person_delete', 'uses' => 
 Route::get('library/persons/{id}/downloadDoc', ['as' => 'doc_download', 'uses' => 'LibraryController@docDownload', 'middleware' => ['general_auth']]);
 // Скачивание ppt файла
 Route::get('library/persons/{id}/downloadPpt', ['as' => 'ppt_download', 'uses' => 'LibraryController@pptDownload', 'middleware' => ['general_auth']]);
-
-Route::get('library/extra', ['as' => 'library_extra', 'uses' => 'LibraryController@extra', 'middleware' => ['general_auth', 'access_for_library']]);
+//Вывод доп материалов
+Route::get('library/extras', ['as' => 'library_extras', 'uses' => 'LibraryController@extras', 'middleware' => ['general_auth', 'access_for_library']]);
+//Сохранение доп материала
+Route::post('library/extra/store', ['as' => 'library_extra_store', 'uses' => 'LibraryController@extraStore', 'middleware' => ['general_auth', 'admin']]);
+//переход на страницу редактирования доп материала
+Route::get('library/extra/edit/{id}', ['as' => 'library_extra_edit', 'uses' => 'LibraryController@extraEdit', 'middleware' => ['general_auth', 'admin']]);
+//Обновление доп материала
+Route::patch('library/extra/update/{id}', ['as' => 'library_extra_update', 'uses' => 'LibraryController@extraUpdate', 'middleware' => ['general_auth', 'admin']]);
+// Удаление доп. материала
+Route::delete('library/extra/delete/{id}',['as' => 'library_extra_delete', 'uses' => 'LibraryController@extraDelete', 'middleware' => ['general_auth', 'admin']]);
 // Переход на страницу учебные материалы
 Route::get('library/educationalMaterials', ['as' => 'educational_materials', 'uses' => 'LibraryController@educationalMaterials', 'middleware' => ['general_auth']]);
 //добавление учебного материала
@@ -172,6 +180,22 @@ Route::get('library/educationalMaterials/{id}/edit', ['as' => 'educationalMateri
 Route::delete('library/educationalMaterials/{id}/delete',['as' => 'educationalMaterial_delete', 'uses' => 'LibraryController@deleteEducationalMaterial', 'middleware' => ['general_auth', 'admin']]);
 // Скачивание файл материала
 Route::get('library/educationalMaterials/{id}/download', ['as' => 'educationalMaterials_download', 'uses' => 'LibraryController@educationalMaterialsDownload', 'middleware' => ['general_auth']]);
+//Вывод всех электронных книг
+Route::get('library/ebooks', ['as' => 'ebooks', 'uses' => 'LibraryController@ebooks']);
+//Поиск электронных книг
+Route::post('library/ebooks/search', ['as' => 'search_ebooks', 'uses' => 'LibraryController@searchEbooks']);
+//Переход на страницу добавление новой эл. книги
+Route::get('library/ebooks/ebook/add', ['as' => 'add_ebook', 'uses' => 'LibraryController@addEbook', 'middleware' => ['general_auth', 'admin']]);
+//сохранение новой эл. книги
+Route::post('library/ebooks/ebook/store', ['as' => 'store_ebook', 'uses' => 'LibraryController@storeEbook', 'middleware' => ['general_auth', 'admin']]);
+//Переход на страницу "Конкретная эл. книга"
+Route::get('library/ebooks/ebook/get/{id_ebook}', ['as' => 'get_ebook', 'uses' => 'LibraryController@getEbook']);
+//Переход на страницу редактирование эл. книги
+Route::get('library/ebooks/ebook/edit/{id_ebook}', ['as' => 'edit_ebook', 'uses' => 'LibraryController@editEbook', 'middleware' => ['general_auth', 'admin']]);
+//Обновление эл. книги
+Route::patch('library/ebooks/ebook/update/{id_ebook}', ['as' => 'update_ebook', 'uses' => 'LibraryController@updateEbook', 'middleware' => ['general_auth', 'admin']]);
+// Удаление научного материала
+Route::delete('libraryebooks/ebook/delete/{id_ebook}',['as' => 'delete_ebook', 'uses' => 'LibraryController@deleteEbook', 'middleware' => ['general_auth', 'admin']]);
 
 
 //библиотека для студентов и преподавателей
@@ -238,8 +262,6 @@ Route::patch('library/manageNewsLibrary/{id}', ['as' => 'library_news_update', '
 
 
 Route::get('library/lection/{id}', ['as' => 'lection', 'uses' => 'BooksController@lection', 'middleware' => ['general_auth', 'admin', 'access_for_library']]); //только студентам и преподавателям
-Route::get('library/ebooks', ['as' => 'ebooks', 'uses' => 'BooksController@ebookindex']); // всем пользователям
-Route::post('library/ebooks/search', ['as' => 'library_esearch', 'uses' => 'BooksController@esearch']); //всем пользователям
 Route::get('teacher_account/library_calendar', ['as' => 'library_calendar', 'uses' => 'BooksController@library_calendar']); //только преподавателю
 Route::post('teacher_account/date_create', ['as' => 'library_date_create', 'uses' => 'BooksController@create_date']); // только преподавателю
 Route::get('teacher_account/library_order_list', ['as' => 'library_order_list', 'uses' => 'BooksController@library_order_list']); // только преподавателю

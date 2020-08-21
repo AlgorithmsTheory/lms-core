@@ -89,7 +89,7 @@
                 <a>&nbsp;&nbsp;&nbsp;</a>
                 <div class="btn-group">
                     <button type="button" class="btn ink-reaction btn-flat dropdown-toggle" >
-                        {!! HTML::linkRoute('library_extra', 'Дополнительно') !!}
+                        {!! HTML::linkRoute('library_extras', 'Дополнительно') !!}
                     </button>
                 </div>
 
