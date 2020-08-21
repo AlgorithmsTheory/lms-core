@@ -287,7 +287,7 @@ class FillGaps extends QuestionType implements Checkable {
         return $data;
     }
 
-    public function pdf(Mypdf $fpdf, $count, $answered=false) {
+    public function pdf(Mypdf $fpdf, $count, $answered=false, $paper_savings=false) {
         $text_parts = explode("<>", $this->text);                                                                       //части текста между селектами
         $parse = explode("%", $this->variants);
         $variants = explode("<>", $parse[0]);
