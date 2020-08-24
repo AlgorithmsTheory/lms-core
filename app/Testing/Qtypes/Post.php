@@ -10,6 +10,7 @@ use Session;
 
 class Post extends QuestionType implements Checkable {
     const type_code = 14;
+    const ORIGIN_HEIGHT_ANSWER = '500px';
 
     function __construct($id_question){
         parent::__construct($id_question);
@@ -124,15 +125,19 @@ class Post extends QuestionType implements Checkable {
         return $data;
     }
 
-    public function pdf(Mypdf $fpdf, $count, $answered=false) {
+    public function pdf(Mypdf $fpdf, $count, $answered=false, $paper_savings=false) {
         $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
         $html .= '  Напишите решение задачи на Машине Поста</td></tr>';
         $html .= '<tr><td>'.$this->text.'</td></tr></table>';
-        
+        if ($paper_savings) {
+            $height_tr = QuestionType::PAPER_SAVING_HEIGHT_ANSWER;
+        } else {
+            $height_tr = $this::ORIGIN_HEIGHT_ANSWER;
+        }
         if ($answered == false) {
             $html .= '<p>Ваш алгоритм:</p>';
             $html .= '<table border="1" style="border-collapse: collapse;" width="100%">
-                        <tr><td height="500px"></td></tr>
+                        <tr><td height="' . $height_tr . '"></td></tr>
                       </table><br>';
         }
         

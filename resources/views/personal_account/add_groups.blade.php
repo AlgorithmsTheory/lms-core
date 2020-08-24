@@ -48,7 +48,7 @@
                     <div class="form">
 
                         <div class="form-group">
-                            <input type="text" name="name" id="name" class="form-control">
+                            <input type="text" name="name" id="name" class="form-control" required>
                             <label for="group">Группа (например Б15-501)</label>
                         </div>
 
@@ -56,6 +56,19 @@
                             <textarea name="description" id="description" class="form-control" rows="1" placeholder=""></textarea>
                             <label for="faculty">Описание (необязательно)</label>
                         </div>
+
+                        <div class="form-group">
+                        <label for="course_plan">Выберите учебный план</label>
+                        <select name ="id_course_plan"  class="form-control">
+                            <option value=""></option>
+                            @foreach($course_plans as $course_plan)
+                                <option value="{{$course_plan->id_course_plan}}"}}>
+                                    {{$course_plan->course_plan_name}}
+                                </option>
+                            @endforeach
+                        </select>
+                        </div>
+
                         <div class="form-group">
                             <button class="btn btn-primary btn-raised submit-question" type="submit">Добавить группу</button>
                         </div>

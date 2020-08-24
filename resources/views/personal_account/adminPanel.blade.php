@@ -85,13 +85,6 @@
                                 </a>
                             </li>
                         @endif
-                        <li class="tile">
-                            <a href="{{ route('manage_plan')}}" class="tile-content ink-reaction">
-                            <div class="tile-text">
-                                Редактировать план выполнения учебного курса
-                            </div>
-                            </a>
-                        </li>
                     </ul>
                 </div><!--end .card-body -->
             </div>

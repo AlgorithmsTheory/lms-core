@@ -9,6 +9,8 @@ use Request;
 use App\Group;
 use Auth;
 use App\Controls;
+use App\Emulators\KontrWork;
+use App\Emulators\EmrForGroup;
 use App\Http\Controllers\Controller;
 use App\Testing\Question;
 use App\Testing\Result;
@@ -108,7 +110,6 @@ class EmulatorController extends Controller {
                 $seq_true++;
             }
         }
-        
         return [$seq_true, $seq_all, $total_cycle];
     }
     
@@ -133,7 +134,6 @@ class EmulatorController extends Controller {
                 $seq_true++;
             }
         }
-        
         return [$seq_true, $seq_all, $total_cycle];
     }
     

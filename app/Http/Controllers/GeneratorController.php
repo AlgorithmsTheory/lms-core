@@ -27,11 +27,11 @@ use Illuminate\Http\Request;
 
 class GeneratorController extends Controller {
 
-    private function pdfQuestion(Mypdf $fpdf, $id_question, $count, $answered=false){
+    private function pdfQuestion(Mypdf $fpdf, $id_question, $count, $answered=false, $paper_savings=false){
         $type = Question::whereId_question($id_question)->join('types', 'questions.type_code', '=', 'types.type_code')
                 ->first()->type_name;
         $question = QuestionTypeFactory::getQuestionTypeByTypeName($id_question, $type);
-        $question->pdf($fpdf, $count, $answered);
+        $question->pdf($fpdf, $count, $answered, $paper_savings);
     }
 
     private function headOfPdf(Mypdf $fpdf, $test_name, $variant, $num_tasks){
@@ -89,6 +89,7 @@ class GeneratorController extends Controller {
 
         $test_name = $request->input('test');
         $num_var = $request->input('num-variants');
+        $paper_savings = $request->input('paper_savings');
         $id_test = Test::whereTest_name($test_name)->select('id_test')->first()->id_test;
         $amount = $test->getAmount($id_test);                                                                                // кол-во вопрососв в тесте
 
@@ -106,7 +107,7 @@ class GeneratorController extends Controller {
             $generator->generate(Test::whereId_test($id_test)->first());
             for ($i=0; $i<$amount; $i++){                                                                               // показываем каждый вопрос из теста
                 $id = $generator->chooseQuestion();
-                $this->pdfQuestion($fpdf, $id, $i+1);
+                $this->pdfQuestion($fpdf, $id, $i+1, false, $paper_savings);
                 $this->pdfQuestion($answered_fpdf, $id, $i+1, true);
             }
             if ($request->input('protocol-num') != '') {

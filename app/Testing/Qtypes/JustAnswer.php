@@ -97,7 +97,7 @@ class JustAnswer extends QuestionType implements Checkable {
         return $data;
     }
 
-    public function pdf(Mypdf $fpdf, $count, $answered=false) {
+    public function pdf(Mypdf $fpdf, $count, $answered=false, $paper_savings=false) {
         $parse = $this->variants;
         $variants = explode(";", $parse);
         $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;

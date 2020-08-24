@@ -159,8 +159,16 @@ Route::delete('library/persons/{id}/delete',['as' => 'person_delete', 'uses' => 
 Route::get('library/persons/{id}/downloadDoc', ['as' => 'doc_download', 'uses' => 'LibraryController@docDownload', 'middleware' => ['general_auth']]);
 // Скачивание ppt файла
 Route::get('library/persons/{id}/downloadPpt', ['as' => 'ppt_download', 'uses' => 'LibraryController@pptDownload', 'middleware' => ['general_auth']]);
-
-Route::get('library/extra', ['as' => 'library_extra', 'uses' => 'LibraryController@extra', 'middleware' => ['general_auth', 'access_for_library']]);
+//Вывод доп материалов
+Route::get('library/extras', ['as' => 'library_extras', 'uses' => 'LibraryController@extras', 'middleware' => ['general_auth', 'access_for_library']]);
+//Сохранение доп материала
+Route::post('library/extra/store', ['as' => 'library_extra_store', 'uses' => 'LibraryController@extraStore', 'middleware' => ['general_auth', 'admin']]);
+//переход на страницу редактирования доп материала
+Route::get('library/extra/edit/{id}', ['as' => 'library_extra_edit', 'uses' => 'LibraryController@extraEdit', 'middleware' => ['general_auth', 'admin']]);
+//Обновление доп материала
+Route::patch('library/extra/update/{id}', ['as' => 'library_extra_update', 'uses' => 'LibraryController@extraUpdate', 'middleware' => ['general_auth', 'admin']]);
+// Удаление доп. материала
+Route::delete('library/extra/delete/{id}',['as' => 'library_extra_delete', 'uses' => 'LibraryController@extraDelete', 'middleware' => ['general_auth', 'admin']]);
 // Переход на страницу учебные материалы
 Route::get('library/educationalMaterials', ['as' => 'educational_materials', 'uses' => 'LibraryController@educationalMaterials', 'middleware' => ['general_auth']]);
 //добавление учебного материала
@@ -175,6 +183,22 @@ Route::get('library/educationalMaterials/{id}/edit', ['as' => 'educationalMateri
 Route::delete('library/educationalMaterials/{id}/delete',['as' => 'educationalMaterial_delete', 'uses' => 'LibraryController@deleteEducationalMaterial', 'middleware' => ['general_auth', 'admin']]);
 // Скачивание файл материала
 Route::get('library/educationalMaterials/{id}/download', ['as' => 'educationalMaterials_download', 'uses' => 'LibraryController@educationalMaterialsDownload', 'middleware' => ['general_auth']]);
+//Вывод всех электронных книг
+Route::get('library/ebooks', ['as' => 'ebooks', 'uses' => 'LibraryController@ebooks']);
+//Поиск электронных книг
+Route::post('library/ebooks/search', ['as' => 'search_ebooks', 'uses' => 'LibraryController@searchEbooks']);
+//Переход на страницу добавление новой эл. книги
+Route::get('library/ebooks/ebook/add', ['as' => 'add_ebook', 'uses' => 'LibraryController@addEbook', 'middleware' => ['general_auth', 'admin']]);
+//сохранение новой эл. книги
+Route::post('library/ebooks/ebook/store', ['as' => 'store_ebook', 'uses' => 'LibraryController@storeEbook', 'middleware' => ['general_auth', 'admin']]);
+//Переход на страницу "Конкретная эл. книга"
+Route::get('library/ebooks/ebook/get/{id_ebook}', ['as' => 'get_ebook', 'uses' => 'LibraryController@getEbook']);
+//Переход на страницу редактирование эл. книги
+Route::get('library/ebooks/ebook/edit/{id_ebook}', ['as' => 'edit_ebook', 'uses' => 'LibraryController@editEbook', 'middleware' => ['general_auth', 'admin']]);
+//Обновление эл. книги
+Route::patch('library/ebooks/ebook/update/{id_ebook}', ['as' => 'update_ebook', 'uses' => 'LibraryController@updateEbook', 'middleware' => ['general_auth', 'admin']]);
+// Удаление научного материала
+Route::delete('libraryebooks/ebook/delete/{id_ebook}',['as' => 'delete_ebook', 'uses' => 'LibraryController@deleteEbook', 'middleware' => ['general_auth', 'admin']]);
 
 
 //библиотека для студентов и преподавателей
@@ -241,8 +265,6 @@ Route::patch('library/manageNewsLibrary/{id}', ['as' => 'library_news_update', '
 
 
 Route::get('library/lection/{id}', ['as' => 'lection', 'uses' => 'BooksController@lection', 'middleware' => ['general_auth', 'admin', 'access_for_library']]); //только студентам и преподавателям
-Route::get('library/ebooks', ['as' => 'ebooks', 'uses' => 'BooksController@ebookindex']); // всем пользователям
-Route::post('library/ebooks/search', ['as' => 'library_esearch', 'uses' => 'BooksController@esearch']); //всем пользователям
 Route::get('teacher_account/library_calendar', ['as' => 'library_calendar', 'uses' => 'BooksController@library_calendar']); //только преподавателю
 Route::post('teacher_account/date_create', ['as' => 'library_date_create', 'uses' => 'BooksController@create_date']); // только преподавателю
 Route::get('teacher_account/library_order_list', ['as' => 'library_order_list', 'uses' => 'BooksController@library_order_list']); // только преподавателю
@@ -281,6 +303,13 @@ Route::get('course_plans', ['as' => 'course_plans', 'uses' => 'StatementsControl
 Route::get('course_plans/create', ['as' => 'course_plans_create', 'uses' => 'StatementsController@createCoursePlans', 'middleware' => ['general_auth', 'admin']]);
 //сохранение учебного плана
 Route::post('course_plans', ['as' => 'course_plan_store', 'uses' => 'StatementsController@storeCoursePlan']);
+//Редактирование основ информации учебного плана
+Route::patch('course_plan/update', ['as' => 'course_plan_update', 'uses' => 'StatementsController@updateCoursePlan', 'middleware' => ['general_auth', 'admin']]);
+//Удаление учебного плана
+Route::delete('course_plan/delete', ['as' => 'course_plan_delete', 'uses' => 'StatementsController@deleteCoursePlan', 'middleware' => ['general_auth', 'admin']]);
+//Утверждение учебного плана для групп
+Route::post('course_plan/check_points', ['as' => 'course_plan_check_points', 'uses' => 'StatementsController@checkPointsCoursePlan', 'middleware' => ['general_auth', 'admin']]);
+
 //получить представление для добавленее раздела учебного плана
 Route::get('course_plan/get_add_section', ['as' => 'get_add_section', 'uses' => 'StatementsController@getAddSection', 'middleware' => ['general_auth', 'admin']]);
 //сохранение нового раздела
@@ -291,10 +320,16 @@ Route::patch('course_plan/section/update', ['as' => 'section_update', 'uses' => 
 Route::delete('course_plan/section/delete', ['as' => 'section_delete', 'uses' => 'StatementsController@deleteSection', 'middleware' => ['general_auth', 'admin']]);
 //получить представление для добавления лекции/семинара/Контрольного мероприятия в разделе учебного плана
 Route::get('course_plan/section/get_add_lec_sem_cw', ['as' => 'get_add_lec_sem_cw', 'uses' => 'StatementsController@getAddLecOrSemOrCW', 'middleware' => ['general_auth', 'admin']]);
-//сохранение новой лекции/семинара/Контрольногое мероприятия в разделе учебного плана
-Route::get('course_plan/section/lec_sem_cw/store', ['as' => 'lec_sem_cw_store', 'uses' => 'StatementsController@storeLecOrSemOrCW', 'middleware' => ['general_auth', 'admin']]);
+//сохранение лекции/семинара/Контрольногое мероприятия в разделе учебного плана
+Route::post('course_plan/section/lec_sem_cw/store', ['as' => 'lec_sem_cw_store', 'uses' => 'StatementsController@storeLecOrSemOrCW', 'middleware' => ['general_auth', 'admin']]);
+//Обновление лекции/семинара/Контрольногое мероприятия в разделе учебного плана
+Route::patch('course_plan/section/lec_sem_cw/update', ['as' => 'lec_sem_cw_update', 'uses' => 'StatementsController@updateLecOrSemOrCW', 'middleware' => ['general_auth', 'admin']]);
+//Удаление лекции/семинара/Контрольногое мероприятия в разделе учебного плана
+Route::delete('course_plan/section/lec_sem_cw/delete', ['as' => 'lec_sem_cw__delete', 'uses' => 'StatementsController@deleteLecOrSemOrCW', 'middleware' => ['general_auth', 'admin']]);
 //представление конкретного учебного плана
 Route::get('course_plan/{id}', ['as' => 'course_plan', 'uses' => 'StatementsController@getCoursePlan']);
+//копирование учебного плана
+Route::post('course_plan/copy', ['as' => 'course_plan_copy', 'uses' => 'StatementsController@copyCoursePlan']);
 
 
 
@@ -303,19 +338,16 @@ Route::get('course_plan/{id}', ['as' => 'course_plan', 'uses' => 'StatementsCont
 Route::get('statements', ['as' => 'statements', 'uses' => 'StatementsController@statements', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/get-lectures', ['as' => 'get_lectures', 'uses' => 'StatementsController@get_lectures', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/get-seminars', ['as' => 'get_seminars', 'uses' => 'StatementsController@get_seminars', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/get-classwork', ['as' => 'get_classwork', 'uses' => 'StatementsController@get_classwork', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/get-controls', ['as' => 'get_controls', 'uses' => 'StatementsController@get_controls', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/get-resulting', ['as' => 'get_resulting', 'uses' => 'StatementsController@get_resulting', 'middleware' => ['general_auth', 'admin']]);
 
-Route::post('statements/lecture/was', ['as' => 'lecture_was', 'uses' => 'StatementsController@lecture_was', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/lecture/wasnot', ['as' => 'lecture_wasnot', 'uses' => 'StatementsController@lecture_wasnot', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/seminar/was', ['as' => 'seminar_was', 'uses' => 'StatementsController@seminar_was', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/seminar/wasnot', ['as' => 'seminar_wasnot', 'uses' => 'StatementsController@seminar_wasnot', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/classwork/change', ['as' => 'classwork_change', 'uses' => 'StatementsController@classwork_change', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/controls/change', ['as' => 'controls_change', 'uses' => 'StatementsController@controls_change', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/resulting/change', ['as' => 'resulting_change', 'uses' => 'StatementsController@resulting_change', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/lecture/wasall', ['as' => 'lecture_wasall', 'uses' => 'StatementsController@lecture_was_all', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/seminar/wasall', ['as' => 'seminar_wasall', 'uses' => 'StatementsController@seminar_was_all', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/lecture/mark_present', ['as' => 'lecture_mark_present', 'uses' => 'StatementsController@lecture_mark_present', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/seminar/mark_present', ['as' => 'seminar_mark_present', 'uses' => 'StatementsController@seminar_mark_present', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/seminar/classwork/change', ['as' => 'classwork_change', 'uses' => 'StatementsController@classwork_change', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/result/mark_present', ['as' => 'result_mark_present', 'uses' => 'StatementsController@result_mark_present', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/result/control_work/change', ['as' => 'result_change', 'uses' => 'StatementsController@result_change', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/result/mark_present_all', ['as' => 'result_mark_present_all', 'uses' => 'StatementsController@result_mark_present_all', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/lecture/mark_present_all', ['as' => 'lecture_mark_present_all', 'uses' => 'StatementsController@lecture_mark_present_all', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/seminar/mark_present_all', ['as' => 'seminar_mark_present_all', 'uses' => 'StatementsController@seminar_mark_present_all', 'middleware' => ['general_auth', 'admin']]);
 Route::post('verify_students/change_user_l_name', ['as' => 'change_l_name', 'uses' => 'AdministrationController@change_l_name', 'middleware' => ['general_auth', 'admin']]);
 Route::post('verify_students/change_user_f_name', ['as' => 'change_f_name', 'uses' => 'AdministrationController@change_f_name', 'middleware' => ['general_auth', 'admin']]);
 
@@ -337,9 +369,6 @@ Route::post('manage_news/add_news', ['as' => 'add_news', 'uses' => 'Administrati
 Route::post('manage_news/delete', ['as' => 'delete_news', 'uses' => 'AdministrationController@delete_news', 'middleware' => ['general_auth', 'admin']]);
 Route::post('manage_news/hide', ['as' => 'hide_news', 'uses' => 'AdministrationController@hide_news', 'middleware' => ['general_auth', 'admin']]);
 
-Route::get('manage_plan', ['as' => 'manage_plan', 'uses' => 'StatementsController@manage_plan', 'middleware' => ['general_auth', 'admin']]);
-Route::post('manage_plan/is', ['as' => 'change_plan', 'uses' => 'StatementsController@plan_is', 'middleware' => ['general_auth', 'admin']]);
-Route::post('manage_plan/is_not', ['as' => 'change_plan', 'uses' => 'StatementsController@plan_is_not', 'middleware' => ['general_auth', 'admin']]);
 Route::get('pashalka', ['as' => 'pashalka', 'uses' => 'AdministrationController@pashalka']);
 
 Route::get('manage_groups/group_set', ['as' => 'group_set', 'uses' => 'AdministrationController@add_groups', 'middleware' => ['general_auth', 'admin']]);
