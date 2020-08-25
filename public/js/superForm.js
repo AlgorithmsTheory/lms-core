@@ -9,6 +9,8 @@ function sendForm(status){
     var countChecked = 0;
     let ramCounter = 0;
     let postCounter = 0;
+    let mtCounter = 0;
+    let hamCounter = 0;
     for (index = 0; index < formsCount; ++index) {
         flag[index] = false;
         typeOfForm = document.forms[index].type.value;
@@ -39,11 +41,21 @@ function sendForm(status){
             }
             if(typeOfForm == 12){
 				// Turing
-	
+                let ctx = $('[name ^= mt-entity]').eq(mtCounter);
+                
+                flag[index] = true;
+                
+                mtCounter++;
+                break;
 			}
             if(typeOfForm == 13){
 				// Markov
+                let ctx = $('[name ^= ham-entity]').eq(hamCounter);
                 
+                flag[index] = true;
+                
+                hamCounter++;
+                break;
 			}
             if(typeOfForm == 14){
 				// Post
@@ -78,14 +90,14 @@ function sendForm(status){
 function fillSuper(){
     // Execute Turing program before send result
     var cnt = 0;
-    $("[name^=turing-entity]").each(function(){
-        turingSubmitTask(cnt, false);
+    $("[name^=mt-entity]").each(function(){
+        mtSubmitTask(cnt, false);
         cnt++
     });
     // Execute Markov program before send result
     var cnt = 0;
-    $("[name^=markov-entity]").each(function(){
-        markovSubmitTask(cnt, false);
+    $("[name^=ham-entity]").each(function(){
+        hamSubmitTask(cnt, false);
         cnt++
     });
     // Execute Post program before send result
@@ -172,13 +184,13 @@ function fill(i) {
             }
         }
         if(typeOfForm == 12){    // Turing
-		    if(allElem[j].name=='num' || (allElem[j].name=='debug_counter') || (allElem[j].name=='sequences_true') || (allElem[j].name=='sequences_all')){
+		    if(allElem[j].name=='num' || (allElem[j].name=='debug_counter') || (allElem[j].name=='task') ){
 			    array[k] = allElem[j].value;
                 k++;
 			}
 		}
         if(typeOfForm == 13){    // Markov
-		    if(allElem[j].name=='num' || (allElem[j].name=='debug_counter') || (allElem[j].name=='sequences_true') || (allElem[j].name=='sequences_all')){
+		    if(allElem[j].name=='num' || (allElem[j].name=='debug_counter') || (allElem[j].name=='task') ){
 			    array[k] = allElem[j].value;
                 k++;
 			}

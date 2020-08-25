@@ -7,10 +7,10 @@ use App\Testing\Type;
 use Illuminate\Http\Request;
 use Input;
 use Session;
+use App\Http\Controllers\Emulators\EmulatorController;
 
-class Post extends QuestionType implements Checkable {
-    const type_code = 14;
-    const ORIGIN_HEIGHT_ANSWER = '500px';
+class Turing extends QuestionType implements Checkable {
+    const type_code = 12;
 
     function __construct($id_question){
         parent::__construct($id_question);
@@ -75,23 +75,29 @@ class Post extends QuestionType implements Checkable {
     }
 
     public function show($count) {
-        $task = "";
+        $view = 'tests.show12';
+        $array = array('view' => $view, 'arguments' => array('text' => explode('::',$this->text), "debug_counter" => 0, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
+        return $array;
+    }
+
+    public function check($array) {
+        $debug_counter = $array[0];
+        $data = $array[1];
+        
         $parse = $this->variants;
         $variantsIn = explode(";", $parse);
         $parse = $this->eng_variants;
         $variantsOut = explode(";", $parse);
         $test_seq = ['input_word' => $variantsIn, 'output_word' => $variantsOut];
-        $test_seq = json_encode($test_seq);
         
-        $view = 'tests.show14';
-        $array = array('view' => $view, 'arguments' => array('text' => explode('::',$this->text), "debug_counter" => 0, "task" => $task, "test_seq" => $test_seq, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
-        return $array;
-    }
-
-    public function check($array) {
-		$debug_counter = $array[0];
-		$sequences_true = $array[1];
-		$sequences_all = $array[2];
+        $array = EmulatorController::MTCheckSequence($data, $test_seq);
+        
+        //--------------------------------------------------------------
+        
+		$sequences_true = $array[0];
+		$sequences_all = $array[1];
+        $total_cycle = $array[2];
+        
 		$score = $this->points;
 		
 		if($sequences_true == $sequences_all){
@@ -121,23 +127,19 @@ class Post extends QuestionType implements Checkable {
         $fee_percent = $fee_percent * 100;
 		
 		$data = array('mark'=>$mark, 'score'=>$score, 'id' => $this->id_question, 'points' => $this->points, 'right_percent' => $right_percent,
-                      'choice' => ['debug_counter' => $debug_counter, 'sequences_true' => $sequences_true, 'sequences_all' => $sequences_all, 'fee_percent' => $fee_percent, 'score'=>$score]);
+                      'choice' => ['debug_counter' => $debug_counter, 'sequences_true' => $sequences_true, 'sequences_all' => $sequences_all, 'fee_percent' => $fee_percent, 'score'=>$score, 'total_cycle'=>$total_cycle]);
         return $data;
     }
 
-    public function pdf(Mypdf $fpdf, $count, $answered=false, $paper_savings=false) {
+    public function pdf(Mypdf $fpdf, $count, $answered=false) {
         $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
-        $html .= '  Напишите решение задачи на Машине Поста</td></tr>';
+        $html .= '  Напишите решение задачи на Машине Тьюринга</td></tr>';
         $html .= '<tr><td>'.$this->text.'</td></tr></table>';
-        if ($paper_savings) {
-            $height_tr = QuestionType::PAPER_SAVING_HEIGHT_ANSWER;
-        } else {
-            $height_tr = $this::ORIGIN_HEIGHT_ANSWER;
-        }
+        
         if ($answered == false) {
             $html .= '<p>Ваш алгоритм:</p>';
             $html .= '<table border="1" style="border-collapse: collapse;" width="100%">
-                        <tr><td height="' . $height_tr . '"></td></tr>
+                        <tr><td height="500px"></td></tr>
                       </table><br>';
         }
         

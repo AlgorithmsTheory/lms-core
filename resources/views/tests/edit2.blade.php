@@ -1,7 +1,7 @@
 @extends('templates.base')
 @section('head')
 <meta name="csrf_token" content="{{ csrf_token() }}" />
-<title>Создание теста - шаг 2</title>
+<title>Редактирование структуры теста</title>
 {!! HTML::style('css/createTest2.css') !!}
 {!! HTML::style('css/loading_blur.css') !!}
 @stop
@@ -10,9 +10,9 @@
 <div id="structures_data" style="display: none">{{$structures_data}}</div>
 <div class="section-body" id="page">
     <div class="col-md-12 col-sm-6 card style-primary text-center">
-        <h1 class="">Создание теста - шаг 2</h1>
+        <h1 id="header_name" class=""><!-- insert in JS --></h1>
     </div>
-    <form action="{{URL::route('test_add')}}" method="POST" class="form">
+    <form action="{{URL::route('test_change_structure')}}" method="POST" class="form">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <input type="hidden" id="num-rows" name="num-rows" value="1">
         <input type="hidden" id="sections-info" name="sections-info" value="{{$json_sections}}">
@@ -23,7 +23,7 @@
         </div>
 
         <div class="col-md-10 col-sm-10" id="add-test">
-            <button class="btn btn-primary btn-raised submit-test" type="button" id="add-test-button">Добавить тест</button>
+            <button class="btn btn-primary btn-raised submit-test" type="button" id="add-test-button">Редактировать тест</button>
             <br><br>
         </div>
         

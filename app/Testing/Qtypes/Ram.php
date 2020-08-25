@@ -82,7 +82,7 @@ class Ram extends QuestionType implements Checkable {
         $test_seq = json_encode($test_seq);
         
         $view = 'tests.show15';
-        $array = array('view' => $view, 'arguments' => array('text' => explode('::',$this->text), "task" => $task, "test_seq" => $test_seq, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
+        $array = array('view' => $view, 'arguments' => array('text' => explode('::',$this->text), "debug_counter" => 0, "task" => $task, "test_seq" => $test_seq, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
         return $array;
     }
 
@@ -99,7 +99,6 @@ class Ram extends QuestionType implements Checkable {
 			$mark = 'Неверно';
 		}
 		
-        $debug_counter--;
         if($debug_counter > 10){
             $debug_counter = 10;
         }

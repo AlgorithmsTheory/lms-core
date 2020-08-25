@@ -95,6 +95,9 @@
                     </div>
                     
                     <div class="col-lg-4">
+                    
+                        @yield('task-post')
+                    
                         <div class="card-body">
                             <div class="form" role="form">
                                 <div class="form-group floating-label">

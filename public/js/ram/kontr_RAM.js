@@ -19,13 +19,12 @@ function ramSubmitTask(impl, notice){
 	
 	envs[impl].ctx.no_notice = true;
 	
-	deb_cnt = $("[name=type][value=15]").eq(impl).parent().find("[name=debug_counter]").first();
 	seq_true = $("[name=type][value=15]").eq(impl).parent().find("[name=sequences_true]").first();
 	seq_all = $("[name=type][value=15]").eq(impl).parent().find("[name=sequences_all]").first();
-	
-	var debug_counter = deb_cnt.val();
-	debug_counter++;
-	deb_cnt.val(debug_counter);
+    debug_form = $("[name=type][value=15]").eq(impl).parent().find("[name=debug_counter]").first();
+    task_id = $("[name=type][value=15]").eq(impl).parent().find("[name=num]").first().val();
+    counter = $("[name=type][value=15]").eq(impl).parent().find("[name=counter]").first().val();
+    test_id = $("#id_test").val();
 	
 	var sequences_true = checkAnswer(impl, test_seq);
 	seq_true.val(sequences_true);
@@ -37,32 +36,34 @@ function ramSubmitTask(impl, notice){
 	envs[impl].ctx.output.val("");
 	envs[impl].ctx.no_notice = false;
 	
-	/*
-	$.ajax({
-		cache: false,
-        type: 'POST',
-        url: '/algorithm/RAM/set_mark',
-		beforeSend: function (xhr) {
-            var token = $('meta[name="csrf_token"]').attr('content');
+    if(notice){
+        $.ajax({
+            cache: false,
+            type: 'POST',
+            url: '/algorithm/RAMCheck',
+            beforeSend: function (xhr) {
+                var token = $('meta[name="csrf_token"]').attr('content');
 
-            if (token) {
-                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                if (token) {
+                    return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                }
+            },
+            data: { counter: counter,
+                    task_id: task_id,
+                    test_id: test_id,
+                    seq_true: sequences_true,
+                    seq_all: sequences_all,
+                    user_code: user_code,
+                    token:     'token' },
+            success: function(data){
+                
+                debug_counter = data['choice']['debug_counter'];
+                debug_form.val(debug_counter);
+                
+                alert("Текущий результат отправки: " + sequences_true + " тестов сработало из " + sequences_all + 
+                      " . Количество отправок: " + debug_counter + "\n");
             }
-        },
-        data: { mark1:     mark,
-				mark2:     mark,
-				sum_mark:  sum_mark,
-				user_code: user_code,
-				token:     'token' },
-        success: function(data){
-			alert("Ваша работа была успешно отправлена!");
-			alert("Ваша оценка: " + mark + " из 1 баллов\n");
-        }
-    });*/
-	
-	if(notice){
-		alert("Текущий результат отправки: " + sequences_true + " тестов сработало из " + sequences_all + 
-			  " . Количество отправок: " + debug_counter + "\n");
+        });
 	}
 }
 

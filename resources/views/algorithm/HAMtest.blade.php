@@ -1,5 +1,6 @@
-@extends('algorithm.Postbase')
-@section('addl-info-post')
+@extends('algorithm.HAMbase')
+
+@section('addl-info-ham')
     <div class="col-lg-12">
         <article class="margin-bottom-xxl">
             <p class = 'lead'>
@@ -9,8 +10,8 @@
     </div>
 @stop
 
-@section('task-post')
+@section('task-ham')
 @stop
 
-@section('addl-blocks-post')
+@section('addl-blocks-ham')
 @stop

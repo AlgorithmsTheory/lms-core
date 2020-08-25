@@ -183,24 +183,6 @@
                     </ul>
                 </div><!--end .card-body -->
             </div>
-            <div class="col-md-12 col-sm-12 style-gray">
-                <h2 class="text-default-bright">Эмуляторы</h2>
-            </div>
-
-            <div class="card col-md-10 col-sm-10 col-md-offset-1">
-                <div class="card-body no-padding">
-                    <ul class="list divider-full-bleed">
-                        <li class="tile">
-                            <a href="{{ route('main_menu')}}" class="tile-content ink-reaction">
-                                <div class="tile-text">
-                                    Управление контрольными материалами эмуляторов
-                                </div>
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </div><!--end .card-body -->
-            </div>
     </div>
 
 @stop
