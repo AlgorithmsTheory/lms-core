@@ -60,7 +60,7 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('passw
 // Модуль тестирования - прохождение тестов
 Route::get('tests/train', ['as' => 'train_tests', 'uses' => 'TestController@trainTests', 'middleware' => 'general_auth']);
 Route::get('tests/adaptive', ['as' => 'adaptive_tests', 'uses' => 'AdaptiveTestController@adaptiveTests', 'middleware' => ['general_auth', 'student', 'admin']]);
-Route::get('tests/control', ['as' => 'control_tests', 'uses' => 'TestController@controlTests', 'middleware' => ['general_auth', 'student', 'admin']]);
+Route::get('tests/control', ['as' => 'control_tests', 'uses' => 'TestController@controlTests', 'middleware' => ['general_auth', 'student']]);
 Route::get('questions/show-test/{id_test}', ['as' => 'question_showtest', 'uses' => 'TestController@showViews', 'middleware' => ['general_auth', 'single_test', 'have_attempts', 'test_is_available']]);
 Route::get('questions/show-adaptive-test/{id_test}', ['as' => 'show_adaptive_test', 'uses' => 'TestController@showAdaptiveTest', 'middleware' => ['general_auth', 'single_test', 'have_attempts', 'test_is_available']]);
 Route::patch('questions/check-test', ['as' => 'question_checktest', 'uses' => 'TestController@checkTest']);
