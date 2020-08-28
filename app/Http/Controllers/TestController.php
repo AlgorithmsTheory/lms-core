@@ -584,6 +584,8 @@ class TestController extends Controller{
         else
             return redirect('tests');
         $amount = $request->input('amount');
+        if($amount < 2)
+            return "Error. Too few questions";
         $score_sum = 0;                                                                                                 //сумма набранных баллов
         $points_sum = 0;                                                                                                //сумма максимально овзможных баллов
         $choice = [];                                                                                                   //запоминаем выбранные варианты пользователя
