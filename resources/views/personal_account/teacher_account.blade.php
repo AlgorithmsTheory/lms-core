@@ -67,6 +67,8 @@
         </div>
 
     </div>
-        {!! HTML::script('js/personal_account/teacherAccount.js') !!}
+@stop
 
+@section('js-down')
+    {!! HTML::script('js/personal_account/teacherAccount.js') !!}
 @stop

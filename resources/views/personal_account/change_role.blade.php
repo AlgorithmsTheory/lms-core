@@ -5,6 +5,7 @@
 {{--    {!! HTML::style('css/materialadmin.css') !!}--}}
 {{--    {!! HTML::style('css/full.css') !!}--}}
 {{--    {!! HTML::script('js/jquery.js') !!}--}}
+    {!! HTML::style('css/loading_blur.css') !!}
     <meta name="csrf_token" content="{{ csrf_token() }}" />
 @stop
 
@@ -16,9 +17,14 @@
 
 
 @section('content')
+    <div id="main_container">
     <div class="col-lg-offset-0 col-md-12 col-sm-12">
         <div class="card">
             <div class="card-body">
+                {{--Вывод ошибок Проверки учебного плана--}}
+                <div class="alert alert-danger print-error-msg" style="display:none">
+                    <ul></ul>
+                </div>
                 <h2 class="text-center">Редактировать роль, фамилию и имя пользователей.</h2>
                 <div class="form">
                     <div class="form-group col-md-4">
@@ -97,9 +103,13 @@
             </div>
         </div>
     </div>
+    </div>
+    <div id="overlay" class="none">
+        <div class="loading-pulse"></div>
+    </div>
+@stop
 
+@section('js-down')
     {!! HTML::script('js/personal_account/add_student.js') !!}
     {!! HTML::script('js/personal_account/person_filter.js') !!}
-
-
 @stop

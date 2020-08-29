@@ -38,6 +38,5 @@
 @stop
 
 @section('js-down')
-    {!! HTML::script('js/libs/dropzone/dropzone.js') !!}
     {!! HTML::script('js/knowledge_level.js') !!}
 @stop

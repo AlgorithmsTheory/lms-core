@@ -20,11 +20,6 @@
     {!! HTML::style('css/bootstrap-datetimepicker.min.css') !!}
     <!-- END STYLESHEETS FOR CALENDAR -->
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    {!! HTML::script('js/libs/utils/html5shiv.js') !!}
-    {!! HTML::script('js/libs/utils/respond.min.js') !!}
-    <![endif]-->
 @stop
 
 @section('content')
@@ -324,10 +319,9 @@
 @stop
 
 @section('js-down')
-    <!-- BEGIN JAVASCRIPT -->
-    {!! HTML::script('js/libs/spin.js/spin.min.js') !!}
-    {!! HTML::script('js/libs/autosize/jquery.autosize.min.js') !!}
-    {!! HTML::script('js/libs/nanoscroller/jquery.nanoscroller.min.js') !!}
+    {!! HTML::script('js/library/settingCalendare.js') !!}
+    {!! HTML::script('js/library/studentCabinet.js') !!}
+
     {!! HTML::script('js/core/source/App.js') !!}
     {!! HTML::script('js/core/source/AppNavigation.js') !!}
     {!! HTML::script('js/core/source/AppOffcanvas.js') !!}
@@ -336,11 +330,4 @@
     {!! HTML::script('js/core/source/AppNavSearch.js') !!}
     {!! HTML::script('js/core/source/AppVendor.js') !!}
     {!! HTML::script('js/core/demo/Demo.js') !!}
-    {{--Календарь начало --}}
-    {!! HTML::script('js/moment-with-locales.min.js') !!}
-    {!! HTML::script('js/bootstrap-datetimepicker.min.js') !!}
-    {{--Календарь конец --}}
-    {!! HTML::script('js/library/settingCalendare.js') !!}
-    {!! HTML::script('js/library/studentCabinet.js') !!}
-    <!-- END JAVASCRIPT -->
 @stop

@@ -40,6 +40,14 @@ class QuestionTypeFactory {
                 return new TheoremLike($question_id);
             case 'Востановить арифметический вид':
                 return new FromCleene($question_id);
+            case 'Эмулятор Тьюринга':
+                return new Turing($question_id);
+            case 'Эмулятор Маркова':
+                return new Markov($question_id);
+            case 'Эмулятор Поста':
+				return new Post($question_id);
+			case 'Эмулятор RAM':
+				return new Ram($question_id);
             default:
                 throw new \InvalidArgumentException("Question type " . $type . " is not supported");
         }
@@ -74,6 +82,14 @@ class QuestionTypeFactory {
                 return new TheoremLike($question_id);
             case 11:
                 return new FromCleene($question_id);
+            case 12:
+                return new Turing($question_id);
+            case 13:
+                return new Markov($question_id);
+            case 14:
+                return new Post($question_id);
+			case 15:
+				return new Ram($question_id);
             default:
                 throw new \InvalidArgumentException("Question type " . $type_code . " is not supported");
         }

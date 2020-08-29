@@ -106,6 +106,7 @@ class TestController extends Controller{
     /** генерирует страницу создания нового теста (шаг 2 - создание структур) */
     public function createSndStep(Request $request) {
         $general_settings = $request->session()->get('general_settings');
+        $structures_data = $request->session()->get('structures_data');
         $sections = [];
         $sections_db = Section::where('section_code', '<', 10)->where('section_code', '>', 0)->select('section_code', 'section_name')->get();
         for ($i=0; $i < sizeof($sections_db); $i++) {
@@ -127,7 +128,7 @@ class TestController extends Controller{
         $json_sections = json_encode($sections);
         $json_types = json_encode($types);
         $general_settings = json_encode($general_settings);
-        return view('tests.create2',compact('general_settings', 'sections', 'types', 'json_sections', 'json_types'));
+        return view('tests.create2', compact('general_settings', 'sections', 'types', 'json_sections', 'json_types', 'structures_data'));
     }
 
     public function validateTestStructure(Request $request) {
@@ -210,7 +211,9 @@ class TestController extends Controller{
                 }
             }
         }
-        //TODO: flush session
+        $request->session()->forget('general_settings');
+        $request->session()->forget('test_for_groups');
+        $request->session()->forget('structures_data');
         return redirect()->route('test_create');
     }
 
@@ -308,29 +311,136 @@ class TestController extends Controller{
         $total = $request->input('total');
         $test_time = $request->input('test-time');
         $max_questions = $request->input('max_questions');
+        
+        if ($request->input('go-to-create-extended-test') == 0) {
+            /* Update test and test_for_group */
+            Test::whereId_test($id_test)->update([
+                'test_name' => $test_name, 'test_type' => $test_type, 'test_time' => $test_time,
+                'total' => $total,'visibility' => $visibility, 'archived' => 0,
+                'multilanguage' => $multilanguage, 'only_for_print' => $only_for_print,
+                'is_adaptive' => $is_adaptive, 'max_questions' => $max_questions]);
 
-        Test::whereId_test($id_test)->update([
-            'test_name' => $test_name, 'test_type' => $test_type, 'test_time' => $test_time,
-            'total' => $total,'visibility' => $visibility, 'archived' => 0,
-            'multilanguage' => $multilanguage, 'only_for_print' => $only_for_print,
-            'is_adaptive' => $is_adaptive, 'max_questions' => $max_questions]);
+            $availability_input = ($request->input('availability') == null) ? [] : $request->input('availability');
 
-        $availability_input = ($request->input('availability') == null) ? [] : $request->input('availability');
-
-        for ($i = 0; $i < count($request->input('id-group')); $i++) {
-            $availability = in_array($request->input('id-group')[$i], $availability_input) ? 1 : 0;
-            TestForGroup::whereId_test($id_test)
-                ->whereId_group($request->input('id-group')[$i])
-                ->update(['id_test' => $id_test, 'id_group' => $request->input('id-group')[$i], 'availability' => $availability]);
+            for ($i = 0; $i < count($request->input('id-group')); $i++) {
+                $availability = in_array($request->input('id-group')[$i], $availability_input) ? 1 : 0;
+                TestForGroup::whereId_test($id_test)
+                    ->whereId_group($request->input('id-group')[$i])
+                    ->update(['id_test' => $id_test, 'id_group' => $request->input('id-group')[$i], 'availability' => $availability]);
+            }
+            
+            if($request->input('go-to-edit-structure') == 0){
+                return redirect()->route('tests_list');
+            }
         }
-
+        
+        /* Get general settings for update structure or create new test based on it */
+        $general_settings = [];
+        $general_settings['id_test'] = $id_test;
+        $general_settings['test_name'] = $test_name;
+        $general_settings['test_type'] = $test_type;
+        $general_settings['only_for_print'] = $only_for_print;
+        $request->session()->put('general_settings', $general_settings);
+        
+        /* Get structures data for id_test */
+        $structures = TestStructure::whereId_test($id_test)->select('id_structure', 'amount')->get();
+        
+        $structures_data = [];
+        for ($i = 0; $i < count($structures); $i++) {
+            $structures_data[$i]['amount'] = $structures[$i]->amount;
+            $records = StructuralRecord::whereId_structure($structures[$i]->id_structure)->select('section_code', 'theme_code', 'type_code')->get();
+            
+            $sections = [];
+            $themes = [];
+            $types = [];
+            foreach ($records as $record) {
+                $section_code = $record->section_code;
+                $theme_code = $record->theme_code;
+                $type_code = $record->type_code;
+                if (!in_array($section_code, $sections)) array_push($sections, $section_code);
+                if (!in_array($theme_code, $themes)) array_push($themes, $theme_code);
+                if (!in_array($type_code, $types)) array_push($types, $type_code);
+            }
+            $structures_data[$i]['sections'] = $sections;
+            $structures_data[$i]['themes'] = $themes;
+            $structures_data[$i]['types'] = $types;
+        }
+        
+        $structures_data = json_encode($structures_data);
+        $request->session()->put('structures_data', $structures_data);
+        
+        
         if ($request->input('go-to-edit-structure')) {
-            //TODO: edit test's structure
-            return redirect()->route('in_process');
+            return redirect()->route('test_edit_structure', ['id_test' => $id_test]);
         }
         else {
-            return redirect()->route('tests_list');
+            $groups = Group::whereArchived(0)->get();
+            $test = Test::whereId_test($id_test)->first();
+            return view('tests.create', compact('groups', 'test'));
         }
+    }
+    
+    /** Редактирование структуры теста */
+    public function editStructure(Request $request, $id_test) {
+        
+        /* Get all sections and themes and types */
+        $structures_data = $request->session()->get('structures_data');
+        $general_settings = $request->session()->get('general_settings');
+        $sections = [];
+        $sections_db = Section::where('section_code', '<', 10)->where('section_code', '>', 0)->select('section_code', 'section_name')->get();
+        for ($i=0; $i < sizeof($sections_db); $i++) {
+            $sections[$i]['name'] = $sections_db[$i]->section_name;
+            $sections[$i]['code'] = $sections_db[$i]->section_code;
+            $themes_in_section = Theme::whereSection_code($sections_db[$i]->section_code)->select('theme_name', 'theme_code')->get();
+            for ($j=0; $j < count($themes_in_section); $j++) {
+                $sections[$i]['themes'][$j] = $themes_in_section[$j];
+            }
+        }
+
+        if ($general_settings['only_for_print']) {
+            $types = Type::all();
+        }
+        else {
+            $types = Type::whereOnly_for_print(0)->get();
+        }
+
+        $json_sections = json_encode($sections);
+        $json_types = json_encode($types);
+        $general_settings = json_encode($general_settings);
+        
+        return view('tests.edit2', compact('general_settings', 'sections', 'types', 'json_sections', 'json_types', 'structures_data'));
+    }
+    
+    public function changeStructure(Request $request) {
+        $general_settings = $request->session()->get('general_settings');
+        $id_test = $general_settings['id_test'];
+        
+        StructuralRecord::where('id_test', $id_test)->delete();
+        TestStructure::where('id_test', $id_test)->delete();
+
+        for ($i = 0; $i < count($request->input('sections')); $i++) {
+            $id_structure = TestStructure::max('id_structure') + 1;
+            TestStructure::insert(array('id_structure' => $id_structure, 'id_test' => $id_test, 'amount' => $request->input('number-of-questions')[$i]));
+            for ($j = 0; $j < count($request->input('sections')[$i]); $j++) {
+                $restrictions['structures'][$i]['sections'][$j]['section_code'] = $request->input('sections')[$i][$j];
+                $theme_index = $this->getSectionOrderForThemes($request->input('themes'), $request->input('sections')[$i][$j], $i);
+                for ($k = 0; $k < count($request->input('themes')[$i][$theme_index]); $k++) {
+                    for ($l = 0; $l < count($request->input('types')[$i]); $l++) {
+                        StructuralRecord::insert(array(
+                            'theme_code' => $request->input('themes')[$i][$theme_index][$k],
+                            'section_code' => $request->input('sections')[$i][$j],
+                            'type_code' => $request->input('types')[$i][$l],
+                            'id_test' => $id_test,
+                            'id_structure' => $id_structure
+                        ));
+                    }
+                }
+            }
+        }
+        $request->session()->forget('general_settings');
+        $request->session()->forget('test_for_groups');
+        $request->session()->forget('structures_data');
+        return redirect()->route('tests_list');
     }
 
     /** Завершает выбранный тест для всех учебных групп */
@@ -474,6 +584,8 @@ class TestController extends Controller{
         else
             return redirect('tests');
         $amount = $request->input('amount');
+        if($amount < 2)
+            return "Error. Too few questions";
         $score_sum = 0;                                                                                                 //сумма набранных баллов
         $points_sum = 0;                                                                                                //сумма максимально овзможных баллов
         $choice = [];                                                                                                   //запоминаем выбранные варианты пользователя
@@ -529,7 +641,8 @@ class TestController extends Controller{
             $widgetListView = View::make('tests.ctrresults',compact('total','score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'id_test', 'id_user'))->with('widgets', $widgets);
             $fine = new Fine();
             $fine->updateFine(Auth::user()['id'], $id_test, $mark_rus);                                                 //вносим в таблицу штрафов необходимую инфу
-            Test::addToStatements($id_test, $id_user, $score);                                                          //занесение балла в ведомость
+            $fraction_score = $score / $total;
+            Test::addToStatements($id_test, $id_user, $fraction_score);                                                          //занесение балла в ведомость
         }
         else {                                                                                                          //тест тренировочный
             $widgetListView = View::make('questions.student.training_test',compact('total','score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'link_to_lecture'))->with('widgets', $widgets);
@@ -547,5 +660,10 @@ class TestController extends Controller{
             Result::whereId_result($current_result)->update(['result_date' => $date, 'result' => -1, 'mark_ru' => -1, 'mark_eu' => 'drop']);                                 //Присваиваем результату и оценке значения -1
         }
         return redirect('home');
+    }
+    
+    /* Отображение состояния тестов */
+    public function monitor(){
+        return view('tests.monitor');
     }
 }

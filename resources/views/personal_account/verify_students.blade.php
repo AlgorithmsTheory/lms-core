@@ -1,10 +1,8 @@
 @extends('templates.base')
 @section('head')
     <title>Отметить студенитов</title>
-    {!! HTML::style('css/bootstrap.css') !!}
-    {!! HTML::style('css/materialadmin.css') !!}
     {!! HTML::style('css/full.css') !!}
-    {!! HTML::script('js/jquery.js') !!}
+    {!! HTML::style('css/loading_blur.css') !!}
     <meta name="csrf_token" content="{{ csrf_token() }}" />
 @stop
 
@@ -12,13 +10,15 @@
     full
 @stop
 
-
-
-
 @section('content')
-<div class="col-md-12 col-sm-12">
+    <div id="main_container">
+<div class="col-md-12 col-sm-12" >
     <div class="card">
         <div class="card-body">
+            {{--Вывод ошибок валидации--}}
+            <div class="alert alert-danger print-error-msg" style="display:none">
+                <ul></ul>
+            </div>
             <h2 class="text-center">Отметить студентов</h2>
             <div class="form">
                 <div class="form-group col-md-4">
@@ -96,8 +96,13 @@
         </div>
     </div>
 </div>
+    </div>
+    <div id="overlay" class="none">
+        <div class="loading-pulse"></div>
+    </div>
+@stop
 
-{!! HTML::script('js/personal_account/add_student.js') !!}
-{!! HTML::script('js/personal_account/person_filter.js') !!}
-
+@section('js-down')
+    {!! HTML::script('js/personal_account/add_student.js') !!}
+    {!! HTML::script('js/personal_account/person_filter.js') !!}
 @stop

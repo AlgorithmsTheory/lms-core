@@ -12,5 +12,7 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
-    mix.sass('app.scss');
+    mix.browserify('modules.js');
+    mix.browserify('ace.js', 'public/js/ram/ace.js');
 });
+

@@ -1,138 +1,133 @@
-$(function () {
-var focusedElem;
+class SymbolsPostContext {
+    constructor(imp){
+        let ctx = $('[name = post-entity' + imp + ']').first();
+        
+        let scntDiv = ctx.find('[name = p_scents]');
+        let i = scntDiv.find('li').length + 1;
+        let focusedElem = null;
+        
+        ctx.find('[name = addScnt]').on('click', function() {
+            $('<li name="p_scnt_' + i + '" class="tile">' +
+            '<div class="col-sm-1">' +
+            '    <span class="input-group-addon"><b>' + i + '</b></span>' +
+            '</div>' +
+            '<div class="form-group col-sm-4">' +
+            '    <select name="select_' + i + '" name="select_' + i + '" class="form-control" style="width:100px">' +
+            '        <option value=" " selected="selected">&nbsp;</option>' +
+            '        <option value=">">></option>' +
+            '        <option value="<"><</option>' +
+            '        <option value="1">1</option>' +
+            '        <option value="0">0</option>' +
+            '        <option value="?">?</option>' +
+            '        <option value="!">!</option>' +
+            '    </select>' +
+            '</div>' +
+            '<div class="col-sm-3" style="">' +
+            '        <div class="input-group">' +
+            '        <input type="number" min="1" name="goto1_' + i + '" class="form-control" required="">' +
+                                                        
+            '        <span class="input-group-addon">|</span>' +
+                                                        
+            '        <input type="number" min="1" name="goto2_' + i + '" class="form-control" required="">' +
+            '        <span class="input-group-addon">|</span>' +
+            '    </div>' +
+            '</div>' +
+            '<div class="col-sm-4" style="">' +
+            '   <div class="input-group">' +
+            '        <input type="text" class="form-control" name="comment_' + i + '" placeholder="Комментарий">' +
+            '        <div class="form-control-line"></div>' +
+            '    </div>' +
+            '</div>' +
+            '</li>').appendTo(scntDiv);
+            
+            i++;
+            return false;
+        });
 
-		var scntDiv = $('#p_scents');
-		var i = $('#p_scents li').size() + 1;
-
-		$('#addScnt').live('click', function() {
-			$('<li  id ="p_scnt_' + i +'" class="tile"><span class="input-group-addon"><b>' + i + '</b></span> <div class="col-md-3"> <div class="input-group-content"><select id="select_' + i +'" name="select_' + i +'" class="form-control"> <option value=">">&nbsp;</option> <option value=">">></option> <option value="<"><</option> <option value="1">1</option> <option value="0">0</option> <option value="?">?</option> <option value="!">!</option> </select> </div> </div> <div class="col-md-3" style="left: -50px;"> <div class="input-group-content"> <input type="number" min="1" id="goto1" class="form-control" required=""> </div> <div class="input-group-content"> <input type="number" min="1" id="goto2" class="form-control" required=""> </div> <span class="input-group-addon">|</span> </div> <div class="col-md-6" style="left: -40px;"> <div class="input-group-content"> <input type="text" class="form-control" name="end" placeholder="Комментарий"> <div class="form-control-line"></div> </div> </div></li>').appendTo(scntDiv);
-
-			i++;
-			return false;
-		});
-
-//<li id="p_scnt_6" class="tile"><div class="input-group"><div class="input-group-content"><input type="text" id="st_6" class="form-control" name="start"></div><span class="input-group-addon"><i class="md md-arrow-forward"></i></span><div class="input-group-content"><input type="text" id="end_6" class="form-control" name="end"></div></div><a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt"><i class="fa fa-trash"></i>									</a>															</li>
-
-		$('#remScnt').live('click', function() { 
-			if( i > 1 ) {
-				$(this).parents('li').remove();
-				i--;
-			}
-			return false;
-		});
+        ctx.find('[name = remScnt]').on('click', function() { 
+            if( i > 1 ) {
+                $(this).parents('li').remove();
+                i--;
+            }
+            return false;
+        });
 
 
-		$('#reset').live('click', function() { 
-			$('input[type=text]').each(function() {
-
-				$(this).val('');
-			});
-			$('input[type=number]').each(function() {
-
-				$(this).val('');
-			});
-			$('select').each(function() {
-
-				$(this).val('');
-			});
-			
-			return false;
-
-		});
-
-
-
-			$('input[type=text]').focus( function() {
-
-				focusedElem = $(this);
-			});
-
-
-			$('#lambda').click( function() {
-
-				//var text = $('#text');
-				focusedElem.val(focusedElem.val() + 'λ'); 
-
-
-			});
-
-			$('#right').click( function() {
-
-				//var text = $('#text');
-				//var text = $('#text');
-				focusedElem.val(focusedElem.val() + 'R'); 
-
-			});
-			$('#left').click( function() {
-
-				//var text = $('#text');
-				focusedElem.val(focusedElem.val() + 'L'); 
-
-			});
-
-			$('#here').click( function() {
-
-				//var text = $('#text');
-				focusedElem.val(focusedElem.val() + 'H'); 
-
-			});
-			$('#part').click( function() {
-
-				//var text = $('#text');
-				focusedElem.val(focusedElem.val() + '∂'); 
-
-			});
-			$('#omega').click( function() {
-
-				//var text = $('#text');
-				focusedElem.val(focusedElem.val() + 'Ω'); 
-
-			});
-			$('#one').click( function() {
-
-				//var text = $('#text');
-				focusedElem.val(focusedElem.val() + 'S₁'); 
-
-			});
-		
-
-	
-			$('#zero').click( function() {
-
-				focusedElem.val(focusedElem.val() + 'S₀');
-
-			});
+        ctx.find('[name = reset]').on('click', function() { 
+            ctx.find('input[type=text]').each(function() {
+                $(this).val('');
+            });
+            ctx.find('input[type=number]').each(function() {
+                $(this).val('');
+            });
+            ctx.find('select').each(function() {
+                $(this).val('');
+            });
+            
+            return false;
+        });
 
 
 
+        ctx.find('input[type=text]').focus( function() {
+            focusedElem = $(this);
+        });
+            
+        ctx.find('[name = lambda]').click( function() {
+            focusedElem.val(focusedElem.val() + 'λ'); 
+        });
 
-		
-		$('#big_lambda').click( function() {
+        ctx.find('[name = right]').click( function() {
+            focusedElem.val(focusedElem.val() + 'R'); 
+        });
+            
+        ctx.find('[name = left]').click( function() {
+            focusedElem.val(focusedElem.val() + 'L'); 
+        });
+        
+        ctx.find('[name = here]').click( function() {
+            focusedElem.val(focusedElem.val() + 'H'); 
+        });
+        
+        ctx.find('[name = part]').click( function() {
+            focusedElem.val(focusedElem.val() + '∂'); 
+        });
+        
+        ctx.find('[name = omega]').click( function() {
+            focusedElem.val(focusedElem.val() + 'Ω'); 
+        });
+        
+        ctx.find('[name = one]').click( function() {
+            focusedElem.val(focusedElem.val() + 'S₁'); 
+        });
+        
+        ctx.find('[name = zero]').click( function() {
+            focusedElem.val(focusedElem.val() + 'S₀');
+        });
+        
+        ctx.find('[name = big_lambda]').click( function() {
+            focusedElem.val(focusedElem.val() + 'Λ'); 
+        });
+        
+        ctx.find('[name = one_tild]').click( function() {
+            focusedElem.val(focusedElem.val() + 'Õ'); 
+        });
+        
+        ctx.find('[name = sh]').click( function() {
+            focusedElem.val(focusedElem.val() + '#'); 
+        });
+        
+        ctx.find('[name = bull]').click( function() {
+            focusedElem.val(focusedElem.val() + 'H'); 
+        });
+    }
+}
 
-		         //var text = $('#text');
-		       focusedElem.val(focusedElem.val() + 'Λ'); 
 
-		    });
+j = 0;
 
-		$('#one_tild').click( function() {
-
-		         //var text = $('#text');
-		        focusedElem.val(focusedElem.val() + 'Õ'); 
-
-		    });
-		$('#sh').click( function() {
-
-		         //var text = $('#text');
-		        focusedElem.val(focusedElem.val() + '#'); 
-
-		    });
-
-		$('#bull').click( function() {
-
-		         //var text = $('#text');
-        		focusedElem.val(focusedElem.val() + 'H'); 
-
-    });
-
-			
-		});
+$("[name=post-entity]").each(function(){
+	$(this).attr('name', 'post-entity' + j);
+	new SymbolsPostContext(j);
+	j++;
+});

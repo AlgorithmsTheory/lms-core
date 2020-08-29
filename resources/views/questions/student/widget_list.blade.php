@@ -1,9 +1,10 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="csrf_token" content="{{ csrf_token() }}" />
     <title>Тест</title>
+    {!! HTML::script('js/modules.js') !!}
     {!! HTML::script('js/superForm.js') !!}
-    {!! HTML::script('js/jquery.js') !!}
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     {!! HTML::style('css/materialadmin_demo.css') !!}
@@ -29,15 +30,15 @@
 <?php $i=1;?>
 @foreach($widgets as $widget)
 <br id="form{{$i}}">
-<?php $i++;?>
 {!! $widget !!}
+<?php $i++;?>
 @endforeach
 {!! Form::open(['method' => 'PATCH', 'route' => 'question_checktest', 'id' => 'super-form', 'name' => 'super', 'onsubmit' => 'return sendForm(true);']) !!}
 @for ($i = 0; $i < $amount; $i++)
 <input id="super{{$i}}" type="hidden" name="{{$i}}" value="">
 @endfor
 <input id="amount" type="hidden" name="amount" value="{{ $amount }}">
-<input type="hidden" name="id_test" value="{{ $id_test }}">
+<input id="id_test" type="hidden" name="id_test" value="{{ $id_test }}">
     <div class="col-sm-6">
         <input id="check" onClick="fillSuper()" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-primary" type="submit" name="check" value="Отправить">
     </div>
@@ -57,6 +58,34 @@
 @endif
 
 {!! HTML::script('js/toolbar.js') !!}
+{!! HTML::script('js/algorithms/superScript.js') !!}
+
+{!! HTML::script('js/ram/ace.js') !!}
+{!! HTML::script('js/ram/RAM.js') !!}
+{!! HTML::script('js/ram/kontr_RAM.js') !!}
+
+{!! HTML::script('js/algorithms/symbols_post.js') !!}
+{!! HTML::script('js/algorithms/saving_post.js') !!}
+{!! HTML::script('js/algorithms/post.js') !!}
+{!! HTML::script('js/algorithms/kontr_post.js') !!}
+
+{!! HTML::script('js/algorithms/symbols.js') !!}
+{!! HTML::script('js/algorithms/saving.js') !!}
+{!! HTML::script('js/algorithms/kontr_mt.js') !!}
+{!! HTML::script('js/algorithms/kontr_ham.js') !!}
+
+{!! HTML::script('js/core/source/App.js') !!}
+{!! HTML::script('js/core/source/AppNavigation.js') !!}
+{!! HTML::script('js/core/source/AppOffcanvas.js') !!}
+{!! HTML::script('js/core/source/AppCard.js') !!}
+{!! HTML::script('js/core/source/AppForm.js') !!}
+{!! HTML::script('js/core/source/AppNavSearch.js') !!}
+{!! HTML::script('js/core/source/AppVendor.js') !!}
+{!! HTML::script('js/core/demo/Demo.js') !!}
+{!! HTML::script('js/core/demo/DemoUILists.js') !!}
+{!! HTML::script('js/core/demo/DemoUIMessages.js') !!}
+        
+{!! HTML::script('js/algorithms/send.js') !!}
 <br>
 </section>
 </body>

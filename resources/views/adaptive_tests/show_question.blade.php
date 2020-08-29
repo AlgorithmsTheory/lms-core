@@ -2,9 +2,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Тест</title>
-    {!! HTML::script('js/jquery.js') !!}
-    {!! HTML::script('js/toolbar.js') !!}
+    {!! HTML::script('js/modules.js') !!}
     {!! HTML::script('js/superForm.js') !!}
+    {!! HTML::script('js/toolbar.js') !!}
     {!! HTML::script('js/adaptive_tests/testPass.js') !!}
     {!! HTML::style('css/font-awesome.min.css') !!}
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
@@ -19,16 +19,16 @@
     <nav class="fixed-nav">
         <div class="menu wrapper">
             <ul>
-                @for ($i=0; $i < $current_question_number; $i++)
-                    <li class="NotAnswered" id="{{$i}}"><a href="#form{{$i+1}}" class="SmoothScroll"> {{$i+1}} </a></li>
+                @for ($i=0; $i < $current_question_number - 1; $i++)
+                    <li class="Answered"><a href="#" class="SmoothScroll"> {{$i+1}} </a></li>
                 @endfor
+                <li class="Return"><a href="#" class="SmoothScroll"> {{$i+1}} </a></li>
             </ul>
 
             <span id="my_timer" class="timer">{{ $left_min }}:{{ $left_sec }}</span> </div>
     </nav>
     <br><br><br>
 
-    <br id="form0">
     {!! $question_widget !!}
 
     {!! Form::open(['method' => 'PATCH', 'route' => 'check_adaptive_test', 'id' => 'super-form', 'name' => 'super']) !!}

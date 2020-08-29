@@ -6,10 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\User;
 use Auth;
-class EditEducationMaterialRequest extends FormRequest
-{
-    public function authorize()
-    {
+class EditEducationMaterialRequest extends FormRequest {
+    public function authorize() {
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
         if ($role == 'Админ'){
             return true;
@@ -19,8 +17,7 @@ class EditEducationMaterialRequest extends FormRequest
 
     }
 
-    public function rules()
-    {
+    public function rules() {
 
         return [
             'name' => "required|between:5,255",

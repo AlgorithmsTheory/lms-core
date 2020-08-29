@@ -6,7 +6,6 @@
     {!! HTML::style('css/materialadmin.css') !!}
     {!! HTML::style('css/full.css') !!}
     {!! HTML::style('css/tests_list.css') !!}
-
 @stop
 
 @section('background')
@@ -27,6 +26,13 @@
                             <div class="tile-text">
                                 Работа с ведомостями
                             </div>
+                            </a>
+                        </li>
+                        <li class="tile">
+                            <a href="{{ route('course_plans')}}" class="tile-content ink-reaction">
+                                <div class="tile-text">
+                                    Работа с учебными планами
+                                </div>
                             </a>
                         </li>
                         <li class="tile">
@@ -79,13 +85,6 @@
                                 </a>
                             </li>
                         @endif
-                        <li class="tile">
-                            <a href="{{ route('manage_plan')}}" class="tile-content ink-reaction">
-                            <div class="tile-text">
-                                Редактировать план выполнения учебного курса
-                            </div>
-                            </a>
-                        </li>
                     </ul>
                 </div><!--end .card-body -->
             </div>
@@ -181,24 +180,6 @@
                                 </div>
                             </a>
                         </li>
-                    </ul>
-                </div><!--end .card-body -->
-            </div>
-            <div class="col-md-12 col-sm-12 style-gray">
-                <h2 class="text-default-bright">Эмуляторы</h2>
-            </div>
-
-            <div class="card col-md-10 col-sm-10 col-md-offset-1">
-                <div class="card-body no-padding">
-                    <ul class="list divider-full-bleed">
-                        <li class="tile">
-                            <a href="{{ route('main_menu')}}" class="tile-content ink-reaction">
-                                <div class="tile-text">
-                                    Управление контрольными материалами эмуляторов
-                                </div>
-                            </a>
-                        </li>
-                        
                     </ul>
                 </div><!--end .card-body -->
             </div>

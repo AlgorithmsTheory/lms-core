@@ -1,166 +1,82 @@
-function checkAnswer(arr){
+function checkAnswer(impl, arr){
 	var count = 0;
-	for(var i=0; i < arr.length; i++){
-		input.value  = arr[i]['input_word'];
-		output.value = "";
-		drop_run.dispatchEvent(new Event("click"));
-		btn_start.dispatchEvent(new Event("click"));
-		if( output.value == " " + arr[i]['output_word'] ){
+	for(var i=0; i < arr['input_word'].length; i++){
+		envs[impl].ctx.input.val(arr['input_word'][i]);
+		envs[impl].ctx.output.val("");
+		envs[impl].ctx.drop_run.trigger("click");
+		envs[impl].ctx.btn_start.trigger("click");
+		if( envs[impl].ctx.output.val() == " " + arr['output_word'][i] ){
 			count++;
 		}
-		btn_reset.dispatchEvent(new Event("click"));
+		envs[impl].ctx.btn_reset.trigger("click");
 	}
 	return count;
 }
 
-function getStr(task, level){
-	if(level == "hard")
-		task++;
-		task++;
-	return level + task;
-}
+function ramSubmitTask(impl, notice){
+	var user_code = envs[impl].RAM.TextEditor.get_text();
+	var test_seq = JSON.parse(envs[impl].ctx.get_elem("test_seq").html());
+	
+	envs[impl].ctx.no_notice = true;
+	
+	seq_true = $("[name=type][value=15]").eq(impl).parent().find("[name=sequences_true]").first();
+	seq_all = $("[name=type][value=15]").eq(impl).parent().find("[name=sequences_all]").first();
+    debug_form = $("[name=type][value=15]").eq(impl).parent().find("[name=debug_counter]").first();
+    task_id = $("[name=type][value=15]").eq(impl).parent().find("[name=num]").first().val();
+    counter = $("[name=type][value=15]").eq(impl).parent().find("[name=counter]").first().val();
+    test_id = $("#id_test").val();
+	
+	var sequences_true = checkAnswer(impl, test_seq);
+	seq_true.val(sequences_true);
+	
+	var sequences_all  = test_seq['input_word'].length;
+	seq_all.val(sequences_all);
+	
+	envs[impl].ctx.input.val("");
+	envs[impl].ctx.output.val("");
+	envs[impl].ctx.no_notice = false;
+	
+    if(notice){
+        $.ajax({
+            cache: false,
+            type: 'POST',
+            url: '/algorithm/RAMCheck',
+            beforeSend: function (xhr) {
+                var token = $('meta[name="csrf_token"]').attr('content');
 
-function swapContent(hide_str, show_str){
-	var code_old = RAM.TextEditor.get_text();
-	var code_new = $("#" + show_str + "code").html();
-	RAM.TextEditor.set_text(code_new);
-	$("#" + hide_str + "code").html(code_old);
-}
-
-function changeMyTask(){
-	var task_new, task_old, level_new, level_old;
-	// old task
-	task_old  = $("#task").html();
-	level_old = $("#level").html();
-	hide_str = getStr(task_old, level_old);
-	// new task
-	click = this.id;
-	if(click == "task1")
-	{
-		task_new = 1;
-		level_new = level_old;
-	}
-	else if(click == "task2")
-	{
-		task_new = 2;
-		level_new = level_old;
-	}
-	else if(click == "easy")
-	{
-		task_new = task_old;
-		level_new = "easy";
-	}
-	else if(click == "hard")
-	{
-		task_new = task_old;
-		level_new = "hard";
-	}
-	show_str = getStr(task_new, level_new);
-	// action
-	if(hide_str != show_str)
-	{
-		$("#level").html(level_new);
-		$("#task").html(task_new);
-		$("#" + hide_str).css('display', 'none');
-		$("#" + show_str).css('display', 'block');
-		swapContent(hide_str, show_str);
-		if(task_new == 1){
-			$("#task2").attr('class', '');
-			$("#task1").attr('class', 'active');
-		}
-		else{
-			$("#task1").attr('class', '');
-			$("#task2").attr('class', 'active');
-		}
-		if(level_new == 'easy')
-		{
-			$("#hard").attr('class', '');
-			$("#easy").attr('class', 'active');
-		}
-		else{
-			$("#easy").attr('class', '');
-			$("#hard").attr('class', 'active');
-		}
-	}
-}
-
-function submitTask(){
-	var curr_code = RAM.TextEditor.get_text();
-	var task_old  = $("#task").html();
-	var level_old = $("#level").html();
-	var hide_str = getStr(task_old, level_old);
-	$("#" + hide_str + "code").html(curr_code);
-	var easy2code = $("#easy2code").html();
-	var easy3code = $("#easy3code").html();
-	var hard3code = $("#hard3code").html();
-	var hard4code = $("#hard4code").html();
-	
-	var easy2seqj = $("#easy2seq").html();
-	var easy3seqj = $("#easy3seq").html();
-	var hard3seqj = $("#hard3seq").html();
-	var hard4seqj = $("#hard4seq").html();
-	
-	var easy2seq  = JSON.parse(easy2seqj);
-	var easy3seq  = JSON.parse(easy3seqj);
-	var hard3seq  = JSON.parse(hard3seqj);
-	var hard4seq  = JSON.parse(hard4seqj);
-	
-	var mark1 = 0, mark2 = 0;
-	RAM.no_notice = true;
-	// some stupid, this must depend on field mark in task_ram table
-	RAM.TextEditor.set_text(easy2code);
-	if( checkAnswer(easy2seq) == easy2seq.length ){
-		mark1 = 2;
-	}
-	RAM.TextEditor.set_text(hard3code);
-	if( checkAnswer(hard3seq) == hard3seq.length ){
-		mark1 = 3;
-	}
-	RAM.TextEditor.set_text(easy3code);
-	if( checkAnswer(easy3seq) == easy3seq.length ){
-		mark2 = 3;
-	}
-	RAM.TextEditor.set_text(hard4code);
-	if( checkAnswer(hard4seq) == hard4seq.length ){
-		mark2 = 4;
-	}
-	input.value  = "";
-	output.value = "";
-	RAM.no_notice = false;
-	RAM.TextEditor.set_text(curr_code);
-	
-	sum_mark  = mark1 + mark2;
-	user_code = "\n********* Задача 1 легкая *******\n" + easy2code +
-				"\n********* Задача 1 сложная ******\n" + hard3code + 
-				"\n********* Задача 2 легкая *******\n" + easy3code + 
-				"\n********* Задача 2 сложная ******\n" + hard4code;
-	
-	$.ajax({
-		cache: false,
-        type: 'POST',
-        url: '/algorithm/RAM/set_mark',
-		beforeSend: function (xhr) {
-            var token = $('meta[name="csrf_token"]').attr('content');
-
-            if (token) {
-                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                if (token) {
+                    return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                }
+            },
+            data: { counter: counter,
+                    task_id: task_id,
+                    test_id: test_id,
+                    seq_true: sequences_true,
+                    seq_all: sequences_all,
+                    user_code: user_code,
+                    token:     'token' },
+            success: function(data){
+                
+                debug_counter = data['choice']['debug_counter'];
+                debug_form.val(debug_counter);
+                
+                alert("Текущий результат отправки: " + sequences_true + " тестов сработало из " + sequences_all + 
+                      " . Количество отправок: " + debug_counter + "\n");
             }
-        },
-        data: { mark1:     mark1,
-				mark2:     mark2,
-				sum_mark:  sum_mark,
-				user_code: user_code,
-				token:     'token' },
-        success: function(data){
-			alert("Ваша работа была успешно отправлена!");
-			alert("Ваша оценка за первую работу: " + mark1 + " из 3 баллов\n" +
-				  "Ваша оценка за вторую работу: " + mark2 + " из 4 баллов\n" +
-				  "Ваша общая оценка: " + (mark1 * 1 + mark2 * 1) + " из 7 баллов");
-        }
-    });
+        });
+	}
 }
 
-task1.onclick = changeMyTask;
-task2.onclick = changeMyTask;
-easy.onclick = changeMyTask;
-hard.onclick = changeMyTask;
+class ContextKontr{
+    constructor(ptr, cnt){
+        $(ptr).click(function(){ ramSubmitTask(cnt, true); });
+    }
+}
+
+var envsKontr = [];
+var cnt = 0;
+
+$("[name^=ram-entity] [name=btn_submit]").each(function(){
+   envsKontr.push( new ContextKontr(this, cnt) );
+   cnt++;
+});

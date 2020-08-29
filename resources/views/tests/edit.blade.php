@@ -31,6 +31,7 @@
             <input type="hidden" id="test-type" name="test-type" value="{{ $test['test_type'] }}">
             <input type="hidden" id="test-resolved" name="test-resolved" value="{{ $test['is_resolved'] }}">
             <input type="hidden" id="go-to-edit-structure" name="go-to-edit-structure" value="0">
+            <input type="hidden" id="go-to-create-extended-test" name="go-to-create-extended-test" value="0">
             <div class="col-lg-offset-1 col-md-5 col-sm-5">
                 <div class="card">
                     <div class="card-body">
@@ -173,16 +174,20 @@
                 </div>
             </div>
 
-            <div class="col-lg-offset-6 col-md-3 col-sm-3" id="edit-test">
+            <div class="col-lg-offset-6 col-md-2 col-sm-2" id="edit-test">
                 <button class="btn btn-primary btn-raised submit-test" type="submit">Применить изменения</button>
                 <br><br>
             </div>
             @if ($test['test_type'] == 'Тренировочный' || $test['is_resolved'] == 0)
-                <div class="col-md-3 col-sm-3">
+                <div class="col-md-2 col-sm-2">
                     <button class="btn btn-primary btn-raised submit-test" type="button" id="edit-test-structure">Изменить структуру</button>
                     <br><br>
                 </div>
             @endif
+            <div class="clo-md-2 col-sm-2">
+                <button class="btn btn-primary btn-raised" type="button" id="create-extended-test">Создать тест</button>
+                </br></br>
+            </div>
         </form>
     </div>
 @stop

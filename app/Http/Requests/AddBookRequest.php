@@ -6,10 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\User;
 use Auth;
-class AddBookRequest extends FormRequest
-{
-    public function authorize()
-    {
+class AddBookRequest extends FormRequest {
+    public function authorize() {
         $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
         if ($role == 'Админ'){
             return true;
@@ -19,8 +17,7 @@ class AddBookRequest extends FormRequest
 
     }
 
-    public function rules()
-    {
+    public function rules() {
         \Validator::extend('uniqueFirstAndLastName', function ($attribute, $value, $parameters, $validator) {
         $count = \DB::table('book')->where('title', $value)
             ->where('author', $parameters[0])

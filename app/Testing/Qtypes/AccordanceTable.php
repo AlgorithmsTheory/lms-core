@@ -167,7 +167,7 @@ class AccordanceTable extends QuestionType implements Checkable {
         return $data;
     }
 
-    public function pdf(Mypdf $fpdf, $count, $answered=false) {
+    public function pdf(Mypdf $fpdf, $count, $answered=false, $paper_savings=false) {
         $text_parse = $this->text;
         $parse = $this->variants;
         $variants = explode(";", $parse);

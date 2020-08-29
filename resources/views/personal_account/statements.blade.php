@@ -1,17 +1,9 @@
 @extends('templates.base')
 @section('head')
     <title>Ведомости</title>
-    {!! HTML::style('css/bootstrap.css') !!}
-    {!! HTML::style('css/materialadmin.css') !!}
-    {!! HTML::style('css/full.css') !!}
-    {!! HTML::script('js/jquery.js') !!}
     {!! HTML::style('css/loading_blur.css') !!}
     <meta name="csrf_token" content="{{ csrf_token() }}" />
 @stop
-
-
-
-
 
 @section('content')
     <div id="main_container">
@@ -49,11 +41,10 @@
 
                     <div class="form-group">
                         <select name="type" id="select-type" class="form-control" size="1">
-                            <option value="lectures">Лекции</option>
-                            <option value="seminars">Семинары</option>
-                            <option value="class">Работа на семинарах</option>
-                            <option value="control">Контрольные работы</option>
+                            <option value="lectures">Посещение лекций</option>
+                            <option value="seminars">Работа на семинарах</option>
                             <option value="resulting">Итоги</option>
+
                         </select>
                         <label for="select-type">Тип ведомости</label>
                     </div>
@@ -70,6 +61,8 @@
     <div id="overlay" class="none">
         <div class="loading-pulse"></div>
     </div>
+@stop
 
-        {!! HTML::script('js/statements/statements.js') !!}
+@section('js-down')
+    {!! HTML::script('js/statements/statements.js') !!}
 @stop
