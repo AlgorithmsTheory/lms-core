@@ -42,14 +42,6 @@ class EmulatorController extends Controller {
     }
     
     public static function MTRun($data) {
-        // эмуляция ответа
-        // $data = json_decode($data, true);
-        // if( true ) //rand(0, 1) == 0 )
-        //     $answer = '{ "error":"ok", "logs":["Шаг 1", "Шаг 2", "Шаг 3"], "cycle":1, "result":"'.$data['str'][0].'" }';
-        // else
-        //     $answer = '{ "error":"notOK", "cycle":1 }';
-        // return $answer;
-        
         $cmd = "/usr/local/bin/turing.sh";
         $task_file = tempnam(sys_get_temp_dir(), 'turn_'); 
         $task_answ = tempnam(sys_get_temp_dir(), 'turn_answ_');
@@ -61,14 +53,6 @@ class EmulatorController extends Controller {
     }
     
     public static function HAMRun($data) {
-        // эмуляция ответа
-        // $data = json_decode($data, true);
-        // if( true ) //rand(0, 1) == 0 )
-        //     $answer = '{ "error":"ok", "logs":["Шаг 1", "Шаг 2", "Шаг 3"], "cycle":1, "result":"'.$data['str'][0].'" }';
-        // else
-        //     $answer = '{ "error":"notOK"}';
-        // return $answer;
-        
         $cmd = "/usr/local/bin/normal.sh";
         $task_file = tempnam(sys_get_temp_dir(), 'norm_'); 
         $task_answ = tempnam(sys_get_temp_dir(), 'norm_answ_');
