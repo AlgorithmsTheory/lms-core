@@ -90,7 +90,7 @@ class EmulatorController extends Controller {
             
             $total_cycle += $answer['cycle'];
             //Log::info($answer['result'].' ----- '.$test_seq['output_word'][$i]);
-            if($answer['result'] == $test_seq['output_word'][$i]){
+            if(trim($answer['result']) == trim($test_seq['output_word'][$i])){
                 $seq_true++;
             }
         }
