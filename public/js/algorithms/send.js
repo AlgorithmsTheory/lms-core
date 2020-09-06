@@ -37,7 +37,7 @@ function run_all_normal(ctx, j){
 	var step = j;
 	var task = new Object()
 	task.rule = new Array()
-	task.str = ['Λ' + ctx.find('textarea[name = textarea_src]').val()]
+	task.str = 'Λ' + ctx.find('textarea[name = textarea_src]').val()
 	var src = ctx.find('input[name ^= st_]').toArray()
 	var dst = ctx.find('input[name ^= end_]').toArray()
 
