@@ -74,7 +74,7 @@ class EmulatorController extends Controller {
     }
     
     public static function MTCheckSequence($data, $test_seq) {
-        Log::info('Checking');
+        Log::debug('Checking');
         $seq_true = 0;
         $seq_all = count($test_seq['input_word']);
         $total_cycle = 0;
@@ -83,13 +83,13 @@ class EmulatorController extends Controller {
             $data = json_decode($data, true);
             $data['str'][0] = $test_seq['input_word'][$i];
             $data = json_encode($data);
-            Log::info('Input: '.$data);
+            Log::debug('Input: '.$data);
             $answer = EmulatorController::MTRun($data);
-            Log::info('Output: '.$answer);
+            Log::debug('Output: '.$answer);
             $answer = json_decode($answer, true);
             
             $total_cycle += $answer['cycle'];
-            //Log::info($answer['result'].' ----- '.$test_seq['output_word'][$i]);
+
             if(trim($answer['result']) == trim($test_seq['output_word'][$i])){
                 $seq_true++;
             }
@@ -98,22 +98,31 @@ class EmulatorController extends Controller {
     }
     
     public static function HAMCheckSequence($data, $test_seq) {
-        Log::info('Checking');
+        Log::debug('Checking');
         $seq_true = 0;
         $seq_all = count($test_seq['input_word']);
         $total_cycle = 0;
         
         for($i = 0; $i < $seq_all; $i++){
             $data = json_decode($data, true);
-            $data['str'][0] = $test_seq['input_word'][$i];
+
+            $test_seq['input_word'][$i] = str_replace("Λ", "", $test_seq['input_word'][$i]);
+            $test_seq['input_word'][$i] = "Λ".$test_seq['input_word'][$i];
+
+            $data['str'] = $test_seq['input_word'][$i];
             $data = json_encode($data);
-            Log::info('Input: '.$data);
+            Log::debug('Input: '.$data);
             $answer = EmulatorController::HAMRun($data);
-            Log::info('Output: '.$answer);
+            Log::debug('Output: '.$answer);
             $answer = json_decode($answer, true);
             
             $total_cycle += $answer['cycle'];
-            //Log::info($answer['result'].' ----- '.$test_seq['output_word'][$i]);
+
+            $test_seq['output_word'][$i] = str_replace("Λ", "", $test_seq['output_word'][$i]);
+            $answer['result'] = str_replace("Λ", "", $answer['result']);
+            Log::debug('Expected result = '.$test_seq['output_word'][$i]);
+            Log::debug('Actual result = '.$answer['result']);
+
             if($answer['result'] == $test_seq['output_word'][$i]){
                 $seq_true++;
             }
