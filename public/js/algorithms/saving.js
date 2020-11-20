@@ -15,7 +15,7 @@ function SavingMtContext(ctx)
                 DataMassEnd.push( rowsEnd.eq(i).val() );
                 i++;
             }
-            let data={task:textToWrite, "DataMassSt":DataMassSt, "DataMassEnd":DataMassEnd}	
+            let data={task:textToWrite, "countRows":countRows, "DataMassSt":DataMassSt, "DataMassEnd":DataMassEnd}	
         
         let json=JSON.stringify(data);
         let textFileAsBlob = new Blob([json], {type:'application/json'});
@@ -50,11 +50,20 @@ function SavingMtContext(ctx)
         {
             let textFromFileLoaded = fileLoadedEvent.target.result;
             let doc = eval('(' + textFromFileLoaded + ')');
-            let i=0;
-            
+            let i=0; let j=0;   
+         
             let rowsStart = ctx.find('[name ^= st_]');
+
+            let countRows = doc.countRows;
+            let currRows = rowsStart.length;
+
+            while( j < countRows - currRows ){
+                ctx.find('[name = addScnt]').trigger('click');
+                j++;
+            }
+
+            rowsStart = ctx.find('[name ^= st_]');
             let rowsEnd = ctx.find('[name ^= end_]');
-            let countRows = rowsStart.length;
         
             while( i < countRows ){
                 rowsStart.eq(i).val( doc.DataMassSt[i] );
@@ -80,5 +89,9 @@ $("[name^=mt-entity]").each(function(){
 
 $("[name^=ham-entity]").each(function(){
 	new SavingMtContext( $(this) );
+});
+
+$("[name^=mt3-entity]").each(function(){
+        new SavingMtContext( $(this) );
 });
 

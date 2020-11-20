@@ -96,8 +96,8 @@ function run_all_mmt(j){
         task.str.push(input[i].value)
     }
 
-	var src = $('input[name=start]').toArray()
-	var dst = $('input[name=end]').toArray()
+	var src = $('input[name ^= st_]').toArray()
+	var dst = $('input[name ^= end_]').toArray()
 
 	for ( var i = 0; i < src.length; i++) {
 		tmp = new Object()
@@ -107,14 +107,14 @@ function run_all_mmt(j){
 			task.rule.push(tmp)
 		}
 	}
-
   
-//	$("#debug > tr").remove();
-	token = $('#forma').children().eq(0).val();
+    // $("#debug > tr").remove();
+	// token = $('#forma').children().eq(0).val();
+    
 	$.ajax({
 		cache: false,
 		type: 'POST',
-		url:   '/get-MT',
+		url:  '/algorithm/MT',
 		beforeSend: function (xhr) {
 			var token = $('meta[name="csrf_token"]').attr('content');
 

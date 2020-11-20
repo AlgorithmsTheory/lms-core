@@ -111,3 +111,12 @@ $("[name=ham-entity]").each(function(){
 	j++;
 });
 
+j = 0;
+
+$("[name=mt3-entity]").each(function(){
+        $(this).attr('name', 'mt3-entity' + j);
+
+        SymbolsMtContext( $(this) );
+        j++;
+});
+
