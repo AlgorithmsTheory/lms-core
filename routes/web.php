@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Testing\Result;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,9 +35,14 @@ Route::get('no-access', ['as' => 'no_access', function(Request $request) {
     return view('no_access', compact('message'));
 }]);
 
-Route::get('tests/single-test/{id_test}', ['as' => 'single_test', function($id_test) {
+Route::get('tests/single-test/{id_test}/{id_test_new}', ['as' => 'single_test', function($id_test, $id_test_new) {
     $test_name = App\Testing\Test::whereId_test($id_test)->select('test_name')->first()->test_name;
-    return view('tests.single_test', compact('test_name', 'id_test'));
+    return view('tests.single_test', compact('test_name', 'id_test', 'id_test_new'));
+}]);
+
+Route::get('tests/drop-opened-test/{id_test_new}', ['as' => 'drop_opened_test', function($id_test_new) {
+    Result::whereId(Auth::user()['id'])->whereResult(null)->delete();
+    return redirect()->route('question_showtest', ['id_test' => $id_test_new]);
 }]);
 
 Route::get('tests/no-attempts/{max_test_points}/{total}', ['as' => 'no_attempts', function ($max_test_points, $total){

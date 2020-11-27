@@ -8,5 +8,6 @@
 </div>
 <div class="row">
     <a href="{{URL::route('question_showtest', $id_test)}}" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-primary" role="button">Продолжить решение</a>
+    <a href="{{URL::route('drop_opened_test',  $id_test_new)}}" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-primary" role="button">Сбросить решение, начать новый тест</a>
 </div>
 @stop
