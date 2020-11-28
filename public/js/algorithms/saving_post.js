@@ -18,7 +18,7 @@ class SavingPostContext {
                 i++;
             }
             
-            let data = {task:textToWrite, "DataMassSelect":DataMassSelect, "DataMassGoto1":DataMassGoto1, "DataMassGoto2":DataMassGoto2, "DataMassComment":DataMassComment}	
+            let data = {task:textToWrite, "countRows":i, "DataMassSelect":DataMassSelect, "DataMassGoto1":DataMassGoto1, "DataMassGoto2":DataMassGoto2, "DataMassComment":DataMassComment}	
             
             let json=JSON.stringify(data);
             let textFileAsBlob = new Blob([json], {type:'application/json'});
@@ -53,7 +53,15 @@ class SavingPostContext {
                 fileReader.onload = function(fileLoadedEvent) {
                     let textFromFileLoaded = fileLoadedEvent.target.result;
                     let doc = eval('(' + textFromFileLoaded + ')');
-                    let i=0;
+                    let i=0; let j=0;
+                    
+                    let countRows = doc.countRows;
+                    let currRows = ctx.find('[name ^= select_]').length;
+                    
+                    while( j < countRows - currRows ){
+                        ctx.find('[name = addScnt]').trigger('click');
+                        j++;
+                    }
                     
                     while(ctx.find('[name = select_' + (i+1) + ']').length != 0){
                           ctx.find('[name = select_' + (i+1) + ']').val( doc.DataMassSelect[i] );

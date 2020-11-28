@@ -14,7 +14,7 @@ superScript = function(e) {
 
 
 setTimeout(function(){
-	$('input[name=start]').each(function(){this.setAttribute('onchange', 'superScript(this)')})
-	$('input[name=end]').each(function(){this.setAttribute('onchange', 'superScript(this)')})
+	$('input[name^=st_]').each(function(){this.setAttribute('onchange', 'superScript(this)')})
+	$('input[name^=end_]').each(function(){this.setAttribute('onchange', 'superScript(this)')})
 }, 500);
 

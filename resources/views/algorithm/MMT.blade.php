@@ -7,6 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="keywords" content="your,keywords">
 		<meta name="description" content="Short explanation about this website">
+        <meta name="csrf_token" content="{{ csrf_token() }}" />
 		<!-- END META -->
 
 		<!-- BEGIN STYLESHEETS -->
@@ -24,7 +25,8 @@
     @section('content')
 
 				<!-- BEGIN LIST SAMPLES -->
-			<section>	
+			<section>
+                        <div name="mt3-entity">	
 						<div class="row">
 							<div class="col-lg-12">
 								<h1 class="text-primary">Эмулятор многоленточной машины Тьюринга</h1>
@@ -50,11 +52,11 @@
 										<div class="tools">
 											<div class="btn-group">
 												
-												<input type="hidden" id="inputFileNameToSaveAs" value="Алгоритм МТ" ></input>
-													<button type="button" title="" data-original-title="Сохранить в файл алгоритм и условие задачи" data-toggle="tooltip" data-placement="top" class="btn btn-default-bright btn-raised" onclick="saveTextAsFile()"><i class="md md-file-download"></i></button>
+												<input type="hidden" name="inputFileNameToSaveAs" value="Алгоритм МТ" ></input>
+													<button type="button" title="" data-original-title="Сохранить в файл алгоритм и условие задачи" data-toggle="tooltip" data-placement="top" class="btn btn-default-bright btn-raised" name="saveTextAsFile"><i class="md md-file-download"></i></button>
 													
-													<button type="button" onclick="loadFileAsText()" style="left:5px" title="" data-original-title="Загрузить в эмулятор ранее сохраненный алгоритм. Перед этим выберите файл" data-toggle="tooltip" data-placement="top" class="btn btn-default-bright btn-raised"><i class="md md-file-upload"></i></button>
-													<input type="file"  style="left:15px" class="btn ink-reaction btn-raised btn-xs btn-primary" id="fileToLoad">
+													<button type="button" name="loadFileAsText" style="left:5px" title="" data-original-title="Загрузить в эмулятор ранее сохраненный алгоритм. Перед этим выберите файл" data-toggle="tooltip" data-placement="top" class="btn btn-default-bright btn-raised"><i class="md md-file-upload"></i></button>
+													<input type="file"  style="left:15px" class="btn ink-reaction btn-raised btn-xs btn-primary" name="fileToLoad">
 												
 											</div>
 										</div>
@@ -66,135 +68,135 @@
 												<div class="card-body no-padding">
 													<div class="card-body height-6 scroll style-default-bright" style="height: 570px;">
 
-														<ul id="p_scents" class="list" data-sortable="true">
-															<li id="p_scnt" class="tile">
+														<ul name="p_scents" class="list" data-sortable="true">
+															<li name="p_scnt" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text"  onchange="superScript(this);" id="st_1"  class="form-control" name="start" value="S₀{∂,∂,∂}">
+																		<input type="text"  onchange="superScript(this);" name="st_1"  class="form-control" value="S₀{∂,∂,∂}">
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" onchange="superScript(this);" id="end_1"  class="form-control" name="end" value="{∂,∂,∂}{R,R,R}S₀">
+																		<input type="text" onchange="superScript(this);" name="end_1"  class="form-control" value="{∂,∂,∂}{R,R,R}S₀">
 																	</div>
 																</div> 
-																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
+																<a class="btn btn-flat ink-reaction btn-default" href="#" name="remScnt">
 																	<i class="fa fa-trash"></i>
 
 																</a>
 															</li>
-															<li id="p_scnt_2" class="tile">
+															<li name="p_scnt_2" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text" id="st_2" class="form-control" name="start">
+																		<input type="text" name="st_2" class="form-control">
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="end_2" class="form-control" name="end">
+																		<input type="text" name="end_2" class="form-control">
 																	</div>
 																</div> 
-																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
-																	<i class="fa fa-trash"></i>
-
-																</a>
-															</li>
-
-
-															<li id="p_scnt_3" class="tile">
-																<div class="input-group">
-																	<div class="input-group-content">
-																		<input type="text" id="st_3" class="form-control" name="start">
-																	</div>
-																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
-																	<div class="input-group-content">
-																		<input type="text" id="end_3" class="form-control" name="end">
-																	</div>
-																</div> 
-																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
+																<a class="btn btn-flat ink-reaction btn-default" href="#" name="remScnt">
 																	<i class="fa fa-trash"></i>
 
 																</a>
 															</li>
 
 
-															<li id="p_scnt_4" class="tile">
+															<li name="p_scnt_3" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text" id="st_4" class="form-control" name="start">
+																		<input type="text" name="st_3" class="form-control">
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="end_4" class="form-control" name="end">
+																		<input type="text" name="end_3" class="form-control">
 																	</div>
 																</div> 
-																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
+																<a class="btn btn-flat ink-reaction btn-default" href="#" name="remScnt">
 																	<i class="fa fa-trash"></i>
 
 																</a>
 															</li>
 
 
-															<li id="p_scnt_5" class="tile">
+															<li name="p_scnt_4" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text" id="st_5" class="form-control" name="start">
+																		<input type="text" name="st_4" class="form-control">
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="end_5" class="form-control" name="end">
+																		<input type="text" name="end_4" class="form-control">
 																	</div>
 																</div> 
-																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
+																<a class="btn btn-flat ink-reaction btn-default" href="#" name="remScnt">
 																	<i class="fa fa-trash"></i>
 
 																</a>
 															</li>
 
 
-															<li id="p_scnt_6" class="tile">
+															<li name="p_scnt_5" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text" id="st_6" class="form-control" name="start">
+																		<input type="text" name="st_5" class="form-control">
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="end_6" class="form-control" name="end">
+																		<input type="text" name="end_5" class="form-control">
 																	</div>
 																</div> 
-																<a class="btn btn-flat ink-reaction btn-default" href="#" id="remScnt">
+																<a class="btn btn-flat ink-reaction btn-default" href="#" name="remScnt">
 																	<i class="fa fa-trash"></i>
 
 																</a>
 															</li>
 
 
-															<li id="p_scnt_7" class="tile">
+															<li name="p_scnt_6" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text" id="st_7" class="form-control" name="start">
+																		<input type="text" name="st_6" class="form-control">
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="end_7" class="form-control" name="end">
+																		<input type="text" name="end_6" class="form-control">
 																	</div>
 																</div> 
-																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																<a class="btn btn-flat ink-reaction btn-default" href="#" name="remScnt">
 																	<i class="fa fa-trash"></i>
 
 																</a>
 															</li>
 
 
-															<li id="p_scnt_8" class="tile">
+															<li name="p_scnt_7" class="tile">
 																<div class="input-group">
 																	<div class="input-group-content">
-																		<input type="text"  id="st_8" class="form-control" name="start">
+																		<input type="text" name="st_7" class="form-control">
 																	</div>
 																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
 																	<div class="input-group-content">
-																		<input type="text" id="end_8" class="form-control" name="end">
+																		<input type="text" name="end_7" class="form-control">
 																	</div>
 																</div> 
-																<a class="btn btn-flat ink-reaction btn-default"  href="#" id="remScnt">
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" name="remScnt">
+																	<i class="fa fa-trash"></i>
+
+																</a>
+															</li>
+
+
+															<li name="p_scnt_8" class="tile">
+																<div class="input-group">
+																	<div class="input-group-content">
+																		<input type="text"  name="st_8" class="form-control">
+																	</div>
+																	<span class="input-group-addon"><i class="md md-arrow-forward"></i></span>
+																	<div class="input-group-content">
+																		<input type="text" name="end_8" class="form-control">
+																	</div>
+																</div> 
+																<a class="btn btn-flat ink-reaction btn-default"  href="#" name="remScnt">
 																	<i class="fa fa-trash"></i>
 																</a>
 															</li>
@@ -209,13 +211,13 @@
 										<div class="row"  >
 											<div class="col-md-3">
 												<div class="card-body text-center height-3" style="top: -90px;">
-													<button type="button"  class="btn ink-reaction btn-raised btn-default-light" href="#" id="addScnt"><i class ="fa fa-plus" ></i></button>
+													<button type="button"  class="btn ink-reaction btn-raised btn-default-light" href="#" name="addScnt"><i class ="fa fa-plus" ></i></button>
 													<br/>
 												</div><!--end .card-body -->
 											</div>
 											<div class="col-md-3">
 												<div class="card-body text-center height-3" style="top: -90px;">
-													<button type="button" class="btn ink-reaction btn-raised btn-default-light" style="right:30px" href="#" id="reset">Очистить</button>
+													<button type="button" class="btn ink-reaction btn-raised btn-default-light" style="right:30px" href="#" name="reset">Очистить</button>
 													<br/>
 												</div><!--end .card-body -->
 											</div>
@@ -285,7 +287,7 @@
 				<button type="button" style="right: -20px;"class="btn ink-reaction btn-primary" onClick="" title="" data-original-title="Шаг для отладки алгоритма" data-toggle="tooltip" data-placement="top"><i class="md md-fast-forward"></i></button>
 			</div> -->
 			<div class="col-sm-6">									
-				<button  type="button" class="btn ink-reaction btn-primary" onClick="run_all_turing(true)" title="" data-original-title="Отладить до конца" data-toggle="tooltip" data-placement="top"><i class="md md-play-arrow"></i></button>
+				<button  type="button" class="btn ink-reaction btn-primary" onClick="run_all_mmt(true)" title="" data-original-title="Отладить до конца" data-toggle="tooltip" data-placement="top"><i class="md md-play-arrow"></i></button>
 			</div>
 			<br>
 
@@ -296,15 +298,15 @@
 			</div>
 			<div class="card-body">
 				<div class="btn-group">
-					<button type="button" class="btn ink-reaction btn-default-bright" id="right">R</button>
-					<button type="button" class="btn ink-reaction btn-default-bright" id="left">L</button>
-					<button type="button" class="btn ink-reaction btn-default-bright" id="here">H</button>
-					<button type="button" class="btn ink-reaction btn-default-bright" id="zero">S<sub>0</sub></button>
+					<button type="button" class="btn ink-reaction btn-default-bright" name="right">R</button>
+					<button type="button" class="btn ink-reaction btn-default-bright" name="left">L</button>
+					<button type="button" class="btn ink-reaction btn-default-bright" name="here">H</button>
+					<button type="button" class="btn ink-reaction btn-default-bright" name="zero">S<sub>0</sub></button>
 					<br>
-					<button type="button" class="btn ink-reaction btn-default-bright" id="part">&part;</button>
-					<button type="button" class="btn ink-reaction btn-default-bright" id="omega">&Omega;</button>
-					<button type="button" class="btn ink-reaction btn-default-bright" id="lambda">&#955;</button>
-					<button type="button" class="btn ink-reaction btn-default-bright" id="one">S<sub>1</sub></button>
+					<button type="button" class="btn ink-reaction btn-default-bright" name="part">&part;</button>
+					<button type="button" class="btn ink-reaction btn-default-bright" name="omega">&Omega;</button>
+					<button type="button" class="btn ink-reaction btn-default-bright" name="lambda">&#955;</button>
+					<button type="button" class="btn ink-reaction btn-default-bright" name="one">S<sub>1</sub></button>
 
 				</div>
 			</div><!--end .card-body -->
@@ -327,7 +329,7 @@
 													
 												</tr>
 											</thead>
-											<tbody id="debug">
+											<tbody name="debug">
 												<tr>
 													<td>№ ленты:</td>
 													<td id="name"></td>
@@ -400,6 +402,7 @@
 					</div></div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 616px; transform: translate(0px, 0px);"></div></div></div>
 					
 				</div>
+</div>
 </div>
 </section>
 
