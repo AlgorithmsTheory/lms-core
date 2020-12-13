@@ -412,18 +412,22 @@ Route::prefix('algorithm')->group(function (){
         Route::get('MT', ['as' => 'MT', 'uses' => 'Emulators\EmulatorController@openMT']);
         Route::post('MT', ['as' => 'MTRun', 'uses' => 'Emulators\EmulatorController@MTPOST']);
         Route::post('MTCheck', ['as' => 'MTCheck', 'uses' => 'Emulators\EmulatorController@MTCheck']);
+        Route::get('MTHelp', ['as' => 'MTHelp', function (){ return view('algorithm.MThelp'); }]);
         
         Route::get('HAM', ['as' => 'HAM', 'uses' => 'Emulators\EmulatorController@openHAM']);
         Route::post('HAM', ['as' => 'HAMRun', 'uses' => 'Emulators\EmulatorController@HAMPOST']);
         Route::post('HAMCheck', ['as' => 'HAMCheck', 'uses' => 'Emulators\EmulatorController@HAMCheck']);
+        Route::get('HAMHelp', ['as' => 'HAMHelp', function (){ return view('algorithm.HAMhelp'); }]);
         
         Route::get('MMT', ['as' => 'MMT', 'uses' => 'Emulators\EmulatorController@openMMT']);
         
         Route::get('RAM', ['as' => 'RAM', 'uses' => 'Emulators\RamEmulatorController@openRAM']);
         Route::post('RAMCheck', ['as' => 'RAMCheck', 'uses' => 'Emulators\RamEmulatorController@RAMCheck']);
+        Route::get('RAMHelp', ['as' => 'RAMHelp', function (){ return view('algorithm.RAMhelp'); }]);
         
         Route::get('Post', ['as' => 'Post', 'uses' => 'Emulators\PostEmulatorController@openPost']);
         Route::post('PostCheck', ['as' => 'PostCheck', 'uses' => 'Emulators\PostEmulatorController@PostCheck']);
+        Route::get('PostHelp', ['as' => 'PostHelp', function (){ return view('algorithm.Posthelp'); }]);
     });
 });
 

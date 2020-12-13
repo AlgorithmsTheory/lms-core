@@ -12,5 +12,16 @@
 @section('task-post')
 @stop
 
+@section('help-post')
+    <script type="text/javascript">
+      function PosthelpFunc () {
+        window.open("{{URL::route('PostHelp')}}", '_blank');
+      }
+    </script>
+    <a class="btn btn-raised ink-reaction btn-primary" onclick="PosthelpFunc();">
+        <i class="md md-help"></i>
+    </a>
+@stop
+
 @section('addl-blocks-post')
 @stop

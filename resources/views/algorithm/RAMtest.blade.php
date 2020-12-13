@@ -8,6 +8,15 @@
         </article>
     </div>
 @stop
-
+@section('help-ram')
+    <script type="text/javascript">
+      function RAMhelpFunc () {
+        window.open("{{URL::route('RAMHelp')}}", '_blank');
+      }
+    </script>
+    <a class="btn btn-block btn-primary" onclick="RAMhelpFunc();" name = "btn_help">
+        <span>Помощь </span><i class="md md-help"></i>
+    </a>
+@stop
 @section('addl-blocks-ram')
 @stop

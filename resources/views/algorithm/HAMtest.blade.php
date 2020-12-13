@@ -13,5 +13,16 @@
 @section('task-ham')
 @stop
 
+@section('help-ham')
+    <script type="text/javascript">
+      function HAMhelpFunc () {
+        window.open("{{URL::route('HAMHelp')}}", '_blank');
+      }
+    </script>
+    <a class="btn btn-raised ink-reaction btn-primary" onclick="HAMhelpFunc();">
+        <i class="md md-help"></i>
+    </a>
+@stop
+
 @section('addl-blocks-ham')
 @stop

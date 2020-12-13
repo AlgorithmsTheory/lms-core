@@ -115,11 +115,7 @@
                                 <div class="col-sm-4">                                    
                                     <button  type="button" name="runPostTrue" class="btn ink-reaction btn-primary"  title="" data-original-title="Шаг для отладки алгоритма" data-toggle="tooltip" data-placement="top"><i class="md md-play-arrow"></i></button>
                                 </div>
-                                <div class="col-sm-4">
-                                    <a class="btn btn-raised ink-reaction btn-primary" href="#offcanvas-demo-right" data-toggle="offcanvas">
-                                        <i class="md md-help"></i>
-                                    </a>
-                                </div>
+                                @yield('help-post')
                             </div>
                         </div>
                         

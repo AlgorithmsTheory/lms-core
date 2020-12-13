@@ -25,6 +25,14 @@
     </div>
 @stop
 
+@section('help-mt')
+<div class="col-sm-3">
+    <a class="btn btn-raised ink-reaction btn-primary" href="#offcanvas-demo-right" data-toggle="offcanvas">
+        <i class="md md-help"></i>
+    </a>
+</div>
+@stop
+
 @section('addl-blocks-mt')
     <div class="offcanvas">
         <div id="offcanvas-demo-right" class="offcanvas-pane width-10" style="">
