@@ -2,10 +2,24 @@
  * Created by Станислав on 15.03.16.
  */
 
+function sendForm() {
+  $('#send_button').trigger('click');
+}
+
+$('#set_button').on('click', function(){
+    console.log('GO');
+    $('input[name ^= fns]').each(function(){
+        $(this).closest(".fine-row").prev().remove();
+        $(this).closest(".fine-row").remove();
+    });
+    setTimeout(sendForm, 500);
+});
+
 var retestForm = $('#retest-form');
 
 /** функция-хелпер для переноса значения из checkbox в hidden */
 $('#retest-table').on('change', '.flag', function(){
+    $(this).next().attr('name', "fines[]");
     if ($(this).prop("checked"))                                                                                        //если галка стоит, то ставим в скрытое поле 1
         $(this).next().val(1);
     else $(this).next().val(0);                                                                                         //иначе 0

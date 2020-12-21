@@ -90,7 +90,7 @@ full
                         <div class="checkbox checkbox-styled">
                             <label>
                                 <input type="checkbox" class="flag"  @if ($fine['access'] == 1) checked @endif>
-                                <input class="support-checkbox" name="fines[]" type="hidden" @if ($fine['access'] == 1) value="1"
+                                <input class="support-checkbox" name="fns[]" type="hidden" @if ($fine['access'] == 1) value="1"
                                 @else value="0"
                                 @endif
                                 >
@@ -107,8 +107,11 @@ full
                 @endforeach
                 </tbody>
             </table>
+            <div class="col-lg-offset-9"  id="change"  style="display: none">
+                <button id="send_button" class="btn btn-primary btn-raised submit-test" type="submit">Кнопка отправки формы</button>
+            </div>
             <div class="col-lg-offset-9"  id="change">
-                <button class="btn btn-primary btn-raised submit-test" type="submit">Применить изменения</button>
+                <button id="set_button" class="btn btn-primary btn-raised">Применить изменения</button>
             </div>
             </form>
         </div>
