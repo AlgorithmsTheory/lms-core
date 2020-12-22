@@ -112,9 +112,7 @@
                                         <button  type="button" class="btn ink-reaction btn-primary" name="run_markov_true" title="" data-original-title="Отладить до конца" data-toggle="tooltip" data-placement="top"><i class="md md-play-arrow"></i></button>
                                     </div>
                                     <div class="col-lg-3">
-                                        <a class="btn btn-raised ink-reaction btn-primary" href="#offcanvas-demo-right" data-toggle="offcanvas">
-                                            <i class="md md-help"></i>
-                                        </a>
+                                        @yield('help-ham')
                                     </div>
                                 </div>
                             </div>

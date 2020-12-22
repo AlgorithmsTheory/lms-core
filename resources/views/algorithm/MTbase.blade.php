@@ -110,11 +110,7 @@
                                     <div class="col-sm-3">                                    
                                         <button name="run_turing_true" type="button" class="btn ink-reaction btn-primary" title="" data-original-title="Отладить до конца" data-toggle="tooltip" data-placement="top"><i class="md md-play-arrow"></i></button>
                                     </div>
-                                    <div class="col-sm-3">
-                                        <a class="btn btn-raised ink-reaction btn-primary" href="#offcanvas-demo-right" data-toggle="offcanvas">
-                                            <i class="md md-help"></i>
-                                        </a>
-                                    </div>
+                                    @yield('help-mt')
                                 </div>
                             </div>
                             

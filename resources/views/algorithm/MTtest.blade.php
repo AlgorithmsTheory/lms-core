@@ -13,5 +13,16 @@
 @section('task-mt')
 @stop
 
+@section('help-mt')
+    <script type="text/javascript">
+      function MThelpFunc () {
+        window.open("{{URL::route('MTHelp')}}", '_blank');
+      }
+    </script>
+    <a class="btn btn-raised ink-reaction btn-primary" onclick="MThelpFunc();">
+        <i class="md md-help"></i>
+    </a>
+@stop
+
 @section('addl-blocks-mt')
 @stop

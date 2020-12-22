@@ -52,9 +52,7 @@
                             <input type="file" class="btn btn-block ink-reaction btn-raised btn-xs btn-primary" name="fileToLoad">
                             <button type="button" class="btn btn-block btn-primary" name = "btn_load_doc">Загрузить из файла</button>
                             </br>
-                            <a class="btn btn-block btn-primary" href="#offcanvas-demo-right" data-toggle="offcanvas" name = "btn_help">
-                                <span>Помощь </span><i class="md md-help"></i>
-                            </a>
+                            @yield('help-ram')
                             </br>
                             <div class = "row justify-content-md-center">
                                 <div class = "col-md-10 col-md-offset-1">
