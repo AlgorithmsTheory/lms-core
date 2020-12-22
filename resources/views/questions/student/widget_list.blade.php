@@ -52,7 +52,26 @@
             <input id="drop" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-danger" type="submit" name="drop_btn" value="Отказаться">
         {!! Form::close() !!}
     </div>
+    {!! HTML::script('js/algorithms/saving.js') !!}
+    {!! HTML::script('js/algorithms/saving_post.js') !!}
 @else
+    <script type="text/javascript">
+        $("[name=saveTextAsFile]").each(function(){
+            $(this).attr("disabled", true);
+        });
+        $("[name=loadFileAsText]").each(function(){
+            $(this).attr("disabled", true);
+        });
+        $("[name=fileToLoad]").each(function(){
+            $(this).attr("disabled", true);
+        });
+        $("[name=btn_save_doc]").each(function(){
+            $(this).attr("disabled", true);
+        });
+        $("[name=btn_load_doc]").each(function(){
+            $(this).attr("disabled", true);
+        });
+    </script>
     {!! Form::open(['method' => 'POST']) !!}
     {!! Form::close() !!}
 @endif
@@ -65,12 +84,10 @@
 {!! HTML::script('js/ram/kontr_RAM.js') !!}
 
 {!! HTML::script('js/algorithms/symbols_post.js') !!}
-{!! HTML::script('js/algorithms/saving_post.js') !!}
 {!! HTML::script('js/algorithms/post.js') !!}
 {!! HTML::script('js/algorithms/kontr_post.js') !!}
 
 {!! HTML::script('js/algorithms/symbols.js') !!}
-{!! HTML::script('js/algorithms/saving.js') !!}
 {!! HTML::script('js/algorithms/kontr_mt.js') !!}
 {!! HTML::script('js/algorithms/kontr_ham.js') !!}
 
