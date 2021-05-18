@@ -42,6 +42,32 @@ class CoursePlanDAO
         return $all_lectures;
     }
 
+    public function getAllLecturesBySec($id_course_plan){
+        $all_lectures_by_sec = collect([]);
+        $course_plan = CoursePlan::where('id_course_plan', $id_course_plan)->first();
+        foreach ($course_plan->section_plans as $section_plan) {
+            $all_lectures = collect([]);
+            foreach ($section_plan->lecture_plans as $lecture_plan) {
+                $all_lectures->push($lecture_plan);
+            }
+            $all_lectures_by_sec->push(['section_num' => $section_plan->section_num, 'arr_lectures' => $all_lectures]);
+        }
+        return $all_lectures_by_sec;
+    }
+
+    public function getAllSeminarsBySec($id_course_plan){
+        $all_seminars_by_sec = collect([]);
+        $course_plan = CoursePlan::where('id_course_plan', $id_course_plan)->first();
+        foreach ($course_plan->section_plans as $section_plan) {
+            $all_seminars = collect([]);
+            foreach ($section_plan->seminar_plans as $seminar_plan) {
+                $all_seminars->push($seminar_plan);
+            }
+            $all_seminars_by_sec->push(['section_num' => $section_plan->section_num, 'arr_seminars' => $all_seminars]);
+        }
+        return $all_seminars_by_sec;
+    }
+
     public function getAllSeminars($id_course_plan){
         $all_seminars = collect([]);
         $course_plan = CoursePlan::where('id_course_plan', $id_course_plan)->first();
