@@ -16,6 +16,9 @@
             <td colspan="{{$section_plan->control_work_plans->count() + 1}}" class="info">
                     {{$section_plan->section_num . ' Раздел'}}
             </td>
+{{--            <td colspan="1" rowspan="2" class="info">Пос. лек.</td>--}}
+{{--            <td colspan="1" rowspan="2" class="info">Пос. сем.</td>--}}
+{{--            <td colspan="1" rowspan="2" class="info">Раб. сем.</td>--}}
         @endforeach
 
         <td colspan="1" rowspan="2" class="info">Итог за разделы</td>
@@ -28,9 +31,9 @@
 
         <td colspan="1" rowspan="2" class="info">Итог за Экзамен(Зачёт)</td>
 
-        <td colspan="1" rowspan="2" class="info">Пос. лек.</td>
-        <td colspan="1" rowspan="2" class="info">Пос. сем.</td>
-        <td colspan="1" rowspan="2" class="info">Раб. сем.</td>
+{{--        <td colspan="1" rowspan="2" class="info">Пос. лек.</td>--}}
+{{--        <td colspan="1" rowspan="2" class="info">Пос. сем.</td>--}}
+{{--        <td colspan="1" rowspan="2" class="info">Раб. сем.</td>--}}
         <td colspan="1" rowspan="2" class="info">Суммарный итог</td>
         <td rowspan="3" class="info">Оценка(A-F)</td>
         <td rowspan="3" class="info">Оценка(2-5)</td>
@@ -57,7 +60,8 @@
             @endforeach
         @endforeach
 
-        <td>max {{":".$course_plan->max_controls}}</td>
+        <td>max {{":".($course_plan->max_controls  + $course_plan->max_lecrures + $course_plan->max_seminars +
+    $course_plan->max_seminars_work)}}</td>
 
         {{--Вывод макс баллов К.М в разделе Экзамен(Зачёт)--}}
             @foreach($course_plan->exam_plans as $exam_plan)
@@ -68,9 +72,9 @@
 
             <td>max {{":".$course_plan->max_exam}}</td>
 
-            <td>max {{":".$course_plan->max_lecrures}}</td>
-            <td>max {{":".$course_plan->max_seminars}}</td>
-            <td>max {{":".$course_plan->max_seminars_work}}</td>
+{{--            <td>max {{":".$course_plan->max_lecrures}}</td>--}}
+{{--            <td>max {{":".$course_plan->max_seminars}}</td>--}}
+{{--            <td>max {{":".$course_plan->max_seminars_work}}</td>--}}
             <td>max :100</td>
 
     </tr>
@@ -106,12 +110,26 @@
                                 {{$control_work_passes->presence == 0 ? 'disabled' : ''}}/>
                     </td>
                 @endforeach
+{{--                @foreach($statement['result_lecture'] as $result_lecture)--}}
+{{--                        --}}{{--Пос. лек.--}}
+{{--                        @if( $statement['result_lecture']['section_num'] == $section_plan->section_num)--}}
+{{--                        <td>{{ round($statement['result_lecture']['result'], 1)}}</td>--}}
+{{--                        @endif--}}
+{{--                @endforeach--}}
+{{--                        --}}{{--Пос. Семинаров.--}}
+
+{{--                        <td>{{round($statement['result_seminar'][$section_plan->section_num], 1)}}</td>--}}
+
+{{--                        --}}{{--Раб. на сем--}}
+
+{{--                        <td>{{round($statement['result_work_seminar'], 1)}}</td>--}}
+
                     {{--Итог за раздел--}}
                 <td data-result-section_num="{{$section_plan->section_num}}"
-                    class="{{$statement['result_control_work_sections']->get($section_plan->section_num) < $section_plan->max_points * 0.6
+                    class="{{$statement['result_in_sections']->get($section_plan->section_num) < $section_plan->max_points * 0.6
                     ? 'danger' : 'success'}}"
                     data-section-max_points="{{$section_plan->max_points}}">
-                    {{round($statement['result_control_work_sections']->get($section_plan->section_num), 1)}}
+                    {{round($statement['result_in_sections']->get($section_plan->section_num), 1)}}
                 </td>
             @endforeach
 
@@ -159,17 +177,7 @@
                     {{round($statement['sum_result_section_exam_work'], 1)}}
                 </td>
 
-            {{--Пос. лек.--}}
 
-                <td>{{round($statement['result_lecture'], 1)}}</td>
-
-            {{--Пос. Семинаров.--}}
-
-                <td>{{round($statement['result_seminar'], 1)}}</td>
-
-            {{--Раб. на сем--}}
-
-                <td>{{round($statement['result_work_seminar'], 1)}}</td>
 
             {{--Суммарный итог--}}
 

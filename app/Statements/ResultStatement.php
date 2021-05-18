@@ -48,29 +48,44 @@ class ResultStatement {
         $result_exam_work_sections = $this->getResultExamWorkSections($exam_work_groupBy_sections, $user->id);
         $sum_result_section_control_work = $result_control_work_sections->sum();
         $sum_result_section_exam_work = $result_exam_work_sections->sum();
-        $result_lecture = $this->getResultLecture($id_course_plan, $user->id);
-        $result_seminar = $this->getResultSeminar($id_course_plan, $user->id);
-        $result_work_seminar = $this->getResultWorkSeminar($id_course_plan, $user->id);
-        $sum_result = $sum_result_section_exam_work + $sum_result_section_control_work + $result_lecture
-            + $result_seminar + $result_work_seminar;
+        $result_lecture = $this->getResultLectureBySections($id_course_plan, $user->id);
+
+        $result_seminar = $this->getResultSeminarBySections($id_course_plan, $user->id);
+        $result_in_sections = $this->getResultBySections($result_control_work_sections, $result_lecture, $result_seminar);
+
+//        $sum_result = $sum_result_section_exam_work + $sum_result_section_control_work + $sum_result_lecture
+//            + $result_seminar ;
+        //add $sum_result_lecture in $sum_result
+        $sum_result = $sum_result_section_exam_work + $sum_result_section_control_work
+            + $result_seminar ;
         $markRus = Test::calcMarkRus(100, $sum_result);
         $markBologna = Test::calcMarkBologna(100, $sum_result);
 
         $user_statement_result = collect([]);
         $user_statement_result->put('user',  $user);
         $user_statement_result->put('control_work_groupBy_sections', $control_work_groupBy_sections);
-        $user_statement_result->put('result_control_work_sections', $result_control_work_sections);
+        $user_statement_result->put('result_in_sections', $result_in_sections);
         $user_statement_result->put('sum_result_section_control_work', $sum_result_section_control_work);
         $user_statement_result->put('exam_work_groupBy_sections', $exam_work_groupBy_sections);
         $user_statement_result->put('result_exam_work_sections', $result_exam_work_sections);
         $user_statement_result->put('sum_result_section_exam_work', $sum_result_section_exam_work);
         $user_statement_result->put('result_lecture', $result_lecture);
         $user_statement_result->put('result_seminar', $result_seminar);
-        $user_statement_result->put('result_work_seminar', $result_work_seminar);
+//        $user_statement_result->put('result_work_seminar', $result_work_seminar);
         $user_statement_result->put('sum_result', $sum_result);
         $user_statement_result->put('markRus', $markRus);
         $user_statement_result->put('markBologna', $markBologna);
         return $user_statement_result;
+    }
+
+    public function getResultBySections($result_control_work_sections, $result_lecture, $result_seminar) {
+        $result = collect([]);
+        foreach($result_control_work_sections as  $num_section => $cw_in_section) {
+            $result_in_section = $cw_in_section + $result_lecture->get($num_section) +
+                $result_seminar->get($num_section);
+            $result[$num_section] = $result_in_section;
+        }
+        return $result;
     }
 
     public function getSumResultSectionControlWork($id_course_plan,$id_user) {
@@ -211,6 +226,32 @@ class ResultStatement {
         return $result;
     }
 
+    public function getResultSeminarBySections($id_course_plan, $id_user) {
+        $max_seminars =  $this->course_plan_DAO
+            ->getCoursePlan($id_course_plan)
+            ->max_seminars;
+        $all_seminars_by_sec = $this->course_plan_DAO->getAllSeminarsBySec($id_course_plan);
+        $count_seminar = $all_seminars_by_sec->sum(function ($map) {
+            return $map['arr_seminars']->count();
+        });
+        $temp_arr = ['max_seminars' => $max_seminars, 'count_seminar' => $count_seminar];
+        $return_result = collect([]);
+        foreach ($all_seminars_by_sec as $sec_seminars_map) {
+            $arr_seminars_id = $sec_seminars_map['arr_seminars']->map(function ($item) {
+                return $item->id_lecture_plan;
+            });
+            $result =  SeminarPasses::whereIn('id_seminar_plan', $arr_seminars_id)
+                ->where('id_user', $id_user)
+                ->get()
+                ->sum(function ($item) use ($temp_arr){
+                    return ($item->presence * $temp_arr['max_lecrures'] / $temp_arr['count_lecture']) + $item->work_points;
+                });
+            //$return_result->push(['section_num' => $sec_seminars_map['section_num'], 'result' => $result]);
+            $return_result[$sec_seminars_map['section_num']] = $result;
+        }
+        return $return_result;
+    }
+
     public function getResultLecture($id_course_plan, $id_user) {
         $max_lecrures =  $this->course_plan_DAO
             ->getCoursePlan($id_course_plan)
@@ -228,6 +269,32 @@ class ResultStatement {
                 return $item->presence * $temp_arr['max_lecrures'] / $temp_arr['count_lecture'];
             });
         return $result;
+    }
+
+    public function getResultLectureBySections($id_course_plan, $id_user) {
+        $max_lecrures =  $this->course_plan_DAO
+            ->getCoursePlan($id_course_plan)
+            ->max_lecrures;
+        $all_lectures_by_sec = $this->course_plan_DAO->getAllLecturesBySec($id_course_plan);
+        $count_lecture = $all_lectures_by_sec->sum(function ($map) {
+            return $map['arr_lectures']->count();
+        });
+        $temp_arr = ['max_lecrures' => $max_lecrures, 'count_lecture' => $count_lecture];
+        $return_result = collect([]);
+        foreach ($all_lectures_by_sec as $sec_lectures_map) {
+            $arr_lectures_id = $sec_lectures_map['arr_lectures']->map(function ($item) {
+                return $item->id_lecture_plan;
+            });
+            $result =  LecturePasses::whereIn('id_lecture_plan', $arr_lectures_id)
+                ->where('id_user', $id_user)
+                ->get()
+                ->sum(function ($item) use ($temp_arr){
+                    return $item->presence * $temp_arr['max_lecrures'] / $temp_arr['count_lecture'];
+                });
+           // $return_result->push(['section_num' => $sec_lectures_map['section_num'], 'result' => $result]);
+            $return_result[$sec_lectures_map['section_num']] = $result;
+        }
+        return $return_result;
     }
 
     //Отметка присутствия на контр меропр

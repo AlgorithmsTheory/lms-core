@@ -404,7 +404,9 @@ class StatementsController extends Controller{
             $sum_result_exam_works = $this->result_statement->getSumResultSectionExamWork($id_course_plan, $id_user);
             $class_work = $this->result_statement->getResultWorkSeminar($id_course_plan, $id_user);
             $seminar_pass = $this->result_statement->getResultSeminar($id_course_plan, $id_user);
-            $lecture_pass = $this->result_statement->getResultLecture($id_course_plan, $id_user);
+            $lecture_pass = $this->result_statement->getResultLectureBySections($id_course_plan, $id_user)->sum(function ($map) {
+                return $map['result'];
+            });
             if ($request->input('work_status') == 'section') {
                 $sum_result_section = $sum_result_control_works;
             } else {
