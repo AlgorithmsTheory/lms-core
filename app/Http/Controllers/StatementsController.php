@@ -16,6 +16,7 @@ use App\Question;
 use App\Codificator;
 use App\Statements\DAO\CoursePlanDAO;
 use stdClass;
+use Illuminate\Support\Facades\Storage;
 
 class StatementsController extends Controller{
 
@@ -29,8 +30,8 @@ class StatementsController extends Controller{
     private $result_statement;
 
     public function __construct(CoursePlanDAO $course_plan_DAO, SectionPlanDAO $section_plan_DAO, LecturePlanDAO $lecture_plan_DAO
-    , SeminarPlanDAO $seminar_plan_DAO, ControlWorkPlanDAO $control_work_plan_DAO, LectureStatement $lecture_statement
-, SeminarStatement $seminar_statement, ResultStatement $result_statement)
+        , SeminarPlanDAO $seminar_plan_DAO, ControlWorkPlanDAO $control_work_plan_DAO, LectureStatement $lecture_statement
+        , SeminarStatement $seminar_statement, ResultStatement $result_statement)
     {
         $this->course_plan_DAO = $course_plan_DAO;
         $this->section_plan_DAO = $section_plan_DAO;
@@ -49,7 +50,7 @@ class StatementsController extends Controller{
             ->map( function ($course_plan) {
                 $exist_statements = $this->course_plan_DAO->existStatements($course_plan->id_course_plan);
                 return ['course_plan' => $course_plan,
-                        'exist_statements' => $exist_statements];
+                    'exist_statements' => $exist_statements];
             });
         return view('personal_account.statements.course_plans.course_plans', compact('course_plans', 'read_only'));
     }
@@ -83,8 +84,14 @@ class StatementsController extends Controller{
             ->get();
         $all_groups = Group::where(['archived' => 0, 'id_course_plan' => null, 'academic' => 1])->orWhere('id_course_plan', $id)->get(['group_name', 'group_id']);
         $exist_statements = $this->course_plan_DAO->existStatements($id);
+        $max_results = $course_plan->getMaxes();
+        $max_control = $max_results['max_control'];
+        $max_ball_gen = $max_results['max_ball_gen'];
+        $max_seminar_pass_ball_gen = $max_results['max_seminar_pass_ball_gen'];
+        $max_lecture_ball_gen = $max_results['max_lecture_ball_gen'];
+        $max_exam_gen = $max_results['max_exam_gen'];
         return view('personal_account.statements.course_plans.course_plan', compact('course_plan', 'read_only', 'tests_control_work', 'exist_statements',
-            'all_groups'));
+            'all_groups', 'max_ball_gen', 'max_seminar_pass_ball_gen', 'max_lecture_ball_gen', 'max_control', 'max_exam_gen'));
     }
 
     //Обновление основной информации об учебном плане
@@ -122,7 +129,10 @@ class StatementsController extends Controller{
         $section_num = $request->input('section_num');
         $id_course_plan = $request->input('id_course_plan');
         $id_section_plan_js = $request->input('id_section_plan_js');
-        return view('personal_account.statements.course_plans.sections.add_section', compact('section_num', 'id_course_plan', 'id_section_plan_js'));
+        $section_plan_max_ball = $request->input('section_plan_max_ball');
+        $section_plan_max_lecture_ball = $request->input('section_plan_max_lecture_ball');
+        $section_plan_max_seminar_pass_ball = $request->input('section_plan_max_seminar_pass_ball');
+        return view('personal_account.statements.course_plans.sections.add_section', compact('section_num', 'id_course_plan', 'id_section_plan_js','section_plan_max_ball', 'section_plan_max_lecture_ball','section_plan_max_seminar_pass_ball'));
     }
 
     //Сохранение раздела учебного плана
@@ -130,13 +140,16 @@ class StatementsController extends Controller{
         $validator = $this->section_plan_DAO->getValidateStoreSectionPlan($request);
         //Для вставки html через js, используя число сгенерированное js
         $id_section_plan_js = $request->input('id_section_plan_js');
-
+        $section_plan_max_ball = $request->input('section_plan_max_ball');
+        $section_plan_max_lecture_ball = $request->input('section_plan_max_lecture_ball');
+        $section_plan_max_seminar_pass_ball = $request->input('section_plan_max_seminar_pass_ball');
         if ($validator->passes()) {
-           $id_section_plan = $this->section_plan_DAO->storeSectionPlan($request);
-           $section_plan = $this->section_plan_DAO->getSectionPlan($id_section_plan);
-           $read_only = true;
-           $returnHtmlString = view('personal_account.statements.course_plans.sections.view_or_update_section', compact('section_plan', 'read_only'))
-               ->render();
+            $id_section_plan = $this->section_plan_DAO->storeSectionPlan($request);
+            $section_plan = $this->section_plan_DAO->getSectionPlan($id_section_plan);
+            $read_only = true;
+            $returnHtmlString = view('personal_account.statements.course_plans.sections.view_or_update_section', compact('section_plan',
+                'section_plan_max_ball','section_plan_max_seminar_pass_ball','section_plan_max_lecture_ball','read_only'))
+                ->render();
             return response()->json(['view'=>$returnHtmlString, 'idSectionPlanJs' => $id_section_plan_js]);
         } else {
             return response()->json(['error'=>$validator->errors()->all(), 'idSectionPlanJs' => $id_section_plan_js]);
@@ -224,7 +237,7 @@ class StatementsController extends Controller{
         $validator = $item_section_DAO->getUpdateValidate($request);
 
         if ($validator->passes()) {
-           $item_section_DAO->update($request);
+            $item_section_DAO->update($request);
             return 0;
         } else {
             return response()->json(['error'=>$validator->errors()->all()]);
@@ -350,8 +363,32 @@ class StatementsController extends Controller{
         $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
         return view('personal_account/statements/results',  compact('course_plan','id_group', 'statement_result'));
     }
-
-
+    public function get_resulting_excel(Request $request){
+        $id_group = $request->input('group');
+        $filename= $request->filename;
+        $file = $request->file;
+        $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
+            ->first()->id_course_plan;
+        //echo $file;
+        $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
+        $statement_result = $this->result_statement->getStatementByGroup($id_group);
+        Storage::disk('local')->put('file.xlsx', file_get_contents($file));
+        //
+        return $this->result_statement->getExcelLoadOut($course_plan,$statement_result,'\storage\app\file.xlsx');;
+    }
+    public function get_resulting_excel_ex(Request $request){
+        $id_group = $request->input('group');
+        $filename= $request->filename;
+        $file = $request->file;
+        $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
+            ->first()->id_course_plan;
+        //echo $file;
+        $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
+        $statement_result = $this->result_statement->getStatementByGroup($id_group);
+        Storage::disk('local')->put('file.xlsx', file_get_contents($file));
+        //
+        return $this->result_statement->getExcelLoadOutEx($course_plan,$statement_result,'\storage\app\file.xlsx');;
+    }
     //Отмечает или раз-отмечает студента на лекции
     public function lecture_mark_present(Request $request){
         $this->lecture_statement->markPresent($request);

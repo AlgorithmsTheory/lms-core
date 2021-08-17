@@ -10,6 +10,7 @@ namespace App\Statements\DAO;
 
 
 use App\Statements\Plans\ControlWorkPlan;
+use App\Statements\Plans\CoursePlan;
 use App\Statements\Plans\LecturePlan;
 use App\Statements\Plans\SectionPlan;
 use App\Statements\Plans\SeminarPlan;
@@ -22,7 +23,14 @@ class SectionPlanDAO {
         $sectionPlan = SectionPlan::where('id_section_plan', $id)->first();
         return $sectionPlan;
     }
-
+    public function getSectionPlanByCourse($id){
+        $sectionPlan = SectionPlan::where('id_course_plan', $id)->first();
+        return $sectionPlan;
+    }
+    public function getSectionPlansByCourse($id){
+        $sectionPlans = SectionPlan::where('id_course_plan', $id)->get();
+        return $sectionPlans;
+    }
     public function storeSectionPlan(Request $request){
         $section_plan = new SectionPlan();
         $section_plan->section_plan_name = $request->section_plan_name;
@@ -30,6 +38,9 @@ class SectionPlanDAO {
         $section_plan->id_course_plan = $request->id_course_plan;
         $section_plan->section_num = $request->is_exam == 0 ? $request->section_num : null;
         $section_plan->is_exam = $request->is_exam;
+        $section_plan->max_ball = $request->section_plan_max_ball;
+        $section_plan->max_seminar_pass_ball = $request->section_plan_max_seminar_pass_ball;
+        $section_plan->max_lecture_ball = $request->section_plan_max_lecture_ball;
         $section_plan->save();
         return $section_plan->id_section_plan;
     }

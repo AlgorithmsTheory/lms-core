@@ -13,7 +13,8 @@
 		"kendu/l5-mpdf" : "dev-master",
         "laravel/tinker": "^1.0",
         "phpoffice/phpspreadsheet": "^1.2",
-        "illuminate/html": "^5.0"
+        "illuminate/html": "^5.0",
+        "maatwebsite/excel": "^2.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

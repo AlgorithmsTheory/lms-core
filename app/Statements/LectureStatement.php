@@ -8,11 +8,12 @@
 
 namespace App\Statements;
 use App\Statements\DAO\CoursePlanDAO;
+use App\Statements\Plans\SectionPlan;
 use Illuminate\Http\Request;
 use App\Statements\Passes\LecturePasses;
 use App\User;
 use App\Group;
-
+use App\Statements\DAO\SectionPlanDAO;
 class LectureStatement {
 
     private $course_plan_DAO;
@@ -33,7 +34,6 @@ class LectureStatement {
         }
         return $statement_lecture;
     }
-
     //Вывод ведомости посящения лекций студентом по группе
     public function getStatementByUser($id_course_plan ,$user) {
         $all_id_lectures = $this->course_plan_DAO->getAllLectures($id_course_plan)
@@ -56,6 +56,55 @@ class LectureStatement {
             ->map(function ($item) {
                 return $item->sortBy('lecture_plan_num');
             });
+        $count = 0;
+        $count_passes = collect();
+        foreach($lecture_passes as $lecture){
+            $c = 0;
+            foreach($lecture as $l){
+                $c += 1;
+                $count += 1;
+            }
+            $count_passes->push($c);
+        }
+        $sp = SectionPlan::where('id_course_plan', $id_course_plan)->get();
+        $maxes = collect();
+        $sp->map(function($section) use($maxes){
+            $maxes->push($section['max_lecture_ball']);
+        });
+        $lect_pres = collect([]);
+        $all_id_lectures2 = $this->course_plan_DAO->getAllLecturesBySection($id_course_plan)
+            ->map(function ($section) {
+                return  $section->map(function ($lecture) {
+                    return ($lecture->id_lecture_plan);
+                });
+
+            });
+        $all_id_lectures2->map(function($section) use($user,$lect_pres){
+            $sectionRes = LecturePasses::whereIn('id_lecture_plan', $section)
+                ->where('id_user', $user->id)
+                ->get();
+            $lect_pres->push($sectionRes);
+        });
+        $lect_sum = collect();
+        $i = 0;
+        $ballsBySections = collect();
+        foreach ($lect_pres as $lect){
+
+            $sum = 0;
+            $c = 0;
+            foreach ($lect as $lecture){
+                $sum += $lecture->presence;
+                $c += 1;
+            }
+            $lect_sum->push($sum);
+            $ballsBySections->push($sum/$c*$maxes[$i]);
+            $i += 1;
+        }
+        $user_statement_lecture->put('ballsBySections',$ballsBySections);
+        $user_statement_lecture->put('lect_sum',$lect_sum);
+        $user_statement_lecture->put('section_count',$count_passes);
+        $user_statement_lecture->put('count',$count);
+        #echo $count;
         $user_statement_lecture->put('lecture_passes', $lecture_passes);
         return $user_statement_lecture;
     }

@@ -30,7 +30,10 @@ class CoursePlanDAO
         $course_plan = CoursePlan::where('id_course_plan', $id)->first();
         return $course_plan;
     }
-
+    public function getSectionPlanByCoursePlan($id, $section_num){
+        $course_plan = CoursePlan::where('id_course_plan', $id)->first();
+        return $course_plan;
+    }
     public function getAllLectures($id_course_plan){
         $all_lectures = collect([]);
         $course_plan = CoursePlan::where('id_course_plan', $id_course_plan)->first();
@@ -42,6 +45,18 @@ class CoursePlanDAO
         return $all_lectures;
     }
 
+    public function getAllLecturesBySection($id_course_plan){
+        $all_lectures = collect([]);
+        $course_plan = CoursePlan::where('id_course_plan', $id_course_plan)->first();
+        foreach ($course_plan->section_plans as $section_plan) {
+            $section = collect([]);
+            foreach ($section_plan->lecture_plans as $lecture_plan) {
+                $section->push($lecture_plan);
+            }
+            $all_lectures->push($section);
+        }
+        return $all_lectures;
+    }
     public function getAllSeminars($id_course_plan){
         $all_seminars = collect([]);
         $course_plan = CoursePlan::where('id_course_plan', $id_course_plan)->first();
@@ -49,6 +64,18 @@ class CoursePlanDAO
             foreach ($section_plan->seminar_plans as $seminar_plan) {
                 $all_seminars->push($seminar_plan);
             }
+        }
+        return $all_seminars;
+    }
+    public function getAllSeminarsBySections($id_course_plan){
+        $all_seminars = collect([]);
+        $course_plan = CoursePlan::where('id_course_plan', $id_course_plan)->first();
+        foreach ($course_plan->section_plans as $section_plan) {
+            $section = collect([]);
+            foreach ($section_plan->seminar_plans as $seminar_plan) {
+                $section->push($seminar_plan);
+            }
+            $all_seminars->push($section);
         }
         return $all_seminars;
     }
@@ -79,10 +106,11 @@ class CoursePlanDAO
         $course_plan = new CoursePlan();
         $course_plan->course_plan_name = $request->course_plan_name;
         $course_plan->course_plan_desc = $request->course_plan_desc;
-        $course_plan->max_controls = $request->max_controls;
-        $course_plan->max_seminars = $request->max_seminars;
-        $course_plan->max_seminars_work = $request->max_seminars_work;
-        $course_plan->max_lecrures = $request->max_lecrures;
+        //$course_plan->max_controls = $request->max_controls;
+        //$course_plan->max_seminars = $request->max_seminars;
+        //$course_plan->max_seminars_work = $request->max_seminars_work;
+        //$course_plan->max_lecrures = $request->max_lecrures;
+        $course_plan->max_semester = $request->max_semester;
         $course_plan->max_exam = $request->max_exam;
         $groups = $request->input('groups');
         $course_plan->save();
@@ -119,26 +147,20 @@ class CoursePlanDAO
         $validator = Validator::make($request->all(), [
             'course_plan_name' => "required",
             'course_plan_desc' => 'required',
-            'max_controls' => 'required|numeric|between:0,100',
-            'max_seminars' => 'required|numeric|between:0,100',
-            'max_seminars_work' => 'required|numeric|between:0,100',
-            'max_lecrures' => 'required|numeric|between:0,100',
-            'max_exam' => 'required|numeric|between:0,100',
+            //'max_semester' => 'required|numeric|between:0,100',
+            //'max_exam' => 'required|numeric|between:0,100',
         ]);
 
         $validator->after(function ($validator) {
-            $max_controls = $validator->getData()['max_controls'];
-            $max_seminars = $validator->getData()['max_seminars'];
-            $max_seminars_work = $validator->getData()['max_seminars_work'];
-            $max_lecrures = $validator->getData()['max_lecrures'];
-            $max_exam = $validator->getData()['max_exam'];
-            $groups = $validator->getData()['groups'];
-            $id_course_plan = $validator->getData()['id_course_plan'];
-            $result_sum = $max_seminars + $max_controls + $max_seminars_work + $max_lecrures + $max_exam;
+            //$max_semester = $validator->getData()['max_semester'];
+            //$max_exam = $validator->getData()['max_exam'];
+            //$groups = $validator->getData()['groups'];
+            //$id_course_plan = $validator->getData()['id_course_plan'];
+            //$result_sum = $max_semester + $max_exam;
 
-            if($result_sum != 100) {
-                $validator->errors()->add('incorrect_result_summ_course','Сумма баллов (' . $result_sum . ') за весь учебный план не равна 100');
-            }
+            //if($result_sum != 100) {
+            //    $validator->errors()->add('incorrect_result_summ_course','Сумма баллов (' . $result_sum . ') за весь учебный план не равна 100');
+            //}
         });
         return $validator;
     }
@@ -167,31 +189,46 @@ class CoursePlanDAO
     public static function checkPointsCoursePlan($id_course_plan) {
         $validator = Validator::make(['id_course_plan' => $id_course_plan], []);
         $validator->after(function ($validator) {
-        $course_plan = CoursePlan::where('id_course_plan', $validator->getData()['id_course_plan'])->first();
-        $max_controls = $course_plan->max_controls;
-        $max_exam = $course_plan->max_exam;
-        $current_max_controls = 0;
-        $current_max_exam = 0;
-        $current_max_controls = $course_plan->section_plans
-            ->sum(function ($section) {
-                return $section->control_work_plans
-                    ->sum(function ($control_work) {
-                    return $control_work->max_points;
+            $course_plan = CoursePlan::where('id_course_plan', $validator->getData()['id_course_plan'])->first();
+            $max_results = $course_plan->getMaxes();
+            $max_control = $max_results['max_control'];
+            $max_ball_gen = $max_results['max_ball_gen'];
+            $max_seminar_pass_ball_gen = $max_results['max_seminar_pass_ball_gen'];
+            $max_lecture_ball_gen = $max_results['max_lecture_ball_gen'];
+            $max_exam_gen = $max_results['max_exam_gen'];
+            $cur_max = $max_control + $max_ball_gen + $max_seminar_pass_ball_gen + $max_lecture_ball_gen;
+            if ($cur_max != $course_plan->max_semester) {
+                $validator->errors()->add('<max_controls','Сумма баллов за семестр (' . $cur_max .') не равна ' . $course_plan->max_semester);
+            }
+            if ($max_exam_gen != $course_plan->max_exam) {
+                $validator->errors()->add('<max_controls','Сумма баллов за все экзаменационные мероприятия (' . $max_exam_gen .') не равна ' . $course_plan->max_exam);
+            }
+            /*
+            $max_controls = $course_plan->max_controls;
+            $max_exam = $course_plan->max_exam;
+            $current_max_controls = 0;
+            $current_max_exam = 0;
+            $current_max_controls = $course_plan->section_plans
+                ->sum(function ($section) {
+                    return $section->control_work_plans
+                        ->sum(function ($control_work) {
+                        return $control_work->max_points;
+                    });
                 });
-            });
-        if ($current_max_controls < $max_controls) {
-            $validator->errors()->add('<max_controls','Сумма баллов за все контрольные мероприятия (' . $current_max_controls .') меньше ' . $max_controls);
-        }
-        $current_max_exam = $course_plan->exam_plans
-            ->sum(function ($section) {
-                return $section->control_work_plans
-                    ->sum(function ($control_work) {
-                    return $control_work->max_points;
+            if ($current_max_controls != $max_controls) {
+                $validator->errors()->add('<max_controls','Сумма баллов за все контрольные мероприятия (' . $current_max_controls .') не равна ' . $max_controls);
+            }
+            $current_max_exam = $course_plan->exam_plans
+                ->sum(function ($section) {
+                    return $section->control_work_plans
+                        ->sum(function ($control_work) {
+                        return $control_work->max_points;
+                    });
                 });
-            });
-        if ($current_max_exam < $max_exam) {
+            if ($current_max_exam < $max_exam) {
                 $validator->errors()->add('<max_controls','Сумма баллов за все экзаменационные мероприятия (' . $current_max_exam .') меньше ' . $max_exam);
             }
+            */
         });
         return $validator;
     }

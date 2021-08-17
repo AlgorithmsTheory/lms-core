@@ -10,14 +10,17 @@
         <td rowspan="2" class="warning">Фамилия</td>
         <td rowspan="2" class="warning">Имя</td>
         @foreach($course_plan->section_plans as $section_plan)
-            <td colspan="{{$section_plan->lecture_plans->count()}}" class="info">{{$section_plan->section_num}} Раздел</td>
+            <td colspan="{{$section_plan->seminar_plans->count()+2}}" class="info">{{$section_plan->section_num}} Раздел </td>
         @endforeach
     </tr>
     <tr class="active">
         @foreach($course_plan->section_plans as $section_plan)
+			
             @foreach($section_plan->seminar_plans as $seminar_plan)
                 <td>{{$seminar_plan->seminar_plan_num}}</td>
             @endforeach
+                <td>Балл за посещения</td>
+                <td>Балл за активность</td>
         @endforeach
     </tr>
     <tbody id="target">
@@ -30,7 +33,8 @@
                 @foreach($seminar_passes_section as $seminar_passes)
 
                 <td id="{{$seminar_passes->id_seminar_pass}}"
-                    data-id-seminar="{{$seminar_passes->id_seminar_plan}}">
+                    data-id-seminar="{{$seminar_passes->id_seminar_plan}}"
+                    section_num = "{{$seminar_passes->section_num}}">
                     <div class='checkbox checkbox-inline checkbox-styled'>
                         <label>
                             <input type='checkbox'
@@ -48,10 +52,12 @@
                 </td>
 
                 @endforeach
+                    <td>{{$statement['ballsBySectionsPass'][$loop->index]}}</td>
+                    <td>{{$statement['ballsBySectionsWorks'][$loop->index]}}</td>
             @endforeach
         </tr>
     @endforeach
-    <tr>
+    <tr class="functionalty_tr">
         <td></td>
         <td></td>
         <td></td>
@@ -69,7 +75,7 @@
     </tr>
     </tbody>
 </table>
-
+<button class="print_to_pdf"> Вывести на печать </button>
 
 
 {!! HTML::script('js/statements/seminars.js') !!}

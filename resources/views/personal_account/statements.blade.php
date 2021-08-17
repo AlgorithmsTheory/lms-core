@@ -3,6 +3,7 @@
     <title>Ведомости</title>
     {!! HTML::style('css/loading_blur.css') !!}
     <meta name="csrf_token" content="{{ csrf_token() }}" />
+    <meta charset="utf-8">
 @stop
 
 @section('content')
@@ -50,6 +51,7 @@
                     </div>
                     <button class="btn btn-primary btn-raised submit-question" id="show">Показать</button>
                 </form>
+
                 <br>
                 <br>
                 <div id="statement" class="table-responsive">

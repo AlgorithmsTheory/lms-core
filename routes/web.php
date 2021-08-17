@@ -35,6 +35,7 @@ Route::get('no-access', ['as' => 'no_access', function(Request $request) {
     return view('no_access', compact('message'));
 }]);
 
+
 Route::get('tests/single-test/{id_test}/{id_test_new}', ['as' => 'single_test', function($id_test, $id_test_new) {
     $test_name = App\Testing\Test::whereId_test($id_test)->select('test_name')->first()->test_name;
     return view('tests.single_test', compact('test_name', 'id_test', 'id_test_new'));
@@ -310,7 +311,7 @@ Route::get('course_plans/create', ['as' => 'course_plans_create', 'uses' => 'Sta
 //сохранение учебного плана
 Route::post('course_plans', ['as' => 'course_plan_store', 'uses' => 'StatementsController@storeCoursePlan']);
 //Редактирование основ информации учебного плана
-Route::patch('course_plan/update', ['as' => 'course_plan_update', 'uses' => 'StatementsController@updateCoursePlan', 'middleware' => ['general_auth', 'admin']]);
+Route::patch('course_plan/update', ['as' =>'ourse_plan_update', 'uses' => 'StatementsController@updateCoursePlan', 'middleware' => ['general_auth', 'admin']]);
 //Удаление учебного плана
 Route::delete('course_plan/delete', ['as' => 'course_plan_delete', 'uses' => 'StatementsController@deleteCoursePlan', 'middleware' => ['general_auth', 'admin']]);
 //Утверждение учебного плана для групп
@@ -345,6 +346,10 @@ Route::get('statements', ['as' => 'statements', 'uses' => 'StatementsController@
 Route::post('statements/get-lectures', ['as' => 'get_lectures', 'uses' => 'StatementsController@get_lectures', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/get-seminars', ['as' => 'get_seminars', 'uses' => 'StatementsController@get_seminars', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/get-resulting', ['as' => 'get_resulting', 'uses' => 'StatementsController@get_resulting', 'middleware' => ['general_auth', 'admin']]);
+
+Route::post('statements/get-resulting-excel', ['as' => 'get_resulting_excel', 'uses' => 'StatementsController@get_resulting_excel', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/get-resulting-excel-ex', ['as' => 'get_resulting_excel-ex', 'uses' => 'StatementsController@get_resulting_excel_ex', 'middleware' => ['general_auth', 'admin']]);
+
 
 Route::post('statements/lecture/mark_present', ['as' => 'lecture_mark_present', 'uses' => 'StatementsController@lecture_mark_present', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/seminar/mark_present', ['as' => 'seminar_mark_present', 'uses' => 'StatementsController@seminar_mark_present', 'middleware' => ['general_auth', 'admin']]);

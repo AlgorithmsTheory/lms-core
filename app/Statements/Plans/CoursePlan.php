@@ -30,4 +30,34 @@ class CoursePlan extends Eloquent {
     public function getGroupsAttribute(){
         return Group::select(['group_name', 'group_id'])->where('id_course_plan', $this->attributes['id_course_plan'])->get();
     }
+
+    public function getMaxes() {
+        $max_control = 0;
+        $max_ball_gen = 0;
+        $max_seminar_pass_ball_gen = 0;
+        $max_lecture_ball_gen = 0;
+        $max_exam_gen = 0;
+        $sections = $this->getSectionPlansAttribute();
+        foreach ($sections as $section) {
+            $max_ball_gen += $section->max_ball;
+            $max_seminar_pass_ball_gen += $section->max_seminar_pass_ball;
+            $max_lecture_ball_gen += $section->max_lecture_ball;
+            $cw_ar = $section->getControlWorkPlansAttribute();
+            foreach ($cw_ar as $cw) {
+                $max_control += $cw->max_points;
+            }
+        }
+        $exam_sections = $this->getExamPlansAttribute();
+        foreach ($exam_sections as $exam_section) {
+            $cw_ar = $exam_section->getControlWorkPlansAttribute();
+            foreach ($cw_ar as $cw) {
+                $max_exam_gen += $cw->max_points;
+            }
+        }
+        return ['max_control' => $max_control,
+            'max_ball_gen' => $max_ball_gen,
+            'max_seminar_pass_ball_gen' => $max_seminar_pass_ball_gen,
+            'max_lecture_ball_gen' => $max_lecture_ball_gen,
+            'max_exam_gen' => $max_exam_gen];
+    }
 }
