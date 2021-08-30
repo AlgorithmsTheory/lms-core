@@ -57,35 +57,18 @@
                 </select>
 
                 <div class="form-group row">
-                    <h4> {!! Form::label('max_controls', 'Макс балл за раздел "Контрольные мероприятия в семестре":', ['class'=>'col-sm-6']) !!}</h4>
+                    <h4> {!! Form::label('max_semester', 'Макс балл за семестр:', ['class'=>'col-sm-6']) !!}</h4>
                     <div class="col-sm-2">
-                        {!! Form::text('max_controls',null,['class' => 'form-control','placeholder' => 'Макс. балл', 'type'=>'number']) !!}
+                        {!! Form::text('max_semester',null,['class' => 'form-control','placeholder' => 'Макс. балл', 'type'=>'number']) !!}
                     </div>
                 </div>
                 <div class="form-group row">
-                    <h4> {!! Form::label('max_seminars', 'Макс балл за раздел "Посещение семинаров":', ['class'=>'col-sm-6']) !!}</h4>
-                    <div class="col-sm-2">
-                        {!! Form::text('max_seminars',null,['class' => 'form-control','placeholder' => 'Макс. балл', 'type'=>'number']) !!}
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <h4> {!! Form::label('max_seminars_work', 'Макс балл за раздел "Работа на семинарах":', ['class'=>'col-sm-6']) !!}</h4>
-                    <div class="col-sm-2">
-                        {!! Form::text('max_seminars_work',null,['class' => 'form-control','placeholder' => 'Макс. балл', 'type'=>'number']) !!}
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <h4> {!! Form::label('max_lecrures', 'Макс балл за раздел "Посещение лекций":', ['class'=>'col-sm-6']) !!}</h4>
-                    <div class="col-sm-2">
-                        {!! Form::text('max_lecrures',null,['class' => 'form-control','placeholder' => 'Макс. балл', 'type'=>'number']) !!}
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <h4> {!! Form::label('max_exam', 'Макс балл за раздел "Зачет (экзамен)":', ['class'=>'col-sm-6']) !!}</h4>
+                    <h4> {!! Form::label('max_exam', 'Макс балл за экзамен (зачёт):', ['class'=>'col-sm-6']) !!}</h4>
                     <div class="col-sm-2">
                         {!! Form::text('max_exam',null,['class' => 'form-control','placeholder' => 'Макс. балл', 'type'=>'number']) !!}
                     </div>
                 </div>
+
 
                 <div class="form-group">
                     <button type="submit" class=" btn ink-reaction btn-primary">Сохранить учебный план</button>

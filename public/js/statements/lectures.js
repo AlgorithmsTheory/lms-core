@@ -1,7 +1,26 @@
 /**
  * Created by Misha on 31/03/16.
  */
+$('.print_to_pdf').on('click', ()=>{
+    let mywindow = window.open('', 'PRINT', 'height=650,width=900,top=100,left=150');
 
+    mywindow.document.write(`<html><head><title></title>`);
+    mywindow.document.write(`</head><body style="border: 2px solid black;">`);
+    var printNode = document.getElementById('statement').cloneNode(true);
+    printNode.getElementsByClassName('table')[0].setAttribute('border', '1')
+    printNode.removeChild(printNode.getElementsByClassName('print_to_pdf')[0])
+    //var tra = printNode.getElementsByClassName('functionalty_tr')[0]
+    //var pTra = tra.parentNode;
+    //pTra.remove(tra);
+    mywindow.document.write(printNode.innerHTML);
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+    mywindow.print();
+    mywindow.close();
+})
 $('.was').on('change', function() {
     var idLecturePlan = $(this).attr('data-id-lecture');
     var idUser = $(this).closest('tr').attr('id');

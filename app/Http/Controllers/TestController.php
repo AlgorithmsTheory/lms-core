@@ -8,6 +8,9 @@
 namespace App\Http\Controllers;
 use App\Group;
 use App\Protocols\TestProtocol;
+use App\Statements\Passes\ControlWorkPasses;
+use App\Statements\Passes\LecturePasses;
+use App\Statements\Plans\CoursePlan;
 use App\Testing\Fine;
 use App\Testing\Result;
 use App\Testing\Section;
@@ -26,11 +29,17 @@ use Illuminate\Http\Request;
 use App\Testing\Question;
 use Illuminate\Http\Response;
 use View;
-
+use App\Statements\DAO\CoursePlanDAO;
+use App\Statements\ResultStatement;
+use App\Statements\DAO\SectionPlanDAO;
 class TestController extends Controller{
     private $test;
-    function __construct(Test $test){
+    private $course_plan_DAO;
+
+    function __construct(Test $test ,CoursePlanDAO $course_plan_DAO,SectionPlanDAO $section_plan_DAO){
         $this->test=$test;
+        $this->course_plan_DAO = $course_plan_DAO;
+        $this->section_plan_DAO = $section_plan_DAO;
     }
 
     public function trainTests() {
@@ -49,22 +58,92 @@ class TestController extends Controller{
         }
         return view('tests.list.train_tests', compact('tr_tests'));
     }
-
+    private $section_plan_DAO;
     public function controlTests() {
         $ctr_tests = [];
+        $user = Auth::user();
+        $user_data = User::where('id','=',$user['id'])->first();
+        $groupInfo = Group::where('group_id','=',$user_data['group'])->first();
+        $id_course_plan = $groupInfo['id_course_plan'];
+        $id_user = $user['id'];
+        $resStat = new ResultStatement($this->course_plan_DAO,$this->section_plan_DAO);
+        $all_works = $resStat->getAllWorksUser($id_course_plan, $user->id);
+        $control_works =$all_works->filter(function ($value, $key)  {
+            return $value->is_exam == 0;
+        });
+        $exam_works = $all_works->filter(function ($value, $key) {
+            return $value->is_exam == 1;
+        });
+        $control_work_groupBy_sections = $resStat->getControlWorksGroupBySec($control_works);
+        $exam_work_groupBy_sections = $resStat->getExamWorksGroupBySection($exam_works);
+        $result_control_work_sections = $resStat->getResultControlWorkSections($control_work_groupBy_sections, $user->id);
+        $result_exam_work_sections = $resStat->getResultExamWorkSections($exam_work_groupBy_sections, $user->id);
+        $sum_result_section_control_work = $result_control_work_sections->sum();
+        $sum_result_section_exam_work = $result_exam_work_sections->sum();
+        $result_lecture = $resStat->getResultLecture($id_course_plan, $user->id);
+        $result_seminar = $resStat->getResultSeminar($id_course_plan, $user->id);
+        $result_work_seminar = $resStat->getResultWorkSeminar($id_course_plan, $user->id);
+        $sum_result = $sum_result_section_exam_work + $sum_result_section_control_work + $result_lecture
+            + $result_seminar + $result_work_seminar;
+        $us_state = $resStat ->getStatementByUser($id_course_plan, $user);
+        $markRus = Test::calcMarkRus(100, $sum_result);
+        $markBologna = Test::calcMarkBologna(100, $sum_result);
+        $all_id_lectures = $this->course_plan_DAO->getAllLectures($id_course_plan)
+            ->map(function ($item) {
+                return $item->id_lecture_plan;
+            });
+        $lecture_passes = LecturePasses::whereIn('lecture_passes.id_lecture_plan',$all_id_lectures)
+            ->where('id_user', '=', $user->id)
+            ->leftJoin('lecture_plans', 'lecture_plans.id_lecture_plan', 'lecture_passes.id_lecture_plan')
+            ->leftJoin('section_plans', 'section_plans.id_section_plan', 'lecture_plans.id_section_plan')
+            ->where('is_exam', '=', 0)
+            ->get(['lecture_plans.id_lecture_plan', 'lecture_passes.presence', 'lecture_plans.lecture_plan_num'
+                , 'section_plans.section_num'])
+            ->groupBy('section_num')
+            ->sortBy(function ($value, $key) {
+                return $key; //ключ = номер раздела
+            })
+            ->map(function ($item) {
+                return $item->sortBy('lecture_plan_num');
+            });
+        $count = 0;
+        $allcount = 0;
+        foreach($lecture_passes as $lecture){
+            foreach($lecture as $l){
+                $allcount += 1;
+                if ($l->presence == 1)
+                {
+                    $count += 1;
+                }
+            }
+        }
+        $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
+        $ball = $course_plan['max_exam'];
+        $lect_ball = 0;
+        if ($allcount != 0){
+            $lect_ball = $count/$allcount * $ball;
+        }
+        $minball = 0.6 * (100 - $ball);
+        $sum_result += $lect_ball;
+        $res = $sum_result > $minball;
+        $converted_res = $res ? 'true' : 'false';
+        #return  "". $converted_res;
+        //$res_Stat = ResultStatement::getStatementByUser($
         $query = $this->test->whereTest_type('Контрольный')
             ->whereVisibility(1)->whereArchived(0)->whereOnly_for_print(0)->get();
         foreach ($query as $test){
+
+
             $availability_for_group = TestForGroup::whereId_group(Auth::user()['group'])
                 ->whereId_test($test['id_test'])
                 ->select('availability')->first()->availability;
-            if ($availability_for_group) {
+            if ($availability_for_group && $us_state['all_ok'] == 1) {
                 $fine = Fine::whereId_test($test['id_test'])->whereId(Auth::user()['id'])->select('access')->get();
                 $test['access_for_student'] = count($fine) == 0 ? 1 : $fine[0]->access;
                 $test['max_points'] = Fine::levelToPercent(Fine::whereId(Auth::user()['id'])->whereId_test($test['id_test'])->select('fine')->first()->fine) / 100 * $test['total'];
                 $test['amount'] = Test::getAmount($test['id_test']);
                 $test['attempts'] = Result::whereId_test($test['id_test'])->whereId(Auth::user()['id'])->where('mark_ru', '>=', 0)->count();
-                array_push($ctr_tests, $test);
+                if ($res) array_push($ctr_tests, $test);
             }
         }
         return view('tests.list.control_tests', compact('ctr_tests'));

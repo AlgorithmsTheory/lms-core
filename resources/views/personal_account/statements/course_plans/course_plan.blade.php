@@ -112,25 +112,27 @@
                     <div class="row">
                         <div class="col-lg-6">
                         {!! Form::label('max_controls' , 'Макс балл за контрольные мероприятия :') !!}
-                            {!! Form::text('max_controls',$course_plan->max_controls,['class' => 'form-control',
-                             $read_only ? 'readonly' : '' ]) !!}
+                            {!! Form::text('max_controls',$max_control,['class' => 'form-control',
+                             'readonly' ]) !!}
 
                     {!! Form::label('max_seminars' , 'Макс балл за посещение семинаров:') !!}
-                    {!! Form::text('max_seminars',$course_plan->max_seminars,['class' => 'form-control',
-                     $read_only ? 'readonly' : '' ]) !!}
+                    {!! Form::text('max_seminars',$max_seminar_pass_ball_gen,['class' => 'form-control',
+                     'readonly' ]) !!}
 
-                    {!! Form::label('max_seminars_work' , 'Макс балл за работу на семинарах":') !!}
-                    {!! Form::text('max_seminars_work',$course_plan->max_seminars_work,['class' => 'form-control',
-                    $read_only ? 'readonly' : '' ]) !!}
+                    {!! Form::label('max_seminars_work' , 'Макс балл за работу на семинарах:') !!}
+                    {!! Form::text('max_seminars_work',$max_ball_gen,['class' => 'form-control',
+                    'readonly' ]) !!}
                         </div>
                         <div class="col-lg-6">
                     {!! Form::label('max_lecrures' , 'Макс балл за посещение лекций:') !!}
-                    {!! Form::text('max_lecrures',$course_plan->max_lecrures,['class' => 'form-control',
-                     $read_only ? 'readonly' : '' ]) !!}
+                    {!! Form::text('max_lecrures',$max_lecture_ball_gen,['class' => 'form-control',
+                     'readonly' ]) !!}
 
                     {!! Form::label('max_exam' , 'Макс балл за зачет (экзамен):') !!}
-                    {!! Form::text('max_exam',$course_plan->max_exam,['class' => 'form-control',
-                     $read_only ? 'readonly' : '' ]) !!}
+                    {!! Form::text('max_exam',$max_exam_gen,['class' => 'form-control',
+                     'readonly' ]) !!}
+
+
                     <input type="hidden"  name="id_course_plan" value="{{$course_plan->id_course_plan}}" />
                         </div>
                     </div>

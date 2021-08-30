@@ -67,6 +67,9 @@ $('#show').click(function(){
     return false;
 });
 
+
+
+
 var myBlurFunction = function(state) {
     /* state can be 1 or 0 */
     var containerElement = document.getElementById('main_container');

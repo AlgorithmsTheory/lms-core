@@ -31,6 +31,19 @@
             '0' => 'Раздел курса',
             '1' => 'Экзамен(Зачёт)'), null, ['id' => 'is_exam','class' => 'form-control', 'required' => 'required']) !!}
         </p>
+        <p class="card-text">{!! Form::label('section_plan_max_ball' , 'Максимальные баллы за работу на семинарах:') !!}
+            {!! Form::text('section_plan_max_ball',null,['class' => 'form-control','placeholder' => 'Введите максимальные баллы за работу на семинарах']) !!}
+        </p>
+
+        <p class="card-text">{!! Form::label('section_plan_max_seminar_pass_ball' , 'Максимальные баллы за посещение семинаров:') !!}
+            {!! Form::text('section_plan_max_seminar_pass_ball',null,['class' => 'form-control','placeholder' => 'Введите максимальные баллы за посещение семинаров']) !!}
+        </p>
+
+        <p class="card-text">{!! Form::label('section_plan_max_lecture_ball' , 'Максимальные баллы за посещение лекций:') !!}
+            {!! Form::text('section_plan_max_lecture_ball',null,['class' => 'form-control','placeholder' => 'Введите максимальные баллы за посещение лекций']) !!}
+        </p>
+
+
             <input type="hidden"  name="id_course_plan" value="{{$id_course_plan}}" />
             <input type="hidden"  name="id_section_plan_js" value="{{$id_section_plan_js}}" />
 

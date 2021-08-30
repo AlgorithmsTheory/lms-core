@@ -103,6 +103,8 @@
                                     {!! Form::label('max_exam' , 'Макс балл за раздел "Зачет (экзамен)":') !!}
                                     {!! Form::text('max_exam',$course_plan['course_plan']->max_exam,['class' => 'form-control',
                                      $read_only ? 'readonly' : '' ]) !!}
+
+
                                     <input type="hidden"  name="id_course_plan" value="{{$course_plan['course_plan']->id_course_plan}}" />
                                 </div>
                             </div>

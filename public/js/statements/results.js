@@ -35,6 +35,31 @@ $('.was').on('change', function() {
     });
     return false;
 });
+$('.print_to_pdf').on('click', ()=>{
+    let mywindow = window.open('', 'PRINT', 'height=650,width=900,top=100,left=150');
+
+    mywindow.document.write(`<html><head><title></title>`);
+    mywindow.document.write(`</head><body style="border: 2px solid black;">`);
+    var printNode = document.getElementById('statement').cloneNode(true);
+    printNode.getElementsByClassName('table')[0].setAttribute('border', '1')
+    printNode.removeChild(printNode.getElementsByClassName('print_to_pdf')[0])
+    //printNode.width = 800;
+    //printNode.height = 650;
+    //printNode.getElementsByClassName('table').width = 800;
+    // tra = printNode.getElementsByClassName('functionalty_tr')[0]
+    //var pTra = tra.parentNode;
+    //pTra.remove(tra);
+    mywindow.document.write(printNode.innerHTML);
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+    mywindow.print();
+    mywindow.close();
+})
+
+
 
 $('.result_control_work').on('change', function() {
     var thisCell = $(this).closest('td');
@@ -73,18 +98,20 @@ $('.result_control_work').on('change', function() {
             if($.isEmptyObject(data.error)) {
                 if (workStatus == 'section') {
                     var sectionResult = thisRow.find('td[data-result-section_num='+ sectionNum + ']');
-                    sectionResult.text(data.sectionResult);
+                    sectionResult.text(Math.round(data.sectionResult));
                     changeColorTd(sectionResult, data.sectionResult, sectionResult.attr('data-section-max_points'));
                     var sumResultSection = thisRow.find('.sum_result_section');
-                    sumResultSection.text(data.sumResultSection);
+                    sumResultSection.text(Math.round(data.sumResultSection));
                     changeColorTd(sumResultSection, data.sumResultSection, sumResultSection.attr('data-max_controls'));
                 } else {
                     var sumResultExam = thisRow.find('.sum_result_exam');
-                    sumResultExam.text(data.sumResultSection);
+                    sumResultExam.text(Math.round(data.sumResultSection));
                     changeColorTd(sumResultExam, data.sumResultSection, sumResultExam.attr('data-max_exam'));
                 }
+                //var res = Math.round(data.sectionResult) + Math.round(data.sumResultSection)
                 var resultAllCourse = thisRow.find('.result_all_course');
-                resultAllCourse.text(data.resultAllCourse);
+                resultAllCourse.text(data.res);
+                console.log(data)
                 changeColorTd(resultAllCourse,data.resultAllCourse, 100);
                 var markBologna = thisRow.find('.mark_bologna');
                 markBologna.text(data.markBologna);
@@ -109,7 +136,89 @@ $('.result_control_work').on('change', function() {
     });
     return false;
 });
+$('#getexcel').click(function(){
+    var group = $("#group_num").val();
+    myBlurFunction(1);
+    var formData = new FormData();
+    formData.set('file', document.getElementById("image-file").files[0] ,'v.xlsx');
+    formData.set('filename',"v.xlsx" );
+    formData.set('group',group);
+    $.ajax({
+        type: 'POST',
+        url:   '/statements/get-resulting-excel',
+        processData: false,  // tell jQuery not to process the data
+        contentType: false,  // tell jQuery not to set contentType
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+            formData.append('token',token);
+        },
+        data: formData,
+        dataType: 'binary',
+        xhrFields: {
+            'responseType': 'blob'
+        },
+        success: function(data){
+            myBlurFunction(0);
+            // Создаём ссылку на него
+            var link = document.createElement('a')
+            filename = 'file.xlsx';
+            // if(xhr.getResponseHeader('Content-Disposition')){//имя файла
+            //     filename = xhr.getResponseHeader('Content-Disposition');
+            //     filename=filename.match(/filename="(.*?)"/)[1];
+            //     filename=decodeURIComponent(escape(filename));
+            // }
+            link.href = URL.createObjectURL(data);
+            link.download = filename;
+            link.click();
+        }
+    });
+    return false;
+});
 
+$('#getexcelex').click(function(){
+    var group = $("#group_num").val();
+    myBlurFunction(1);
+    var formData = new FormData();
+    formData.set('file', document.getElementById("image-file").files[0] ,'v.xlsx');
+    formData.set('filename',"v.xlsx" );
+    formData.set('group',group);
+    $.ajax({
+        type: 'POST',
+        url:   '/statements/get-resulting-excel-ex',
+        processData: false,  // tell jQuery not to process the data
+        contentType: false,  // tell jQuery not to set contentType
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+            formData.append('token',token);
+        },
+        data: formData,
+        dataType: 'binary',
+        xhrFields: {
+            'responseType': 'blob'
+        },
+        success: function(data){
+            myBlurFunction(0);
+            // Создаём ссылку на него
+            var link = document.createElement('a')
+            filename = 'file.xlsx';
+            // if(xhr.getResponseHeader('Content-Disposition')){//имя файла
+            //     filename = xhr.getResponseHeader('Content-Disposition');
+            //     filename=filename.match(/filename="(.*?)"/)[1];
+            //     filename=decodeURIComponent(escape(filename));
+            // }
+            link.href = URL.createObjectURL(data);
+            link.download = filename;
+            link.click();
+        }
+    });
+    return false;
+});
 function changeColorTd(td, currentPoints, maxPoints) {
     if (currentPoints < maxPoints * 0.6 &&
         td.hasClass('success')) {

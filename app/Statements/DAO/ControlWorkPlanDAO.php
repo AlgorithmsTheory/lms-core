@@ -89,10 +89,12 @@ class ControlWorkPlanDAO implements ItemSectionDAO {
                     ->where('id_course_plan', $validator->getData()['id_course_plan'])
                     ->first()->max_controls;
                 $different = $max_points + $current_max_points - $max_controls;
+                /*
                 if ($max_points + $current_max_points > $max_controls) {
                     $validator->errors()->add('exceeded_max_points', 'Сумма баллов за все К.М превышает Макс балл за раздел "Контрольные мероприятия в семестре"' . '(' . $max_controls . ')
                      на '. $different);
                 }
+                */
             } else {
                 //Кол баллов за все к.м. в курсе (Экзамены(Зачёты))
                 $max_points = DB::table('section_plans')

@@ -6,8 +6,8 @@ $(document).on('click', '.activate_edit_course_plan', function () {
     var thisForm = thisCoursePlan.find('.course_plan_form');
     $(this).hide();
     //выключение readonly для полей
-    thisForm.find('input').removeAttr("readonly");
-    thisForm.find('textarea').removeAttr("readonly");
+    thisForm.find('input#course_plan_name').removeAttr("readonly");
+    thisForm.find('textarea#course_plan_desc').removeAttr("readonly");
     thisForm.find('select').prop('disabled', false);
     //вставка кнопки "Обновить информ. о разделе"
     var htmlUpdateBatton = '<button type="button" class="ink-reaction btn btn-gray update_course_plan">Обновить</button>';

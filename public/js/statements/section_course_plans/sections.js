@@ -6,11 +6,14 @@ $(document).on('click', '#addSection', function () {
     sectionNum++;
     var idCoursePlan = parseInt($(".course_plan").attr('id').match(/\d+/));
     var idSectionPlanJs = Math.floor(Math.random() * 1000) + Date.now();
+    var maxCourseBalls = parseInt($(".course_plan").attr('max_balls'));
+    var section_plan_max_lecture_ball = parseInt($(".course_plan").attr('max_lecture_ball'));
+    var section_plan_max_seminar_pass_ball = parseInt($(".course_plan").attr('max_seminar_pass_ball'));
     $.ajax({
         cache: false,
         type: 'GET',
         url:   '/course_plan/get_add_section',
-        data: { section_num: sectionNum, id_course_plan: idCoursePlan, id_section_plan_js: idSectionPlanJs },
+        data: { section_num: sectionNum, id_course_plan: idCoursePlan, id_section_plan_js: idSectionPlanJs, max_balls: maxCourseBalls, max_lecture_ball: section_plan_max_lecture_ball, max_seminar_pass_ball:section_plan_max_seminar_pass_ball},
         success: function(data){
             $('#sections').append(data);
         }
@@ -26,6 +29,7 @@ $(document).on('submit', '#form_add_section', function (event) {
         url:   '/course_plan/'+idCoursePlan+'/section',
         data:  $(this).serialize(),
         success: function(data){
+            console.log(data)
             var currentSection = $('#section'+data.idSectionPlanJs);
             if($.isEmptyObject(data.error)){
                 currentSection.replaceWith(data.view);
@@ -80,6 +84,7 @@ $(document).on('submit', '#form_update_section', function (event) {
         url:   '/course_plan/section/update',
         data:  $(this).serialize(),
         success: function(data){
+            console.log(data)
             var currentSection = $('#section'+data.idSectionPlan);
             if($.isEmptyObject(data.error)){
                 var isExam = currentSection.find('#is_exam').filter( ':first' ).val();
