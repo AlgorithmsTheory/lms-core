@@ -50,6 +50,9 @@ class SectionPlanDAO {
         $section_plan->section_plan_name = $request->section_plan_name;
         $section_plan->section_plan_desc = $request->section_plan_desc;
         $section_plan->section_num = $request->is_exam == 0 ? $request->section_num : null;
+        $section_plan->max_ball = $request->max_ball;
+        $section_plan->max_seminar_pass_ball = $request->max_seminar_pass_ball;
+        $section_plan->max_lecture_ball = $request->max_lecture_ball;
         $section_plan->update();
     }
 
