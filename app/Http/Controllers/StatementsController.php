@@ -374,7 +374,7 @@ class StatementsController extends Controller{
         $statement_result = $this->result_statement->getStatementByGroup($id_group);
         Storage::disk('local')->put('file.xlsx', file_get_contents($file));
         //
-        return $this->result_statement->getExcelLoadOut($course_plan,$statement_result,'\storage\app\file.xlsx');;
+        return $this->result_statement->getExcelLoadOut($course_plan,$statement_result,'/storage/app/file.xlsx');;
     }
     public function get_resulting_excel_ex(Request $request){
         $id_group = $request->input('group');
@@ -387,7 +387,7 @@ class StatementsController extends Controller{
         $statement_result = $this->result_statement->getStatementByGroup($id_group);
         Storage::disk('local')->put('file.xlsx', file_get_contents($file));
         //
-        return $this->result_statement->getExcelLoadOutEx($course_plan,$statement_result,'\storage\app\file.xlsx');;
+        return $this->result_statement->getExcelLoadOutEx($course_plan,$statement_result,'/storage/app/file.xlsx');;
     }
     //Отмечает или раз-отмечает студента на лекции
     public function lecture_mark_present(Request $request){
