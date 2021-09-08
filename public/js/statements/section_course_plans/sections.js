@@ -71,6 +71,9 @@ $(document).on('click', '.activate_edit_section', function () {
     //выключение readonly для полей
     currentSection.find('input[name="section_plan_name"]').filter( ':first' ).removeAttr("readonly");
     currentSection.find('input[name="section_plan_desc"]').filter( ':first' ).removeAttr("readonly");
+    currentSection.find('input[name="max_ball"]').filter(':first').removeAttr("readonly");
+    currentSection.find('input[name="max_seminar_pass_ball"]').filter(':first').removeAttr("readonly");
+    currentSection.find('input[name="max_lecture_ball"]').filter(':first').removeAttr("readonly");
     //вставка кнопки "Обновить информ. о разделе"
     var htmlUpdateBatton = '<button type="submit" class="ink-reaction btn btn-success" id="updateSection">Обновить информ. о разделе</button>';
     currentSection.find('.update_button_section').filter( ':first' ).html(htmlUpdateBatton);
