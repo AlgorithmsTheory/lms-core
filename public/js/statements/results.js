@@ -97,12 +97,16 @@ $('.result_control_work').on('change', function() {
             var divError = $('.print-error-msg');
             if($.isEmptyObject(data.error)) {
                 if (workStatus == 'section') {
-                    var sectionResult = thisRow.find('td[data-result-section_num='+ sectionNum + ']');
-                    sectionResult.text(Math.round(data.sectionResult));
-                    changeColorTd(sectionResult, data.sectionResult, sectionResult.attr('data-section-max_points'));
-                    var sumResultSection = thisRow.find('.sum_result_section');
-                    sumResultSection.text(Math.round(data.sumResultSection));
-                    changeColorTd(sumResultSection, data.sumResultSection, sumResultSection.attr('data-max_controls'));
+                    var sectionsTotalsEls = thisRow.find('td[data-result-section_num]');
+                    for (var i = 0; i < Math.min(sectionsTotalsEls.length, data.secSum.length); i++) {
+                        var sectionTotalEl = sectionsTotalsEls.eq(i);
+                        var res = data.secSum[i];
+                        sectionTotalEl.text(res);
+                        setColorTd(sectionTotalEl, data.secOk[i]);
+                    }
+                    var allSectionsTotalEl = thisRow.find('.sum_result_section');
+                    allSectionsTotalEl.text(Math.round(data.fullSum));
+                    setColorTd(allSectionsTotalEl, data.allOk);
                 } else {
                     var sumResultExam = thisRow.find('.sum_result_exam');
                     sumResultExam.text(Math.round(data.sumResultSection));
@@ -111,7 +115,6 @@ $('.result_control_work').on('change', function() {
                 //var res = Math.round(data.sectionResult) + Math.round(data.sumResultSection)
                 var resultAllCourse = thisRow.find('.result_all_course');
                 resultAllCourse.text(data.res);
-                console.log(data)
                 changeColorTd(resultAllCourse,data.resultAllCourse, 100);
                 var markBologna = thisRow.find('.mark_bologna');
                 markBologna.text(data.markBologna);
@@ -220,13 +223,22 @@ $('#getexcelex').click(function(){
     return false;
 });
 function changeColorTd(td, currentPoints, maxPoints) {
-    if (currentPoints < maxPoints * 0.6 &&
-        td.hasClass('success')) {
-        td.toggleClass('danger success');
+    if (currentPoints >= maxPoints * 0.6) {
+        td.addClass('success');
+        td.removeClass('danger');
+    } else {
+        td.removeClass('success');
+        td.addClass('danger');
     }
-    if (currentPoints > maxPoints * 0.6 &&
-        td.hasClass('danger')) {
-        td.toggleClass('success danger');
+}
+
+function setColorTd(td, isGood) {
+    if (isGood) {
+        td.addClass('success');
+        td.removeClass('danger');
+    } else {
+        td.removeClass('success');
+        td.addClass('danger');
     }
 }
 

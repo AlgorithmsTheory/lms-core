@@ -104,7 +104,10 @@ class SeminarStatement {
                 ->get();
             $sem_pres->push($sectionRes);
         });
-        $sp = SectionPlan::where('id_course_plan', $id_course_plan)->get();
+        $sp = SectionPlan::where('id_course_plan', $id_course_plan)
+            ->where('is_exam', '=', 0)
+            ->get()
+            ->sortBy('section_num');
         $maxes = collect();
         $sp->map(function($section) use($maxes){
             $maxes->push($section['max_seminar_pass_ball']);

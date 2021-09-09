@@ -66,7 +66,10 @@ class LectureStatement {
             }
             $count_passes->push($c);
         }
-        $sp = SectionPlan::where('id_course_plan', $id_course_plan)->get();
+        $sp = SectionPlan::where('id_course_plan', $id_course_plan)
+            ->where('is_exam', '=', 0)
+            ->get()
+            ->sortBy('section_num');
         $maxes = collect();
         $sp->map(function($section) use($maxes){
             $maxes->push($section['max_lecture_ball']);
@@ -97,7 +100,7 @@ class LectureStatement {
                 $c += 1;
             }
             $lect_sum->push($sum);
-            $ballsBySections->push($sum/$c*$maxes[$i]);
+            $ballsBySections->push($sum / $c * $maxes[$i]);
             $i += 1;
         }
         $user_statement_lecture->put('ballsBySections',$ballsBySections);

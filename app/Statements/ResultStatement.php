@@ -679,76 +679,92 @@ class ResultStatement {
         return $statement_result;
     }
 
+    public function getStatementByUserId($id_course_plan, $user_id) {
+        $user = User::whereId($user_id)->get()[0];
+        return $this->getStatementByUser($id_course_plan, $user);
+    }
+
+    private function calcSectionTotals($course_plan, $sections, $section_total_array) {
+        $control_work_points_array = collect();
+        foreach ($sections as $section){
+            $control_work_points = 0;
+            foreach ($section['control_work_plans'] as $control_work){
+                // if ($control_work['control_work_plan_type'] == "WRITING"){
+                $control_work_points += $control_work['max_points'];
+                // }
+            }
+            $control_work_points_array->push($control_work_points);
+        }
+
+        $all_ok = 1;
+        $sec_ok = collect();
+        $i = 0;
+        while ($i < count($section_total_array)){
+            if ($section_total_array[$i] < $control_work_points_array[$i] * 0.6) {
+                $all_ok = 0;
+                $sec_ok->push(0);
+            } else {
+                $sec_ok->push(1);
+            }
+            $i += 1;
+        }
+        if ($section_total_array->sum() < $course_plan->max_semester * 0.6) {
+            $all_ok = 0;
+        }
+
+        return array(
+            'all_ok' => $all_ok,
+            'sec_ok' => $sec_ok,
+        );
+    }
+
     //Вывод ведомости по id_user
     public function getStatementByUser($id_course_plan, $user) {
 
         $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
-        $sp = SectionPlan::where('id_course_plan', $id_course_plan)->get();
-        /*$sp_ids = SectionPlan::where('id_course_plan', $id_course_plan)->get();
-        $maxesCW = collect();
-        $i = 0;
-        $sp_ids->map(function ($section)use($maxesCW,$i){
-            $cwps = ControlWorkPlan::where('id_section_plan',$section->id_section_plan)->get();
-            foreach ($cwps as $work){
-                if ($work['control_work_plan_type'] == "WRITING"){
-                    $maxesCW->push($i . " " . $work['id_section_plan'] . " " .  $work['max_points']);
-                }
-            }
-            $i += 1;
-        });*/
-        $sec_sp_CW = collect();
-        foreach ($sp as $section){
-            $summary_cw_sec = 0;
-            foreach ($section['control_work_plans'] as $cwp){
-                if ($cwp['control_work_plan_type'] == "WRITING"){
-                    $summary_cw_sec += $cwp['max_points'];
-                }
-            }
-            if ($summary_cw_sec != 0){
-                $sec_sp_CW->push($summary_cw_sec);
-            }
-
-        }
+        $sp = SectionPlan::where('id_course_plan', $id_course_plan)
+            ->where('is_exam', '=', 0)
+            ->get()
+            ->sortBy('section_num');
 
         // Подсчет посещаемости семинаров
-        $all_id_seminar2 = $this->course_plan_DAO->getAllSeminarsBySections($id_course_plan)
-            ->map(function ($section) {
-                return  $section->map(function ($seminar) {
+        $seminar_ids_for_each_section = $this->course_plan_DAO->getAllSeminarsBySections($id_course_plan)
+            ->map(function ($seminars_for_section) {
+                return  $seminars_for_section->map(function ($seminar) {
                     return ($seminar->id_seminar_plan);
                 });
-
             });
         $all_seminars = $this->course_plan_DAO->getAllSeminarsBySections($id_course_plan);
-        $sem_pres = collect([]);
-        $i = 0;
-        $ballsBySections = collect();
-        $all_id_seminar2->map(function($section) use($user,$sem_pres){
-            $sectionRes = SeminarPasses::whereIn('id_seminar_plan', $section)
+        $seminars_by_section = collect([]);
+
+        $seminar_ids_for_each_section->map(function($seminar_ids_for_section) use($user,$seminars_by_section){
+            $seminars_of_section = SeminarPasses::whereIn('id_seminar_plan', $seminar_ids_for_section)
                 ->where('id_user', $user->id)
                 ->get();
-            $sem_pres->push($sectionRes);
+            $seminars_by_section->push($seminars_of_section);
         });
-        $maxesSP = collect();
-        $sp->map(function($section) use($maxesSP){
-            $maxesSP->push($section['max_seminar_pass_ball']);
+        $seminar_attended_max_points = collect();
+        $sp->map(function($section) use($seminar_attended_max_points){
+            $seminar_attended_max_points->push($section['max_seminar_pass_ball']);
         });
-        $sem_sum = collect();
-        foreach ($sem_pres as $lect){
+
+        $i = 0;
+        $seminar_attended_points = collect();
+        foreach ($seminars_by_section as $seminars_of_section){
             $sum = 0;
             $c = 0;
-            foreach ($lect as $lecture){
-                $sum += $lecture->presence;
+            foreach ($seminars_of_section as $seminar){
+                $sum += $seminar->presence;
                 $c += 1;
             }
-            $sem_sum->push($sum);
-            $ballsBySections->push($sum/$c*$maxesSP[$i]);
+            $seminar_attended_points->push($sum/$c*$seminar_attended_max_points[$i]);
             $i += 1;
         }
 
         // Подсчет баллов за работу на семинарах с лимитом на максимум
         $seminarWorks = $this->getWorkSeminarBySection($id_course_plan, $user->id, $all_seminars);
         $maxesW = collect();
-        $sumW_balls = collect();
+        $seminar_work_points = collect();
         $sections = $this->section_plan_DAO->getSectionPlansByCourse($id_course_plan);
         $o = 1;
         foreach ($seminarWorks as $seminar){
@@ -757,13 +773,13 @@ class ResultStatement {
                 $sum += $semBal['points'];
             }
             $maxesW->push($sections[$o]['max_ball']);
-            $sumW_balls->push($sum);
+            $seminar_work_points->push($sum);
             $o += 1;
         }
         $ind = 0;
-        foreach($sumW_balls as $sec){
+        foreach($seminar_work_points as $sec){
             if ($sec > $maxesW[$ind]){
-                $sumW_balls[$ind] = $maxesW[$ind];
+                $seminar_work_points[$ind] = $maxesW[$ind];
             }
             $ind += 1;
         }
@@ -789,9 +805,8 @@ class ResultStatement {
         });
         $lect_sum = collect();
         $i = 0;
-        $ball_lection_passes = collect();
+        $lecture_points = collect();
         foreach ($lect_pres as $lect){
-
             $sum = 0;
             $c = 0;
             foreach ($lect as $lecture){
@@ -799,7 +814,7 @@ class ResultStatement {
                 $c += 1;
             }
             $lect_sum->push($sum);
-            $ball_lection_passes->push($sum/$c*$maxesLP[$i]);
+            $lecture_points->push($sum/$c*$maxesLP[$i]);
             $i += 1;
         }
 
@@ -818,169 +833,29 @@ class ResultStatement {
         $sum_result_section_exam_work = $result_exam_work_sections->sum();
         $result_lecture = $this->getResultLecture($id_course_plan, $user->id);
         $result_seminar = $this->getResultSeminar($id_course_plan, $user->id);
-        //$resultBallsBySections = $this->getResultBySections($id_course_plan, $user->id);
         $result_work_seminar = $this->getResultWorkSeminar($id_course_plan, $user->id);
-        /*
-
-         $sum_result = round($sum_result_section_exam_work) + round($sum_result_section_control_work)  ;
-        $all_id_lectures = $this->course_plan_DAO->getAllLectures($id_course_plan)
-            ->map(function ($item) {
-                return $item->id_lecture_plan;
-            });
-        $all_id_seminars = $this->course_plan_DAO->getAllSeminars($id_course_plan)
-            ->map(function ($item) {
-                return $item->id_seminar_plan;
-            });
-        $lecture_passes = LecturePasses::whereIn('lecture_passes.id_lecture_plan',$all_id_lectures)
-            ->where('id_user', '=', $user->id)
-            ->leftJoin('lecture_plans', 'lecture_plans.id_lecture_plan', 'lecture_passes.id_lecture_plan')
-            ->leftJoin('section_plans', 'section_plans.id_section_plan', 'lecture_plans.id_section_plan')
-            ->where('is_exam', '=', 0)
-            ->get(['lecture_plans.id_lecture_plan', 'lecture_passes.presence', 'lecture_plans.lecture_plan_num'
-                , 'section_plans.section_num'])
-            ->groupBy('section_num')
-            ->sortBy(function ($value, $key) {
-                return $key; //ключ = номер раздела
-            })
-            ->map(function ($item) {
-                return $item->sortBy('lecture_plan_num');
-            });
-        $count = 0;
-        $allcount = 0;
-        foreach($lecture_passes as $lecture){
-            foreach($lecture as $l){
-                $allcount += 1;
-                if ($l->presence == 1)
-                {
-                    $count += 1;
-                }
-            }
-        }
-        */
-        /*
-         $ball = $course_plan['max_exam'];
-
-        $lect_ball = 0;
-        if ($allcount != 0){
-            $lect_ball = $count/$allcount * $ball;
-        }
-        $seminar_passes_sections = SeminarPasses::whereIn('seminar_passes.id_seminar_plan',$all_id_seminars)
-            ->where('id_user', '=', $user->id)
-            ->leftJoin('seminar_plans', 'seminar_plans.id_seminar_plan', 'seminar_passes.id_seminar_plan')
-            ->leftJoin('section_plans', 'section_plans.id_section_plan', 'seminar_plans.id_section_plan')
-            ->where('is_exam', '=', 0)
-            ->get(['seminar_plans.id_seminar_plan', 'seminar_plans.seminar_plan_num', 'seminar_passes.presence'
-                , 'seminar_passes.work_points', 'section_plans.section_num', 'seminar_passes.id_seminar_pass'])
-            ->groupBy('section_num')
-            ->sortBy(function ($value, $key) {
-                return $key;
-            })
-            ->map(function ($item) {
-                return $item->sortBy('seminar_plan_num');
-            });
-
-        $maxes = collect();
-        $sec_count = 0;
-        foreach($sp as $section){
-            $sec_count += 1;
-        };
-
-        $sp->map(function($section) use($maxes,  $sec_count,$ball){
-            if ($sec_count != 0)
-            $maxes->push(($section['max_ball'] + (100-$ball)/$sec_count));
-        });
-
-        $minexes = collect();
-        $maxes->map(function($section) use($minexes){
-            $minexes->push($section * 0.6);
-        });
-        $minball = 0.6 * (100 - $ball);
-        foreach ($resultBallsBySections as $rsec){
-            $sum_result +=  $rsec;
-        }
-        $controlSum = collect([]);
-        $controlIter = 1;
-        while ($controlIter < count($control_work_groupBy_sections)+1){
-            $sum = 0;
-            $controlIter1 = 0;
-            while ($controlIter1 < count($control_work_groupBy_sections[$controlIter])+1){
-                $sum += $control_work_groupBy_sections[$controlIter][$controlIter1]['points'];
-                $controlIter1 += 1;
-            }
-            $controlSum->push($sum);
-            $controlIter += 1;
-        }
-        $tempRes = collect();
-        $temp = collect();
-        $tempMax = collect();
-        $tempMin = collect();
-        $iter = 0;
-        while ($iter < count($resultBallsBySections)){
-            $temp->push($resultBallsBySections[$iter]);
-            $tempRes->push($resultBallsBySections[$iter] + $controlSum[$iter]);
-            $tempMax->push($maxes[$iter]);
-            $tempMin->push($minexes[$iter]);
-            $iter += 1;
-        }
-        $temp1 = $this->getLecSemBySections($id_course_plan, $user->id);
-        $sum1 = 0;
-        $i = 0;
-        while ($i < count($controlSum)){
-            $sum1+= $controlSum[$i];
-            $i += 1;
-        }*/
-        /*$i = 0;
-        while ($i < count($tempRes)) {
-            $sum1 += $tempRes[$i];
-            $i += 1;
-        }*/
-        /*
-        $spsec = collect();
-        foreach ($seminar_passes_sections as $s){
-            $spsec->push($s[0]['work_points']);
-        }*/
-        //echo $spsec;
-       /* $i = 0;
-        while ($i < count($temp)+1) {
-            $abssum1 += $temp[$i];
-            $i += 1;
-        }*/
-        //echo $result_control_work_sections;
-        // echo $control_work_groupBy_sections;
 
         // Общая сумма за разделы
-        $sec_rrs = 0;
-
+        $all_sections_total = 0;
         // Получение общей суммы за разделы И суммы по каждому разделу
-        $sec_sum = collect();
+        $section_total_array = collect();
         $i = 0;
-        while ($i < count($ballsBySections)) {
-            $sa = [];
-            $ss = $ballsBySections[$i] + $sumW_balls[$i] +  $ball_lection_passes[$i];
-            $ss += $result_control_work_sections->get($i+1);
-            //$ss += $spsec[$i];
-            $sec_sum->push($ss);
-            $sec_rrs += $ss;
+        while ($i < count($seminar_attended_points)) {
+            $section_total = $seminar_attended_points[$i] + $seminar_work_points[$i] + $lecture_points[$i]
+                    + $result_control_work_sections->get($i+1);
+            $section_total_array->push($section_total);
+            $all_sections_total += $section_total;
             $i += 1;
         }
-        // Детектор прохождения всех минимумов по разделам
-        $i = 0;
-        $all_ok = 1;
-        $sec_ok = collect();
-        while ($i < count($sec_sum)){
-            if ($sec_sum[$i]  < $sec_sp_CW[$i] * 0.6)
-            {//($maxesSP[$i] * 0.6) || $sumW_balls[$i] < ($maxesW[$i] * 0.6) || $ball_lection_passes[$i] < ($maxesLP[$i] * 0.6)){
-                $all_ok = 0;
-                $sec_ok->push(0);
-            }else
-            {
-                $sec_ok->push(1);
-            }
-            $i += 1;
-        }
+
+        $sec_info = $this->calcSectionTotals($course_plan, $sp, $section_total_array);
+        $all_ok = $sec_info['all_ok'];
+        $sec_ok = $sec_info['sec_ok'];
+
+
         // Получение абсолютной суммы
         $abssum1 = 0;
-        $abssum1 += $sec_rrs;
+        $abssum1 += $all_sections_total;
         $abssum1 += $sum_result_section_exam_work;
         if ($abssum1 > 100){
             $abssum1 = 100;
@@ -992,31 +867,15 @@ class ResultStatement {
         $user_statement_result = collect([]);
 
         // Добавленное
-        $user_statement_result->put('ballsBySectionsPass', $ballsBySections);
-        $user_statement_result->put('ballsBySectionsWorks', $sumW_balls);
-        $user_statement_result->put('ball_lection_passes', $ball_lection_passes);
-        $user_statement_result->put('fullsum', $sec_rrs);
+        $user_statement_result->put('ballsBySectionsPass', $seminar_attended_points);
+        $user_statement_result->put('ballsBySectionsWorks', $seminar_work_points);
+        $user_statement_result->put('ball_lection_passes', $lecture_points);
+
+        $user_statement_result->put('fullsum', $all_sections_total);
         $user_statement_result->put('absolutefullsum', $abssum1);
         $user_statement_result->put('all_ok',  $all_ok);
         $user_statement_result->put('sec_ok',  $sec_ok);
-
-        $user_statement_result->put('sec_sum', $sec_sum);
-
-        // Не используемое
-        ////$user_statement_result->put('sum_result', $sum_result);
-        //$user_statement_result->put('resultBallsBySections',$temp);
-        //$user_statement_result->put('result_control_work_sections', $result_control_work_sections);
-        //$user_statement_result->put('sum_result_section_control_work', $sum_result_section_control_work);
-        //$user_statement_result->put('result_exam_work_sections', $result_exam_work_sections);
-        //$user_statement_result->put('lectures_visited', $count);
-        //$user_statement_result->put('lectures_count', $allcount);
-        //$user_statement_result->put('lect_ball', $lect_ball);
-        //$user_statement_result->put('minball', $minball);
-        //$user_statement_result->put('maximumsBySections', $tempMax);
-        //$user_statement_result->put('minimumsBySections', $tempMin);
-        //$user_statement_result->put('temp1', $temp1);
-        //$user_statement_result->put('full_results', $tempRes);
-        //$user_statement_result->put('controlSum', $controlSum);
+        $user_statement_result->put('sec_sum', $section_total_array);
 
         // Оставшееся с прошлых версий
         $user_statement_result->put('control_work_groupBy_sections', $control_work_groupBy_sections);
@@ -1028,7 +887,6 @@ class ResultStatement {
         $user_statement_result->put('markRus', $markRus);
         $user_statement_result->put('markBologna', $markBologna);
         $user_statement_result->put('exam_work_groupBy_sections', $exam_work_groupBy_sections);
-
 
         return $user_statement_result;
     }
