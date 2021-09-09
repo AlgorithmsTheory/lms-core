@@ -355,14 +355,38 @@ class StatementsController extends Controller{
         return view('personal_account/statements/seminars', compact('course_plan','id_group', 'statement_seminar'));
     }
 
+    private function modifySecOk($statement_result, $course_plan) {
+        foreach ($statement_result as $statement) {
+            $sec_ok = array();
+            foreach ($course_plan->section_plans as $section_plan) {
+                $max_points_sum = 0;
+                foreach ($section_plan->control_work_plans as $control_work_plan) {
+                    $max_points_sum += $control_work_plan->max_points;
+                }
+                $points_sum = 0;
+                foreach ($statement['control_work_groupBy_sections'][$section_plan->section_num] as $control_work_passes) {
+                    $points_sum += $control_work_passes->points;
+                }
+                if ($points_sum >= $max_points_sum * 0.6) {
+                    $sec_ok[$section_plan->section_num] = 1;
+                } else {
+                    $sec_ok[$section_plan->section_num] = 0;
+                }
+            }
+            $statement['sec_ok'] = $sec_ok;
+        }
+    }
+
     public function get_resulting(Request $request){
         $id_group = $request->input('group');
         $statement_result = $this->result_statement->getStatementByGroup($id_group);
         $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
             ->first()->id_course_plan;
         $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
+        // $this->modifySecOk($statement_result, $course_plan);
         return view('personal_account/statements/results',  compact('course_plan','id_group', 'statement_result'));
     }
+
     public function get_resulting_excel(Request $request){
         $id_group = $request->input('group');
         $filename= $request->filename;
@@ -376,6 +400,7 @@ class StatementsController extends Controller{
         //
         return $this->result_statement->getExcelLoadOut($course_plan,$statement_result,'/storage/app/file.xlsx');;
     }
+
     public function get_resulting_excel_ex(Request $request){
         $id_group = $request->input('group');
         $filename= $request->filename;
@@ -447,12 +472,25 @@ class StatementsController extends Controller{
             } else {
                 $sum_result_section = $sum_result_exam_works;
             }
-            $result_all_course = $sum_result_exam_works +  $sum_result_control_works + $class_work
+            $result_all_course = $sum_result_exam_works + $sum_result_control_works + $class_work
                 + $seminar_pass + $lecture_pass;
 
             $markRus = Test::calcMarkRus(100, $result_all_course);
             $markBologna = Test::calcMarkBologna(100, $result_all_course);
-            return response()->json(['sectionResult' => $section_result, 'sumResultSection' => $sum_result_section,
+
+
+            $stat = $this->result_statement->getStatementByUserId($id_course_plan, $id_user);
+            $sec_ok = $stat['sec_ok'];
+            $all_ok = $stat['all_ok'];
+            $sec_sum = $stat['sec_sum'];
+            $fullsum = $stat['fullsum'];
+
+            return response()->json(['sectionResult' => $section_result,
+                'secOk' => $sec_ok,
+                'allOk' => $all_ok,
+                'secSum' => $sec_sum,
+                'fullSum' => $fullsum,
+                'sumResultSection' => $sum_result_section,
                 'resultAllCourse' => $result_all_course, 'markRus' => $markRus, 'markBologna' => $markBologna]);
         } else {
             return response()->json(['error' => $validator->errors()->all()]);

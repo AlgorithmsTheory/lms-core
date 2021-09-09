@@ -6,17 +6,17 @@
         <td rowspan="2" class="warning" style="width: 20px">Фамилия</td>
         <td rowspan="2" class="warning" style="width: 20px">Имя</td>
         @foreach($course_plan->section_plans as $section_plan)
-        <td colspan="{{$section_plan->lecture_plans->count() + 1}}" class="info">{{$section_plan->section_num}} Раздел
+            <td colspan="{{$section_plan->lecture_plans->count() + 1}}" class="info">{{$section_plan->section_num}} Раздел
             </td>
-            @endforeach
+        @endforeach
     </tr>
     <tr class="active">
         @foreach($course_plan->section_plans as $section_plan)
             @foreach($section_plan->lecture_plans as $lecture_plan)
 
                     <td>{{$lecture_plan->lecture_plan_num}}</td>
-                @endforeach
-                <td>Итог</td>
+            @endforeach
+            <td>Итог</td>
         @endforeach
 
     </tr>
@@ -41,13 +41,11 @@
 
 
                     </td>
-
-                    @endforeach
-                    <td>{{$statement['ballsBySections'][$loop->index]}}</td>
                 @endforeach
-
-        </tr>
-        @endforeach
+                <td>{{round($statement['ballsBySections'][$loop->index], 2)}}</td>
+            @endforeach
+            </tr>
+    @endforeach
     <tr class="functionalty_tr">
         <td></td>
         <td></td>
@@ -62,6 +60,7 @@
                     </button>
                 </td>
             @endforeach
+            <td></td>
         @endforeach
     </tr>
 

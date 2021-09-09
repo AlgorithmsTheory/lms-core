@@ -10,7 +10,7 @@
     <div id="main_container">
         <div class="card col-lg-12 col-md-12">
             <div class="card-body">
-                <h2 class="text-center">Просмотр и редактирование веломостей</h2>
+                <h2 class="text-center">Просмотр и редактирование ведомостей</h2>
                 <form action="" method="" class="form" id="forma">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
 

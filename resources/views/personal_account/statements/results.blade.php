@@ -57,28 +57,25 @@
         {{--Вывод макс баллов К.М в обычных разделов--}}
         @foreach($course_plan->section_plans as $section_plan)
             @foreach($section_plan->control_work_plans as $control_work_plan)
-                <td>max {{":".$control_work_plan->max_points}}</td>
+                <td>max: {{$control_work_plan->max_points}}</td>
             @endforeach
-                <td>max {{":".$control_work_plan->max_points}}</td>
-                <td>max {{":".$control_work_plan->max_points}}</td>
-                <td>max {{":".$control_work_plan->max_points}}</td>
+            <script>console.log('{{json_encode($section_plan)}}')</script>
+                <td>max: {{$section_plan->max_lecture_ball}}</td>
+                <td>max: {{$section_plan->max_seminar_pass_ball}}</td>
+                <td>max: {{$section_plan->max_ball}}</td>
         @endforeach
 
-        <td>max {{":".$course_plan->max_controls}}</td>
+        <td>max: {{$course_plan->max_semester}}</td>
 
         {{--Вывод макс баллов К.М в разделе Экзамен(Зачёт)--}}
         @foreach($course_plan->exam_plans as $exam_plan)
             @foreach($exam_plan->control_work_plans as $control_work_plan)
-                <td>max {{":".$control_work_plan->max_points}}</td>
+                <td>max: {{$control_work_plan->max_points}}</td>
             @endforeach
         @endforeach
 
-        <td>max {{":".$course_plan->max_exam}}</td>
-
-    <!---  <td>max {{":".$course_plan->max_lecrures}}</td>-->
-      <!---   <td>max {{":".$course_plan->max_seminars}}</td>-->
-     <!---    <td>max {{":".$course_plan->max_seminars_work}}</td>-->
-        <td>max :100</td>
+        <td>max: {{$course_plan->max_exam}}</td>
+        <td>max: {{$course_plan->max_semester + $course_plan->max_exam}}</td>
 
     </tr>
     <tbody id="target">
@@ -118,19 +115,18 @@
                     <td>{{$statement['ballsBySectionsWorks'][$loop->index]}}</td>
                     {{--Итог за раздел--}}
                     <td data-result-section_num="{{$section_plan->section_num}}"
-                        class="{{$statement['sec_ok'][$section_plan->section_num-1] == 0
-                    ? 'danger' : 'success'}}"
+                        class="{{$statement['sec_ok'][$loop->index] == 0 ? 'danger' : 'success'}}"
                         data-section-max_points="{{$section_plan->max_points}}">
-                        {{round($statement['sec_sum'][$section_plan->section_num-1], 0)}}
+                        {{round($statement['sec_sum'][$loop->index], 0)}}
                     </td>
                 @endforeach
 
 
 
-                {{--Вывод итогов всех К.М. за все разделы--}}
+                {{--Вывод итогов всех К.М., а также ПЛ, ПС, РС за все разделы--}}
                 <td class="sum_result_section {{$statement['all_ok'] == 0
                 ? 'danger' : 'success'}}"
-                    data-max_controls="{{$course_plan->max_controls}}">
+                    data-max_controls="{{$course_plan->max_semester}}">
                     {{round($statement['fullsum'], 0)}}
                 </td>
             @endif
@@ -218,6 +214,9 @@
                     </button>
                 </td>
             @endforeach
+            <td></td>
+            <td></td>
+            <td></td>
             <td></td>
         @endforeach
         <td></td>
