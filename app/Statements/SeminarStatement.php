@@ -129,7 +129,7 @@ class SeminarStatement {
         $maxesW = collect();
         $sumW_balls = collect();
         $sections = $this->section_plan_DAO->getSectionPlansByCourse($id_course_plan);
-        $o = 1;
+        $o = 0;
         foreach ($seminarWorks as $seminar){
             $sum = 0;
             foreach ($seminar as $semBal){
@@ -149,6 +149,7 @@ class SeminarStatement {
         $user_statement_seminar->put('ballsBySectionsPass', $ballsBySections);
         $user_statement_seminar->put('ballsBySectionsWorks', $sumW_balls);
         $user_statement_seminar->put('seminar_passes_sections', $seminar_passes_sections);
+        $user_statement_seminar->put('lala1', $maxesW);
         return $user_statement_seminar;
     }
 

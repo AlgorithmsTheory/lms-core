@@ -71,6 +71,8 @@
                     </button>
                 </td>
             @endforeach
+            <td></td>
+            <td></td>
         @endforeach
     </tr>
     </tbody>

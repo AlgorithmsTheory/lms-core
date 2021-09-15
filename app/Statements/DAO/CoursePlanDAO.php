@@ -126,11 +126,11 @@ class CoursePlanDAO
         $course_plan = CoursePlan::findOrFail($request->input('id_course_plan'));
         $course_plan->course_plan_name = $request->course_plan_name;
         $course_plan->course_plan_desc = $request->course_plan_desc;
-        $course_plan->max_controls = $request->max_controls;
-        $course_plan->max_seminars = $request->max_seminars;
-        $course_plan->max_seminars_work = $request->max_seminars_work;
-        $course_plan->max_lecrures = $request->max_lecrures;
-        $course_plan->max_exam = $request->max_exam;
+        //$course_plan->max_controls = $request->max_controls;
+        //$course_plan->max_seminars = $request->max_seminars;
+        //$course_plan->max_seminars_work = $request->max_seminars_work;
+        //$course_plan->max_lecrures = $request->max_lecrures;
+        //$course_plan->max_exam = $request->max_exam;
         $groups = $request->input('groups');
         $id_course_plan = $request->input('id_course_plan');
         Group::where('id_course_plan', $id_course_plan)->update(['id_course_plan' => null]);

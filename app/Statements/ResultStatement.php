@@ -766,7 +766,7 @@ class ResultStatement {
         $maxesW = collect();
         $seminar_work_points = collect();
         $sections = $this->section_plan_DAO->getSectionPlansByCourse($id_course_plan);
-        $o = 1;
+        $o = 0;
         foreach ($seminarWorks as $seminar){
             $sum = 0;
             foreach ($seminar as $semBal){
