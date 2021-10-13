@@ -39,9 +39,9 @@ class CoursePlan extends Eloquent {
         $max_exam_gen = 0;
         $sections = $this->getSectionPlansAttribute();
         foreach ($sections as $section) {
-            $max_ball_gen += $section->max_ball;
-            $max_seminar_pass_ball_gen += $section->max_seminar_pass_ball;
-            $max_lecture_ball_gen += $section->max_lecture_ball;
+            $max_ball_gen += $section->max_seminar_work_point;
+            $max_seminar_pass_ball_gen += $section->max_seminar_pass_point;
+            $max_lecture_ball_gen += $section->max_lecture_pass_point;
             $cw_ar = $section->getControlWorkPlansAttribute();
             foreach ($cw_ar as $cw) {
                 $max_control += $cw->max_points;

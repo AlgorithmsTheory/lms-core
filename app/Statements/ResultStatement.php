@@ -141,7 +141,7 @@ class ResultStatement {
         $sp = SectionPlan::where('id_course_plan', $id_course_plan)->get();
         $maxes = collect();
         $sp->map(function($section) use($maxes){
-            $maxes->push($section['max_seminar_pass_ball']);
+            $maxes->push($section['max_seminar_pass_point']);
         });
         $lectIter = 0;
         $lect_sum = collect();
@@ -267,11 +267,11 @@ class ResultStatement {
                     $sum += $semBal['points'];
 
             }
-            if ($sum < $sections[$o]['max_ball']) {
+            if ($sum < $sections[$o]['max_seminar_work_point']) {
                 $sWs->push($sum);
             }
             else{
-                $sWs->push($sections[$o]['max_ball']);
+                $sWs->push($sections[$o]['max_seminar_work_point']);
             }
             $o += 1;
         }
@@ -281,7 +281,7 @@ class ResultStatement {
         $sp = SectionPlan::where('id_course_plan', $id_course_plan)->get();
         $maxes = collect();
         $sp->map(function($section) use($maxes){
-            $maxes->push($section['max_ball']);
+            $maxes->push($section['max_seminar_work_point']);
         });
         $lectIter = 0;
         $lect_sum = collect();
@@ -745,7 +745,7 @@ class ResultStatement {
         });
         $seminar_attended_max_points = collect();
         $sp->map(function($section) use($seminar_attended_max_points){
-            $seminar_attended_max_points->push($section['max_seminar_pass_ball']);
+            $seminar_attended_max_points->push($section['max_seminar_pass_point']);
         });
 
         $i = 0;
@@ -772,7 +772,7 @@ class ResultStatement {
             foreach ($seminar as $semBal){
                 $sum += $semBal['points'];
             }
-            $maxesW->push($sections[$o]['max_ball']);
+            $maxesW->push($sections[$o]['max_seminar_work_point']);
             $seminar_work_points->push($sum);
             $o += 1;
         }
@@ -787,7 +787,7 @@ class ResultStatement {
         // Подсчет количества баллов за посещение лекций
         $maxesLP = collect();
         $sp->map(function($section) use($maxesLP){
-            $maxesLP->push($section['max_lecture_ball']);
+            $maxesLP->push($section['max_lecture_pass_point']);
         });
         $lect_pres = collect([]);
         $all_id_lectures2 = $this->course_plan_DAO->getAllLecturesBySection($id_course_plan)

@@ -60,9 +60,9 @@
                 <td>max: {{$control_work_plan->max_points}}</td>
             @endforeach
             <script>console.log('{{json_encode($section_plan)}}')</script>
-                <td>max: {{$section_plan->max_lecture_ball}}</td>
-                <td>max: {{$section_plan->max_seminar_pass_ball}}</td>
-                <td>max: {{$section_plan->max_ball}}</td>
+                <td>max: {{$section_plan->max_lecture_pass_point}}</td>
+                <td>max: {{$section_plan->max_seminar_pass_point}}</td>
+                <td>max: {{$section_plan->max_seminar_work_point}}</td>
         @endforeach
 
         <td>max: {{$course_plan->max_semester}}</td>

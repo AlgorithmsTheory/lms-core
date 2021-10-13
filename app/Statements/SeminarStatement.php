@@ -110,7 +110,7 @@ class SeminarStatement {
             ->sortBy('section_num');
         $maxes = collect();
         $sp->map(function($section) use($maxes){
-            $maxes->push($section['max_seminar_pass_ball']);
+            $maxes->push($section['max_seminar_pass_point']);
         });
         $sem_sum = collect();
         foreach ($sem_pres as $lect){
@@ -135,7 +135,7 @@ class SeminarStatement {
             foreach ($seminar as $semBal){
                 $sum += $semBal['points'];
             }
-            $maxesW->push($sections[$o]['max_ball']);
+            $maxesW->push($sections[$o]['max_seminar_work_point']);
             $sumW_balls->push($sum);
             $o += 1;
         }
@@ -215,12 +215,12 @@ class SeminarStatement {
                     ->sum('work_points');
             //$section_plan_num = $section_plan->section_num'];
             $section = $this->course_plan_DAO->getSectionPlanByCoursePlan($validator->getData()['id_course_plan'],$validator->getData()['section_num']);
-            $max_section_balls = $section['section_plans'][$validator->getData()['section_num']-1]['max_ball'];
+            $max_section_balls = $section['section_plans'][$validator->getData()['section_num']-1]['max_seminar_work_point'];
             $sp = SectionPlan::where('id_course_plan', $validator->getData()['id_course_plan'])->get();
             //$validator->errors()->add('exceeded_max_points', 'С ' .  . ' ');
             $maxes = collect();
             $sp->map(function($section) use($maxes){
-                $maxes->push($section['max_ball']);
+                $maxes->push($section['max_seminar_work_point']);
             });
             $different = abs($max_section_balls - $current_point);
             if ( $current_point > $max_section_balls)

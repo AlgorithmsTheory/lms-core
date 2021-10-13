@@ -384,7 +384,7 @@ class StatementsController extends Controller{
             ->first()->id_course_plan;
         $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
         // $this->modifySecOk($statement_result, $course_plan);
-        return view('personal_account/statements/results',  compact('course_plan','id_group', 'statement_result'));
+        return view('personal_account/statements/results', compact('course_plan','id_group', 'statement_result'));
     }
 
     public function get_resulting_excel(Request $request){
