@@ -44,7 +44,7 @@
             <td>ПЛ</td>
             <td>ПС</td>
             <td>РС</td>
-            <td class="info" rowspan="2">Итог</td>
+            <td class="info" rowspan="2">Итог: {{$section_plan->getOverallMaxPoints()}}</td>
         @endforeach
 
         @foreach($course_plan->exam_plans as $exam_plan)
@@ -59,7 +59,7 @@
             @foreach($section_plan->control_work_plans as $control_work_plan)
                 <td>max: {{$control_work_plan->max_points}}</td>
             @endforeach
-            <script>console.log('{{json_encode($section_plan)}}')</script>
+{{--            <script>console.log('{{json_encode($section_plan)}}')</script>--}}
                 <td>max: {{$section_plan->max_lecture_pass_point}}</td>
                 <td>max: {{$section_plan->max_seminar_pass_point}}</td>
                 <td>max: {{$section_plan->max_seminar_work_point}}</td>
