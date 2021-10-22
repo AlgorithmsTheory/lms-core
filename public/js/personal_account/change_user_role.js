@@ -2,6 +2,28 @@
  * Created by Misha on 18/03/16.
  */
 
+function changeGroup(selectEl, userID) {
+    const groupID = selectEl.value;
+    myBlurFunction(1);
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url:   '/verify_students/change_group',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        data: { token: 'token', id: userID, value: groupID },
+        success: function(data){
+            myBlurFunction(0);
+            alert('Группа успешно изменена');
+        }
+    });
+}
+
 $(".student").click(function() {
     $(this).attr("disabled", true);
     var id = this.name;

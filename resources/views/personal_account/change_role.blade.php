@@ -66,7 +66,13 @@
                         @foreach($query as $user)
                             <tr id="{{ $user['id'] }}">
                                 <td>
-                                    {{ $user['group_name'] }}
+                                    <select name="group-select" class="form-control" size="1" onchange="changeGroup(this, {{ $user['id'] }})">
+                                        @foreach($groups as $group)
+                                            <option value="{{ $group['group_id'] }}" {{ $user->group === $group['group_id'] ? 'selected' : '' }}>{{ $group['group_name'] }}</option>/td>
+                                        @endforeach
+                                    </select>
+{{--                                    <script> console.log(JSON.parse('{!! json_encode($user) !!}')); </script>--}}
+{{--                                    {{ $user['group_name'] }}--}}
                                 </td>
                                 <td>
                                     <input type="text" value="{{ $user['last_name'] }}" name="{{ $user['id'] }}" class="l_name_change">
