@@ -110,6 +110,6 @@
 @stop
 
 @section('js-down')
-    {!! HTML::script('js/personal_account/add_student.js') !!}
+    {!! HTML::script('js/personal_account/change_user_role.js') !!}
     {!! HTML::script('js/personal_account/person_filter.js') !!}
 @stop
