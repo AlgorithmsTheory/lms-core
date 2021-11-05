@@ -60,7 +60,7 @@
                             <td>Админ</td>
                             <td>Обычный</td>
                             <td>Преподаватель</td>
-
+                            <td>Удалить!</td>
                         </tr>
                         <tbody id="target">
                         @foreach($query as $user)
@@ -99,6 +99,9 @@
                                 </td>
                                 <td>
                                     <button type="button" class="tutor btn btn-accent-bright" name="{{ $user['id'] }}">Преподаватель</button>
+                                </td>
+                                <td>
+                                    <button type="button" class="remove-the-user btn btn-danger" name="{{ $user['id'] }}">Удалить!</button>
                                 </td>
                             </tr>
                         @endforeach

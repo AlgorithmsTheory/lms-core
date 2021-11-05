@@ -95,6 +95,12 @@ class AdministrationController extends Controller{
         return 0;
     }
 
+    public function remove_user(Request $request){
+        $id = json_decode($request->input('id'),true);
+        User::find($id)->delete();
+        return 0;
+    }
+
     public function change_l_name(Request $request){
         $id = json_decode($request->input('id'),true);
         $value = $request->input('value');

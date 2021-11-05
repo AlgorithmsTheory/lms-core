@@ -140,6 +140,33 @@ $(".tutor").click(function() {
     return false;
 });
 
+$(".remove-the-user").click(function() {
+    if (!confirm('Точно удалить?')) {
+        return;
+    }
+    deleteMsgError();
+    var id = this.name;
+    token = $('#forma').children().eq(0).val();
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url:   '/verify_students/remove_user',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        data: { id: id, token: 'token' },
+        success: function(data){
+            $('#' + id).remove();
+            alert('Пользователь успешно удалён из системы!');
+        }
+    });
+    return false;
+});
+
 $('.l_name_change').on('change', function() {
     var userID = this.name;
     var value = $( this ).val();
