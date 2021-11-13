@@ -64,9 +64,14 @@ class PersonalAccount extends Controller{
             $resultsQuery = $resultsQuery->where('groups.group_name', 'like', '%' . $request->group . '%');
         }
 
+        if (!empty($request->mark)) {
+            $resultsQuery = $resultsQuery->where('results.mark_eu', 'like', '%' . $request->mark . '%');
+        }
+
         $request_test = $request->test;
         $request_surname = $request->surname;
         $request_group = $request->group;
+        $request_mark = $request->mark;
 
         $resultsQuery = $resultsQuery
             ->select('results.id', 'test_name', 'result_date', 'result', 'mark_eu',
@@ -94,7 +99,7 @@ class PersonalAccount extends Controller{
         }
         return view('personal_account/teacher_account', compact('results', 'last_names',
             'first_names', 'groups', 'test_names', 'result_dates', 'marks', 'amount', 'tests', 'names',
-            'resultsQuery', 'request_test', 'request_surname', 'request_group'));
+            'resultsQuery', 'request_test', 'request_surname', 'request_group', 'request_mark'));
     }
 
 }

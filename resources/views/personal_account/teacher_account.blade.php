@@ -35,6 +35,10 @@
                             <textarea  class="form-control textarea3" id="regexp" rows="1" placeholder="" name="group">{{ !empty($request_group) ? $request_group : '' }}</textarea>
                             <label for="textarea3">Группа</label>
                         </div>
+                        <div class="form-group col-md-6">
+                            <textarea  class="form-control textarea3" id="regexp" rows="1" placeholder="" name="mark">{{ !empty($request_mark) ? $request_mark : '' }}</textarea>
+                            <label for="textarea3">Оценка</label>
+                        </div>
                         <input type="submit" value="Применить" class="btn btn-primary">
                     </form>
                 </div>
