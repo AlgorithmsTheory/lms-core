@@ -25,11 +25,10 @@ function reloadThemes(){
         data: { choice: choice, token: 'token' },
         success: function(data){
             $('#theme-container').html(data);
-            var filt_theme = localStorage.getItem('filter_theme');
-            console.log('!');
-            console.log(filt_theme);
-            if (filt_theme) {
-                $('#theme-container select').val(filt_theme);
+            if (!filter_theme || filter_theme === '$nbsp') {
+                $('#theme-container select').val('$nbsp');
+            } else {
+                $('#theme-container select').val(filter_theme);
             }
         }
     });

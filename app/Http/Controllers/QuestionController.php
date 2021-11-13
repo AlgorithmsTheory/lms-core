@@ -73,8 +73,12 @@ class QuestionController extends Controller {
     public function getTheme(Request $request){
         if ($request->ajax()) {
             $section = $request->input('choice');
-            $section_code = Section::whereSection_name($section)->select('section_code')->first()->section_code;
-            $themes_list = Theme::whereSection_code($section_code)->select('theme_name')->get();
+            if ($section !== 'Все') {
+                $section_code = Section::whereSection_name($section)->select('section_code')->first()->section_code;
+                $themes_list = Theme::whereSection_code($section_code)->select('theme_name')->get();
+            } else {
+                $themes_list = null;
+            }
             return (String) view('questions.student.getTheme', compact('themes_list'));
         }
     }

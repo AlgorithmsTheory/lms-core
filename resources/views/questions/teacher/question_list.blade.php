@@ -87,7 +87,6 @@
 @section('js-down')
     <script>
         const filter_theme = {!! json_encode($filter_theme, JSON_HEX_TAG) !!};
-        localStorage.setItem('filter_theme', filter_theme);
     </script>
     {!! HTML::script('js/questionList.js') !!}
 
