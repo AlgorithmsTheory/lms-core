@@ -70,7 +70,7 @@
                 </div>
                 <header>
                     Тема: {{ $question['theme'] }} <br>
-                    Текст: {{ substr($question['title'], 0, 160) }}
+                    Текст: {{ str_limit($question['title'], $limit = 120, $end = '...') }}
                 </header>
             </div><!--end .card-head -->
             <div class="card-body style-default-bright" style="display: none">
