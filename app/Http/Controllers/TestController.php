@@ -29,6 +29,7 @@ use Auth;
 use Illuminate\Http\Request;
 use App\Testing\Question;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use View;
 use App\Statements\DAO\CoursePlanDAO;
 use App\Statements\ResultStatement;
@@ -323,8 +324,31 @@ class TestController extends Controller{
         return redirect()->route('test_create');
     }
 
+    /** Возвращает идентификаторы тех тестов, которые доступны хотя бы для одной неархивной группы.
+     * Ответ имеет следующий вид: assoc(10 => 1, 23 => 1, 50 => 1);
+     * В качестве значений могут быть только единицы, отражающие тот факт, что тест с id, указанным
+     * в ключе, является "доступным".
+     */
+    private function getAvailableTests() {
+        $available_tests = TestForGroup::query()
+            ->join('groups', 'test_for_group.id_group', 'groups.group_id')
+            ->where('groups.archived', '=', 0)
+            ->where('test_for_group.availability', '=', 1)
+            ->orderBy('test_for_group.id_test')
+            ->select('test_for_group.id_test')
+            ->distinct()
+            ->get();
+        $res = [];
+        foreach ($available_tests as $test) {
+            $res[$test['id_test']] = 1;
+        }
+        return $res;
+    }
+
     /** Список всех тестов для их редактирования и завершения */
     public function editList(){
+        $available_tests = $this->getAvailableTests();
+
         $ctr_tests = $this->test->whereTest_type('Контрольный')
             ->where('archived', '<>', '1')
             ->orderByDesc('id_test')
@@ -332,6 +356,7 @@ class TestController extends Controller{
             ->get();
         foreach ($ctr_tests as $test){
             $test['amount'] = Test::getAmount($test['id_test']);
+            $test['at_least_one_available'] = array_key_exists($test['id_test'], $available_tests);
         }
 
         $tr_tests = $this->test->whereTest_type('Тренировочный')
@@ -341,9 +366,10 @@ class TestController extends Controller{
             ->get();
         foreach ($tr_tests as $test){
             $test['amount'] = Test::getAmount($test['id_test']);
+            $test['at_least_one_available'] = array_key_exists($test['id_test'], $available_tests);
         }
 
-        return view ('personal_account.test_list', compact('ctr_tests', 'tr_tests'));
+        return view('personal_account.test_list', compact('ctr_tests', 'tr_tests'));
     }
 
     public function profile($id_test) {

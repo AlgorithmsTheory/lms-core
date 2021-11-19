@@ -33,7 +33,7 @@
                                 <th class="text-center">Удалить тест</th>
                             </tr>
                             @foreach ($ctr_tests as $test)
-                            <tr>
+                            <tr style="background-color: {{ $test['at_least_one_available'] ? '#caffca' : '#faeaea' }};">
                                 <input type="hidden" name="id-test[]" class="id-test" value="{{$test['id_test']}}">
                                 <td>{{$test['test_name']}}</td>
                                 <td class="text-center">{{$test['amount']}}</td>
@@ -100,7 +100,7 @@
                                 <th class="text-center">Удалить тест</th>
                             </tr>
                             @foreach ($tr_tests as $test)
-                            <tr>
+                            <tr style="background-color: {{ $test['at_least_one_available'] ? '#caffca' : '#faeaea' }};">
                                 <input type="hidden" name="id-test[]" class="id-test" value="{{$test['id_test']}}">
                                 <td>{{$test['test_name']}}</td>
                                 <td class="text-center">{{$test['amount']}}</td>
