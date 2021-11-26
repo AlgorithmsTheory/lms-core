@@ -511,7 +511,26 @@ class TestController extends Controller{
             return view('tests.create', compact('groups', 'test'));
         }
     }
-    
+
+    public function makeAllControlTestsUnavailable() {
+        $this->makeAllTestsUnavailable('control');
+    }
+
+    public function makeAllTrainTestsUnavailable() {
+        $this->makeAllTestsUnavailable('train');
+    }
+
+    private function makeAllTestsUnavailable($test_type) {
+        $test_type_real = $test_type === 'control' ? 'Контрольный' : 'Тренировочный';
+        TestForGroup::whereAvailability(1)
+            ->whereIn('id_test', function($query) use ($test_type_real) {
+                $query->from('tests')
+                    ->select('id_test')
+                    ->where('test_type', '=', $test_type_real);
+            })
+            ->update(['availability' => 0]);
+    }
+
     /** Редактирование структуры теста */
     public function editStructure(Request $request, $id_test) {
         
