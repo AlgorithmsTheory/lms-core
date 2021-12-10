@@ -101,6 +101,7 @@ Route::get('tests/test-list', ['as' => 'tests_list', 'uses' => 'TestController@e
 Route::get('tests/profile/{id_question}', ['as' => 'test_profile', 'uses' => 'TestController@profile', 'middleware' => ['general_auth','admin']]);
 Route::post('tests/update-general-settings', ['as' => 'update_general_settings', 'uses' => 'TestController@updateSettings']);
 Route::post('tests/edit', ['as' => 'test_update', 'uses' => 'TestController@update']);
+Route::post('tests/clone', ['as' => 'tests_clone', 'uses' => 'TestController@cloneTest']);
 Route::post('tests/make-all-control-tests-unavailable', ['as' => 'make_all_control_tests_unavailable', 'uses' => 'TestController@makeAllControlTestsUnavailable']);
 Route::post('tests/make-all-train-tests-unavailable', ['as' => 'make_all_train_tests_unavailable', 'uses' => 'TestController@makeAllTrainTestsUnavailable']);
 Route::get('tests/remove/{id_test}', ['as' => 'test_remove', 'uses' => 'TestController@remove', 'middleware' => ['general_auth', 'admin']]);

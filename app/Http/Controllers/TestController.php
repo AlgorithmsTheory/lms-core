@@ -29,11 +29,13 @@ use Auth;
 use Illuminate\Http\Request;
 use App\Testing\Question;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use View;
 use App\Statements\DAO\CoursePlanDAO;
 use App\Statements\ResultStatement;
 use App\Statements\DAO\SectionPlanDAO;
+
 class TestController extends Controller{
     private $test;
     private $course_plan_DAO;
@@ -429,6 +431,36 @@ class TestController extends Controller{
             $test_for_group['finish_opportunity'] = Test::isFinishedForGroup($id_test, $test_for_group['id_group']) ? 0 : 1;
         }
         return view ('tests.edit', compact('test',  'test_for_groups'));
+    }
+
+    public function cloneTest(Request $request) {
+        if ($request->ajax()) {
+            $old_test_id = $request->input('test_id');
+            $old_items = Test::whereId_test($old_test_id)->get()->toArray();
+            $item = $old_items[0];
+            $item['id_test'] = null;
+            $item['test_name'] = $item['test_name'] . ' (копия)';
+            $new_test_id = Test::insertGetId($item);
+            $old_test_structures = TestStructure::whereId_test($old_test_id)->get()->toArray();
+            $new_structure_id = TestStructure::max('id_structure');
+            foreach ($old_test_structures as $old_test_structure) {
+                $new_structure_id++;
+                $old_structural_records = StructuralRecord::whereId_test($old_test_structure['id_test']) // whereId_test($old_test_id)
+                    ->where('id_structure', '=', $old_test_structure['id_structure'])->get()->toArray();
+
+                $old_test_structure['id_test'] = $new_test_id;
+                $old_test_structure['id_structure'] = $new_structure_id;
+
+                TestStructure::insert($old_test_structure);
+
+                foreach ($old_structural_records as $old_structural_record) {
+                    $old_structural_record['id_test'] = $new_test_id;
+                    $old_structural_record['id_structure'] = $new_structure_id;
+                    StructuralRecord::insert($old_structural_record);
+                }
+            }
+        }
+        return null;
     }
 
     /** Применение изменений после редактирования теста */

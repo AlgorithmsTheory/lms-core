@@ -120,6 +120,10 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="">
+                    <button class="btn btn-primary btn-raised btn-clone-test">Склонировать тест</button>
+                </div>
             </div>
 
             <div class="col-md-5 col-sm-5">

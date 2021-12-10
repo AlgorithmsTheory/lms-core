@@ -38,3 +38,22 @@ $('#create-extended-test').click(function(){
     $('.form').submit();
 });
 
+$('.btn-clone-test').click(function() {
+    const testID = +document.querySelector('#id-test').value;
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url:   '/tests/clone',
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        data: { test_id: testID, token: 'token' },
+        success: function(data){
+            alert('Тест успешно склонирован');
+        }
+    });
+});
