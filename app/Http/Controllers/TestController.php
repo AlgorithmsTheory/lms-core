@@ -62,14 +62,61 @@ class TestController extends Controller{
         }
         return view('tests.list.train_tests', compact('tr_tests'));
     }
+
     private $section_plan_DAO;
+
     public function controlTests() {
         $user = Auth::user();
-        $user_data = User::where('id','=',$user['id'])->first();
-        $groupInfo = Group::where('group_id','=',$user_data['group'])->first();
+        $user_data = User::where('id', '=', $user['id'])->first();
+        $groupInfo = Group::where('group_id', '=', $user_data['group'])->first();
+
+        /*
         $id_course_plan = $groupInfo['id_course_plan'];
-        $id_user = $user['id'];
-        $resStat = new ResultStatement($this->course_plan_DAO,$this->section_plan_DAO);
+        $resStat = new ResultStatement($this->course_plan_DAO, $this->section_plan_DAO);
+        $all_works = $resStat->getAllWorksUser($id_course_plan, $user->id);
+        $exam_works = $all_works->filter(function ($value, $key) {
+            return $value->is_exam == 1;
+        });
+        $exam_work_groupBy_sections = $resStat->getExamWorksGroupBySection($exam_works);
+        */
+        $query = $this->test->whereTest_type('Контрольный')
+            ->whereVisibility(1)->whereArchived(0)->whereOnly_for_print(0)->get();
+        $ctr_tests = [];
+        foreach ($query as $test){
+            $availability_for_group = TestForGroup::whereId_group(Auth::user()['group'])
+                ->whereId_test($test['id_test'])
+                ->select('availability')->first()->availability;
+            if ($availability_for_group/* && $us_state['all_ok'] == 1*/) {
+                $fine = Fine::whereId_test($test['id_test'])->whereId(Auth::user()['id'])->select('access')->get();
+                $test['access_for_student'] = count($fine) == 0 ? 1 : $fine[0]->access;
+                $test['max_points'] = Fine::levelToPercent(Fine::whereId(Auth::user()['id'])->whereId_test($test['id_test'])->select('fine')->first()->fine) / 100 * $test['total'];
+                $test['amount'] = Test::getAmount($test['id_test']);
+                $test['attempts'] = Result::whereId_test($test['id_test'])->whereId(Auth::user()['id'])->where('mark_ru', '>=', 0)->count();
+                // $test_is_exam = $this->testIsInExamSection($test, $exam_work_groupBy_sections);
+                // if ($res) array_push($ctr_tests, $test);
+                array_push($ctr_tests, $test);
+                /*
+                if ($test_is_exam) {
+                    if ($us_state['all_ok'] == 1) {
+                        array_push($ctr_tests, $test);
+                    }
+                } else {
+                    array_push($ctr_tests, $test);
+                }
+                */
+            }
+        }
+        return view('tests.list.control_tests', compact('ctr_tests'));
+    }
+
+    public function controlTests2() {
+        $user = Auth::user();
+        $user_data = User::where('id', '=', $user['id'])->first();
+        $groupInfo = Group::where('group_id', '=', $user_data['group'])->first();
+
+        $id_course_plan = $groupInfo['id_course_plan'];
+
+        $resStat = new ResultStatement($this->course_plan_DAO, $this->section_plan_DAO);
         $all_works = $resStat->getAllWorksUser($id_course_plan, $user->id);
         $control_works = $all_works->filter(function ($value, $key)  {
             return $value->is_exam == 0;
