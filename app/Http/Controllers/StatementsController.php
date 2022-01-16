@@ -388,33 +388,25 @@ class StatementsController extends Controller{
             compact('course_plan','id_group', 'statement_result'));
     }
 
-    public function get_resulting_excel(Request $request){
+    private function get_resulting_excel_internal(Request $request, $isForExam) {
         $id_group = $request->input('group');
-        $filename= $request->filename;
         $file = $request->file;
         $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
             ->first()->id_course_plan;
-        //echo $file;
         $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
         $statement_result = $this->result_statement->getStatementByGroup($id_group);
         Storage::disk('local')->put('file.xlsx', file_get_contents($file));
-        //
-        return $this->result_statement->getExcelLoadOut($course_plan,$statement_result,'/storage/app/file.xlsx');;
+        return $this->result_statement->getExcelLoadOut($course_plan,$statement_result,'/storage/app/file.xlsx', $isForExam);;
+    }
+
+    public function get_resulting_excel(Request $request){
+        return $this->get_resulting_excel_internal($request, false);
     }
 
     public function get_resulting_excel_ex(Request $request){
-        $id_group = $request->input('group');
-        $filename= $request->filename;
-        $file = $request->file;
-        $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
-            ->first()->id_course_plan;
-        //echo $file;
-        $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
-        $statement_result = $this->result_statement->getStatementByGroup($id_group);
-        Storage::disk('local')->put('file.xlsx', file_get_contents($file));
-        //
-        return $this->result_statement->getExcelLoadOutEx($course_plan,$statement_result,'/storage/app/file.xlsx');;
+        return $this->get_resulting_excel_internal($request, true);
     }
+
     //Отмечает или раз-отмечает студента на лекции
     public function lecture_mark_present(Request $request){
         $this->lecture_statement->markPresent($request);
