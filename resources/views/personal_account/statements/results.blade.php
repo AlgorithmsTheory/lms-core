@@ -161,8 +161,7 @@
                 @endforeach
 
                 {{--Итог за Экзамен(Зачёт)--}}
-                <td class="sum_result_exam {{$statement['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6
-                ? 'danger' : 'success'}}"
+                <td class="sum_result_exam {{$statement['exam_result'] ? 'success' : 'danger'}}"
                     data-max_exam="{{$course_plan->max_exam}}">
                     {{round($statement['sum_result_section_exam_work'], 0)}}
                 </td>
@@ -181,19 +180,19 @@
 
                     {{--Суммарный итог--}}
 
-                <td class="result_all_course {{$statement['absolutefullsum'] < 60 || $statement['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6 ? 'danger' : 'success'}}">
+                <td class="result_all_course {{$statement['course_result'] ? 'success' : 'danger'}}">
                     {{round($statement['absolutefullsum'], 0)}}
                 </td>
 
                 {{--Оценка(A-F)--}}
 
-                <td class="mark_bologna {{$statement['absolutefullsum'] < 60 || $statement['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6 ? 'danger' : 'success'}}">
+                <td class="mark_bologna {{$statement['course_result'] ? 'success' : 'danger'}}">
                     {{$statement['markBologna']}}
                 </td>
 
                 {{--Оценка(2-5)--}}
 
-                <td class="mark_rus {{$statement['absolutefullsum'] < 60 || $statement['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6 ? 'danger' : 'success'}}">
+                <td class="mark_rus {{$statement['course_result'] ? 'success' : 'danger'}}">
                     {{$statement['markRus']}}
                 </td>
 

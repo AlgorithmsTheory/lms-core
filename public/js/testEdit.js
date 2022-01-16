@@ -53,7 +53,7 @@ $('.btn-clone-test').click(function() {
         },
         data: { test_id: testID, token: 'token' },
         success: function(data){
-            alert('Тест успешно склонирован');
+            alert('Тест успешно клонирован');
         }
     });
 });

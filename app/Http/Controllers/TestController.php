@@ -148,7 +148,7 @@ class TestController extends Controller{
                 $test_is_exam = $this->testIsInExamSection($test, $exam_work_groupBy_sections);
                 // if ($res) array_push($ctr_tests, $test);
                 if ($test_is_exam) {
-                    if ($us_state['all_ok'] == 1) {
+                    if (true/*$us_state['all_ok'] == 1*/) {
                         array_push($ctr_tests, $test);
                     }
                 } else {

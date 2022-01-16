@@ -122,7 +122,7 @@
                 </div>
 
                 <div class="">
-                    <button class="btn btn-primary btn-raised btn-clone-test">Склонировать тест</button>
+                    <button class="btn btn-primary btn-raised btn-clone-test">Клонировать тест</button>
                 </div>
             </div>
 

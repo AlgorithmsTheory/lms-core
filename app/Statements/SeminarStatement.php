@@ -121,23 +121,29 @@ class SeminarStatement {
                 $c += 1;
             }
             $sem_sum->push($sum);
-            $ballsBySections->push($sum/$c*$maxes[$i]);
+            if ($c == 0) {
+                $ballsBySections->push(0);
+            } else {
+                $ballsBySections->push($sum / $c * $maxes[$i]);
+            }
             $i += 1;
         }
 
         $seminarWorks = $this->getWorkSeminarBySection($id_course_plan, $user->id, $all_seminars);
+
         $maxesW = collect();
         $sumW_balls = collect();
+
         $sections = $this->section_plan_DAO->getSectionPlansByCourse($id_course_plan);
-        $o = 0;
+
         foreach ($seminarWorks as $seminar){
             $sum = 0;
             foreach ($seminar as $semBal){
                 $sum += $semBal['points'];
             }
-            $maxesW->push($sections[$o]['max_seminar_work_point']);
+            $sect = $this->getSectionById($sections, $seminar[0]['id_section_plan']);
+            $maxesW->push($sect['max_seminar_work_point']);
             $sumW_balls->push($sum);
-            $o += 1;
         }
         $ind = 0;
         foreach($sumW_balls as $sec){
@@ -151,6 +157,15 @@ class SeminarStatement {
         $user_statement_seminar->put('seminar_passes_sections', $seminar_passes_sections);
         $user_statement_seminar->put('lala1', $maxesW);
         return $user_statement_seminar;
+    }
+
+    private function getSectionById($sections, $id) {
+        foreach ($sections as $section) {
+            if ($section['id_section_plan'] == $id) {
+                return $section;
+            }
+        }
+        return null;
     }
 
     //Отметка присутствия на семинаре
