@@ -14,8 +14,8 @@ class AddDeletedAtToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            // ýòà ñòðîêà äîáàâèò ñòîëáåö deleted_at â òàáëèöó users,
-            // â òîò ìîìåíò, êîãäà ýòà ìèãðàöèÿ áóäåò ïðèìåíåíà.
+            // ÑÑ‚Ð° ÑÑ‚Ñ€Ð¾ÐºÐ° Ð´Ð¾Ð±Ð°Ð²Ð¸Ñ‚ ÑÑ‚Ð¾Ð»Ð±ÐµÑ† deleted_at Ð² Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñƒ users,
+            // Ð² Ñ‚Ð¾Ñ‚ Ð¼Ð¾Ð¼ÐµÐ½Ñ‚, ÐºÐ¾Ð³Ð´Ð° ÑÑ‚Ð° Ð¼Ð¸Ð³Ñ€Ð°Ñ†Ð¸Ñ Ð±ÑƒÐ´ÐµÑ‚ Ð¿Ñ€Ð¸Ð¼ÐµÐ½ÐµÐ½Ð°.
             $table->softDeletes();
         });
     }

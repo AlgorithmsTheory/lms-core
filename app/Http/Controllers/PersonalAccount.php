@@ -42,9 +42,14 @@ class PersonalAccount extends Controller{
         $marks = [];
         $query = $this->test->select('id_test', 'test_course', 'test_name', 'test_type')->get();
         foreach ($query as $test){
-            if ($test->test_course != 'Рыбина'){                    //проверка, что тест открыт и он не из Рыбинских
-                array_push($tests, $test->id_test);                                                              //название тренировочного теста состоит из слова "Тренировочный" и
-                array_push($names, $test->test_name);                                                            //самого названия теста
+            /*
+             * проверка, что тест открыт и он не из Рыбинских
+             * название тренировочного теста состоит из слова "Тренировочный" и
+             * самого названия теста
+             */
+            if ($test->test_course != 'Рыбина'){
+                array_push($tests, $test->id_test);
+                array_push($names, $test->test_name);
             }
         }
         $amount = count($tests);
@@ -78,17 +83,6 @@ class PersonalAccount extends Controller{
                 'users.last_name', 'users.first_name', 'groups.group_name')
             ->paginate(100);
         foreach ($resultsQuery as $res){
-            #$user = User::whereId($res->id)->join('groups', 'groups.group_id', '=', 'users.group')->get();
-            #if(isset($res->last_name)) {
-            #    array_push($last_names, $user[0]->last_name);
-            #    array_push($first_names, $user[0]->first_name);
-            #    array_push($groups, $user[0]->group_name);
-            #}
-            #else {
-            #    array_push($last_names, 'УДАЛЕН');
-            #    array_push($first_names, 'УДАЛЕН');
-            #    array_push($groups, '-1');
-            #}
             array_push($last_names, $res->last_name);
             array_push($first_names, $res->first_name);
             array_push($groups, $res->group_name);
