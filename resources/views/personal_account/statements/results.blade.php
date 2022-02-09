@@ -110,8 +110,11 @@
                                     {{$control_work_passes->presence == 0 ? 'disabled' : ''}}/>
                         </td>
                     @endforeach
+                    {{-- ПЛ --}}
                     <td>{{$statement['ball_lection_passes'][$loop->index]}}</td>
+                    {{-- ПС --}}
                     <td>{{$statement['ballsBySectionsPass'][$loop->index]}}</td>
+                    {{-- РС --}}
                     <td>{{$statement['ballsBySectionsWorks'][$loop->index]}}</td>
                     {{--Итог за раздел--}}
                     <td data-result-section_num="{{$section_plan->section_num}}"
