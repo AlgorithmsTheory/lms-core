@@ -29,10 +29,13 @@ use Auth;
 use Illuminate\Http\Request;
 use App\Testing\Question;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use View;
 use App\Statements\DAO\CoursePlanDAO;
 use App\Statements\ResultStatement;
 use App\Statements\DAO\SectionPlanDAO;
+
 class TestController extends Controller{
     private $test;
     private $course_plan_DAO;
@@ -59,76 +62,10 @@ class TestController extends Controller{
         }
         return view('tests.list.train_tests', compact('tr_tests'));
     }
+
     private $section_plan_DAO;
+
     public function controlTests() {
-        $user = Auth::user();
-        $user_data = User::where('id','=',$user['id'])->first();
-        $groupInfo = Group::where('group_id','=',$user_data['group'])->first();
-        $id_course_plan = $groupInfo['id_course_plan'];
-        $id_user = $user['id'];
-        $resStat = new ResultStatement($this->course_plan_DAO,$this->section_plan_DAO);
-        $all_works = $resStat->getAllWorksUser($id_course_plan, $user->id);
-        $control_works = $all_works->filter(function ($value, $key)  {
-            return $value->is_exam == 0;
-        });
-        $exam_works = $all_works->filter(function ($value, $key) {
-            return $value->is_exam == 1;
-        });
-        $control_work_groupBy_sections = $resStat->getControlWorksGroupBySec($control_works);
-        $exam_work_groupBy_sections = $resStat->getExamWorksGroupBySection($exam_works);
-        $result_control_work_sections = $resStat->getResultControlWorkSections($control_work_groupBy_sections, $user->id);
-        $result_exam_work_sections = $resStat->getResultExamWorkSections($exam_work_groupBy_sections, $user->id);
-        $sum_result_section_control_work = $result_control_work_sections->sum();
-        $sum_result_section_exam_work = $result_exam_work_sections->sum();
-        $result_lecture = $resStat->getResultLecture($id_course_plan, $user->id);
-        $result_seminar = $resStat->getResultSeminar($id_course_plan, $user->id);
-        $result_work_seminar = $resStat->getResultWorkSeminar($id_course_plan, $user->id);
-        $sum_result = $sum_result_section_exam_work + $sum_result_section_control_work + $result_lecture
-            + $result_seminar + $result_work_seminar;
-        $us_state = $resStat ->getStatementByUser($id_course_plan, $user);
-        $markRus = Test::calcMarkRus(100, $sum_result);
-        $markBologna = Test::calcMarkBologna(100, $sum_result);
-        $all_id_lectures = $this->course_plan_DAO->getAllLectures($id_course_plan)
-            ->map(function ($item) {
-                return $item->id_lecture_plan;
-            });
-        $lecture_passes = LecturePasses::whereIn('lecture_passes.id_lecture_plan',$all_id_lectures)
-            ->where('id_user', '=', $user->id)
-            ->leftJoin('lecture_plans', 'lecture_plans.id_lecture_plan', 'lecture_passes.id_lecture_plan')
-            ->leftJoin('section_plans', 'section_plans.id_section_plan', 'lecture_plans.id_section_plan')
-            ->where('is_exam', '=', 0)
-            ->get(['lecture_plans.id_lecture_plan', 'lecture_passes.presence', 'lecture_plans.lecture_plan_num'
-                , 'section_plans.section_num'])
-            ->groupBy('section_num')
-            ->sortBy(function ($value, $key) {
-                return $key; //ключ = номер раздела
-            })
-            ->map(function ($item) {
-                return $item->sortBy('lecture_plan_num');
-            });
-        $count = 0;
-        $allcount = 0;
-        foreach($lecture_passes as $lecture){
-            foreach($lecture as $l){
-                $allcount += 1;
-                if ($l->presence == 1)
-                {
-                    $count += 1;
-                }
-            }
-        }
-        $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
-        $ball = $course_plan['max_exam'];
-        $lect_ball = 0;
-        if ($allcount != 0){
-            $lect_ball = $count/$allcount * $ball;
-        }
-        $minball = 0.6 * (100 - $ball);
-        $sum_result += $lect_ball;
-        $res = $sum_result > $minball;
-        $converted_res = $res ? 'true' : 'false';
-        #return  "". $converted_res;
-        //$res_Stat = ResultStatement::getStatementByUser($
         $query = $this->test->whereTest_type('Контрольный')
             ->whereVisibility(1)->whereArchived(0)->whereOnly_for_print(0)->get();
         $ctr_tests = [];
@@ -142,18 +79,10 @@ class TestController extends Controller{
                 $test['max_points'] = Fine::levelToPercent(Fine::whereId(Auth::user()['id'])->whereId_test($test['id_test'])->select('fine')->first()->fine) / 100 * $test['total'];
                 $test['amount'] = Test::getAmount($test['id_test']);
                 $test['attempts'] = Result::whereId_test($test['id_test'])->whereId(Auth::user()['id'])->where('mark_ru', '>=', 0)->count();
-                $test_is_exam = $this->testIsInExamSection($test, $exam_work_groupBy_sections);
-                // if ($res) array_push($ctr_tests, $test);
-                if ($test_is_exam) {
-                    if ($us_state['all_ok'] == 1) {
-                        array_push($ctr_tests, $test);
-                    }
-                } else {
-                    array_push($ctr_tests, $test);
-                }
+                array_push($ctr_tests, $test);
             }
         }
-        return view('tests.list.control_tests', compact('ctr_tests','control_work_groupBy_sections', 'exam_works', 'query'));
+        return view('tests.list.control_tests', compact('ctr_tests'));
     }
 
     private function testIsInExamSection($test, $examSectionsBySection) {
@@ -323,8 +252,31 @@ class TestController extends Controller{
         return redirect()->route('test_create');
     }
 
+    /** Возвращает идентификаторы тех тестов, которые доступны хотя бы для одной неархивной группы.
+     * Ответ имеет следующий вид: assoc(10 => 1, 23 => 1, 50 => 1);
+     * В качестве значений могут быть только единицы, отражающие тот факт, что тест с id, указанным
+     * в ключе, является "доступным".
+     */
+    private function getAvailableTests() {
+        $available_tests = TestForGroup::query()
+            ->join('groups', 'test_for_group.id_group', 'groups.group_id')
+            ->where('groups.archived', '=', 0)
+            ->where('test_for_group.availability', '=', 1)
+            ->orderBy('test_for_group.id_test')
+            ->select('test_for_group.id_test')
+            ->distinct()
+            ->get();
+        $res = [];
+        foreach ($available_tests as $test) {
+            $res[$test['id_test']] = 1;
+        }
+        return $res;
+    }
+
     /** Список всех тестов для их редактирования и завершения */
     public function editList(){
+        $available_tests = $this->getAvailableTests();
+
         $ctr_tests = $this->test->whereTest_type('Контрольный')
             ->where('archived', '<>', '1')
             ->orderByDesc('id_test')
@@ -332,6 +284,7 @@ class TestController extends Controller{
             ->get();
         foreach ($ctr_tests as $test){
             $test['amount'] = Test::getAmount($test['id_test']);
+            $test['at_least_one_available'] = array_key_exists($test['id_test'], $available_tests);
         }
 
         $tr_tests = $this->test->whereTest_type('Тренировочный')
@@ -341,9 +294,10 @@ class TestController extends Controller{
             ->get();
         foreach ($tr_tests as $test){
             $test['amount'] = Test::getAmount($test['id_test']);
+            $test['at_least_one_available'] = array_key_exists($test['id_test'], $available_tests);
         }
 
-        return view ('personal_account.test_list', compact('ctr_tests', 'tr_tests'));
+        return view('personal_account.test_list', compact('ctr_tests', 'tr_tests'));
     }
 
     public function profile($id_test) {
@@ -403,6 +357,36 @@ class TestController extends Controller{
             $test_for_group['finish_opportunity'] = Test::isFinishedForGroup($id_test, $test_for_group['id_group']) ? 0 : 1;
         }
         return view ('tests.edit', compact('test',  'test_for_groups'));
+    }
+
+    public function cloneTest(Request $request) {
+        if ($request->ajax()) {
+            $old_test_id = $request->input('test_id');
+            $old_items = Test::whereId_test($old_test_id)->get()->toArray();
+            $item = $old_items[0];
+            $item['id_test'] = null;
+            $item['test_name'] = $item['test_name'] . ' (копия)';
+            $new_test_id = Test::insertGetId($item);
+            $old_test_structures = TestStructure::whereId_test($old_test_id)->get()->toArray();
+            $new_structure_id = TestStructure::max('id_structure');
+            foreach ($old_test_structures as $old_test_structure) {
+                $new_structure_id++;
+                $old_structural_records = StructuralRecord::whereId_test($old_test_structure['id_test']) // whereId_test($old_test_id)
+                    ->where('id_structure', '=', $old_test_structure['id_structure'])->get()->toArray();
+
+                $old_test_structure['id_test'] = $new_test_id;
+                $old_test_structure['id_structure'] = $new_structure_id;
+
+                TestStructure::insert($old_test_structure);
+
+                foreach ($old_structural_records as $old_structural_record) {
+                    $old_structural_record['id_test'] = $new_test_id;
+                    $old_structural_record['id_structure'] = $new_structure_id;
+                    StructuralRecord::insert($old_structural_record);
+                }
+            }
+        }
+        return null;
     }
 
     /** Применение изменений после редактирования теста */
@@ -485,7 +469,26 @@ class TestController extends Controller{
             return view('tests.create', compact('groups', 'test'));
         }
     }
-    
+
+    public function makeAllControlTestsUnavailable() {
+        $this->makeAllTestsUnavailable('control');
+    }
+
+    public function makeAllTrainTestsUnavailable() {
+        $this->makeAllTestsUnavailable('train');
+    }
+
+    private function makeAllTestsUnavailable($test_type) {
+        $test_type_real = $test_type === 'control' ? 'Контрольный' : 'Тренировочный';
+        TestForGroup::whereAvailability(1)
+            ->whereIn('id_test', function($query) use ($test_type_real) {
+                $query->from('tests')
+                    ->select('id_test')
+                    ->where('test_type', '=', $test_type_real);
+            })
+            ->update(['availability' => 0]);
+    }
+
     /** Редактирование структуры теста */
     public function editStructure(Request $request, $id_test) {
         

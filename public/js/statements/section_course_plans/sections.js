@@ -7,13 +7,13 @@ $(document).on('click', '#addSection', function () {
     var idCoursePlan = parseInt($(".course_plan").attr('id').match(/\d+/));
     var idSectionPlanJs = Math.floor(Math.random() * 1000) + Date.now();
     var maxCourseBalls = parseInt($(".course_plan").attr('max_balls'));
-    var section_plan_max_lecture_ball = parseInt($(".course_plan").attr('max_lecture_ball'));
-    var section_plan_max_seminar_pass_ball = parseInt($(".course_plan").attr('max_seminar_pass_ball'));
+    var section_plan_max_lecture_ball = parseInt($(".course_plan").attr('max_lecture_pass_point'));
+    var section_plan_max_seminar_pass_ball = parseInt($(".course_plan").attr('max_seminar_pass_point'));
     $.ajax({
         cache: false,
         type: 'GET',
         url:   '/course_plan/get_add_section',
-        data: { section_num: sectionNum, id_course_plan: idCoursePlan, id_section_plan_js: idSectionPlanJs, max_balls: maxCourseBalls, max_lecture_ball: section_plan_max_lecture_ball, max_seminar_pass_ball:section_plan_max_seminar_pass_ball},
+        data: { section_num: sectionNum, id_course_plan: idCoursePlan, id_section_plan_js: idSectionPlanJs, max_balls: maxCourseBalls, max_lecture_pass_point: section_plan_max_lecture_ball, max_seminar_pass_point:section_plan_max_seminar_pass_ball},
         success: function(data){
             $('#sections').append(data);
         }
@@ -71,9 +71,9 @@ $(document).on('click', '.activate_edit_section', function () {
     //выключение readonly для полей
     currentSection.find('input[name="section_plan_name"]').filter( ':first' ).removeAttr("readonly");
     currentSection.find('input[name="section_plan_desc"]').filter( ':first' ).removeAttr("readonly");
-    currentSection.find('input[name="max_ball"]').filter(':first').removeAttr("readonly");
-    currentSection.find('input[name="max_seminar_pass_ball"]').filter(':first').removeAttr("readonly");
-    currentSection.find('input[name="max_lecture_ball"]').filter(':first').removeAttr("readonly");
+    currentSection.find('input[name="max_seminar_work_point"]').filter(':first').removeAttr("readonly");
+    currentSection.find('input[name="max_seminar_pass_point"]').filter(':first').removeAttr("readonly");
+    currentSection.find('input[name="max_lecture_pass_point"]').filter(':first').removeAttr("readonly");
     //вставка кнопки "Обновить информ. о разделе"
     var htmlUpdateBatton = '<button type="submit" class="ink-reaction btn btn-success" id="updateSection">Обновить информ. о разделе</button>';
     currentSection.find('.update_button_section').filter( ':first' ).html(htmlUpdateBatton);

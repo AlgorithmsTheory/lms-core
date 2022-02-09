@@ -35,6 +35,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Test  select()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Test  first()
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Test  insert($array)
+ * @method static \Illuminate\Database\Eloquent|\App\Testing\Test  insertGetId($array)
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Test  table($array)
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Test  max($array)
  * @method static \Illuminate\Database\Eloquent|\App\Testing\Test  toSql()

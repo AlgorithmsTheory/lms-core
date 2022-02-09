@@ -141,7 +141,7 @@ class ResultStatement {
         $sp = SectionPlan::where('id_course_plan', $id_course_plan)->get();
         $maxes = collect();
         $sp->map(function($section) use($maxes){
-            $maxes->push($section['max_seminar_pass_ball']);
+            $maxes->push($section['max_seminar_pass_point']);
         });
         $lectIter = 0;
         $lect_sum = collect();
@@ -267,11 +267,11 @@ class ResultStatement {
                     $sum += $semBal['points'];
 
             }
-            if ($sum < $sections[$o]['max_ball']) {
+            if ($sum < $sections[$o]['max_seminar_work_point']) {
                 $sWs->push($sum);
             }
             else{
-                $sWs->push($sections[$o]['max_ball']);
+                $sWs->push($sections[$o]['max_seminar_work_point']);
             }
             $o += 1;
         }
@@ -281,7 +281,7 @@ class ResultStatement {
         $sp = SectionPlan::where('id_course_plan', $id_course_plan)->get();
         $maxes = collect();
         $sp->map(function($section) use($maxes){
-            $maxes->push($section['max_ball']);
+            $maxes->push($section['max_seminar_work_point']);
         });
         $lectIter = 0;
         $lect_sum = collect();
@@ -323,341 +323,84 @@ class ResultStatement {
         }
         return $sec;
     }
-    public function getExcelLoadOut($course_plan,$statement_result, $file){
-        //$sectionsCount = count($course_plan['section_plans']);
-        //return $statement_result;
-        //return $course_plan['max_exam'] ;
-        $userResultSections = collect();
-        foreach ($statement_result as $user_state){
-            $userResultSections->push($user_state['sec_sum']);
-        };
-        $sectionCount = $userResultSections[0]->count();
-        //return $statement_result[0]['maximumsBySections'][0];
-        Excel::load($file, function($doc) use ($sectionCount,$statement_result, $userResultSections,$course_plan) {
-            $res = "";
-            $sheet = $doc->setActiveSheetIndex(0);
-            $studentStartNum = 12;
-            $e = $studentStartNum;
-            $count = 0;
-            while ($sheet->getCell("B" . $e) != ""){
-                $count += 1;
-                $e+= 1;
-            }
-            $costilNum = "B";
-            $costilName = "D";
-            $costilZachetka = "H";
-            $adress = array("A","B","C", "D", "E", "F", "G", "H", "I","J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG");
 
-            $u = 0;
-            $costil = array(4,2,2,2,2,2,2);
-            $startSectionNum = 8;
-            $sumBallSections = 0;
-            for ($i = 0; $i < $sectionCount; $i++) {
-                    $sheet->setCellValue($adress[$startSectionNum + $u] . ($studentStartNum-1), round($statement_result[0]['maximumsBySections'][$i],0) . '('. round($statement_result[0]['maximumsBySections'][$i] * 0.6,0) . ")");
-                    $u = $u + $costil[$i];
-                    $sumBallSections += $statement_result[0]['maximumsBySections'][$i];
-            }
-            $point = $startSectionNum + $u;
-            $StartSumBallForSections = $point + 2;
-            $sheet->setCellValue($adress[$StartSumBallForSections] . 11, round($sumBallSections,0));
-
-            $OtmetkaRazdel = $StartSumBallForSections +2;
-
-            $Balls1Ball = $OtmetkaRazdel +1;
-            $sheet->setCellValue($adress[$Balls1Ball] . 11, $course_plan['max_exam'] . '('. round($course_plan['max_exam'] * 0.6,0) . ")");
-
-            $Balls2Itog = $Balls1Ball +2;
-            $sheet->setCellValue($adress[$Balls2Itog] . 11, ($course_plan['max_exam'] + $sumBallSections) . '('. (round($course_plan['max_exam'] + $sumBallSections* 0.6,0)  ) . ")");
-
-            for ($j = 0; $j < $count; $j++){
-                $name = $sheet->getCell($costilName . $studentStartNum);
-                $name = mb_strtolower($name);
-                $userNum = 0;
-                $u = 0;
-
-                foreach ($statement_result as $user_statement){
-                    $usrLN = $user_statement['user']->last_name;
-                    $usrFN = mb_str_split($user_statement['user']->first_name)[0];
-                    $usrLN = mb_strtolower($usrLN);
-
-                    $res = $res . strpos($name, $usrLN);
-                    if (strpos($name, $usrLN) !== false){
-
-                        $sheet->setCellValue('D'.(100 + $j), $usrLN);
-                        $u = 0;
-                        $startSectionNum = 8;
-                        $sumRazdel = 0;
-                        for ($i = 0; $i < $sectionCount; $i++) {
-                                $sheet->setCellValue($adress[$startSectionNum + $u] . $studentStartNum, round($userResultSections[$userNum][$i],0) );
-                                $sumRazdel += $userResultSections[$userNum][$i];
-                                $u = $u + $costil[$i];
-                        }
-                        $point = $startSectionNum + $u;
-                        $StartSumBallForSections = $point;
-                        $sheet->setCellValue($adress[$StartSumBallForSections] . $studentStartNum, round($sumRazdel,0));
-
-                        $soIter = 0;
-                        $isAttestated = true;
-                        while ($soIter < count($userResultSections[$userNum])){
-                            if ($userResultSections[$userNum][$soIter] < $user_statement['minimumsBySections'][$soIter]){
-                                $isAttestated = false;
-                            }
-                            $soIter += 1;
-                        }
-                        $OtmetkaRazdel = $StartSumBallForSections +2;
-                        if($isAttestated){
-                            $sheet->setCellValue($adress[$OtmetkaRazdel] . $studentStartNum,  "а");
-                        }
-                        else{
-                            $sheet->setCellValue($adress[$OtmetkaRazdel] . $studentStartNum,  "н/а");
-                        }
-
-
-
-
-                        $Balls1Ball = $OtmetkaRazdel +1;
-                        $sheet->setCellValue($adress[$Balls1Ball] . $studentStartNum, round($user_statement['sum_result_section_exam_work'],0));
-
-                        $Balls2Itog = $Balls1Ball +2;
-                        $sheet->setCellValue($adress[$Balls2Itog] . $studentStartNum,  round($user_statement['absolutefullsum'],0));
-
-
-                        $Balls3TekstOtmetka = $Balls2Itog +2;
-                        $Balls4KodOtmetka = $Balls3TekstOtmetka +2;
-
-                        if ( $user_statement['markBologna'] == "F"){
-                            $sheet->setCellValue($adress[$Balls3TekstOtmetka] . $studentStartNum,   "не зачтено");
-                            $sheet->setCellValue($adress[$Balls4KodOtmetka] . $studentStartNum,  "2");
-                        }else{
-                            $sheet->setCellValue($adress[$Balls3TekstOtmetka] . $studentStartNum,  "зачтено");
-                            $sheet->setCellValue($adress[$Balls4KodOtmetka] . $studentStartNum,  "3");
-                        }
-
-
-
-
-                        $Balls6markBologna = $Balls4KodOtmetka +5;
-                        $sheet->setCellValue($adress[$Balls6markBologna] . $studentStartNum,  $user_statement['markBologna']);
-                        break;
-                    }
-                    else
-                    {
-                        $u = 0;
-                        $startSectionNum = 8;
-
-                        for ($i = 0; $i < $sectionCount; $i++) {
-                                $sheet->setCellValue($adress[$startSectionNum + $u] . $studentStartNum, "0" );
-                                $u = $u + $costil[$i];
-
-                        }
-                        $point = $startSectionNum + $u;
-                        $StartSumBallForSections = $point;
-                        $sheet->setCellValue($adress[$StartSumBallForSections] . $studentStartNum, "0");
-
-                        $OtmetkaRazdel = $StartSumBallForSections +2;
-                        $sheet->setCellValue($adress[$OtmetkaRazdel] . $studentStartNum,  "н/а");
-
-                        $Balls1Ball = $OtmetkaRazdel +1;
-                        $sheet->setCellValue($adress[$Balls1Ball] . $studentStartNum, "Z");
-
-                        $Balls2Itog = $Balls1Ball +2;
-                        $sheet->setCellValue($adress[$Balls2Itog] . $studentStartNum,  "Z");
-
-
-                        $Balls3TekstOtmetka = $Balls2Itog +2;
-                        $sheet->setCellValue($adress[$Balls3TekstOtmetka] . $studentStartNum,   "не зачтено");
-
-
-                        $Balls4KodOtmetka = $Balls3TekstOtmetka +2;
-                        $sheet->setCellValue($adress[$Balls4KodOtmetka] . $studentStartNum, "1");
-
-                        $Balls6markBologna = $Balls4KodOtmetka +5;
-                        $sheet->setCellValue($adress[$Balls6markBologna] . $studentStartNum,  "F");
-
-                    }
-                    $userNum += 1;
-
-                }
-                $studentStartNum+= 1;
-            }
-
-        })->store('xlsx', storage_path('app/public/excel'), true);
-        //PDF file is stored under project/public/download/info.pdf
-        $file = storage_path('app/public/excel'). "/file.xlsx";
-        $headers = array(
-            'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        );
-        return Response::download($file, 'file.xlsx', $headers);
+    private function getFirstWord($stringVal) {
+        return explode(' ', $stringVal)[0];
     }
 
-    public function getExcelLoadOutEx($course_plan,$statement_result, $file){
-        //$sectionsCount = count($course_plan['section_plans']);
-        //return $statement_result;
-        //return $course_plan['max_exam'] ;
-        $userResultSections = collect();
-        foreach ($statement_result as $user_state){
-            $userResultSections->push($user_state['sec_sum']);
-        };
-        $sectionCount = $userResultSections[0]->count();
-        //return $statement_result[0]['maximumsBySections'][0];
-        Excel::load($file, function($doc) use ($sectionCount,$statement_result, $userResultSections,$course_plan) {
-            $res = "";
+    private function findStatementByLastNameFirstWord($statements, $lastNameFirstWord) {
+        foreach ($statements as $stat) {
+            if ($this->getFirstWord($stat['user']->last_name) == $lastNameFirstWord) {
+                return $stat;
+            }
+        }
+        return null;
+    }
+
+    // $isForExam: true для экзаменационной ведомости, false - для зачётной ведомости
+    public function getExcelLoadOut($plan, $statements, $file, $isForExam) {
+        Excel::load($file, function($doc) use ($plan, $statements, $isForExam) {
             $sheet = $doc->setActiveSheetIndex(0);
-            $studentStartNum = 12;
-            $e = $studentStartNum;
-            $count = 0;
-            while ($sheet->getCell("B" . $e) != ""){
-                $count += 1;
-                $e+= 1;
-            }
-            $costilNum = "B";
-            $costilName = "D";
-            $costilZachetka = "H";
-            $adress = array("A","B","C", "D", "E", "F", "G", "H", "I","J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG");
-
-            $u = 0;
-            $costil = array(4,2,2,2,2,2,2);
-            $startSectionNum = 8;
-            $sumBallSections = 0;
-            for ($i = 0; $i < $sectionCount; $i++) {
-                $sheet->setCellValue($adress[$startSectionNum + $u] . ($studentStartNum-1), round($statement_result[0]['maximumsBySections'][$i],0) . '('. round($statement_result[0]['maximumsBySections'][$i] * 0.6,0) . ")");
-                $u = $u + $costil[$i];
-                $sumBallSections += $statement_result[0]['maximumsBySections'][$i];
-            }
-            $point = $startSectionNum + $u;
-            $StartSumBallForSections = $point + 2;
-            $sheet->setCellValue($adress[$StartSumBallForSections] . 11, round($sumBallSections,0));
-
-            $OtmetkaRazdel = $StartSumBallForSections +2;
-
-            $Balls1Ball = $OtmetkaRazdel +1;
-            $sheet->setCellValue($adress[$Balls1Ball] . 11, $course_plan['max_exam'] . '('. round($course_plan['max_exam'] * 0.6,0) . ")");
-
-            $Balls2Itog = $Balls1Ball +2;
-            $sheet->setCellValue($adress[$Balls2Itog] . 11, ($course_plan['max_exam'] + $sumBallSections) . '('. (round($course_plan['max_exam'] + $sumBallSections* 0.6,0)  ) . ")");
-
-            for ($j = 0; $j < $count; $j++){
-                $name = $sheet->getCell($costilName . $studentStartNum);
-                $name = mb_strtolower($name);
-                $userNum = 0;
-                $u = 0;
-
-                foreach ($statement_result as $user_statement){
-                    $usrLN = $user_statement['user']->last_name;
-                    $usrFN = mb_str_split($user_statement['user']->first_name)[0];
-                    $usrLN = mb_strtolower($usrLN);
-
-                    $res = $res . strpos($name, $usrLN);
-                    if (strpos($name, $usrLN) !== false){
-
-                        $sheet->setCellValue('D'.(100 + $j), $usrLN);
-                        $u = 0;
-                        $startSectionNum = 8;
-                        $sumRazdel = 0;
-                        for ($i = 0; $i < $sectionCount; $i++) {
-                            $sheet->setCellValue($adress[$startSectionNum + $u] . $studentStartNum, round($userResultSections[$userNum][$i],0) );
-                            $sumRazdel += $userResultSections[$userNum][$i];
-                            $u = $u + $costil[$i];
-                        }
-                        $point = $startSectionNum + $u;
-                        $StartSumBallForSections = $point;
-                        $sheet->setCellValue($adress[$StartSumBallForSections] . $studentStartNum, round($sumRazdel,0));
-
-                        $soIter = 0;
-                        $isAttestated = true;
-                        while ($soIter < count($userResultSections[$userNum])){
-                            if ($userResultSections[$userNum][$soIter] < $user_statement['minimumsBySections'][$soIter]){
-                                $isAttestated = false;
-                            }
-                            $soIter += 1;
-                        }
-                        $OtmetkaRazdel = $StartSumBallForSections +2;
-                        if($isAttestated){
-                            $sheet->setCellValue($adress[$OtmetkaRazdel] . $studentStartNum,  "а");
-                        }
-                        else{
-                            $sheet->setCellValue($adress[$OtmetkaRazdel] . $studentStartNum,  "н/а");
-                        }
-
-
-
-
-                        $Balls1Ball = $OtmetkaRazdel +1;
-                        $sheet->setCellValue($adress[$Balls1Ball] . $studentStartNum, round($user_statement['sum_result_section_exam_work'],0));
-
-                        $Balls2Itog = $Balls1Ball +2;
-                        $sheet->setCellValue($adress[$Balls2Itog] . $studentStartNum,  round($user_statement['absolutefullsum'],0));
-
-
-                        $Balls3TekstOtmetka = $Balls2Itog +2;
-                        if ( $user_statement['markBologna'] == "F"){
-                            $sheet->setCellValue($adress[$Balls3TekstOtmetka] . $studentStartNum,   "неудовл");
-                        }else{
-                            if (round($user_statement['absolutefullsum'],0) >= 60 && round($user_statement['absolutefullsum'],0) <= 69){
-                                $sheet->setCellValue($adress[$Balls3TekstOtmetka] . $studentStartNum,  "удовл");
-                            }else{
-                                if (round($user_statement['absolutefullsum'],0) >= 70 && round($user_statement['absolutefullsum'],0) <= 89){
-                                    $sheet->setCellValue($adress[$Balls3TekstOtmetka] . $studentStartNum,  "хор");
-                                }
-                                else{
-                                    if (round($user_statement['absolutefullsum'],0) >= 90 ){
-                                        $sheet->setCellValue($adress[$Balls3TekstOtmetka] . $studentStartNum,  "отл");
-                                    }
-                                }
-                            }
-                        }
-
-
-                        $Balls4KodOtmetka = $Balls3TekstOtmetka +2;
-                        $sheet->setCellValue($adress[$Balls4KodOtmetka] . $studentStartNum,  $user_statement['markRus']);
-
-                        $Balls6markBologna = $Balls4KodOtmetka +5;
-                        $sheet->setCellValue($adress[$Balls6markBologna] . $studentStartNum,  $user_statement['markBologna']);
-                        break;
-                    }
-                    else
-                    {
-                        $u = 0;
-                        $startSectionNum = 8;
-
-                        for ($i = 0; $i < $sectionCount; $i++) {
-                            $sheet->setCellValue($adress[$startSectionNum + $u] . $studentStartNum, "0" );
-                            $u = $u + $costil[$i];
-
-                        }
-                        $point = $startSectionNum + $u;
-                        $StartSumBallForSections = $point;
-                        $sheet->setCellValue($adress[$StartSumBallForSections] . $studentStartNum, "0");
-
-                        $OtmetkaRazdel = $StartSumBallForSections +2;
-                        $sheet->setCellValue($adress[$OtmetkaRazdel] . $studentStartNum,  "н/а");
-
-                        $Balls1Ball = $OtmetkaRazdel +1;
-                        $sheet->setCellValue($adress[$Balls1Ball] . $studentStartNum, "Z");
-
-                        $Balls2Itog = $Balls1Ball +2;
-                        $sheet->setCellValue($adress[$Balls2Itog] . $studentStartNum,  "Z");
-
-
-                        $Balls3TekstOtmetka = $Balls2Itog +2;
-                        $sheet->setCellValue($adress[$Balls3TekstOtmetka] . $studentStartNum,   "не удовл.");
-
-
-                        $Balls4KodOtmetka = $Balls3TekstOtmetka +2;
-                        $sheet->setCellValue($adress[$Balls4KodOtmetka] . $studentStartNum, "1");
-
-                        $Balls6markBologna = $Balls4KodOtmetka +5;
-                        $sheet->setCellValue($adress[$Balls6markBologna] . $studentStartNum,  "F");
-
-                    }
-                    $userNum += 1;
-
+            $t1 = $sheet->getCell("B9");
+            $row = 9;
+            while (true) {
+                $fullName = trim($sheet->getCell("B" . $row));
+                if ($fullName == '') {
+                    break;
                 }
-                $studentStartNum+= 1;
+                $lastNameFirstWord = $this->getFirstWord($fullName);
+                $stat = $this->findStatementByLastNameFirstWord($statements, $lastNameFirstWord);
+                // $stat can be null here
+                $col = ord('F');
+                if ($stat != null && $stat['control_work_groupBy_sections']->isEmpty()) {
+                    $row++;
+                    continue;
+                }
+                foreach ($plan->section_plans as $ind => $section_plan) {
+                    $sectionResult = $stat == null ? 0 : round($stat['sec_sum'][$ind], 0);
+                    $sheet->setCellValue(chr($col) . $row, $sectionResult);
+                    $col++;
+                }
+                $sectionsResult = $stat == null ? 0 : round($stat['fullsum'], 0);
+                $sheet->setCellValue(chr($col) . $row, $sectionsResult);
+                $col++;
+                $certified = ($stat == null || $stat['all_ok'] == 0) ? 'н/а' : 'а';
+                $sheet->setCellValue(chr($col) . $row, $certified);
+                $col++;
+                if ($stat != null && $stat['exam_work_groupBy_sections']->isEmpty()) {
+                    $row++;
+                    continue;
+                }
+                $examResult = $stat == null ? 'Z' : round($stat['sum_result_section_exam_work'], 0);
+                $sheet->setCellValue(chr($col) . $row, $examResult);
+                $col++;
+                $overallResult = $stat == null ? 'Z' : round($stat['absolutefullsum'], 0);
+                $sheet->setCellValue(chr($col) . $row, $overallResult);
+                $col++;
+                $credited = ($stat == null || !$stat['course_result']) ? 'не зачтено' : 'зачтено';
+                $sheet->setCellValue(chr($col) . $row, $credited);
+                $col++;
+                if ($stat == null) {
+                    $markCode = 1;
+                } else {
+                    if ($isForExam) {
+                        $markCode = $stat['markRus'];
+                    } else {
+                        if (!$stat['course_result']) {
+                            $markCode = 2;
+                        } else {
+                            $markCode = 3;
+                        }
+                    }
+                }
+                $sheet->setCellValue(chr($col) . $row, $markCode);
+                $col++;
+                $markBologna = $stat == null ? 'F' : $stat['markBologna'];
+                $sheet->setCellValue(chr($col) . $row, $markBologna);
+                $col++;
+                $row++;
             }
-
         })->store('xlsx', storage_path('app/public/excel'), true);
-        //PDF file is stored under project/public/download/info.pdf
         $file = storage_path('app/public/excel'). "/file.xlsx";
         $headers = array(
             'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -708,7 +451,7 @@ class ResultStatement {
             }
             $i += 1;
         }
-        if ($section_total_array->sum() < $course_plan->max_semester * 0.6) {
+        if (round($section_total_array->sum(), 0) < $course_plan->max_semester * 0.6) {
             $all_ok = 0;
         }
 
@@ -745,7 +488,7 @@ class ResultStatement {
         });
         $seminar_attended_max_points = collect();
         $sp->map(function($section) use($seminar_attended_max_points){
-            $seminar_attended_max_points->push($section['max_seminar_pass_ball']);
+            $seminar_attended_max_points->push($section['max_seminar_pass_point']);
         });
 
         $i = 0;
@@ -757,7 +500,11 @@ class ResultStatement {
                 $sum += $seminar->presence;
                 $c += 1;
             }
-            $seminar_attended_points->push($sum/$c*$seminar_attended_max_points[$i]);
+            if ($c == 0) {
+                $seminar_attended_points->push(0);
+            } else {
+                $seminar_attended_points->push($sum/$c*$seminar_attended_max_points[$i]);
+            }
             $i += 1;
         }
 
@@ -772,7 +519,7 @@ class ResultStatement {
             foreach ($seminar as $semBal){
                 $sum += $semBal['points'];
             }
-            $maxesW->push($sections[$o]['max_ball']);
+            $maxesW->push($sections[$o]['max_seminar_work_point']);
             $seminar_work_points->push($sum);
             $o += 1;
         }
@@ -787,7 +534,7 @@ class ResultStatement {
         // Подсчет количества баллов за посещение лекций
         $maxesLP = collect();
         $sp->map(function($section) use($maxesLP){
-            $maxesLP->push($section['max_lecture_ball']);
+            $maxesLP->push($section['max_lecture_pass_point']);
         });
         $lect_pres = collect([]);
         $all_id_lectures2 = $this->course_plan_DAO->getAllLecturesBySection($id_course_plan)
@@ -814,7 +561,11 @@ class ResultStatement {
                 $c += 1;
             }
             $lect_sum->push($sum);
-            $lecture_points->push($sum/$c*$maxesLP[$i]);
+            if ($c == 0) {
+                $lecture_points->push(0);
+            } else {
+                $lecture_points->push($sum/$c*$maxesLP[$i]);
+            }
             $i += 1;
         }
 
@@ -855,14 +606,18 @@ class ResultStatement {
 
         // Получение абсолютной суммы
         $abssum1 = 0;
-        $abssum1 += $all_sections_total;
-        $abssum1 += $sum_result_section_exam_work;
+        $abssum1 += round($all_sections_total, 0);
+        $abssum1 += round($sum_result_section_exam_work, 0);
         if ($abssum1 > 100){
             $abssum1 = 100;
         }
         // С прошлых версий, в этой сам алгоритм расчета не был изменен
         $markRus = Test::calcMarkRus(100, $abssum1);
         $markBologna = Test::calcMarkBologna(100, $abssum1);
+        if (round($sum_result_section_exam_work, 0) < 30) {
+            $markRus = 2;
+            $markBologna = 'F';
+        }
 
         $user_statement_result = collect([]);
 
@@ -887,8 +642,38 @@ class ResultStatement {
         $user_statement_result->put('markRus', $markRus);
         $user_statement_result->put('markBologna', $markBologna);
         $user_statement_result->put('exam_work_groupBy_sections', $exam_work_groupBy_sections);
+        $user_statement_result->put('exam_result', $this->getExamResult($user_statement_result, $course_plan));
+        $user_statement_result->put('course_result', $this->getCourseResult($user_statement_result));
+        if (!$user_statement_result['exam_result']) {
+            $user_statement_result['markBologna'] = 'F';
+            $user_statement_result['markRus'] = '2';
+        }
 
         return $user_statement_result;
+    }
+
+    // return true if exam result is green.
+    // return false if exam result is red.
+    private function getExamResult($st, $course_plan) {
+        if (!$st['exam_work_groupBy_sections']->isEmpty()) {
+            foreach ($course_plan->exam_plans as $exam_plan) {
+                foreach ($st['exam_work_groupBy_sections'][$exam_plan->id_section_plan] as $control_work_passes) {
+                    if (round($control_work_passes->points, 0) < 15) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return round($st['sum_result_section_exam_work'], 0) >= $course_plan->max_exam * 0.6;
+    }
+
+    // return true if course result is green.
+    // return false if course result is red.
+    private function getCourseResult($st) {
+        if (!$st['exam_result']) {
+            return false;
+        }
+        return round($st['absolutefullsum'], 0) >= 60;
     }
 
     public function getSumResultSectionControlWork($id_course_plan,$id_user) {

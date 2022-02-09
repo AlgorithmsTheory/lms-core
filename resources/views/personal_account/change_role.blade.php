@@ -60,13 +60,19 @@
                             <td>Админ</td>
                             <td>Обычный</td>
                             <td>Преподаватель</td>
-
+                            <td>Удалить!</td>
                         </tr>
                         <tbody id="target">
                         @foreach($query as $user)
                             <tr id="{{ $user['id'] }}">
                                 <td>
-                                    {{ $user['group_name'] }}
+                                    <select name="group-select" class="form-control" size="1" onchange="changeGroup(this, {{ $user['id'] }})">
+                                        @foreach($groups as $group)
+                                            <option value="{{ $group['group_id'] }}" {{ $user->group === $group['group_id'] ? 'selected' : '' }}>{{ $group['group_name'] }}</option>/td>
+                                        @endforeach
+                                    </select>
+{{--                                    <script> console.log(JSON.parse('{!! json_encode($user) !!}')); </script>--}}
+{{--                                    {{ $user['group_name'] }}--}}
                                 </td>
                                 <td>
                                     <input type="text" value="{{ $user['last_name'] }}" name="{{ $user['id'] }}" class="l_name_change">
@@ -94,6 +100,9 @@
                                 <td>
                                     <button type="button" class="tutor btn btn-accent-bright" name="{{ $user['id'] }}">Преподаватель</button>
                                 </td>
+                                <td>
+                                    <button type="button" class="remove-the-user btn btn-danger" name="{{ $user['id'] }}">Удалить!</button>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -110,6 +119,6 @@
 @stop
 
 @section('js-down')
-    {!! HTML::script('js/personal_account/add_student.js') !!}
+    {!! HTML::script('js/personal_account/change_user_role.js') !!}
     {!! HTML::script('js/personal_account/person_filter.js') !!}
 @stop

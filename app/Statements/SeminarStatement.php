@@ -110,7 +110,7 @@ class SeminarStatement {
             ->sortBy('section_num');
         $maxes = collect();
         $sp->map(function($section) use($maxes){
-            $maxes->push($section['max_seminar_pass_ball']);
+            $maxes->push($section['max_seminar_pass_point']);
         });
         $sem_sum = collect();
         foreach ($sem_pres as $lect){
@@ -121,23 +121,29 @@ class SeminarStatement {
                 $c += 1;
             }
             $sem_sum->push($sum);
-            $ballsBySections->push($sum/$c*$maxes[$i]);
+            if ($c == 0) {
+                $ballsBySections->push(0);
+            } else {
+                $ballsBySections->push($sum / $c * $maxes[$i]);
+            }
             $i += 1;
         }
 
         $seminarWorks = $this->getWorkSeminarBySection($id_course_plan, $user->id, $all_seminars);
+
         $maxesW = collect();
         $sumW_balls = collect();
+
         $sections = $this->section_plan_DAO->getSectionPlansByCourse($id_course_plan);
-        $o = 0;
+
         foreach ($seminarWorks as $seminar){
             $sum = 0;
             foreach ($seminar as $semBal){
                 $sum += $semBal['points'];
             }
-            $maxesW->push($sections[$o]['max_ball']);
+            $sect = $this->getSectionById($sections, $seminar[0]['id_section_plan']);
+            $maxesW->push($sect['max_seminar_work_point']);
             $sumW_balls->push($sum);
-            $o += 1;
         }
         $ind = 0;
         foreach($sumW_balls as $sec){
@@ -151,6 +157,15 @@ class SeminarStatement {
         $user_statement_seminar->put('seminar_passes_sections', $seminar_passes_sections);
         $user_statement_seminar->put('lala1', $maxesW);
         return $user_statement_seminar;
+    }
+
+    private function getSectionById($sections, $id) {
+        foreach ($sections as $section) {
+            if ($section['id_section_plan'] == $id) {
+                return $section;
+            }
+        }
+        return null;
     }
 
     //Отметка присутствия на семинаре
@@ -215,12 +230,12 @@ class SeminarStatement {
                     ->sum('work_points');
             //$section_plan_num = $section_plan->section_num'];
             $section = $this->course_plan_DAO->getSectionPlanByCoursePlan($validator->getData()['id_course_plan'],$validator->getData()['section_num']);
-            $max_section_balls = $section['section_plans'][$validator->getData()['section_num']-1]['max_ball'];
+            $max_section_balls = $section['section_plans'][$validator->getData()['section_num']-1]['max_seminar_work_point'];
             $sp = SectionPlan::where('id_course_plan', $validator->getData()['id_course_plan'])->get();
             //$validator->errors()->add('exceeded_max_points', 'С ' .  . ' ');
             $maxes = collect();
             $sp->map(function($section) use($maxes){
-                $maxes->push($section['max_ball']);
+                $maxes->push($section['max_seminar_work_point']);
             });
             $different = abs($max_section_balls - $current_point);
             if ( $current_point > $max_section_balls)

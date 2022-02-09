@@ -1,7 +1,8 @@
 function groupFilter() {
     // Declare variables
     var filter, table, tr, td, i;
-    filter = $('#groupInput option:selected').val().toUpperCase();
+    filter = $('#groupInput option:selected').text().toUpperCase().trim();
+    theValue = +$('#groupInput option:selected').val();
     table = document.getElementById("target");
     tr = table.getElementsByTagName("tr");
 
@@ -9,14 +10,24 @@ function groupFilter() {
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[0];
         if (td) {
-            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
+            const selectEl = td.querySelector('select');
+            if (selectEl) {
+                if (filter === 'ВСЕ' || +selectEl.value === theValue) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
             } else {
-                tr[i].style.display = "none";
+                if (filter === 'ВСЕ' || td.innerHTML.toUpperCase().trim() === filter) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
             }
         }
     }
-};
+}
+
 function emailFilter() {
     // Declare variables
     var input, filter, table, tr, td, i;
@@ -36,7 +47,8 @@ function emailFilter() {
             }
         }
     }
-};
+}
+
 function nameFilter() {
     // Declare variables
     var input, filter, table, tr, td, i;

@@ -22,14 +22,14 @@
             <form action="{{URL::route('questions_find')}}" method="POST" class="form">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="form-group col-md-6 floating-label">
-                    <input name="title" type="text" class="form-control" id="title">
+                    <input name="title" type="text" class="form-control" id="title" value="{{ $filter_query }}">
                     <label for="title">Текст вопроса</label>
                 </div>
                 <div class="form-group col-md-6">
                     <select name="section" id="section" class="form-control" size="1" required>
                         <option value="Все">Все</option>
                         @foreach ($sections as $section)
-                        <option value="{{ $section['section_name'] }}">{{ $section['section_name'] }}</option>
+                        <option value="{{ $section['section_name'] }}" {{ $filter_section == $section['section_name'] ? 'selected' : '' }}>{{ $section['section_name'] }}</option>
                         @endforeach
                     </select>
                     <label for="section">Раздел</label>
@@ -41,7 +41,7 @@
                     <select name="type" id="type" class="form-control" size="1">
                         <option value="Все">Все</option>
                         @foreach ($types as $type)
-                        <option value="{{ $type['type_name'] }}">{{ $type['type_name'] }}</option>
+                        <option value="{{ $type['type_name'] }}" {{ $filter_type == $type['type_name'] ? 'selected' : '' }}>{{ $type['type_name'] }}</option>
                         @endforeach
                     </select>
                     <label for="type">Тип</label>
@@ -70,7 +70,7 @@
                 </div>
                 <header>
                     Тема: {{ $question['theme'] }} <br>
-                    Текст: {{ substr($question['title'], 0, 160) }}
+                    Текст: {{ str_limit($question['title'], $limit = 120, $end = '...') }}
                 </header>
             </div><!--end .card-head -->
             <div class="card-body style-default-bright" style="display: none">
@@ -85,6 +85,9 @@
 @stop
 
 @section('js-down')
+    <script>
+        const filter_theme = {!! json_encode($filter_theme, JSON_HEX_TAG) !!};
+    </script>
     {!! HTML::script('js/questionList.js') !!}
 
     {!! HTML::script('js/core/source/App.js') !!}

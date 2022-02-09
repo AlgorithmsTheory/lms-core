@@ -44,7 +44,7 @@
             <td>ПЛ</td>
             <td>ПС</td>
             <td>РС</td>
-            <td class="info" rowspan="2">Итог</td>
+            <td class="info" rowspan="2">Итог: {{$section_plan->getOverallMaxPoints()}}</td>
         @endforeach
 
         @foreach($course_plan->exam_plans as $exam_plan)
@@ -59,10 +59,10 @@
             @foreach($section_plan->control_work_plans as $control_work_plan)
                 <td>max: {{$control_work_plan->max_points}}</td>
             @endforeach
-            <script>console.log('{{json_encode($section_plan)}}')</script>
-                <td>max: {{$section_plan->max_lecture_ball}}</td>
-                <td>max: {{$section_plan->max_seminar_pass_ball}}</td>
-                <td>max: {{$section_plan->max_ball}}</td>
+{{--            <script>console.log('{{json_encode($section_plan)}}')</script>--}}
+                <td>max: {{$section_plan->max_lecture_pass_point}}</td>
+                <td>max: {{$section_plan->max_seminar_pass_point}}</td>
+                <td>max: {{$section_plan->max_seminar_work_point}}</td>
         @endforeach
 
         <td>max: {{$course_plan->max_semester}}</td>
@@ -110,8 +110,11 @@
                                     {{$control_work_passes->presence == 0 ? 'disabled' : ''}}/>
                         </td>
                     @endforeach
+                    {{-- ПЛ --}}
                     <td>{{$statement['ball_lection_passes'][$loop->index]}}</td>
+                    {{-- ПС --}}
                     <td>{{$statement['ballsBySectionsPass'][$loop->index]}}</td>
+                    {{-- РС --}}
                     <td>{{$statement['ballsBySectionsWorks'][$loop->index]}}</td>
                     {{--Итог за раздел--}}
                     <td data-result-section_num="{{$section_plan->section_num}}"
@@ -161,8 +164,7 @@
                 @endforeach
 
                 {{--Итог за Экзамен(Зачёт)--}}
-                <td class="sum_result_exam {{$statement['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6
-                ? 'danger' : 'success'}}"
+                <td class="sum_result_exam {{$statement['exam_result'] ? 'success' : 'danger'}}"
                     data-max_exam="{{$course_plan->max_exam}}">
                     {{round($statement['sum_result_section_exam_work'], 0)}}
                 </td>
@@ -181,19 +183,19 @@
 
                     {{--Суммарный итог--}}
 
-                <td class="result_all_course {{$statement['absolutefullsum'] < 60 || $statement['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6 ? 'danger' : 'success'}}">
+                <td class="result_all_course {{$statement['course_result'] ? 'success' : 'danger'}}">
                     {{round($statement['absolutefullsum'], 0)}}
                 </td>
 
                 {{--Оценка(A-F)--}}
 
-                <td class="mark_bologna {{$statement['absolutefullsum'] < 60 || $statement['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6 ? 'danger' : 'success'}}">
+                <td class="mark_bologna {{$statement['course_result'] ? 'success' : 'danger'}}">
                     {{$statement['markBologna']}}
                 </td>
 
                 {{--Оценка(2-5)--}}
 
-                <td class="mark_rus {{$statement['absolutefullsum'] < 60 || $statement['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6 ? 'danger' : 'success'}}">
+                <td class="mark_rus {{$statement['course_result'] ? 'success' : 'danger'}}">
                     {{$statement['markRus']}}
                 </td>
 

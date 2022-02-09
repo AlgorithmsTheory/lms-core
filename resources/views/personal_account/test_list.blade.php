@@ -21,7 +21,7 @@
                     </div>
                     <form action="" method="POST" class="form">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <table class="table table-condensed" id="out-of-date-test-table">
+                        <table class="table table-condensed control-tests-table" id="out-of-date-test-table">
                             <tr>
                                 <th>Название теста</th>
                                 <th class="text-center">Количество вопросов</th>
@@ -33,7 +33,7 @@
                                 <th class="text-center">Удалить тест</th>
                             </tr>
                             @foreach ($ctr_tests as $test)
-                            <tr>
+                            <tr style="background-color: {{ $test['at_least_one_available'] ? '#caffca' : '#faeaea' }};">
                                 <input type="hidden" name="id-test[]" class="id-test" value="{{$test['id_test']}}">
                                 <td>{{$test['test_name']}}</td>
                                 <td class="text-center">{{$test['amount']}}</td>
@@ -81,14 +81,14 @@
                             <button class="btn btn-primary btn-raised submit-test" type="submit">Завершить выбранные тесты</button>
                         </div>
                     </form>
-                    <br>
+                    <button class="btn btn-primary btn-raised btn-unavailable-all-control-tests" style="margin-bottom: 20px;}" type="button">Сделать недоступными все контрольные тесты для всех групп</button>
                     <div class="col-lg-offset-0 col-md-12 col-sm-12 card style-gray">
                         <h2 class="text-default-bright">Тренировочные тесты</h2>
                     </div>
                     <form action="" method="POST" class="form">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="id_group" value="{{ $id_group }}">
-                        <table class="table table-condensed" id="out-of-date-test-table">
+                        <table class="table table-condensed train-tests-table" id="out-of-date-test-table">
                             <tr>
                                 <th>Название теста</th>
                                 <th class="text-center">Количество вопросов</th>
@@ -100,7 +100,7 @@
                                 <th class="text-center">Удалить тест</th>
                             </tr>
                             @foreach ($tr_tests as $test)
-                            <tr>
+                            <tr style="background-color: {{ $test['at_least_one_available'] ? '#caffca' : '#faeaea' }};">
                                 <input type="hidden" name="id-test[]" class="id-test" value="{{$test['id_test']}}">
                                 <td>{{$test['test_name']}}</td>
                                 <td class="text-center">{{$test['amount']}}</td>
@@ -146,6 +146,7 @@
                             @endforeach
                         </table>
                     </form>
+                    <button class="btn btn-primary btn-raised btn-unavailable-all-train-tests" type="button">Сделать недоступными все тренировочные тесты для всех групп</button>
                 </div>
             </div>
         </div>

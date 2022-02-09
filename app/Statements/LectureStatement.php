@@ -72,7 +72,7 @@ class LectureStatement {
             ->sortBy('section_num');
         $maxes = collect();
         $sp->map(function($section) use($maxes){
-            $maxes->push($section['max_lecture_ball']);
+            $maxes->push($section['max_lecture_pass_point']);
         });
         $lect_pres = collect([]);
         $all_id_lectures2 = $this->course_plan_DAO->getAllLecturesBySection($id_course_plan)

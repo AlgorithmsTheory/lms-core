@@ -43,3 +43,45 @@ var myBlurFunction = function(state) {
         containerElement.setAttribute('class', null);
     }
 };
+
+// testType should be 'control' or 'train'
+function makeUnavailable(testType) {
+    if (!confirm('Вы уверены, что хотите сделать все тесты недоступными?')) {
+        return;
+    }
+    myBlurFunction(1);
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url:   `/tests/make-all-${testType}-tests-unavailable`,
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+            if (token) {
+                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        data: { },
+        success: function(){
+            const requiredTable = document.querySelector(`.${testType}-tests-table`);
+            if (requiredTable) {
+                let isFirst = true;
+                for (let row of requiredTable.rows) {
+                    if (isFirst) {
+                        isFirst = false;
+                        continue;
+                    }
+                    row.style.backgroundColor = '#faeaea';
+                }
+            }
+            myBlurFunction(0);
+        }
+    });
+}
+
+$('.btn-unavailable-all-control-tests').on('click', function(){
+    makeUnavailable('control');
+});
+
+$('.btn-unavailable-all-train-tests').on('click', function(){
+    makeUnavailable('train');
+});

@@ -17,26 +17,34 @@
             <div class="card-body">
                 <h2 class="text-center">Результаты тестов всех пользователей</h2>
                 <div class="form">
-                    <div class="form-group">
-                        <select name="type" id="tests" class="form-control" size="1">
-                            <option value="">Все</option>
-                            @for ($i=0; $i<$amount; $i++)
-                                <option value="{{ $names[$i] }}">{{ $names[$i] }}</option>/td>
-                            @endfor
-                        </select>
-                        <label for="select-type">Тесты</label>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <textarea  class="form-control textarea3" rows="1" id="regexp2" placeholder="" required></textarea>
-                        <label for="textarea3">Фаимилия студета</label>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <textarea  class="form-control textarea3" id="regexp" rows="1" placeholder="" required></textarea>
-                        <label for="textarea3">Группа</label>
-                    </div>
+                    <form action="">
+                        <div class="form-group">
+                            <select name="test" id="tests" class="form-control" size="1">
+                                <option value="">Все</option>
+                                @for ($i=0; $i<$amount; $i++)
+                                    <option value="{{ $tests[$i] }}" {{ !empty($request_test) && $request_test == $tests[$i] ? 'selected' : '' }}>{{ $names[$i] }}</option>/td>
+                                @endfor
+                            </select>
+                            <label for="select-type">Тесты</label>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <textarea  class="form-control textarea3" rows="1" id="regexp2" placeholder="" name="surname">{{ !empty($request_surname) ? $request_surname : '' }}</textarea>
+                            <label for="textarea3">Фаимилия студета</label>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <textarea  class="form-control textarea3" id="regexp" rows="1" placeholder="" name="group">{{ !empty($request_group) ? $request_group : '' }}</textarea>
+                            <label for="textarea3">Группа</label>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <textarea  class="form-control textarea3" id="regexp" rows="1" placeholder="" name="mark">{{ !empty($request_mark) ? $request_mark : '' }}</textarea>
+                            <label for="textarea3">Оценка</label>
+                        </div>
+                        <input type="submit" value="Применить" class="btn btn-primary">
+                    </form>
                 </div>
                 <br>
                 <br>
+                {{ $resultsQuery->appends(request()->query())->links() }}
                 <table class="table table-condensed">
                     <tr>
                         <td>Группа</td>
@@ -62,7 +70,7 @@
                         @endfor
                     </tbody>
                 </table>
-
+                {{ $resultsQuery->appends(request()->query())->links() }}
             </div>
         </div>
 
@@ -70,5 +78,4 @@
 @stop
 
 @section('js-down')
-    {!! HTML::script('js/personal_account/teacherAccount.js') !!}
 @stop

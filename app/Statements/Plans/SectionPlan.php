@@ -41,5 +41,15 @@ class SectionPlan extends Eloquent {
                 return $item->max_points;
             });
     }
+
+    public function getOverallMaxPoints() {
+        $overall_max = 0;
+        foreach ($this->control_work_plans as $control_work_plan) {
+            $overall_max += $control_work_plan->max_points;
+        }
+        $overall_max += $this->max_lecture_pass_point + $this->max_seminar_pass_point
+            + $this->max_seminar_work_point;
+        return $overall_max;
+    }
 }
 

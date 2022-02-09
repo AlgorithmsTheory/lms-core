@@ -88,14 +88,23 @@
                             </div>
                         </td>
                         @endforeach
-                            <td class="info">
-                                <div class="dropdown">
-                                    <button class="dropbtn">{{'Итог за ' . $section_plan->section_num . ' раздел'}}</button>
-                                    <div class="dropdown-content">
-                                        <a>{{'Макс: ' . $section_plan->max_points}}</a>
-                                    </div>
+                        <td class="info">
+                            ПЛ
+                        </td>
+                        <td class="info">
+                            ПС
+                        </td>
+                        <td class="info">
+                            РС
+                        </td>
+                        <td class="info">
+                            <div class="dropdown">
+                                <button class="dropbtn">{{'Итог за ' . $section_plan->section_num . ' раздел'}}</button>
+                                <div class="dropdown-content">
+                                    <a>{{'Макс: ' . $section_plan->getOverallMaxPoints()}}</a>
                                 </div>
-                                </td>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         @foreach($statement_result['control_work_groupBy_sections'][$section_plan->section_num] as $control_work_pass)
@@ -109,14 +118,17 @@
                             {{ round($control_work_pass->points, 1) }}
                         </td>
                         @endforeach
-                        <td
-                                @if (($statement_result['result_control_work_sections'][$section_plan->section_num] < $section_plan->max_points * 0.6))
-                                class="danger"
-                                @else
-                                class="success"
-                                @endif
-                        >
-                            {{ round($statement_result['result_control_work_sections'][$section_plan->section_num],1) }}
+                        {{-- ПЛ --}}
+                        <td>{{$statement_result['ball_lection_passes'][$loop->index]}}</td>
+                        {{-- ПС --}}
+                        <td>{{$statement_result['ballsBySectionsPass'][$loop->index]}}</td>
+                        {{-- РС --}}
+                        <td>{{$statement_result['ballsBySectionsWorks'][$loop->index]}}</td>
+                        {{--Итог за раздел--}}
+                        <td data-result-section_num="{{$section_plan->section_num}}"
+                            class="{{$statement_result['sec_ok'][$loop->index] == 0 ? 'danger' : 'success'}}"
+                            data-section-max_points="{{$section_plan->max_points}}">
+                            {{round($statement_result['sec_sum'][$loop->index], 0)}}
                         </td>
                     </tr>
                     </tbody>
@@ -132,9 +144,9 @@
                 <tr>
                     <td class="info">
                         <div class="dropdown">
-                            <button class="dropbtn">Итог за контрольные мероприятия</button>
+                            <button class="dropbtn">Итог за разделы</button>
                             <div class="dropdown-content">
-                                <a>{{'Макс: ' . $course_plan->max_controls}}</a>
+                                <a>{{'Макс: ' . $course_plan->max_semester}}</a>
                             </div>
                         </div>
                     </td>
@@ -148,33 +160,9 @@
                     </td>
                     <td class="info">
                         <div class="dropdown">
-                            <button class="dropbtn">Посещение лекций</button>
-                            <div class="dropdown-content">
-                                <a>{{'Макс: ' . $course_plan->max_lecrures}}</a>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="info">
-                        <div class="dropdown">
-                            <button class="dropbtn">Посещение семинаров</button>
-                            <div class="dropdown-content">
-                                <a>{{'Макс: ' . $course_plan->max_seminars}}</a>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="info">
-                        <div class="dropdown">
-                            <button class="dropbtn">Работа на семинарах</button>
-                            <div class="dropdown-content">
-                                <a>{{'Макс: ' . $course_plan->max_seminars_work}}</a>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="info">
-                        <div class="dropdown">
                             <button class="dropbtn">Суммарный итог</button>
                             <div class="dropdown-content">
-                                <a>Макс: 100 баллов</a>
+                                <a>Макс: {{$course_plan->max_semester + $course_plan->max_exam}} баллов</a>
                             </div>
                         </div>
                     </td>
@@ -188,72 +176,20 @@
                     </td>
                 </tr>
                 <tbody>
-                <tr>
-                    <td
-                            @if ($statement_result['sum_result_section_control_work'] < $course_plan->max_controls * 0.6)
-                            class="danger"
-                            @else
-                           class="success"
-                            @endif
-                    >
-                        {{ round($statement_result['sum_result_section_control_work'],1) }}
-                    </td>
-                    <td
-                            @if ($statement_result['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6)
-                            class="danger"
-                            @else
-                            class="success"
-                            @endif
-                    >
-                        {{ $statement_result['sum_result_section_exam_work'] }}
-                    </td>
-                    <td
-                            @if ($statement_result['result_lecture'] < $course_plan->max_lecrures * 0.6)
-                            class="danger"
-                            @else
-                            class="success"
-                            @endif
-                    >
-                        {{ round($statement_result['result_lecture'],1) }}
-                    </td>
-                    <td
-                            @if ($statement_result['result_seminar'] < $course_plan->max_seminars * 0.6)
-                            class="danger"
-                            @else
-                            class="success"
-                            @endif
-                    >
-                        {{ round($statement_result['result_seminar'],1) }}
-                    </td>
-                    <td
-                            @if ($statement_result['result_seminar'] < $course_plan->max_seminars_work * 0.6)
-                            class="danger"
-                            @else
-                            class="success"
-                            @endif
-                    >
-                        {{ round($statement_result['result_work_seminar'],1) }}
-                    </td>
-                    <td
-                            @if ($statement_result['sum_result'] < 60 || $statement_result['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6)
-                            class="danger"
-                            @else
-                            class="success"
-                            @endif
-                    >
-                        {{ round($statement_result['sum_result'],1) }}
-                    </td>
-                    <td
-                            @if ($statement_result['sum_result'] < 60 || $statement_result['sum_result_section_exam_work'] < $course_plan->max_exam * 0.6)
-                            class="danger"
-                            @else
-                            class="success"
-                            @endif
-                    >
-                        {{ $statement_result['markBologna'] }}
-                    </td>
-
-                </tr>
+                    <tr>
+                        <td class="{{$statement_result['all_ok'] == 0 ? 'danger' : 'success'}}">
+                            {{round($statement_result['fullsum'], 0)}}
+                        </td>
+                        <td class="{{$statement_result['exam_result'] ? 'success' : 'danger'}}">
+                            {{round($statement_result['sum_result_section_exam_work'], 0)}}
+                        </td>
+                        <td class="{{$statement_result['course_result'] ? 'success' : 'danger'}}">
+                            {{round($statement_result['absolutefullsum'], 0)}}
+                        </td>
+                        <td class="{{$statement_result['course_result'] ? 'success' : 'danger'}}">
+                            {{$statement_result['markBologna']}}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 

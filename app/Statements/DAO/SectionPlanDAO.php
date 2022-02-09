@@ -38,9 +38,9 @@ class SectionPlanDAO {
         $section_plan->id_course_plan = $request->id_course_plan;
         $section_plan->section_num = $request->is_exam == 0 ? $request->section_num : null;
         $section_plan->is_exam = $request->is_exam;
-        $section_plan->max_ball = $request->section_plan_max_ball;
-        $section_plan->max_seminar_pass_ball = $request->section_plan_max_seminar_pass_ball;
-        $section_plan->max_lecture_ball = $request->section_plan_max_lecture_ball;
+        $section_plan->max_seminar_work_point = $request->section_plan_max_ball;
+        $section_plan->max_seminar_pass_point = $request->section_plan_max_seminar_pass_ball;
+        $section_plan->max_lecture_pass_point = $request->section_plan_max_lecture_ball;
         $section_plan->save();
         return $section_plan->id_section_plan;
     }
@@ -50,9 +50,9 @@ class SectionPlanDAO {
         $section_plan->section_plan_name = $request->section_plan_name;
         $section_plan->section_plan_desc = $request->section_plan_desc;
         $section_plan->section_num = $request->is_exam == 0 ? $request->section_num : null;
-        $section_plan->max_ball = $request->max_ball;
-        $section_plan->max_seminar_pass_ball = $request->max_seminar_pass_ball;
-        $section_plan->max_lecture_ball = $request->max_lecture_ball;
+        $section_plan->max_seminar_work_point = $request->max_seminar_work_point;
+        $section_plan->max_seminar_pass_point = $request->max_seminar_pass_point;
+        $section_plan->max_lecture_pass_point = $request->max_lecture_pass_point;
         $section_plan->update();
     }
 

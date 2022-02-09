@@ -24,14 +24,14 @@
             <h5 class="card-title">{!! Form::label('section_plan_name' , 'Название раздела:') !!}
                 {!! Form::text('section_plan_name',$section_plan->section_plan_name,['class' => 'form-control','placeholder' => 'Введите название учебного плана',
                 'required' => 'required', $read_only ? 'readonly' : '' ]) !!}</h5>
-            <h5 class="card-title">{!! Form::label('max_ball' , 'Максимальные баллы за работу на семинарах:') !!}
-                {!! Form::text('max_ball',$section_plan->max_ball,['class' => 'form-control','placeholder' => 'Введите число баллов',
+            <h5 class="card-title">{!! Form::label('max_seminar_work_point' , 'Максимальные баллы за работу на семинарах:') !!}
+                {!! Form::text('max_seminar_work_point',$section_plan->max_seminar_work_point,['class' => 'form-control','placeholder' => 'Введите число баллов',
                 'required' => 'required', $read_only ? 'readonly' : '' ]) !!}</h5>
-            <h5 class="card-title">{!! Form::label('max_seminar_pass_ball' , 'Максимальные баллы за посещение семинаров:') !!}
-                {!! Form::text('max_seminar_pass_ball',$section_plan->max_seminar_pass_ball,['class' => 'form-control','placeholder' => 'Введите число баллов',
+            <h5 class="card-title">{!! Form::label('max_seminar_pass_point' , 'Максимальные баллы за посещение семинаров:') !!}
+                {!! Form::text('max_seminar_pass_point',$section_plan->max_seminar_pass_point,['class' => 'form-control','placeholder' => 'Введите число баллов',
                 'required' => 'required', $read_only ? 'readonly' : '' ]) !!}</h5>
-            <h5 class="card-title">{!! Form::label('max_lecture_ball' , 'Максимальные баллы за посещение лекций:') !!}
-                {!! Form::text('max_lecture_ball',$section_plan->max_lecture_ball,['class' => 'form-control','placeholder' => 'Введите число баллов',
+            <h5 class="card-title">{!! Form::label('max_lecture_pass_point' , 'Максимальные баллы за посещение лекций:') !!}
+                {!! Form::text('max_lecture_pass_point',$section_plan->max_lecture_pass_point,['class' => 'form-control','placeholder' => 'Введите число баллов',
                 'required' => 'required', $read_only ? 'readonly' : '' ]) !!}</h5>
             <p class="card-text">{!! Form::label('section_plan_desc' , 'Описание раздела:') !!}
                 {!! Form::text('section_plan_desc',$section_plan->section_plan_desc,['class' => 'form-control','placeholder' => 'Введите описание учебного плана',

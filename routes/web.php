@@ -101,6 +101,9 @@ Route::get('tests/test-list', ['as' => 'tests_list', 'uses' => 'TestController@e
 Route::get('tests/profile/{id_question}', ['as' => 'test_profile', 'uses' => 'TestController@profile', 'middleware' => ['general_auth','admin']]);
 Route::post('tests/update-general-settings', ['as' => 'update_general_settings', 'uses' => 'TestController@updateSettings']);
 Route::post('tests/edit', ['as' => 'test_update', 'uses' => 'TestController@update']);
+Route::post('tests/clone', ['as' => 'tests_clone', 'uses' => 'TestController@cloneTest']);
+Route::post('tests/make-all-control-tests-unavailable', ['as' => 'make_all_control_tests_unavailable', 'uses' => 'TestController@makeAllControlTestsUnavailable']);
+Route::post('tests/make-all-train-tests-unavailable', ['as' => 'make_all_train_tests_unavailable', 'uses' => 'TestController@makeAllTrainTestsUnavailable']);
 Route::get('tests/remove/{id_test}', ['as' => 'test_remove', 'uses' => 'TestController@remove', 'middleware' => ['general_auth', 'admin']]);
 Route::get('tests/edit/{id_test}', ['as' => 'test_edit', 'uses' => 'TestController@edit', 'middleware' => ['general_auth', 'admin']]);
 Route::get('tests/finish/{id_test}', ['as' => 'finish_test', 'uses' => 'TestController@finishTest']);
@@ -370,6 +373,7 @@ Route::post('verify_students/admin', ['as' => 'add_student', 'uses' => 'Administ
 Route::post('verify_students/average', ['as' => 'add_student', 'uses' => 'AdministrationController@add_average', 'middleware' => ['general_auth', 'admin']]);
 Route::post('verify_students/tutor', ['as' => 'add_tutor', 'uses' => 'AdministrationController@add_tutor', 'middleware' => ['general_auth', 'admin']]);
 Route::post('verify_students/change_group', ['as' => 'change_group', 'uses' => 'AdministrationController@change_group', 'middleware' => ['general_auth', 'admin']]);
+Route::post('verify_students/remove_user', ['as' => 'remove_user', 'uses' => 'AdministrationController@remove_user', 'middleware' => ['general_auth', 'admin']]);
 Route::get('change_role', ['as' => 'change_role', 'uses' => 'AdministrationController@change_role', 'middleware' => ['general_auth', 'admin']]);
 Route::get('manage_groups', ['as' => 'manage_groups', 'uses' => 'AdministrationController@manage_groups', 'middleware' => ['general_auth','admin']]);
 Route::post('manage_groups/add_group', ['as' => 'add_group', 'uses' => 'AdministrationController@add_group', 'middleware' => ['general_auth', 'admin']]);

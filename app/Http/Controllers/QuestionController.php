@@ -73,8 +73,12 @@ class QuestionController extends Controller {
     public function getTheme(Request $request){
         if ($request->ajax()) {
             $section = $request->input('choice');
-            $section_code = Section::whereSection_name($section)->select('section_code')->first()->section_code;
-            $themes_list = Theme::whereSection_code($section_code)->select('theme_name')->get();
+            if ($section !== 'Все') {
+                $section_code = Section::whereSection_name($section)->select('section_code')->first()->section_code;
+                $themes_list = Theme::whereSection_code($section_code)->select('theme_name')->get();
+            } else {
+                $themes_list = null;
+            }
             return (String) view('questions.student.getTheme', compact('themes_list'));
         }
     }
@@ -145,7 +149,14 @@ class QuestionController extends Controller {
         $sections = Section::where('section_code', '>', 0)->select('section_name')->get();
         $themes = Theme::where('theme_code', '>', 0)->select('theme_name')->get();
         $types = Type::where('type_code', '>', 0)->select('type_name')->get();
-        $widgetListView = View::make('questions.teacher.question_list', compact('questions', 'sections', 'themes', 'types'))->with('widgets', $widgets);
+        $filter_section = $request->input('section');
+        $filter_theme = $request->input('theme');
+        $filter_type = $request->input('type');
+        $filter_query = $request->input('title');
+        $widgetListView = View::make('questions.teacher.question_list', compact('questions',
+            'sections', 'themes', 'types',
+            'filter_section', 'filter_theme', 'filter_type', 'filter_query'))
+            ->with('widgets', $widgets);
         $response = new Response($widgetListView);
         return $response;
     }
