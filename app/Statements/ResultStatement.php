@@ -615,7 +615,7 @@ class ResultStatement {
         $markRus = Test::calcMarkRus(100, $abssum1);
         $markBologna = Test::calcMarkBologna(100, $abssum1);
         if (round($sum_result_section_exam_work, 0) < 30) {
-            $markRus = 2;
+            $markRus = '2';
             $markBologna = 'F';
         }
 
