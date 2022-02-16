@@ -130,7 +130,7 @@
                 <td class="sum_result_section {{$statement['all_ok'] == 0
                 ? 'danger' : 'success'}}"
                     data-max_controls="{{$course_plan->max_semester}}">
-                    {{round($statement['fullsum'], 0)}}
+                    {{$statement['fullsum']}}
                 </td>
             @endif
 
@@ -153,7 +153,7 @@
                                 </label>
                             </div>
                             <input type="number"
-                                   value="{{round($control_work_passes->points, 0)}}"
+                                   value="{{$control_work_passes->points}}"
                                    class="result_control_work"
                                    style="width: 50px;"
                                    step="1"

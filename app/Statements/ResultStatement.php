@@ -578,10 +578,23 @@ class ResultStatement {
         });
         $control_work_groupBy_sections = $this->getControlWorksGroupBySec($control_works);
         $exam_work_groupBy_sections = $this->getExamWorksGroupBySection($exam_works);
+
+        foreach ($exam_work_groupBy_sections as $exam_work) {
+            foreach ($exam_work as $x) {
+                $x->points = round($x->points, 0);
+            }
+        }
+
         $result_control_work_sections = $this->getResultControlWorkSections($control_work_groupBy_sections, $user->id);
+
         $result_exam_work_sections = $this->getResultExamWorkSections($exam_work_groupBy_sections, $user->id);
+
         $sum_result_section_control_work = $result_control_work_sections->sum();
-        $sum_result_section_exam_work = $result_exam_work_sections->sum();
+
+        $sum_result_section_exam_work = $result_exam_work_sections->map(function($x) {
+            return round($x, 0);
+        })->sum();
+
         $result_lecture = $this->getResultLecture($id_course_plan, $user->id);
         $result_seminar = $this->getResultSeminar($id_course_plan, $user->id);
         $result_work_seminar = $this->getResultWorkSeminar($id_course_plan, $user->id);
@@ -592,8 +605,8 @@ class ResultStatement {
         $section_total_array = collect();
         $i = 0;
         while ($i < count($seminar_attended_points)) {
-            $section_total = $seminar_attended_points[$i] + $seminar_work_points[$i] + $lecture_points[$i]
-                    + $result_control_work_sections->get($i+1);
+            $section_total = round($seminar_attended_points[$i] + $seminar_work_points[$i] + $lecture_points[$i]
+                    + $result_control_work_sections->get($i+1), 0);
             $section_total_array->push($section_total);
             $all_sections_total += $section_total;
             $i += 1;
@@ -709,7 +722,7 @@ class ResultStatement {
             ->where('section_plans.id_section_plan', '=', $id_section)
             ->get(['control_work_passes.points'])
             ->sum(function ($item) {
-                return $item->points;
+                return round($item->points, 0);
             });
     }
 
