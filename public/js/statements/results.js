@@ -1,13 +1,58 @@
+function updateRow(row, statement) {
+    for (let section of statement.sections) {
+        for (let control of section.controls) {
+            const controlPassId = control.id;
+            const controlTd = row.find(`td[data-id-control_work=${controlPassId}]`);
+            controlTd.find('input[type=checkbox]').prop('checked', control.presence);
+            const pointsInput = controlTd.find('input[type=number]');
+            pointsInput.val(control.points);
+            pointsInput.prop('disabled', !control.presence);
+        }
+        const sectionResultEl = row.find(`td[data-result-section_num=${section.section_num}]`);
+        setColorTd(sectionResultEl, section.total_ok);
+        sectionResultEl.text(section.total);
+    }
+    for (let exam of statement.exams) {
+        const controlPassId = exam.id;
+        const controlTd = row.find(`td[data-id-control_work=${controlPassId}]`);
+        const presenceInput = controlTd.find('input[type=checkbox]');
+        presenceInput.prop('checked', exam.presence);
+        presenceInput.prop('disabled', !statement.sections_total_ok);
+        const pointsInput = controlTd.find('input[type=number]');
+        pointsInput.val(exam.points);
+        pointsInput.prop('disabled', !exam.presence || !statement.sections_total_ok);
+    }
+    const sectionsResultEl = row.find('.sum_result_section');
+    setColorTd(sectionsResultEl, statement.sections_total_ok);
+    sectionsResultEl.text(statement.sections_total);
+    const sumResultExamEl = row.find('.sum_result_exam');
+    const resultAllCourseEl = row.find('.result_all_course');
+    const markBolognaEl = row.find('.mark_bologna');
+    const markRusEl = row.find('.mark_rus');
+    setColorTd(sumResultExamEl, statement.exams_total_ok);
+    setColorTd(resultAllCourseEl, statement.summary_total_ok);
+    setColorTd(markBolognaEl, statement.summary_total_ok);
+    setColorTd(markRusEl, statement.summary_total_ok);
+    sumResultExamEl.text(statement.exams_total);
+    resultAllCourseEl.text(statement.summary_total);
+    markBolognaEl.text(statement.mark_bologna);
+    markRusEl.text(statement.mark_rus);
+}
+
 
 $('.was').on('change', function() {
     var thisCell = $(this).closest('td');
+    var thisRow = $(this).closest('tr');
     var idControlWorkPass = thisCell.attr('id');
-    var inputResultControlWork = thisCell.find('.result_control_work');
     var isPresence = false;
+    var idUser = thisRow.attr('id');
+    var idCoursePlan = $('table').attr('data-id-course_plan');
     myBlurFunction(1);
     if (this.checked) {
         isPresence = true;
     }
+    var data = { id_control_work_pass: idControlWorkPass, token: 'token', is_presence: isPresence,
+        id_user: idUser, id_course_plan: idCoursePlan};
     $.ajax({
         cache: false,
         type: 'POST',
@@ -19,49 +64,16 @@ $('.was').on('change', function() {
                 return xhr.setRequestHeader('X-CSRF-TOKEN', token);
             }
         },
-        data: { id_control_work_pass: idControlWorkPass, token: 'token', is_presence: isPresence },
+        data: data,
         success: function(data){
-            if (isPresence) {
-                //Разблокирование input result_control_work при отметки присутствия
-                inputResultControlWork.prop('disabled', false);
-                myBlurFunction(0);
-            } else {
-                //Блокирование input classwork при отсутсвии студента на семинаре
-                inputResultControlWork.prop('disabled', true);
-                myBlurFunction(0);
-            }
-
+            myBlurFunction(0);
+            updateRow(thisRow, data.statement);
         }
     });
     return false;
 });
-$('.print_to_pdf').on('click', ()=>{
-    let mywindow = window.open('', 'PRINT', 'height=650,width=900,top=100,left=150');
 
-    mywindow.document.write(`<html><head><title></title>`);
-    mywindow.document.write(`</head><body style="border: 2px solid black;">`);
-    var printNode = document.getElementById('statement').cloneNode(true);
-    printNode.getElementsByClassName('table')[0].setAttribute('border', '1')
-    printNode.removeChild(printNode.getElementsByClassName('print_to_pdf')[0])
-    //printNode.width = 800;
-    //printNode.height = 650;
-    //printNode.getElementsByClassName('table').width = 800;
-    // tra = printNode.getElementsByClassName('functionalty_tr')[0]
-    //var pTra = tra.parentNode;
-    //pTra.remove(tra);
-    mywindow.document.write(printNode.innerHTML);
-    mywindow.document.write('</body></html>');
-
-    mywindow.document.close(); // necessary for IE >= 10
-    mywindow.focus(); // necessary for IE >= 10*/
-
-    mywindow.print();
-    mywindow.close();
-})
-
-
-
-$('.result_control_work').on('change', function() {
+$('.result_control_work').on('change', function handleChange() {
     var thisCell = $(this).closest('td');
     var thisRow = $(this).closest('tr');
     var idUser = thisRow.attr('id');
@@ -94,51 +106,36 @@ $('.result_control_work').on('change', function() {
         },
         success: function(data){
             myBlurFunction(0);
-            var divError = $('.print-error-msg');
-            if($.isEmptyObject(data.error)) {
-                if (workStatus == 'section') {
-                    var sectionsTotalsEls = thisRow.find('td[data-result-section_num]');
-                    for (var i = 0; i < Math.min(sectionsTotalsEls.length, data.secSum.length); i++) {
-                        var sectionTotalEl = sectionsTotalsEls.eq(i);
-                        var res = data.secSum[i];
-                        sectionTotalEl.text(res);
-                        setColorTd(sectionTotalEl, data.secOk[i]);
-                    }
-                    var allSectionsTotalEl = thisRow.find('.sum_result_section');
-                    allSectionsTotalEl.text(Math.round(data.fullSum));
-                    setColorTd(allSectionsTotalEl, data.allOk);
-                } else {
-                    var sumResultExam = thisRow.find('.sum_result_exam');
-                    sumResultExam.text(Math.round(data.sumResultSection));
-                    changeColorTd(sumResultExam, data.sumResultSection, sumResultExam.attr('data-max_exam'));
-                }
-                //var res = Math.round(data.sectionResult) + Math.round(data.sumResultSection)
-                var resultAllCourse = thisRow.find('.result_all_course');
-                resultAllCourse.text(data.res);
-                changeColorTd(resultAllCourse,data.resultAllCourse, 100);
-                var markBologna = thisRow.find('.mark_bologna');
-                markBologna.text(data.markBologna);
-                changeColorTd(markBologna,data.resultAllCourse, 100);
-                var markRus = thisRow.find('.mark_rus');
-                markRus.text(data.markRus);
-                changeColorTd(markRus,data.resultAllCourse, 100);
-                // удаление сообщений об ошибках
-                divError.find("ul").html('');
-                divError.css('display','none');
-                thisCell.attr('style', 'border-color:rgba(163, 168, 168, 0.2);');
-            } else {
-                //добавление в html сообщений об ошибках
-                divError.find("ul").html('');
-                divError.css('display','block');
-                $.each( data.error, function( key, value ) {
-                    divError.find("ul").append('<li>'+value+'</li>');
-                });
-                thisCell.attr('style', 'border-color:#ff0000;');
-            }
+            updateRow(thisRow, data.statement);
         }
     });
     return false;
 });
+
+$('.print_to_pdf').on('click', ()=>{
+    let mywindow = window.open('', 'PRINT', 'height=650,width=900,top=100,left=150');
+
+    mywindow.document.write(`<html><head><title></title>`);
+    mywindow.document.write(`</head><body style="border: 2px solid black;">`);
+    var printNode = document.getElementById('statement').cloneNode(true);
+    printNode.getElementsByClassName('table')[0].setAttribute('border', '1')
+    printNode.removeChild(printNode.getElementsByClassName('print_to_pdf')[0])
+    //printNode.width = 800;
+    //printNode.height = 650;
+    //printNode.getElementsByClassName('table').width = 800;
+    // tra = printNode.getElementsByClassName('functionalty_tr')[0]
+    //var pTra = tra.parentNode;
+    //pTra.remove(tra);
+    mywindow.document.write(printNode.innerHTML);
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+    mywindow.print();
+    mywindow.close();
+});
+
 $('#getexcel').click(function(){
     var group = $("#group_num").val();
     myBlurFunction(1);
@@ -222,15 +219,6 @@ $('#getexcelex').click(function(){
     });
     return false;
 });
-function changeColorTd(td, currentPoints, maxPoints) {
-    if (currentPoints >= maxPoints * 0.6) {
-        td.addClass('success');
-        td.removeClass('danger');
-    } else {
-        td.removeClass('success');
-        td.addClass('danger');
-    }
-}
 
 function setColorTd(td, isGood) {
     if (isGood) {
