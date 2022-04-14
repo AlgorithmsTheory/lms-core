@@ -5,6 +5,7 @@ use App\Mypdf;
 use App\Testing\Question;
 use App\Testing\Type;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Input;
 use Session;
 use App\Http\Controllers\Emulators\EmulatorController;
@@ -83,11 +84,13 @@ class Turing extends QuestionType implements Checkable {
     public function check($array) {
         $debug_counter = $array[0];
         $data = $array[1];
-        
+
         $parse = $this->variants;
+
         $variantsIn = explode(";", $parse);
         $parse = $this->eng_variants;
         $variantsOut = explode(";", $parse);
+
         $test_seq = ['input_word' => $variantsIn, 'output_word' => $variantsOut];
         
         $array = EmulatorController::MTCheckSequence($data, $test_seq);

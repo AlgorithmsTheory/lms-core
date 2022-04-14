@@ -671,6 +671,7 @@ class TestController extends Controller{
             $saved_test = $test->saved_test;
             $saved_test = unserialize($saved_test);
             for ($i=0; $i<$amount; $i++){
+                Log::debug($saved_test[$i]);
                 $widgets[] = View::make($saved_test[$i]['view'], $saved_test[$i]['arguments']);
             }
         }

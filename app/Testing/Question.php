@@ -151,16 +151,19 @@ class Question extends Eloquent {
         $query = $this->whereId_question($id)->select('answer','points', 'type_code')->first();
         $points = $query->points;
         $type = Type::whereType_code($query['type_code'])->select('type_name')->first()->type_name;
-        if (count($array)==1){                                                                                          //если не был отмечен ни один вариант
+        //если не был отмечен ни один вариант
+        if (count($array)==1){
             $choice = [];
             $score = 0;
             $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points, 'choice' => $choice, 'right_percent' => 0);
             return $data;
         }
-        for ($i=0; $i < count($array)-1; $i++){                                                                         //передвигаем массив, чтобы первый элемент оказался последним
+        //передвигаем массив, чтобы первый элемент оказался последним
+        for ($i=0; $i < count($array)-1; $i++){
             $array[$i] = $array[$i+1];
         }
-        array_pop($array);                                                                                              //убираем из входного массива id вопроса, чтобы остались лишь выбранные варианты ответа
+        //убираем из входного массива id вопроса, чтобы остались лишь выбранные варианты ответа
+        array_pop($array);
         $question = QuestionTypeFactory::getQuestionTypeByTypeName($id, $type);
         return $question->check($array);
     }

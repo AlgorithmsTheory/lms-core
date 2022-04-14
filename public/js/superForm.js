@@ -89,11 +89,12 @@ function sendForm(status){
 
 function fillSuper(){
     // Execute Turing program before send result
-    var cnt = 0;
-    $("[name^=mt-entity]").each(function(){
-        mtSubmitTask(cnt, false);
-        cnt++
-    });
+    window.mt2SubmitAllTasks();
+    // var cnt = 0;
+    // $("[name^=mt-entity]").each(function(){
+    //     mtSubmitTask(cnt, false);
+    //     cnt++
+    // });
     // Execute Markov program before send result
     var cnt = 0;
     $("[name^=ham-entity]").each(function(){

@@ -415,12 +415,16 @@ Route::post('api/check', ['uses' => 'APIController@checkStudentsAtSeminar']);
 //Login verification
 Route::post('check/ifExists', ['uses' => 'AdministrationController@checkEmailIfExists']);
 
+Route::get('algorithm/mt2', ['as' => 'mt2', 'uses' => 'Emulators\MT2Controller@openMT']);
+Route::get('algorithm/mt2_try', ['as' => 'mt2', 'uses' => 'Emulators\MT2Controller@mt2_try']);
+
 // Эмуляторы
 Route::prefix('algorithm')->group(function (){
     Route::middleware(['general_auth'])->group(function(){
         Route::get('MT', ['as' => 'MT', 'uses' => 'Emulators\EmulatorController@openMT']);
         Route::post('MT', ['as' => 'MTRun', 'uses' => 'Emulators\EmulatorController@MTPOST']);
         Route::post('MTCheck', ['as' => 'MTCheck', 'uses' => 'Emulators\EmulatorController@MTCheck']);
+        Route::post('MT2Check', ['as' => 'MT2Check', 'uses' => 'Emulators\EmulatorController@MT2Check']);
         Route::get('MTHelp', ['as' => 'MTHelp', function (){ return view('algorithm.MThelp'); }]);
         
         Route::get('HAM', ['as' => 'HAM', 'uses' => 'Emulators\EmulatorController@openHAM']);
