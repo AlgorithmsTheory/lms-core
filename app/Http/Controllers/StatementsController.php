@@ -10,6 +10,7 @@ use App\Statements\SeminarStatement;
 use App\Testing\Test;
 use App\TeacherHasGroup;
 use App\Group;
+use App\User;
 use Auth;
 use Illuminate\Http\Request;
 use App\Question;
@@ -17,6 +18,7 @@ use App\Codificator;
 use App\Statements\DAO\CoursePlanDAO;
 use stdClass;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class StatementsController extends Controller{
 
@@ -332,7 +334,7 @@ class StatementsController extends Controller{
         $course_plan = $this->course_plan_DAO->getCoursePlan( $id_course_plan);
         $statement_lecture = $this->lecture_statement->getStatementByUser($id_course_plan, $user);
         $statement_seminar = $this->seminar_statement->getStatementByUser($id_course_plan, $user);
-        $statement_result = $this->result_statement->getStatementByUser($id_course_plan, $user);
+        $statement_result = $this->result_statement->getResultingStatementByUser($id_course_plan, $user);
         return view('personal_account/student_account',  compact('course_plan','statement_lecture','statement_seminar', 'statement_result'));
     }
 
@@ -379,7 +381,7 @@ class StatementsController extends Controller{
 
     public function get_resulting(Request $request){
         $id_group = $request->input('group');
-        $statement_result = $this->result_statement->getStatementByGroup($id_group);
+        $statement_result = $this->result_statement->getResultingStatementByGroup($id_group);
         $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
             ->first()->id_course_plan;
         $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
@@ -394,7 +396,7 @@ class StatementsController extends Controller{
         $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
             ->first()->id_course_plan;
         $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
-        $statement_result = $this->result_statement->getStatementByGroup($id_group);
+        $statement_result = $this->result_statement->getResultingStatementByGroup($id_group);
         Storage::disk('local')->put('file.xlsx', file_get_contents($file));
         return $this->result_statement->getExcelLoadOut($course_plan,$statement_result,'/storage/app/file.xlsx', $isForExam);;
     }
@@ -443,7 +445,15 @@ class StatementsController extends Controller{
     //Отмечает или раз-отмечает студента на Контрольном мероприятии
     public function result_mark_present(Request $request){
         $this->result_statement->markPresent($request);
-        return 0;
+
+        $id_user = $request->input('id_user');
+        $id_course_plan = $request->input('id_course_plan');
+        $user = User::whereId($id_user)->first();
+        $statement = $this->result_statement->getResultingStatementByUser($id_course_plan, $user);
+
+        return response()->json([
+            'statement' => $statement,
+        ]);
     }
 
     //Изменяет балл студента за контр мероприятие
@@ -451,43 +461,16 @@ class StatementsController extends Controller{
         $validator = $this->result_statement->getResultChangeValidate($request);
         if ($validator->passes()) {
             $this->result_statement->resultChange($request);
-            $id_user = $request->input('id_user');
-            $id_course_plan = $request->input('id_course_plan');
-            $section_result = $this->result_statement->getResultSectionByNumber($request->input('section_num'),
-                $id_user);
-            $sum_result_control_works = $this->result_statement->getSumResultSectionControlWork($id_course_plan, $id_user);
-            $sum_result_exam_works = $this->result_statement->getSumResultSectionExamWork($id_course_plan, $id_user);
-            $class_work = $this->result_statement->getResultWorkSeminar($id_course_plan, $id_user);
-            $seminar_pass = $this->result_statement->getResultSeminar($id_course_plan, $id_user);
-            $lecture_pass = $this->result_statement->getResultLecture($id_course_plan, $id_user);
-            if ($request->input('work_status') == 'section') {
-                $sum_result_section = $sum_result_control_works;
-            } else {
-                $sum_result_section = $sum_result_exam_works;
-            }
-            $result_all_course = $sum_result_exam_works + $sum_result_control_works + $class_work
-                + $seminar_pass + $lecture_pass;
-
-            $markRus = Test::calcMarkRus(100, $result_all_course);
-            $markBologna = Test::calcMarkBologna(100, $result_all_course);
-
-
-            $stat = $this->result_statement->getStatementByUserId($id_course_plan, $id_user);
-            $sec_ok = $stat['sec_ok'];
-            $all_ok = $stat['all_ok'];
-            $sec_sum = $stat['sec_sum'];
-            $fullsum = $stat['fullsum'];
-
-            return response()->json(['sectionResult' => $section_result,
-                'secOk' => $sec_ok,
-                'allOk' => $all_ok,
-                'secSum' => $sec_sum,
-                'fullSum' => $fullsum,
-                'sumResultSection' => $sum_result_section,
-                'resultAllCourse' => $result_all_course, 'markRus' => $markRus, 'markBologna' => $markBologna]);
-        } else {
-            return response()->json(['error' => $validator->errors()->all()]);
         }
+
+        $id_user = $request->input('id_user');
+        $id_course_plan = $request->input('id_course_plan');
+        $user = User::whereId($id_user)->first();
+        $statement = $this->result_statement->getResultingStatementByUser($id_course_plan, $user);
+
+        return response()->json([
+            'statement' => $statement,
+        ]);
     }
 
     public function result_mark_present_all(Request $request){

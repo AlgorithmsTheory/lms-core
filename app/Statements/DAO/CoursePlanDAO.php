@@ -34,6 +34,7 @@ class CoursePlanDAO
         $course_plan = CoursePlan::where('id_course_plan', $id)->first();
         return $course_plan;
     }
+
     public function getAllLectures($id_course_plan){
         $all_lectures = collect([]);
         $course_plan = CoursePlan::where('id_course_plan', $id_course_plan)->first();
@@ -57,6 +58,7 @@ class CoursePlanDAO
         }
         return $all_lectures;
     }
+
     public function getAllSeminars($id_course_plan){
         $all_seminars = collect([]);
         $course_plan = CoursePlan::where('id_course_plan', $id_course_plan)->first();
@@ -67,6 +69,7 @@ class CoursePlanDAO
         }
         return $all_seminars;
     }
+
     public function getAllSeminarsBySections($id_course_plan){
         $all_seminars = collect([]);
         $course_plan = CoursePlan::where('id_course_plan', $id_course_plan)->first();

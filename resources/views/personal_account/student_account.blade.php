@@ -22,7 +22,7 @@
         <a href="{{ route('student_сabinet')}}" class="btn btn-warning col-md-offset-3 col-md-6 " style="margin-top: 0.5%">Перейти на страницу "Заказы книг" </a>
 
 
-        @foreach($course_plan->section_plans as $section_plan)
+        @foreach($course_plan->section_plans as $ind => $section_plan)
             <div class="col-md-12 col-sm-12 style-gray">
                 <h3 class="text-default-bright">Раздел {{$section_plan->section_num}}</h3>
             </div>
@@ -78,24 +78,39 @@
                 <table class="table table-condensed table-bordered">
                     <tbody>
                     <tr>
-                        @foreach($statement_result['control_work_groupBy_sections'][$section_plan->section_num] as $control_work_pass)
+                        @foreach($section_plan->control_work_plans as $control_work_plan)
                         <td class="info">
                             <div class="dropdown">
-                                <button class="dropbtn">{{$control_work_pass->control_work_plan_name}}</button>
+                                <button class="dropbtn">{{$control_work_plan->control_work_plan_name}}</button>
                                 <div class="dropdown-content">
-                                    <a>{{'Макс: ' . $control_work_pass->max_points}}</a>
+                                    <a>{{'Макс: ' . $control_work_plan->max_points}}</a>
                                 </div>
                             </div>
                         </td>
                         @endforeach
                         <td class="info">
-                            ПЛ
+                            <div class="dropdown">
+                                <button class="dropbtn">ПЛ</button>
+                                <div class="dropdown-content">
+                                    <a>{{'Макс: ' . $section_plan->max_lecture_pass_point}}</a>
+                                </div>
+                            </div>
                         </td>
                         <td class="info">
-                            ПС
+                            <div class="dropdown">
+                                <button class="dropbtn">ПС</button>
+                                <div class="dropdown-content">
+                                    <a>{{'Макс: ' . $section_plan->max_seminar_pass_point}}</a>
+                                </div>
+                            </div>
                         </td>
                         <td class="info">
-                            РС
+                            <div class="dropdown">
+                                <button class="dropbtn">РС</button>
+                                <div class="dropdown-content">
+                                    <a>{{'Макс: ' . $section_plan->max_seminar_work_point}}</a>
+                                </div>
+                            </div>
                         </td>
                         <td class="info">
                             <div class="dropdown">
@@ -107,28 +122,28 @@
                         </td>
                     </tr>
                     <tr>
-                        @foreach($statement_result['control_work_groupBy_sections'][$section_plan->section_num] as $control_work_pass)
+                        @foreach($statement_result['sections'][$ind]['controls'] as $control_ind => $control)
                         <td
-                                @if (($control_work_pass->points < $control_work_pass->max_points * 0.6))
+                                @if (($control['points'] < $section_plan->control_work_plans[$control_ind]->max_points * 0.6))
                                 class="danger"
                                 @else
                                 class="success"
                                 @endif
                         >
-                            {{ round($control_work_pass->points, 1) }}
+                            {{ $control['points'] }}
                         </td>
                         @endforeach
                         {{-- ПЛ --}}
-                        <td>{{$statement_result['ball_lection_passes'][$loop->index]}}</td>
+                        <td>{{$statement_result['sections'][$ind]['lecture']}}</td>
                         {{-- ПС --}}
-                        <td>{{$statement_result['ballsBySectionsPass'][$loop->index]}}</td>
+                        <td>{{$statement_result['sections'][$ind]['seminar']['presence_points']}}</td>
                         {{-- РС --}}
-                        <td>{{$statement_result['ballsBySectionsWorks'][$loop->index]}}</td>
+                        <td>{{$statement_result['sections'][$ind]['seminar']['work_points']}}</td>
                         {{--Итог за раздел--}}
                         <td data-result-section_num="{{$section_plan->section_num}}"
-                            class="{{$statement_result['sec_ok'][$loop->index] == 0 ? 'danger' : 'success'}}"
+                            class="{{$statement_result['sections'][$ind]['total_ok'] ? 'success' : 'danger'}}"
                             data-section-max_points="{{$section_plan->max_points}}">
-                            {{round($statement_result['sec_sum'][$loop->index], 0)}}
+                            {{$statement_result['sections'][$ind]['total']}}
                         </td>
                     </tr>
                     </tbody>
@@ -177,17 +192,17 @@
                 </tr>
                 <tbody>
                     <tr>
-                        <td class="{{$statement_result['all_ok'] == 0 ? 'danger' : 'success'}}">
-                            {{round($statement_result['fullsum'], 0)}}
+                        <td class="{{$statement_result['sections_total_ok'] ? 'success' : 'danger'}}">
+                            {{$statement_result['sections_total']}}
                         </td>
-                        <td class="{{$statement_result['exam_result'] ? 'success' : 'danger'}}">
-                            {{round($statement_result['sum_result_section_exam_work'], 0)}}
+                        <td class="{{$statement_result['exams_total_ok'] ? 'success' : 'danger'}}">
+                            {{$statement_result['exams_total']}}
                         </td>
-                        <td class="{{$statement_result['course_result'] ? 'success' : 'danger'}}">
-                            {{round($statement_result['absolutefullsum'], 0)}}
+                        <td class="{{$statement_result['summary_total_ok'] ? 'success' : 'danger'}}">
+                            {{$statement_result['summary_total']}}
                         </td>
-                        <td class="{{$statement_result['course_result'] ? 'success' : 'danger'}}">
-                            {{$statement_result['markBologna']}}
+                        <td class="{{$statement_result['summary_total_ok'] ? 'success' : 'danger'}}">
+                            {{$statement_result['mark_bologna']}}
                         </td>
                     </tr>
                 </tbody>

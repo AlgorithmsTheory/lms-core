@@ -20,17 +20,17 @@ use Illuminate\Validation\Rule;
 class SectionPlanDAO {
 
     public function getSectionPlan($id){
-        $sectionPlan = SectionPlan::where('id_section_plan', $id)->first();
-        return $sectionPlan;
+        return SectionPlan::where('id_section_plan', $id)->first();
     }
+
     public function getSectionPlanByCourse($id){
-        $sectionPlan = SectionPlan::where('id_course_plan', $id)->first();
-        return $sectionPlan;
+        return SectionPlan::where('id_course_plan', $id)->first();
     }
+
     public function getSectionPlansByCourse($id){
-        $sectionPlans = SectionPlan::where('id_course_plan', $id)->get();
-        return $sectionPlans;
+        return SectionPlan::where('id_course_plan', $id)->get();
     }
+
     public function storeSectionPlan(Request $request){
         $section_plan = new SectionPlan();
         $section_plan->section_plan_name = $request->section_plan_name;
