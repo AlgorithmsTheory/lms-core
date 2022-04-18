@@ -31,9 +31,19 @@ div.mt2-container {
 }
 
 div.mt2-help-container {
+    font-size: 26px;
     max-width: 1284px;
     margin: 0 auto;
     padding: 12px;
+}
+
+div.mt2-help-container h3 {
+    font-size: 45px;
+}
+
+div.mt2-help-container h4 {
+    font-size: 30px;
+    text-align: center;
 }
 
 div.mt2-container .mt2-tape {
@@ -201,4 +211,23 @@ div.mt2-container .mt2-error {
 
 div.mt2-container .mt2-input-next-command {
     background-color: #aaffaa !important;
+}
+
+
+.mt2-help-link-wrapper {
+    margin: 20px 0;
+}
+
+.mt2-help-link {
+    display: inline-block;
+    padding: 8px 20px;
+    border-bottom: 1px solid #0b76cc;
+    text-decoration: none !important;
+    color: #0b76cc !important;
+    transition: all .2s ease-in-out;
+}
+
+.mt2-help-link:hover {
+    background-color: #0b76cc;
+    color: white !important;
 }

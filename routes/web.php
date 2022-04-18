@@ -416,7 +416,7 @@ Route::post('api/check', ['uses' => 'APIController@checkStudentsAtSeminar']);
 Route::post('check/ifExists', ['uses' => 'AdministrationController@checkEmailIfExists']);
 
 Route::get('algorithm/mt2', ['as' => 'mt2', 'uses' => 'Emulators\MT2Controller@openMT']);
-Route::get('algorithm/mt2_try', ['as' => 'mt2', 'uses' => 'Emulators\MT2Controller@mt2_try']);
+Route::get('algorithm/mt2help', ['as' => 'mt2help', 'uses' => 'Emulators\MT2Controller@openMT2Help']);
 
 // Эмуляторы
 Route::prefix('algorithm')->group(function (){

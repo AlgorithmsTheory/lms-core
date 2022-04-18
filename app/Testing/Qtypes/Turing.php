@@ -116,8 +116,30 @@ class Turing extends QuestionType implements Checkable {
         
 		$right_percent = ($sequences_true * 1.0) / ($sequences_all * 1.0);
         $score_fee = $right_percent / 2 / 10;
-        
-        $fee_percent = $score_fee * $debug_counter;
+
+
+        /*
+         * Ранее был налог за количество отладок.
+         *
+         * В текущей версии число отладок не влияет на полученное число очков.
+         *
+         * debug_counter	снимается %
+         * 10+		        50
+         * 9		        45
+         * 8		        40
+         * 7		        35
+         * 6		        30
+         * 5		        25
+         * 4		        20
+         * 3		        15
+         * 2		        10
+         * 1		        5
+         * 0		        0
+         */
+
+
+        $fee_percent = 0; // $score_fee * $debug_counter;
+
         $last_percent = $right_percent - $fee_percent;
         
 		$score = $score * $last_percent;
@@ -128,9 +150,10 @@ class Turing extends QuestionType implements Checkable {
         
         $right_percent = $last_percent * 100;
         $fee_percent = $fee_percent * 100;
-		
+
 		$data = array('mark'=>$mark, 'score'=>$score, 'id' => $this->id_question, 'points' => $this->points, 'right_percent' => $right_percent,
-                      'choice' => ['debug_counter' => $debug_counter, 'sequences_true' => $sequences_true, 'sequences_all' => $sequences_all, 'fee_percent' => $fee_percent, 'score'=>$score, 'total_cycle'=>$total_cycle]);
+                      'choice' => ['debug_counter' => $debug_counter, 'sequences_true' => $sequences_true, 'sequences_all' => $sequences_all,
+                          'fee_percent' => $fee_percent, 'score'=>$score, 'total_cycle'=>$total_cycle]);
         return $data;
     }
 
