@@ -447,7 +447,7 @@ function createMt2(containerEl) {
             for (let x in el.expressions) {
                 resItem.expressions[x] = el.expressions[x];
             }
-            res.push(el);
+            res.push(resItem);
         }
         return res;
     }
