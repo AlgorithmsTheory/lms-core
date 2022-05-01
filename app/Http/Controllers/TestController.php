@@ -66,6 +66,8 @@ class TestController extends Controller{
     private $section_plan_DAO;
 
     public function controlTests() {
+        $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
+        $isAdmin = $role === 'Админ' || $role === 'Преподаватель';
         $query = $this->test->whereTest_type('Контрольный')
             ->whereVisibility(1)->whereArchived(0)->whereOnly_for_print(0)->get();
         $ctr_tests = [];
@@ -75,7 +77,8 @@ class TestController extends Controller{
                 ->select('availability')->first()->availability;
             if ($availability_for_group/* && $us_state['all_ok'] == 1*/) {
                 $fine = Fine::whereId_test($test['id_test'])->whereId(Auth::user()['id'])->select('access')->get();
-                $test['access_for_student'] = count($fine) == 0 ? 1 : $fine[0]->access;
+
+                $test['access_for_student'] = (count($fine) == 0 || $isAdmin) ? 1 : $fine[0]->access;
                 $test['max_points'] = Fine::levelToPercent(Fine::whereId(Auth::user()['id'])->whereId_test($test['id_test'])->select('fine')->first()->fine) / 100 * $test['total'];
                 $test['amount'] = Test::getAmount($test['id_test']);
                 $test['attempts'] = Result::whereId_test($test['id_test'])->whereId(Auth::user()['id'])->where('mark_ru', '>=', 0)->count();
