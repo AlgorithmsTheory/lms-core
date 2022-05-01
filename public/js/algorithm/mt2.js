@@ -314,8 +314,23 @@ function createMt2(containerEl) {
         const val = ev.target.value;
         alphabet = [...new Set(val.split(''))];
         ev.target.value = alphabet.join('');
+        removeNonAlphaColumnsFromAutomaton();
         generateTable();
         setButtonsEnabled(false);
+    }
+
+    function removeNonAlphaColumnsFromAutomaton() {
+        for (let item of automaton) {
+            const badSymbols = [];
+            for (let ch in item.expressions) {
+                if (!alphabet.includes(ch) && ch !== lambdaSymbol) {
+                    badSymbols.push(ch);
+                }
+            }
+            for (let ch of badSymbols) {
+                delete item.expressions[ch];
+            }
+        }
     }
 
     function addHeaderCell(headRow, text) {
