@@ -385,6 +385,11 @@ class TestController extends Controller{
                     StructuralRecord::insert($old_structural_record);
                 }
             }
+            // adding test_for_group
+            $groups = Group::whereArchived(0)->get();
+            foreach ($groups as $group) {
+                TestForGroup::insert(['id_test' => $new_test_id, 'id_group' => $group['group_id'], 'availability' => 0]);
+            }
         }
         return null;
     }

@@ -190,7 +190,7 @@ class MT2TuringMachine
         if (count($parts) === 1) {
             $part = $parts[0];
             if ($part !== '' && $part !== 'R' && $part !== 'L' && $part !== 'N') {
-                $res[] = "элемент должен иметь значение 'R', 'L', 'N' или быть не заданным. Сейчас задано в '$part'.";
+                $res[] = "элемент должен иметь значение 'R', 'L', 'N' или быть не заданным. Сейчас задано '$part'.";
                 return $res;
             }
         } else {
@@ -202,7 +202,7 @@ class MT2TuringMachine
                 $res[] = "первый элемент должен быть символом алфавита \"$alphabetStr\" или символом $this->lambdaSymbol. Сейчас первый элемент имеет значение \"$left\".";
             }
             if ($middle !== 'R' && $middle !== 'L' && $middle !== 'N') {
-                $res[] = "средний элемент должен иметь значение 'R', 'L' или 'N'. Сейчас задано в '$middle'.";
+                $res[] = "средний элемент должен иметь значение 'R', 'L' или 'N'. Сейчас задано '$middle'.";
             }
             $mapped = array_map(function($x) {
                 return $x['state'];
