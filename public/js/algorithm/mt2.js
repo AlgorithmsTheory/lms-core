@@ -567,6 +567,12 @@ function createMt2(containerEl) {
     }
 
     function startButtonClickHandler() {
+        if (checkErrors()) {
+            if (formEl) {
+                checkAnswer('btnRun', formEl, true);
+            }
+            return;
+        }
         const itersCount = 500;
         let all_ok = false;
         for (let i = 0; i < itersCount; i++) {
@@ -711,7 +717,8 @@ function createMt2(containerEl) {
         return res;
     }
 
-    function checkBtnClickHandler() {
+    // returns true if errors were detected
+    function checkErrors() {
         removeHighlightCommands();
         const errors = getErrors();
         if (errors.length <= 0) {
@@ -722,6 +729,11 @@ function createMt2(containerEl) {
             showErrors(errors);
             setButtonsEnabled(false);
         }
+        return errors.length > 0;
+    }
+
+    function checkBtnClickHandler() {
+        checkErrors();
         if (formEl) {
             checkAnswer('btnCheckSyntax', formEl, true);
         }
@@ -742,7 +754,7 @@ function createMt2(containerEl) {
     }
 
     function setButtonsEnabled(value) {
-        startBtnEl.disabled = !value;
+        // startBtnEl.disabled = !value;
         stepBtnEl.disabled = !value;
     }
 

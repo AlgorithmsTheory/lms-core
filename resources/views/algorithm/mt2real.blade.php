@@ -15,7 +15,7 @@
     <input type="text" class="mt2-alphabet">
     <button type="button" class="mt2-check-btn btn btn-primary">Проверить синтаксис</button>
     <button type="button" class="mt2-to-first-state btn btn-primary">Начать заново</button>
-    <button type="button" class="mt2-start-btn btn btn-primary" disabled>Запустить</button>
+    <button type="button" class="mt2-start-btn btn btn-primary">Запустить</button>
     <button type="button" class="mt2-step-btn btn btn-primary" disabled style="display: none">Сделать шаг</button>
 </div>
 <div class="mt2-errors"></div>

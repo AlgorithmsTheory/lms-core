@@ -98,7 +98,8 @@ class Turing extends QuestionType implements Checkable {
         $debug_counter = $array[0];
         $check_syntax_counter = $array[1];
         $run_counter = $array[2];
-        $data = $array[3];
+        $should_increment_debug_counter = $array[3];
+        $data = $array[4];
 
         $parse = $this->variants;
 
@@ -116,11 +117,19 @@ class Turing extends QuestionType implements Checkable {
 		$sequences_true = $array[0];
 		$sequences_all = $array[1];
         $mark = $sequences_true == $sequences_all ? 'Верно' : 'Неверно';
+        if ($should_increment_debug_counter && $sequences_true < $sequences_all) {
+            $debug_counter++;
+        }
         $right_percent = $sequences_true / $sequences_all;
         $fee_percent = 0.15*$debug_counter + 0.05*$check_syntax_counter + 0.10*$run_counter;
         if ($fee_percent > 0.5) {
             $fee_percent = 0.5;
         }
+        /*
+        if ($sequences_true == $sequences_all) {
+            $fee_percent = 0;
+        }
+        */
         $score_percent = $right_percent - $fee_percent;
         if ($score_percent < 0) {
             $score_percent = 0;
@@ -130,11 +139,12 @@ class Turing extends QuestionType implements Checkable {
 
 		$data = array('mark'=>$mark, 'score' => $scores,
             'id' => $this->id_question, 'points' => $this->points,
-            'right_percent' => $right_percent,
+            'right_percent' => round($score_percent*100),
                 'choice' => ['debug_counter' => $debug_counter, 'check_syntax_counter' => $check_syntax_counter,
                     'run_counter' => $run_counter,
                     'sequences_true' => $sequences_true, 'sequences_all' => $sequences_all,
-                    'fee_percent' => $fee_percent, 'score'=>$scores, 'total_cycle'=>$total_cycle]);
+                    'fee_percent' => round($fee_percent*100), 'score'=>$scores, 'total_cycle'=>$total_cycle,
+                    'right_percent' => round($right_percent*100)]);
         return $data;
     }
 

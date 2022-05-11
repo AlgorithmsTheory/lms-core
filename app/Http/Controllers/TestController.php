@@ -722,7 +722,30 @@ class TestController extends Controller{
             $data = $request->input($i);
             $array = json_decode($data);
             $link_to_lecture[$j] = $question->linkToLecture($array[0]);
-            $data = $question->check($array);
+
+            // get type of test
+            $id_question = $array[0];
+            $query1 = Question::whereId_question($id_question)->select('answer','points', 'type_code')->first();
+            $type_name = Type::whereType_code($query1['type_code'])->select('type_name')->first()->type_name;
+
+            if ($type_name == 'Эмулятор Тьюринга') {
+                /* Get current saved test */
+                $test = Result::whereId_result($current_test)->first();
+                $saved_test = $test->saved_test;
+                $saved_test = unserialize($saved_test);
+
+                $arguments = $saved_test[$i]['arguments'];
+                $debug_counter = $arguments['debug_counter'];
+                $check_syntax_counter = $arguments['check_syntax_counter'];
+                $run_counter = $arguments['run_counter'];
+
+                $solution = $array[2];
+                $should_increment_debug_counter = false;
+                $data = $question->check([$id_question, $debug_counter, $check_syntax_counter, $run_counter,
+                    $should_increment_debug_counter, $solution]);
+            } else {
+                $data = $question->check($array);
+            }
             $right_or_wrong[$j] = $data['mark'];
             $choice[$j] = $data['choice'];
             $right_percent[$j] = $data['right_percent'];

@@ -172,15 +172,15 @@ class EmulatorController extends Controller {
             ];
         }
 
-        $debug_counter++;
         # $task_id = 43564 (идентификатор вопроса)
         # $debug_counter = 8 (сколько раз нажали на кнопку "Проверить работу" вплоть до сих пор
         # $task = информация о текущем вводе пользователя в эмулятор Тьюринга в следующем виде:
         #   {"rule":[{"src":"S0{∂}","dst":"{∂}{R}S0"}],"str":["∂"]}
         $question = new Question();
-        $result_check = $question->check([$task_id, $debug_counter, $check_syntax_counter, $run_counter, $task]);
-
-        $saved_test[$counter]['arguments']['debug_counter'] = $debug_counter;
+        $should_increment_debug_counter = true;
+        $result_check = $question->check([$task_id, $debug_counter, $check_syntax_counter, $run_counter,
+            $should_increment_debug_counter, $task]);
+        $saved_test[$counter]['arguments']['debug_counter'] = $result_check['choice']['debug_counter'];
 
         /* Save new data */
         $saved_test = serialize($saved_test);
