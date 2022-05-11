@@ -10,11 +10,11 @@ class MT2TuringMachine
 {
     // [
     //   {
-    //     state: 'q0',
+    //     state: 's0',
     //     expressions: {
     //       '0': 'R',
     //       '1': 'R',
-    //       [lambdaSymbol]: `${lambdaSymbol} L q1`,
+    //       [lambdaSymbol]: `${lambdaSymbol} L s1`,
     //     }
     //   }
     // ]
@@ -23,10 +23,12 @@ class MT2TuringMachine
     private $tape;
     private $firstState;
     private $lambdaSymbol;
+    private $lastCommandSymbol;
 
     public function __construct($automaton, $alphabet) {
-        $this->firstState = 'q0';
-        $this->lambdaSymbol = 'λ';
+        $this->firstState = 's0';
+        $this->lambdaSymbol = 'η';
+        $this->lastCommandSymbol = 'Ω';
         $this->automaton = $automaton;
         $this->alphabet = $alphabet;
         $this->tape = null;
@@ -44,7 +46,7 @@ class MT2TuringMachine
     }
 
     private function runInternal() {
-        $state = 'q0';
+        $state = $this->firstState;
         $errors = $this->getErrors();
         Log::debug('errors');
         Log::debug($errors);
@@ -67,7 +69,7 @@ class MT2TuringMachine
             }
             $parsedCommand = $this->parseCommand($command, $state);
             $state = $this->applyCommand($parsedCommand);
-            if ($parsedCommand['nextState'] === '!') {
+            if ($parsedCommand['nextState'] === $this->lastCommandSymbol) {
                 $all_ok = true;
                 $itersCount = $i + 1;
                 break;
@@ -126,7 +128,7 @@ class MT2TuringMachine
         } else if ($tapeMovement === 'L') {
             $this->tape->toLeft();
         }
-        if ($nextState === '!') {
+        if ($nextState === $this->lastCommandSymbol) {
             return $this->firstState;
         } else {
             return $nextState;
@@ -207,8 +209,8 @@ class MT2TuringMachine
             $mapped = array_map(function($x) {
                 return $x['state'];
             }, $this->automaton);
-            if (!(in_array($right, $mapped) || $right === '!')) {
-                $res[] = "последний элемент должен являться состоянием или являться символом '!', обозначающим конец. Сейчас последний элемент имеет значение \"$right\".";
+            if (!(in_array($right, $mapped) || $right === $this->lastCommandSymbol)) {
+                $res[] = "последний элемент должен являться состоянием или являться символом '" . $this->lastCommandSymbol . "', обозначающим конец. Сейчас последний элемент имеет значение \"$right\".";
             }
         }
         return $res;

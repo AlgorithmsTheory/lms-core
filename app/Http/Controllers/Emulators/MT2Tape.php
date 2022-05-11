@@ -19,7 +19,7 @@ class MT2Tape
 
     // $word is a string from which the tape should be created.
     public function __construct($word) {
-        $this->lambdaSymbol = 'λ';
+        $this->lambdaSymbol = 'η';
         $this->buffer = $this->toTapePresentation($word);
     }
 

@@ -77,13 +77,28 @@ class Turing extends QuestionType implements Checkable {
 
     public function show($count) {
         $view = 'tests.show12';
-        $array = array('view' => $view, 'arguments' => array('text' => explode('::',$this->text), "debug_counter" => 0, "type" => self::type_code, "id" => $this->id_question, "count" => $count));
+        $array = array('view' => $view, 'arguments' =>
+            array(
+                'text' => explode('::',$this->text),
+                // Число нажатий на кнопку "Проверить работу"
+                "debug_counter" => 0,
+                // Число нажатий на кнопку "Проверить синтаксис"
+                'check_syntax_counter' => 0,
+                // Число нажатий на кнопку "Запустить"
+                'run_counter' => 0,
+                "type" => self::type_code,
+                "id" => $this->id_question,
+                "count" => $count));
         return $array;
     }
 
     public function check($array) {
+        Log::debug('array of check');
+        Log::debug($array);
         $debug_counter = $array[0];
-        $data = $array[1];
+        $check_syntax_counter = $array[1];
+        $run_counter = $array[2];
+        $data = $array[3];
 
         $parse = $this->variants;
 
@@ -96,64 +111,30 @@ class Turing extends QuestionType implements Checkable {
         $array = EmulatorController::MTCheckSequence($data, $test_seq);
         
         //--------------------------------------------------------------
-        
+
+        $total_cycle = $array[2];
 		$sequences_true = $array[0];
 		$sequences_all = $array[1];
-        $total_cycle = $array[2];
-        
-		$score = $this->points;
-		
-		if($sequences_true == $sequences_all){
-			$mark = 'Верно';
-		}
-		else{
-			$mark = 'Неверно';
-		}
-		
-        if($debug_counter > 10){
-            $debug_counter = 10;
+        $mark = $sequences_true == $sequences_all ? 'Верно' : 'Неверно';
+        $right_percent = $sequences_true / $sequences_all;
+        $fee_percent = 0.15*$debug_counter + 0.05*$check_syntax_counter + 0.10*$run_counter;
+        if ($fee_percent > 0.5) {
+            $fee_percent = 0.5;
         }
-        
-		$right_percent = ($sequences_true * 1.0) / ($sequences_all * 1.0);
-        $score_fee = $right_percent / 2 / 10;
-
-
-        /*
-         * Ранее был налог за количество отладок.
-         *
-         * В текущей версии число отладок не влияет на полученное число очков.
-         *
-         * debug_counter	снимается %
-         * 10+		        50
-         * 9		        45
-         * 8		        40
-         * 7		        35
-         * 6		        30
-         * 5		        25
-         * 4		        20
-         * 3		        15
-         * 2		        10
-         * 1		        5
-         * 0		        0
-         */
-
-
-        $fee_percent = 0; // $score_fee * $debug_counter;
-
-        $last_percent = $right_percent - $fee_percent;
-        
-		$score = $score * $last_percent;
-        if($score < 0){
-            $score = 0;
+        $score_percent = $right_percent - $fee_percent;
+        if ($score_percent < 0) {
+            $score_percent = 0;
         }
-        
-        
-        $right_percent = $last_percent * 100;
-        $fee_percent = $fee_percent * 100;
+        $max_scores = $this->points;
+        $scores = $score_percent * $max_scores;
 
-		$data = array('mark'=>$mark, 'score'=>$score, 'id' => $this->id_question, 'points' => $this->points, 'right_percent' => $right_percent,
-                      'choice' => ['debug_counter' => $debug_counter, 'sequences_true' => $sequences_true, 'sequences_all' => $sequences_all,
-                          'fee_percent' => $fee_percent, 'score'=>$score, 'total_cycle'=>$total_cycle]);
+		$data = array('mark'=>$mark, 'score' => $scores,
+            'id' => $this->id_question, 'points' => $this->points,
+            'right_percent' => $right_percent,
+                'choice' => ['debug_counter' => $debug_counter, 'check_syntax_counter' => $check_syntax_counter,
+                    'run_counter' => $run_counter,
+                    'sequences_true' => $sequences_true, 'sequences_all' => $sequences_all,
+                    'fee_percent' => $fee_percent, 'score'=>$scores, 'total_cycle'=>$total_cycle]);
         return $data;
     }
 

@@ -136,52 +136,58 @@ class EmulatorController extends Controller {
         $task = Request::input('task');
         $task_id = Request::input('task_id');
         $test_id = Request::input('test_id');
+        $button_code = Request::input('buttonCode');
         $counter = Request::input('counter') - 1;
-        Log::debug('task');
-        Log::debug($task);
-        Log::debug('task_id');
-        Log::debug($task_id);
-        Log::debug('test_id');
-        Log::debug($test_id);
-        Log::debug('counter');
-        Log::debug($counter);
-        Log::debug('user_id');
-        Log::debug(Auth::user()['id']);
         $current_test = Result::getCurrentResult(Auth::user()['id'], $test_id);
-        Log::debug('current_test');
-        Log::debug($current_test);
 
-        if($current_test != -1){
-            /* Get current saved test */
-            $test = Result::whereId_result($current_test)->first();
-            $saved_test = $test->saved_test;
-            $saved_test = unserialize($saved_test);
-            Log::debug('saved_test');
-            Log::debug($saved_test);
-            
-            /* Modify saved data with use question->check() */
-            $question = new Question();
-            $debug_counter = $saved_test[$counter]['arguments']['debug_counter'];
+        if ($current_test == -1) {
+            return null;
+        }
 
-            # $task_id = 43564 (идентификатор вопроса)
-            # $debug_counter = 8 (сколько раз нажали на кнопку "Проверить работу" вплоть до сих пор
-            # $task = информация о текущем вводе пользователя в эмулятор Тьюринга в следующем виде:
-            #   {"rule":[{"src":"S0{∂}","dst":"{∂}{R}S0"}],"str":["∂"]}
-            $result_check = $question->check([$task_id, $debug_counter + 1, $task]);
+        /* Get current saved test */
+        $test = Result::whereId_result($current_test)->first();
+        $saved_test = $test->saved_test;
+        $saved_test = unserialize($saved_test);
 
-            Log::debug('result_check');
-            Log::debug($result_check);
-            
-            $saved_test[$counter]['arguments']['debug_counter'] = $result_check['choice']['debug_counter'];
-            
-            /* Save new data */
+        $arguments = $saved_test[$counter]['arguments'];
+        $debug_counter = $arguments['debug_counter'];
+        $check_syntax_counter = $arguments['check_syntax_counter'];
+        $run_counter = $arguments['run_counter'];
+
+        if ($button_code == 'btnCheckSyntax' || $button_code == 'btnRun') {
+            if ($button_code == 'btnCheckSyntax') {
+                $check_syntax_counter++;
+            } else if ($button_code == 'btnRun') {
+                $run_counter++;
+            }
+            $saved_test[$counter]['arguments']['check_syntax_counter'] = $check_syntax_counter;
+            $saved_test[$counter]['arguments']['run_counter'] = $run_counter;
             $saved_test = serialize($saved_test);
             $test->saved_test = $saved_test;
             $test->save();
-        
+            return [
+                'debug_counter' => $debug_counter,
+                'check_syntax_counter' => $check_syntax_counter,
+                'run_counter' => $run_counter,
+            ];
         }
-        
-        return $result_check;   
+
+        $debug_counter++;
+        # $task_id = 43564 (идентификатор вопроса)
+        # $debug_counter = 8 (сколько раз нажали на кнопку "Проверить работу" вплоть до сих пор
+        # $task = информация о текущем вводе пользователя в эмулятор Тьюринга в следующем виде:
+        #   {"rule":[{"src":"S0{∂}","dst":"{∂}{R}S0"}],"str":["∂"]}
+        $question = new Question();
+        $result_check = $question->check([$task_id, $debug_counter, $check_syntax_counter, $run_counter, $task]);
+
+        $saved_test[$counter]['arguments']['debug_counter'] = $debug_counter;
+
+        /* Save new data */
+        $saved_test = serialize($saved_test);
+        $test->saved_test = $saved_test;
+        $test->save();
+
+        return $result_check;
     }
 
     public function HAMCheck(Request $request) {

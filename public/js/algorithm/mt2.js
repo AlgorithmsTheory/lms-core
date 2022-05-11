@@ -16,6 +16,7 @@ function createMt2(containerEl) {
     const clearTapeBtnEl = qs('.mt2-clear-tape-btn');
     const toFirstStateEl = qs('.mt2-to-first-state');
     const checkBtnEl = qs('.mt2-check-btn');
+    const formEl = tapeContentEl.closest('form'); // can be null. If not null then emulator is used inside the test
 
 
 
@@ -25,18 +26,20 @@ function createMt2(containerEl) {
     let visibleTapeStartPos = 0;
     let tapePos = 6;
     let alphabet = ['a', 'b'];
-    const firstState = 'q0';
+    const stateSymbol = 's';
+    const lastCommandSymbol = 'Ω';
+    const firstState = `${stateSymbol}0`;
     let currentState = firstState;
 
     let automaton = [
         {
-            state: 'q0',
+            state: `${stateSymbol}0`,
             expressions: {
             },
         },
     ];
 
-    const lambdaSymbol = 'λ';
+    const lambdaSymbol = 'η';
 
     const examples = [
         {
@@ -45,27 +48,27 @@ function createMt2(containerEl) {
             word: '1011',
             automaton: [
                 {
-                    state: 'q0',
+                    state: `${stateSymbol}0`,
                     expressions: {
                         '0': 'R',
                         '1': 'R',
-                        [lambdaSymbol]: `${lambdaSymbol} L q1`,
+                        [lambdaSymbol]: `${lambdaSymbol} L ${stateSymbol}1`,
                     }
                 },
                 {
-                    state: 'q1',
+                    state: `${stateSymbol}1`,
                     expressions: {
-                        '0': '1 N q2',
-                        '1': '0 L q1',
-                        [lambdaSymbol]: `1 N !`,
+                        '0': `1 N ${stateSymbol}2`,
+                        '1': `0 L ${stateSymbol}1`,
+                        [lambdaSymbol]: `1 N ${lastCommandSymbol}`,
                     }
                 },
                 {
-                    state: 'q2',
+                    state: `${stateSymbol}2`,
                     expressions: {
                         '0': 'L',
                         '1': 'L',
-                        [lambdaSymbol]: `${lambdaSymbol} R !`,
+                        [lambdaSymbol]: `${lambdaSymbol} R ${lastCommandSymbol}`,
                     }
                 },
             ]
@@ -76,7 +79,7 @@ function createMt2(containerEl) {
             word: '1011',
             automaton: [
                 {
-                    state: 'q0',
+                    state: `${stateSymbol}0`,
                     expressions: {
                         '0': 'R',
                         '1': 'R',
@@ -88,27 +91,27 @@ function createMt2(containerEl) {
                         '7': 'R',
                         '8': 'R',
                         '9': 'R',
-                        [lambdaSymbol]: `${lambdaSymbol} L q1`,
+                        [lambdaSymbol]: `${lambdaSymbol} L ${stateSymbol}1`,
                     }
                 },
                 {
-                    state: 'q1',
+                    state: `${stateSymbol}1`,
                     expressions: {
-                        '0': '1 N q2',
-                        '1': '2 N q2',
-                        '2': '3 N q2',
-                        '3': '4 N q2',
-                        '4': '5 N q2',
-                        '5': '6 N q2',
-                        '6': '7 N q2',
-                        '7': '8 N q2',
-                        '8': '9 N q2',
-                        '9': '0 L q1',
-                        [lambdaSymbol]: '1 N !',
+                        '0': `1 N ${stateSymbol}2`,
+                        '1': `2 N ${stateSymbol}2`,
+                        '2': `3 N ${stateSymbol}2`,
+                        '3': `4 N ${stateSymbol}2`,
+                        '4': `5 N ${stateSymbol}2`,
+                        '5': `6 N ${stateSymbol}2`,
+                        '6': `7 N ${stateSymbol}2`,
+                        '7': `8 N ${stateSymbol}2`,
+                        '8': `9 N ${stateSymbol}2`,
+                        '9': `0 L ${stateSymbol}1`,
+                        [lambdaSymbol]: `1 N ${lastCommandSymbol}`,
                     }
                 },
                 {
-                    state: 'q2',
+                    state: `${stateSymbol}2`,
                     expressions: {
                         '0': 'L',
                         '1': 'L',
@@ -120,7 +123,7 @@ function createMt2(containerEl) {
                         '7': 'L',
                         '8': 'L',
                         '9': 'L',
-                        [lambdaSymbol]: `${lambdaSymbol} R !`,
+                        [lambdaSymbol]: `${lambdaSymbol} R ${lastCommandSymbol}`,
                     }
                 },
             ]
@@ -131,11 +134,11 @@ function createMt2(containerEl) {
             word: 'abaabbaaabbb',
             automaton: [
                 {
-                    state: 'q0',
+                    state: `${stateSymbol}0`,
                     expressions: {
-                        'a': 'b R q0',
-                        'b': 'a R q0',
-                        [lambdaSymbol]: `${lambdaSymbol} N !`,
+                        'a': `b R ${stateSymbol}0`,
+                        'b': `a R ${stateSymbol}0`,
+                        [lambdaSymbol]: `${lambdaSymbol} N ${lastCommandSymbol}`,
                     }
                 },
             ]
@@ -146,53 +149,53 @@ function createMt2(containerEl) {
             word: 'abacabaab',
             automaton: [
                 {
-                    state: 'q0',
+                    state: `${stateSymbol}0`,
                     expressions: {
                         'a': 'R',
                         'b': 'R',
                         'c': 'R',
                         '#': '',
-                        [lambdaSymbol]: '# L q1',
+                        [lambdaSymbol]: `# L ${stateSymbol}1`,
                     }
                 },
                 {
-                    state: 'q1',
+                    state: `${stateSymbol}1`,
                     expressions: {
                         'a': 'L',
                         'b': 'L',
                         'c': 'L',
                         '#': 'L',
-                        [lambdaSymbol]: `${lambdaSymbol} R q2`,
+                        [lambdaSymbol]: `${lambdaSymbol} R ${stateSymbol}2`,
                     }
                 },
                 {
-                    state: 'q2',
+                    state: `${stateSymbol}2`,
                     expressions: {
-                        'a': `${lambdaSymbol} R q2`,
-                        'b': `${lambdaSymbol} R q3`,
-                        'c': `${lambdaSymbol} R q4`,
-                        '#': `${lambdaSymbol} R !`,
-                        [lambdaSymbol]: `${lambdaSymbol} R !`,
+                        'a': `${lambdaSymbol} R ${stateSymbol}2`,
+                        'b': `${lambdaSymbol} R ${stateSymbol}3`,
+                        'c': `${lambdaSymbol} R ${stateSymbol}4`,
+                        '#': `${lambdaSymbol} R ${lastCommandSymbol}`,
+                        [lambdaSymbol]: `${lambdaSymbol} R ${lastCommandSymbol}`,
                     }
                 },
                 {
-                    state: 'q3',
-                    expressions: {
-                        'a': 'R',
-                        'b': 'R',
-                        'c': 'R',
-                        '#': 'R',
-                        [lambdaSymbol]: 'b L q1',
-                    }
-                },
-                {
-                    state: 'q4',
+                    state: `${stateSymbol}3`,
                     expressions: {
                         'a': 'R',
                         'b': 'R',
                         'c': 'R',
                         '#': 'R',
-                        [lambdaSymbol]: 'c L q1',
+                        [lambdaSymbol]: `b L ${stateSymbol}1`,
+                    }
+                },
+                {
+                    state: `${stateSymbol}4`,
+                    expressions: {
+                        'a': 'R',
+                        'b': 'R',
+                        'c': 'R',
+                        '#': 'R',
+                        [lambdaSymbol]: `c L ${stateSymbol}1`,
                     }
                 },
             ]
@@ -399,7 +402,7 @@ function createMt2(containerEl) {
         }
         if (el.textContent === '+') {
             automaton.push({
-                state: `q${automaton.length}`,
+                state: `${stateSymbol}${automaton.length}`,
                 expressions: {},
             });
         } else {
@@ -547,7 +550,7 @@ function createMt2(containerEl) {
             tapePos--;
         }
         refillTape();
-        if (nextState === '!') {
+        if (nextState === lastCommandSymbol) {
             changeCurrentState(firstState);
         } else {
             changeCurrentState(nextState);
@@ -572,7 +575,7 @@ function createMt2(containerEl) {
             const command = automatonExpressions[tape[tapePos] || lambdaSymbol] || '';
             const parsedCommand = parseCommand(command);
             applyCommand(parsedCommand);
-            if (parsedCommand.nextState === '!') {
+            if (parsedCommand.nextState === lastCommandSymbol) {
                 all_ok = true;
                 break;
             }
@@ -580,6 +583,9 @@ function createMt2(containerEl) {
         highlightNextCommand();
         if (!all_ok) {
             alert(`Следующий шаг был выполнен ${itersCount} раз, но не было найдено команды, обозначающей конец, поэтому машина была приостановлена.`);
+        }
+        if (formEl) {
+            checkAnswer('btnRun', formEl, true);
         }
     }
 
@@ -593,7 +599,23 @@ function createMt2(containerEl) {
     }
 
     function toFirstStateButtonClickHandler() {
+        // to s0
         changeCurrentState(firstState);
+
+        // select first letter on tape
+        let elementsOnTape = false;
+        let minValue = 2000000000;
+        for (let el in tape) {
+            if (+el < minValue && tape[el] !== lambdaSymbol && tape[el] !== '') {
+                elementsOnTape = true;
+                minValue = +el;
+            }
+        }
+        if (!elementsOnTape) {
+            return;
+        }
+        tapePos = minValue;
+        refillTape();
     }
 
     function getTapeErrors() {
@@ -657,8 +679,8 @@ function createMt2(containerEl) {
             if (middle !== 'R' && middle !== 'L' && middle !== 'N') {
                 res.push(`средний элемент должен иметь значение 'R', 'L' или 'N'. Сейчас задано '${middle}'.`);
             }
-            if (!(automaton.map(x => x.state).includes(right) || right === '!')) {
-                res.push(`последний элемент должен являться состоянием или являться символом '!', обозначающим конец. Сейчас последний элемент имеет значение "${right}".`);
+            if (!(automaton.map(x => x.state).includes(right) || right === lastCommandSymbol)) {
+                res.push(`последний элемент должен являться состоянием или являться символом '${lastCommandSymbol}', обозначающим конец. Сейчас последний элемент имеет значение "${right}".`);
             }
         }
         return res;
@@ -699,6 +721,9 @@ function createMt2(containerEl) {
         } else {
             showErrors(errors);
             setButtonsEnabled(false);
+        }
+        if (formEl) {
+            checkAnswer('btnCheckSyntax', formEl, true);
         }
     }
 
@@ -777,9 +802,13 @@ function createMt2(containerEl) {
         refillTape();
         fillAlphabetInput();
         generateTable();
-        addExamplesButtons();
+        if (examplesButtonsWrapperEl) {
+            addExamplesButtons();
+        }
 
-        examplesButtonsWrapperEl.addEventListener('click', examplesButtonsWrapperClickHandler);
+        if (examplesButtonsWrapperEl) {
+            examplesButtonsWrapperEl.addEventListener('click', examplesButtonsWrapperClickHandler);
+        }
         stepBtnEl.addEventListener('click', stepButtonClickHandler);
         startBtnEl.addEventListener('click', startButtonClickHandler);
         toFirstStateEl.addEventListener('click', toFirstStateButtonClickHandler);
@@ -788,7 +817,8 @@ function createMt2(containerEl) {
         return checking();
     }
 
-    function checkAnswer(formEl, notice) {
+    // buttonCode: 'btnDebug'|'btnCheckSyntax'|'btnRun'
+    function checkAnswer(buttonCode, formEl, notice) {
         const testId = +document.querySelector('#id_test').value;
 
         const counterEl = formEl.querySelector('[name=counter]');
@@ -803,6 +833,10 @@ function createMt2(containerEl) {
         taskEl.value = task;
 
         if (notice) {
+            if (!['btnDebug', 'btnCheckSyntax', 'btnRun'].includes(buttonCode)) {
+                return;
+            }
+
             $.ajax({
                 cache: false,
                 type: 'POST',
@@ -818,23 +852,36 @@ function createMt2(containerEl) {
                     task_id: +numEl.value,
                     test_id: testId,
                     task: task,
+                    buttonCode: buttonCode,
                     token: 'token' },
                 success: function(data){
-                    const sequences_true = data['choice']['sequences_true'];
-                    const sequences_all = data['choice']['sequences_all'];
-                    const debug_counter = data['choice']['debug_counter'];
+                    if (buttonCode === 'btnDebug') {
+                        const sequences_true = data['choice']['sequences_true'];
+                        const sequences_all = data['choice']['sequences_all'];
+                        const debug_counter = data['choice']['debug_counter'];
+                        const check_syntax_counter = data['choice']['check_syntax_counter'];
+                        const run_counter = data['choice']['run_counter'];
 
-                    debugCounterEl.value = debug_counter;
+                        debugCounterEl.value = debug_counter;
 
-                    alert("Текущий результат отправки: " + sequences_true + " тестов сработало из " + sequences_all +
-                        " . Количество отправок: " + debug_counter + "\n");
+                        alert(`Текущий результат отправки: ${sequences_true} тестов сработало из ${sequences_all}.\n` +
+                            `Количество нажатий "Проверить работу": ${debug_counter}\n` +
+                            `Количество нажатий "Проверить синтаксис": ${check_syntax_counter}\n` +
+                            `Количество нажатий "Запустить": ${run_counter}`);
+                    } else {
+                        const debug_counter = data['debug_counter'];
+                        const check_syntax_counter = data['check_syntax_counter'];
+                        const run_counter = data['run_counter'];
+                        alert(`Количество нажатий "Проверить работу": ${debug_counter}\n` +
+                            `Количество нажатий "Проверить синтаксис": ${check_syntax_counter}\n` +
+                            `Количество нажатий "Запустить": ${run_counter}`);
+                    }
                 }
             });
         }
     }
 
     function checking() {
-        const formEl = tapeContentEl.closest('form');
         if (!formEl) {
             return () => {};
         }
@@ -843,9 +890,9 @@ function createMt2(containerEl) {
             return () => {};
         }
 
-        btnCheckAnswerEl.addEventListener('click', () => checkAnswer(formEl, true));
+        btnCheckAnswerEl.addEventListener('click', () => checkAnswer('btnDebug', formEl, true));
         return () => {
-            checkAnswer(formEl, false);
+            checkAnswer('btnDebug', formEl, false);
         };
     }
 
