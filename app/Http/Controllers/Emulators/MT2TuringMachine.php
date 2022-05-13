@@ -68,6 +68,15 @@ class MT2TuringMachine
                 $command = '';
             }
             $parsedCommand = $this->parseCommand($command, $state);
+
+            $fillCharOnTape = $parsedCommand['fillCharOnTape'];
+            $tapeMovement = $parsedCommand['tapeMovement'];
+            $nextState = $parsedCommand['nextState'];
+            if ($tapeMovement == 'N' && $nextState == $state && $fillCharOnTape == $tapeChar) {
+                $itersCount = $i;
+                break;
+            }
+
             $state = $this->applyCommand($parsedCommand);
             if ($parsedCommand['nextState'] === $this->lastCommandSymbol) {
                 $all_ok = true;
@@ -76,7 +85,8 @@ class MT2TuringMachine
             }
         }
         if (!$all_ok) {
-            $errors[] = "Следующий шаг был выполнен $itersCount раз, но не было найдено команды, обозначающей конец, поэтому машина была приостановлена.";
+            $errors[] = "Машина была остановлена, т.к. за $itersCount команд не было найдено команды, " .
+                "обозначающей конец, или же спустя $itersCount команд была встречена команда, не влияющая на машину.";
         }
         return $itersCount;
     }

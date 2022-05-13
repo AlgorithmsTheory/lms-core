@@ -573,13 +573,20 @@ function createMt2(containerEl) {
             }
             return;
         }
-        const itersCount = 500;
+        let itersCount = 500;
         let all_ok = false;
         for (let i = 0; i < itersCount; i++) {
             const automatonRow = automaton.find(x => x.state === currentState);
             const automatonExpressions = automatonRow.expressions;
             const command = automatonExpressions[tape[tapePos] || lambdaSymbol] || '';
             const parsedCommand = parseCommand(command);
+
+            const { fillCharOnTape, tapeMovement, nextState } = parsedCommand;
+            if (tapeMovement === 'N' && nextState === currentState && fillCharOnTape === (tape[tapePos] || '')) {
+                itersCount = i;
+                break;
+            }
+
             applyCommand(parsedCommand);
             if (parsedCommand.nextState === lastCommandSymbol) {
                 all_ok = true;
@@ -588,7 +595,8 @@ function createMt2(containerEl) {
         }
         highlightNextCommand();
         if (!all_ok) {
-            alert(`Следующий шаг был выполнен ${itersCount} раз, но не было найдено команды, обозначающей конец, поэтому машина была приостановлена.`);
+            alert(`Машина была остановлена, т.к. за ${itersCount} команд не было найдено команды, ` +
+                `обозначающей конец, или же спустя ${itersCount} команд была встречена команда, не влияющая на машину.`);
         }
         if (formEl) {
             checkAnswer('btnRun', formEl, true);

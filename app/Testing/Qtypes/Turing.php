@@ -1,6 +1,7 @@
 <?php
 namespace App\Testing\Qtypes;
 use App\Http\Controllers\QuestionController;
+use App\MtFees;
 use App\Mypdf;
 use App\Testing\Question;
 use App\Testing\Type;
@@ -95,6 +96,7 @@ class Turing extends QuestionType implements Checkable {
     public function check($array) {
         Log::debug('array of check');
         Log::debug($array);
+        $fees = MtFees::first();
         $debug_counter = $array[0];
         $check_syntax_counter = $array[1];
         $run_counter = $array[2];
@@ -121,7 +123,9 @@ class Turing extends QuestionType implements Checkable {
             $debug_counter++;
         }
         $right_percent = $sequences_true / $sequences_all;
-        $fee_percent = 0.15*$debug_counter + 0.05*$check_syntax_counter + 0.10*$run_counter;
+        $fee_percent = ($fees->debug_fee / 100)*$debug_counter
+            + ($fees->check_syntax_fee / 100)*$check_syntax_counter
+            + ($fees->run_fee / 100)*$run_counter;
         if ($fee_percent > 0.5) {
             $fee_percent = 0.5;
         }
