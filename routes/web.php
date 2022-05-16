@@ -471,3 +471,7 @@ Route::get('stat/get-question-group-success/{id_question}', ['as' => 'question_g
 Route::get('stat/get-test-results/{id_test}', ['as' => 'test_results_stat', 'uses' => 'StatisticController@getResults', 'middleware' => ['general_auth', 'admin']]);
 Route::get('stat/get-test-results/{id_test}/{id_group}', ['as' => 'test_results_stat_for_group', 'uses' => 'StatisticController@getResultsForGroup', 'middleware' => ['general_auth', 'admin']]);
 Route::get('stat/get-question-type-frequency-in-test/{id_test}', ['as' => 'question_type_freq_in_test', 'uses' => 'StatisticController@getQuestionTypeFrequencyInTest', 'middleware' => ['general_auth', 'admin']]);
+
+// Редактирование параметров начисления баллов за эмулятор Тьюринга
+Route::get('edit_mt_params', ['as' => 'edit_mt_params', 'uses' => 'Emulators\Mt2Controller@show_edit_params', 'middleware' => ['general_auth', 'admin']]);
+Route::post('edit_mt_params_apply', ['as' => 'edit_mt_params_apply', 'uses' => 'Emulators\Mt2Controller@edit_params', 'middleware' => ['general_auth', 'admin']]);

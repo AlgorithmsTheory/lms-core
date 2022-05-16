@@ -157,6 +157,13 @@
                                 </div>
                             </a>
                         </li>
+                        <li class="tile">
+                            <a href="{{ route('edit_mt_params')}}" class="tile-content ink-reaction">
+                                <div class="tile-text">
+                                    Редактирование параметров подсчета баллов для задач на эмулятор Тьюринга
+                                </div>
+                            </a>
+                        </li>
                     </ul>
                 </div><!--end .card-body -->
             </div>
