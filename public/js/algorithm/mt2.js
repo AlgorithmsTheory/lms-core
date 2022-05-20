@@ -7,6 +7,7 @@ function createMt2(containerEl) {
     const alphabetEl = qs('.mt2-alphabet');
     const examplesButtonsWrapperEl = qs('.mt2-examples-buttons-wrapper');
     const currentStateEl = qs('.mt2-current-state');
+    const syntaxSuccessEl = qs('.mt2-syntax-success');
     const errorsEl = qs('.mt2-errors');
     const startBtnEl = qs('.mt2-start-btn');
     const stepBtnEl = qs('.mt2-step-btn');
@@ -22,6 +23,7 @@ function createMt2(containerEl) {
 
 
     const ce = document.createElement.bind(document);
+    let canTapeBeChanged = true;
     let tape = {};
     let visibleTapeStartPos = 0;
     let tapePos = 6;
@@ -30,6 +32,8 @@ function createMt2(containerEl) {
     const lastCommandSymbol = 'Ω';
     const firstState = `${stateSymbol}0`;
     let currentState = firstState;
+    const lastCommandSymbolAbbr = '\\om';
+    const lambdaSymbolAbbr = '\\la';
 
     let automaton = [
         {
@@ -39,7 +43,7 @@ function createMt2(containerEl) {
         },
     ];
 
-    const lambdaSymbol = 'η';
+    const lambdaSymbol = 'λ';
 
     const examples = [
         {
@@ -213,6 +217,9 @@ function createMt2(containerEl) {
             res.style.backgroundColor = '#b3ffb4';
         }
         res.classList.add('mt2-tape-cell');
+        if (!canTapeBeChanged) {
+            res.disabled = true;
+        }
         return res;
     }
 
@@ -263,12 +270,14 @@ function createMt2(containerEl) {
         const requireFocusInd = ((realInd + 1) < cells.length && letters.length > 0) ? realInd + 1 : realInd;
         cells[requireFocusInd].focus();
         cells[requireFocusInd].select();
-        setButtonsEnabled(false);
     }
 
     function tapeInputHandler(ev) {
         const tapeCell = ev.target.closest('.mt2-tape-cell');
         if (!tapeCell) {
+            return;
+        }
+        if (!canTapeBeChanged) {
             return;
         }
         placeWord(tapeCell, tapeCell.value);
@@ -285,6 +294,10 @@ function createMt2(containerEl) {
     }
 
     function placeWordHandler() {
+        if (!canTapeBeChanged)
+        {
+            return;
+        }
         const word = newWordEl.value;
         const letters = word.split('');
         for (let i = 0; i < letters.length; i++) {
@@ -292,15 +305,21 @@ function createMt2(containerEl) {
             tape[realInd] = letters[i];
         }
         refillTape();
-        setButtonsEnabled(false);
     }
 
     function clearTapeHandler() {
+        if (!canTapeBeChanged)
+        {
+            return;
+        }
         tape = {};
         refillTape();
     }
 
     function tapeDblClickHandler(ev) {
+        if (!canTapeBeChanged) {
+            return;
+        }
         const tapeCell = ev.target.closest('.mt2-tape-cell');
         if (!tapeCell) {
             return;
@@ -319,7 +338,7 @@ function createMt2(containerEl) {
         ev.target.value = alphabet.join('');
         removeNonAlphaColumnsFromAutomaton();
         generateTable();
-        setButtonsEnabled(false);
+        setStepStartButtonsEnabled(false);
     }
 
     function removeNonAlphaColumnsFromAutomaton() {
@@ -419,7 +438,6 @@ function createMt2(containerEl) {
             automaton.splice(ind, 1);
         }
         generateTable();
-        setButtonsEnabled(false);
     }
 
     function reflectAutomatonOnTableInputBlurHandler(ev) {
@@ -452,7 +470,16 @@ function createMt2(containerEl) {
             const letter = cellIndex - 1 < alphabet.length ? alphabet[cellIndex - 1] : lambdaSymbol;
             automaton[rowIndex].expressions[letter] = el.value;
         }
-        setButtonsEnabled(false);
+        setStepStartButtonsEnabled(false);
+    }
+
+    function changeToSpecialsOnInput(ev) {
+        const el = ev.target;
+        if (el.tagName !== 'INPUT') {
+            return;
+        }
+        el.value = el.value.replace(lambdaSymbolAbbr, lambdaSymbol)
+            .replace(lastCommandSymbolAbbr, lastCommandSymbol);
     }
 
     function cloneAutomaton(automaton) {
@@ -482,7 +509,6 @@ function createMt2(containerEl) {
         newWordEl.value = example.word;
         placeWordHandler();
         generateTable();
-        setButtonsEnabled(false);
     }
 
     function addExamplesButtons() {
@@ -557,7 +583,21 @@ function createMt2(containerEl) {
         }
     }
 
+    function setTapeEnabled(value) {
+        canTapeBeChanged = value;
+        for (let el of tapeContentEl.querySelectorAll('.mt2-tape-cell')) {
+            el.disabled = !value;
+        }
+    }
+
     function stepButtonClickHandler() {
+        if (checkErrors()) {
+            if (formEl) {
+                checkAnswer('btnStep', formEl, false);
+            }
+            return;
+        }
+        setTapeEnabled(false);
         const automatonRow = automaton.find(x => x.state === currentState);
         const automatonExpressions = automatonRow.expressions;
         const command = automatonExpressions[tape[tapePos] || lambdaSymbol] || '';
@@ -573,6 +613,7 @@ function createMt2(containerEl) {
             }
             return;
         }
+        setTapeEnabled(false);
         let itersCount = 500;
         let all_ok = false;
         for (let i = 0; i < itersCount; i++) {
@@ -613,8 +654,14 @@ function createMt2(containerEl) {
     }
 
     function toFirstStateButtonClickHandler() {
+        setTapeEnabled(true);
         // to s0
         changeCurrentState(firstState);
+
+        clearTapeHandler();
+        placeWordHandler();
+
+        setStepStartButtonsEnabled(true);
 
         // select first letter on tape
         let elementsOnTape = false;
@@ -731,11 +778,9 @@ function createMt2(containerEl) {
         const errors = getErrors();
         if (errors.length <= 0) {
             clearErrors();
-            setButtonsEnabled(true);
             highlightNextCommand();
         } else {
             showErrors(errors);
-            setButtonsEnabled(false);
         }
         return errors.length > 0;
     }
@@ -749,10 +794,12 @@ function createMt2(containerEl) {
 
     function clearErrors() {
         errorsEl.innerHTML = '';
+        syntaxSuccessEl.style.display = '';
     }
 
     function showErrors(errors) {
         errorsEl.innerHTML = '';
+        syntaxSuccessEl.style.display = errors.length > 0 ? 'none' : '';
         for (let error of errors) {
             const pEl = ce('p');
             pEl.classList.add('.mt2-error');
@@ -761,9 +808,12 @@ function createMt2(containerEl) {
         }
     }
 
-    function setButtonsEnabled(value) {
-        // startBtnEl.disabled = !value;
+    function setStepStartButtonsEnabled(value) {
+        startBtnEl.disabled = !value;
         stepBtnEl.disabled = !value;
+        if (!value) {
+            syntaxSuccessEl.style.display = 'none';
+        }
     }
 
     function highlightNextCommand() {
@@ -818,6 +868,7 @@ function createMt2(containerEl) {
 
         tableEl.addEventListener('click', buttonsOnTableClickHandler);
         tableEl.addEventListener('focusout', reflectAutomatonOnTableInputBlurHandler);
+        tableEl.addEventListener('input', changeToSpecialsOnInput);
 
         refillTape();
         fillAlphabetInput();
@@ -837,7 +888,7 @@ function createMt2(containerEl) {
         return checking();
     }
 
-    // buttonCode: 'btnDebug'|'btnCheckSyntax'|'btnRun'
+    // buttonCode: 'btnDebug'|'btnCheckSyntax'|'btnRun'|'btnStep'
     function checkAnswer(buttonCode, formEl, notice) {
         const testId = +document.querySelector('#id_test').value;
 

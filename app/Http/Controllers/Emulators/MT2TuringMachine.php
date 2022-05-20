@@ -27,7 +27,7 @@ class MT2TuringMachine
 
     public function __construct($automaton, $alphabet) {
         $this->firstState = 's0';
-        $this->lambdaSymbol = 'η';
+        $this->lambdaSymbol = 'λ';
         $this->lastCommandSymbol = 'Ω';
         $this->automaton = $automaton;
         $this->alphabet = $alphabet;
