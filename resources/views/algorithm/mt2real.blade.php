@@ -21,11 +21,12 @@
 <div class="mt2-syntax-success" style="background-color: #aaffaa;max-width: max-content; display: none;">Проверка синтаксиса завершена успешно</div>
 <div class="mt2-errors"></div>
 <div class="mt2-current-state-section">
-    Текущее состояние: <span class="mt2-current-state">s0</span>
+    Текущее состояние: <span class="mt2-current-state"></span>
 </div>
 <div class="mt2-table-section">
     <table class="mt2-table">
     </table>
 </div>
-<div>Для ввода λ используйте "\la".</div>
-<div>Для ввода Ω используйте "\om".</div>
+<div>Для ввода λ используйте "\l".</div>
+<div>Для ввода Ω используйте "\o".</div>
+<div>Для ввода ∂ используйте "\d".</div>

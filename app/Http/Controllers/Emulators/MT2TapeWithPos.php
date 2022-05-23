@@ -24,6 +24,10 @@ class MT2TapeWithPos
         $this->pos--;
     }
 
+    public function getPos() {
+        return $this->pos;
+    }
+
     public function getChar() {
         return $this->tape->getChar($this->pos);
     }

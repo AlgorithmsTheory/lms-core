@@ -24,16 +24,26 @@ function createMt2(containerEl) {
 
     const ce = document.createElement.bind(document);
     let canTapeBeChanged = true;
-    let tape = {};
     let visibleTapeStartPos = 0;
-    let tapePos = 6;
-    let alphabet = ['a', 'b'];
-    const stateSymbol = 's';
+    let tapePos = 0;
+    const stateSymbol = 'S';
     const lastCommandSymbol = 'Ω';
+    const firstSymbol = '∂';
+    const lambdaSymbol = 'λ';
+    const RSymbol = 'R';
+    const LSymbol = 'L';
+    const NSymbol = 'H';
+    newWordEl.value = firstSymbol;
+    let tape = {
+        0: firstSymbol,
+    };
+    let alphabet = [firstSymbol, 'a', 'b'];
     const firstState = `${stateSymbol}0`;
     let currentState = firstState;
-    const lastCommandSymbolAbbr = '\\om';
-    const lambdaSymbolAbbr = '\\la';
+    const lastCommandSymbolAbbr = '\\o';
+    const lambdaSymbolAbbr = '\\l';
+    const firstSymbolAbbr = '\\d';
+    currentStateEl.textContent = firstState;
 
     let automaton = [
         {
@@ -43,168 +53,24 @@ function createMt2(containerEl) {
         },
     ];
 
-    const lambdaSymbol = 'λ';
-
     const examples = [
         {
-            title: 'Инкремент (двоичная СС)',
-            alphabet: '01',
-            word: '1011',
-            automaton: [
-                {
-                    state: `${stateSymbol}0`,
-                    expressions: {
-                        '0': 'R',
-                        '1': 'R',
-                        [lambdaSymbol]: `${lambdaSymbol} L ${stateSymbol}1`,
-                    }
-                },
-                {
-                    state: `${stateSymbol}1`,
-                    expressions: {
-                        '0': `1 N ${stateSymbol}2`,
-                        '1': `0 L ${stateSymbol}1`,
-                        [lambdaSymbol]: `1 N ${lastCommandSymbol}`,
-                    }
-                },
-                {
-                    state: `${stateSymbol}2`,
-                    expressions: {
-                        '0': 'L',
-                        '1': 'L',
-                        [lambdaSymbol]: `${lambdaSymbol} R ${lastCommandSymbol}`,
-                    }
-                },
-            ]
-        },
-        {
-            title: 'Инкремент (десятичная СС)',
-            alphabet: '0123456789',
-            word: '1011',
-            automaton: [
-                {
-                    state: `${stateSymbol}0`,
-                    expressions: {
-                        '0': 'R',
-                        '1': 'R',
-                        '2': 'R',
-                        '3': 'R',
-                        '4': 'R',
-                        '5': 'R',
-                        '6': 'R',
-                        '7': 'R',
-                        '8': 'R',
-                        '9': 'R',
-                        [lambdaSymbol]: `${lambdaSymbol} L ${stateSymbol}1`,
-                    }
-                },
-                {
-                    state: `${stateSymbol}1`,
-                    expressions: {
-                        '0': `1 N ${stateSymbol}2`,
-                        '1': `2 N ${stateSymbol}2`,
-                        '2': `3 N ${stateSymbol}2`,
-                        '3': `4 N ${stateSymbol}2`,
-                        '4': `5 N ${stateSymbol}2`,
-                        '5': `6 N ${stateSymbol}2`,
-                        '6': `7 N ${stateSymbol}2`,
-                        '7': `8 N ${stateSymbol}2`,
-                        '8': `9 N ${stateSymbol}2`,
-                        '9': `0 L ${stateSymbol}1`,
-                        [lambdaSymbol]: `1 N ${lastCommandSymbol}`,
-                    }
-                },
-                {
-                    state: `${stateSymbol}2`,
-                    expressions: {
-                        '0': 'L',
-                        '1': 'L',
-                        '2': 'L',
-                        '3': 'L',
-                        '4': 'L',
-                        '5': 'L',
-                        '6': 'L',
-                        '7': 'L',
-                        '8': 'L',
-                        '9': 'L',
-                        [lambdaSymbol]: `${lambdaSymbol} R ${lastCommandSymbol}`,
-                    }
-                },
-            ]
-        },
-        {
             title: 'Инверсия слова',
-            alphabet: 'ab',
-            word: 'abaabbaaabbb',
+            alphabet: `${firstSymbol}ab`,
+            word: `${firstSymbol}aba`,
             automaton: [
                 {
                     state: `${stateSymbol}0`,
                     expressions: {
-                        'a': `b R ${stateSymbol}0`,
-                        'b': `a R ${stateSymbol}0`,
-                        [lambdaSymbol]: `${lambdaSymbol} N ${lastCommandSymbol}`,
+                        [firstSymbol]: RSymbol,
+                        'a': `b ${RSymbol} ${stateSymbol}0`,
+                        'b': `a ${RSymbol} ${stateSymbol}0`,
+                        [lambdaSymbol]: `${lambdaSymbol} ${NSymbol} ${lastCommandSymbol}`,
                     }
                 },
             ]
         },
-        {
-            title: 'Удаление символа',
-            alphabet: 'abc#',
-            word: 'abacabaab',
-            automaton: [
-                {
-                    state: `${stateSymbol}0`,
-                    expressions: {
-                        'a': 'R',
-                        'b': 'R',
-                        'c': 'R',
-                        '#': '',
-                        [lambdaSymbol]: `# L ${stateSymbol}1`,
-                    }
-                },
-                {
-                    state: `${stateSymbol}1`,
-                    expressions: {
-                        'a': 'L',
-                        'b': 'L',
-                        'c': 'L',
-                        '#': 'L',
-                        [lambdaSymbol]: `${lambdaSymbol} R ${stateSymbol}2`,
-                    }
-                },
-                {
-                    state: `${stateSymbol}2`,
-                    expressions: {
-                        'a': `${lambdaSymbol} R ${stateSymbol}2`,
-                        'b': `${lambdaSymbol} R ${stateSymbol}3`,
-                        'c': `${lambdaSymbol} R ${stateSymbol}4`,
-                        '#': `${lambdaSymbol} R ${lastCommandSymbol}`,
-                        [lambdaSymbol]: `${lambdaSymbol} R ${lastCommandSymbol}`,
-                    }
-                },
-                {
-                    state: `${stateSymbol}3`,
-                    expressions: {
-                        'a': 'R',
-                        'b': 'R',
-                        'c': 'R',
-                        '#': 'R',
-                        [lambdaSymbol]: `b L ${stateSymbol}1`,
-                    }
-                },
-                {
-                    state: `${stateSymbol}4`,
-                    expressions: {
-                        'a': 'R',
-                        'b': 'R',
-                        'c': 'R',
-                        '#': 'R',
-                        [lambdaSymbol]: `c L ${stateSymbol}1`,
-                    }
-                },
-            ]
-        }
-    ]
+    ];
 
     function createTapeCell(tapeSuperIndex) {
         const res = ce('input');
@@ -284,8 +150,10 @@ function createMt2(containerEl) {
     }
 
     function tapeLeftHandler() {
-        visibleTapeStartPos--;
-        refillTape();
+        if (visibleTapeStartPos > 0) {
+            visibleTapeStartPos--;
+            refillTape();
+        }
     }
 
     function tapeRightHandler() {
@@ -300,8 +168,9 @@ function createMt2(containerEl) {
         }
         const word = newWordEl.value;
         const letters = word.split('');
+        tape = {};
         for (let i = 0; i < letters.length; i++) {
-            const realInd = tapePos + i;
+            const realInd = /* tapePos + */ i;
             tape[realInd] = letters[i];
         }
         refillTape();
@@ -333,7 +202,11 @@ function createMt2(containerEl) {
     }
 
     function alphabetInputHandler(ev) {
-        const val = ev.target.value;
+        let val = ev.target.value;
+        val = val.replace(firstSymbolAbbr, firstSymbol);
+        if (val.length <= 0 || val[0] !== firstSymbol) {
+            val = firstSymbol + val;
+        }
         alphabet = [...new Set(val.split(''))];
         ev.target.value = alphabet.join('');
         removeNonAlphaColumnsFromAutomaton();
@@ -371,7 +244,7 @@ function createMt2(containerEl) {
         const td = tableRow.insertCell();
         const inputEl = ce('input');
         inputEl.type = 'text';
-        inputEl.placeholder = 'N';
+        inputEl.placeholder = NSymbol;
         inputEl.value = value;
         td.append(inputEl);
     }
@@ -479,7 +352,8 @@ function createMt2(containerEl) {
             return;
         }
         el.value = el.value.replace(lambdaSymbolAbbr, lambdaSymbol)
-            .replace(lastCommandSymbolAbbr, lastCommandSymbol);
+            .replace(lastCommandSymbolAbbr, lastCommandSymbol)
+            .replace(firstSymbolAbbr, firstSymbol);
     }
 
     function cloneAutomaton(automaton) {
@@ -509,6 +383,7 @@ function createMt2(containerEl) {
         newWordEl.value = example.word;
         placeWordHandler();
         generateTable();
+        setStepStartButtonsEnabled(false);
     }
 
     function addExamplesButtons() {
@@ -542,21 +417,21 @@ function createMt2(containerEl) {
     // fillCharOnTape will be '' for lambda
     function parseCommand(command) {
         let fillCharOnTape = tape[tapePos] || '';
-        let tapeMovement = 'N';
+        let tapeMovement = NSymbol;
         let nextState = currentState;
         const parts = command.replace(/\s+/g, ' ').trim().split(' ');
         if (parts.length === 1) {
-            if (parts[0] === 'R') {
-                tapeMovement = 'R';
-            } else if (parts[0] === 'L') {
-                tapeMovement = 'L';
+            if (parts[0] === RSymbol) {
+                tapeMovement = RSymbol;
+            } else if (parts[0] === LSymbol) {
+                tapeMovement = LSymbol;
             }
         } else {
             fillCharOnTape = parts[0] === lambdaSymbol ? '' : parts[0];
-            if (parts[1] === 'R') {
-                tapeMovement = 'R';
-            } else if (parts[1] === 'L') {
-                tapeMovement = 'L';
+            if (parts[1] === RSymbol) {
+                tapeMovement = RSymbol;
+            } else if (parts[1] === LSymbol) {
+                tapeMovement = LSymbol;
             }
             nextState = parts[2];
         }
@@ -570,9 +445,9 @@ function createMt2(containerEl) {
     function applyCommand(parsedCommand) {
         const { fillCharOnTape, tapeMovement, nextState } = parsedCommand;
         tape[tapePos] = fillCharOnTape;
-        if (tapeMovement === 'R') {
+        if (tapeMovement === RSymbol) {
             tapePos++;
-        } else if (tapeMovement === 'L') {
+        } else if (tapeMovement === LSymbol) {
             tapePos--;
         }
         refillTape();
@@ -603,6 +478,14 @@ function createMt2(containerEl) {
         const command = automatonExpressions[tape[tapePos] || lambdaSymbol] || '';
         const parsedCommand = parseCommand(command);
         applyCommand(parsedCommand);
+        if (parsedCommand.nextState === lastCommandSymbol) {
+            setStepStartButtonsEnabled(false);
+        }
+        if (tapePos < 0) {
+            alert(`Неверная команда: попытка выйти за пределы однонаправленной ленты!`);
+            tapePos = 0;
+            refillTape();
+        }
         highlightNextCommand();
     }
 
@@ -615,7 +498,7 @@ function createMt2(containerEl) {
         }
         setTapeEnabled(false);
         let itersCount = 500;
-        let all_ok = false;
+        let stopReason = 'too-many-commands';
         for (let i = 0; i < itersCount; i++) {
             const automatonRow = automaton.find(x => x.state === currentState);
             const automatonExpressions = automatonRow.expressions;
@@ -623,22 +506,31 @@ function createMt2(containerEl) {
             const parsedCommand = parseCommand(command);
 
             const { fillCharOnTape, tapeMovement, nextState } = parsedCommand;
-            if (tapeMovement === 'N' && nextState === currentState && fillCharOnTape === (tape[tapePos] || '')) {
+            if (tapeMovement === NSymbol && nextState === currentState && fillCharOnTape === (tape[tapePos] || '')) {
                 itersCount = i;
+                stopReason = 'empty-rule';
                 break;
             }
 
             applyCommand(parsedCommand);
+            if (tapePos < 0) {
+                stopReason = 'outside-the-tape';
+                break;
+            }
             if (parsedCommand.nextState === lastCommandSymbol) {
-                all_ok = true;
+                stopReason = 'successful-finish';
                 break;
             }
         }
         highlightNextCommand();
-        if (!all_ok) {
-            alert(`Машина была остановлена, т.к. за ${itersCount} команд не было найдено команды, ` +
-                `обозначающей конец, или же спустя ${itersCount} команд была встречена команда, не влияющая на машину.`);
+        if (stopReason === 'too-many-commands') {
+            alert(`Машина была остановлена, т.к. за ${itersCount} команд не было найдено команды с переходом в конечное состояние (${lastCommandSymbol}).`);
+        } else if (stopReason === 'empty-rule') {
+            alert(`Машина была остановлена, т.к. спустя ${itersCount} команд была встречена команда, не влияющая на машину.`);
+        } else if (stopReason === 'outside-the-tape') {
+            alert(`Машина была остановлена, т.к. был произведён переход за пределы однонаправленной ленты.`);
         }
+        setStepStartButtonsEnabled(false);
         if (formEl) {
             checkAnswer('btnRun', formEl, true);
         }
@@ -726,8 +618,8 @@ function createMt2(containerEl) {
         }
         if (parts.length === 1) {
             const part = parts[0];
-            if (part !== '' && part !== 'R' && part !== 'L' && part !== 'N') {
-                res.push(`элемент должен иметь значение 'R', 'L', 'N' или быть не заданным. Сейчас задано '${part}'.`);
+            if (part !== '' && part !== RSymbol && part !== LSymbol && part !== NSymbol) {
+                res.push(`элемент должен иметь значение '${RSymbol}', '${LSymbol}', '${NSymbol}' или быть не заданным. Сейчас задано '${part}'.`);
                 return res;
             }
         } else {
@@ -737,8 +629,8 @@ function createMt2(containerEl) {
             if (!(alphabet.includes(left) || left === lambdaSymbol)) {
                 res.push(`первый элемент должен быть символом алфавита "${alphabet.join('')}" или символом ${lambdaSymbol}. Сейчас первый элемент имеет значение "${left}".`);
             }
-            if (middle !== 'R' && middle !== 'L' && middle !== 'N') {
-                res.push(`средний элемент должен иметь значение 'R', 'L' или 'N'. Сейчас задано '${middle}'.`);
+            if (middle !== RSymbol && middle !== LSymbol && middle !== NSymbol) {
+                res.push(`средний элемент должен иметь значение '${RSymbol}', '${LSymbol}' или '${NSymbol}'. Сейчас задано '${middle}'.`);
             }
             if (!(automaton.map(x => x.state).includes(right) || right === lastCommandSymbol)) {
                 res.push(`последний элемент должен являться состоянием или являться символом '${lastCommandSymbol}', обозначающим конец. Сейчас последний элемент имеет значение "${right}".`);
@@ -853,6 +745,16 @@ function createMt2(containerEl) {
         }
     }
 
+    function newWordInputHandler(ev) {
+        const t = ev.target;
+        let v = t.value;
+        v = v.replace(firstSymbolAbbr, firstSymbol);
+        if (v.length <= 0 || v[0] !== firstSymbol) {
+            v = firstSymbol + v;
+        }
+        t.value = v;
+    }
+
     function start() {
         window.addEventListener('resize', refillTape);
         tapeContentEl.addEventListener('input', tapeInputHandler);
@@ -860,6 +762,8 @@ function createMt2(containerEl) {
 
         tapeLeftEl.addEventListener('click', tapeLeftHandler);
         tapeRightEl.addEventListener('click', tapeRightHandler);
+
+        newWordEl.addEventListener('input', newWordInputHandler);
 
         placeWordBtnEl.addEventListener('click', placeWordHandler);
         clearTapeBtnEl.addEventListener('click', clearTapeHandler);

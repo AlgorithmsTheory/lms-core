@@ -81,9 +81,9 @@ class EmulatorController extends Controller {
         $machine = new MT2TuringMachine($automaton, $alphabet);
         for($i = 0; $i < $seq_all; $i++){
             $inputWord = $test_seq['input_word'][$i];
-            $inputWord = mb_substr($inputWord, 1, null, 'UTF-8');
+            // $inputWord = mb_substr($inputWord, 1, null, 'UTF-8');
             $outputWord = $test_seq['output_word'][$i];
-            $outputWord = mb_substr($outputWord, 1, null, 'UTF-8');
+            // $outputWord = mb_substr($outputWord, 1, null, 'UTF-8');
             Log::debug('input');
             Log::debug($inputWord);
             Log::debug('right answer');

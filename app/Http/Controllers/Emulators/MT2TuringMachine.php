@@ -10,7 +10,7 @@ class MT2TuringMachine
 {
     // [
     //   {
-    //     state: 's0',
+    //     state: 'S0',
     //     expressions: {
     //       '0': 'R',
     //       '1': 'R',
@@ -24,14 +24,20 @@ class MT2TuringMachine
     private $firstState;
     private $lambdaSymbol;
     private $lastCommandSymbol;
+    private $RSymbol;
+    private $NSymbol;
+    private $LSymbol;
 
     public function __construct($automaton, $alphabet) {
-        $this->firstState = 's0';
+        $this->firstState = 'S0';
         $this->lambdaSymbol = 'λ';
         $this->lastCommandSymbol = 'Ω';
         $this->automaton = $automaton;
         $this->alphabet = $alphabet;
         $this->tape = null;
+        $this->RSymbol = 'R';
+        $this->LSymbol = 'L';
+        $this->NSymbol = 'H';
     }
 
     public function run($input) {
@@ -54,7 +60,7 @@ class MT2TuringMachine
             return 0;
         }
         $itersCount = 500;
-        $all_ok = false;
+        $stopReason = 'too-many-commands';
         for ($i = 0; $i < $itersCount; $i++) {
             $automatonRow = $this->findRowByState($state);
             if ($automatonRow === null) {
@@ -72,21 +78,29 @@ class MT2TuringMachine
             $fillCharOnTape = $parsedCommand['fillCharOnTape'];
             $tapeMovement = $parsedCommand['tapeMovement'];
             $nextState = $parsedCommand['nextState'];
-            if ($tapeMovement == 'N' && $nextState == $state && $fillCharOnTape == $tapeChar) {
+            if ($tapeMovement == $this->NSymbol && $nextState == $state && $fillCharOnTape == $tapeChar) {
                 $itersCount = $i;
+                $stopReason = 'empty-rule';
                 break;
             }
 
             $state = $this->applyCommand($parsedCommand);
+            if ($this->tape->getPos() < 0) {
+                $stopReason = 'outside-the-tape';
+                break;
+            }
             if ($parsedCommand['nextState'] === $this->lastCommandSymbol) {
-                $all_ok = true;
+                $stopReason = 'successful-finish';
                 $itersCount = $i + 1;
                 break;
             }
         }
-        if (!$all_ok) {
-            $errors[] = "Машина была остановлена, т.к. за $itersCount команд не было найдено команды, " .
-                "обозначающей конец, или же спустя $itersCount команд была встречена команда, не влияющая на машину.";
+        if ($stopReason == 'too-many-commands') {
+            $errors[] = "Машина была остановлена, т.к. за $itersCount команд не было найдено команды с переходом в конечное состояние ($this->lastCommandSymbol).";
+        } else if ($stopReason == 'empty-rule') {
+            $errors[] = "Машина была остановлена, т.к. спустя $itersCount команд была встречена команда, не влияющая на машину.";
+        } else if ($stopReason == 'outside-the-tape') {
+            $errors[] = "Машина была остановлена, т.к. был произведён переход за пределы однонаправленной ленты.";
         }
         return $itersCount;
     }
@@ -102,22 +116,22 @@ class MT2TuringMachine
 
     private function parseCommand($command, $currentState) {
         $fillCharOnTape = $this->tape->getChar();
-        $tapeMovement = 'N';
+        $tapeMovement = $this->NSymbol;
         $nextState = $currentState;
         $parts = preg_replace('/\s+/u', ' ', $command);
         $parts = preg_split('/ /u', trim($parts));
         if (count($parts) === 1) {
-            if ($parts[0] === 'R') {
-                $tapeMovement = 'R';
-            } else if ($parts[0] === 'L') {
-                $tapeMovement = 'L';
+            if ($parts[0] === $this->RSymbol) {
+                $tapeMovement = $this->RSymbol;
+            } else if ($parts[0] === $this->LSymbol) {
+                $tapeMovement = $this->LSymbol;
             }
         } else {
             $fillCharOnTape = $parts[0];
-            if ($parts[1] === 'R') {
-                $tapeMovement = 'R';
-            } else if ($parts[1] === 'L') {
-                $tapeMovement = 'L';
+            if ($parts[1] === $this->RSymbol) {
+                $tapeMovement = $this->RSymbol;
+            } else if ($parts[1] === $this->LSymbol) {
+                $tapeMovement = $this->LSymbol;
             }
             $nextState = $parts[2];
         }
@@ -133,9 +147,9 @@ class MT2TuringMachine
         $tapeMovement = $parsedCommand['tapeMovement'];
         $nextState = $parsedCommand['nextState'];
         $this->tape->setChar($fillCharOnTape);
-        if ($tapeMovement === 'R') {
+        if ($tapeMovement === $this->RSymbol) {
             $this->tape->toRight();
-        } else if ($tapeMovement === 'L') {
+        } else if ($tapeMovement === $this->LSymbol) {
             $this->tape->toLeft();
         }
         if ($nextState === $this->lastCommandSymbol) {
@@ -201,8 +215,8 @@ class MT2TuringMachine
         }
         if (count($parts) === 1) {
             $part = $parts[0];
-            if ($part !== '' && $part !== 'R' && $part !== 'L' && $part !== 'N') {
-                $res[] = "элемент должен иметь значение 'R', 'L', 'N' или быть не заданным. Сейчас задано '$part'.";
+            if ($part !== '' && $part !== $this->RSymbol && $part !== $this->LSymbol && $part !== $this->NSymbol) {
+                $res[] = "элемент должен иметь значение '$this->RSymbol', '$this->LSymbol', '$this->NSymbol' или быть не заданным. Сейчас задано '$part'.";
                 return $res;
             }
         } else {
@@ -213,8 +227,8 @@ class MT2TuringMachine
                 $alphabetStr = join('', $this->alphabet);
                 $res[] = "первый элемент должен быть символом алфавита \"$alphabetStr\" или символом $this->lambdaSymbol. Сейчас первый элемент имеет значение \"$left\".";
             }
-            if ($middle !== 'R' && $middle !== 'L' && $middle !== 'N') {
-                $res[] = "средний элемент должен иметь значение 'R', 'L' или 'N'. Сейчас задано '$middle'.";
+            if ($middle !== $this->RSymbol && $middle !== $this->LSymbol && $middle !== $this->NSymbol) {
+                $res[] = "средний элемент должен иметь значение '$this->RSymbol', '$this->LSymbol' или '$this->NSymbol'. Сейчас задано '$middle'.";
             }
             $mapped = array_map(function($x) {
                 return $x['state'];
