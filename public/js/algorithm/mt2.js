@@ -3,8 +3,11 @@ function createMt2(containerEl) {
 
     const tapeContentEl = qs('.mt2-tape-content');
     const newWordEl = qs('.mt2-new-word');
+    const tableSectionEl = qs('.mt2-table-section');
     const tableEl = qs('.mt2-table');
+    const listSectionEl = qs('.mt2-list-section');
     const alphabetEl = qs('.mt2-alphabet');
+    const listSectionRowsEl = qs('.mt2-list-section-rows');
     const examplesButtonsWrapperEl = qs('.mt2-examples-buttons-wrapper');
     const currentStateEl = qs('.mt2-current-state');
     const syntaxSuccessEl = qs('.mt2-syntax-success');
@@ -17,6 +20,9 @@ function createMt2(containerEl) {
     const clearTapeBtnEl = qs('.mt2-clear-tape-btn');
     const toFirstStateEl = qs('.mt2-to-first-state');
     const checkBtnEl = qs('.mt2-check-btn');
+    const listViewBtn = qs('.mt2-list-view-btn');
+    const tableViewBtn = qs('.mt2-table-view-btn');
+    const listAddRowBtn = qs('.mt2-list-add-row-btn');
     const formEl = tapeContentEl.closest('form'); // can be null. If not null then emulator is used inside the test
 
 
@@ -44,12 +50,20 @@ function createMt2(containerEl) {
     const lambdaSymbolAbbr = '\\l';
     const firstSymbolAbbr = '\\d';
     currentStateEl.textContent = firstState;
+    let view = 'list';
 
     let automaton = [
         {
             state: `${stateSymbol}0`,
             expressions: {
+                [firstSymbol]: `${firstSymbol} ${RSymbol} ${stateSymbol}0`,
             },
+        },
+    ];
+    let list = [
+        {
+            stateLetter: `${stateSymbol}0 ${firstSymbol}`,
+            expression: `${firstSymbol} ${RSymbol} ${stateSymbol}0`,
         },
     ];
 
@@ -283,6 +297,59 @@ function createMt2(containerEl) {
         tableEl.append(tbodyEl);
     }
 
+    function createListRow(stateLetter, expression) {
+        const res = document.createElement('div');
+        res.classList.add('mt2-list-row');
+        const inputFrom = document.createElement('input');
+        const arrowEl = document.createElement('span');
+        const inputTo = document.createElement('input');
+
+        const trash = document.createElement('button');
+        trash.type = 'button';
+        trash.classList.add('mt2-list-row-remove-btn');
+        const trashIcon = document.createElement('i');
+        trashIcon.classList.add('fa', 'fa-trash');
+        trash.append(trashIcon);
+        trash.tabIndex = -1;
+
+        const up = document.createElement('button');
+        up.type = 'button';
+        up.classList.add('mt2-list-row-up-btn');
+        up.textContent = '↑';
+        up.tabIndex = -1;
+
+        const down = document.createElement('button');
+        down.type = 'button';
+        down.classList.add('mt2-list-row-down-btn');
+        down.textContent = '↓';
+        down.tabIndex = -1;
+
+        inputFrom.type = 'text';
+        inputTo.type = 'text';
+        inputFrom.classList.add('mt2-list-row-input-from');
+        arrowEl.classList.add('mt2-list-row-arrow');
+        inputTo.classList.add('mt2-list-row-input-to');
+        inputTo.placeholder = NSymbol;
+        inputFrom.value = stateLetter;
+        arrowEl.textContent = '→';
+        inputTo.value = expression;
+        res.append(inputFrom);
+        res.append(arrowEl);
+        res.append(inputTo);
+        res.append(trash);
+        res.append(up);
+        res.append(down);
+        return res;
+    }
+
+    function generateList() {
+        listSectionRowsEl.innerHTML = '';
+        for (let rowInfo of list) {
+            const listRow = createListRow(rowInfo.stateLetter, rowInfo.expression);
+            listSectionRowsEl.append(listRow);
+        }
+    }
+
     function fillAlphabetInput() {
         alphabetEl.value = alphabet.join('');
     }
@@ -346,6 +413,32 @@ function createMt2(containerEl) {
         setStepStartButtonsEnabled(false);
     }
 
+    function reflectListOnListInputBlurHandler(ev) {
+        const inputFrom = ev.target.closest('.mt2-list-row-input-from');
+        const inputTo = ev.target.closest('.mt2-list-row-input-to');
+        let input;
+        let isInputFrom = false;
+        if (inputFrom) {
+            input = inputFrom;
+            isInputFrom = true;
+        } else if (inputTo) {
+            input = inputTo;
+        } else {
+            return;
+        }
+        const row = input.closest('.mt2-list-row');
+        const ind = qsaIndexOf(listSectionRowsEl.querySelectorAll('.mt2-list-row'), row);
+        if (ind < 0) {
+            return;
+        }
+        if (isInputFrom) {
+            list[ind].stateLetter = input.value;
+        } else {
+            list[ind].expression = input.value;
+        }
+        setStepStartButtonsEnabled(false);
+    }
+
     function changeToSpecialsOnInput(ev) {
         const el = ev.target;
         if (el.tagName !== 'INPUT') {
@@ -378,11 +471,13 @@ function createMt2(containerEl) {
         tapePos = 6;
         alphabet = example.alphabet.split('');
         automaton = cloneAutomaton(example.automaton);
+        list = automatonToList();
         tape = {};
         alphabetEl.value = example.alphabet;
         newWordEl.value = example.word;
         placeWordHandler();
         generateTable();
+        generateList();
         setStepStartButtonsEnabled(false);
     }
 
@@ -658,10 +753,98 @@ function createMt2(containerEl) {
 
     function getErrors() {
         const res = [];
+        if (view === 'list') {
+            res.push(...checkListToAutomatonErrors());
+            automaton = listToAutomaton();
+        }
         res.push(...getTapeErrors());
         res.push(...getStatesErrors());
         res.push(...getCommandsErrors());
         return res;
+    }
+
+    function checkListToAutomatonErrors() {
+        const errors = [];
+        const stateLetterMultiple = {};
+        for (let row of list) {
+            const val = row.stateLetter.replace(/\s+/g, ' ').trim();
+            const parts = val.split(' ');
+            if (val === '') {
+                continue;
+            }
+            if (parts.length !== 2) {
+                errors.push(`Должно быть 2 элемента, разделённых пробелом для элемента ${row.stateLetter}. Обнаружено ${parts} элементов.`);
+                continue;
+            }
+            const state = parts[0];
+            const letter = parts[1];
+            if (!alphabet.includes(letter) && letter !== lambdaSymbol) {
+                errors.push(`Вторым элементом должен быть символ алфавита или ${lambdaSymbol} для ${row.stateLetter}. Обнаружено ${letter}`);
+            }
+            let stateLetterMultipleState;
+            if (state in stateLetterMultiple) {
+                stateLetterMultipleState = stateLetterMultiple[state];
+            } else {
+                stateLetterMultipleState = {};
+                stateLetterMultiple[state] = stateLetterMultipleState;
+            }
+            if (letter in stateLetterMultipleState) {
+                errors.push(`Для состояния ${state} и символа ${letter} уже был задан переход. Необходимо удалить дубликат.`);
+            } else {
+                stateLetterMultipleState[letter] = true;
+            }
+        }
+        return errors;
+    }
+
+    function listToAutomaton() {
+        const automaton = [];
+        for (let row of list) {
+            const parts = row.stateLetter.replace(/\s+/g, ' ').trim().split(' ');
+            if (parts.length !== 2) {
+                continue;
+            }
+            const state = parts[0];
+            let stateExists = false;
+            for (let el of automaton) {
+                if (el.state === state) {
+                    stateExists = true;
+                    break;
+                }
+            }
+            if (!stateExists) {
+                automaton.push({
+                    state: state,
+                    expressions: {},
+                });
+            }
+        }
+        for (let el of automaton) {
+            for (let letter of alphabet) {
+                el.expressions[letter] = '';
+            }
+            el.expressions[lambdaSymbol] = '';
+        }
+        for (let row of list) {
+            const parts = row.stateLetter.replace(/\s+/g, ' ').trim().split(' ');
+            const state = parts[0];
+            const letter = parts[1];
+            if (!alphabet.includes(letter) && letter !== lambdaSymbol) {
+                continue;
+            }
+            let indOfState = -1;
+            for (let i = 0; i < automaton.length; i++) {
+                if (automaton[i].state === state) {
+                    indOfState = i;
+                    break;
+                }
+            }
+            if (indOfState < 0) {
+                continue;
+            }
+            automaton[indOfState].expressions[letter] = row.expression;
+        }
+        return automaton;
     }
 
     // returns true if errors were detected
@@ -755,8 +938,178 @@ function createMt2(containerEl) {
         t.value = v;
     }
 
+    function setTableView() {
+        if (checkListToAutomatonErrors().length > 0) {
+            const answer = confirm('Конвертация в табличный вид не может быть произведена без потери данных из-за присутствия ошибок, препятствующих конвертации.' +
+                ' Все ошибки можно просмотреть, нажав на кнопку "Проверить синтаксис". Вы желаете всё равно выполнить конвертацию?');
+            if (!answer) {
+                return;
+            }
+        }
+        automaton = listToAutomaton();
+        generateTable();
+        tableViewBtn.classList.add('mt2-view-btn-active');
+        listViewBtn.classList.remove('mt2-view-btn-active');
+        tableSectionEl.style.display = '';
+        listSectionEl.style.display = 'none';
+        view = 'table';
+    }
+
+    function setListView() {
+        list = automatonToList();
+        generateList();
+        tableViewBtn.classList.remove('mt2-view-btn-active');
+        listViewBtn.classList.add('mt2-view-btn-active');
+        tableSectionEl.style.display = 'none';
+        listSectionEl.style.display = '';
+        view = 'list';
+    }
+
+    function addListRowIfNeeded(letter, automatonRow, list) {
+        const expressions = automatonRow.expressions;
+        if (letter in expressions && expressions[letter]) {
+            const row = {
+                stateLetter: `${automatonRow.state} ${letter}`,
+                expression: automatonRow.expressions[letter],
+            };
+            list.push(row);
+        }
+    }
+
+    function automatonToList() {
+        const list = [];
+        for (let automatonRow of automaton) {
+            for (let letter of alphabet) {
+                addListRowIfNeeded(letter, automatonRow, list);
+            }
+            addListRowIfNeeded(lambdaSymbol, automatonRow, list);
+        }
+        return list;
+    }
+
+    function listAddRowClickHandler() {
+        listAddRow();
+    }
+
+    function listAddRow() {
+        const row = createListRow('', '');
+        listSectionRowsEl.append(row);
+        list.push({
+            stateLetter: '',
+            expression: '',
+        });
+        return row;
+    }
+
+    function inputFromEnterHandler(ev, inputFrom) {
+        if (ev.shiftKey) {
+            return;
+        }
+        if (ev.key !== 'Enter') {
+            return;
+        }
+        ev.preventDefault();
+        const ind = qsaIndexOf(listSectionRowsEl.querySelectorAll('.mt2-list-row-input-from'), inputFrom);
+        if (ind < 0) {
+            return;
+        }
+        listSectionRowsEl.querySelectorAll('.mt2-list-row-input-to')[ind].focus();
+    }
+
+    function inputToTabEnterHandler(ev, inputTo) {
+        if (ev.shiftKey) {
+            return;
+        }
+        if (!['Enter', 'Tab'].includes(ev.key)) {
+            return;
+        }
+        ev.preventDefault();
+        const ind = qsaIndexOf(listSectionRowsEl.querySelectorAll('.mt2-list-row-input-to'), inputTo);
+        if (ind < 0) {
+            return;
+        }
+        const fromEls = listSectionRowsEl.querySelectorAll('.mt2-list-row-input-from');
+        if (ind + 1 < fromEls.length) {
+            fromEls[ind + 1].focus();
+        } else {
+            const row = listAddRow();
+            row.querySelector('.mt2-list-row-input-from').focus();
+        }
+    }
+
+    function listInputsTabEnterHandler(ev) {
+        const inputFrom = ev.target.closest('.mt2-list-row-input-from');
+        const inputTo = ev.target.closest('.mt2-list-row-input-to');
+        if (inputFrom) {
+            inputFromEnterHandler(ev, inputFrom);
+        } else if (inputTo) {
+            inputToTabEnterHandler(ev, inputTo);
+        }
+    }
+
+    function listInputsRewriteAbbrs(ev) {
+        const inputFrom = ev.target.closest('.mt2-list-row-input-from');
+        const inputTo = ev.target.closest('.mt2-list-row-input-to');
+        let input;
+        if (inputFrom) {
+            input = inputFrom;
+        } else if (inputTo) {
+            input = inputTo;
+        } else {
+            return;
+        }
+        input.value = input.value.replace(lambdaSymbolAbbr, lambdaSymbol)
+            .replace(lastCommandSymbolAbbr, lastCommandSymbol)
+            .replace(firstSymbolAbbr, firstSymbol);
+    }
+
+    function listRowButtonClicks(ev) {
+        const btn = ev.target.closest('button');
+        if (!btn) {
+            return;
+        }
+        const cl = btn.classList;
+        const isRem = cl.contains('mt2-list-row-remove-btn');
+        const isUp = cl.contains('mt2-list-row-up-btn');
+        const isDown = cl.contains('mt2-list-row-down-btn');
+        if (!isRem && !isUp && !isDown) {
+            return;
+        }
+        const listRow = btn.closest('.mt2-list-row');
+        const listRows = listSectionRowsEl.querySelectorAll('.mt2-list-row');
+        const ind = qsaIndexOf(listRows, listRow);
+        if (ind < 0) {
+            return;
+        }
+        if (isRem) {
+            listRow.remove();
+            list.splice(ind, 1);
+        } else if (isUp) {
+            if (ind <= 0) {
+                return;
+            }
+            listRow.parentNode.insertBefore(listRow, listRow.previousElementSibling);
+            const item = list.splice(ind, 1)[0];
+            list.splice(ind - 1, 0, item);
+        } else if (isDown) {
+            if (ind >= listRows.length - 1) {
+                return;
+            }
+            listRow.parentNode.insertBefore(listRow.nextElementSibling, listRow);
+            const item = list.splice(ind, 1)[0];
+            list.splice(ind + 1, 0, item);
+        }
+    }
+
     function start() {
         window.addEventListener('resize', refillTape);
+        tableViewBtn.addEventListener('click', setTableView);
+        listViewBtn.addEventListener('click', setListView);
+        listAddRowBtn.addEventListener('click', listAddRowClickHandler);
+        listSectionRowsEl.addEventListener('keydown', listInputsTabEnterHandler);
+        listSectionRowsEl.addEventListener('input', listInputsRewriteAbbrs);
+        listSectionRowsEl.addEventListener('click', listRowButtonClicks);
+        listSectionRowsEl.addEventListener('focusout', reflectListOnListInputBlurHandler)
         tapeContentEl.addEventListener('input', tapeInputHandler);
         tapeContentEl.addEventListener('dblclick', tapeDblClickHandler);
 
@@ -777,6 +1130,7 @@ function createMt2(containerEl) {
         refillTape();
         fillAlphabetInput();
         generateTable();
+        generateList();
         if (examplesButtonsWrapperEl) {
             addExamplesButtons();
         }
@@ -800,7 +1154,7 @@ function createMt2(containerEl) {
         const numEl = formEl.querySelector('[name=num]');
         const debugCounterEl = formEl.querySelector('[name=debug_counter]');
         const taskEl = formEl.querySelector('[name=task]');
-
+        automaton = listToAutomaton();
         const task = JSON.stringify({
             automaton: automaton,
             alphabet: alphabet,
@@ -817,7 +1171,7 @@ function createMt2(containerEl) {
                 type: 'POST',
                 url:   '/algorithm/MTCheck',
                 beforeSend: function (xhr) {
-                    var token = $('meta[name="csrf_token"]').attr('content');
+                    const token = $('meta[name="csrf_token"]').attr('content');
 
                     if (token) {
                         return xhr.setRequestHeader('X-CSRF-TOKEN', token);

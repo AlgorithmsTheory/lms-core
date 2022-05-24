@@ -4,6 +4,7 @@
     <meta name="csrf_token" content="{{ csrf_token() }}" />
     <meta charset="utf-8">
     {!! HTML::style('css/algorithm/mt2.css') !!}
+    {!! HTML::style('css/font-awesome.min.css?1422529194') !!}
 @stop
 
 @section('content')

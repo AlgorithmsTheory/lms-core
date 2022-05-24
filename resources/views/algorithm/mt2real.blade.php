@@ -23,7 +23,23 @@
 <div class="mt2-current-state-section">
     Текущее состояние: <span class="mt2-current-state"></span>
 </div>
-<div class="mt2-table-section">
+<div class="mt2-view-section">
+    <button class="mt2-list-view-btn mt2-view-btn-active" type="button">
+        Списочный вид
+    </button>
+    <button class="mt2-table-view-btn" type="button">
+        Табличный вид
+    </button>
+</div>
+<div class="mt2-list-section">
+    <div class="mt2-list-section-rows">
+
+    </div>
+    <button class="mt2-list-add-row-btn" type="button">
+        +
+    </button>
+</div>
+<div class="mt2-table-section" style="display: none">
     <table class="mt2-table">
     </table>
 </div>

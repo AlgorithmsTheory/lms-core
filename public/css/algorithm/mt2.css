@@ -239,3 +239,105 @@ div.mt2-container .mt2-input-next-command {
 
 }
 
+
+
+.mt2-view-section {
+    display: flex;
+    gap: 20px;
+}
+
+.mt2-list-view-btn, .mt2-table-view-btn {
+    border: 1px solid green;
+    background-color: transparent;
+    padding: 0 40px;
+    outline: 0;
+    height: 44px;
+    color: green;
+    transition: all .2s ease-in-out;
+}
+
+.mt2-list-view-btn:hover, .mt2-table-view-btn:hover, .mt2-list-view-btn.mt2-view-btn-active, .mt2-table-view-btn.mt2-view-btn-active {
+    background-color: green;
+    color: white;
+}
+
+.mt2-list-section {
+    margin: 10px 0;
+}
+
+.mt2-list-section-rows {
+    padding: 12px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.mt2-list-add-row-btn {
+    margin-top: 12px;
+    display: inline-block;
+    background: #0aa89e;
+    border: 0;
+    outline: 0;
+    color: white;
+    height: 45px;
+    width: 45px;
+    text-align: center;
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.mt2-list-add-row-btn:hover, .mt2-list-add-row-btn:focus {
+    background: #08867e;
+}
+
+.mt2-list-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mt2-list-row-remove-btn, .mt2-list-row-up-btn, .mt2-list-row-down-btn {
+    background: transparent;
+    width: 45px;
+    height: 45px;
+    font-size: 21px;
+    border: 0;
+    outline: 0;
+    color: #888;
+}
+
+.mt2-list-row-remove-btn:hover, .mt2-list-row-remove-btn:focus,
+.mt2-list-row-up-btn:hover, .mt2-list-row-up-btn:focus,
+.mt2-list-row-down-btn:hover, .mt2-list-row-down-btn:focus {
+    background: #ccc;
+    color: #333;
+}
+
+div.mt2-container .mt2-list-row-input-from, div.mt2-container .mt2-list-row-input-to {
+    height: 48px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+    padding: 0;
+    background: transparent;
+    outline: 0;
+    text-align: center;
+    font-size: 18px;
+}
+
+div.mt2-container .mt2-list-row-input-from:focus, div.mt2-container .mt2-list-row-input-to:focus {
+    border-bottom: 1px solid black;
+}
+
+.mt2-list-row-input-from {
+    width: 100px;
+}
+
+.mt2-list-row-input-to {
+    width: 160px;
+}
+
+.mt2-list-row-arrow {
+
+}
+
