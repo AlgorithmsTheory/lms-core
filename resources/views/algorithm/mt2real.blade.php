@@ -31,9 +31,16 @@
         Табличный вид
     </button>
 </div>
+<div class="mt2-import-export-section" style="display: none">
+    <input class="mt2-algo-name" type="text" placeholder="Название алгоритма">
+    <label class="mt2-import-label">
+        Импорт из:
+        <input class="mt2-import-input" type="file">
+    </label>
+    <button class="mt2-export-btn" type="button">Экспорт</button>
+</div>
 <div class="mt2-list-section">
     <div class="mt2-list-section-rows">
-
     </div>
     <button class="mt2-list-add-row-btn" type="button">
         +

@@ -341,3 +341,13 @@ div.mt2-container .mt2-list-row-input-from:focus, div.mt2-container .mt2-list-ro
 
 }
 
+.mt2-import-export-section {
+    display: flex;
+    gap: 20px;
+    margin: 15px 0;
+}
+
+.mt2-import-label {
+    border: 1px solid gray;
+    margin: 0;
+}

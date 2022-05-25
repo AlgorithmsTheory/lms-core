@@ -23,6 +23,9 @@ function createMt2(containerEl) {
     const listViewBtn = qs('.mt2-list-view-btn');
     const tableViewBtn = qs('.mt2-table-view-btn');
     const listAddRowBtn = qs('.mt2-list-add-row-btn');
+    const algoNameEl = qs('.mt2-algo-name');
+    const importInput = qs('.mt2-import-input');
+    const exportBtn = qs('.mt2-export-btn');
     const formEl = tapeContentEl.closest('form'); // can be null. If not null then emulator is used inside the test
 
 
@@ -468,7 +471,7 @@ function createMt2(containerEl) {
         changeCurrentState(firstState);
         const example = examples[ind];
         visibleTapeStartPos = 0;
-        tapePos = 6;
+        tapePos = 0;
         alphabet = example.alphabet.split('');
         automaton = cloneAutomaton(example.automaton);
         list = automatonToList();
@@ -948,21 +951,29 @@ function createMt2(containerEl) {
         }
         automaton = listToAutomaton();
         generateTable();
-        tableViewBtn.classList.add('mt2-view-btn-active');
-        listViewBtn.classList.remove('mt2-view-btn-active');
-        tableSectionEl.style.display = '';
-        listSectionEl.style.display = 'none';
+        showTableView();
         view = 'table';
     }
 
     function setListView() {
         list = automatonToList();
         generateList();
+        showListView();
+        view = 'list';
+    }
+
+    function showTableView() {
+        tableViewBtn.classList.add('mt2-view-btn-active');
+        listViewBtn.classList.remove('mt2-view-btn-active');
+        tableSectionEl.style.display = '';
+        listSectionEl.style.display = 'none';
+    }
+
+    function showListView() {
         tableViewBtn.classList.remove('mt2-view-btn-active');
         listViewBtn.classList.add('mt2-view-btn-active');
         tableSectionEl.style.display = 'none';
         listSectionEl.style.display = '';
-        view = 'list';
     }
 
     function addListRowIfNeeded(letter, automatonRow, list) {
@@ -1101,6 +1112,73 @@ function createMt2(containerEl) {
         }
     }
 
+    function saveFile(filename, text) {
+        const element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
+
+    function exportBtnClick() {
+        const algoName = algoNameEl.value;
+        const exportData = {
+            algoName: algoName,
+            tape: tape,
+            newWord: newWordEl.value,
+            alphabet: alphabet,
+            view: view,
+            automaton: automaton,
+            list: list,
+        };
+        const data = JSON.stringify(exportData);
+        saveFile(`${algoName}.json`, data);
+    }
+
+    function importInputChangeHandler(ev) {
+        const file = ev.target.files[0];
+        if (!file) {
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            const contents = ev.target.result;
+            applyImportedData(JSON.parse(contents+''));
+        };
+        reader.readAsText(file);
+    }
+
+    function applyImportedData(data) {
+        const d = data;
+        if (!d || d.algoName === undefined || !d.tape || d.newWord === undefined || !d.alphabet || !d.view || !d.automaton || !d.list) {
+            alert('Неверный формат файла для импорта');
+            return;
+        }
+        algoNameEl.value = d.algoName;
+        tape = d.tape;
+        newWordEl.value = d.newWord;
+        alphabet = d.alphabet;
+        view = d.view;
+        automaton = d.automaton;
+        list = d.list;
+        if (view === 'list') {
+            showListView();
+        } else {
+            showTableView();
+        }
+
+        changeCurrentState(firstState);
+        visibleTapeStartPos = 0;
+        tapePos = 0;
+        fillAlphabetInput();
+        placeWordHandler();
+        generateTable();
+        generateList();
+        setStepStartButtonsEnabled(false);
+    }
+
     function start() {
         window.addEventListener('resize', refillTape);
         tableViewBtn.addEventListener('click', setTableView);
@@ -1126,6 +1204,9 @@ function createMt2(containerEl) {
         tableEl.addEventListener('click', buttonsOnTableClickHandler);
         tableEl.addEventListener('focusout', reflectAutomatonOnTableInputBlurHandler);
         tableEl.addEventListener('input', changeToSpecialsOnInput);
+
+        exportBtn.addEventListener('click', exportBtnClick);
+        importInput.addEventListener('change', importInputChangeHandler, false);
 
         refillTape();
         fillAlphabetInput();

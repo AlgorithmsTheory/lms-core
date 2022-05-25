@@ -41,6 +41,12 @@
                 if (mt2StepBtnEl) {
                     mt2StepBtnEl.style.display = '';
                 }
+
+                // Показать импорт экспорт
+                const mt2ImportExportSection = document.querySelector('.mt2-import-export-section');
+                if (mt2ImportExportSection) {
+                    mt2ImportExportSection.style.display = '';
+                }
             </script>
         </div>
     </div>
