@@ -728,7 +728,7 @@ class TestController extends Controller{
             $query1 = Question::whereId_question($id_question)->select('answer','points', 'type_code')->first();
             $type_name = Type::whereType_code($query1['type_code'])->select('type_name')->first()->type_name;
 
-            if ($type_name == 'Эмулятор Тьюринга') {
+            if ($type_name == 'Эмулятор Тьюринга' || $type_name == 'Эмулятор Маркова') {
                 /* Get current saved test */
                 $test = Result::whereId_result($current_test)->first();
                 $saved_test = $test->saved_test;
@@ -736,13 +736,19 @@ class TestController extends Controller{
 
                 $arguments = $saved_test[$i]['arguments'];
                 $debug_counter = $arguments['debug_counter'];
-                $check_syntax_counter = $arguments['check_syntax_counter'];
-                $run_counter = $arguments['run_counter'];
-
                 $solution = $array[2];
                 $should_increment_debug_counter = false;
-                $data = $question->check([$id_question, $debug_counter, $check_syntax_counter, $run_counter,
-                    $should_increment_debug_counter, $solution]);
+                if ($type_name == 'Эмулятор Тьюринга') {
+                    $check_syntax_counter = $arguments['check_syntax_counter'];
+                    $run_counter = $arguments['run_counter'];
+                    $data = $question->check([$id_question, $debug_counter, $check_syntax_counter, $run_counter,
+                        $should_increment_debug_counter, $solution]);
+                } else {
+                    $run_counter = $arguments['run_counter'];
+                    $steps_counter = $arguments['steps_counter'];
+                    $data = $question->check([$id_question, $debug_counter, $run_counter, $steps_counter,
+                        $should_increment_debug_counter, $solution]);
+                }
             } else {
                 $data = $question->check($array);
             }

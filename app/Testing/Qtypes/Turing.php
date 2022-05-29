@@ -129,11 +129,6 @@ class Turing extends QuestionType implements Checkable {
         if ($fee_percent > 0.5) {
             $fee_percent = 0.5;
         }
-        /*
-        if ($sequences_true == $sequences_all) {
-            $fee_percent = 0;
-        }
-        */
         $score_percent = $right_percent - $fee_percent;
         if ($score_percent < 0) {
             $score_percent = 0;

@@ -51,6 +51,23 @@ function run_all_normal(ctx, j){
 	}
     
     ctx.find("[name = debug] > tr").remove();
+
+	const ctxNative = ctx[0];
+	const questionFormEl = ctxNative.closest('form.question-form');
+	const notice = questionFormEl !== null; // can be null. If not null then emulator is used inside the test;
+
+	const inputData = {
+		task: JSON.stringify(task),
+		notice: notice,
+		withSteps: step,
+		token: 'token',
+	};
+
+	if (notice) {
+		const counterEl = questionFormEl.querySelector('input[name="counter"]');
+		inputData.test_id = +document.querySelector('#id_test').value;;
+		inputData.counter = +counterEl.value;
+	}
     
 	$.ajax({
 		cache: false,
@@ -63,9 +80,15 @@ function run_all_normal(ctx, j){
 				return xhr.setRequestHeader('X-CSRF-TOKEN', token);
 			}
 		},
-		data: { task: JSON.stringify(task), token: 'token' },
-		success: function(data){
-            
+		data: inputData,
+		success: function(outputData){
+            const data = outputData.data;
+			if (outputData.notice) {
+				const noticeResult = outputData.noticeResult;
+				alert(`Количество отправок (нажатий "Проверить работу"): ${noticeResult.debug_counter}\n` +
+					`Количество запусков: ${noticeResult.run_counter}\n` +
+					`Количество отладок (запусков с шагами): ${noticeResult.steps_counter}`);
+			}
 			var resp = JSON.parse(data);
 			if ( resp.error != 'ok' ) {
 				ctx.find('input[name = disabled6]').val("Ошибка!");

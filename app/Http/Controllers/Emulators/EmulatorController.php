@@ -48,7 +48,7 @@ class EmulatorController extends Controller {
     
     public static function HAMRun($data) {
         $cmd = "/usr/local/bin/normal.sh";
-        $task_file = tempnam(sys_get_temp_dir(), 'norm_'); 
+        $task_file = tempnam(sys_get_temp_dir(), 'norm_');
         $task_answ = tempnam(sys_get_temp_dir(), 'norm_answ_');
         file_put_contents($task_file, $data);
         $data = exec($cmd . " " . $task_file);
@@ -62,49 +62,91 @@ class EmulatorController extends Controller {
         //return EmulatorController::MTRun($data);
     }
 
+    public function HAMCheck(Request $request) {
+        $task = Request::input('task');
+        $task_id = Request::input('task_id');
+        $test_id = Request::input('test_id');
+        $counter = Request::input('counter');
+        return $this->HAMCheckInternal($task, $task_id, $test_id, 'btnDebug', $counter);
+    }
+
     public function HAMPOST(Request $request){ // выполняет Маркова на данных и возвращает ответ    (ОБЫЧНОЕ ИСПОЛНЕНИЕ)
         $data = Request::input('task'); // data уже в JSON
-        return EmulatorController::HAMRun($data);
-    }
-    
-    public static function MTCheckSequence($data, $test_seq) {
-        $seq_true = 0;
-        $seq_all = count($test_seq['input_word']);
-        $total_cycle = 0;
-        $data = json_decode($data, true);
-        $automaton = $data['automaton'];
-        $alphabet = $data['alphabet'];
-        Log::debug('automaton');
-        Log::debug($automaton);
-        Log::debug('alphabet');
-        Log::debug($alphabet);
-        $machine = new MT2TuringMachine($automaton, $alphabet);
-        for($i = 0; $i < $seq_all; $i++){
-            $inputWord = $test_seq['input_word'][$i];
-            // $inputWord = mb_substr($inputWord, 1, null, 'UTF-8');
-            $outputWord = $test_seq['output_word'][$i];
-            // $outputWord = mb_substr($outputWord, 1, null, 'UTF-8');
-            Log::debug('input');
-            Log::debug($inputWord);
-            Log::debug('right answer');
-            Log::debug($outputWord);
-            $answer = EmulatorController::MTRun($machine, $inputWord);
-            Log::debug('output');
-            Log::debug($answer);
-            $total_cycle += $answer['cycle'];
-            if(trim($answer['result']) == trim($outputWord)){
-                $seq_true++;
-            }
+        $notice = Request::input('notice');
+        $withSteps = Request::input('withSteps') === 'true';
+        $data = EmulatorController::HAMRun($data);
+        $result = [
+            'data' => $data,
+            'notice' => $notice,
+        ];
+        if ($notice) {
+            $test_id = Request::input('test_id');
+            $buttonCode = $withSteps ? 'btnSteps' : 'btnRun';
+            $counter = Request::input('counter');
+            $noticeResult = $this->HAMCheckInternal(null, null, $test_id, $buttonCode, $counter);
+            $result['noticeResult'] = $noticeResult;
         }
-        return [$seq_true, $seq_all, $total_cycle];
+        return $result;
     }
-    
+
+    // $task and $task_id values not used by the function if $button_code is 'btnSteps' or 'btnRun'
+    private function HAMCheckInternal($task, $task_id, $test_id, $button_code, $counter) {
+        $counter--;
+        $current_test = Result::getCurrentResult(Auth::user()['id'], $test_id);
+
+        if ($current_test == -1) {
+            return null;
+        }
+
+        /* Get current saved test */
+        $test = Result::whereId_result($current_test)->first();
+        $saved_test = $test->saved_test;
+        $saved_test = unserialize($saved_test);
+
+        $arguments = $saved_test[$counter]['arguments'];
+        $debug_counter = $arguments['debug_counter'];
+        $run_counter = $arguments['run_counter'];
+        $steps_counter = $arguments['steps_counter'];
+
+        if ($button_code == 'btnSteps' || $button_code == 'btnRun') {
+            if ($button_code == 'btnSteps') {
+                $steps_counter++;
+            } else if ($button_code == 'btnRun') {
+                $run_counter++;
+            }
+            $saved_test[$counter]['arguments']['steps_counter'] = $steps_counter;
+            $saved_test[$counter]['arguments']['run_counter'] = $run_counter;
+            $saved_test = serialize($saved_test);
+            $test->saved_test = $saved_test;
+            $test->save();
+            return [
+                'debug_counter' => $debug_counter,
+                'steps_counter' => $steps_counter,
+                'run_counter' => $run_counter,
+            ];
+        }
+
+        /* Modify saved data with use question->check() */
+        $question = new Question();
+        $should_increment_debug_counter = true;
+        $result_check = $question->check([$task_id, $debug_counter, $run_counter, $steps_counter,
+            $should_increment_debug_counter, $task]);
+        $saved_test[$counter]['arguments']['debug_counter'] = $result_check['choice']['debug_counter'];
+
+        /* Save new data */
+        $saved_test = serialize($saved_test);
+        $test->saved_test = $saved_test;
+        $test->save();
+
+        return $result_check;
+    }
+
     public static function HAMCheckSequence($data, $test_seq) {
         Log::debug('Checking');
         $seq_true = 0;
         $seq_all = count($test_seq['input_word']);
         $total_cycle = 0;
-        
+
         for($i = 0; $i < $seq_all; $i++){
             $data = json_decode($data, true);
 
@@ -117,7 +159,7 @@ class EmulatorController extends Controller {
             $answer = EmulatorController::HAMRun($data);
             Log::debug('Output: '.$answer);
             $answer = json_decode($answer, true);
-            
+
             $total_cycle += $answer['cycle'];
 
             $test_seq['output_word'][$i] = str_replace("Λ", "", $test_seq['output_word'][$i]);
@@ -190,38 +232,37 @@ class EmulatorController extends Controller {
         return $result_check;
     }
 
-    public function HAMCheck(Request $request) {
-        $task = Request::input('task');
-        $task_id = Request::input('task_id');
-        $test_id = Request::input('test_id');
-        $counter = Request::input('counter') - 1;
-        $current_test = Result::getCurrentResult(Auth::user()['id'], $test_id);
-        
-        if($current_test != -1){
-            /* Get current saved test */
-            $test = Result::whereId_result($current_test)->first();
-            $saved_test = $test->saved_test;
-            $saved_test = unserialize($saved_test);
-            
-            /* Modify saved data with use question->check() */
-            $question = new Question();
-            $debug_counter = $saved_test[$counter]['arguments']['debug_counter'];
-            
-            $result_check = $question->check([$task_id, $debug_counter + 1, $task]);
-            
-            $saved_test[$counter]['arguments']['debug_counter'] = $result_check['choice']['debug_counter'];
-            
-            /* Save new data */
-            $saved_test = serialize($saved_test);
-            $test->saved_test = $saved_test;
-            $test->save();
-        
+    public static function MTCheckSequence($data, $test_seq) {
+        $seq_true = 0;
+        $seq_all = count($test_seq['input_word']);
+        $total_cycle = 0;
+        $data = json_decode($data, true);
+        $automaton = $data['automaton'];
+        $alphabet = $data['alphabet'];
+        Log::debug('automaton');
+        Log::debug($automaton);
+        Log::debug('alphabet');
+        Log::debug($alphabet);
+        $machine = new MT2TuringMachine($automaton, $alphabet);
+        for($i = 0; $i < $seq_all; $i++){
+            $inputWord = $test_seq['input_word'][$i];
+            // $inputWord = mb_substr($inputWord, 1, null, 'UTF-8');
+            $outputWord = $test_seq['output_word'][$i];
+            // $outputWord = mb_substr($outputWord, 1, null, 'UTF-8');
+            Log::debug('input');
+            Log::debug($inputWord);
+            Log::debug('right answer');
+            Log::debug($outputWord);
+            $answer = EmulatorController::MTRun($machine, $inputWord);
+            Log::debug('output');
+            Log::debug($answer);
+            $total_cycle += $answer['cycle'];
+            if(trim($answer['result']) == trim($outputWord)){
+                $seq_true++;
+            }
         }
-        
-        return $result_check;   
+        return [$seq_true, $seq_all, $total_cycle];
     }
-    
-     
 
     //protocol creation
     public function get_MT_protocol(Request $request){
