@@ -164,6 +164,13 @@
                                 </div>
                             </a>
                         </li>
+                        <li class="tile">
+                            <a href="{{ route('edit_ham_params')}}" class="tile-content ink-reaction">
+                                <div class="tile-text">
+                                    Редактирование параметров подсчета баллов для задач на эмулятор Маркова
+                                </div>
+                            </a>
+                        </li>
                     </ul>
                 </div><!--end .card-body -->
             </div>

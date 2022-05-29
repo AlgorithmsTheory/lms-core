@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\MtFees;
+use App\HamFees;
 
-class MT2Controller extends Controller {
+class MT2HAMController extends Controller {
 
     public function openMT() {
         $fees = MtFees::first();
@@ -19,12 +20,22 @@ class MT2Controller extends Controller {
         return view("algorithm.mt2help", compact('fees'));
     }
 
-    public function show_edit_params() {
+    public function openHAMHelp() {
+        $fees = HamFees::first();
+        return view("algorithm.HAMhelp", compact('fees'));
+    }
+
+    public function show_edit_params_mt2() {
         $fees = MtFees::first();
         return view("algorithm.mt2edit_params", compact('fees'));
     }
 
-    public function edit_params(Request $request) {
+    public function show_edit_params_ham() {
+        $fees = HamFees::first();
+        return view("algorithm.hamedit_params", compact('fees'));
+    }
+
+    public function edit_params_mt2(Request $request) {
         $debugPercent = $request->input('debugPercent');
         $checkSyntaxPercent = $request->input('checkSyntaxPercent');
         $runPercent = $request->input('runPercent');
@@ -32,6 +43,20 @@ class MT2Controller extends Controller {
         $fees->debug_fee = $debugPercent;
         $fees->check_syntax_fee = $checkSyntaxPercent;
         $fees->run_fee = $runPercent;
+        $fees->save();
+        return [
+            'success' => true,
+        ];
+    }
+
+    public function edit_params_ham(Request $request) {
+        $debugPercent = $request->input('debugPercent');
+        $runPercent = $request->input('runPercent');
+        $stepsPercent = $request->input('stepsPercent');
+        $fees = HamFees::first();
+        $fees->debug_fee = $debugPercent;
+        $fees->run_fee = $runPercent;
+        $fees->steps_fee = $stepsPercent;
         $fees->save();
         return [
             'success' => true,

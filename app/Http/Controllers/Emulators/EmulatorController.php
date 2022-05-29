@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Emulators;
+use App\HamFees;
 use App\Protocols\HAMProtocol;
 use App\Protocols\MTProtocol;
 use Input;
@@ -28,7 +29,8 @@ class EmulatorController extends Controller {
     }
     
     public function openHAM(){
-        return view("algorithm.HAM");
+        $fees = HamFees::first();
+        return view("algorithm.HAM", compact('fees'));
     }
 
     public function magic($array) {

@@ -415,8 +415,9 @@ Route::post('api/check', ['uses' => 'APIController@checkStudentsAtSeminar']);
 //Login verification
 Route::post('check/ifExists', ['uses' => 'AdministrationController@checkEmailIfExists']);
 
-Route::get('algorithm/mt2', ['as' => 'mt2', 'uses' => 'Emulators\MT2Controller@openMT']);
-Route::get('algorithm/mt2help', ['as' => 'mt2help', 'uses' => 'Emulators\MT2Controller@openMT2Help']);
+Route::get('algorithm/mt2', ['as' => 'mt2', 'uses' => 'Emulators\MT2HAMController@openMT']);
+Route::get('algorithm/mt2help', ['as' => 'mt2help', 'uses' => 'Emulators\MT2HAMController@openMT2Help']);
+Route::get('algorithm/HAMHelp', ['as' => 'HAMHelp', 'uses' => 'Emulators\MT2HAMController@openHAMHelp']);
 
 // Эмуляторы
 Route::prefix('algorithm')->group(function (){
@@ -430,8 +431,7 @@ Route::prefix('algorithm')->group(function (){
         Route::get('HAM', ['as' => 'HAM', 'uses' => 'Emulators\EmulatorController@openHAM']);
         Route::post('HAM', ['as' => 'HAMRun', 'uses' => 'Emulators\EmulatorController@HAMPOST']);
         Route::post('HAMCheck', ['as' => 'HAMCheck', 'uses' => 'Emulators\EmulatorController@HAMCheck']);
-        Route::get('HAMHelp', ['as' => 'HAMHelp', function (){ return view('algorithm.HAMhelp'); }]);
-        
+
         Route::get('MMT', ['as' => 'MMT', 'uses' => 'Emulators\EmulatorController@openMMT']);
         
         Route::get('RAM', ['as' => 'RAM', 'uses' => 'Emulators\RamEmulatorController@openRAM']);
@@ -473,5 +473,7 @@ Route::get('stat/get-test-results/{id_test}/{id_group}', ['as' => 'test_results_
 Route::get('stat/get-question-type-frequency-in-test/{id_test}', ['as' => 'question_type_freq_in_test', 'uses' => 'StatisticController@getQuestionTypeFrequencyInTest', 'middleware' => ['general_auth', 'admin']]);
 
 // Редактирование параметров начисления баллов за эмулятор Тьюринга
-Route::get('edit_mt_params', ['as' => 'edit_mt_params', 'uses' => 'Emulators\Mt2Controller@show_edit_params', 'middleware' => ['general_auth', 'admin']]);
-Route::post('edit_mt_params_apply', ['as' => 'edit_mt_params_apply', 'uses' => 'Emulators\Mt2Controller@edit_params', 'middleware' => ['general_auth', 'admin']]);
+Route::get('edit_mt_params', ['as' => 'edit_mt_params', 'uses' => 'Emulators\MT2HAMController@show_edit_params_mt2', 'middleware' => ['general_auth', 'admin']]);
+Route::post('edit_mt_params_apply', ['as' => 'edit_mt_params_apply', 'uses' => 'Emulators\MT2HAMController@edit_params_mt2', 'middleware' => ['general_auth', 'admin']]);
+Route::get('edit_ham_params', ['as' => 'edit_ham_params', 'uses' => 'Emulators\MT2HAMController@show_edit_params_ham', 'middleware' => ['general_auth', 'admin']]);
+Route::post('edit_ham_params_apply', ['as' => 'edit_ham_params_apply', 'uses' => 'Emulators\MT2HAMController@edit_params_ham', 'middleware' => ['general_auth', 'admin']]);
