@@ -53,6 +53,8 @@ class EmulatorController extends Controller {
         $task_file = tempnam(sys_get_temp_dir(), 'norm_');
         $task_answ = tempnam(sys_get_temp_dir(), 'norm_answ_');
         file_put_contents($task_file, $data);
+        Log::debug('Data for Markov');
+        Log::debug($data);
         $data = exec($cmd . " " . $task_file);
         unlink($task_file);
         unlink($task_answ);
@@ -74,7 +76,7 @@ class EmulatorController extends Controller {
 
     public function HAMPOST(Request $request){ // выполняет Маркова на данных и возвращает ответ    (ОБЫЧНОЕ ИСПОЛНЕНИЕ)
         $data = Request::input('task'); // data уже в JSON
-        $notice = Request::input('notice');
+        $notice = Request::input('notice') == "true";
         $withSteps = Request::input('withSteps') === 'true';
         $data = EmulatorController::HAMRun($data);
         $result = [
