@@ -46,6 +46,12 @@ div.mt2-help-container h4 {
     text-align: center;
 }
 
+.mt2-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 div.mt2-container .mt2-tape {
     margin-top: 20px;
     display: flex;
@@ -80,7 +86,7 @@ div.mt2-container .mt2-tape-cell {
     font-size: 30px;
     font-weight: 600;
 
-    /* Чтобы перебить стили внутри теста */
+    /* пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ */
     height: auto;
     padding: 0;
     margin: 0;
@@ -108,13 +114,22 @@ div.mt2-container .mt2-place-word-section, div.mt2-container .mt2-alphabet-secti
     margin-top: 20px;
 }
 
+.mt2-place-word-section {
+    display: flex;
+    align-items: center;
+}
+
+.mt2-current-state-section {
+    margin-right: 15px;
+}
+
 div.mt2-container .mt2-new-word, div.mt2-container .mt2-alphabet {
     font-family: Consolas, monospace;
     font-size: 20px;
     color: rgb(49, 53, 52);
     display: inline;
 
-    /* Чтобы перебить стили внутри теста */
+    /* пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ */
     width: auto;
     height: 48px;
     vertical-align: middle;
@@ -186,10 +201,6 @@ div.mt2-container .mt2-examples-section {
 
 div.mt2-container .mt2-examples-buttons-wrapper {
     margin-top: 4px;
-}
-
-div.mt2-container .mt2-current-state-section {
-    margin-top: 18px;
 }
 
 div.mt2-container .mt2-current-state {
@@ -343,11 +354,15 @@ div.mt2-container .mt2-list-row-input-from:focus, div.mt2-container .mt2-list-ro
 
 .mt2-import-export-section {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     margin: 15px 0;
 }
 
 .mt2-import-label {
     border: 1px solid gray;
     margin: 0;
+}
+
+.mt2-place-word-btn, .mt2-clear-tape-btn, .mt2-check-btn, .mt2-to-first-state, .mt2-step-btn, .mt2-start-btn {
+    width: 210px;
 }

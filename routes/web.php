@@ -417,6 +417,7 @@ Route::post('check/ifExists', ['uses' => 'AdministrationController@checkEmailIfE
 
 Route::get('algorithm/mt2', ['as' => 'mt2', 'uses' => 'Emulators\MT2HAMController@openMT']);
 Route::get('algorithm/mt2help', ['as' => 'mt2help', 'uses' => 'Emulators\MT2HAMController@openMT2Help']);
+Route::get('algorithm/mt2help_alternative', ['as' => 'mt2help_alternative', 'uses' => 'Emulators\MT2HAMController@openMT2HelpAlternative']);
 Route::get('algorithm/HAMHelp', ['as' => 'HAMHelp', 'uses' => 'Emulators\MT2HAMController@openHAMHelp']);
 
 // Эмуляторы
