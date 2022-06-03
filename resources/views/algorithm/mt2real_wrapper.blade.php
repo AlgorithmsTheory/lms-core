@@ -5,7 +5,7 @@
     <div class="mt2-container">
         @include('algorithm.mt2real')
     </div>
-    <div class="mt2-help-link-wrapper">
-        <a class="mt2-help-link" href="/algorithm/mt2help" target="_blank">Справка</a>
-    </div>
+{{--    <div class="mt2-help-link-wrapper">--}}
+{{--        <a class="mt2-help-link" href="/algorithm/mt2help" target="_blank">Справка</a>--}}
+{{--    </div>--}}
 </div>

@@ -25,6 +25,15 @@ class MT2HAMController extends Controller {
         return view("algorithm.mt2_emulator_help", compact('fees'));
     }
 
+    public function openMT2_HELP() {
+        return view("algorithm.mt2_HELP");
+    }
+
+    public function openMT2_SCORES() {
+        $fees = MtFees::first();
+        return view("algorithm.mt2_SCORES", compact('fees'));
+    }
+
     public function openHAMHelp() {
         $fees = HamFees::first();
         return view("algorithm.HAMhelp", compact('fees'));

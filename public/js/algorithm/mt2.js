@@ -23,9 +23,11 @@ function createMt2(containerEl) {
     const listViewBtn = qs('.mt2-list-view-btn');
     const tableViewBtn = qs('.mt2-table-view-btn');
     const listAddRowBtn = qs('.mt2-list-add-row-btn');
+    const algoNameWrapperEl = qs('.mt2-algo-name-wrapper');
     const algoNameEl = qs('.mt2-algo-name');
     const importInput = qs('.mt2-import-input');
     const exportBtn = qs('.mt2-export-btn');
+    const exportApplyBtn = qs('.mt2-export-apply-btn');
     const formEl = tapeContentEl.closest('form'); // can be null. If not null then emulator is used inside the test
 
 
@@ -561,6 +563,8 @@ function createMt2(containerEl) {
         for (let el of tapeContentEl.querySelectorAll('.mt2-tape-cell')) {
             el.disabled = !value;
         }
+        placeWordBtnEl.disabled = !value;
+        clearTapeBtnEl.disabled = !value;
     }
 
     function stepButtonClickHandler() {
@@ -1122,7 +1126,19 @@ function createMt2(containerEl) {
         document.body.removeChild(element);
     }
 
+    function algoNameWrapperClick(ev) {
+        if (ev.target == algoNameWrapperEl) {
+            algoNameWrapperEl.style.display = 'none';
+        }
+    }
+
     function exportBtnClick() {
+        algoNameEl.value = '';
+        algoNameWrapperEl.style.display = '';
+    }
+
+    function exportApplyBtnClick() {
+        algoNameWrapperEl.style.display = 'none';
         const algoName = algoNameEl.value;
         const exportData = {
             algoName: algoName,
@@ -1206,6 +1222,8 @@ function createMt2(containerEl) {
         tableEl.addEventListener('input', changeToSpecialsOnInput);
 
         exportBtn.addEventListener('click', exportBtnClick);
+        exportApplyBtn.addEventListener('click', exportApplyBtnClick);
+        algoNameWrapperEl.addEventListener('click', algoNameWrapperClick)
         importInput.addEventListener('change', importInputChangeHandler, false);
 
         refillTape();
