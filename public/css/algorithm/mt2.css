@@ -90,7 +90,6 @@ div.mt2-container .mt2-tape-cell {
     font-size: 30px;
     font-weight: 600;
 
-    /* ����� �������� ����� ������ ����� */
     height: auto;
     padding: 0;
     margin: 0;
@@ -127,7 +126,6 @@ div.mt2-container .mt2-new-word, div.mt2-container .mt2-alphabet {
     color: rgb(49, 53, 52);
     display: inline;
 
-    /* ����� �������� ����� ������ ����� */
     width: auto;
     height: 48px;
     vertical-align: middle;

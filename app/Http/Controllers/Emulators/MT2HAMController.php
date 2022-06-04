@@ -15,6 +15,11 @@ class MT2HAMController extends Controller {
         return view("algorithm.mt2", compact('fees'));
     }
 
+    public function openHAM() {
+        $fees = HamFees::first();
+        return view("algorithm.ham2", compact('fees'));
+    }
+
     public function openMT2Help() {
         $fees = MtFees::first();
         return view("algorithm.mt2help", compact('fees'));
