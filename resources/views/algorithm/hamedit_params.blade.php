@@ -37,13 +37,17 @@
             <input class="tb-debug" type="text" value="{{$fees->debug_fee}}">
         </label>
         <label>
+            За проверку синтаксиса:
+            <input class="tb-check-syntax" type="text" value="{{$fees->check_syntax_fee}}">
+        </label>
+        <label>
             За запуск:
             <input class="tb-run" type="text" value="{{$fees->run_fee}}">
         </label>
-        <label>
-            За отладку (запуск с шагами):
-            <input class="tb-steps" type="text" value="{{$fees->steps_fee}}">
-        </label>
+{{--        <label>--}}
+{{--            За отладку (запуск с шагами):--}}
+{{--            <input class="tb-steps" type="text" value="{{$fees->steps_fee}}">--}}
+{{--        </label>--}}
         <button class="btn-apply">Применить</button>
     </div>
 @stop

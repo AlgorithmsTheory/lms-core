@@ -42,7 +42,7 @@ class Markov extends QuestionType implements Checkable {
                 'title_eng' => $title['eng_title'], 'variants_eng' => $eng_variants, 'answer_eng' => $eng_answer];
     }
 
-    public  function add(Request $request) {
+    public function add(Request $request) {
         $data = $this->setAttributes($request);
         Question::insert(array('title' => $data['title'], 'variants' => $data['variants'],
                         'answer' => $data['answer'], 'points' => $data['points'], 'difficulty' => $data['difficulty'],
@@ -82,6 +82,7 @@ class Markov extends QuestionType implements Checkable {
                 'text' => explode('::',$this->text),
                 "debug_counter" => 0,
                 "run_counter" => 0,
+                'check_syntax_counter' => 0,
                 "steps_counter" => 0,
                 "type" => self::type_code,
                 "id" => $this->id_question,
@@ -92,19 +93,21 @@ class Markov extends QuestionType implements Checkable {
     public function check($array) {
         $fees = HamFees::first();
         $debug_counter = $array[0];
-        $run_counter = $array[1];
-        $steps_counter = $array[2];
+        $check_syntax_counter = $array[1];
+        $run_counter = $array[2];
         $should_increment_debug_counter = $array[3];
         $data = $array[4];
-        
+
         $parse = $this->variants;
+
         $variantsIn = explode(";", $parse);
         $parse = $this->eng_variants;
         $variantsOut = explode(";", $parse);
+
         $test_seq = ['input_word' => $variantsIn, 'output_word' => $variantsOut];
-        
+
         $array = EmulatorController::HAMCheckSequence($data, $test_seq);
-        
+
         //--------------------------------------------------------------
 
         $total_cycle = $array[2];
@@ -116,8 +119,8 @@ class Markov extends QuestionType implements Checkable {
         }
         $right_percent = $sequences_true / $sequences_all;
         $fee_percent = ($fees->debug_fee / 100)*$debug_counter
-            + ($fees->run_fee / 100)*$run_counter
-            + ($fees->steps_fee / 100)*$steps_counter;
+            + ($fees->check_syntax_fee / 100)*$check_syntax_counter
+            + ($fees->run_fee / 100)*$run_counter;
         if ($fee_percent > 0.5) {
             $fee_percent = 0.5;
         }
@@ -128,20 +131,13 @@ class Markov extends QuestionType implements Checkable {
         $max_scores = $this->points;
         $scores = $score_percent * $max_scores;
 
-		$data = array('mark'=>$mark,
-            'score'=>$scores,
-            'id' => $this->id_question,
-            'points' => $this->points,
+        $data = array('mark'=>$mark, 'score' => $scores,
+            'id' => $this->id_question, 'points' => $this->points,
             'right_percent' => round($score_percent*100),
-            'choice' => [
-                'debug_counter' => $debug_counter,
+            'choice' => ['debug_counter' => $debug_counter, 'check_syntax_counter' => $check_syntax_counter,
                 'run_counter' => $run_counter,
-                'steps_counter' => $steps_counter,
-                'sequences_true' => $sequences_true,
-                'sequences_all' => $sequences_all,
-                'fee_percent' => round($fee_percent*100),
-                'score'=>$scores,
-                'total_cycle'=>$total_cycle,
+                'sequences_true' => $sequences_true, 'sequences_all' => $sequences_all,
+                'fee_percent' => round($fee_percent*100), 'score'=>$scores, 'total_cycle'=>$total_cycle,
                 'right_percent' => round($right_percent*100)]);
         return $data;
     }

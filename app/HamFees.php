@@ -9,5 +9,5 @@ use Illuminate\Database\Eloquent\Model;
 class HamFees extends Model {
     protected $table = 'ham_fees';
     public $timestamps = false;
-    protected $fillable = ['debug_fee', 'run_fee', 'steps_fee'];
+    protected $fillable = ['debug_fee', 'run_fee', 'steps_fee', 'check_syntax_fee'];
 }

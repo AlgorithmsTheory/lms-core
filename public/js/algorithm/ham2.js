@@ -630,9 +630,8 @@ function createMt2(containerEl) {
         const numEl = formEl.querySelector('[name=num]');
         const debugCounterEl = formEl.querySelector('[name=debug_counter]');
         const taskEl = formEl.querySelector('[name=task]');
-        automaton = listToAutomaton();
         const task = JSON.stringify({
-            automaton: automaton,
+            list: list,
             alphabet: alphabet,
         });
         taskEl.value = task;
@@ -645,7 +644,7 @@ function createMt2(containerEl) {
             $.ajax({
                 cache: false,
                 type: 'POST',
-                url:   '/algorithm/MTCheck',
+                url:   '/algorithm/HAM2Check',
                 beforeSend: function (xhr) {
                     const token = $('meta[name="csrf_token"]').attr('content');
 

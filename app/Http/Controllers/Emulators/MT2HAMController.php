@@ -9,7 +9,6 @@ use App\MtFees;
 use App\HamFees;
 
 class MT2HAMController extends Controller {
-
     public function openMT() {
         $fees = MtFees::first();
         return view("algorithm.mt2", compact('fees'));
@@ -37,6 +36,15 @@ class MT2HAMController extends Controller {
     public function openMT2_SCORES() {
         $fees = MtFees::first();
         return view("algorithm.mt2_SCORES", compact('fees'));
+    }
+
+    public function openHAM2_HELP() {
+        return view("algorithm.ham2_HELP");
+    }
+
+    public function openHAM2_SCORES() {
+        $fees = HamFees::first();
+        return view("algorithm.ham2_SCORES", compact('fees'));
     }
 
     public function openHAMHelp() {
@@ -71,11 +79,12 @@ class MT2HAMController extends Controller {
     public function edit_params_ham(Request $request) {
         $debugPercent = $request->input('debugPercent');
         $runPercent = $request->input('runPercent');
-        $stepsPercent = $request->input('stepsPercent');
+        // $stepsPercent = $request->input('stepsPercent');
+        $checkSyntaxPercent = $request->input('checkSyntaxPercent');
         $fees = HamFees::first();
         $fees->debug_fee = $debugPercent;
         $fees->run_fee = $runPercent;
-        $fees->steps_fee = $stepsPercent;
+        $fees->check_syntax_fee = $checkSyntaxPercent;
         $fees->save();
         return [
             'success' => true,

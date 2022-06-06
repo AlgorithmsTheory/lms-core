@@ -421,6 +421,8 @@ Route::get('algorithm/mt2help', ['as' => 'mt2help', 'uses' => 'Emulators\MT2HAMC
 Route::get('algorithm/mt2help_alternative', ['as' => 'mt2help_alternative', 'uses' => 'Emulators\MT2HAMController@openMT2HelpAlternative']);
 Route::get('algorithm/mt2_HELP', ['as' => 'mt2help', 'uses' => 'Emulators\MT2HAMController@openMT2_HELP']);
 Route::get('algorithm/mt2_SCORES', ['as' => 'mt2help', 'uses' => 'Emulators\MT2HAMController@openMT2_SCORES']);
+Route::get('algorithm/ham2_HELP', ['as' => 'ham2help', 'uses' => 'Emulators\MT2HAMController@openHAM2_HELP']);
+Route::get('algorithm/ham2_SCORES', ['as' => 'ham2help', 'uses' => 'Emulators\MT2HAMController@openHAM2_SCORES']);
 Route::get('algorithm/HAMHelp', ['as' => 'HAMHelp', 'uses' => 'Emulators\MT2HAMController@openHAMHelp']);
 
 // Эмуляторы
@@ -429,7 +431,7 @@ Route::prefix('algorithm')->group(function (){
         Route::get('MT', ['as' => 'MT', 'uses' => 'Emulators\EmulatorController@openMT']);
         Route::post('MT', ['as' => 'MTRun', 'uses' => 'Emulators\EmulatorController@MTPOST']);
         Route::post('MTCheck', ['as' => 'MTCheck', 'uses' => 'Emulators\EmulatorController@MTCheck']);
-        Route::post('MT2Check', ['as' => 'MT2Check', 'uses' => 'Emulators\EmulatorController@MT2Check']);
+        Route::post('HAM2Check', ['as' => 'HAM2Check', 'uses' => 'Emulators\EmulatorController@HAM2Check']);
         Route::get('MTHelp', ['as' => 'MTHelp', function (){ return view('algorithm.MThelp'); }]);
         
         Route::get('HAM', ['as' => 'HAM', 'uses' => 'Emulators\EmulatorController@openHAM']);

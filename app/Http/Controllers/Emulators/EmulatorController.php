@@ -47,19 +47,23 @@ class EmulatorController extends Controller {
     public static function MTRun($machine, $inputWord) {
         return $machine->run($inputWord);
     }
-    
-    public static function HAMRun($data) {
-        $cmd = "/usr/local/bin/normal.sh";
-        $task_file = tempnam(sys_get_temp_dir(), 'norm_');
-        $task_answ = tempnam(sys_get_temp_dir(), 'norm_answ_');
-        file_put_contents($task_file, $data);
-        Log::debug('Data for Markov');
-        Log::debug($data);
-        $data = exec($cmd . " " . $task_file);
-        unlink($task_file);
-        unlink($task_answ);
-        return $data;
+
+    public static function HAMRun($machine, $inputWord) {
+        return $machine->run($inputWord);
     }
+    
+//    public static function HAMRun($data) {
+//        $cmd = "/usr/local/bin/normal.sh";
+//        $task_file = tempnam(sys_get_temp_dir(), 'norm_');
+//        $task_answ = tempnam(sys_get_temp_dir(), 'norm_answ_');
+//        file_put_contents($task_file, $data);
+//        Log::debug('Data for Markov');
+//        Log::debug($data);
+//        $data = exec($cmd . " " . $task_file);
+//        unlink($task_file);
+//        unlink($task_answ);
+//        return $data;
+//    }
     
     public function MTPOST(Request $request){  // выполняет Тьюринга на данных и возвращает ответ   (ОБЫЧНОЕ ИСПОЛНЕНИЕ)
         //$data = Request::input('task'); // data уже в JSON
@@ -145,40 +149,100 @@ class EmulatorController extends Controller {
         return $result_check;
     }
 
-    public static function HAMCheckSequence($data, $test_seq) {
-        Log::debug('Checking');
-        $seq_true = 0;
-        $seq_all = count($test_seq['input_word']);
-        $total_cycle = 0;
 
-        for($i = 0; $i < $seq_all; $i++){
-            $data = json_decode($data, true);
 
-            $test_seq['input_word'][$i] = str_replace("Λ", "", $test_seq['input_word'][$i]);
-            $test_seq['input_word'][$i] = "Λ".$test_seq['input_word'][$i];
-
-            $data['str'] = $test_seq['input_word'][$i];
-            $data = json_encode($data);
-            Log::debug('Input: '.$data);
-            $answer = EmulatorController::HAMRun($data);
-            Log::debug('Output: '.$answer);
-            $answer = json_decode($answer, true);
-
-            $total_cycle += $answer['cycle'];
-
-            $test_seq['output_word'][$i] = str_replace("Λ", "", $test_seq['output_word'][$i]);
-            $answer['result'] = str_replace("Λ", "", $answer['result']);
-            Log::debug('Expected result = '.$test_seq['output_word'][$i]);
-            Log::debug('Actual result = '.$answer['result']);
-
-            if($answer['result'] == $test_seq['output_word'][$i]){
-                $seq_true++;
-            }
-        }
-        return [$seq_true, $seq_all, $total_cycle];
-    }
+//    public static function HAMCheckSequence($data, $test_seq) {
+//        Log::debug('Checking');
+//        $seq_true = 0;
+//        $seq_all = count($test_seq['input_word']);
+//        $total_cycle = 0;
+//
+//        for($i = 0; $i < $seq_all; $i++){
+//            $data = json_decode($data, true);
+//
+//            $test_seq['input_word'][$i] = str_replace("Λ", "", $test_seq['input_word'][$i]);
+//            $test_seq['input_word'][$i] = "Λ".$test_seq['input_word'][$i];
+//
+//            $data['str'] = $test_seq['input_word'][$i];
+//            $data = json_encode($data);
+//            Log::debug('Input: '.$data);
+//            $answer = EmulatorController::HAMRun($data);
+//            Log::debug('Output: '.$answer);
+//            $answer = json_decode($answer, true);
+//
+//            $total_cycle += $answer['cycle'];
+//
+//            $test_seq['output_word'][$i] = str_replace("Λ", "", $test_seq['output_word'][$i]);
+//            $answer['result'] = str_replace("Λ", "", $answer['result']);
+//            Log::debug('Expected result = '.$test_seq['output_word'][$i]);
+//            Log::debug('Actual result = '.$answer['result']);
+//
+//            if($answer['result'] == $test_seq['output_word'][$i]){
+//                $seq_true++;
+//            }
+//        }
+//        return [$seq_true, $seq_all, $total_cycle];
+//    }
     
     public function MTCheck(Request $request) {
+        $task = Request::input('task');
+        $task_id = Request::input('task_id');
+        $test_id = Request::input('test_id');
+        $button_code = Request::input('buttonCode');
+        $counter = Request::input('counter') - 1;
+        $current_test = Result::getCurrentResult(Auth::user()['id'], $test_id);
+
+        if ($current_test == -1) {
+            return null;
+        }
+
+        /* Get current saved test */
+        $test = Result::whereId_result($current_test)->first();
+        $saved_test = $test->saved_test;
+        $saved_test = unserialize($saved_test);
+
+        $arguments = $saved_test[$counter]['arguments'];
+        $debug_counter = $arguments['debug_counter'];
+        $check_syntax_counter = $arguments['check_syntax_counter'];
+        $run_counter = $arguments['run_counter'];
+
+        if ($button_code == 'btnCheckSyntax' || $button_code == 'btnRun') {
+            if ($button_code == 'btnCheckSyntax') {
+                $check_syntax_counter++;
+            } else if ($button_code == 'btnRun') {
+                $run_counter++;
+            }
+            $saved_test[$counter]['arguments']['check_syntax_counter'] = $check_syntax_counter;
+            $saved_test[$counter]['arguments']['run_counter'] = $run_counter;
+            $saved_test = serialize($saved_test);
+            $test->saved_test = $saved_test;
+            $test->save();
+            return [
+                'debug_counter' => $debug_counter,
+                'check_syntax_counter' => $check_syntax_counter,
+                'run_counter' => $run_counter,
+            ];
+        }
+
+        # $task_id = 43564 (идентификатор вопроса)
+        # $debug_counter = 8 (сколько раз нажали на кнопку "Проверить работу" вплоть до сих пор
+        # $task = информация о текущем вводе пользователя в эмулятор Тьюринга в следующем виде:
+        #   {"rule":[{"src":"S0{∂}","dst":"{∂}{R}S0"}],"str":["∂"]}
+        $question = new Question();
+        $should_increment_debug_counter = true;
+        $result_check = $question->check([$task_id, $debug_counter, $check_syntax_counter, $run_counter,
+            $should_increment_debug_counter, $task]);
+        $saved_test[$counter]['arguments']['debug_counter'] = $result_check['choice']['debug_counter'];
+
+        /* Save new data */
+        $saved_test = serialize($saved_test);
+        $test->saved_test = $saved_test;
+        $test->save();
+
+        return $result_check;
+    }
+
+    public function HAM2Check(Request $request) {
         $task = Request::input('task');
         $task_id = Request::input('task_id');
         $test_id = Request::input('test_id');
@@ -243,23 +307,42 @@ class EmulatorController extends Controller {
         $data = json_decode($data, true);
         $automaton = $data['automaton'];
         $alphabet = $data['alphabet'];
-        Log::debug('automaton');
-        Log::debug($automaton);
-        Log::debug('alphabet');
-        Log::debug($alphabet);
         $machine = new MT2TuringMachine($automaton, $alphabet);
         for($i = 0; $i < $seq_all; $i++){
             $inputWord = $test_seq['input_word'][$i];
             // $inputWord = mb_substr($inputWord, 1, null, 'UTF-8');
             $outputWord = $test_seq['output_word'][$i];
             // $outputWord = mb_substr($outputWord, 1, null, 'UTF-8');
-            Log::debug('input');
-            Log::debug($inputWord);
-            Log::debug('right answer');
-            Log::debug($outputWord);
             $answer = EmulatorController::MTRun($machine, $inputWord);
-            Log::debug('output');
-            Log::debug($answer);
+            $total_cycle += $answer['cycle'];
+            if(trim($answer['result']) == trim($outputWord)){
+                $seq_true++;
+            }
+        }
+        return [$seq_true, $seq_all, $total_cycle];
+    }
+
+    public static function HAMCheckSequence($data, $test_seq) {
+        $seq_true = 0;
+        $seq_all = count($test_seq['input_word']);
+        $total_cycle = 0;
+        $data = json_decode($data, true);
+        $list = $data['list'];
+        $alphabet = $data['alphabet'];
+        Log::debug('$data["list"]');
+        Log::debug($list);
+        $machine = new HAM2Machine($list, $alphabet);
+        $lambdaSymbol = 'Λ';
+        for($i = 0; $i < $seq_all; $i++){
+            $inputWord = $test_seq['input_word'][$i];
+            if (substr($inputWord, 0, strlen($lambdaSymbol)) === $lambdaSymbol) {
+                $inputWord = mb_substr($inputWord, 1, null, 'UTF-8');
+            }
+            $outputWord = $test_seq['output_word'][$i];
+            if (substr($outputWord, 0, strlen($lambdaSymbol)) === $lambdaSymbol) {
+                $outputWord = mb_substr($outputWord, 1, null, 'UTF-8');
+            }
+            $answer = EmulatorController::HAMRun($machine, $inputWord);
             $total_cycle += $answer['cycle'];
             if(trim($answer['result']) == trim($outputWord)){
                 $seq_true++;

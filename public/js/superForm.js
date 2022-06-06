@@ -90,17 +90,18 @@ function sendForm(status){
 function fillSuper(){
     // Execute Turing program before send result
     window.mt2SubmitAllTasks();
+    window.ham2SubmitAllTasks();
     // var cnt = 0;
     // $("[name^=mt-entity]").each(function(){
     //     mtSubmitTask(cnt, false);
     //     cnt++
     // });
     // Execute Markov program before send result
-    var cnt = 0;
-    $("[name^=ham-entity]").each(function(){
-        hamSubmitTask(cnt, false);
-        cnt++
-    });
+    // var cnt = 0;
+    // $("[name^=ham-entity]").each(function(){
+    //     hamSubmitTask(cnt, false);
+    //     cnt++
+    // });
     // Execute Post program before send result
     var cnt = 0;
     $("[name^=post-entity]").each(function(){

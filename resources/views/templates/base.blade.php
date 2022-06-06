@@ -44,7 +44,7 @@
 							</a>
 							<ul class="dropdown-menu" aria-labelledby="dropdownChoiceEmulator">
 								<li><a href="{{URL::route('mt2')}}" class="btn">Тьюринг</a></li>
-								<li><a href="{{URL::route('HAM')}}" class="btn">Марков</a></li>
+								<li><a href="{{URL::route('ham2')}}" class="btn">Марков</a></li>
 								<li><a href="{{URL::route('recursion_index')}}" class="btn">Рекурсия</a></li>
 								<li><a href="{{URL::route('Post')}}" class="btn">Пост</a></li>
 								<li><a href="{{URL::route('MMT')}}" class="btn">Тьюринг (3 ленты)</a></li>

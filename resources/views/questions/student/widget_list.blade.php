@@ -13,6 +13,7 @@
     {!! HTML::style('css/materialadmin.css') !!}
 
     {!! HTML::style('css/algorithm/mt2.css') !!}
+    {!! HTML::style('css/algorithm/ham2.css') !!}
 
 </head>
 <body onload="startTimer()">
@@ -107,6 +108,7 @@
 {!! HTML::script('js/algorithms/send.js') !!}
 
 {!! HTML::script('js/algorithm/mt2.js') !!}
+{!! HTML::script('js/algorithm/ham2.js') !!}
 <br>
 </section>
 </body>

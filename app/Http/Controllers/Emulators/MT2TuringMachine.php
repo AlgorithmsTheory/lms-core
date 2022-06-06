@@ -54,8 +54,6 @@ class MT2TuringMachine
     private function runInternal() {
         $state = $this->firstState;
         $errors = $this->getErrors();
-        Log::debug('errors');
-        Log::debug($errors);
         if (count($errors) > 0) {
             return 0;
         }

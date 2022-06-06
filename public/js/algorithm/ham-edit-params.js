@@ -6,13 +6,15 @@
     }
     const tbDebug = hamEditParams.querySelector('.tb-debug');
     const tbRun = hamEditParams.querySelector('.tb-run');
-    const tbSteps = hamEditParams.querySelector('.tb-steps');
+    const tbCheckSyntax = hamEditParams.querySelector('.tb-check-syntax');
+    // const tbSteps = hamEditParams.querySelector('.tb-steps');
     const btnApply = hamEditParams.querySelector('.btn-apply');
 
     btnApply.addEventListener('click', () => {
         const debugPercent = +tbDebug.value;
         const runPercent = +tbRun.value;
-        const stepsPercent = +tbSteps.value;
+        const checkSyntaxPercent = +tbCheckSyntax.value;
+        // const stepsPercent = +tbSteps.value;
         if (isNaN(debugPercent) || debugPercent < 0 || debugPercent > 100) {
             alert('Значение штрафа за проверку (нажатие "Проверить работу") должно быть от 0 до 100');
             return;
@@ -21,10 +23,14 @@
             alert('Значение штрафа за запуск должно быть от 0 до 100');
             return;
         }
-        if (isNaN(stepsPercent) || stepsPercent < 0 || stepsPercent > 100) {
-            alert('Значение штрафа за отладку (запу с шагами) должно быть от 0 до 100');
+        if (isNaN(checkSyntaxPercent) || checkSyntaxPercent < 0 || checkSyntaxPercent > 100) {
+            alert('Значение штрафа за проверку синтаксиса должно быть от 0 до 100');
             return;
         }
+        // if (isNaN(stepsPercent) || stepsPercent < 0 || stepsPercent > 100) {
+        //     alert('Значение штрафа за отладку (запу с шагами) должно быть от 0 до 100');
+        //     return;
+        // }
         btnApply.disabled = true;
         $.ajax({
             cache: false,
@@ -37,7 +43,8 @@
             data: {
                 debugPercent: debugPercent,
                 runPercent: runPercent,
-                stepsPercent: stepsPercent,
+                // stepsPercent: stepsPercent,
+                checkSyntaxPercent: checkSyntaxPercent,
                 token: 'token'
             },
             success: function(data){

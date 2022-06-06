@@ -94,8 +94,6 @@ class Turing extends QuestionType implements Checkable {
     }
 
     public function check($array) {
-        Log::debug('array of check');
-        Log::debug($array);
         $fees = MtFees::first();
         $debug_counter = $array[0];
         $check_syntax_counter = $array[1];
