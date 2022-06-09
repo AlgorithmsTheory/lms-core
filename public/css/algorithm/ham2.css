@@ -56,6 +56,18 @@ div.ham2-container .ham2-place-word-section, div.ham2-container .ham2-alphabet-s
     align-items: center;
 }
 
+div.ham2-container .ham2-algo-comment {
+    font-size: 25px;
+    color: black;
+    width: 100%;
+    display: block;
+    height: 80px;
+    margin: 0;
+    border: 0;
+    padding: 7px 7px;
+    line-height: 1.2em;
+}
+
 div.ham2-container .ham2-new-word, div.ham2-container .ham2-alphabet {
     font-family: Consolas, monospace;
     font-size: 20px;

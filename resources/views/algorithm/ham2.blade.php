@@ -27,6 +27,12 @@
         if (ham2ImportExportSection) {
             ham2ImportExportSection.style.display = '';
         }
+
+        // Показать комментарий
+        const ham2CommentSection = document.querySelector('.ham2-comment-section');
+        if (ham2CommentSection) {
+            ham2CommentSection.style.display = '';
+        }
     </script>
 @stop
 

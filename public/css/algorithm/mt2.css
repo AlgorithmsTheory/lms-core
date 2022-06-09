@@ -120,6 +120,18 @@ div.mt2-container .mt2-place-word-section, div.mt2-container .mt2-alphabet-secti
     align-items: center;
 }
 
+div.mt2-container .mt2-algo-comment {
+    font-size: 25px;
+    color: black;
+    width: 100%;
+    display: block;
+    height: 80px;
+    margin: 0;
+    border: 0;
+    padding: 7px 7px;
+    line-height: 1.2em;
+}
+
 div.mt2-container .mt2-new-word, div.mt2-container .mt2-alphabet {
     font-family: Consolas, monospace;
     font-size: 20px;

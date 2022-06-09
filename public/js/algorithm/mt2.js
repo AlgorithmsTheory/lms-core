@@ -28,6 +28,7 @@ function createMt2(containerEl) {
     const importInput = qs('.mt2-import-input');
     const exportBtn = qs('.mt2-export-btn');
     const exportApplyBtn = qs('.mt2-export-apply-btn');
+    const algoCommentEl = qs('.mt2-algo-comment');
     const formEl = tapeContentEl.closest('form'); // can be null. If not null then emulator is used inside the test
 
 
@@ -1142,6 +1143,7 @@ function createMt2(containerEl) {
         const algoName = algoNameEl.value;
         const exportData = {
             algoName: algoName,
+            comment: algoCommentEl.value,
             tape: tape,
             newWord: newWordEl.value,
             alphabet: alphabet,
@@ -1162,6 +1164,7 @@ function createMt2(containerEl) {
         reader.onload = function(ev) {
             const contents = ev.target.result;
             applyImportedData(JSON.parse(contents+''));
+            importInput.value = '';
         };
         reader.readAsText(file);
     }
@@ -1173,6 +1176,7 @@ function createMt2(containerEl) {
             return;
         }
         algoNameEl.value = d.algoName;
+        algoCommentEl.value = d.comment;
         tape = d.tape;
         newWordEl.value = d.newWord;
         alphabet = d.alphabet;

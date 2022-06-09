@@ -1,3 +1,6 @@
+<div class="mt2-comment-section" style="display: none;">
+    <textarea class="mt2-algo-comment" placeholder="Комментарий"></textarea>
+</div>
 <div class="mt2-header">
     <h2 class="mt2-header-h2">Эмулятор машины Тьюринга</h2>
     <div class="mt2-view-section">
@@ -17,7 +20,7 @@
 {{--        <input type="file" class="mt2-import-input btn ink-reaction btn-raised btn-xs btn-primary">--}}
 {{--    /stackoverflow.com/questions/43649952/instruct-browser-to-make-user-select-location-for-downloaded-file--}}
         <div class="mt2-algo-name-wrapper" style="display: none">
-            <input class="mt2-algo-name" type="text" placeholder="Комментарий">
+            <input class="mt2-algo-name" type="text" placeholder="Название файла">
             <button class="mt2-export-apply-btn btn btn-primary">Подтвердить</button>
         </div>
     </div>

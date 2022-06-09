@@ -1,4 +1,4 @@
-function createMt2(containerEl) {
+function createHam2(containerEl) {
     function qs(selector) { return containerEl.querySelector(selector); }
 
     const newWordEl = qs('.ham2-new-word');
@@ -9,6 +9,8 @@ function createMt2(containerEl) {
     const errorsEl = qs('.ham2-errors');
     const startBtnEl = qs('.ham2-start-btn');
     const stepBtnEl = qs('.ham2-step-btn');
+    const placeWordBtnEl = qs('.ham2-place-word-btn');
+    const clearTapeBtnEl = qs('.ham2-clear-tape-btn');
     const toFirstStateEl = qs('.ham2-to-first-state');
     const checkBtnEl = qs('.ham2-check-btn');
     const listAddRowBtn = qs('.ham2-list-add-row-btn');
@@ -18,6 +20,7 @@ function createMt2(containerEl) {
     const exportBtn = qs('.ham2-export-btn');
     const exportApplyBtn = qs('.ham2-export-apply-btn');
     const currentWordEl = qs('.ham2-current-word');
+    const algoCommentEl = qs('.ham2-algo-comment');
     // can be null. If not null then emulator is used inside the test
     const formEl = newWordEl.closest('form');
 
@@ -123,6 +126,23 @@ function createMt2(containerEl) {
             }
         }
         return -1;
+    }
+
+    function placeWordHandler() {
+        if (!canTapeBeChanged)
+        {
+            return;
+        }
+        const word = newWordEl.value;
+        setCurrentWord(word);
+    }
+
+    function clearTapeHandler() {
+        if (!canTapeBeChanged)
+        {
+            return;
+        }
+        setCurrentWord('');
     }
 
     function alphabetInputHandler(ev) {
@@ -306,6 +326,12 @@ function createMt2(containerEl) {
         return true;
     }
 
+    function setTapeEnabled(value) {
+        canTapeBeChanged = value;
+        placeWordBtnEl.disabled = !value;
+        clearTapeBtnEl.disabled = !value;
+    }
+
     function stepButtonClickHandler() {
         if (checkErrors()) {
             if (formEl) {
@@ -313,6 +339,7 @@ function createMt2(containerEl) {
             }
             return;
         }
+        setTapeEnabled(false);
         const isLast = makeStep();
         setCurrentWord(currentWord);
         if (isLast) {
@@ -327,6 +354,7 @@ function createMt2(containerEl) {
             }
             return;
         }
+        setTapeEnabled(false);
         let itersCount = 500;
         let stopReason = 'too-many-commands';
         for (let i = 0; i < itersCount; i++) {
@@ -346,6 +374,7 @@ function createMt2(containerEl) {
     }
 
     function toFirstStateButtonClickHandler() {
+        setTapeEnabled(true);
         setCurrentWord(newWordEl.value);
         setStepStartButtonsEnabled(true);
     }
@@ -557,6 +586,7 @@ function createMt2(containerEl) {
         const algoName = algoNameEl.value;
         const exportData = {
             algoName: algoName,
+            comment: algoCommentEl.value,
             newWord: newWordEl.value,
             alphabet: alphabet,
             list: list,
@@ -574,6 +604,7 @@ function createMt2(containerEl) {
         reader.onload = function(ev) {
             const contents = ev.target.result;
             applyImportedData(JSON.parse(contents+''));
+            importInput.value = '';
         };
         reader.readAsText(file);
     }
@@ -585,6 +616,7 @@ function createMt2(containerEl) {
             return;
         }
         algoNameEl.value = d.algoName;
+        algoCommentEl.value = d.comment;
         newWordEl.value = d.newWord;
         alphabet = d.alphabet;
         list = d.list;
@@ -600,6 +632,8 @@ function createMt2(containerEl) {
         listSectionRowsEl.addEventListener('click', listRowButtonClicks);
         listSectionRowsEl.addEventListener('focusout', reflectListOnListInputBlurHandler)
         newWordEl.addEventListener('input', newWordInputHandler);
+        placeWordBtnEl.addEventListener('click', placeWordHandler);
+        clearTapeBtnEl.addEventListener('click', clearTapeHandler);
         alphabetEl.addEventListener('input', alphabetInputHandler);
         exportBtn.addEventListener('click', exportBtnClick);
         exportApplyBtn.addEventListener('click', exportApplyBtnClick);
@@ -706,7 +740,7 @@ function createMt2(containerEl) {
 $(() => {
     const allSubmitItFuncs = [];
     for (let containerEl of document.querySelectorAll('.ham2-container')) {
-        const submitIt = createMt2(containerEl);
+        const submitIt = createHam2(containerEl);
         allSubmitItFuncs.push(submitIt);
     }
 

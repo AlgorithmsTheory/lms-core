@@ -30,6 +30,12 @@
         if (mt2ImportExportSection) {
             mt2ImportExportSection.style.display = '';
         }
+
+        // Показать комментарий
+        const mt22CommentSection = document.querySelector('.mt2-comment-section');
+        if (mt22CommentSection) {
+            mt22CommentSection.style.display = '';
+        }
     </script>
 @stop
 

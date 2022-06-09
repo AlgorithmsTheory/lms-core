@@ -45,6 +45,7 @@ class HAM2Machine
             $isLast = $this->makeStep();
             if ($isLast) {
                 $stopReason = 'successful-finish';
+                $itersCount = $i + 1;
                 break;
             }
         }

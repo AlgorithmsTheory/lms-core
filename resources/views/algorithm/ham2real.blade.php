@@ -1,3 +1,6 @@
+<div class="ham2-comment-section" style="display: none;">
+    <textarea class="ham2-algo-comment" placeholder="Комментарий"></textarea>
+</div>
 <div class="ham2-header">
     <h2 class="ham2-header-h2">Эмулятор нормальных алгоритмов Маркова</h2>
     <div class="ham2-import-export-section btn-group" style="display: none">
@@ -7,7 +10,7 @@
             <i class="md md-file-upload" style="line-height: 39px"></i>
         </label>
         <div class="ham2-algo-name-wrapper" style="display: none">
-            <input class="ham2-algo-name" type="text" placeholder="Комментарий">
+            <input class="ham2-algo-name" type="text" placeholder="Название файла">
             <button class="ham2-export-apply-btn btn btn-primary">Подтвердить</button>
         </div>
     </div>
@@ -22,6 +25,8 @@
         Слово:&nbsp;
     </span>
     <input type="text" class="ham2-new-word">
+    <button type="button" class="ham2-place-word-btn btn btn-primary">Поместить на ленту</button>
+    <button type="button" class="ham2-clear-tape-btn btn btn-primary">Очистить ленту</button>
 </div>
 <div class="ham2-alphabet-section">
     <span style="width: 70px; display: inline-block;">
