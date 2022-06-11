@@ -11,7 +11,7 @@
     <div class="mt2-container">
         @include('algorithm.mt2real')
         <div class="mt2-examples-section">
-            Примеры:
+            Пример:
             <div class="mt2-examples-buttons-wrapper"></div>
         </div>
 {{--        <div class="mt2-help-link-wrapper">--}}

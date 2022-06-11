@@ -62,61 +62,6 @@ function createHam2(containerEl) {
                 },
             ],
         },
-        {
-            title: 'Подсчет 012 в унарной СС',
-            alphabet: `a012#`,
-            word: `12012210012`,
-            list: [
-                {
-                    source: 'a012',
-                    dest: '012#a',
-                },
-                {
-                    source: 'a0',
-                    dest: '0a',
-                },
-                {
-                    source: 'a1',
-                    dest: '1a',
-                },
-                {
-                    source: 'a2',
-                    dest: '2a',
-                },
-                {
-                    source: '#0',
-                    dest: '0#',
-                },
-                {
-                    source: '#1',
-                    dest: '1#',
-                },
-                {
-                    source: '#2',
-                    dest: '2#',
-                },
-                {
-                    source: '#',
-                    dest: '1',
-                },
-                {
-                    source: '0a',
-                    dest: `01${lastCommandSymbol}`,
-                },
-                {
-                    source: '1a',
-                    dest: `11${lastCommandSymbol}`,
-                },
-                {
-                    source: '2a',
-                    dest: `21${lastCommandSymbol}`,
-                },
-                {
-                    source: lambdaSymbol,
-                    dest: `a`,
-                },
-            ],
-        },
     ];
 
     function qsaIndexOf(qsaResult, searchTarget) {

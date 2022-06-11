@@ -11,7 +11,7 @@
     <div class="ham2-container">
         @include('algorithm.ham2real')
         <div class="ham2-examples-section">
-            Примеры:
+            Пример:
             <div class="ham2-examples-buttons-wrapper"></div>
         </div>
     </div>
