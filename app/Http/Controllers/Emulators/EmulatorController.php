@@ -64,10 +64,22 @@ class EmulatorController extends Controller {
 //        unlink($task_answ);
 //        return $data;
 //    }
+
+
+    public static function MTRun_($data) {
+        $cmd = "/usr/local/bin/turing.sh";
+        $task_file = tempnam(sys_get_temp_dir(), 'turn_');
+        $task_answ = tempnam(sys_get_temp_dir(), 'turn_answ_');
+        file_put_contents($task_file, $data);
+        $data = exec($cmd . " " . $task_file);
+        unlink($task_file);
+        unlink($task_answ);
+        return $data;
+    }
     
     public function MTPOST(Request $request){  // выполняет Тьюринга на данных и возвращает ответ   (ОБЫЧНОЕ ИСПОЛНЕНИЕ)
-        //$data = Request::input('task'); // data уже в JSON
-        //return EmulatorController::MTRun($data);
+        $data = Request::input('task'); // data уже в JSON
+        return EmulatorController::MTRun_($data);
     }
 
     public function HAMCheck(Request $request) {
