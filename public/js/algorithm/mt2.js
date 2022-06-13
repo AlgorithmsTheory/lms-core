@@ -947,6 +947,9 @@ function createMt2(containerEl) {
     }
 
     function setTableView() {
+        if (view === 'table') {
+            return;
+        }
         if (checkListToAutomatonErrors().length > 0) {
             const answer = confirm('Конвертация в табличный вид не может быть произведена без потери данных из-за присутствия ошибок, препятствующих конвертации.' +
                 ' Все ошибки можно просмотреть, нажав на кнопку "Проверить синтаксис". Вы желаете всё равно выполнить конвертацию?');
@@ -961,6 +964,9 @@ function createMt2(containerEl) {
     }
 
     function setListView() {
+        if (view === 'list') {
+            return;
+        }
         list = automatonToList();
         generateList();
         showListView();
@@ -1257,7 +1263,9 @@ function createMt2(containerEl) {
         const numEl = formEl.querySelector('[name=num]');
         const debugCounterEl = formEl.querySelector('[name=debug_counter]');
         const taskEl = formEl.querySelector('[name=task]');
-        automaton = listToAutomaton();
+        if (view === 'list') {
+            automaton = listToAutomaton();
+        }
         const task = JSON.stringify({
             automaton: automaton,
             alphabet: alphabet,

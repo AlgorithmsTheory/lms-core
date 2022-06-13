@@ -327,6 +327,11 @@ class EmulatorController extends Controller {
             // $outputWord = mb_substr($outputWord, 1, null, 'UTF-8');
             $answer = EmulatorController::MTRun($machine, $inputWord);
             $total_cycle += $answer['cycle'];
+            //Log::debug($i);
+            //Log::debug('user answer');
+            //Log::debug($answer['result']);
+            //Log::debug('right answer');
+            //Log::debug($outputWord);
             if(trim($answer['result']) == trim($outputWord)){
                 $seq_true++;
             }
@@ -341,8 +346,8 @@ class EmulatorController extends Controller {
         $data = json_decode($data, true);
         $list = $data['list'];
         $alphabet = $data['alphabet'];
-        Log::debug('$data["list"]');
-        Log::debug($list);
+        //Log::debug('$data["list"]');
+        //Log::debug($list);
         $machine = new HAM2Machine($list, $alphabet);
         $lambdaSymbol = 'Λ';
         for($i = 0; $i < $seq_all; $i++){
