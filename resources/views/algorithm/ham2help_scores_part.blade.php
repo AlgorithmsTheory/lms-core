@@ -50,7 +50,7 @@
 </ul>
 <p>При этом <code>fee</code> вычисляется по следующей формуле:</p>
 <p>
-    <code>min(0.5, (debug_fee / 100) * debug_count + (check_syntax_fee / 100) * check_syntax_count +
+    <code>min(0.5, (debug_fee / 100) * debug_count + (check_syntax_fee / 100) * check_syntax_count
         + (run_fee / 100) * run_count)</code>, где
 </p>
 <ul>
