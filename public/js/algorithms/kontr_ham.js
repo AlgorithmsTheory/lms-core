@@ -47,15 +47,21 @@ function hamSubmitTask(cnt, notice) {
                     task: JSON.stringify(task),
                     token: 'token' },
             success: function(data){
-                
-                sequences_true = data['choice']['sequences_true'];
-                sequences_all = data['choice']['sequences_all'];
-                debug_counter = data['choice']['debug_counter'];
+
+                const choice = data['choice'];
+                sequences_true = choice['sequences_true'];
+                sequences_all = choice['sequences_all'];
+                debug_counter = choice['debug_counter'];
+                run_counter = choice['run_counter'];
+                steps_counter = choice['steps_counter'];
                 
                 debug_form.val(debug_counter);
 
                 alert("Текущий результат отправки: " + sequences_true + " тестов сработало из " + sequences_all + 
-                      " . Количество отправок: " + debug_counter + "\n");                
+                      " .\n" +
+                    `Количество отправок (нажатий "Проверить работу"): ${debug_counter}\n` +
+                    `Количество запусков: ${run_counter}\n` +
+                    `Количество отладок (запусков с шагами): ${steps_counter}`);
             }
         });
      

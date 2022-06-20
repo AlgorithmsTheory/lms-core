@@ -1,0 +1,253 @@
+div.ham2-container .ham2-place-word-btn,
+div.ham2-container .ham2-clear-tape-btn,
+div.ham2-container .ham2-check-btn,
+div.ham2-container .ham2-to-first-state,
+div.ham2-container .ham2-start-btn,
+div.ham2-container .ham2-step-btn,
+div.ham2-container .ham2-example-btn {
+    height: 48px;
+}
+
+div.ham2-container .ham2-example-btn:not(:first-child) {
+    margin-left: 7px;
+}
+
+
+
+div.ham2-container {
+    max-width: 1284px;
+    margin: 0 auto;
+    padding: 12px;
+    background-color: #e5e6e6;
+}
+
+div.ham2-help-container {
+    font-size: 26px;
+    max-width: 1284px;
+    margin: 0 auto;
+    padding: 12px;
+}
+
+div.ham2-help-container h3 {
+    font-size: 45px;
+}
+
+div.ham2-help-container h4 {
+    font-size: 30px;
+    text-align: center;
+}
+
+.ham2-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.ham2-header-h2 {
+    margin: 0;
+}
+
+/* ================================================================================================= */
+
+div.ham2-container .ham2-place-word-section, div.ham2-container .ham2-alphabet-section {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+div.ham2-container .ham2-algo-comment {
+    font-size: 25px;
+    color: black;
+    width: 100%;
+    display: block;
+    height: 80px;
+    margin: 0;
+    border: 0;
+    padding: 7px 7px;
+    line-height: 1.2em;
+}
+
+div.ham2-container .ham2-new-word, div.ham2-container .ham2-alphabet {
+    font-family: Consolas, monospace;
+    font-size: 20px;
+    color: rgb(49, 53, 52);
+    display: inline;
+
+    width: auto;
+    height: 48px;
+    vertical-align: middle;
+    margin: 0;
+    border: 0;
+}
+
+/* ================================================================================================= */
+
+div.ham2-container .ham2-examples-section {
+    margin-top: 18px;
+}
+
+div.ham2-container .ham2-examples-buttons-wrapper {
+    margin-top: 4px;
+}
+
+div.ham2-container .ham2-current-state {
+    font-weight: 600;
+    font-size: 24px;
+}
+
+div.ham2-container .ham2-errors {
+    margin-top: 5px;
+    color: #c73a3a;
+    font-size: 15px;
+}
+
+div.ham2-container .ham2-error {
+    letter-spacing: 0.1px;
+    padding: 15px 0;
+    margin: 0;
+}
+
+div.ham2-container .ham2-input-next-command {
+    background-color: #aaffaa !important;
+}
+
+
+.ham2-help-link-wrapper {
+    margin: 20px 0;
+}
+
+.ham2-help-link {
+    display: inline-block;
+    padding: 8px 20px;
+    border-bottom: 1px solid #0b76cc;
+    text-decoration: none !important;
+    color: #0b76cc !important;
+    transition: all .2s ease-in-out;
+}
+
+.ham2-help-link:hover {
+    background-color: #0b76cc;
+    color: white !important;
+}
+
+
+
+
+.ham2-toggle-scores-section {
+
+}
+
+
+.ham2-list-section {
+    margin: 10px 0;
+}
+
+.ham2-list-section-rows {
+    padding: 12px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.ham2-list-add-row-btn {
+    margin-top: 12px;
+    display: inline-block;
+    background: #0aa89e;
+    border: 0;
+    outline: 0;
+    color: white;
+    height: 45px;
+    width: 45px;
+    text-align: center;
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.ham2-list-add-row-btn:hover, .ham2-list-add-row-btn:focus {
+    background: #08867e;
+}
+
+.ham2-list-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ham2-list-row-remove-btn, .ham2-list-row-up-btn, .ham2-list-row-down-btn {
+    background: transparent;
+    width: 45px;
+    height: 45px;
+    font-size: 21px;
+    border: 0;
+    outline: 0;
+    color: #888;
+}
+
+.ham2-list-row-remove-btn:hover, .ham2-list-row-remove-btn:focus,
+.ham2-list-row-up-btn:hover, .ham2-list-row-up-btn:focus,
+.ham2-list-row-down-btn:hover, .ham2-list-row-down-btn:focus {
+    background: #ccc;
+    color: #333;
+}
+
+div.ham2-container .ham2-list-row-input-from, div.ham2-container .ham2-list-row-input-to {
+    height: 48px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+    padding: 0;
+    background: transparent;
+    outline: 0;
+    text-align: center;
+    font-size: 18px;
+}
+
+div.ham2-container .ham2-list-row-input-from:focus, div.ham2-container .ham2-list-row-input-to:focus {
+    border-bottom: 1px solid black;
+}
+
+.ham2-list-row-input-from {
+    width: 100px;
+}
+
+.ham2-list-row-input-to {
+    width: 160px;
+}
+
+.ham2-list-row-arrow {
+
+}
+
+.ham2-import-export-section {
+    display: flex;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.ham2-import-label {
+    border: 1px solid gray;
+    margin: 0;
+}
+
+.ham2-algo-name-wrapper {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background-color: #ffffff99;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ham2-place-word-btn, .ham2-clear-tape-btn, .ham2-check-btn, .ham2-to-first-state, .ham2-step-btn, .ham2-start-btn {
+    width: 210px;
+}
+
+.ham2-current-word {
+    font-family: Consolas, monospace;
+    font-size: 45px;
+}

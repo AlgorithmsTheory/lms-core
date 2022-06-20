@@ -120,3 +120,21 @@ $("[name=mt3-entity]").each(function(){
         j++;
 });
 
+
+ham2_changeSpecialSymbols();
+
+function ham2_changeSpecialSymbols() {
+    const ulEl = document.querySelector('.ham2-super-keyboard');
+    if (!ulEl) {
+        return;
+    }
+    ulEl.addEventListener('input', ev => {
+        const inputEl = ev.target.closest('input');
+        if (!inputEl) {
+            return;
+        }
+        if (inputEl.value.includes("\\l")) {
+            inputEl.value = inputEl.value.replaceAll('\\l', 'Λ');
+        }
+    });
+}

@@ -1,0 +1,379 @@
+div.mt2-container .mt2-place-word-btn,
+div.mt2-container .mt2-clear-tape-btn,
+div.mt2-container .mt2-check-btn,
+div.mt2-container .mt2-to-first-state,
+div.mt2-container .mt2-start-btn,
+div.mt2-container .mt2-step-btn,
+div.mt2-container .mt2-example-btn {
+    height: 48px;
+}
+
+div.mt2-container .mt2-example-btn:not(:first-child) {
+    margin-left: 7px;
+}
+
+
+
+div.mt2-container {
+    max-width: 1284px;
+    margin: 0 auto;
+    padding: 12px;
+    background-color: #e5e6e6;
+}
+
+div.mt2-help-container {
+    font-size: 26px;
+    max-width: 1284px;
+    margin: 0 auto;
+    padding: 12px;
+}
+
+div.mt2-help-container h3 {
+    font-size: 45px;
+}
+
+div.mt2-help-container h4 {
+    font-size: 30px;
+    text-align: center;
+}
+
+.mt2-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.mt2-header-h2 {
+    margin: 0;
+}
+
+div.mt2-container .mt2-tape {
+    margin-top: 20px;
+    display: flex;
+    height: 40px;
+    font-family: Consolas, monospace;
+}
+
+div.mt2-container .mt2-tape-left, div.mt2-container .mt2-tape-right {
+    width: 40px;
+    font-size: 30px;
+    padding: 0;
+    line-height: 40px;
+    vertical-align: top;
+    user-select: none;
+    transition: all .2s ease-out;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+div.mt2-container .mt2-tape-left:hover, div.mt2-container .mt2-tape-right:hover {
+    background-color: #ccf3eb;
+}
+
+div.mt2-container .mt2-tape-cell {
+    flex: 1 1 0%;
+    width: 0;
+    text-align: center;
+
+    font-size: 30px;
+    font-weight: 600;
+
+    height: auto;
+    padding: 0;
+    margin: 0;
+}
+
+div.mt2-container .mt2-tape-content {
+    flex: 1;
+    display: flex;
+}
+
+div.mt2-container .mt2-tape-left, div.mt2-container .mt2-tape-right, div.mt2-container .mt2-tape-cell {
+    background-color: transparent;
+    outline: 0;
+    border: 1px solid black;
+    border-left: 0;
+}
+
+div.mt2-container .mt2-tape-left {
+    border-left: 1px solid black;
+}
+
+/* ================================================================================================= */
+
+div.mt2-container .mt2-place-word-section, div.mt2-container .mt2-alphabet-section {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+div.mt2-container .mt2-algo-comment {
+    font-size: 25px;
+    color: black;
+    width: 100%;
+    display: block;
+    height: 80px;
+    margin: 0;
+    border: 0;
+    padding: 7px 7px;
+    line-height: 1.2em;
+}
+
+div.mt2-container .mt2-new-word, div.mt2-container .mt2-alphabet {
+    font-family: Consolas, monospace;
+    font-size: 20px;
+    color: rgb(49, 53, 52);
+    display: inline;
+
+    width: auto;
+    height: 48px;
+    vertical-align: middle;
+    margin: 0;
+    border: 0;
+}
+
+/* ================================================================================================= */
+
+div.mt2-container .mt2-table-section {
+    margin-top: 18px;
+    width: 100%;
+    overflow-x: auto;
+}
+
+div.mt2-container .mt2-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 24px;
+}
+
+div.mt2-container .mt2-table th {
+    padding: 5px 18px;
+}
+
+div.mt2-container .mt2-table th, div.mt2-container .mt2-table td {
+    border: 1px solid black;
+    text-align: center;
+    min-width: 150px;
+}
+
+div.mt2-container .mt2-table .mt2-state-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+div.mt2-container .mt2-table input[type="text"] {
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    border: 0;
+    outline: 0;
+    background: transparent;
+}
+
+div.mt2-container .mt2-table button {
+    width: 40px;
+    height: 40px;
+    border-radius: 9999px;
+    border: 1px solid black;
+    background: transparent;
+    outline: 0;
+    vertical-align: top;
+    line-height: 36px;
+}
+
+div.mt2-container .mt2-table .mt2-del-state-btn {
+    margin-right: 10px;
+}
+
+div.mt2-container .mt2-table button:hover {
+    border-color: blue;
+    color: blue;
+}
+
+div.mt2-container .mt2-examples-section {
+    margin-top: 18px;
+}
+
+div.mt2-container .mt2-examples-buttons-wrapper {
+    margin-top: 4px;
+}
+
+div.mt2-container .mt2-current-state {
+    font-weight: 600;
+    font-size: 24px;
+}
+
+div.mt2-container .mt2-errors {
+    margin-top: 5px;
+    color: #c73a3a;
+    font-size: 15px;
+}
+
+div.mt2-container .mt2-error {
+    letter-spacing: 0.1px;
+    padding: 15px 0;
+    margin: 0;
+}
+
+div.mt2-container .mt2-input-next-command {
+    background-color: #aaffaa !important;
+}
+
+
+.mt2-help-link-wrapper {
+    margin: 20px 0;
+}
+
+.mt2-help-link {
+    display: inline-block;
+    padding: 8px 20px;
+    border-bottom: 1px solid #0b76cc;
+    text-decoration: none !important;
+    color: #0b76cc !important;
+    transition: all .2s ease-in-out;
+}
+
+.mt2-help-link:hover {
+    background-color: #0b76cc;
+    color: white !important;
+}
+
+
+
+
+.mt2-toggle-scores-section {
+
+}
+
+
+
+.mt2-view-section {
+    display: flex;
+    gap: 20px;
+}
+
+.mt2-list-view-btn, .mt2-table-view-btn {
+    border: 1px solid green;
+    background-color: transparent;
+    padding: 0 15px;
+    outline: 0;
+    height: 44px;
+    color: green;
+    transition: all .2s ease-in-out;
+}
+
+.mt2-list-view-btn:hover, .mt2-table-view-btn:hover, .mt2-list-view-btn.mt2-view-btn-active, .mt2-table-view-btn.mt2-view-btn-active {
+    background-color: green;
+    color: white;
+}
+
+.mt2-list-section {
+    margin: 10px 0;
+}
+
+.mt2-list-section-rows {
+    padding: 12px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.mt2-list-add-row-btn {
+    margin-top: 12px;
+    display: inline-block;
+    background: #0aa89e;
+    border: 0;
+    outline: 0;
+    color: white;
+    height: 45px;
+    width: 45px;
+    text-align: center;
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.mt2-list-add-row-btn:hover, .mt2-list-add-row-btn:focus {
+    background: #08867e;
+}
+
+.mt2-list-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mt2-list-row-remove-btn, .mt2-list-row-up-btn, .mt2-list-row-down-btn {
+    background: transparent;
+    width: 45px;
+    height: 45px;
+    font-size: 21px;
+    border: 0;
+    outline: 0;
+    color: #888;
+}
+
+.mt2-list-row-remove-btn:hover, .mt2-list-row-remove-btn:focus,
+.mt2-list-row-up-btn:hover, .mt2-list-row-up-btn:focus,
+.mt2-list-row-down-btn:hover, .mt2-list-row-down-btn:focus {
+    background: #ccc;
+    color: #333;
+}
+
+div.mt2-container .mt2-list-row-input-from, div.mt2-container .mt2-list-row-input-to {
+    height: 48px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+    padding: 0;
+    background: transparent;
+    outline: 0;
+    text-align: center;
+    font-size: 18px;
+}
+
+div.mt2-container .mt2-list-row-input-from:focus, div.mt2-container .mt2-list-row-input-to:focus {
+    border-bottom: 1px solid black;
+}
+
+.mt2-list-row-input-from {
+    width: 100px;
+}
+
+.mt2-list-row-input-to {
+    width: 160px;
+}
+
+.mt2-list-row-arrow {
+
+}
+
+.mt2-import-export-section {
+    display: flex;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.mt2-import-label {
+    border: 1px solid gray;
+    margin: 0;
+}
+
+.mt2-algo-name-wrapper {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background-color: #ffffff99;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mt2-place-word-btn, .mt2-clear-tape-btn, .mt2-check-btn, .mt2-to-first-state, .mt2-step-btn, .mt2-start-btn {
+    width: 210px;
+}

@@ -31,7 +31,7 @@
                                     <div class="card-body no-padding">
                                         <div class="card-body height-6 scroll style-default-bright" style="height: 550px;">
 
-                                            <ul name="p_scents" class="list" data-sortable="true">
+                                            <ul name="p_scents" class="list ham2-super-keyboard" data-sortable="true">
                                                 @for($i = 1; $i <= 13; $i++)
                                                     
                                                 @if ($i == 1)
@@ -123,12 +123,8 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="btn-group">
-                                        <button type="button" class="btn ink-reaction btn-default-bright" name="sh">#</button>
-                                        <button type="button" class="btn ink-reaction btn-default-bright" name="one_tild">Õ</button>
                                         <button type="button" class="btn ink-reaction btn-default-bright" name="big_lambda">&lambda;</button>
-                                        <button type="button" class="btn ink-reaction btn-default-bright" name="bull">H</button>
-                                        <button type="button" class="btn ink-reaction btn-default-bright" name="delete">_</button>
-                                    </div> 
+                                    </div>
                                 </div>
                             </div>
                         </div>

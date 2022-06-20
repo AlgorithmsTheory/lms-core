@@ -10,6 +10,7 @@ namespace App\Http\Middleware;
 
 use App\Testing\Fine;
 use App\Testing\Test;
+use App\User;
 use Auth;
 use Closure;
 use Illuminate\Http\Request;
@@ -21,7 +22,9 @@ class StudentAccessForTest {
         $fine_class = new Fine();
         $id_test = strrev(explode('/',strrev($request->url()))[0]);
         $query_test = Test::whereId_test($id_test)->first();
-        if ($query_test->test_type == 'Контрольный'){
+        $role = User::whereId(Auth::user()['id'])->select('role')->first()->role;
+        $isAdmin = $role === 'Админ' || $role === 'Преподаватель';
+        if (!$isAdmin && $query_test->test_type == 'Контрольный'){
             $query = Fine::whereId_test($id_test)->whereId(Auth::user()['id'])->select('fine','access')->first();
             $total = $query_test->total;
             if (!is_null($query) && !$query->access){                                                                                   // если попытки нет
