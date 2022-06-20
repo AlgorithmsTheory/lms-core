@@ -14,9 +14,6 @@
             Пример:
             <div class="mt2-examples-buttons-wrapper"></div>
         </div>
-{{--        <div class="mt2-help-link-wrapper">--}}
-{{--            <a class="mt2-help-link" href="/algorithm/mt2help_alternative" target="_blank">Справка</a>--}}
-{{--        </div>--}}
     </div>
     <script>
         // Показать кнопку "Сделать шаг"

@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Emulators;
 
 
+use App\Utils\StringUtils;
 use Illuminate\Support\Facades\Log;
 
 class HAM2Machine
@@ -69,22 +70,22 @@ class HAM2Machine
                     $sourceIsLambda = false;
                 }
             }
-            $source = $this->mb_replace($source, $this->lambdaSymbol, '');
-            if (!$sourceIsLambda && !$this->mb_includes($this->currentWord, $source)) {
+            $source = StringUtils::mb_replace($source, $this->lambdaSymbol, '');
+            if (!$sourceIsLambda && !StringUtils::mb_includes($this->currentWord, $source)) {
                 continue;
             }
-            $isLastCommand = $this->mb_includes($dest, $this->lastCommandSymbol);
-            $isRemovingRule = $this->mb_includes($dest, $this->removingSymbol);
+            $isLastCommand = StringUtils::mb_includes($dest, $this->lastCommandSymbol);
+            $isRemovingRule = StringUtils::mb_includes($dest, $this->removingSymbol);
             if ($isRemovingRule) {
                 $dest = '';
             } else {
-                $dest = $this->mb_replace($dest, $this->lastCommandSymbol, '');
-                $dest = $this->mb_replace($dest, $this->lambdaSymbol, '');
+                $dest = StringUtils::mb_replace($dest, $this->lastCommandSymbol, '');
+                $dest = StringUtils::mb_replace($dest, $this->lambdaSymbol, '');
             }
             if ($sourceIsLambda) {
                 $this->currentWord = $dest . $this->currentWord;
             } else {
-                $this->currentWord = $this->mb_replace_first($this->currentWord, $source, $dest);
+                $this->currentWord = StringUtils::mb_replace_first($this->currentWord, $source, $dest);
             }
             return $isLastCommand;
         }
@@ -110,33 +111,5 @@ class HAM2Machine
             }
         }
         return $res;
-    }
-
-    ////////////////////////////////////////////////////////
-    ///////////// string utilities functions ///////////////
-    ////////////////////////////////////////////////////////
-
-    private function mb_includes($str, $subst) {
-        return mb_strpos($str, $subst) !== false;
-    }
-
-    private function mb_replace($str, $substr, $replacement) {
-        $parts = mb_split(preg_quote($substr), $str);
-        return implode($replacement, $parts);
-    }
-
-    private function mb_replace_first($str, $substr, $replacement) {
-        $pos = mb_strpos($str, $substr);
-        if ($pos === false) {
-            return $str;
-        }
-        return $this->mb_substr_replace($str, $replacement, $pos, mb_strlen($substr));
-    }
-
-    private function mb_substr_replace($original, $replacement, $position, $length)
-    {
-        $startString = mb_substr($original, 0, $position, 'UTF-8');
-        $endString = mb_substr($original, $position + $length, mb_strlen($original), 'UTF-8');
-        return $startString . $replacement . $endString;
     }
 }

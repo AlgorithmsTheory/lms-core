@@ -17,8 +17,6 @@
             <input type="file" class="mt2-import-input" style="display: none">
             <i class="md md-file-upload" style="line-height: 39px"></i>
         </label>
-{{--        <input type="file" class="mt2-import-input btn ink-reaction btn-raised btn-xs btn-primary">--}}
-{{--    /stackoverflow.com/questions/43649952/instruct-browser-to-make-user-select-location-for-downloaded-file--}}
         <div class="mt2-algo-name-wrapper" style="display: none">
             <input class="mt2-algo-name" type="text" placeholder="Название файла">
             <button class="mt2-export-apply-btn btn btn-primary">Подтвердить</button>
@@ -56,13 +54,6 @@
 </div>
 <div class="mt2-syntax-success" style="background-color: #aaffaa;max-width: max-content; display: none;">Проверка синтаксиса завершена успешно</div>
 <div class="mt2-errors"></div>
-{{--<div class="mt2-import-export-section" style="display: none">--}}
-{{--    <label class="mt2-import-label">--}}
-{{--        Импорт из:--}}
-{{--        <input class="mt2-import-input" type="file">--}}
-{{--    </label>--}}
-{{--    <button class="mt2-export-btn" type="button">Экспорт</button>--}}
-{{--</div>--}}
 <div class="mt2-list-section">
     <button class="mt2-list-add-row-btn" type="button">
         +

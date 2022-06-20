@@ -8,15 +8,6 @@ div.mt2-container .mt2-example-btn {
     height: 48px;
 }
 
-/*div.mt2-container .mt2-place-word-btn,*/
-/*div.mt2-container .mt2-clear-tape-btn,*/
-/*div.mt2-container .mt2-check-btn,*/
-/*div.mt2-container .mt2-to-first-state,*/
-/*div.mt2-container .mt2-start-btn,*/
-/*div.mt2-container .mt2-step-btn {*/
-/*    margin-left: 7px;*/
-/*}*/
-
 div.mt2-container .mt2-example-btn:not(:first-child) {
     margin-left: 7px;
 }
@@ -78,7 +69,6 @@ div.mt2-container .mt2-tape-left, div.mt2-container .mt2-tape-right {
 }
 
 div.mt2-container .mt2-tape-left:hover, div.mt2-container .mt2-tape-right:hover {
-    /*color: #0038ff;*/
     background-color: #ccf3eb;
 }
 

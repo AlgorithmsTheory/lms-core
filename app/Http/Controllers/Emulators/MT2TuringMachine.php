@@ -8,16 +8,21 @@ use Illuminate\Support\Facades\Log;
 
 class MT2TuringMachine
 {
-    // [
-    //   {
-    //     state: 'S0',
-    //     expressions: {
-    //       '0': 'R',
-    //       '1': 'R',
-    //       [lambdaSymbol]: `${lambdaSymbol} L s1`,
-    //     }
-    //   }
-    // ]
+    /**
+     * Has the following structure:
+     * [
+     *   {
+     *     state: 'S0',
+     *     expressions: {
+     *       '0': 'R',
+     *       '1': 'R',
+     *       [lambdaSymbol]: `${lambdaSymbol} L s1`,
+     *     }
+     *   }
+     * ]
+     *
+     * @var array
+     */
     private $automaton;
     private $alphabet;
     private $tape;

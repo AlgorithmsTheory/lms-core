@@ -738,17 +738,10 @@ class TestController extends Controller{
                 $debug_counter = $arguments['debug_counter'];
                 $solution = $array[2];
                 $should_increment_debug_counter = false;
-                // if ($type_name == 'Эмулятор Тьюринга') {
-                    $check_syntax_counter = $arguments['check_syntax_counter'];
-                    $run_counter = $arguments['run_counter'];
-                    $data = $question->check([$id_question, $debug_counter, $check_syntax_counter, $run_counter,
-                        $should_increment_debug_counter, $solution]);
-                // } else {
-                //    $run_counter = $arguments['run_counter'];
-                //    $steps_counter = $arguments['steps_counter'];
-                //    $data = $question->check([$id_question, $debug_counter, $run_counter, $steps_counter,
-                //        $should_increment_debug_counter, $solution]);
-                // }
+                $check_syntax_counter = $arguments['check_syntax_counter'];
+                $run_counter = $arguments['run_counter'];
+                $data = $question->check([$id_question, $debug_counter, $check_syntax_counter, $run_counter,
+                    $should_increment_debug_counter, $solution]);
             } else {
                 $data = $question->check($array);
             }

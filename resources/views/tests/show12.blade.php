@@ -14,7 +14,6 @@
 <input type="hidden" name="debug_counter" value="{{ $debug_counter }}">
 <input type="hidden" name="task" value="">
 @include('algorithm.mt2real_wrapper')
-{{--@include('algorithm.MTtest')--}}
 @if (!$is_adaptive)
     <div class="checkbox checkbox-styled checkbox-warning">
         <label>

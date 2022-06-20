@@ -51,20 +51,6 @@ class EmulatorController extends Controller {
     public static function HAMRun($machine, $inputWord) {
         return $machine->run($inputWord);
     }
-    
-//    public static function HAMRun($data) {
-//        $cmd = "/usr/local/bin/normal.sh";
-//        $task_file = tempnam(sys_get_temp_dir(), 'norm_');
-//        $task_answ = tempnam(sys_get_temp_dir(), 'norm_answ_');
-//        file_put_contents($task_file, $data);
-//        Log::debug('Data for Markov');
-//        Log::debug($data);
-//        $data = exec($cmd . " " . $task_file);
-//        unlink($task_file);
-//        unlink($task_answ);
-//        return $data;
-//    }
-
 
     public static function MTRun_($data) {
         $cmd = "/usr/local/bin/turing.sh";
@@ -109,7 +95,16 @@ class EmulatorController extends Controller {
         return $result;
     }
 
-    // $task and $task_id values not used by the function if $button_code is 'btnSteps' or 'btnRun'
+    /**
+     * $task and $task_id values not used by the function if $button_code is 'btnSteps' or 'btnRun'
+     *
+     * @param $task
+     * @param $task_id
+     * @param $test_id
+     * @param $button_code
+     * @param $counter
+     * @return array|null
+     */
     private function HAMCheckInternal($task, $task_id, $test_id, $button_code, $counter) {
         $counter--;
         $current_test = Result::getCurrentResult(Auth::user()['id'], $test_id);
@@ -161,41 +156,6 @@ class EmulatorController extends Controller {
         return $result_check;
     }
 
-
-
-//    public static function HAMCheckSequence($data, $test_seq) {
-//        Log::debug('Checking');
-//        $seq_true = 0;
-//        $seq_all = count($test_seq['input_word']);
-//        $total_cycle = 0;
-//
-//        for($i = 0; $i < $seq_all; $i++){
-//            $data = json_decode($data, true);
-//
-//            $test_seq['input_word'][$i] = str_replace("Λ", "", $test_seq['input_word'][$i]);
-//            $test_seq['input_word'][$i] = "Λ".$test_seq['input_word'][$i];
-//
-//            $data['str'] = $test_seq['input_word'][$i];
-//            $data = json_encode($data);
-//            Log::debug('Input: '.$data);
-//            $answer = EmulatorController::HAMRun($data);
-//            Log::debug('Output: '.$answer);
-//            $answer = json_decode($answer, true);
-//
-//            $total_cycle += $answer['cycle'];
-//
-//            $test_seq['output_word'][$i] = str_replace("Λ", "", $test_seq['output_word'][$i]);
-//            $answer['result'] = str_replace("Λ", "", $answer['result']);
-//            Log::debug('Expected result = '.$test_seq['output_word'][$i]);
-//            Log::debug('Actual result = '.$answer['result']);
-//
-//            if($answer['result'] == $test_seq['output_word'][$i]){
-//                $seq_true++;
-//            }
-//        }
-//        return [$seq_true, $seq_all, $total_cycle];
-//    }
-    
     public function MTCheck(Request $request) {
         $task = Request::input('task');
         $task_id = Request::input('task_id');
@@ -322,16 +282,9 @@ class EmulatorController extends Controller {
         $machine = new MT2TuringMachine($automaton, $alphabet);
         for($i = 0; $i < $seq_all; $i++){
             $inputWord = $test_seq['input_word'][$i];
-            // $inputWord = mb_substr($inputWord, 1, null, 'UTF-8');
             $outputWord = $test_seq['output_word'][$i];
-            // $outputWord = mb_substr($outputWord, 1, null, 'UTF-8');
             $answer = EmulatorController::MTRun($machine, $inputWord);
             $total_cycle += $answer['cycle'];
-            //Log::debug($i);
-            //Log::debug('user answer');
-            //Log::debug($answer['result']);
-            //Log::debug('right answer');
-            //Log::debug($outputWord);
             if(trim($answer['result']) == trim($outputWord)){
                 $seq_true++;
             }
@@ -346,8 +299,6 @@ class EmulatorController extends Controller {
         $data = json_decode($data, true);
         $list = $data['list'];
         $alphabet = $data['alphabet'];
-        //Log::debug('$data["list"]');
-        //Log::debug($list);
         $machine = new HAM2Machine($list, $alphabet);
         $lambdaSymbol = 'Λ';
         for($i = 0; $i < $seq_all; $i++){

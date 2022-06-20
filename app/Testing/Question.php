@@ -158,14 +158,22 @@ class Question extends Eloquent {
             $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points, 'choice' => $choice, 'right_percent' => 0);
             return $data;
         }
-        //передвигаем массив, чтобы первый элемент оказался последним
-        for ($i=0; $i < count($array)-1; $i++){
-            $array[$i] = $array[$i+1];
-        }
+        $this->shift_ar($array);
         //убираем из входного массива id вопроса, чтобы остались лишь выбранные варианты ответа
         array_pop($array);
         $question = QuestionTypeFactory::getQuestionTypeByTypeName($id, $type);
         return $question->check($array);
+    }
+
+    /**
+     * Передвигает массив так, чтобы первый элемент оказался последним.
+     *
+     * @param array $array
+     */
+    private static function shift_ar(&$array) {
+        for ($i=0; $i < count($array)-1; $i++){
+            $array[$i] = $array[$i+1];
+        }
     }
 
     /** По id вопроса возвращает массив, где первый элемент - номер лекции, второй - <раздел.тема> */

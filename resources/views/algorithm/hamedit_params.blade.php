@@ -44,10 +44,6 @@
             За запуск:
             <input class="tb-run" type="text" value="{{$fees->run_fee}}">
         </label>
-{{--        <label>--}}
-{{--            За отладку (запуск с шагами):--}}
-{{--            <input class="tb-steps" type="text" value="{{$fees->steps_fee}}">--}}
-{{--        </label>--}}
         <button class="btn-apply">Применить</button>
     </div>
 @stop

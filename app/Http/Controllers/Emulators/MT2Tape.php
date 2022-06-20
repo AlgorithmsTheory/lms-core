@@ -2,22 +2,38 @@
 
 namespace App\Http\Controllers\Emulators;
 
+use App\Utils\StringUtils;
 use Illuminate\Support\Facades\Log;
 
-// MT2Tape represents infinite tape of the Turing Machine.
+/**
+ * MT2Tape represents infinite tape of the Turing Machine.
+ *
+ * @author Michail Safronov
+ */
 class MT2Tape
 {
-    // $buffer - is an associative array int => str
-    //   where integer key is the position of the character on tape
-    //   and the string value is the character itself.
-    //   If no character is set on the position (e.g. lambdaSymbol), then
-    //   the key does not exist.
+    /**
+     * $buffer is an associative array int => str
+     * where integer key is the position of the character on tape
+     * and the string value is the character itself.
+     * If no character is set on the position (e.g. lambdaSymbol), then
+     * the key does not exist.
+     *
+     * @var array
+     */
     private $buffer;
 
-    // The symbol meaning nothing on the tape.
+    /**
+     * The symbol meaning nothing on the tape.
+     *
+     * @var string
+     */
     private $lambdaSymbol;
 
-    // $word is a string from which the tape should be created.
+    /**
+     *
+     * @param string $word A string from which the tape should be created.
+     */
     public function __construct($word) {
         $this->lambdaSymbol = 'λ';
         $this->buffer = $this->toTapePresentation($word);
@@ -27,8 +43,13 @@ class MT2Tape
         return $this->buffer;
     }
 
-    // getChar() returns the character which is set on the $pos position on the tape
-    //   or $lambdaSymbol if the character does not exist on the specified position.
+    /**
+     * getChar() returns the character which is set on the $pos position on the tape
+     * or $lambdaSymbol if the character does not exist on the specified position.
+     *
+     * @param number $pos
+     * @return string
+     */
     public function getChar($pos) {
         if (array_key_exists($pos, $this->buffer)) {
             return $this->buffer[$pos];
@@ -36,9 +57,15 @@ class MT2Tape
         return $this->lambdaSymbol;
     }
 
-    // setChar() place the $char character on the tape.
-    //   use $lambdaSymbol as $char-value if you need to clear the character
-    //   on the specified position on the tape.
+    /**
+     * setChar() place the $char character on the tape.
+     * use $lambdaSymbol as $char-value if you need to clear the character
+     * on the specified position on the tape.
+     *
+     * @param number $pos
+     * @param string $char
+     * @return void
+     */
     public function setChar($pos, $char) {
         if ($char === $this->lambdaSymbol) {
             unset($this->buffer[$pos]);
@@ -47,7 +74,7 @@ class MT2Tape
         }
     }
 
-    public function isClear() {
+    private function isClear() {
         return count($this->buffer) === 0;
     }
 
@@ -91,7 +118,7 @@ class MT2Tape
     }
 
     private function toTapePresentation($word) {
-        $tape = $this->utf8_split($word);
+        $tape = StringUtils::utf8_split($word);
         $keysToRemove = [];
         foreach ($tape as $ind => $symbol) {
             if ($symbol === $this->lambdaSymbol) {
@@ -102,11 +129,6 @@ class MT2Tape
             unset($tape[$key]);
         }
         return $tape;
-    }
-
-    // utf8_split() is the same as str_split(), but also works for special (e.g. chinese) characters
-    private function utf8_split($str) {
-        return preg_split('//u', $str, -1, PREG_SPLIT_NO_EMPTY);
     }
 
     public function getAlphabetErrors($alphabet) {
