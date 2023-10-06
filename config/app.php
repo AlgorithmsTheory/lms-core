@@ -139,7 +139,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Laravel\Tinker\TinkerServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-        Kendu\Mpdf\ServiceProvider::class,
+        Mccarlosen\LaravelMpdf\LaravelMpdfServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -199,7 +199,7 @@ return [
         'View'      => Illuminate\Support\Facades\View::class,
         'Form'      => Collective\Html\FormFacade::class,
         'HTML'      => Collective\Html\HtmlFacade::class,
-        'PDF'       => Kendu\Mpdf\Facades\Pdf::class,
+        'PDF'       => Mccarlosen\LaravelMpdf\Facades\LaravelMpdf::class
     ],
 
     'env' => env('APP_ENV', 'production'),
