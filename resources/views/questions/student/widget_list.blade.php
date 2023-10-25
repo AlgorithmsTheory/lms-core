@@ -32,20 +32,22 @@
 <br><br><br>
 <?php $i=1;?>
 @foreach($widgets as $widget)
-<br id="form{{$i}}">
-{!! $widget !!}
-<?php $i++;?>
+    <br id="form{{$i}}">
+    {!! $widget !!}
+    <?php $i++;?>
 @endforeach
+
 {!! Form::open(['method' => 'PATCH', 'route' => 'question_checktest', 'id' => 'super-form', 'name' => 'super', 'onsubmit' => 'return sendForm(true);']) !!}
-@for ($i = 0; $i < $amount; $i++)
-<input id="super{{$i}}" type="hidden" name="{{$i}}" value="">
-@endfor
-<input id="amount" type="hidden" name="amount" value="{{ $amount }}">
-<input id="id_test" type="hidden" name="id_test" value="{{ $id_test }}">
+    @for ($i = 0; $i < $amount; $i++)
+        <input id="super{{$i}}" type="hidden" name="{{$i}}" value="">
+    @endfor
+    <input id="amount" type="hidden" name="amount" value="{{ $amount }}">
+    <input id="id_test" type="hidden" name="id_test" value="{{ $id_test }}">
     <div class="col-sm-6">
         <input id="check" onClick="fillSuper()" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-primary" type="submit" name="check" value="Отправить">
     </div>
 {!! Form::close() !!}
+
 @if ($test_type == 'Тренировочный')
     <div class="col-sm-6">
         {!! Form::open(['method' => 'POST', 'route' => 'drop_test', 'id' => 'drop-test', 'name' => 'drop_test']) !!}
@@ -79,6 +81,8 @@
     {!! Form::close() !!}
 @endif
 
+<input id="result_id" type="hidden" value="{{$result_id}}" />
+
 {!! HTML::script('js/toolbar.js') !!}
 {!! HTML::script('js/algorithms/superScript.js') !!}
 
@@ -109,6 +113,8 @@
 
 {!! HTML::script('js/algorithm/mt2.js') !!}
 {!! HTML::script('js/algorithm/ham2.js') !!}
+
+{!! HTML::script('js/algorithm/mt2ham2_autosave.js') !!}
 <br>
 </section>
 </body>

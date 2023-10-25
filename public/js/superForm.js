@@ -89,8 +89,8 @@ function sendForm(status){
 
 function fillSuper(){
     // Execute Turing program before send result
-    window.mt2SubmitAllTasks();
-    window.ham2SubmitAllTasks();
+    window.mt2List.submit();
+    window.ham2List.submit();
     // Execute Post program before send result
     var cnt = 0;
     $("[name^=post-entity]").each(function(){
