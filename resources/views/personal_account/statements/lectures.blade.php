@@ -2,9 +2,9 @@
 <br>
 <table class="table table-condensed table-bordered" data-id-course_plan="{{$course_plan->id_course_plan}}">
     <tr>
-        <td rowspan="2" class="warning" style="width: 20px">Группа</td>
-        <td rowspan="2" class="warning" style="width: 20px">Фамилия</td>
-        <td rowspan="2" class="warning" style="width: 20px">Имя</td>
+        <td rowspan="2" class="warning" style="width: 20px;">Группа</td>
+        <td rowspan="2" class="warning" style="width: 20px;">Фамилия</td>
+        <td rowspan="2" class="warning" style="width: 20px;">Имя</td>
         @foreach($course_plan->section_plans as $section_plan)
             <td colspan="{{$section_plan->lecture_plans->count() + 1}}" class="info">{{$section_plan->section_num}} Раздел
             </td>
@@ -13,7 +13,6 @@
     <tr class="active">
         @foreach($course_plan->section_plans as $section_plan)
             @foreach($section_plan->lecture_plans as $lecture_plan)
-
                     <td>{{$lecture_plan->lecture_plan_num}}</td>
             @endforeach
             <td>Итог</td>
@@ -22,9 +21,9 @@
     </tr>
     <tbody id="target">
     @foreach($statement_lecture as $statement)
-            <tr id ="{{$statement['user']->id}}">
-            <td>{{$statement['user']->group_name}}</td>
-            <td>{{$statement['user']->last_name}}</td>
+        <tr id ="{{$statement['user']->id}}">
+            <td style="position: sticky; left: 0; z-index: 3; background: #fff;">{{$statement['user']->group_name}}</td>
+            <td style="position: sticky; left: 0; z-index: 3; background: #fff;">{{$statement['user']->last_name}}</td>
             <td>{{$statement['user']->first_name}}</td>
             @foreach($statement['lecture_passes'] as $lecture_sections)
                 @foreach($lecture_sections as $lecture_passes)
@@ -44,7 +43,7 @@
                 @endforeach
                 <td>{{round($statement['ballsBySections'][$loop->index], 2)}}</td>
             @endforeach
-            </tr>
+        </tr>
     @endforeach
     <tr class="functionalty_tr">
         <td></td>
