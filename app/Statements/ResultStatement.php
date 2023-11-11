@@ -30,7 +30,8 @@ class ResultStatement {
         return explode(' ', $stringVal)[0];
     }
 
-    private function findStatementByLastNameFirstWord($statements, $lastNameFirstWord) {
+    // На самом деле ищет в первом слове фамилии, если фамилия состоит из 2х слов.
+    private function findStatementByLastName($statements, $lastNameFirstWord) {
         foreach ($statements as $stat) {
             if ($this->getFirstWord($stat['user']->last_name) == $lastNameFirstWord) {
                 return $stat;
@@ -39,19 +40,47 @@ class ResultStatement {
         return null;
     }
 
+    // Возвращает массив всех $statement'ов, которые не
+    // связаны с пользователями, id'шники которых перечислены в
+    // массиве $thisUserIdList.
+    private function findOthers($statements, $thisUserIdList) {
+        $res = [];
+        foreach ($statements as $stat) {
+            if (!in_array($stat['user']['id'], $thisUserIdList)) {
+                $res[] = $stat;
+            }
+        }
+        return $res;
+    }
+
+    private function setBgColor($sheet, $cellRange, $color) {
+        $sheet->getStyle($cellRange)
+            ->getFill()
+            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+            ->getStartColor()
+            ->setARGB($color);
+    }
+
     // $isForExam: true для экзаменационной ведомости, false - для зачётной ведомости
     public function getExcelLoadOut($plan, $statements, $file, $isForExam) {
         Excel::load($file, function($doc) use ($plan, $statements, $isForExam) {
             $sheet = $doc->setActiveSheetIndex(0);
-            $row = 9;
+            $startRow = 9;
+            $row = $startRow;
+            $filledUserIdList = [];
+            $maxCol = ord('A');
             while (true) {
                 $fullName = trim($sheet->getCell("B" . $row));
                 if ($fullName == '') {
                     break;
                 }
-                $lastNameFirstWord = $this->getFirstWord($fullName);
-                $stat = $this->findStatementByLastNameFirstWord($statements, $lastNameFirstWord);
-                // $stat can be null here
+                $lastName = $this->getFirstWord($fullName);
+                $stat = $this->findStatementByLastName($statements, $lastName);
+                if ($stat === null) {
+                    $this->setBgColor($sheet, 'B' . $row, 'FFFF00');
+                } else {
+                    $filledUserIdList[] = $stat['user']['id'];
+                }
                 $col = ord('F');
                 foreach ($plan->section_plans as $ind => $section_plan) {
                     $sectionResult = $stat == null ? 0 : $stat['sections'][$ind]['total'];
@@ -90,6 +119,20 @@ class ResultStatement {
                 $col++;
                 $markBologna = $stat == null ? 'F' : $stat['mark_bologna'];
                 $sheet->setCellValue(chr($col) . $row, $markBologna);
+                if ($col > $maxCol) {
+                    $maxCol = $col;
+                }
+                $row++;
+            }
+            $colForNotIncludedStats = chr($maxCol + 2);
+            $notIncludedStatements = $this->findOthers($statements, $filledUserIdList);
+            $row = $startRow;
+            foreach ($notIncludedStatements as $st) {
+                $user = $st['user'];
+                $name = "$user->last_name $user->first_name";
+                $cellId = $colForNotIncludedStats . $row;
+                $sheet->setCellValue($cellId, $name);
+                $this->setBgColor($sheet, $cellId, 'FF0000');
                 $row++;
             }
         })->store('xlsx', storage_path('app/public/excel'), true);
