@@ -62,22 +62,18 @@ class Theorem extends QuestionType {
             $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для доказательства
                         <tr><td height="250px">'.$this->answer.'</td></tr>
                       </table><br>';
-            $fpdf->WriteHTML($html);
-        }
-        else{
-            $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для формулировки
-                            <tr><td height="80px"></td></tr>
-                      </table>';
-            $html .= '<p>Доказательство:</p>';
-            if ($paper_savings) {
-                $height_tr = QuestionType::PAPER_SAVING_HEIGHT_ANSWER;
-            } else {
+        } else {
+            if (!$paper_savings) {
+                $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для формулировки
+                                <tr><td height="80px"></td></tr>
+                        </table>';
+                $html .= '<p>Доказательство:</p>';
                 $height_tr = $this::ORIGIN_HEIGHT_ANSWER;
+                $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для доказательства
+                            <tr><td height="'. $height_tr . '"></td></tr>
+                        </table><br>';
             }
-            $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для доказательства
-                        <tr><td height="'. $height_tr . '"></td></tr>
-                      </table><br>';
-            $fpdf->WriteHTML($html);
         }
+        $fpdf->WriteHTML($html);
     }
 } 

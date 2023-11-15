@@ -73,9 +73,9 @@ class GeneratorController extends Controller {
 
     public function index(){
         $tests = [];
-        $query = Test::whereArchived(0)
+        $tests = Test::whereArchived(0)
                     ->select('id_test', 'test_name', 'test_type')->get();
-        foreach ($query as $test){
+        foreach ($tests as $test){
             if ($test->test_type != 'Тренировочный'){
                 array_push($tests, $test->test_name);
             }
@@ -93,7 +93,7 @@ class GeneratorController extends Controller {
         $id_test = Test::whereTest_name($test_name)->select('id_test')->first()->id_test;
         $amount = $test->getAmount($id_test);                                                                                // кол-во вопрососв в тесте
 
-        $today =  date("Y-m-d H-i-s");
+        $today = date("Y-m-d H-i-s");
         $dir = 'archive/pdf_tests/'.Mypdf::translit($test_name).' '.$today;
         mkdir($dir);
 

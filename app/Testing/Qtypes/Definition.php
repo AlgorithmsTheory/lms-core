@@ -69,21 +69,29 @@ class Definition extends QuestionType {
         $html = '<table><tr><td style="text-decoration: underline; font-size: 130%;">Вопрос '.$count;
         $html .= '  Запишите определения</td></tr></table>';
 
-        $html .= '<table border="1" style="border-collapse: collapse;" width="100%">';                                                          //чертим шапку
-        $html .= '<tr><td width="20%" align="center">Термин</td>
-                      <td width="80%" align="center">Определение</td></tr>';
-
-        for ($i = 0; $i < count($text); $i++){
-            $html .= '<tr><td>'.$text[$i].'</td>';                                                                      //утверждение
-            if ($answered){                                                                                             //пдф с ответами                                                                         //если истинно
-                    $html .= '<td>'.$answers[$i].'</td>';
+        if ($paper_savings && !$answered) {
+            for ($i = 0; $i < count($text); $i++){
+                $num = $i + 1;
+                // Термин
+                $html .= '<p>' . $num . '. ' . $text[$i] . '</p>';
             }
-            else {                                                                                                      //пдф без ответов
-                $html .= '<td height="85px"></td>';
+        } else {
+            $html .= '<table border="1" style="border-collapse: collapse;" width="100%">';                                                          //чертим шапку
+            $html .= '<tr><td width="20%" align="center">Термин</td>
+                          <td width="80%" align="center">Определение</td></tr>';
+    
+            for ($i = 0; $i < count($text); $i++){
+                $html .= '<tr><td>'.$text[$i].'</td>';                                                                      //утверждение
+                if ($answered){                                                                                             //пдф с ответами                                                                         //если истинно
+                        $html .= '<td>'.$answers[$i].'</td>';
+                }
+                else {                                                                                                      //пдф без ответов
+                    $html .= '<td height="85px"></td>';
+                }
+                $html .= '</tr>';
             }
-            $html .= '</tr>';
+            $html .= '</table><br>';
         }
-        $html .= '</table><br>';
         $fpdf->WriteHTML($html);
     }
 } 
