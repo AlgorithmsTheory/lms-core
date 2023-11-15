@@ -70,11 +70,12 @@ class Definition extends QuestionType {
         $html .= '  Запишите определения</td></tr></table>';
 
         if ($paper_savings && !$answered) {
+            $html .= '<table border="1" style="border-collapse: collapse;">';
             for ($i = 0; $i < count($text); $i++){
-                $num = $i + 1;
                 // Термин
-                $html .= '<p>' . $num . '. ' . $text[$i] . '</p>';
+                $html .= '<tr><td>' . $text[$i] . '</td></tr>';
             }
+            $html .= '</table><br>';
         } else {
             $html .= '<table border="1" style="border-collapse: collapse;" width="100%">';                                                          //чертим шапку
             $html .= '<tr><td width="20%" align="center">Термин</td>
