@@ -72,15 +72,15 @@ class GeneratorController extends Controller {
     }
 
     public function index(){
-        $tests = [];
+        $testNames = [];
         $tests = Test::whereArchived(0)
                     ->select('id_test', 'test_name', 'test_type')->get();
         foreach ($tests as $test){
             if ($test->test_type != 'Тренировочный'){
-                array_push($tests, $test->test_name);
+                array_push($testNames, $test->test_name);
             }
         }
-        return view('generator.index', compact('tests'));
+        return view('generator.index', compact('testNames'));
     }
 
     /** Генерирует pdf файлы с тестом с заданным количеством вариантов */
