@@ -19,6 +19,7 @@ div.ham2-container {
     margin: 0 auto;
     padding: 12px;
     background-color: #e5e6e6;
+    overflow-x: auto;
 }
 
 div.ham2-help-container {
