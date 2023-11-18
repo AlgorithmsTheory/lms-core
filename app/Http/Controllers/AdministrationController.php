@@ -115,7 +115,11 @@ class AdministrationController extends Controller{
     }
 
     public function manage_groups(){
-        $teachers = User::whereRole("Преподаватель")->orderBy('id', 'desc')->get();
+        $teachers = User::
+            join('groups', 'groups.group_id', '=', 'users.group')
+            ->where('users.role', 'Преподаватель')
+            ->where('groups.archived', 0)
+            ->orderBy('id', 'desc')->get();
         $group_set = Group::where('archived', 0)->get();
         $groups = TeacherHasGroup::join('users', 'teacher_has_group.user_id', '=', 'users.id')
             ->join('groups', 'groups.group_id', '=', 'teacher_has_group.group')
