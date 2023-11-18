@@ -278,4 +278,43 @@ class AdministrationController extends Controller{
     public static function getAdminPanel(){
         return view('personal_account/adminPanel');
     }
+
+    public function manage_groups_elite() {
+        /*
+        $teachers = User::
+            join('groups', 'groups.group_id', '=', 'users.group')
+            ->where('users.role', 'Преподаватель')
+            ->where('groups.archived', 0)
+            ->orderBy('id', 'desc')->get();
+        $group_set = Group::where('archived', 0)->get();
+        $groups = TeacherHasGroup::join('users', 'teacher_has_group.user_id', '=', 'users.id')
+            ->join('groups', 'groups.group_id', '=', 'teacher_has_group.group')
+            ->where('groups.archived', 0)
+            ->select('teacher_has_group.user_id', 'teacher_has_group.group', 'teacher_has_group.id', 'users.first_name', 'users.last_name', 'groups.group_name')
+            ->get();
+        return view('personal_account/manage_groups', compact('teachers', 'groups', 'group_set'));
+        */
+        $groupsSrc = Group::
+            where('archived', 0)
+            ->orderBy('group_id', 'desc')
+            ->get();
+        $groups = [];
+        foreach ($groupsSrc as $group) {
+            $teachers = TeacherHasGroup::
+                join('users', 'teacher_has_group.user_id', '=', 'users.id')
+                ->where('teacher_has_group.group', $group->group_id)
+                ->orderBy('users.last_name')
+                ->orderBy('users.first_name')
+                ->select('users.id', 'users.first_name', 'users.last_name')
+                ->get();
+            $groups[] = [
+                'id' => $group->group_id,
+                'name' => $group->group_name,
+                'teachers' => $teachers,
+            ];
+        }
+        $teacher_has_group = TeacherHasGroup::get();
+        
+        return view('personal_account/manage_groups_elite', compact('groups'));
+    }
 }
