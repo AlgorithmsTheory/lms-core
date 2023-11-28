@@ -1,0 +1,97 @@
+.mge-root {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 30px;
+}
+
+@media (min-width: 540px) {
+  .mge-root {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 940px) {
+  .mge-root {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1150px) {
+  .mge-root {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.mge-card {
+  position: relative;
+  background: #fff;
+  padding: 20px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+}
+
+.mge-card-group {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.mge-card-teachers {
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.mge-card-teacher {
+  border: 1px solid #eee;
+  border-radius: 999px;
+  padding: 4px 15px;
+  flex: 0 0 auto;
+}
+
+.mge-card-btn-add {
+  position: absolute;
+  right: 20px;
+  top: 17px;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  /* border: 1px solid #008cba; */
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 12px;
+  transition: all .2s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #008cba;
+}
+
+.mge-card-btn-add:hover {
+  background: #008cba;
+  color: #fff;
+}
+
+.mge-modal-bg {
+  background: #0006;
+}
+
+.mge-modal-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.mge-modal-title {
+  font-size: 24px;
+}
+
+.mge-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
