@@ -284,18 +284,113 @@ class AdministrationController extends Controller{
     // BEGIN manage groups elite
     // -------------------------
 
+    /**
+     * returns [
+     *  {
+     *      id,
+     *      lastName,
+     *      firstName,
+     *  },
+     *  ...
+     * ]
+     */
+    private function loadTeachers($teacherIds = null) {
+        $teachers = User::
+            join('groups', 'groups.group_id', '=', 'users.group')
+            ->where('groups.group_name', 'Админы')
+            ->where('users.role', 'Преподаватель');
+        if ($teacherIds !== null) {
+            $teachers = $teachers->whereIn('users.id', $teacherIds);
+        }
+        return $teachers
+            ->orderBy('users.id', 'desc')
+            ->get()
+            ->map(function($x) {
+                return $this->convertTeacher($x);
+            })
+            ->values();
+    }
+
+    private function convertTeacher($teacher) {
+        return [
+            'id' => $teacher->id,
+            'lastName' => $teacher->last_name,
+            'firstName' => $teacher->first_name,
+        ];
+    }
+
+    /**
+     * returns [
+     *  {
+     *      id,
+     *      name,
+     *  },
+     *  ...
+     * ]
+     */
+    private function loadGroups($groupIds = null) {
+        $groups = Group::
+            where('archived', 0)
+            ->where('group_name', '!=', 'Админы');
+        if ($groupIds !== null) {
+            $groups = $groups->whereIn('group_id', $groupIds);
+        }
+        return $groups
+            ->orderBy('group_id', 'desc')
+            ->get()->map(function ($x) {
+                return $this->convertGroup($x);
+            })->values();
+    }
+
+    private function convertGroup($group) {
+        return [
+            'id' => $group->group_id,
+            'name' => $group->group_name,
+        ];
+    }
+
+    private function loadTeachersByGroup($groupId) {
+        $teacherIds = TeacherHasGroup::
+            where('group', $groupId)
+            ->get()
+            ->map(function ($x) {
+                return $x->user_id;
+            })
+            ->values();
+        return $this->loadTeachers($teacherIds);
+    }
+
+    private function loadGroupsByTeacher($teacherId) {
+        $groupIds = TeacherHasGroup::
+            where('user_id', $teacherId)
+            ->get()
+            ->map(function ($x) {
+                return $x->group;
+            })
+            ->values();
+        return $this->loadGroups($groupIds);
+    }
+
     public function manage_groups_elite() {
-        $groupsSrc = $this->getGroups();
+        $groupsSrc = $this->loadGroups();
         $groups = [];
         foreach ($groupsSrc as $group) {
-            $teachers = $this->getTeachersByGroup($group->group_id);
-            $groups[] = [
-                'id' => $group->group_id,
-                'name' => $group->group_name,
-                'teachers' => $teachers,
-            ];
+            $groups[] = array_merge($group, [
+                'teachers' => $this->loadTeachersByGroup($group['id']),
+            ]);
         }
         return view('personal_account/manage_groups_elite', compact('groups'));
+    }
+
+    public function manage_groups_by_teachers_elite() {
+        $teachersSrc = $this->loadTeachers();
+        $teachers = [];
+        foreach ($teachersSrc as $teacher) {
+            $teachers[] = array_merge($teacher, [
+                'groups' => $this->loadGroupsByTeacher($teacher['id']),
+            ]);
+        }
+        return view('personal_account/manage_groups_by_teachers_elite', compact('teachers'));
     }
 
     public function mge_other_teachers(Request $request) {
@@ -340,6 +435,36 @@ class AdministrationController extends Controller{
         return response()->json($teachers->values());
     }
 
+    public function mge_other_groups(Request $request) {
+        $data = $this->getData($request);
+        $groupId = $data->groupId;
+
+        $group = $this->getGroup($groupId);
+        $allTeachers = $this->getTeachers();
+        $groupTeachers = $this->getTeachersByGroup($groupId);
+        $otherTeachers = $this->excludeTeachers($allTeachers, $groupTeachers);
+
+        $res = [
+            'group' => [
+                'id' => $group->group_id,
+                'name' => $group->group_name,
+            ],
+            'otherTeachers' => $otherTeachers->values(),
+        ];
+        return response()->json($res);
+    }
+
+    public function mge_add_groups_to_teacher(Request $request) {
+        $data = $this->getData($request);
+        $groupIds = $data->groupIds;
+        $teacherId = $data->teacherId;
+        foreach ($groupIds as $id) {
+            TeacherHasGroup::insert(['user_id' => $teacherId, 'group' => $id]);
+        }
+        $groups = $this->getGroupsByTeacher($teacherId);
+        return response()->json($groups->values());
+    }
+
     private function getGroup($id) {
         return Group::
             whereGroupId($id)
@@ -354,12 +479,24 @@ class AdministrationController extends Controller{
             ->get();
     }
 
+    private function getGroupsByTeacher($teacherId) {
+        return TeacherHasGroup::
+            join('groups', 'teacher_has_group.group', '=', 'groups.group_id')
+            ->where('teacher_has_group.user_id', $teacherId)
+            ->where('groups.archived', 0)
+            ->where('groups.group_name', '!=', 'Админы')
+            ->orderBy('groups.group_name')
+            ->select('groups.group_id', 'groups.group_name')
+            ->get();
+    }
+
     private function getTeachers() {
         return User::
             join('groups', 'groups.group_id', '=', 'users.group')
             ->where('users.role', 'Преподаватель')
             ->where('groups.archived', 0)
-            ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')
+            ->get();
     }
 
     private function getTeachersByGroup($groupId) {

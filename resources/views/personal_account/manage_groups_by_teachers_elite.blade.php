@@ -16,16 +16,16 @@
 @section('content')
     <div class="mge-root">
         @foreach ($teachers as $t)
-            <div class="mge-card" data-teacher-id="{{ $t->id }}">
+            <div class="mge-card" data-teacher-id="{{ $t['id'] }}">
                 <div class="mge-card-teacher">
-                    {{ $t->last_name }}
-                    {{ $t->first_name }}
+                    {{ $t['lastName'] }}
+                    {{ $t['firstName'] }}
                 </div>
                 <div class="mge-card-groups">
-                    @foreach ($t->groups as $g)
+                    @foreach ($t['groups'] as $g)
                         <div class="mge-card-group">
                             {{ $g['name'] }}
-                            <button type="button" class="close mge-remove-group" data-group-id="{{ $g['id'] }}">
+                            <button type="button" class="close mge-remove-group" data-group-id="{{ $g->group_id }}">
                                 &times;
                             </button>
                         </div>

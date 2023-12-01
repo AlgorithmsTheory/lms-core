@@ -23,9 +23,9 @@
                 <div class="mge-card-teachers">
                     @foreach ($g['teachers'] as $t)
                         <div class="mge-card-teacher">
-                            {{ $t->last_name }}
-                            {{ $t->first_name }}
-                            <button type="button" class="close mge-remove-teacher" data-teacher-id="{{ $t->id }}">
+                            {{ $t['lastName'] }}
+                            {{ $t['firstName'] }}
+                            <button type="button" class="close mge-remove-teacher" data-teacher-id="{{ $t['id'] }}">
                                 &times;
                             </button>
                         </div>

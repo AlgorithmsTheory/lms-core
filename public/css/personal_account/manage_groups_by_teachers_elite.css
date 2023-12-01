@@ -33,20 +33,20 @@
   box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
 }
 
-.mge-card-group {
+.mge-card-teacher {
   text-align: center;
   font-size: 16px;
   font-weight: 500;
 }
 
-.mge-card-teachers {
+.mge-card-groups {
   font-size: 12px;
   display: flex;
   flex-direction: column;
   gap: 9px;
 }
 
-.mge-card-teacher {
+.mge-card-group {
   border: 1px solid #eee;
   border-radius: 999px;
   padding: 4px 15px;

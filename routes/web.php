@@ -384,6 +384,10 @@ Route::post('mge_other_teachers', ['as' => 'mge_other_teachers', 'uses' => 'Admi
 Route::post('mge_add_teachers_to_group', ['as' => 'mge_add_teachers_to_group', 'uses' => 'AdministrationController@mge_add_teachers_to_group', 'middleware' => ['general_auth','admin']]);
 Route::post('mge_remove_teacher_from_group', ['as' => 'mge_remove_teacher_from_group', 'uses' => 'AdministrationController@mge_remove_teacher_from_group', 'middleware' => ['general_auth','admin']]);
 
+Route::get('manage_groups_by_teachers_elite', ['as' => 'manage_groups_by_teachers_elite', 'uses' => 'AdministrationController@manage_groups_by_teachers_elite', 'middleware' => ['general_auth','admin']]);
+Route::post('mge_other_groups', ['as' => 'mge_other_groups', 'uses' => 'AdministrationController@mge_other_groups', 'middleware' => ['general_auth','admin']]);
+Route::post('mge_add_groups_to_teacher', ['as' => 'mge_add_groups_to_teacher', 'uses' => 'AdministrationController@mge_add_groups_to_teacher', 'middleware' => ['general_auth','admin']]);
+
 Route::get('manage_news', ['as' => 'manage_news', 'uses' => 'AdministrationController@manage_news', 'middleware' => ['general_auth', 'admin']]);
 Route::post('manage_news/add_news', ['as' => 'add_news', 'uses' => 'AdministrationController@add_news', 'middleware' => ['general_auth', 'admin']]);
 Route::post('manage_news/delete', ['as' => 'delete_news', 'uses' => 'AdministrationController@delete_news', 'middleware' => ['general_auth', 'admin']]);
