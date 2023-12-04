@@ -375,7 +375,7 @@ Route::post('verify_students/tutor', ['as' => 'add_tutor', 'uses' => 'Administra
 Route::post('verify_students/change_group', ['as' => 'change_group', 'uses' => 'AdministrationController@change_group', 'middleware' => ['general_auth', 'admin']]);
 Route::post('verify_students/remove_user', ['as' => 'remove_user', 'uses' => 'AdministrationController@remove_user', 'middleware' => ['general_auth', 'admin']]);
 Route::get('change_role', ['as' => 'change_role', 'uses' => 'AdministrationController@change_role', 'middleware' => ['general_auth', 'admin']]);
-Route::get('manage_groups', ['as' => 'manage_groups', 'uses' => 'AdministrationController@manage_groups', 'middleware' => ['general_auth','admin']]);
+Route::get('manage_groups', ['as' => 'manage_groups', 'uses' => 'AdministrationController@manage_groups_elite', 'middleware' => ['general_auth','admin']]);
 Route::post('manage_groups/add_group', ['as' => 'add_group', 'uses' => 'AdministrationController@add_group', 'middleware' => ['general_auth', 'admin']]);
 Route::post('manage_groups/delete_group', ['as' => 'delete_group', 'uses' => 'AdministrationController@delete_group', 'middleware' => ['general_auth', 'admin']]);
 
