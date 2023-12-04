@@ -389,6 +389,7 @@ Route::get('pashalka', ['as' => 'pashalka', 'uses' => 'AdministrationController@
 Route::get('manage_groups/group_set', ['as' => 'group_set', 'uses' => 'AdministrationController@add_groups', 'middleware' => ['general_auth', 'admin']]);
 Route::post('manage_groups/group_set/add', ['as' => 'add_group_to_set', 'uses' => 'AdministrationController@add_group_to_set', 'middleware' => ['general_auth', 'admin']]);
 Route::post('manage_groups/group_set/delete', ['as' => 'delete_group_from_set', 'uses' => 'AdministrationController@delete_group_from_set', 'middleware' => ['general_auth', 'admin']]);
+Route::post('manage_groups/group_set/restore', ['as' => 'archived_group_restore', 'uses' => 'AdministrationController@archived_group_restore', 'middleware' => ['general_auth', 'admin']]);
 
 //архивный модуль
 Route::get('storage', ['as' => 'archive_index', 'uses' => 'ArchiveController@index', 'middleware' => ['general_auth', 'admin']]);

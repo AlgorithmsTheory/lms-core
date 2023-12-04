@@ -88,6 +88,13 @@ class AdministrationController extends Controller{
     }
 
 
+    public function archived_group_restore(Request $request){
+        $id = json_decode($request->input('number'),true);
+        Group::where('group_id', $id)->update(['archived' => 0]);
+        return $id;
+    }
+
+
     public function change_group(Request $request){
         $id = json_decode($request->input('id'),true);
         $value = $request->input('value');
