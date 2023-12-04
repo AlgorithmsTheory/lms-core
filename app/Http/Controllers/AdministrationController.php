@@ -284,6 +284,25 @@ class AdministrationController extends Controller{
     // BEGIN manage groups elite
     // -------------------------
 
+    private function getData(Request $request) {
+        return json_decode($request->input('data'), false);
+    }
+
+    private function convertTeacher($teacher) {
+        return [
+            'id' => $teacher->id,
+            'lastName' => $teacher->last_name,
+            'firstName' => $teacher->first_name,
+        ];
+    }
+
+    private function convertGroup($group) {
+        return [
+            'id' => $group->group_id,
+            'name' => $group->group_name,
+        ];
+    }
+
     /**
      * returns [
      *  {
@@ -311,12 +330,20 @@ class AdministrationController extends Controller{
             ->values();
     }
 
-    private function convertTeacher($teacher) {
-        return [
-            'id' => $teacher->id,
-            'lastName' => $teacher->last_name,
-            'firstName' => $teacher->first_name,
-        ];
+    /**
+     * returns null or
+     *  {
+     *      id,
+     *      lastName,
+     *      firstName,
+     *  }
+     */
+    private function loadTeacher($teacherId) {
+        $teachers = $this->loadTeachers([$teacherId]);
+        if (count($teachers) <= 0) {
+            return null;
+        }
+        return $teachers[0];
     }
 
     /**
@@ -342,11 +369,19 @@ class AdministrationController extends Controller{
             })->values();
     }
 
-    private function convertGroup($group) {
-        return [
-            'id' => $group->group_id,
-            'name' => $group->group_name,
-        ];
+    /**
+     * returns null or
+     *  {
+     *      id,
+     *      name,
+     *  }
+     */
+    private function loadGroup($groupId) {
+        $groups = $this->loadGroups([$groupId]);
+        if (count($groups) <= 0) {
+            return null;
+        }
+        return $groups[0];
     }
 
     private function loadTeachersByGroup($groupId) {
@@ -397,17 +432,30 @@ class AdministrationController extends Controller{
         $data = $this->getData($request);
         $groupId = $data->groupId;
 
-        $group = $this->getGroup($groupId);
-        $allTeachers = $this->getTeachers();
-        $groupTeachers = $this->getTeachersByGroup($groupId);
-        $otherTeachers = $this->excludeTeachers($allTeachers, $groupTeachers);
+        $group = $this->loadGroup($groupId);
+        $allTeachers = $this->loadTeachers();
+        $groupTeachers = $this->loadTeachersByGroup($groupId);
+        $otherTeachers = $this->subtract($allTeachers, $groupTeachers);
 
         $res = [
-            'group' => [
-                'id' => $group->group_id,
-                'name' => $group->group_name,
-            ],
-            'otherTeachers' => $otherTeachers->values(),
+            'group' => $group,
+            'otherTeachers' => $otherTeachers,
+        ];
+        return response()->json($res);
+    }
+    
+    public function mge_other_groups(Request $request) {
+        $data = $this->getData($request);
+        $teacherId = $data->teacherId;
+
+        $teacher = $this->loadTeacher($teacherId);
+        $allGroups = $this->loadGroups();
+        $teacherGroups = $this->loadGroupsByTeacher($teacherId);
+        $otherGroups = $this->subtract($allGroups, $teacherGroups);
+
+        $res = [
+            'teacher' => $teacher,
+            'otherGroups' => $otherGroups,
         ];
         return response()->json($res);
     }
@@ -419,27 +467,58 @@ class AdministrationController extends Controller{
         foreach ($teacherIds as $id) {
             TeacherHasGroup::insert(['user_id' => $id, 'group' => $groupId]);
         }
-        $teachers = $this->getTeachersByGroup($groupId);
-        return response()->json($teachers->values());
+        $teachers = $this->loadTeachersByGroup($groupId);
+        return response()->json($teachers);
+    }
+
+    public function mge_add_groups_to_teacher(Request $request) {
+        $data = $this->getData($request);
+        $teacherId = $data->teacherId;
+        $groupIds = $data->groupIds;
+        foreach ($groupIds as $id) {
+            TeacherHasGroup::insert(['user_id' => $teacherId, 'group' => $id]);
+        }
+        $groups = $this->loadGroupsByTeacher($teacherId);
+        return response()->json($groups);
     }
 
     public function mge_remove_teacher_from_group(Request $request) {
         $data = $this->getData($request);
         $groupId = $data->groupId;
         $teacherId = $data->teacherId;
+        $this->remove_group_teacher_link($groupId, $teacherId);
+        $teachers = $this->loadTeachersByGroup($groupId);
+        return response()->json($teachers);
+    }
+    
+    public function mge_remove_group_from_teacher(Request $request) {
+        $data = $this->getData($request);
+        $groupId = $data->groupId;
+        $teacherId = $data->teacherId;
+        $this->remove_group_teacher_link($groupId, $teacherId);
+        $groups = $this->loadGroupsByTeacher($teacherId);
+        return response()->json($groups);
+    }
+
+    private function remove_group_teacher_link($groupId, $teacherId) {
         TeacherHasGroup::
             whereUserId($teacherId)
             ->whereGroup($groupId)
             ->delete();
-        $teachers = $this->getTeachersByGroup($groupId);
-        return response()->json($teachers->values());
     }
 
+    private function subtract($aCollection, $bCollection) {
+        return $aCollection->filter(function($a) use ($bCollection) {
+            return !$bCollection->contains('id', $a['id']);
+        })->values();
+    }
+
+    /*
     public function mge_other_groups(Request $request) {
         $data = $this->getData($request);
         $groupId = $data->groupId;
 
-        $group = $this->getGroup($groupId);
+        $group = $this->loadGroup($groupId);
         $allTeachers = $this->getTeachers();
         $groupTeachers = $this->getTeachersByGroup($groupId);
         $otherTeachers = $this->excludeTeachers($allTeachers, $groupTeachers);
@@ -514,10 +593,7 @@ class AdministrationController extends Controller{
             return !$someTeachers->contains('id', $t->id);
         });
     }
-
-    private function getData(Request $request) {
-        return json_decode($request->input('data'), false);
-    }
+    */
 
     // -------------------------
     // END manage groups elite

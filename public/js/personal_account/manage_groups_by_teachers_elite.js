@@ -3,11 +3,11 @@
 (function() {
   $('.mge-card-btn-add').on('click', addClick)
   $('.mge-modal-save').on('click', saveAddClick);
-  $('.mge-card-teachers').on('click', '.mge-remove-teacher', removeClick);
+  $('.mge-card-groups').on('click', '.mge-remove-group', removeClick);
   $('.mge-select-all').on('click', selectAllClick);
 
   function selectAllClick() {
-    const checkboxes = $(this).closest('.modal').find('.mge-modal-teachers .checkbox__trigger');
+    const checkboxes = $(this).closest('.modal').find('.mge-modal-groups .checkbox__trigger');
     const first = checkboxes.first();
     if (!first) {
       return;
@@ -18,29 +18,29 @@
 
   async function addClick() {
     const cardEl = $(this).closest('.mge-card');
-    const groupId = +cardEl.attr('data-group-id');
+    const teacherId = +cardEl.attr('data-teacher-id');
     let resp;
-    $('.mge-modal-group')
+    $('.mge-modal-teacher')
       .text('...')
-      .data('group-id', groupId);
-    const teachersEl = $('.mge-modal-teachers');
-    teachersEl.empty();
+      .data('teacher-id', teacherId);
+    const groupsEl = $('.mge-modal-groups');
+    groupsEl.empty();
     try {
-      resp = await post('/mge_other_teachers', {
-        groupId: groupId,
+      resp = await post('/mge_other_groups', {
+        teacherId: teacherId,
       });
     } catch (er) {
       alert(er.message);
       return;
     }
-    $('.mge-modal-group').text(resp.group.name);
-    const teachers = resp.otherTeachers;
-    if (teachers.length <= 0) {
-      teachersEl.text('Все преподаватели уже добавлены в эту группу.');
+    $('.mge-modal-teacher').text(`${resp.teacher.lastName} ${resp.teacher.firstName}`);
+    const groups = resp.otherGroups;
+    if (groups.length <= 0) {
+      groupsEl.text('Все группы уже добавлены для этого преподавателя.');
     } else {
-      for (const t of teachers) {
-        const cb = checkbox(t.id, `${t.last_name} ${t.first_name}`);
-        teachersEl.append(cb);
+      for (const g of groups) {
+        const cb = checkbox(g.id, g.name);
+        groupsEl.append(cb);
       }
     }
   }
@@ -48,63 +48,63 @@
   async function saveAddClick() {
     const btnSave = $(this);
     const modal = btnSave.closest('.modal');
-    const groupId = modal.find('.mge-modal-group').data('group-id');
-    if (!groupId) {
+    const teacherId = modal.find('.mge-modal-teacher').data('teacher-id');
+    if (!teacherId) {
       return;
     }
-    const teacherIds = [];
-    modal.find('.mge-modal-teachers input:checked').each(function() {
-      const teacherId = $(this).data('id');
-      teacherIds.push(teacherId);
+    const groupIds = [];
+    modal.find('.mge-modal-groups input:checked').each(function() {
+      const groupId = $(this).data('id');
+      groupIds.push(groupId);
     });
     const request = {
-      groupId: groupId,
-      teacherIds: teacherIds,
+      teacherId: teacherId,
+      groupIds: groupIds,
     };
-    let newTeachers;
+    let newGroups;
     btnSave.prop('disabled', true);
     try {
-      newTeachers = await post('/mge_add_teachers_to_group', request)
+      newGroups = await post('/mge_add_groups_to_teacher', request)
     } catch (er) {
       alert(er.message);
       btnSave.prop('disabled', false);
       return;
     }
     btnSave.prop('disabled', false);
-    refreshTeachers(groupId, newTeachers);
+    refreshGroups(teacherId, newGroups);
     modal.modal('hide');
   }
 
   async function removeClick() {
-    const teacherId = +$(this).attr('data-teacher-id');
+    const groupId = +$(this).attr('data-group-id');
     const cardEl = $(this).closest('.mge-card');
-    const groupId = +cardEl.attr('data-group-id');
+    const teacherId = +cardEl.attr('data-teacher-id');
     const request = {
-      groupId: groupId,
       teacherId: teacherId,
+      groupId: groupId,
     };
-    let newTeachers;
+    let newGroups;
     try {
-      newTeachers = await post('/mge_remove_teacher_from_group', request)
+      newGroups = await post('/mge_remove_group_from_teacher', request)
     } catch (er) {
       alert(er.message);
       return;
     }
-    refreshTeachers(groupId, newTeachers);
+    refreshGroups(teacherId, newGroups);
   }
 
-  function refreshTeachers(groupId, teachers) {
-    const teachersEl = $(`.mge-card[data-group-id="${groupId}"] .mge-card-teachers`)
+  function refreshGroups(teacherId, groups) {
+    const groupsEl = $(`.mge-card[data-teacher-id="${teacherId}"] .mge-card-groups`)
       .empty();
-    for (const t of teachers) {
-      const teacherEl = $(`<div class="mge-card-teacher"></div>`)
-        .text(`${t.last_name} ${t.first_name}`)
+    for (const g of groups) {
+      const groupEl = $(`<div class="mge-card-group"></div>`)
+        .text(g.name)
         .append(`
-          <button type="button" class="close mge-remove-teacher" data-teacher-id="${t.id}">
+          <button type="button" class="close mge-remove-group" data-group-id="${g.id}">
             &times;
           </button>
         `);
-      teachersEl.append(teacherEl);
+      groupsEl.append(groupEl);
     }
   }
 

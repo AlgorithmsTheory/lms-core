@@ -39,7 +39,7 @@
       teachersEl.text('Все преподаватели уже добавлены в эту группу.');
     } else {
       for (const t of teachers) {
-        const cb = checkbox(t.id, `${t.last_name} ${t.first_name}`);
+        const cb = checkbox(t.id, `${t.lastName} ${t.firstName}`);
         teachersEl.append(cb);
       }
     }
@@ -98,7 +98,7 @@
       .empty();
     for (const t of teachers) {
       const teacherEl = $(`<div class="mge-card-teacher"></div>`)
-        .text(`${t.last_name} ${t.first_name}`)
+        .text(`${t.lastName} ${t.firstName}`)
         .append(`
           <button type="button" class="close mge-remove-teacher" data-teacher-id="${t.id}">
             &times;
