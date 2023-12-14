@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {!! HTML::style('css/bootstrap.css') !!}
     {!! HTML::style('css/full.css') !!}
     {!! HTML::style('css/tests_list.css') !!}
