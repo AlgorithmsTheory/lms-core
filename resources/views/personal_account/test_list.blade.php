@@ -19,7 +19,7 @@
                     <div class="col-lg-offset-0 col-md-12 col-sm-12 card style-gray">
                         <h2 class="text-default-bright">Контрольные тесты</h2>
                     </div>
-                    <form action="" method="POST" class="form">
+                    <form action="" method="POST" class="form" style="overflow-x: auto">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <table class="table table-condensed control-tests-table" id="out-of-date-test-table">
                             <tr>
@@ -81,11 +81,15 @@
                             <button class="btn btn-primary btn-raised submit-test" type="submit">Завершить выбранные тесты</button>
                         </div>
                     </form>
-                    <button class="btn btn-primary btn-raised btn-unavailable-all-control-tests" style="margin-bottom: 20px;}" type="button">Сделать недоступными все контрольные тесты для всех групп</button>
+                    <button class="btn btn-primary btn-raised btn-unavailable-all-control-tests" style="margin-bottom: 20px;}" type="button">
+                        Сделать недоступными<br>
+                        все контрольные тесты<br>
+                        для всех групп
+                    </button>
                     <div class="col-lg-offset-0 col-md-12 col-sm-12 card style-gray">
                         <h2 class="text-default-bright">Тренировочные тесты</h2>
                     </div>
-                    <form action="" method="POST" class="form">
+                    <form action="" method="POST" class="form" style="overflow-x: auto">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="id_group" value="{{ $id_group }}">
                         <table class="table table-condensed train-tests-table" id="out-of-date-test-table">
@@ -146,7 +150,11 @@
                             @endforeach
                         </table>
                     </form>
-                    <button class="btn btn-primary btn-raised btn-unavailable-all-train-tests" type="button">Сделать недоступными все тренировочные тесты для всех групп</button>
+                    <button class="btn btn-primary btn-raised btn-unavailable-all-train-tests" type="button">
+                        Сделать недоступными<br>
+                        все тренировочные тесты<br>
+                        для всех групп
+                    </button>
                 </div>
             </div>
         </div>

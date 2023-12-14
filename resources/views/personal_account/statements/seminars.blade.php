@@ -26,8 +26,8 @@
     <tbody id="target">
     @foreach($statement_seminar as $statement)
         <tr id ="{{$statement['user']->id}}">
-            <td>{{$statement['user']->group_name}}</td>
-            <td>{{$statement['user']->last_name}}</td>
+            <td style="position: sticky; left: 0; z-index: 3; background: #fff;">{{$statement['user']->group_name}}</td>
+            <td style="position: sticky; left: 0; z-index: 3; background: #fff;">{{$statement['user']->last_name}}</td>
             <td>{{$statement['user']->first_name}}</td>
             @foreach($statement['seminar_passes_sections'] as $seminar_passes_section)
                 @foreach($seminar_passes_section as $seminar_passes)

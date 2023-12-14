@@ -1,5 +1,5 @@
-<td>{{$statement['user']->group_name}}</td>
-<td>{{$statement['user']->last_name}}</td>
+<td style="position: sticky; left: 0; z-index: 3; background: #fff;">{{$statement['user']->group_name}}</td>
+<td style="position: sticky; left: 0; z-index: 3; background: #fff;">{{$statement['user']->last_name}}</td>
 <td>{{$statement['user']->first_name}}</td>
 @foreach ($statement['sections'] as $section)
     @foreach ($section['controls'] as $control)
