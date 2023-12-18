@@ -210,5 +210,10 @@
 
         </div>
     </div>
+    <button class="btn-screenshot">
+        Скриншот
+    </button>
+@stop
 
+@section('js-down')
 @stop

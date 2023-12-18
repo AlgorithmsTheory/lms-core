@@ -694,20 +694,39 @@ class TestController extends Controller{
         return $response;
     }
 
-    /** Проверка теста */
-    public function checkTest(Request $request){   //обработать ответ на вопрос
+    private function saveTestScreenshot($pngBase64Screenshot, $userId, $testId) {
+        $img = $pngBase64Screenshot;
+        $img = str_replace('data:image/png;base64,', '', $img);
+        $img = str_replace(' ', '+', $img);
+        $fileData = base64_decode($img);
+        //saving
+        $fileName = 'photo.png';
+        file_put_contents($fileName, $fileData);
+    }
+
+    /** Проверка контрольной (теста) */
+    public function checkTest(Request $request) {
+        $userId = Auth::user()['id'];
+        // id контрольной
         $id_test = $request->input('id_test');
-        if (Result::getCurrentResult(Auth::user()['id'], $id_test) != -1)                                                                                       //проверяем повторность обращения к результам
-            $current_test = Result::getCurrentResult(Auth::user()['id'], $id_test);                                                                       //определяем проверяемый тест
-        else
+        // Получаем начатую пользователем попытку прохождения контрольной с id = $id_test
+        $current_test = Result::getCurrentResult($userId, $id_test);
+        if ($current_test == -1) {
             return redirect('tests');
+        }
+        // Число вопросов.
         $amount = $request->input('amount');
-        if($amount < 2)
+        if ($amount < 2) {
             return "Error. Too few questions";
-        $score_sum = 0;                                                                                                 //сумма набранных баллов
-        $points_sum = 0;                                                                                                //сумма максимально овзможных баллов
-        $choice = [];                                                                                                   //запоминаем выбранные варианты пользователя
-        $right_percent = [];                                                                                            //Процент правильности ответа на неверный вопрос
+        }
+        //сумма набранных баллов
+        $score_sum = 0;
+        //сумма максимально возможных баллов
+        $points_sum = 0;
+        //запоминаем выбранные варианты пользователя
+        $choice = [];
+        //Процент правильности ответа на неверный вопрос
+        $right_percent = [];
         $j = 1;
         $question = new Question();
 
@@ -718,7 +737,8 @@ class TestController extends Controller{
         $id_user = Result::whereId_result($current_test)
             ->join('users', 'results.id', '=', 'users.id')->select('users.id')->first()->id;
 
-        for ($i=0; $i<$amount; $i++){                                                                                   //обрабатываем каждый вопрос
+        //обрабатываем каждый вопрос
+        for ($i=0; $i<$amount; $i++) {
             $data = $request->input($i);
             $array = json_decode($data);
             $link_to_lecture[$j] = $question->linkToLecture($array[0]);
@@ -767,7 +787,6 @@ class TestController extends Controller{
 
         $result = new Result();
         $date = date('Y-m-d H:i:s', time());                                                                            //текущее время
-        //если тест тренировочный
         $widgets = [];
         $query = $result->whereId_result($current_test)->first();                                                       //берем сохраненный тест из БД
         $saved_test = $query->saved_test;
@@ -783,8 +802,9 @@ class TestController extends Controller{
             $fine->updateFine(Auth::user()['id'], $id_test, $mark_rus);                                                 //вносим в таблицу штрафов необходимую инфу
             $fraction_score = $score / $total;
             Test::addToStatements($id_test, $id_user, $fraction_score);                                                          //занесение балла в ведомость
-        }
-        else {                                                                                                          //тест тренировочный
+            $screenshot = $request->input('screenshot');
+            $this->saveTestScreenshot($screenshot, $userId, $id_test);
+        } else {                                                                                                          //тест тренировочный
             $widgetListView = View::make('questions.student.training_test',compact('total','score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'link_to_lecture'))->with('widgets', $widgets);
         }
         $result->whereId_result($current_test)->update(['result_date' => $date, 'result' => $score, 'mark_ru' => $mark_rus, 'mark_eu' => $mark_bologna]);

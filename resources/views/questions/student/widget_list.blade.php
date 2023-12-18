@@ -36,12 +36,14 @@
 {!! $widget !!}
 <?php $i++;?>
 @endforeach
-{!! Form::open(['method' => 'PATCH', 'route' => 'question_checktest', 'id' => 'super-form', 'name' => 'super', 'onsubmit' => 'return sendForm(true);']) !!}
-@for ($i = 0; $i < $amount; $i++)
-<input id="super{{$i}}" type="hidden" name="{{$i}}" value="">
-@endfor
-<input id="amount" type="hidden" name="amount" value="{{ $amount }}">
-<input id="id_test" type="hidden" name="id_test" value="{{ $id_test }}">
+{!! Form::open(['method' => 'PATCH', 'route' => 'question_checktest',
+    'id' => 'super-form', 'name' => 'super', 'onsubmit' => 'sendForm(this, true); return false;']) !!}
+    @for ($i = 0; $i < $amount; $i++)
+        <input id="super{{$i}}" type="hidden" name="{{$i}}" value="">
+    @endfor
+    <input id="amount" type="hidden" name="amount" value="{{ $amount }}">
+    <input id="id_test" type="hidden" name="id_test" value="{{ $id_test }}">
+    <input id="screenshot" type="hidden" name="screenshot" value="">
     <div class="col-sm-6">
         <input id="check" onClick="fillSuper()" class="btn btn-warning btn-lg col-md-4 col-md-offset-4 style-primary" type="submit" name="check" value="Отправить">
     </div>
@@ -79,6 +81,7 @@
     {!! Form::close() !!}
 @endif
 
+{!! HTML::script('js/personal_account/html2canvas.min.js') !!}
 {!! HTML::script('js/toolbar.js') !!}
 {!! HTML::script('js/algorithms/superScript.js') !!}
 

@@ -95,7 +95,7 @@ function startTimer() {
     if (s <= 0) {
         if (m <= 0) {                                                                                                   //если время вышло
             fillSuper();                                                                                                //собираем все данные в супер-форму
-            $('#super-form').attr('onsubmit','return sendForm(false)');                                                 //меняем обработчик на false
+            $('#super-form').attr('onsubmit','sendForm(this, false); return false;');                                                 //меняем обработчик на false
             $('#super-form').trigger('submit');                                                                         //генерируем событие submit
             return;
         }
