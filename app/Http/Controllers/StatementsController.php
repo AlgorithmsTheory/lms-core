@@ -335,7 +335,19 @@ class StatementsController extends Controller{
         $statement_lecture = $this->lecture_statement->getStatementByUser($id_course_plan, $user);
         $statement_seminar = $this->seminar_statement->getStatementByUser($id_course_plan, $user);
         $statement_result = $this->result_statement->getResultingStatementByUser($id_course_plan, $user);
-        return view('personal_account/student_account',  compact('course_plan','statement_lecture','statement_seminar', 'statement_result'));
+        $screenshots = $this->getScreenshots(Auth::user()['id']);
+        Log::debug('screenshots');
+        Log::debug($screenshots);
+        return view('personal_account/student_account',  compact('course_plan','statement_lecture','statement_seminar', 'statement_result', 'screenshots'));
+    }
+
+    private function getScreenshots($userId) {
+        $dir = 'screenshots/tests/' . $userId;
+        if (!file_exists($dir)) {
+            return [];
+        }
+        $res = glob($dir . '/*.png');
+        return preg_filter('/^/', '/', $res);
     }
 
     //Возвращают представление соответствующей ведомости
