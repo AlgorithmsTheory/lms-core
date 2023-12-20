@@ -5,7 +5,7 @@
 async function generateScreenshot() {
     const canvas = await html2canvas(document.body);
     const url = canvas.toDataURL();
-    $('#screenshot').value = url;
+    $('#screenshot').val(url);
 }
 
 async function sendForm(form, status){
@@ -97,7 +97,10 @@ async function sendForm(form, status){
         alert('Время вышло');
     }
     if (shouldSubmit) {
+        const navEl = document.querySelector('.fixed-nav');
+        navEl.style.position = 'static';
         await generateScreenshot();
+        navEl.style.position = '';
         form.submit();
     }
 }

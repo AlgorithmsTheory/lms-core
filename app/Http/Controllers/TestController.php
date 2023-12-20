@@ -700,7 +700,12 @@ class TestController extends Controller{
         $img = str_replace(' ', '+', $img);
         $fileData = base64_decode($img);
         //saving
-        $fileName = 'photo.png';
+        $dir = 'screenshots/tests/' . $userId;
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        $today =  date("Y-m-d H-i-s");
+        $fileName = $dir . '/' . $testId . '_' . $today . '.png';
         file_put_contents($fileName, $fileData);
     }
 
