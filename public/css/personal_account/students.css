@@ -1,0 +1,12 @@
+.students {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  font-size: 16px;
+}
+
+.student {
+  color: rgb(52, 52, 212);
+  text-decoration: underline;
+}
