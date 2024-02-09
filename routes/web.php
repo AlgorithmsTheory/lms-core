@@ -304,7 +304,8 @@ Route::get('personal_account', ['as' => 'personal_account', 'uses' => 'Statement
 Route::get('personal_account/student_info', ['as' => 'student_info', 'uses' => 'StatementsController@showStudentInfo', 'middleware' => 'general_auth']);
 Route::get('personal_account/all_test_results', ['as' => 'all_test_results', 'uses' => 'PersonalAccount@showAllTests', 'middleware' => ['general_auth', 'admin']]);
 Route::get('personal_account/tests_results', ['as' => 'test_results', 'uses' => 'PersonalAccount@showTestResults', 'middleware' => 'general_auth']);
-
+Route::get('personal_account/student/{id}', ['as' => 'specific_student_account', 'uses' => 'StatementsController@showSpecificStudentAccount', 'middleware' => 'general_auth']);
+Route::post('personal_account/get_students_by_group', ['as' => 'students_get', 'uses' => 'StatementsController@getStudentsByGroup', 'middleware' => 'general_auth']);
 
 //учебные планы
 //все учебные планы
