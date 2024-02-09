@@ -2,7 +2,13 @@
  * Created by Станислав on 22.05.15.
  */
 
-function sendForm(status){
+async function generateScreenshot() {
+    const canvas = await html2canvas(document.body);
+    const url = canvas.toDataURL();
+    $('#screenshot').val(url);
+}
+
+async function sendForm(form, status){
     var formsCount = document.forms.length - 2;
     var elementNumber;
     var flag = [true];
@@ -78,13 +84,25 @@ function sendForm(status){
 			}
         }
     }
-    if (status == true){
-        for (index = 0; index < formsCount; ++index) {
-            if(flag[index]) {countChecked++;}
+    let shouldSubmit = true;
+    if (status) {
+        for (index = 0; index < formsCount; index++) {
+            if (flag[index]) {
+                countChecked++;
+            }
         }
-        return confirm('Вы уверены, что хотите завершить тест? Вы ответили на ' + countChecked + ' вопросов из ' + formsCount + '.');
+        shouldSubmit = confirm('Вы уверены, что хотите завершить тест? Вы ответили на '
+            + countChecked + ' вопросов из ' + formsCount + '.');
+    } else {
+        alert('Время вышло');
     }
-    else return alert("Время вышло");
+    if (shouldSubmit) {
+        const navEl = document.querySelector('.fixed-nav');
+        navEl.style.position = 'static';
+        await generateScreenshot();
+        navEl.style.position = '';
+        form.submit();
+    }
 }
 
 function fillSuper(){

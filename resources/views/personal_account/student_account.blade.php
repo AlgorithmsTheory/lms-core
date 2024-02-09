@@ -210,5 +210,13 @@
 
         </div>
     </div>
+    <div class="section-screenshots">
+        <h2>Скриншоты сданных контрольных</h2>
+        @foreach($screenshots as $shot)
+            <a href="{{ $shot }}" target="_blank">{{ basename($shot) }}</a>
+        @endforeach
+    </div>
+@stop
 
+@section('js-down')
 @stop
