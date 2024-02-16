@@ -5,7 +5,9 @@ function updateRow(row, statement) {
             const controlTd = row.find(`td[data-id-control_work=${controlPassId}]`);
             controlTd.find('input[type=checkbox]').prop('checked', control.presence);
             const pointsInput = controlTd.find('input[type=number]');
-            pointsInput.val(control.points);
+            const pointsRounded = controlTd.find('.points-rounded')
+            pointsRounded.text(control.points);
+            pointsInput.val(control.points_raw);
             pointsInput.prop('disabled', !control.presence);
         }
         const sectionResultEl = row.find(`td[data-result-section_num=${section.section_num}]`);
@@ -19,7 +21,9 @@ function updateRow(row, statement) {
         presenceInput.prop('checked', exam.presence);
         presenceInput.prop('disabled', !statement.sections_total_ok);
         const pointsInput = controlTd.find('input[type=number]');
-        pointsInput.val(exam.points);
+        const pointsRounded = controlTd.find('.points-rounded')
+        pointsRounded.text(exam.points);
+        pointsInput.val(exam.points_raw);
         pointsInput.prop('disabled', !exam.presence || !statement.sections_total_ok);
     }
     const sectionsResultEl = row.find('.sum_result_section');

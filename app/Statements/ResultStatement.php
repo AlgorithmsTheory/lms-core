@@ -252,13 +252,15 @@ class ResultStatement {
             $controls_max = 0;
             foreach ($control_work_groupBy_sections[$section->section_num] as $control_work) {
                 $presence = $control_work['presence'] == 1;
-                $points = $presence ? round($control_work['points'], 0) : 0;
+                $pointsRaw = $presence ? $control_work['points'] : 0;
+                $points = round($pointsRaw);
                 $total += $points;
                 $controls_max += $control_work['max_points'];
                 $controls[] = array(
                     'id' => $control_work['id_control_work_pass'],
                     'section_num' => $control_work['section_num'],
                     'presence' => $presence,
+                    'points_raw' => $pointsRaw,
                     'points' => $points,
                 );
             }
@@ -270,15 +272,20 @@ class ResultStatement {
                 $section_with_bad_result_exists = true;
             }
             $sections_total += $total;
-            $sections_result[] = array(
+            $section_result = array(
                 'section_num' => $section['section_num'],
                 'controls_max_points' => $controls_max,
+                // КМы
                 'controls' => $controls,
+                // ПЛ
                 'lecture' => $lecture,
+                // ПС + РС
                 'seminar' => $seminar,
+                // Итог раздела
                 'total' => $total,
                 'total_ok' => $ok,
             );
+            $sections_result[] = $section_result;
         }
         $sections_total_ok = !$section_with_bad_result_exists && $sections_total >= 0.6 * $course_plan->max_semester;
 
@@ -288,7 +295,8 @@ class ResultStatement {
         foreach ($exam_work_groupBy_sections as $exams_by_section) {
             foreach ($exams_by_section as $exam_data) {
                 $presence = $exam_data['presence'] == 1;
-                $points = $presence ? round($exam_data['points'], 0) : 0;
+                $pointsRaw = $presence ? $exam_data['points'] : 0;
+                $points = round($pointsRaw);
                 $exams_total += $points;
                 if ($points < 0.6 * $exam_data['max_points']) {
                     $exam_with_bad_result_exists = true;
@@ -296,6 +304,7 @@ class ResultStatement {
                 $exams_result[] = array(
                     'id' => $exam_data['id_control_work_pass'],
                     'presence' => $presence,
+                    'points_raw' => $pointsRaw,
                     'points' => $points,
                 );
             }
