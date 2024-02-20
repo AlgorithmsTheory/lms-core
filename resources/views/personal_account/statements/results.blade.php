@@ -119,11 +119,32 @@
     </tbody>
 </table>
 
-
 <button class="print_to_pdf"> Вывести на печать </button>
-<form action="" method="" class="form" id="forma">
-    <input id="image-file" type="file" />
-    <button id="getexcel">Заполнить зачетную ведомость</button>
-    <button id="getexcelex">Заполнить экзаменационную ведомость</button>
-</form>
+
+<h2>Генерация ведомостей</h2>
+<div>
+    <style>
+        .generating-statements {
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .generating-statements_buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+    </style>
+    <form action="" method="" class="form generating-statements" id="forma">
+        <input id="image-file" type="file" />
+        <div class="generating-statements_buttons">
+            <button class="btn-gen-statement" data-type="credit">Зачёт</button>
+            <button class="btn-gen-statement" data-type="credit-with-grade">Зачёт с оценкой</button>
+            <button class="btn-gen-statement" data-type="exam">Экзамен</button>
+            <button class="btn-gen-statement" data-type="section-evaluation">Аттестация разделов</button>
+        </div>
+    </form>
+</div>
 {!! HTML::script('js/statements/results.js') !!}

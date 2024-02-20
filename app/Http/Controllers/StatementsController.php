@@ -432,7 +432,18 @@ class StatementsController extends Controller{
             compact('course_plan','id_group', 'statement_result'));
     }
 
-    private function get_resulting_excel_internal(Request $request, $isForExam) {
+    // Генерация ведомости
+    public function gen_statement(Request $request) {
+        // $stat_type - Тип ведомости:
+        // 1. credit - зачёт
+        // 2. credit-with-grade - зачёт с оценкой
+        // 3. exam - экзамен
+        // 4. section-evaluation - аттестация разделов
+        $stat_type = $request->input('type');
+        if (!in_array($stat_type, ['credit', 'credit-with-grade', 'exam', 'section-evaluation'])) {
+            return;
+        }
+
         $id_group = $request->input('group');
         $file = $request->file;
         $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
@@ -440,18 +451,15 @@ class StatementsController extends Controller{
         $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
         $statement_result = $this->result_statement->getResultingStatementByGroup($id_group);
         Storage::disk('local')->put('file.xlsx', file_get_contents($file));
-        return $this->result_statement->getExcelLoadOut($course_plan,$statement_result,'/storage/app/file.xlsx', $isForExam);;
+
+        return $this->result_statement->getExcelLoadOut(
+            $course_plan,
+            $statement_result,
+            '/storage/app/file.xlsx',
+            $stat_type);;
     }
 
-    public function get_resulting_excel(Request $request){
-        return $this->get_resulting_excel_internal($request, false);
-    }
-
-    public function get_resulting_excel_ex(Request $request){
-        return $this->get_resulting_excel_internal($request, true);
-    }
-
-    //Отмечает или раз-отмечает студента на лекции
+    // Отмечает или раз-отмечает студента на лекции
     public function lecture_mark_present(Request $request){
         $this->lecture_statement->markPresent($request);
         return 0;

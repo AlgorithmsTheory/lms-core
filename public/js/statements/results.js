@@ -140,16 +140,24 @@ $('.print_to_pdf').on('click', ()=>{
     mywindow.close();
 });
 
-$('#getexcel').click(function(){
+// Сгенерировать ведомость
+$('.btn-gen-statement').on('click', function(ev){
+    // Тип ведомости:
+    // 1. credit - зачёт
+    // 2. credit-with-grade - зачёт с оценкой
+    // 3. exam - экзамен
+    // 4. section-evaluation - аттестация разделов
+    const type = ev.currentTarget.dataset.type;
     var group = $("#group_num").val();
     myBlurFunction(1);
     var formData = new FormData();
     formData.set('file', document.getElementById("image-file").files[0] ,'v.xlsx');
-    formData.set('filename',"v.xlsx" );
-    formData.set('group',group);
+    formData.set('filename', "v.xlsx" );
+    formData.set('group', group);
+    formData.set('type', type)
     $.ajax({
         type: 'POST',
-        url:   '/statements/get-resulting-excel',
+        url:   '/statements/gen-statement',
         processData: false,  // tell jQuery not to process the data
         contentType: false,  // tell jQuery not to set contentType
         beforeSend: function (xhr) {
@@ -166,56 +174,8 @@ $('#getexcel').click(function(){
         },
         success: function(data){
             myBlurFunction(0);
-            // Создаём ссылку на него
             var link = document.createElement('a')
             filename = 'file.xlsx';
-            // if(xhr.getResponseHeader('Content-Disposition')){//имя файла
-            //     filename = xhr.getResponseHeader('Content-Disposition');
-            //     filename=filename.match(/filename="(.*?)"/)[1];
-            //     filename=decodeURIComponent(escape(filename));
-            // }
-            link.href = URL.createObjectURL(data);
-            link.download = filename;
-            link.click();
-        }
-    });
-    return false;
-});
-
-$('#getexcelex').click(function(){
-    var group = $("#group_num").val();
-    myBlurFunction(1);
-    var formData = new FormData();
-    formData.set('file', document.getElementById("image-file").files[0] ,'v.xlsx');
-    formData.set('filename',"v.xlsx" );
-    formData.set('group',group);
-    $.ajax({
-        type: 'POST',
-        url:   '/statements/get-resulting-excel-ex',
-        processData: false,  // tell jQuery not to process the data
-        contentType: false,  // tell jQuery not to set contentType
-        beforeSend: function (xhr) {
-            var token = $('meta[name="csrf_token"]').attr('content');
-            if (token) {
-                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-            }
-            formData.append('token',token);
-        },
-        data: formData,
-        dataType: 'binary',
-        xhrFields: {
-            'responseType': 'blob'
-        },
-        success: function(data){
-            myBlurFunction(0);
-            // Создаём ссылку на него
-            var link = document.createElement('a')
-            filename = 'file.xlsx';
-            // if(xhr.getResponseHeader('Content-Disposition')){//имя файла
-            //     filename = xhr.getResponseHeader('Content-Disposition');
-            //     filename=filename.match(/filename="(.*?)"/)[1];
-            //     filename=decodeURIComponent(escape(filename));
-            // }
             link.href = URL.createObjectURL(data);
             link.download = filename;
             link.click();

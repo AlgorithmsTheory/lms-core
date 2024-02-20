@@ -61,9 +61,13 @@ class ResultStatement {
             ->setARGB($color);
     }
 
-    // $isForExam: true для экзаменационной ведомости, false - для зачётной ведомости
-    public function getExcelLoadOut($plan, $statements, $file, $isForExam) {
-        Excel::load($file, function($doc) use ($plan, $statements, $isForExam) {
+    // $stat_type - Тип ведомости:
+    // 1. credit - зачёт
+    // 2. credit-with-grade - зачёт с оценкой
+    // 3. exam - экзамен
+    // 4. section-evaluation - аттестация разделов
+    public function getExcelLoadOut($plan, $statements, $file, $stat_type) {
+        Excel::load($file, function($doc) use ($plan, $statements, $stat_type) {
             $sheet = $doc->setActiveSheetIndex(0);
             $startRow = 9;
             $row = $startRow;
@@ -99,13 +103,32 @@ class ResultStatement {
                 $overallResult = $stat == null ? 'Z' : $stat['summary_total'];
                 $sheet->setCellValue(chr($col) . $row, $overallResult);
                 $col++;
-                $credited = ($stat == null || !$stat['summary_total_ok']) ? 'не зачтено' : 'зачтено';
+
+                $credited = 'не зачтено';
+                if ($stat != null) {
+                    if ($stat_type === 'credit-with-grade') {
+                        $rus = $stat['mark_rus'];
+                        if ($rus === '5') {
+                            $credited = 'отлично';
+                        } else if ($rus === '4') {
+                            $credited = 'хорошо';
+                        } else if ($rus === '3') {
+                            $credited = 'удовл.';
+                        } else {
+                            $credited = 'неудовл.';
+                        }
+                    } else {
+                        $credited = $stat['summary_total_ok'] ? 'зачтено' : 'не зачтено';
+                    }
+                }
+
                 $sheet->setCellValue(chr($col) . $row, $credited);
                 $col++;
+
                 if ($stat == null) {
                     $markCode = 1;
                 } else {
-                    if ($isForExam) {
+                    if (in_array($stat_type, ['exam', 'credit-with-grade'])) {
                         $markCode = $stat['mark_rus'];
                     } else {
                         if (!$stat['summary_total_ok']) {
@@ -117,6 +140,7 @@ class ResultStatement {
                 }
                 $sheet->setCellValue(chr($col) . $row, $markCode);
                 $col++;
+
                 $markBologna = $stat == null ? 'F' : $stat['mark_bologna'];
                 $sheet->setCellValue(chr($col) . $row, $markBologna);
                 if ($col > $maxCol) {
