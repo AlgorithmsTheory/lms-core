@@ -89,15 +89,17 @@ class ResultStatement {
                 foreach ($plan->section_plans as $ind => $section_plan) {
                     $sectionResult = $stat == null ? 0 : $stat['sections'][$ind]['total'];
                     $sheet->setCellValue(chr($col) . $row, $sectionResult);
+                    if ($stat_type === 'section-evaluation') {
+                        break;
+                    }
                     $col++;
                 }
-                $sectionsResult = $stat == null ? 0 : $stat['sections_total'];
-                $sheet->setCellValue(chr($col) . $row, $sectionsResult);
-                $col++;
-                $certified = ($stat == null || !$stat['sections_total_ok']) ? 'н/а' : 'а';
-                $sheet->setCellValue(chr($col) . $row, $certified);
-
                 if ($stat_type !== 'section-evaluation') {
+                    $sectionsResult = $stat == null ? 0 : $stat['sections_total'];
+                    $sheet->setCellValue(chr($col) . $row, $sectionsResult);
+                    $col++;
+                    $certified = ($stat == null || !$stat['sections_total_ok']) ? 'н/а' : 'а';
+                    $sheet->setCellValue(chr($col) . $row, $certified);
                     $col++;
                     $examResult = $stat == null ? 'Z' : $stat['exams_total'];
                     $sheet->setCellValue(chr($col) . $row, $examResult);
@@ -152,7 +154,8 @@ class ResultStatement {
 
                 $row++;
             }
-            $colForNotIncludedStats = chr($maxCol + 2);
+            $notInclCol = $stat_type === 'section-evaluation' ? $maxCol + 6 : $maxCol + 2;
+            $colForNotIncludedStats = chr($notInclCol);
             $notIncludedStatements = $this->findOthers($statements, $filledUserIdList);
             $row = $startRow;
             foreach ($notIncludedStatements as $st) {
