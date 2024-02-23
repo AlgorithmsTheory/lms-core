@@ -96,56 +96,60 @@ class ResultStatement {
                 $col++;
                 $certified = ($stat == null || !$stat['sections_total_ok']) ? 'н/а' : 'а';
                 $sheet->setCellValue(chr($col) . $row, $certified);
-                $col++;
-                $examResult = $stat == null ? 'Z' : $stat['exams_total'];
-                $sheet->setCellValue(chr($col) . $row, $examResult);
-                $col++;
-                $overallResult = $stat == null ? 'Z' : $stat['summary_total'];
-                $sheet->setCellValue(chr($col) . $row, $overallResult);
-                $col++;
 
-                $credited = 'не зачтено';
-                if ($stat != null) {
-                    if ($stat_type === 'credit-with-grade') {
-                        $rus = $stat['mark_rus'];
-                        if ($rus === '5') {
-                            $credited = 'отлично';
-                        } else if ($rus === '4') {
-                            $credited = 'хорошо';
-                        } else if ($rus === '3') {
-                            $credited = 'удовл.';
+                if ($stat_type !== 'section-evaluation') {
+                    $col++;
+                    $examResult = $stat == null ? 'Z' : $stat['exams_total'];
+                    $sheet->setCellValue(chr($col) . $row, $examResult);
+                    $col++;
+                    $overallResult = $stat == null ? 'Z' : $stat['summary_total'];
+                    $sheet->setCellValue(chr($col) . $row, $overallResult);
+                    $col++;
+
+                    $credited = 'не зачтено';
+                    if ($stat != null) {
+                        if ($stat_type === 'credit-with-grade') {
+                            $rus = $stat['mark_rus'];
+                            if ($rus === '5') {
+                                $credited = 'отлично';
+                            } else if ($rus === '4') {
+                                $credited = 'хорошо';
+                            } else if ($rus === '3') {
+                                $credited = 'удовл.';
+                            } else {
+                                $credited = 'неудовл.';
+                            }
                         } else {
-                            $credited = 'неудовл.';
-                        }
-                    } else {
-                        $credited = $stat['summary_total_ok'] ? 'зачтено' : 'не зачтено';
-                    }
-                }
-
-                $sheet->setCellValue(chr($col) . $row, $credited);
-                $col++;
-
-                if ($stat == null) {
-                    $markCode = 1;
-                } else {
-                    if (in_array($stat_type, ['exam', 'credit-with-grade'])) {
-                        $markCode = $stat['mark_rus'];
-                    } else {
-                        if (!$stat['summary_total_ok']) {
-                            $markCode = 2;
-                        } else {
-                            $markCode = 3;
+                            $credited = $stat['summary_total_ok'] ? 'зачтено' : 'не зачтено';
                         }
                     }
-                }
-                $sheet->setCellValue(chr($col) . $row, $markCode);
-                $col++;
 
-                $markBologna = $stat == null ? 'F' : $stat['mark_bologna'];
-                $sheet->setCellValue(chr($col) . $row, $markBologna);
+                    $sheet->setCellValue(chr($col) . $row, $credited);
+                    $col++;
+
+                    if ($stat == null) {
+                        $markCode = 1;
+                    } else {
+                        if (in_array($stat_type, ['exam', 'credit-with-grade'])) {
+                            $markCode = $stat['mark_rus'];
+                        } else {
+                            if (!$stat['summary_total_ok']) {
+                                $markCode = 2;
+                            } else {
+                                $markCode = 3;
+                            }
+                        }
+                    }
+                    $sheet->setCellValue(chr($col) . $row, $markCode);
+                    $col++;
+
+                    $markBologna = $stat == null ? 'F' : $stat['mark_bologna'];
+                    $sheet->setCellValue(chr($col) . $row, $markBologna);
+                }
                 if ($col > $maxCol) {
                     $maxCol = $col;
                 }
+
                 $row++;
             }
             $colForNotIncludedStats = chr($maxCol + 2);
