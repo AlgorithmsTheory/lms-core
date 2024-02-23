@@ -20,7 +20,7 @@
                    value="{{$control['points_raw']}}"
                    class="result_control_work"
                    style="width: 50px;"
-                   step="1"
+                   step="0.1"
                     {{$control['presence'] ? '' : 'disabled'}}/>
         </td>
     @endforeach
