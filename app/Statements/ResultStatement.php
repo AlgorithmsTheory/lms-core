@@ -275,10 +275,12 @@ class ResultStatement {
         $exam_work_groupBy_sections = $this->getExamWorksGroupBySection($exam_works);
 
         $sections_total = 0;
+        $sections_total_unrounded = 0;
         $section_with_bad_result_exists = false;
         $sections_result = array();
         foreach ($sections as $section) {
             $total = 0;
+            $total_unrounded = 0;
             $controls = array();
             $controls_max = 0;
             foreach ($control_work_groupBy_sections[$section->section_num] as $control_work) {
@@ -286,6 +288,7 @@ class ResultStatement {
                 $pointsRaw = $presence ? $control_work['points'] : 0;
                 $points = round($pointsRaw);
                 $total += $points;
+                $total_unrounded += $pointsRaw;
                 $controls_max += $control_work['max_points'];
                 $controls[] = array(
                     'id' => $control_work['id_control_work_pass'],
@@ -297,12 +300,15 @@ class ResultStatement {
             }
             $lecture = $this->getLectureResult($section, $user);
             $seminar = $this->getSeminarResult($section, $user);
-            $total = round($total + $lecture + $seminar['presence_points'] + $seminar['work_points'], 0);
+            $others = $lecture + $seminar['presence_points'] + $seminar['work_points'];
+            $total = round($total + $others);
+            $total_unrounded += $others;
             $ok = $total >= 0.6 * $controls_max;
             if (!$ok) {
                 $section_with_bad_result_exists = true;
             }
             $sections_total += $total;
+            $sections_total_unrounded += $total_unrounded;
             $section_result = array(
                 'section_num' => $section['section_num'],
                 'controls_max_points' => $controls_max,
@@ -314,6 +320,7 @@ class ResultStatement {
                 'seminar' => $seminar,
                 // Итог раздела
                 'total' => $total,
+                'total_unrounded' => $total_unrounded,
                 'total_ok' => $ok,
             );
             $sections_result[] = $section_result;
@@ -353,6 +360,8 @@ class ResultStatement {
             'user' => $user,
             'sections' => $sections_result,
             'sections_total' => $sections_total,
+            'sections_total_unrounded' => $sections_total_unrounded,
+            'sections_total_diff_1_or_more' => abs($sections_total - $sections_total_unrounded) >= 1,
             'sections_total_ok' => $sections_total_ok,
             'exams' => $exams_result,
             'exams_total' => $exams_total,

@@ -80,9 +80,7 @@
     </tr>
     <tbody id="target">
     @foreach($statement_result as $statement)
-        <tr id="{{$statement['user']->id}}">
-            @include('personal_account.statements.one_result', array('statement' => $statement, 'course_plan' => $course_plan))
-        </tr>
+        @include('personal_account.statements.one_result', array('statement' => $statement, 'course_plan' => $course_plan))
     @endforeach
     <tr>
         <td></td>

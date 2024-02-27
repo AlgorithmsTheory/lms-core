@@ -1,4 +1,5 @@
 function updateRow(row, statement) {
+    row.css({'background-color': statement.sections_total_diff_1_or_more ? 'rgb(220 255 0 / 19%)': ''});
     for (let section of statement.sections) {
         for (let control of section.controls) {
             const controlPassId = control.id;
@@ -12,7 +13,8 @@ function updateRow(row, statement) {
         }
         const sectionResultEl = row.find(`td[data-result-section_num=${section.section_num}]`);
         setColorTd(sectionResultEl, section.total_ok);
-        sectionResultEl.text(section.total);
+        sectionResultEl.find('.section_total').text(section.total);
+        sectionResultEl.find('.section_total_unrounded').text(section.total_unrounded);
     }
     for (let exam of statement.exams) {
         const controlPassId = exam.id;
@@ -28,7 +30,8 @@ function updateRow(row, statement) {
     }
     const sectionsResultEl = row.find('.sum_result_section');
     setColorTd(sectionsResultEl, statement.sections_total_ok);
-    sectionsResultEl.text(statement.sections_total);
+    sectionsResultEl.find('.sections_total').text(statement.sections_total);
+    sectionsResultEl.find('.sections_total_unrounded').text(statement.sections_total_unrounded);
     const sumResultExamEl = row.find('.sum_result_exam');
     const resultAllCourseEl = row.find('.result_all_course');
     const markBolognaEl = row.find('.mark_bologna');
