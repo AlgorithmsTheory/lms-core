@@ -304,7 +304,8 @@ Route::get('personal_account', ['as' => 'personal_account', 'uses' => 'Statement
 Route::get('personal_account/student_info', ['as' => 'student_info', 'uses' => 'StatementsController@showStudentInfo', 'middleware' => 'general_auth']);
 Route::get('personal_account/all_test_results', ['as' => 'all_test_results', 'uses' => 'PersonalAccount@showAllTests', 'middleware' => ['general_auth', 'admin']]);
 Route::get('personal_account/tests_results', ['as' => 'test_results', 'uses' => 'PersonalAccount@showTestResults', 'middleware' => 'general_auth']);
-
+Route::get('personal_account/student/{id}', ['as' => 'specific_student_account', 'uses' => 'StatementsController@showSpecificStudentAccount', 'middleware' => 'general_auth']);
+Route::post('personal_account/get_students_by_group', ['as' => 'students_get', 'uses' => 'StatementsController@getStudentsByGroup', 'middleware' => 'general_auth']);
 
 //учебные планы
 //все учебные планы
@@ -350,8 +351,7 @@ Route::post('statements/get-lectures', ['as' => 'get_lectures', 'uses' => 'State
 Route::post('statements/get-seminars', ['as' => 'get_seminars', 'uses' => 'StatementsController@get_seminars', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/get-resulting', ['as' => 'get_resulting', 'uses' => 'StatementsController@get_resulting', 'middleware' => ['general_auth', 'admin']]);
 
-Route::post('statements/get-resulting-excel', ['as' => 'get_resulting_excel', 'uses' => 'StatementsController@get_resulting_excel', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/get-resulting-excel-ex', ['as' => 'get_resulting_excel-ex', 'uses' => 'StatementsController@get_resulting_excel_ex', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/gen-statement', ['as' => 'gen_statement', 'uses' => 'StatementsController@gen_statement', 'middleware' => ['general_auth', 'admin']]);
 
 
 Route::post('statements/lecture/mark_present', ['as' => 'lecture_mark_present', 'uses' => 'StatementsController@lecture_mark_present', 'middleware' => ['general_auth', 'admin']]);
@@ -375,9 +375,19 @@ Route::post('verify_students/tutor', ['as' => 'add_tutor', 'uses' => 'Administra
 Route::post('verify_students/change_group', ['as' => 'change_group', 'uses' => 'AdministrationController@change_group', 'middleware' => ['general_auth', 'admin']]);
 Route::post('verify_students/remove_user', ['as' => 'remove_user', 'uses' => 'AdministrationController@remove_user', 'middleware' => ['general_auth', 'admin']]);
 Route::get('change_role', ['as' => 'change_role', 'uses' => 'AdministrationController@change_role', 'middleware' => ['general_auth', 'admin']]);
-Route::get('manage_groups', ['as' => 'manage_groups', 'uses' => 'AdministrationController@manage_groups', 'middleware' => ['general_auth','admin']]);
+Route::get('manage_groups', ['as' => 'manage_groups', 'uses' => 'AdministrationController@manage_groups_elite', 'middleware' => ['general_auth','admin']]);
 Route::post('manage_groups/add_group', ['as' => 'add_group', 'uses' => 'AdministrationController@add_group', 'middleware' => ['general_auth', 'admin']]);
 Route::post('manage_groups/delete_group', ['as' => 'delete_group', 'uses' => 'AdministrationController@delete_group', 'middleware' => ['general_auth', 'admin']]);
+
+Route::get('manage_groups_elite', ['as' => 'manage_groups_elite', 'uses' => 'AdministrationController@manage_groups_elite', 'middleware' => ['general_auth','admin']]);
+Route::post('mge_other_teachers', ['as' => 'mge_other_teachers', 'uses' => 'AdministrationController@mge_other_teachers', 'middleware' => ['general_auth','admin']]);
+Route::post('mge_add_teachers_to_group', ['as' => 'mge_add_teachers_to_group', 'uses' => 'AdministrationController@mge_add_teachers_to_group', 'middleware' => ['general_auth','admin']]);
+Route::post('mge_remove_teacher_from_group', ['as' => 'mge_remove_teacher_from_group', 'uses' => 'AdministrationController@mge_remove_teacher_from_group', 'middleware' => ['general_auth','admin']]);
+
+Route::get('manage_groups_by_teachers_elite', ['as' => 'manage_groups_by_teachers_elite', 'uses' => 'AdministrationController@manage_groups_by_teachers_elite', 'middleware' => ['general_auth','admin']]);
+Route::post('mge_other_groups', ['as' => 'mge_other_groups', 'uses' => 'AdministrationController@mge_other_groups', 'middleware' => ['general_auth','admin']]);
+Route::post('mge_add_groups_to_teacher', ['as' => 'mge_add_groups_to_teacher', 'uses' => 'AdministrationController@mge_add_groups_to_teacher', 'middleware' => ['general_auth','admin']]);
+Route::post('mge_remove_group_from_teacher', ['as' => 'mge_remove_group_from_teacher', 'uses' => 'AdministrationController@mge_remove_group_from_teacher', 'middleware' => ['general_auth','admin']]);
 
 Route::get('manage_news', ['as' => 'manage_news', 'uses' => 'AdministrationController@manage_news', 'middleware' => ['general_auth', 'admin']]);
 Route::post('manage_news/add_news', ['as' => 'add_news', 'uses' => 'AdministrationController@add_news', 'middleware' => ['general_auth', 'admin']]);
@@ -389,6 +399,7 @@ Route::get('pashalka', ['as' => 'pashalka', 'uses' => 'AdministrationController@
 Route::get('manage_groups/group_set', ['as' => 'group_set', 'uses' => 'AdministrationController@add_groups', 'middleware' => ['general_auth', 'admin']]);
 Route::post('manage_groups/group_set/add', ['as' => 'add_group_to_set', 'uses' => 'AdministrationController@add_group_to_set', 'middleware' => ['general_auth', 'admin']]);
 Route::post('manage_groups/group_set/delete', ['as' => 'delete_group_from_set', 'uses' => 'AdministrationController@delete_group_from_set', 'middleware' => ['general_auth', 'admin']]);
+Route::post('manage_groups/group_set/restore', ['as' => 'archived_group_restore', 'uses' => 'AdministrationController@archived_group_restore', 'middleware' => ['general_auth', 'admin']]);
 
 //архивный модуль
 Route::get('storage', ['as' => 'archive_index', 'uses' => 'ArchiveController@index', 'middleware' => ['general_auth', 'admin']]);

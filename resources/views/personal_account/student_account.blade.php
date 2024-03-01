@@ -5,7 +5,7 @@
     {!! HTML::style('css/bootstrap.css') !!}
     {!! HTML::style('css/materialadmin.css') !!}
     {!! HTML::style('css/full.css') !!}
-    {!! HTML::style('css/student_account.css') !!}}
+    {!! HTML::style('css/student_account.css') !!}
 @stop
 
 @section('background')
@@ -17,7 +17,7 @@
     <div class="card style-default-light">
                     {{--<div class="card-body test-list">--}}
                     <h2 class="text-center">Личный кабинет</h2>
-                    <h3 class="text-center">{{ Auth::user()['first_name'] }} {{ Auth::user()['last_name'] }} <b>{{ Auth::user()['email'] }}</b></h3>
+                    <h3 class="text-center">{{ $user['first_name'] }} {{ $user['last_name'] }} <b>{{ $user['email'] }}</b></h3>
                         <a href="{{ route('test_results')}}" class="btn btn-warning col-md-offset-3 col-md-6 ">Перейти на страницу результатов системы тестирования</a>
         <a href="{{ route('student_сabinet')}}" class="btn btn-warning col-md-offset-3 col-md-6 " style="margin-top: 0.5%">Перейти на страницу "Заказы книг" </a>
 
@@ -210,5 +210,13 @@
 
         </div>
     </div>
+    <div class="section-screenshots">
+        <h2>Скриншоты сданных контрольных</h2>
+        @foreach($screenshots as $shot)
+            <a href="{{ $shot }}" target="_blank">{{ basename($shot) }}</a>
+        @endforeach
+    </div>
+@stop
 
+@section('js-down')
 @stop

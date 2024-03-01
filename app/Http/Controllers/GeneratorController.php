@@ -21,6 +21,7 @@ use App\Testing\Qtypes\TheoremLike;
 use App\Testing\Qtypes\YesNo;
 use App\Testing\Question;
 use App\Testing\Test;
+use App\Testing\TestGeneration\TestGenerationException;
 use App\Testing\TestGeneration\UsualTestGenerator;
 use Illuminate\Http\Request;
 
@@ -72,15 +73,15 @@ class GeneratorController extends Controller {
     }
 
     public function index(){
-        $tests = [];
-        $query = Test::whereArchived(0)
+        $testNames = [];
+        $tests = Test::whereArchived(0)
                     ->select('id_test', 'test_name', 'test_type')->get();
-        foreach ($query as $test){
+        foreach ($tests as $test){
             if ($test->test_type != 'Тренировочный'){
-                array_push($tests, $test->test_name);
+                array_push($testNames, $test->test_name);
             }
         }
-        return view('generator.index', compact('tests'));
+        return view('generator.index', compact('testNames'));
     }
 
     /** Генерирует pdf файлы с тестом с заданным количеством вариантов */
@@ -93,28 +94,32 @@ class GeneratorController extends Controller {
         $id_test = Test::whereTest_name($test_name)->select('id_test')->first()->id_test;
         $amount = $test->getAmount($id_test);                                                                                // кол-во вопрососв в тесте
 
-        $today =  date("Y-m-d H-i-s");
+        $today = date("Y-m-d H-i-s");
         $dir = 'archive/pdf_tests/'.Mypdf::translit($test_name).' '.$today;
         mkdir($dir);
 
         define('FPDF_FONTPATH','C:\wamp\www\uir\public\fonts');
-        for ($k = 1; $k <= $num_var; $k++){                                                                             // генерируем необходимое число вариантов
-            $fpdf = new Mypdf();
-            $answered_fpdf = new Mypdf();
-            $this->headOfPdf($fpdf, $test_name, $k, $amount);
-            $this->headOfPdf($answered_fpdf, $test_name, $k, $amount);
-            $generator = new UsualTestGenerator();
-            $generator->generate(Test::whereId_test($id_test)->first());
-            for ($i=0; $i<$amount; $i++){                                                                               // показываем каждый вопрос из теста
-                $id = $generator->chooseQuestion();
-                $this->pdfQuestion($fpdf, $id, $i+1, false, $paper_savings);
-                $this->pdfQuestion($answered_fpdf, $id, $i+1, true);
+        try {
+            for ($k = 1; $k <= $num_var; $k++){                                                                             // генерируем необходимое число вариантов
+                $fpdf = new Mypdf();
+                $answered_fpdf = new Mypdf();
+                $this->headOfPdf($fpdf, $test_name, $k, $amount);
+                $this->headOfPdf($answered_fpdf, $test_name, $k, $amount);
+                $generator = new UsualTestGenerator();
+                $generator->generate(Test::whereId_test($id_test)->first());
+                for ($i=0; $i<$amount; $i++){                                                                               // показываем каждый вопрос из теста
+                    $id = $generator->chooseQuestion();
+                    $this->pdfQuestion($fpdf, $id, $i+1, false, $paper_savings);
+                    $this->pdfQuestion($answered_fpdf, $id, $i+1, true);
+                }
+                if ($request->input('protocol-num') != '') {
+                    $this->footerOfPdf($fpdf, $request->input('protocol-num'), $request->input('protocol-date'));
+                }
+                $fpdf->Output($dir.'/variant'.$k.'.pdf', 'F');
+                $answered_fpdf->Output($dir.'/answered_variant'.$k.'.pdf', 'F');
             }
-            if ($request->input('protocol-num') != '') {
-                $this->footerOfPdf($fpdf, $request->input('protocol-num'), $request->input('protocol-date'));
-            }
-            $fpdf->Output($dir.'/variant'.$k.'.pdf', 'F');
-            $answered_fpdf->Output($dir.'/answered_variant'.$k.'.pdf', 'F');
+        } catch (TestGenerationException $ex) {
+            throw new \Exception('Произошла ошибка при генерации теста. Для решения этого вопроса попробуйте в разделе "Список всех тестов" для этого теста задать галочку на "Только для печати".');
         }
 
         $zip = Mypdf::pdfToZip($dir);                                                                                   // создаем архив

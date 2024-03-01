@@ -528,14 +528,7 @@ function createHam2(containerEl) {
 
     function exportApplyBtnClick() {
         algoNameWrapperEl.style.display = 'none';
-        const algoName = algoNameEl.value;
-        const exportData = {
-            algoName: algoName,
-            comment: algoCommentEl.value,
-            newWord: newWordEl.value,
-            alphabet: alphabet,
-            list: list,
-        };
+        const exportData = getExportData();
         const data = JSON.stringify(exportData);
         saveFile(`${algoName}.json`, data);
     }
@@ -548,13 +541,25 @@ function createHam2(containerEl) {
         const reader = new FileReader();
         reader.onload = function(ev) {
             const contents = ev.target.result;
-            applyImportedData(JSON.parse(contents+''));
+            importData(JSON.parse(contents+''));
             importInput.value = '';
         };
         reader.readAsText(file);
     }
 
-    function applyImportedData(data) {
+    function getExportData() {
+        const algoName = algoNameEl.value;
+        const exportData = {
+            algoName: algoName,
+            comment: algoCommentEl.value,
+            newWord: newWordEl.value,
+            alphabet: alphabet,
+            list: list,
+        };
+        return exportData;
+    }
+
+    function importData(data) {
         const d = data;
         if (!d || d.algoName === undefined || d.newWord === undefined || !d.alphabet || !d.list) {
             alert('Неверный формат файла для импорта');
@@ -569,38 +574,7 @@ function createHam2(containerEl) {
         generateList();
         setStepStartButtonsEnabled(false);
     }
-
-    function start() {
-        listAddRowBtn.addEventListener('click', listAddRowClickHandler);
-        listSectionRowsEl.addEventListener('keydown', listInputsTabEnterHandler);
-        listSectionRowsEl.addEventListener('input', listInputsRewriteAbbrs);
-        listSectionRowsEl.addEventListener('click', listRowButtonClicks);
-        listSectionRowsEl.addEventListener('focusout', reflectListOnListInputBlurHandler)
-        newWordEl.addEventListener('input', newWordInputHandler);
-        placeWordBtnEl.addEventListener('click', placeWordHandler);
-        clearTapeBtnEl.addEventListener('click', clearTapeHandler);
-        alphabetEl.addEventListener('input', alphabetInputHandler);
-        exportBtn.addEventListener('click', exportBtnClick);
-        exportApplyBtn.addEventListener('click', exportApplyBtnClick);
-        algoNameWrapperEl.addEventListener('click', algoNameWrapperClick)
-        importInput.addEventListener('change', importInputChangeHandler, false);
-        fillAlphabetInput();
-        generateList();
-        if (examplesButtonsWrapperEl) {
-            addExamplesButtons();
-        }
-
-        if (examplesButtonsWrapperEl) {
-            examplesButtonsWrapperEl.addEventListener('click', examplesButtonsWrapperClickHandler);
-        }
-        stepBtnEl.addEventListener('click', stepButtonClickHandler);
-        startBtnEl.addEventListener('click', startButtonClickHandler);
-        toFirstStateEl.addEventListener('click', toFirstStateButtonClickHandler);
-        checkBtnEl.addEventListener('click', checkBtnClickHandler);
-
-        return checking();
-    }
-
+    
     // buttonCode: 'btnDebug'|'btnCheckSyntax'|'btnRun'|'btnStep'
     function checkAnswer(buttonCode, formEl, notice) {
         const testId = +document.querySelector('#id_test').value;
@@ -664,18 +638,56 @@ function createHam2(containerEl) {
         }
     }
 
-    function checking() {
+    // Эмулятор машины Маркова запущен отдельно, т.е. вне теста, контрольной и т.д.
+    function isStandaloneEmulator() {
         if (!formEl) {
-            return () => {};
+            return true;
         }
         const btnCheckAnswerEl = formEl.querySelector('.btn-check-answer');
-        if (!btnCheckAnswerEl) {
-            return () => {};
+        return !btnCheckAnswerEl;
+    }
+
+    function start() {
+        listAddRowBtn.addEventListener('click', listAddRowClickHandler);
+        listSectionRowsEl.addEventListener('keydown', listInputsTabEnterHandler);
+        listSectionRowsEl.addEventListener('input', listInputsRewriteAbbrs);
+        listSectionRowsEl.addEventListener('click', listRowButtonClicks);
+        listSectionRowsEl.addEventListener('focusout', reflectListOnListInputBlurHandler)
+        newWordEl.addEventListener('input', newWordInputHandler);
+        placeWordBtnEl.addEventListener('click', placeWordHandler);
+        clearTapeBtnEl.addEventListener('click', clearTapeHandler);
+        alphabetEl.addEventListener('input', alphabetInputHandler);
+        exportBtn.addEventListener('click', exportBtnClick);
+        exportApplyBtn.addEventListener('click', exportApplyBtnClick);
+        algoNameWrapperEl.addEventListener('click', algoNameWrapperClick)
+        importInput.addEventListener('change', importInputChangeHandler, false);
+        fillAlphabetInput();
+        generateList();
+        if (examplesButtonsWrapperEl) {
+            addExamplesButtons();
         }
 
-        btnCheckAnswerEl.addEventListener('click', () => checkAnswer('btnDebug', formEl, true));
-        return () => {
-            checkAnswer('btnDebug', formEl, false);
+        if (examplesButtonsWrapperEl) {
+            examplesButtonsWrapperEl.addEventListener('click', examplesButtonsWrapperClickHandler);
+        }
+        stepBtnEl.addEventListener('click', stepButtonClickHandler);
+        startBtnEl.addEventListener('click', startButtonClickHandler);
+        toFirstStateEl.addEventListener('click', toFirstStateButtonClickHandler);
+        checkBtnEl.addEventListener('click', checkBtnClickHandler);
+
+        if (!isStandaloneEmulator()) {
+            const btnCheckAnswerEl = formEl.querySelector('.btn-check-answer');
+            btnCheckAnswerEl.addEventListener('click', () => checkAnswer('btnDebug', formEl, true));
+        }
+
+        if (isStandaloneEmulator()) {
+            return null;
+        }
+
+        return {
+            submit: () => checkAnswer('btnDebug', formEl, false),
+            getExportData: getExportData,
+            importData: importData,
         };
     }
 
@@ -683,15 +695,30 @@ function createHam2(containerEl) {
 }
 
 $(() => {
-    const allSubmitItFuncs = [];
+    const ham2List = [];
     for (let containerEl of document.querySelectorAll('.ham2-container')) {
-        const submitIt = createHam2(containerEl);
-        allSubmitItFuncs.push(submitIt);
+        const ham2 = createHam2(containerEl);
+        ham2List.push(ham2);
     }
 
-    window.ham2SubmitAllTasks = () => {
-        for (let foo of allSubmitItFuncs) {
-            foo();
+    window.ham2List = {
+        submit: () => {
+            for (let ham2 of ham2List) {
+                ham2.submit();
+            }
+        },
+        getExportData: () => {
+            const data = [];
+            for (let ham2 of ham2List) {
+                data.push(ham2.getExportData());
+            }
+            return data;
+        },
+        importData: dataAll => {
+            const n = Math.min(dataAll.length, ham2List.length);
+            for (let i = 0; i < n; i++) {
+                ham2List[i].importData(dataAll[i]);
+            }
         }
     };
 });

@@ -144,21 +144,19 @@ class Test extends Eloquent {
         if ($real < $max * 0.6){
             return 'F';
         }
-        if ($real >= $max * 0.6 && $real < $max * 0.65){
+        if ($real < $max * 0.65){
             return 'E';
         }
-        if ($real >= 0.65 && $real < $max * 0.75){
+        if ($real < $max * 0.75){
             return 'D';
         }
-        if ($real >= 0.75 && $real < $max * 0.85){
+        if ($real < $max * 0.85){
             return 'C';
         }
-        if ($real >= 0.85 && $real < $max * 0.9){
+        if ($real < $max * 0.9){
             return 'B';
         }
-        if ($real >= 0.9){
-            return 'A';
-        }
+        return 'A';
     }
 
     /** вычисляет оценку по обычной 5-тибалльной шкале, если дан максимально возможный балл и реальный */
@@ -166,15 +164,13 @@ class Test extends Eloquent {
         if ($real < $max * 0.6){
             return '2';
         }
-        if ($real >= $max * 0.6 && $real < $max * 0.7){
+        if ($real < $max * 0.7){
             return '3';
         }
-        if ($real >= 0.7 && $real < $max * 0.9){
+        if ($real < $max * 0.9){
             return '4';
         }
-        if ($real >= 0.9){
-            return '5';
-        }
+        return '5';
     }
 
 

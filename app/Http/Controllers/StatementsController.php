@@ -311,31 +311,73 @@ class StatementsController extends Controller{
     public function showPersonalAccount()
     {
         $user = Auth::user();
-        if (($user['role'] == 'Админ') or ($user['role'] == 'Преподаватель')) {
+        $role = $user['role'];
+        if ($role === 'Админ' || $role === 'Преподаватель') {
             return AdministrationController::getAdminPanel();
-        } else {
-            if ($user['role'] == 'Студент')
-            {
-                return $this->showStudentInfo();
-
-            }
-            else{
-                return PersonalAccount::showTestResults();
-            }
         }
+        if ($role === 'Студент') {
+            return $this->showStudentAccount($user);
+        }
+        return PersonalAccount::showTestResults();
     }
 
     //показывает личный кабинет студента, вкладку со статистикой
     public function showStudentInfo()
     {
         $user = Auth::user();
+        $role = $user['role'];
+        if ($role === 'Админ' || $role === 'Преподаватель') {
+            $groups = Group::where('groups.archived', 0)->where('groups.id_course_plan', '<>', null)->get();
+            return view('personal_account/students', compact('groups'));
+        }
+        return $this->showStudentAccount($user);
+    }
+
+    public function showSpecificStudentAccount($id) {
+        $user = Auth::user();
+        $role = $user['role'];
+        if ($role !== 'Админ' && $role !== 'Преподаватель') {
+            return 'Нет доступа';
+        }
+        $student = User::whereId($id)->first();
+        return $this->showStudentAccount($student);
+    }
+
+    private function showStudentAccount($user) {
         $id_course_plan = Group::where('group_id', $user->group)->select('id_course_plan')
             ->first()->id_course_plan;
         $course_plan = $this->course_plan_DAO->getCoursePlan( $id_course_plan);
         $statement_lecture = $this->lecture_statement->getStatementByUser($id_course_plan, $user);
         $statement_seminar = $this->seminar_statement->getStatementByUser($id_course_plan, $user);
         $statement_result = $this->result_statement->getResultingStatementByUser($id_course_plan, $user);
-        return view('personal_account/student_account',  compact('course_plan','statement_lecture','statement_seminar', 'statement_result'));
+        $screenshots = $this->getScreenshots(Auth::user()['id']);
+        return view('personal_account/student_account',
+            compact('course_plan','statement_lecture','statement_seminar',
+                'statement_result', 'user', 'screenshots'));
+    }
+
+    private function getScreenshots($userId) {
+        $dir = 'screenshots/tests/' . $userId;
+        if (!file_exists($dir)) {
+            return [];
+        }
+        $res = glob($dir . '/*.png');
+        return preg_filter('/^/', '/', $res);
+    }
+
+    public function getStudentsByGroup(Request $request) {
+        $data = $this->getData($request);
+        $groupId = $data->groupId;
+        $users = User::where([['group', '=', $groupId], ['role', '=', 'Студент']])
+            ->join('groups', 'groups.group_id', '=', 'users.group')
+            ->orderBy('users.last_name', 'asc')
+            ->distinct()->get();
+
+        return response()->json($users);
+    }
+
+    private function getData(Request $request) {
+        return json_decode($request->input('data'), false);
     }
 
     //Возвращают представление соответствующей ведомости
@@ -390,7 +432,18 @@ class StatementsController extends Controller{
             compact('course_plan','id_group', 'statement_result'));
     }
 
-    private function get_resulting_excel_internal(Request $request, $isForExam) {
+    // Генерация ведомости
+    public function gen_statement(Request $request) {
+        // $stat_type - Тип ведомости:
+        // 1. credit - зачёт
+        // 2. credit-with-grade - зачёт с оценкой
+        // 3. exam - экзамен
+        // 4. section-evaluation - аттестация разделов
+        $stat_type = $request->input('type');
+        if (!in_array($stat_type, ['credit', 'credit-with-grade', 'exam', 'section-evaluation'])) {
+            return;
+        }
+
         $id_group = $request->input('group');
         $file = $request->file;
         $id_course_plan = Group::where('group_id', $id_group)->select('id_course_plan')
@@ -398,18 +451,15 @@ class StatementsController extends Controller{
         $course_plan = $this->course_plan_DAO->getCoursePlan($id_course_plan);
         $statement_result = $this->result_statement->getResultingStatementByGroup($id_group);
         Storage::disk('local')->put('file.xlsx', file_get_contents($file));
-        return $this->result_statement->getExcelLoadOut($course_plan,$statement_result,'/storage/app/file.xlsx', $isForExam);;
+
+        return $this->result_statement->getExcelLoadOut(
+            $course_plan,
+            $statement_result,
+            '/storage/app/file.xlsx',
+            $stat_type);;
     }
 
-    public function get_resulting_excel(Request $request){
-        return $this->get_resulting_excel_internal($request, false);
-    }
-
-    public function get_resulting_excel_ex(Request $request){
-        return $this->get_resulting_excel_internal($request, true);
-    }
-
-    //Отмечает или раз-отмечает студента на лекции
+    // Отмечает или раз-отмечает студента на лекции
     public function lecture_mark_present(Request $request){
         $this->lecture_statement->markPresent($request);
         return 0;

@@ -59,19 +59,15 @@ class TheoremLike extends QuestionType {
             $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для доказательства
                         <tr><td height="150px">'.$this->answer.'</td></tr>
                       </table><br>';
-            $fpdf->WriteHTML($html);
-        }
-        else{
-            $html .= '<p>Ответ:</p>';
-            if ($paper_savings) {
-                $height_tr = QuestionType::PAPER_SAVING_HEIGHT_ANSWER;
-            } else {
+        } else {
+            if (!$paper_savings) {
+                $html .= '<p>Ответ:</p>';
                 $height_tr = $this::ORIGIN_HEIGHT_ANSWER;
-            }
-            $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для доказательства
-                        <tr><td height="' . $height_tr . '"></td></tr>
-                      </table><br>';
-            $fpdf->WriteHTML($html);
+                $html .= '<table border="1" style="border-collapse: collapse;" width="100%">                                                       //блок для доказательства
+                            <tr><td height="' . $height_tr . '"></td></tr>
+                        </table><br>';
+            }   
         }
+        $fpdf->WriteHTML($html);
     }
 }
