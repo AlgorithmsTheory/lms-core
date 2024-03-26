@@ -9,32 +9,7 @@
     {!! HTML::style('css/material-design-iconic-font.min.css') !!}
     {!! HTML::style('css/materialadmin_demo.css') !!}
     @yield('head')
-    <style>
-        .navbar-header {
-            display: flex;
-            align-items: center;
-            padding: 0 25px;
-        }
-
-        .navbar-toggler {
-            margin-left: auto;
-            background: transparent;
-            width: 40px;
-            height: 40px;
-            color: #fff;
-            border: 0;
-            outline: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        @media (min-width: 769px) {
-            .navbar-toggler {
-                display: none;
-            }
-        }
-    </style>
+    {!! HTML::style('css/navbar.css') !!}
 </head>
 <body class="@yield('background', '')">
 <div id="base">
