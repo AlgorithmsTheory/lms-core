@@ -196,24 +196,39 @@ class Question extends Eloquent {
     }
 
     public function evalDiscriminant($id_question) {
+        // Баллы за ответы на вопрос разных юзеров
         $points = [];
+        // Уровни юзеров, соответствующих points по индексам
         $levels = [];
 
+        // Ответы на заданный вопрос (каждый ответ хранит код вопроса, код результата)
         $tasks = TestTask::whereId_question($id_question)->select('points', 'id_result')->get();
         foreach ($tasks as $task) {
+            // Баллов за ответ на вопрос
             array_push($points, $task->points);
+            // ИД юзера, который ответил на вопрос
             $user_id = Result::whereId_result($task->id_result)->select('id')->first()->id;
+            // Уровень знаний юзера
             $level = User::whereId($user_id)->select('knowledge_level')->first()->knowledge_level;
             array_push($levels, $level);
         }
 
+        // Число ответов на вопрос от разных пользователей
         $number = count($points);
         if ($number > 0) {
-
+            // sum(points[i])
             $sum_points = 0;
+
+            // sum(levels[i])
             $sum_levels = 0;
+
+            // sum(points[i] * levels[i])
             $sum_points_and_levels = 0;
+
+            // sum(points[i] ^ 2)
             $sum_quadratic_points = 0;
+
+            // sum (levels[i] ^ 2)
             $sum_quadratic_levels = 0;
             for ($i = 0; $i < count($points); $i++) {
                 $sum_points += $points[$i];
@@ -223,10 +238,24 @@ class Question extends Eloquent {
                 $sum_quadratic_levels += $levels[$i] * $levels[$i];
             }
 
+            // N - число всех ответов на вопросы от разных пользователей
+            // N * sum(points[i] * levels[i]) - sum(points[i]) * sum(levels[i])
             $division = ($number * $sum_points_and_levels) - ($sum_points * $sum_levels);
-            $divider = sqrt(($number * $sum_quadratic_points - pow($sum_points, 2)) *
-                ($number * $sum_quadratic_levels - pow($sum_levels, 2)));
+            // sqrt(
+            //   (N * sum(points[i] ^ 2) - sum(points[i]) ^ 2)) *
+            //   (N * sum(levels[i] ^ 2) - sum(levels[i]) ^ 2)
+            // )
+            $divider = sqrt(
+                ($number * $sum_quadratic_points - pow($sum_points, 2)) *
+                ($number * $sum_quadratic_levels - pow($sum_levels, 2))
+            );
 
+            // N * sum(points[i] * levels[i]) - sum(points[i]) * sum(levels[i])
+            // ----------------------------------------------------------------
+            // sqrt(
+            //   (N * sum(points[i] ^ 2) - sum(points[i]) ^ 2)) *
+            //   (N * sum(levels[i] ^ 2) - sum(levels[i]) ^ 2)
+            // )
             if ($divider != 0) return $division / $divider;
         }
         return Question::whereId_question($id_question)
@@ -237,15 +266,23 @@ class Question extends Eloquent {
         $right_answers_count = 0;
         $wrong_answers_count = 0;
 
+        // Вопрос (хранит код темы, код раздела, код типа)
         $question = Question::whereId_question($id_question)->select('points', 'difficulty')->first();
         $max_points = $question->points;
+        // Ответы на вопрос от разных пользователей (каждый ответ хранит ид результата, ид вопроса)
+        // P.S. Результат - пройденный кем-то тест (тест может быть пройден несколько раз)
         $tasks = TestTask::whereId_question($id_question)->select('points')->get();
         foreach ($tasks as $task) {
+            // Балл за ответ выше 60%?
             if (Question::isAnsweredRight($task->points, $max_points)) $right_answers_count++;
             else $wrong_answers_count++;
         }
 
         if ($right_answers_count == 0 || $wrong_answers_count == 0) return $question->difficulty;
+        // Натуральный логарифм.
+        // Результат от -Infinity до Infinity.
+        // 1) 1 при wrong/right === e.
+        // 2) 0 при wrong/right === 1.
         return log($wrong_answers_count / $right_answers_count);
     }
-} 
+}
