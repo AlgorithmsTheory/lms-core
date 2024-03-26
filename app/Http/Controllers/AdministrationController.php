@@ -15,6 +15,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Validator;
+use Illuminate\Support\Facades\Log;
 
 class AdministrationController extends Controller{
     const NEWS_FILE_DIR = 'download/news/';
@@ -88,6 +89,13 @@ class AdministrationController extends Controller{
     }
 
 
+    public function archived_group_restore(Request $request){
+        $id = json_decode($request->input('number'),true);
+        Group::where('group_id', $id)->update(['archived' => 0]);
+        return $id;
+    }
+
+
     public function change_group(Request $request){
         $id = json_decode($request->input('id'),true);
         $value = $request->input('value');
@@ -115,7 +123,11 @@ class AdministrationController extends Controller{
     }
 
     public function manage_groups(){
-        $teachers = User::whereRole("Преподаватель")->orderBy('id', 'desc')->get();
+        $teachers = User::
+            join('groups', 'groups.group_id', '=', 'users.group')
+            ->where('users.role', 'Преподаватель')
+            ->where('groups.archived', 0)
+            ->orderBy('id', 'desc')->get();
         $group_set = Group::where('archived', 0)->get();
         $groups = TeacherHasGroup::join('users', 'teacher_has_group.user_id', '=', 'users.id')
             ->join('groups', 'groups.group_id', '=', 'teacher_has_group.group')

@@ -1,0 +1,72 @@
+.mge-root {
+
+}
+
+.mge-subpages {
+  margin: 0 0 30px;
+  display: flex;
+  justify-content: center;
+  gap: 17px;
+  align-items: center;
+}
+
+.mge-subpage-btn {
+  --mge-btn-color: #007bff;
+  height: 44px;
+  border: 1px solid var(--mge-btn-color);
+  background: #ffffffd2;
+  padding: 0 20px;
+  text-decoration: none !important;
+  font-family: inherit;
+  color: var(--mge-btn-color);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  transition: all .2s ease-in-out;
+  letter-spacing: 0.9px;
+}
+
+.mge-subpage-btn[disabled], .mge-subpage-btn:hover {
+  background: var(--mge-btn-color);
+  color: #fff;
+}
+
+.mge-subpage-btn[disabled] {
+  pointer-events: none;
+  cursor: default;
+}
+
+.mge-cards {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 30px;
+}
+
+@media (min-width: 540px) {
+  .mge-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 940px) {
+  .mge-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1150px) {
+  .mge-cards {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.mge-card {
+  position: relative;
+  background: #fff;
+  padding: 20px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+}

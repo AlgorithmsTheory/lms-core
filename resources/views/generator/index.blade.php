@@ -17,7 +17,7 @@
                         <!-- Выбор теста -->
                         <div class="form-group">
                             <select name="test" id="select-test" class="form-control" size="1" required>
-                                @foreach ($tests as $test)
+                                @foreach ($testNames as $test)
                                 <option value="{{$test}}">{{$test}}</option>/td>
                                 @endforeach
                             </select>

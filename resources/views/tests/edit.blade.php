@@ -101,12 +101,12 @@
                         </div>
                         <!-- Максимум баллов за тест -->
                         <div class="form-group">
-                            <input type="number" min="1" step="0.5" name="total" id="total" class="form-control" value="{{ $test['total'] }}" required>
+                            <input type="number" min="1" step="0.5" name="total" id="total" class="form-control" style="width: 100%; max-width: 400px;" value="{{ $test['total'] }}" required>
                             <label for="total">Максимум баллов за тест</label>
                         </div>
                         <!-- Время на прохождение теста -->
                         <div class="form-group">
-                            <input type="number" min="1" name="test-time" id="test-time" class="form-control" value="{{ $test['test_time'] }}" required>
+                            <input type="number" min="1" name="test-time" id="test-time" class="form-control" style="width: 100%; max-width: 400px;" value="{{ $test['test_time'] }}" required>
                             <label for="test-time">Время на прохождение теста в минутах</label>
                         </div>
                         <!-- Максимальное число вопросов в адаптивном тесте -->
