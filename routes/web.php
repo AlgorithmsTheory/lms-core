@@ -381,16 +381,15 @@ Route::post('manage_groups/add_group', ['as' => 'add_group', 'uses' => 'Administ
 Route::post('manage_groups/delete_group', ['as' => 'delete_group', 'uses' => 'AdministrationController@delete_group', 'middleware' => ['general_auth', 'admin']]);
 
 Route::get('manage_groups', ['as' => 'manage_groups', 'uses' => 'GroupsController@manageGroups', 'middleware' => ['general_auth','admin']]);
-Route::get('manage_groups_elite', ['as' => 'manage_groups_elite', 'uses' => 'GroupsController@manageGroups', 'middleware' => ['general_auth','admin']]);
 
-Route::post('mge_other_teachers', ['as' => 'mge_other_teachers', 'uses' => 'GroupsController@otherTeachers', 'middleware' => ['general_auth','admin']]);
-Route::post('mge_add_teachers_to_group', ['as' => 'mge_add_teachers_to_group', 'uses' => 'GroupsController@addTeachersToGroup', 'middleware' => ['general_auth','admin']]);
-Route::post('mge_remove_teacher_from_group', ['as' => 'mge_remove_teacher_from_group', 'uses' => 'GroupsController@removeTeacherFromGroup', 'middleware' => ['general_auth','admin']]);
+Route::post('manage_groups_other_teachers', ['as' => 'manage_groups_other_teachers', 'uses' => 'GroupsController@otherTeachers', 'middleware' => ['general_auth','admin']]);
+Route::post('manage_groups_add_teachers_to_group', ['as' => 'manage_groups_add_teachers_to_group', 'uses' => 'GroupsController@addTeachersToGroup', 'middleware' => ['general_auth','admin']]);
+Route::post('manage_groups_remove_teacher_from_group', ['as' => 'manage_groups_remove_teacher_from_group', 'uses' => 'GroupsController@removeTeacherFromGroup', 'middleware' => ['general_auth','admin']]);
 
-Route::get('manage_groups_by_teachers_elite', ['as' => 'manage_groups_by_teachers_elite', 'uses' => 'GroupsController@manageGroupsByTeachers', 'middleware' => ['general_auth','admin']]);
-Route::post('mge_other_groups', ['as' => 'mge_other_groups', 'uses' => 'GroupsController@otherGroups', 'middleware' => ['general_auth','admin']]);
-Route::post('mge_add_groups_to_teacher', ['as' => 'mge_add_groups_to_teacher', 'uses' => 'GroupsController@addGroupsToTeacher', 'middleware' => ['general_auth','admin']]);
-Route::post('mge_remove_group_from_teacher', ['as' => 'mge_remove_group_from_teacher', 'uses' => 'GroupsController@removeGroupFromTeacher', 'middleware' => ['general_auth','admin']]);
+Route::get('manage_groups_by_teachers', ['as' => 'manage_groups_by_teachers', 'uses' => 'GroupsController@manageGroupsByTeachers', 'middleware' => ['general_auth','admin']]);
+Route::post('manage_groups_other_groups', ['as' => 'manage_groups_other_groups', 'uses' => 'GroupsController@otherGroups', 'middleware' => ['general_auth','admin']]);
+Route::post('manage_groups_add_groups_to_teacher', ['as' => 'manage_groups_add_groups_to_teacher', 'uses' => 'GroupsController@addGroupsToTeacher', 'middleware' => ['general_auth','admin']]);
+Route::post('manage_groups_remove_group_from_teacher', ['as' => 'manage_groups_remove_group_from_teacher', 'uses' => 'GroupsController@removeGroupFromTeacher', 'middleware' => ['general_auth','admin']]);
 
 Route::get('manage_news', ['as' => 'manage_news', 'uses' => 'AdministrationController@manage_news', 'middleware' => ['general_auth', 'admin']]);
 Route::post('manage_news/add_news', ['as' => 'add_news', 'uses' => 'AdministrationController@add_news', 'middleware' => ['general_auth', 'admin']]);
