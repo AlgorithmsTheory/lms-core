@@ -179,6 +179,7 @@ class AdaptiveTestController extends Controller {
     }
 
     public function evalParams(Request $request) {
+        ini_set('max_execution_time', 3600);
         $params = $request->input('param');
         $questions = Question::where('section_code', '>', 0)
             ->whereRaw("type_code in (select type_code from types where only_for_print = 0)")

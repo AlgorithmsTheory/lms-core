@@ -196,70 +196,80 @@ class Question extends Eloquent {
     }
 
     public function evalDiscriminant($id_question) {
-        // Баллы за ответы на вопрос разных юзеров
-        $points = [];
-        // Уровни юзеров, соответствующих points по индексам
-        $levels = [];
+        $tasks = TestTask::whereId_question($id_question)
+            ->join('results', 'test_tasks.id_result', '=', 'results.id_result')
+            ->join('users', 'results.id', '=', 'users.id')
+            ->select(
+                'test_tasks.points as points',
+                'users.knowledge_level as level'
+            )
+            ->get();
+        return $this->discrV2($tasks, $id_question);
+    }
 
-        // Ответы на заданный вопрос (каждый ответ хранит код вопроса, код результата)
-        $tasks = TestTask::whereId_question($id_question)->select('points', 'id_result')->get();
+    private function discrV1($tasks, $id_question) {
+        $N = $tasks->count();
+        if ($N <= 0) {
+            return Question::whereId_question($id_question)
+                ->select('discriminant')->first()->discriminant;
+        }
+        $sum_points = 0;
+        $sum_levels = 0;
+        $sum_points_and_levels = 0;
+        $sum_quadratic_points = 0;
+        $sum_quadratic_levels = 0;
         foreach ($tasks as $task) {
-            // Баллов за ответ на вопрос
-            array_push($points, $task->points);
-            // ИД юзера, который ответил на вопрос
-            $user_id = Result::whereId_result($task->id_result)->select('id')->first()->id;
-            // Уровень знаний юзера
-            $level = User::whereId($user_id)->select('knowledge_level')->first()->knowledge_level;
-            array_push($levels, $level);
+            $points = $task->points;
+            $level = $task->level;
+            $sum_points += $points;
+            $sum_levels += $level;
+            $sum_points_and_levels += $points * $level;
+            $sum_quadratic_points += $points * $points;
+            $sum_quadratic_levels += $level * $level;
         }
 
-        // Число ответов на вопрос от разных пользователей
-        $number = count($points);
-        if ($number > 0) {
-            // sum(points[i])
-            $sum_points = 0;
+        $division = ($N * $sum_points_and_levels) - ($sum_points * $sum_levels);
+        $divider = sqrt(
+            ($N * $sum_quadratic_points - pow($sum_points, 2)) *
+            ($N * $sum_quadratic_levels - pow($sum_levels, 2))
+        );
 
-            // sum(levels[i])
-            $sum_levels = 0;
-
-            // sum(points[i] * levels[i])
-            $sum_points_and_levels = 0;
-
-            // sum(points[i] ^ 2)
-            $sum_quadratic_points = 0;
-
-            // sum (levels[i] ^ 2)
-            $sum_quadratic_levels = 0;
-            for ($i = 0; $i < count($points); $i++) {
-                $sum_points += $points[$i];
-                $sum_levels += $levels[$i];
-                $sum_points_and_levels += $points[$i] * $levels[$i];
-                $sum_quadratic_points += $points[$i] * $points[$i];
-                $sum_quadratic_levels += $levels[$i] * $levels[$i];
-            }
-
-            // N - число всех ответов на вопросы от разных пользователей
-            // N * sum(points[i] * levels[i]) - sum(points[i]) * sum(levels[i])
-            $division = ($number * $sum_points_and_levels) - ($sum_points * $sum_levels);
-            // sqrt(
-            //   (N * sum(points[i] ^ 2) - sum(points[i]) ^ 2)) *
-            //   (N * sum(levels[i] ^ 2) - sum(levels[i]) ^ 2)
-            // )
-            $divider = sqrt(
-                ($number * $sum_quadratic_points - pow($sum_points, 2)) *
-                ($number * $sum_quadratic_levels - pow($sum_levels, 2))
-            );
-
-            // N * sum(points[i] * levels[i]) - sum(points[i]) * sum(levels[i])
-            // ----------------------------------------------------------------
-            // sqrt(
-            //   (N * sum(points[i] ^ 2) - sum(points[i]) ^ 2)) *
-            //   (N * sum(levels[i] ^ 2) - sum(levels[i]) ^ 2)
-            // )
-            if ($divider != 0) return $division / $divider;
+        if ($divider == 0) {
+            return Question::whereId_question($id_question)
+                ->select('discriminant')->first()->discriminant;
         }
-        return Question::whereId_question($id_question)
-            ->select('discriminant')->first()->discriminant;
+
+        return $division / $divider;
+    }
+
+    private function discrV2($tasks, $id_question) {
+        $N = $tasks->count();
+        if ($N <= 0) {
+            return Question::whereId_question($id_question)
+                ->select('discriminant')->first()->discriminant;
+        }
+        $xAvg = $tasks->avg('points');
+        $yAvg = $tasks->avg('level');
+        $sumDeltaX = 0;
+        $sumDeltaY = 0;
+        $sumSquaredDeltaX = 0;
+        $sumSquaredDeltaY = 0;
+        foreach ($tasks as $task) {
+            $x = $task->points;
+            $y = $task->level;
+            $dx = $x - $xAvg;
+            $dy = $y - $yAvg;
+            $sumDeltaX += $dx;
+            $sumDeltaY += $dy;
+            $sumSquaredDeltaX += $dx*$dx;
+            $sumSquaredDeltaY += $dy*$dy;
+        }
+        $divider = sqrt($sumSquaredDeltaX * $sumSquaredDeltaY);
+        if ($divider == 0) {
+            return Question::whereId_question($id_question)
+                ->select('discriminant')->first()->discriminant;
+        }
+        return $sumDeltaX * $sumDeltaY / $divider;
     }
 
     public function evalDifficulty($id_question) {
