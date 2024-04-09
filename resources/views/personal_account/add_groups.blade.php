@@ -35,8 +35,8 @@
                                 {{ $group['archived'] == 0 ? "Активна" : "В архиве" }}
                             </td>
                             <td>
-                                <button type="button" class="delete btn btn-danger" name="{{ $group['group_id'] }}" id="{{ $group['group_id'] }}delete" {{ $group['archived'] == 0 ? "" : "Disabled" }}>
-                                    Архивировать
+                                <button type="button" class="delete btn btn-danger" name="{{ $group['group_id'] }}" data-id="{{ $group['group_id'] }}" data-archived="{{ $group['archived'] }}">
+                                    {{ $group['archived'] == 0 ? 'Архивировать' : 'Разархивировать' }}
                                 </button>
                             </td>
                         </tr>
@@ -81,5 +81,5 @@
 @stop
 
 @section('js-down')
-    {!! HTML::script('js/personal_account/delete_group.js') !!}
+    {!! HTML::script('js/personal_account/delete_restore_group.js') !!}
 @stop

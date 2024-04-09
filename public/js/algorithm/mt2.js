@@ -1146,17 +1146,7 @@ function createMt2(containerEl) {
 
     function exportApplyBtnClick() {
         algoNameWrapperEl.style.display = 'none';
-        const algoName = algoNameEl.value;
-        const exportData = {
-            algoName: algoName,
-            comment: algoCommentEl.value,
-            tape: tape,
-            newWord: newWordEl.value,
-            alphabet: alphabet,
-            view: view,
-            automaton: automaton,
-            list: list,
-        };
+        const exportData = getExportData();
         const data = JSON.stringify(exportData);
         saveFile(`${algoName}.json`, data);
     }
@@ -1169,13 +1159,28 @@ function createMt2(containerEl) {
         const reader = new FileReader();
         reader.onload = function(ev) {
             const contents = ev.target.result;
-            applyImportedData(JSON.parse(contents+''));
+            importData(JSON.parse(contents+''));
             importInput.value = '';
         };
         reader.readAsText(file);
     }
 
-    function applyImportedData(data) {
+    function getExportData() {
+        const algoName = algoNameEl.value;
+        const exportData = {
+            algoName: algoName,
+            comment: algoCommentEl.value,
+            tape: tape,
+            newWord: newWordEl.value,
+            alphabet: alphabet,
+            view: view,
+            automaton: automaton,
+            list: list,
+        };
+        return exportData;
+    }
+
+    function importData(data) {
         const d = data;
         if (!d || d.algoName === undefined || !d.tape || d.newWord === undefined || !d.alphabet || !d.view || !d.automaton || !d.list) {
             alert('Неверный формат файла для импорта');
@@ -1204,57 +1209,7 @@ function createMt2(containerEl) {
         generateList();
         setStepStartButtonsEnabled(false);
     }
-
-    function start() {
-        window.addEventListener('resize', refillTape);
-        tableViewBtn.addEventListener('click', setTableView);
-        listViewBtn.addEventListener('click', setListView);
-        listAddRowBtn.addEventListener('click', listAddRowClickHandler);
-        listSectionRowsEl.addEventListener('keydown', listInputsTabEnterHandler);
-        listSectionRowsEl.addEventListener('input', listInputsRewriteAbbrs);
-        listSectionRowsEl.addEventListener('click', listRowButtonClicks);
-        listSectionRowsEl.addEventListener('focusout', reflectListOnListInputBlurHandler)
-        tapeContentEl.addEventListener('input', tapeInputHandler);
-        tapeContentEl.addEventListener('dblclick', tapeDblClickHandler);
-
-        tapeLeftEl.addEventListener('click', tapeLeftHandler);
-        tapeRightEl.addEventListener('click', tapeRightHandler);
-
-        newWordEl.addEventListener('input', newWordInputHandler);
-
-        placeWordBtnEl.addEventListener('click', placeWordHandler);
-        clearTapeBtnEl.addEventListener('click', clearTapeHandler);
-
-        alphabetEl.addEventListener('input', alphabetInputHandler);
-
-        tableEl.addEventListener('click', buttonsOnTableClickHandler);
-        tableEl.addEventListener('focusout', reflectAutomatonOnTableInputBlurHandler);
-        tableEl.addEventListener('input', changeToSpecialsOnInput);
-
-        exportBtn.addEventListener('click', exportBtnClick);
-        exportApplyBtn.addEventListener('click', exportApplyBtnClick);
-        algoNameWrapperEl.addEventListener('click', algoNameWrapperClick)
-        importInput.addEventListener('change', importInputChangeHandler, false);
-
-        refillTape();
-        fillAlphabetInput();
-        generateTable();
-        generateList();
-        if (examplesButtonsWrapperEl) {
-            addExamplesButtons();
-        }
-
-        if (examplesButtonsWrapperEl) {
-            examplesButtonsWrapperEl.addEventListener('click', examplesButtonsWrapperClickHandler);
-        }
-        stepBtnEl.addEventListener('click', stepButtonClickHandler);
-        startBtnEl.addEventListener('click', startButtonClickHandler);
-        toFirstStateEl.addEventListener('click', toFirstStateButtonClickHandler);
-        checkBtnEl.addEventListener('click', checkBtnClickHandler);
-
-        return checking();
-    }
-
+    
     // buttonCode: 'btnDebug'|'btnCheckSyntax'|'btnRun'|'btnStep'
     function checkAnswer(buttonCode, formEl, notice) {
         const testId = +document.querySelector('#id_test').value;
@@ -1321,18 +1276,75 @@ function createMt2(containerEl) {
         }
     }
 
-    function checking() {
+    // Эмулятор машины Тьюринга запущен отдельно, т.е. вне теста, контрольной и т.д.
+    function isStandaloneEmulator() {
         if (!formEl) {
-            return () => {};
+            return true;
         }
         const btnCheckAnswerEl = formEl.querySelector('.btn-check-answer');
-        if (!btnCheckAnswerEl) {
-            return () => {};
+        return !btnCheckAnswerEl;
+    }
+
+    function start() {
+        window.addEventListener('resize', refillTape);
+        tableViewBtn.addEventListener('click', setTableView);
+        listViewBtn.addEventListener('click', setListView);
+        listAddRowBtn.addEventListener('click', listAddRowClickHandler);
+        listSectionRowsEl.addEventListener('keydown', listInputsTabEnterHandler);
+        listSectionRowsEl.addEventListener('input', listInputsRewriteAbbrs);
+        listSectionRowsEl.addEventListener('click', listRowButtonClicks);
+        listSectionRowsEl.addEventListener('focusout', reflectListOnListInputBlurHandler)
+        tapeContentEl.addEventListener('input', tapeInputHandler);
+        tapeContentEl.addEventListener('dblclick', tapeDblClickHandler);
+
+        tapeLeftEl.addEventListener('click', tapeLeftHandler);
+        tapeRightEl.addEventListener('click', tapeRightHandler);
+
+        newWordEl.addEventListener('input', newWordInputHandler);
+
+        placeWordBtnEl.addEventListener('click', placeWordHandler);
+        clearTapeBtnEl.addEventListener('click', clearTapeHandler);
+
+        alphabetEl.addEventListener('input', alphabetInputHandler);
+
+        tableEl.addEventListener('click', buttonsOnTableClickHandler);
+        tableEl.addEventListener('focusout', reflectAutomatonOnTableInputBlurHandler);
+        tableEl.addEventListener('input', changeToSpecialsOnInput);
+
+        exportBtn.addEventListener('click', exportBtnClick);
+        exportApplyBtn.addEventListener('click', exportApplyBtnClick);
+        algoNameWrapperEl.addEventListener('click', algoNameWrapperClick)
+        importInput.addEventListener('change', importInputChangeHandler, false);
+
+        refillTape();
+        fillAlphabetInput();
+        generateTable();
+        generateList();
+        if (examplesButtonsWrapperEl) {
+            addExamplesButtons();
         }
 
-        btnCheckAnswerEl.addEventListener('click', () => checkAnswer('btnDebug', formEl, true));
-        return () => {
-            checkAnswer('btnDebug', formEl, false);
+        if (examplesButtonsWrapperEl) {
+            examplesButtonsWrapperEl.addEventListener('click', examplesButtonsWrapperClickHandler);
+        }
+        stepBtnEl.addEventListener('click', stepButtonClickHandler);
+        startBtnEl.addEventListener('click', startButtonClickHandler);
+        toFirstStateEl.addEventListener('click', toFirstStateButtonClickHandler);
+        checkBtnEl.addEventListener('click', checkBtnClickHandler);
+
+        if (!isStandaloneEmulator()) {
+            const btnCheckAnswerEl = formEl.querySelector('.btn-check-answer');
+            btnCheckAnswerEl.addEventListener('click', () => checkAnswer('btnDebug', formEl, true));
+        }
+
+        if (isStandaloneEmulator()) {
+            return null;
+        }
+
+        return {
+            submit: () => checkAnswer('btnDebug', formEl, false),
+            getExportData: getExportData,
+            importData: importData,
         };
     }
 
@@ -1340,15 +1352,30 @@ function createMt2(containerEl) {
 }
 
 $(() => {
-    const allSubmitItFuncs = [];
+    const mt2List = [];
     for (let containerEl of document.querySelectorAll('.mt2-container')) {
-        const submitIt = createMt2(containerEl);
-        allSubmitItFuncs.push(submitIt);
+        const mt2 = createMt2(containerEl);
+        mt2List.push(mt2);
     }
 
-    window.mt2SubmitAllTasks = () => {
-        for (let foo of allSubmitItFuncs) {
-            foo();
+    window.mt2List = {
+        submit: () => {
+            for (let mt2 of mt2List) {
+                mt2.submit();
+            }
+        },
+        getExportData: () => {
+            const data = [];
+            for (let mt2 of mt2List) {
+                data.push(mt2.getExportData());
+            }
+            return data;
+        },
+        importData: dataAll => {
+            const n = Math.min(dataAll.length, mt2List.length);
+            for (let i = 0; i < n; i++) {
+                mt2List[i].importData(dataAll[i]);
+            }
         }
     };
 });

@@ -1,0 +1,62 @@
+.mge-card-group {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.mge-card-teachers {
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.mge-card-teacher {
+  border: 1px solid #eee;
+  border-radius: 999px;
+  padding: 4px 15px;
+  flex: 0 0 auto;
+}
+
+.mge-card-btn-add {
+  position: absolute;
+  right: 20px;
+  top: 17px;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  /* border: 1px solid #008cba; */
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 12px;
+  transition: all .2s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #008cba;
+}
+
+.mge-card-btn-add:hover {
+  background: #008cba;
+  color: #fff;
+}
+
+.mge-modal-bg {
+  background: #0006;
+}
+
+.mge-modal-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.mge-modal-title {
+  font-size: 24px;
+}
+
+.mge-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
