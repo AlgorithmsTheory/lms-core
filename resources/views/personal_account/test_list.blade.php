@@ -19,7 +19,7 @@
                     <div class="col-lg-offset-0 col-md-12 col-sm-12 card style-gray">
                         <h2 class="text-default-bright">Контрольные тесты</h2>
                     </div>
-                    <form action="" method="POST" class="form" style="overflow-x: auto">
+                    <form action="" method="POST" class="form" style="overflow-x: auto; width: 100%">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <table class="table table-condensed control-tests-table" id="out-of-date-test-table">
                             <tr>
