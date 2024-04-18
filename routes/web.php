@@ -66,7 +66,7 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('passw
 
 // Модуль тестирования - прохождение тестов
 Route::get('tests/train', ['as' => 'train_tests', 'uses' => 'TestController@trainTests', 'middleware' => 'general_auth']);
-Route::get('tests/adaptive', ['as' => 'adaptive_tests', 'uses' => 'AdaptiveTestController@adaptiveTests', 'middleware' => ['general_auth', 'student', 'admin']]);
+Route::get('tests/adaptive', ['as' => 'adaptive_tests', 'uses' => 'AdaptiveTestController@adaptiveTests', 'middleware' => ['general_auth', 'student']]);
 Route::get('tests/control', ['as' => 'control_tests', 'uses' => 'TestController@controlTests', 'middleware' => ['general_auth', 'student']]);
 Route::get('questions/show-test/{id_test}', ['as' => 'question_showtest', 'uses' => 'TestController@showViews', 'middleware' => ['general_auth', 'single_test', 'have_attempts', 'test_is_available']]);
 Route::get('questions/show-adaptive-test/{id_test}', ['as' => 'show_adaptive_test', 'uses' => 'TestController@showAdaptiveTest', 'middleware' => ['general_auth', 'single_test', 'have_attempts', 'test_is_available']]);
@@ -474,12 +474,12 @@ Route::post('adaptive-tests/reevaluate-difficulty', ['as' => 'reeval_difficulty'
 Route::post('adaptive-tests/reevaluate-discriminant', ['as' => 'reeval_difficulty', 'uses' => 'AdaptiveTestController@reEvalDiscriminant', 'middleware' => ['general_auth', 'admin']]);
 
 // Прохождение адаптивного теста
-Route::get('adaptive-tests/prepare/{test_id}', ['as' => 'prepare_adaptive_test', 'uses' => 'AdaptiveTestController@prepare', 'middleware' => ['general_auth', 'student', 'admin']]);
-Route::post('adaptive-tests/init/{test_id}', ['as' => 'init_adaptive_test', 'uses' => 'AdaptiveTestController@init', 'middleware' => ['general_auth', 'student', 'admin']]);
-Route::get('adaptive-tests/show/{question_id}', ['as' => 'show_adaptive_test', 'uses' => 'AdaptiveTestController@showQuestion', 'middleware' => ['general_auth', 'student', 'admin']]);
-Route::patch('adaptive-tests/check', ['as' => 'check_adaptive_test', 'uses' => 'AdaptiveTestController@checkQuestion', 'middleware' => ['general_auth', 'student', 'admin']]);
-Route::get('adaptive-tests/results', ['as' => 'result_adaptive_test', 'uses' => 'AdaptiveTestController@showResults', 'middleware' => ['general_auth', 'student', 'admin']]);
-Route::post('adaptive-tests/drop', ['as' => 'drop_adaptive_test', 'uses' => 'AdaptiveTestController@dropTest', 'middleware' => ['general_auth', 'student', 'admin']]);
+Route::get('adaptive-tests/prepare/{test_id}', ['as' => 'prepare_adaptive_test', 'uses' => 'AdaptiveTestController@prepare', 'middleware' => ['general_auth', 'student']]);
+Route::post('adaptive-tests/init/{test_id}', ['as' => 'init_adaptive_test', 'uses' => 'AdaptiveTestController@init', 'middleware' => ['general_auth', 'student']]);
+Route::get('adaptive-tests/show/{question_id}', ['as' => 'show_adaptive_test', 'uses' => 'AdaptiveTestController@showQuestion', 'middleware' => ['general_auth', 'student']]);
+Route::patch('adaptive-tests/check', ['as' => 'check_adaptive_test', 'uses' => 'AdaptiveTestController@checkQuestion', 'middleware' => ['general_auth', 'student']]);
+Route::get('adaptive-tests/results', ['as' => 'result_adaptive_test', 'uses' => 'AdaptiveTestController@showResults', 'middleware' => ['general_auth', 'student']]);
+Route::post('adaptive-tests/drop', ['as' => 'drop_adaptive_test', 'uses' => 'AdaptiveTestController@dropTest', 'middleware' => ['general_auth', 'student']]);
 
 // Модуль статистики
 Route::get('stat/get-question-success/{id_question}', ['as' => 'question_success_stat', 'uses' => 'StatisticController@getSuccess', 'middleware' => ['general_auth', 'admin']]);
