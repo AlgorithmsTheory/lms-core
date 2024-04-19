@@ -23,21 +23,32 @@ class GraphBuilder {
      */
     public static function buildGraphFromTest(Test $test) {
         $id_test = $test->id_test;
+        // Вершины "Записи Структур Теста".графа Исходят из Исходной вершины.
         $record_nodes = [];
         $struct_nodes = [];
+        // Все Рёбра графа.
         $edges = [];
         $source_node = new Node();
         $source_node->setCapacity(1);
         $sink_node = new Node();
         $sink_node->setCapacity(-1);
+        // Берём все Записи Теста
+        // Запись (Структуры) = Раздел + ТемаРаздела + ТипВопроса
         $records = StructuralRecord::whereId_test($id_test)->distinct()->select('section_code', 'theme_code', 'type_code')->get();
+        // Для каждой Записи Теста
         foreach ($records as $record) {
+            // Создаём Вершину "Запись Структуры" в графе
             $node = new RecordNode($record->section_code, $record->theme_code, $record->type_code);
+            // Проводим Ребро из Вершины-Источника в каждую Вершину "Запись Структуры"
+            // Ребро хранит в capacity Число Вопросов, соответствующих Записи
+            // (и параметрам теста: "Контрольный"/"Тренировочный", "Только для печати"/Нет).
             $source_edge = new DirectedEdge($source_node, $node, EdgeType::BEGIN, $test->test_type, $test->only_for_print);
             array_push($record_nodes, $node);
             array_push($edges, $source_edge);
         }
+        // Загружаем все Структуры Теста
         $structures = TestStructure::whereId_test($id_test)->get();
+        // Для каждой Структуры Теста
         foreach ($structures as $structure) {
             $node = new StructuralNode($structure->id_structure, $structure->amount);
             $sink_edge = new DirectedEdge($node, $sink_node, EdgeType::END, $test->test_type, $test->only_for_print);

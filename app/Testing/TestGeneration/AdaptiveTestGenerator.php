@@ -96,11 +96,24 @@ class AdaptiveTestGenerator implements TestGenerator {
         $this->student_knowledge_level = $student['knowledge_level'];
         $group_id = $student['group'];
         $this->student_expected_mark = $this->evalStudentExpectedMark($mark_expected_by_student, $student_id, $group_id);
+        // Весь Пул вопросов делится на 2 категории:
+        // 1. Главный пул (MAIN)
+        // 2. Общий пул (COMMON)
+        // Каждая из категорий подразделяется на 5 класс по уровням сложности вопросов.
+        // Создаём пустой Пул вопросов.
         $this->question_pool = new AdaptiveQuestionPool();
+        // Берём все Вопросы Разделов любых Типов и любых Тем, которые упоминаются в Тесте.
+        // Преобразуем эти Вопросы в Адаптивные и сохраняем их в Общий Пул с подразделение на
+        // классы по сложностям.
+        // Ср. сложность всех этих Вопросов сохраняем в $this->mean_difficulty.
+        // Ср. сложность рассчитывается не на основе значений сложностей [-3; 3],
+        // а на основе [0; 6]
         $this->mean_difficulty = $this->evalMeanDifficultyAndSetCommonPool($id_test);
+        // Макс. число вопросов в Тесте сохраняем в $this->max_question_number.
         $this->max_question_number = Test::whereId_test($id_test)->select('max_questions')->first()->max_questions;
         $this->current_question_number = 0;
         $this->current_difficulty_sum = 0;
+        // Средний класс сложностей вопросов считаем уже посещённым.
         array_push($this->visited_classes, QuestionClass::MIDDLE);
         $this->main_phase_amount = 0;
     }
@@ -301,22 +314,34 @@ class AdaptiveTestGenerator implements TestGenerator {
     }
 
     private function evalMeanDifficultyAndSetCommonPool($id_test) {
+        // Одна Структура может содержать множество Записей (Запись = ТемаРаздела+ТипВопроса)
+        // Загрузить записи всех Структур Теста.
+        // Из них берём все Разделы.
         $sections = StructuralRecord::whereId_test($id_test)->select('section_code')->distinct()->get();
         $difficult_sum = 0;
         $questions_counter = 0;
+        // Массив адаптивных вопросов из Разделов, указанных в Структурах Теста
         $common_questions_pool = [];
+        // Для каждого Раздела (Раздел подразделяется по Темам.)
         foreach ($sections as $section) {
+            // Получаем все Вопросы Раздела любого типа,
+            // не являющиеся только для печати.
             $questions = Question::whereSection_code($section['section_code'])
                 ->join('types', 'questions.type_code', '=', 'types.type_code')
                 ->where('types.only_for_print', '=', '0')
                 ->select('id_question', 'pass_time', 'difficulty', 'discriminant', 'guess')->get();
+            // Для каждого Вопроса
             foreach ($questions as $question) {
                 $questions_counter++;
+                // Т.к. сложности вопросов в общем случае варьируются от -3 до 3
+                // Суммируем смещённые на 3 сложности для получения средней сложности.
                 $difficult_sum += $question['difficulty'] + 3;
+                // преобразуем каждый вопрос в Адаптивный вопрос.
                 $adaptive_question = new AdaptiveQuestion($question, $this->student_knowledge_level);
                 array_push($common_questions_pool, $adaptive_question);
             }
         }
+        // Сохраняем все Адаптивные вопросы в Общий пул (с подразделением на 5 классов сложностей).
         $this->question_pool->setCommonPool($common_questions_pool);
         return $difficult_sum / $questions_counter;
     }

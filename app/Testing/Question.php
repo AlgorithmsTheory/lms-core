@@ -69,6 +69,8 @@ class Question extends Eloquent {
         }
 
         $questions  = new Question();
+
+        // Все Вопросы из Разделов $sections.
         $questions = $questions->where(function($query) use ($sections) {
             $query->whereSection_code($sections[0]);
             for ($i = 1; $i < count($sections); $i++) {
@@ -76,6 +78,8 @@ class Question extends Eloquent {
             }
         });
 
+        // Фильтруем, оставляя только Вопросы
+        // по Темам $themes
         $questions = $questions->where(function($query) use ($themes) {
             $query->whereTheme_code($themes[0]);
             for ($i = 1; $i < count($themes); $i++) {
@@ -83,16 +87,24 @@ class Question extends Eloquent {
             }
         });
 
+        // Фильтруем далее, оставляя только Вопросы
+        // Типов $types.
         $questions = $questions->where(function($query) use ($types) {
             $query->whereType_code($types[0]);
             for ($i = 1; $i < count($types); $i++) {
                 $query->orWhere('type_code', '=', $types[$i]);
             }
         });
+
+        // Для Тренировочных фильтруем далее,
+        // оставляя только Тренировочные вопросы.
+        // Выходит, что на Тренировке видим только Тренировочные Вопросы.
+        // На Контрольной видим Тренировочные и Контрольные Вопросы.
         if ($test_type == 'Тренировочный'){
             $questions = $questions->whereControl(0);
         }
-        if ($printable == 0){                                                                                           // если не только для печати, а для электронного прохождения
+        // если не только для печати, а для электронного прохождения
+        if ($printable == 0){
             $questions = $questions->whereRaw("type_code in (select type_code from types where only_for_print = 0)");
         }
         $amount = $questions->select('id_question')->count();
