@@ -80,6 +80,9 @@ class AdaptiveTestGenerator implements TestGenerator {
 
     /**
      * @var AdaptiveRecord[] formed by Ford-Fulkerson algorithm
+     * 
+     * Выбранные Адаптивные Записи.
+     * Адапт. Запись хранит сколько еще вопросов можно взять и сами Вопросы.
      */
     private $chosen_records = [];
 
@@ -99,11 +102,11 @@ class AdaptiveTestGenerator implements TestGenerator {
         // Весь Пул вопросов делится на 2 категории:
         // 1. Главный пул (MAIN)
         // 2. Общий пул (COMMON)
-        // Каждая из категорий подразделяется на 5 класс по уровням сложности вопросов.
+        // Каждая из категорий подразделяется на 5 классов по уровням сложности вопросов.
         // Создаём пустой Пул вопросов.
         $this->question_pool = new AdaptiveQuestionPool();
         // Берём все Вопросы Разделов любых Типов и любых Тем, которые упоминаются в Тесте.
-        // Преобразуем эти Вопросы в Адаптивные и сохраняем их в Общий Пул с подразделение на
+        // Преобразуем эти Вопросы в Адаптивные и сохраняем их в Общий Пул с подразделением на
         // классы по сложностям.
         // Ср. сложность всех этих Вопросов сохраняем в $this->mean_difficulty.
         // Ср. сложность рассчитывается не на основе значений сложностей [-3; 3],
@@ -120,26 +123,34 @@ class AdaptiveTestGenerator implements TestGenerator {
 
     public function generate(Test $test) {
         $graph = GraphBuilder::buildGraphFromTest($test);
+        // Находим максимальный поток
         $graph->fordFulkersonMaxFlow();
         if (!$graph->isSaturated())
             throw new TestGenerationException("Test has unacceptable structure!");
 
+        // Для каждой Вершины-Записи...
         foreach ($graph->getSource()->getNextNodes() as $record) {
+            // Общий поток из Вершины-Записи в Вершины-Структуры
+            // заносимв amount.
             $amount = 0;
             foreach ($record->getNextNodes() as $struct_node) {
                 $amount += $graph->getEdge($record, $struct_node)->getFlow();
             }
             $this->main_phase_amount += $amount;
             if ($amount > 0) {
+                // Берём все Вопросы по теме и нужного типа
                 $questions = Question::whereSection_code($record->section_code)
                     ->whereTheme_code($record->theme_code)
                     ->whereType_code($record->type_code)
                     ->select('id_question', 'pass_time', 'difficulty', 'discriminant', 'guess')
                     ->get();
+                // Создаем адаптивную Запись.
+                // Она хранит, сколько еще Вопросов можно выдать.
                 $adaptive_record = new AdaptiveRecord($record, $amount, $questions);
                 array_push($this->chosen_records, $adaptive_record);
 
                 foreach ($questions as $question) {
+                    // Каждый Вопрос добавляется в MAIN pool
                     $adaptive_question = new AdaptiveQuestion($question, $this->student_knowledge_level);
                     $this->question_pool->addQuestionToMainPhasePool($adaptive_question);
                 }

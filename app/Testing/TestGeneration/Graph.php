@@ -106,13 +106,25 @@ class Graph {
     }
 
     public function putInitialFlows() {
+        // Задаём пометку для каждой Вершины:
+        // 1. исходящий узел: null
+        // 2. значение: 0
         $this->flushMarks();
+
+        // allNodesMarked возвращает false,
+        // если хотя бы 1 Вершина (не являющаяся Стоком)
+        // имеет в пометке "значение" == 0.
+        //
+        // На начальный момент времени все Вершины имеют "значение" 0,
+        // так что условие изначально выполняется.
         while (!$this->allNodesMarked()) {
             $route = [];
             $route = $this->findWay($this->sink, $this->source, $route);
             $this->fillWay($route);
             $this->markNodes($this->source, $this->sink);
         }
+
+        // Сбрасываем пометки в null, 0.
         $this->flushMarks();
     }
 
