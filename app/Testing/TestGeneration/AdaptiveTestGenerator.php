@@ -77,6 +77,9 @@ class AdaptiveTestGenerator implements TestGenerator {
 
     /**
      * @var int sum of difficulties of passed questions
+     * 
+     * При выполнении метода chooseQuestion() увеличивается на
+     * Сложность Вопроса.
      */
     private $current_difficulty_sum;
 
@@ -101,6 +104,8 @@ class AdaptiveTestGenerator implements TestGenerator {
      * COMMON-пул создаётся в конструкторе.
      * Состоит из всех возможных Вопросов (без ограничений) всех Разделов,
      * упоминаемых в Тесте (любой Темы и любого Типа).
+     * 
+     * Вопрос из $question_pool исключается при выполнении метода chooseQuestion().
      */
     private $question_pool;
 
@@ -108,12 +113,15 @@ class AdaptiveTestGenerator implements TestGenerator {
      * @var AdaptiveRecord[] formed by Ford-Fulkerson algorithm
      * 
      * Выбранные Адаптивные Записи.
-     * Адапт. Запись хранит сколько еще вопросов можно взять и сами Вопросы.
+     * Адапт. Запись хранит сколько еще вопросов
+     * такого вида (раздел-тема-тип) можно взять и сами Вопросы.
      */
     private $chosen_records = [];
 
     /**
      * @var AdaptiveQuestion[] already passed by student
+     * 
+     * Наполняется при выполнении метода chooseQuestion().
      */
     private $passed_questions = [];
 
@@ -263,35 +271,65 @@ class AdaptiveTestGenerator implements TestGenerator {
     public function chooseQuestion() {
         $this->current_question_number++;
         $phase = $this->getCurrentPhase();
+
         if ($phase == Phase::MAIN) {
             if ($this->current_question_number >= $this->max_question_number) {
-                throw new TestGenerationException("Invalid test state: main phase contains more questions than test limit");
+                throw new TestGenerationException("Invalid test state: " +
+                    "main phase contains more questions than test limit");
             }
-            $possible_questions = $this->getPossibleQuestions($phase);
-            $possible_questions_count = count($possible_questions);
-            if ($possible_questions_count == 0) {
+        } else {
+            if ($this->isReadyToFinish()) {
+                return -1;
+            }
+        }
+
+        // На основе очков за ответ на последний вопрос
+        // выбирается класс сложности (выше на 1, такой же что у пред. вопроса,
+        // ниже на 1).
+        // 
+        // Для выбранного класса пытаемся достать вопросы из пула и вернуть их.
+        // 
+        // Но если таких вопросов нет, то рассматриваем из ближайших классов.
+        // 
+        // Если и таких нет, то рассматриваем в том числе
+        // среди классов бОльшей отдалённости.
+        $possible_questions = $this->getPossibleQuestions($phase);
+        $possible_questions_count = count($possible_questions);
+
+        if ($possible_questions_count == 0) {
+            if ($phase == Phase::MAIN) {
                 throw new TestGenerationException("Can't find question in main phase!");
             }
+            return -1;
+        }
 
-            $rand_question_index = rand(0, $possible_questions_count - 1);
-            $chosen_question = $possible_questions[$rand_question_index];
-            $this->setStateAfterChooseQuestion($chosen_question, $phase);
+        // Выбираем случайный вопрос из возможных и сохраняем
+        // в $chosen_question.
+        $rand_question_index = rand(0, $possible_questions_count - 1);
+        $chosen_question = $possible_questions[$rand_question_index];
+
+        // Увеличить current_difficulty_sum на сложность выбранного Вопроса.
+        // Перенести выбранный Вопрос из question_pool в passed_questions.
+        // В visited_classes добавить Класс Сложности Вопроса.
+        $this->setStateAfterChooseQuestion($chosen_question, $phase);
+
+        if ($phase == Phase::MAIN) {
+            // Исключить из каждой chosen_records id вопроса
+            // $chosen_question, если есть в (Адаптивной) Записи.
+            // А также, если есть в Записи, то уменьшить число
+            // оставшихся в Записи Вопросов на 1.
+            // Если Запись оказалась пустой, то исключить
+            // Вопрос из question_pool. 
             $this->handleGraphRecordsAfterChooseQuestion($chosen_question, $phase);
-            $chosen_question->setEndTime();
-            return $chosen_question->getId();
         }
-        else {
-            if ($this->isReadyToFinish()) return -1;
-            $possible_questions = $this->getPossibleQuestions($phase);
-            $possible_questions_count = count($possible_questions);
-            if ($possible_questions_count == 0) return -1;
 
-            $rand_question_index = rand(0, $possible_questions_count - 1);
-            $chosen_question = $possible_questions[$rand_question_index];
-            $this->setStateAfterChooseQuestion($chosen_question, $phase);
-            $chosen_question->setEndTime();
-            return $chosen_question->getId();
-        }
+        // Задаём время, до которого Вопрос
+        // должен быть решён. (сейчас + question.pass_time).
+        // question.pass_time - за какое время Вопрос должен быть решён
+        $chosen_question->setEndTime();
+
+        // Возвращаем ID выбранного Вопроса.
+        return $chosen_question->getId();
     }
 
     public function setEndTimeForChosenQuestion($end_time) {
@@ -517,42 +555,102 @@ class AdaptiveTestGenerator implements TestGenerator {
         else return Phase::EXTRA;
     }
 
+    // Для Первого вопроса возвращает MIDDLE.
+    // Для Второго и далее вопросов возвращает
+    // Класс ниже на 1, равный или выше на 1 чем Класс последнего отвеченного
+    // вопроса в зависимости от полученных очков за ответ (0; 0.6; 0.8; 1).
+    // Хорошо ответил на пред. вопрос -> возвращаем класс сложности сложнее.
+    // Плохо -> проще.
     private function getCurrentClass() {
-        if ($this->current_question_number == 1) return QuestionClass::MIDDLE;
+        // Для первого Вопроса выбираем Средний класс Сложности.
+        if ($this->current_question_number == 1) {
+            return QuestionClass::MIDDLE;
+        }
+
+        // Последний Класс сложности в visited_classes
         $prev_class = end($this->visited_classes);
-        $points_for_prev_question = end($this->passed_questions)->getRightFactor();
+
+        // Последний пройденный Вопрос (Он будет, т.к. сюда попадаем,
+        // только если хотя бы 1 Вопрос был решён)
+        $last_passed_question = end($this->passed_questions);
+
+        // rightFactor (Фактор Верности)
+        // последнего пройденного Вопроса (задаётся, когда
+        // пользователь ответит на Вопрос)
+        $points_for_prev_question = $last_passed_question->getRightFactor();
+
+        // Определить Класс сложности Текущего вопроса на основе
+        // Класса сложности и Очков (набранных) для Предыдущего вопроса.
         return QuestionClass::getNextClass($prev_class, $points_for_prev_question);
     }
 
     /**
      * @return AdaptiveQuestion[]
+     * 
+     * На основе очков за ответ на последний вопрос
+     * выбирается класс сложности (выше на 1, такой же что у пред. вопроса,
+     * ниже на 1).
+     * 
+     * Для выбранного класса пытаемся достать вопросы из пула и вернуть их.
+     * 
+     * Но если таких вопросов нет, то рассматриваем из ближайших классов.
+     * 
+     * Если и таких нет, то рассматриваем в том числе
+     * среди классов бОльшей отдалённости.
      */
     private function getPossibleQuestions($phase) {
+        // Для Первого вопроса возвращает MIDDLE.
+        // Для Второго и далее вопросов возвращает
+        // Класс ниже на 1, равный или выше на 1 чем Класс последнего отвеченного
+        // вопроса в зависимости от полученных очков за ответ (0; 0.6; 0.8; 1).
+        // Хорошо ответил на пред. вопрос -> возвращаем класс сложности сложнее.
+        // Плохо -> проще.
         $class = $this->getCurrentClass();
+
         $possible_questions_count = 0;
         $try = 0;
         $classes_questions = [];
+
+        // Пробуем вначале достать из question_pool
+        // в $classes_questions
+        // Вопросы Класса сложности $class.
+        //
+        // Если таких нет, то очень близких к $class.
+        //
+        // Если и таких нет, то не столь уже близких к $class.
         while ($possible_questions_count == 0  && $try < 3) {
+            // Здесь будут все допустимые вопросы из пула
+            // Классов сложностей, близких Классу сложности
+            // $class (т.е. требуемому).
             $classes_questions = [];
             $try++;
+
+            // Получаем близкие к $class Классы сложностей.
+            // Чем выше $try, тем больше различных классов сложностей,
+            // близких к $class мы получаем.
+            // Конкретика в комментах к функции getNearsetClasses().
             $classes_for_choose = QuestionClass::getNearestClasses($class, $try);
+
+            // Для каждого Класса сложностей из близких к классу последнего вопроса
             foreach ($classes_for_choose as $class_for_choose) {
-                if ($phase == Phase::MAIN) {
-                    $questions_in_class = $this->question_pool->getMainPhasePool()[$class_for_choose];
-                }
-                else {
-                    $questions_in_class = $this->question_pool->getCommonPool()[$class_for_choose];
-                }
+                $questions_in_class = $this->getPhasePool($phase)[$class_for_choose];
                 if (count($questions_in_class) != 0) {
                     $classes_questions = array_merge($classes_questions, $questions_in_class);
                 }
-                $possible_questions_count = count($classes_questions);
             }
+            $possible_questions_count = count($classes_questions);
         }
         if ($possible_questions_count == 0) {
             $classes_questions = [];
         }
         return $classes_questions;
+    }
+
+    private function getPhasePool($phase) {
+        if ($phase == Phase::MAIN) {
+            return $this->question_pool->getMainPhasePool();
+        }
+        return $this->question_pool->getCommonPool();
     }
 
     private function setStateAfterChooseQuestion(AdaptiveQuestion $chosen_question, $phase) {

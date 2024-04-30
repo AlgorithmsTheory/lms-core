@@ -73,4 +73,15 @@ class AdaptiveQuestion {
     public function getRightFactor() {
         return $this->right_factor;
     }
+
+    public function __toString() {
+        $output = "Question ID: " . $this->id . "\n";
+        $output .= "Difficulty: " . $this->difficulty . "\n";
+        $output .= "Pass Time: " . $this->pass_time . " seconds\n";
+        $output .= "Class: " . $this->class . "\n";
+        $output .= "End Time: " . ($this->end_time ? date('Y-m-d H:i:s', $this->end_time) : "Not set") . "\n";
+        $output .= "Right Factor: " . $this->right_factor . "\n";
+    
+        return $output;
+    }
 }
