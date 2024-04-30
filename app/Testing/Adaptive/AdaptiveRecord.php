@@ -18,14 +18,24 @@ class AdaptiveRecord {
 
     /**
      * @var int
+     * 
+     * Осталось выдать Вопросов такого вида (Раздел-Тема-Тип) в Тесте
      */
     private $amount_left;
 
     /**
      * @var int[]
+     * 
+     * Идентификаторы всех Вопросов вида (Раздел-Тема-Тип) из которых
+     * можно выбрать следующий Вопрос.
      */
     private $question_ids = [];
 
+    /**
+     * 
+     * $amount - Сколько Вопросов в Тесте должно быть такого вида (Раздел-Тема-Тип)
+     * $questions - Все Вопросы такого вида (Раздел-Тема-Тип). Их может быть >= $amount.
+     */
     public function __construct(RecordNode $record, $amount, $questions) {
         $this->record = $record;
         $this->amount_left = $amount;

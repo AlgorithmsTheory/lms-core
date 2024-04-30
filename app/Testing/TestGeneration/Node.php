@@ -123,4 +123,8 @@ Class Node {
     public function equals(Node $other) {
         return $this->id === $other->getId();
     }
+
+    public function toString() {
+        return "?";
+    }
 }

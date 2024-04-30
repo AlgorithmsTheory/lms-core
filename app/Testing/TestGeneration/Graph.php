@@ -8,6 +8,8 @@
 
 namespace App\Testing\TestGeneration;
 
+use Illuminate\Support\Facades\Log;
+
 
 class Graph {
     /**
@@ -357,6 +359,18 @@ class Graph {
     private function flushMarks() {
         foreach ($this->nodes as $node) {
             $node->setMark(null, 0);
+        }
+    }
+
+    public function display() {
+        foreach ($this->edges as $edge) {
+            $node_from = $edge->getNodeFrom();
+            $node_to = $edge->getNodeTo();
+            $flow = $edge->getFlow();
+            $capacity = $edge->getCapacity();
+            $edge_info = "$flow / $capacity";
+    
+            Log::Debug("{$node_from->toString()} -> {$node_to->toString()}: $edge_info");
         }
     }
 }

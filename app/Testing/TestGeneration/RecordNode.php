@@ -51,4 +51,8 @@ class RecordNode extends Node {
             $this->theme_code == $node->theme_code &&
             $this->type_code == $node->type_code;
     }
+
+    public function toString() {
+        return "{$this->section_code}/{$this->theme_code}/{$this->type_code}";
+    }
 }
