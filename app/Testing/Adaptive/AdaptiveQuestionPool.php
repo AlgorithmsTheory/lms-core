@@ -115,4 +115,18 @@ class AdaptiveQuestionPool {
             throw new TestGenerationException("Question " . $question_id . " hasn't been removed from pool properly");
         }
     }
+
+    public function questionsCountToString() {
+        $result = "Main Phase Pool:\n";
+        foreach ($this->main_phase_pool as $class => $questions) {
+            $result .= "Class: $class, Count: " . count($questions) . "\n";
+        }
+    
+        $result .= "\nCommon Pool:\n";
+        foreach ($this->common_pool as $class => $questions) {
+            $result .= "Class: $class, Count: " . count($questions) . "\n";
+        }
+    
+        return $result;
+    }
 }

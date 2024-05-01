@@ -373,4 +373,74 @@ class Graph {
             Log::Debug("{$node_from->toString()} -> {$node_to->toString()}: $edge_info");
         }
     }
+
+    // Альтернативный способ поиска максимального потока.
+    // Данный способ добавляет по единице в поток к случайно выбранному пути,
+    // чтобы Записи не пытались полностью быть выбранными.
+
+    public function randomMaxFlow() {
+        while ($this->isThereAnyAvailablePath()) {
+            $random_path = $this->findRandomPath();
+            $this->augmentFlowAlongPath($random_path);
+        }
+    }
+    
+    private function isThereAnyAvailablePath() {
+        $visited = [];
+        $queue = new \SplQueue();
+        $queue->enqueue($this->source);
+    
+        while (!$queue->isEmpty()) {
+            $current_node = $queue->dequeue();
+            if ($current_node === $this->sink) {
+                return true;
+            }
+    
+            foreach ($current_node->getNextNodes() as $next_node) {
+                $edge = $this->getEdge($current_node, $next_node);
+                if ($edge->getFlow() < $edge->getCapacity() && !isset($visited[$next_node->getId()])) {
+                    $visited[$next_node->getId()] = true;
+                    $queue->enqueue($next_node);
+                }
+            }
+        }
+    
+        return false;
+    }
+    
+    private function findRandomPath() {
+        $path = [];
+        $current_node = $this->source;
+    
+        while ($current_node !== $this->sink) {
+            $next_nodes = [];
+            foreach ($current_node->getNextNodes() as $next_node) {
+                $edge = $this->getEdge($current_node, $next_node);
+                if ($edge->getFlow() < $edge->getCapacity()) {
+                    $next_nodes[] = $next_node;
+                }
+            }
+    
+            if (empty($next_nodes)) {
+                throw new TestGenerationException("No available path found");
+            }
+    
+            $random_next_node = $next_nodes[array_rand($next_nodes)];
+            $path[] = $this->getEdge($current_node, $random_next_node);
+            $current_node = $random_next_node;
+        }
+    
+        return $path;
+    }
+    
+    private function augmentFlowAlongPath($path) {
+        $min_capacity = PHP_INT_MAX;
+        foreach ($path as $edge) {
+            $min_capacity = min($min_capacity, $edge->getCapacity() - $edge->getFlow());
+        }
+    
+        foreach ($path as $edge) {
+            $edge->setFlow($edge->getFlow() + $min_capacity);
+        }
+    }
 }

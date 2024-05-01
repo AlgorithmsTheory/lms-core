@@ -477,6 +477,7 @@ Route::post('adaptive-tests/reevaluate-discriminant', ['as' => 'reeval_difficult
 Route::get('adaptive-tests/prepare/{test_id}', ['as' => 'prepare_adaptive_test', 'uses' => 'AdaptiveTestController@prepare', 'middleware' => ['general_auth', 'student']]);
 Route::post('adaptive-tests/init/{test_id}', ['as' => 'init_adaptive_test', 'uses' => 'AdaptiveTestController@init', 'middleware' => ['general_auth', 'student']]);
 Route::get('adaptive-tests/show/{question_id}', ['as' => 'show_adaptive_test', 'uses' => 'AdaptiveTestController@showQuestion', 'middleware' => ['general_auth', 'student']]);
+Route::get('adaptive-tests/show/', ['as' => 'show_adaptive_test_immediate', 'uses' => 'AdaptiveTestController@showQuestionImmediate', 'middleware' => ['general_auth', 'student']]);
 Route::patch('adaptive-tests/check', ['as' => 'check_adaptive_test', 'uses' => 'AdaptiveTestController@checkQuestion', 'middleware' => ['general_auth', 'student']]);
 Route::get('adaptive-tests/results', ['as' => 'result_adaptive_test', 'uses' => 'AdaptiveTestController@showResults', 'middleware' => ['general_auth', 'student']]);
 Route::post('adaptive-tests/drop', ['as' => 'drop_adaptive_test', 'uses' => 'AdaptiveTestController@dropTest', 'middleware' => ['general_auth', 'student']]);

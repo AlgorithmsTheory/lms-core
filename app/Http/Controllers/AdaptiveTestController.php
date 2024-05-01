@@ -84,6 +84,10 @@ class AdaptiveTestController extends Controller {
         return new Response($widgetListView);
     }
 
+    public function showQuestionImmediate(Request $request) {
+        return $this->showQuestion($request, -1);
+    }
+
     /** Show question */
     public function showQuestion(Request $request, $id_question) {
         $student_id = Auth::user()['id'];

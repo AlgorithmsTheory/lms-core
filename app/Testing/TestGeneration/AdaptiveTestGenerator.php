@@ -167,7 +167,8 @@ class AdaptiveTestGenerator implements TestGenerator {
         Log::Debug('Граф до нахождения макс. потока');
         $graph->display();
         // Находим максимальный поток
-        $graph->fordFulkersonMaxFlow();
+        // $graph->fordFulkersonMaxFlow();
+        $graph->randomMaxFlow();
         Log::Debug('Граф после нахождения макс. потока');
         $graph->display();
 
@@ -269,6 +270,8 @@ class AdaptiveTestGenerator implements TestGenerator {
     }
 
     public function chooseQuestion() {
+        Log::Debug("Question Pool when chooseQuestion() algo starts:");
+        Log::Debug($this->question_pool->questionsCountToString());
         $this->current_question_number++;
         $phase = $this->getCurrentPhase();
 
@@ -606,6 +609,8 @@ class AdaptiveTestGenerator implements TestGenerator {
         // Хорошо ответил на пред. вопрос -> возвращаем класс сложности сложнее.
         // Плохо -> проще.
         $class = $this->getCurrentClass();
+        Log::Debug('$class in getPossibleQuestions()');
+        Log::Debug($class);
 
         $possible_questions_count = 0;
         $try = 0;
