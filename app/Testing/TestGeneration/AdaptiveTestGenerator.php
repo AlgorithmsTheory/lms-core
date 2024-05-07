@@ -164,12 +164,16 @@ class AdaptiveTestGenerator implements TestGenerator {
         // b) 0 / лимит вопросов Структуры
         // c) 0 / лимит вопросов Структуры
         $graph = GraphBuilder::buildGraphFromTest($test);
-        Log::Debug('Граф до нахождения макс. потока');
-        $graph->display();
         // Находим максимальный поток
-        // $graph->fordFulkersonMaxFlow();
-        $graph->randomMaxFlow();
-        Log::Debug('Граф после нахождения макс. потока');
+        $graph->fordFulkersonMaxFlow();
+        // $graph->randomMaxFlow();
+        Log::Debug('');
+        Log::Debug('Создан граф теста:');
+        Log::Debug('');
+        Log::Debug('Раздел/Тема/Тип');
+        Log::Debug('? - это исток или сток');
+        Log::Debug('поток / capacity');
+        Log::Debug('');
         $graph->display();
 
         // Если flow !== capacity хотя бы в одном из (c), то Выходим.
@@ -270,10 +274,14 @@ class AdaptiveTestGenerator implements TestGenerator {
     }
 
     public function chooseQuestion() {
-        Log::Debug("Question Pool when chooseQuestion() algo starts:");
-        Log::Debug($this->question_pool->questionsCountToString());
+        Log::Debug("Выбираем вопрос из пула:");
+        Log::Debug('');
+        $this->logLines($this->question_pool->questionsCountToString());
+
         $this->current_question_number++;
         $phase = $this->getCurrentPhase();
+
+        Log::Debug("Текущая фаза: " . ($phase == Phase::MAIN ? "Главная" : "Экстра"));
 
         if ($phase == Phase::MAIN) {
             if ($this->current_question_number >= $this->max_question_number) {
@@ -300,6 +308,7 @@ class AdaptiveTestGenerator implements TestGenerator {
         $possible_questions_count = count($possible_questions);
 
         if ($possible_questions_count == 0) {
+            Log::Debug("Нет возможных вопросов для выбора!");
             if ($phase == Phase::MAIN) {
                 throw new TestGenerationException("Can't find question in main phase!");
             }
@@ -311,10 +320,38 @@ class AdaptiveTestGenerator implements TestGenerator {
         $rand_question_index = rand(0, $possible_questions_count - 1);
         $chosen_question = $possible_questions[$rand_question_index];
 
+        Log::Debug("Выбранный вопрос ID: " . $chosen_question->getId());
+        $this->logLines("Адаптивные данные: " . $chosen_question);
+        $question = Question::whereIdQuestion($chosen_question->getId())->first();
+        if ($question) {
+            Log::Debug('Текст вопроса: ' . $question->text);
+            Log::Debug('Тема/Тип: ' . $question->theme_code . '/' . $question->type_code);
+            Log::Debug("Правильный ответ: " . $question->answer);
+        } else {
+            Log::Debug('Вопрос не найден в БД');
+        }
+
         // Увеличить current_difficulty_sum на сложность выбранного Вопроса.
+        // Добавить Класс Сложности выбранного вопроса в visited classes.
+        //
         // Перенести выбранный Вопрос из question_pool в passed_questions.
-        // В visited_classes добавить Класс Сложности Вопроса.
         $this->setStateAfterChooseQuestion($chosen_question, $phase);
+
+        Log::Debug('Выбранный вопрос убран из пула:');
+        Log::Debug('');
+        $this->logLines($this->question_pool->questionsCountToString());
+
+        Log::Debug('');
+        Log::Debug('Пройденные вопросы:');
+        foreach ($this->passed_questions as $passed_question) {
+            Log::Debug("ID вопроса: " . $passed_question->getId());
+            Log::Debug("Сложность: " . $passed_question->getDifficulty());
+            Log::Debug("Класс сложности: " . QuestionClass::getClassName($passed_question->getClass()));
+            Log::Debug("Время прохождения: " . $passed_question->getPassTime() . " секунд");
+            Log::Debug("Фактор верности ответа: " . $passed_question->getRightFactor());
+            Log::Debug("Время окончания: " . date('Y-m-d H:i:s', $passed_question->getEndTime()));
+            Log::Debug('---');
+        }
 
         if ($phase == Phase::MAIN) {
             // Исключить из каждой chosen_records id вопроса
@@ -322,9 +359,22 @@ class AdaptiveTestGenerator implements TestGenerator {
             // А также, если есть в Записи, то уменьшить число
             // оставшихся в Записи Вопросов на 1.
             // Если Запись оказалась пустой, то исключить
-            // Вопрос из question_pool. 
+            // Вопрос из question_pool.
             $this->handleGraphRecordsAfterChooseQuestion($chosen_question, $phase);
         }
+
+        Log::Debug('Адаптивные записи:');
+        foreach ($this->chosen_records as $record) {
+            if ($record->isEmpty()) {
+                Log::Debug("Запись пуста. ID вопросов были удалены из пула: " . implode(", ", $record->getQuestionIds()));
+            } else {
+                $this->logLines($record);
+            }
+        }
+
+        Log::Debug('Состояние пула вопросов после изменений:');
+        $this->logLines($this->question_pool->questionsCountToString());
+
 
         // Задаём время, до которого Вопрос
         // должен быть решён. (сейчас + question.pass_time).
@@ -518,10 +568,34 @@ class AdaptiveTestGenerator implements TestGenerator {
         return $rand_num <= $probability_to_finish * 100;
     }
 
+    // Возвращает 0, 0.2, 0.5 или 1.0.
+    // 0 - если последний 1-2 вопроса варьировались по классу
+    //  сложности на 2.
+    // 0.2 - если последние 3 вопроса варьировались по кл.сл на 2.
+    // 0.5 - если последние 4
+    // 1.0 - если последние 5+ вопросов варьир. по кл. сл. на 2.
     private function evalTrajectoryFinishFactor() {
         $number_of_steps_in_two_classes = 1;
         $max_class = end($this->visited_classes);
         $min_class = $max_class;
+        // Находим сколько последних вопросов нужно взять,
+        // чтобы разница в классе сложностей в этих вопросах была
+        // 2 или более.
+        // Например:
+        // Классы сложностей выбранных вопросов: 1 (первый), 2, 5, 4, 4, 3 (последний).
+        // Берём 1 последних: 3 -> min=3,max=3. 3-3=0  < 2
+        // Берём 2 последних: 3 -> min=3,max=4. 4-3=1  < 2
+        // Берём 3 последних: 3 -> min=3,max=4. 4-3=1  < 2
+        // Берём 4 последних: 3 -> min=3,max=5. 5-3=2  >= 2!
+        // Значит $number_of_steps_in_two_classes === 4!
+        // При этом значение выше 5 быть не может.
+        //
+        // Выходит, что если класс сложности выбранных вопросов
+        // долго не менялся (т.е. устоялся),
+        // $number_of_steps_in_two_classes будет большим.
+        //
+        // Если классы новых вопросов не стабильны,
+        // то $number_of_steps_in_two_classes будет маленьким числом.
         while($max_class - $min_class < 2 && $number_of_steps_in_two_classes < 5) {
             $number_of_steps_in_two_classes++;
             $current_class = prev($this->visited_classes);
@@ -529,6 +603,12 @@ class AdaptiveTestGenerator implements TestGenerator {
             if ($current_class > $max_class) $max_class = $current_class;
             if ($current_class < $min_class) $min_class = $current_class;
         }
+        // $number_of_steps_in_two_classes -> finish factor
+        // 1: 0.0
+        // 2: 0.0
+        // 3: 0.2
+        // 4: 0.5
+        // 5: 1.0 (долго не менялся -> финишируем)
         return FinishCriteria::getClassFinishFactor($number_of_steps_in_two_classes);
     }
 
@@ -582,6 +662,8 @@ class AdaptiveTestGenerator implements TestGenerator {
         // пользователь ответит на Вопрос)
         $points_for_prev_question = $last_passed_question->getRightFactor();
 
+        Log::Debug("Очков за пред. ответ: " . $points_for_prev_question);
+
         // Определить Класс сложности Текущего вопроса на основе
         // Класса сложности и Очков (набранных) для Предыдущего вопроса.
         return QuestionClass::getNextClass($prev_class, $points_for_prev_question);
@@ -609,8 +691,7 @@ class AdaptiveTestGenerator implements TestGenerator {
         // Хорошо ответил на пред. вопрос -> возвращаем класс сложности сложнее.
         // Плохо -> проще.
         $class = $this->getCurrentClass();
-        Log::Debug('$class in getPossibleQuestions()');
-        Log::Debug($class);
+        Log::Debug("Выбранный класс сложности: " . QuestionClass::getClassName($class));
 
         $possible_questions_count = 0;
         $try = 0;
@@ -648,6 +729,17 @@ class AdaptiveTestGenerator implements TestGenerator {
         if ($possible_questions_count == 0) {
             $classes_questions = [];
         }
+        Log::Debug("Выбранные классы сложности для вопросов:");
+        foreach ($classes_for_choose as $class_for_choose) {
+            Log::Debug(QuestionClass::getClassName($class_for_choose));
+        }
+
+        Log::Debug("ID и классы сложности выбранных вопросов:");
+        $logMessages = [];
+        foreach ($classes_questions as $question) {
+            $logMessages[] = $question->getId() . " (" . QuestionClass::getClassName($question->getClass()) . ")";
+        }
+        Log::Debug(implode(", ", $logMessages));
         return $classes_questions;
     }
 
@@ -661,6 +753,7 @@ class AdaptiveTestGenerator implements TestGenerator {
     private function setStateAfterChooseQuestion(AdaptiveQuestion $chosen_question, $phase) {
         $this->current_difficulty_sum += $chosen_question->getDifficulty();
         array_push($this->visited_classes, $chosen_question->getClass());
+
         $this->question_pool->remove($chosen_question->getId(), $phase);
         array_push($this->passed_questions, $chosen_question);
     }
@@ -677,4 +770,12 @@ class AdaptiveTestGenerator implements TestGenerator {
             }
         }
     }
+
+    private function logLines($str) {
+        $lines = explode("\n", $str);
+        foreach ($lines as $line) {
+            Log::Debug($line);
+        }
+    }
 }
+

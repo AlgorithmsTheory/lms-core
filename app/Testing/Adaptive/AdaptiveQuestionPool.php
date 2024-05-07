@@ -12,6 +12,7 @@ namespace App\Testing\TestGeneration;
 use App\Testing\Adaptive\AdaptiveQuestion;
 use App\Testing\Adaptive\Phase;
 use App\Testing\Adaptive\QuestionClass;
+use Illuminate\Support\Facades\Log;
 
 class AdaptiveQuestionPool {
 
@@ -86,15 +87,15 @@ class AdaptiveQuestionPool {
     }
 
     public function remove($question_id, $phase) {
-        $removed_from_main_phase_pool = ($phase == Phase::MAIN) ? false : true;
+        $removed_from_main_phase_pool = $phase !== Phase::MAIN;
         $removed_from_common_pool = false;
-        for ($i = QuestionClass::HIGH; $i <= QuestionClass::LOW; $i++) {
+        for ($i = QuestionClass::HIGH; $i >= QuestionClass::LOW; $i--) {
             if ($removed_from_main_phase_pool && $removed_from_common_pool) return;
             if (!$removed_from_main_phase_pool) {
                 for ($j = 0; $j < count($this->getMainPhasePool()[$i]); $j++) {
                     if ($this->getMainPhasePool()[$i][$j]->getId() == $question_id) {
-                        unset($this->getMainPhasePool()[$i][$j]);
-                        array_values($this->getMainPhasePool()[$i]);
+                        array_splice($this->main_phase_pool[$i], $j, 1);
+                        Log::Debug("Удалён вопрос из главной фазы: " . $question_id);
                         $removed_from_main_phase_pool = true;
                         break;
                     }
@@ -103,8 +104,8 @@ class AdaptiveQuestionPool {
             if (!$removed_from_common_pool) {
                 for ($j = 0; $j < count($this->getCommonPool()[$i]); $j++) {
                     if ($this->getCommonPool()[$i][$j]->getId() == $question_id) {
-                        unset($this->getCommonPool()[$i][$j]);
-                        array_values($this->getCommonPool()[$i]);
+                        array_splice($this->common_pool[$i], $j, 1);
+                        Log::Debug("Удалён вопрос из экстра фазы: " . $question_id);
                         $removed_from_common_pool = true;
                         break;
                     }
@@ -117,16 +118,21 @@ class AdaptiveQuestionPool {
     }
 
     public function questionsCountToString() {
-        $result = "Main Phase Pool:\n";
+        $result = "Главная фаза:\n";
         foreach ($this->main_phase_pool as $class => $questions) {
-            $result .= "Class: $class, Count: " . count($questions) . "\n";
+            $class_name = QuestionClass::getClassName($class);
+            $ids = array_map(function($question) { return $question->getId(); }, $questions);
+            $result .= count($questions) . " $class_name: " . implode(", ", $ids) . "\n";
         }
     
-        $result .= "\nCommon Pool:\n";
+        $result .= "\nЭкстра фаза:\n";
         foreach ($this->common_pool as $class => $questions) {
-            $result .= "Class: $class, Count: " . count($questions) . "\n";
+            $class_name = QuestionClass::getClassName($class);
+            $ids = array_map(function($question) { return $question->getId(); }, $questions);
+            $result .= count($questions) . " $class_name: " . implode(", ", $ids) . "\n";
         }
     
         return $result;
     }
 }
+

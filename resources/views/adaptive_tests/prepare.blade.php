@@ -14,7 +14,10 @@
     </div>
     <div class="col-md-12 col-sm-12 card">
         <div class="card-body">
-            <p>Здесь находится краткое описание сути адаптивного режима</p>
+            <p>
+                Адаптивный режим тестирования подстраивается под ваш уровень знаний,<br>
+                выбирая вопросы на основе предыдущих ответов для оптимальной оценки ваших знаний.
+            </p>
         </div>
     </div>
     <div class="col-lg-offset-1 col-md-10 col-sm-6">
@@ -25,8 +28,8 @@
                     @foreach ($marks as $mark)
                         <div class="radio radio-styled text-lg">
                             <label>
-                                <input type="radio" name="expected-mark[]" id="expected-mark" value="{{ $mark }}">
-                                <span>{{ $mark }}</span>
+                                <input type="radio" name="expected-mark[]" id="expected-mark-{{ $mark }}" value="{{ $mark }}">
+                                <span class="radio-span">{{ $mark }}</span>
                             </label>
                         </div>
                     @endforeach
@@ -38,4 +41,10 @@
         </form>
         <br><br>
     </div>
+    <style>
+        .radio-span::before, .radio-span::after {
+            top: 50% !important;
+            transform: translateY(-50%);
+        }
+    </style>
 @stop

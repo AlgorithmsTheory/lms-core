@@ -47,11 +47,11 @@ class AdaptiveRecord {
     public function remove($id_question) {
         for ($i = 0; $i < count($this->question_ids); $i++) {
             if ($this->question_ids[$i] == $id_question) {
-                unset($this->question_ids[$i]);
-                array_values($this->question_ids);
+                array_splice($this->question_ids, $i, 1);
                 return true;
             }
         }
+        return false;
     }
 
     public function decreaseAmount() {
@@ -68,5 +68,19 @@ class AdaptiveRecord {
 
     public function isEmpty() {
         return $this->amount_left <= 0;
+    }
+
+    /**
+     * Converts the current state of the AdaptiveRecord to a string.
+     * This includes the record details, amount left, and question IDs.
+     *
+     * @return string
+     */
+    public function __toString() {
+        $recordDetails = "Запись: " . $this->record;
+        $amountDetails = "Осталось вопросов: " . $this->amount_left;
+        $questionIds = "ID вопросов: [" . implode(", ", $this->question_ids) . "]";
+        
+        return $recordDetails . "\n" . $amountDetails . "\n" . $questionIds;
     }
 }

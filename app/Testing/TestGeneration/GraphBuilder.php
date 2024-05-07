@@ -51,8 +51,9 @@ class GraphBuilder {
         $sink_node->setCapacity(-1);
         // Берём все Записи Теста
         // Запись (Структуры) = Раздел + ТемаРаздела + ТипВопроса
-        $records = StructuralRecord::whereId_test($id_test)->distinct()
-            ->select('section_code', 'theme_code', 'type_code')->get();
+        $records = StructuralRecord::whereId_test($id_test)
+            ->select('section_code', 'theme_code', 'type_code')
+            ->distinct()->get();
         // Для каждой Записи Теста
         foreach ($records as $record) {
             // Создаём Вершину "Запись Структуры" в графе

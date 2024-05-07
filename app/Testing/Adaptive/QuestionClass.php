@@ -10,11 +10,11 @@ namespace App\Testing\Adaptive;
 
 
 abstract class QuestionClass {
-    const HIGH = 1;
-    const PRE_HIGH = 2;
+    const LOW = 1;
+    const PRE_LOW = 2;
     const MIDDLE = 3;
-    const PRE_LOW = 4;
-    const LOW = 5;
+    const PRE_HIGH = 4;
+    const HIGH = 5;
 
     // Возвращает Класс сложности на основе Вероятности неверности.
     // Чем выше Вероятность неверности, тем выше возвращаемый Класс сложности.
@@ -29,16 +29,21 @@ abstract class QuestionClass {
     // Определить Класс сложности следующего Вопроса на основе
     // Класса сложности и Очков набранных для Предыдущего вопроса.
     public static function getNextClass($current_class, $points_for_prev_question) {
-        // Очки за пред. Вопрос высокие?
-        // Тогда возвращаем более Высокий класс сложности.
-        // Здесь "- 1", т.к. HIGH == 1, LOW == 5.
-        if ($points_for_prev_question >= 0.8) return $current_class - 1;
+        // Сложность след. класса зависит от того,
+        // насколько хорошо ответил
+        // на предыдущий вопрос.
 
-        // Очки за пред. Вопрос норм (60-80%%)?
-        // Возвращаем тот же класс, что и класс пред. вопроса
-        if ($points_for_prev_question >= 0.6) return $current_class;
-
-        // Возвращаем тот же класс, что и класс пред. Вопроса.
+        if ($points_for_prev_question >= 0.8) {
+            $current_class++;
+            if ($current_class > self::HIGH) {
+                $current_class = self::HIGH;
+            }
+        } else if ($points_for_prev_question < 0.6) {
+            $current_class--;
+            if ($current_class < self::LOW) {
+                $current_class = self::LOW;
+            }
+        }
         return $current_class;
     }
 
@@ -68,43 +73,60 @@ abstract class QuestionClass {
         if ($try == 2) {
             switch ($current_class) {
                 case QuestionClass::LOW:
-                    array_push($classes, $current_class - 1);
+                    array_push($classes, $current_class + 1);
                     break;
                 case QuestionClass::HIGH:
-                    array_push($classes, $current_class + 1);
+                    array_push($classes, $current_class - 1);
                     break;
                 default:
-                    array_push($classes, $current_class - 1);
                     array_push($classes, $current_class + 1);
+                    array_push($classes, $current_class - 1);
             }
         }
         else if ($try == 3) {
             switch ($current_class) {
                 case QuestionClass::LOW:
-                    array_push($classes, $current_class - 1);
-                    array_push($classes, $current_class - 2);
+                    array_push($classes, $current_class + 1);
+                    array_push($classes, $current_class + 2);
                     break;
                 case QuestionClass::PRE_LOW:
-                    array_push($classes, $current_class - 1);
-                    array_push($classes, $current_class - 2);
                     array_push($classes, $current_class + 1);
+                    array_push($classes, $current_class + 2);
+                    array_push($classes, $current_class - 1);
                     break;
                 case QuestionClass::PRE_HIGH:
-                    array_push($classes, $current_class + 1);
-                    array_push($classes, $current_class + 2);
-                    array_push($classes, $current_class - 1);
-                    break;
-                case QuestionClass::HIGH:
-                    array_push($classes, $current_class + 1);
-                    array_push($classes, $current_class + 2);
-                    break;
-                default:
                     array_push($classes, $current_class - 1);
                     array_push($classes, $current_class - 2);
                     array_push($classes, $current_class + 1);
+                    break;
+                case QuestionClass::HIGH:
+                    array_push($classes, $current_class - 1);
+                    array_push($classes, $current_class - 2);
+                    break;
+                default:
+                    array_push($classes, $current_class + 1);
                     array_push($classes, $current_class + 2);
+                    array_push($classes, $current_class - 1);
+                    array_push($classes, $current_class - 2);
             }
         }
         return $classes;
+    }
+
+    public static function getClassName($class) {
+        switch ($class) {
+            case 1:
+                return 'LOW';
+            case 2:
+                return 'PRELOW';
+            case 3:
+                return 'MIDDLE';
+            case 4:
+                return 'PREHIGH';
+            case 5:
+                return 'HIGH';
+            default:
+                return 'UNKNOWN';
+        }
     }
 }
