@@ -274,7 +274,20 @@ class AdaptiveTestGenerator implements TestGenerator {
     }
 
     public function chooseQuestion() {
-        Log::Debug("Выбираем вопрос из пула:");
+        Log::Debug('Адаптивные записи до выбора вопроса');
+        Log::Debug('===================================');
+        Log::Debug('');
+        foreach ($this->chosen_records as $record) {
+            if ($record->isEmpty()) {
+                Log::Debug("Запись пуста. ID вопросов были удалены из пула: " . implode(", ", $record->getQuestionIds()));
+            } else {
+                $this->logLines($record);
+                Log::Debug('');
+            }
+        }
+
+        Log::Debug("Пул до выбора вопроса");
+        Log::Debug('=====================');
         Log::Debug('');
         $this->logLines($this->question_pool->questionsCountToString());
 
@@ -326,7 +339,7 @@ class AdaptiveTestGenerator implements TestGenerator {
         if ($question) {
             Log::Debug('Текст вопроса: ' . $question->text);
             Log::Debug('Тема/Тип: ' . $question->theme_code . '/' . $question->type_code);
-            Log::Debug("Правильный ответ: " . $question->answer);
+            Log::Debug("ПРАВИЛЬНЫЙ ОТВЕТ: " . $question->answer);
         } else {
             Log::Debug('Вопрос не найден в БД');
         }
@@ -363,12 +376,15 @@ class AdaptiveTestGenerator implements TestGenerator {
             $this->handleGraphRecordsAfterChooseQuestion($chosen_question, $phase);
         }
 
-        Log::Debug('Адаптивные записи:');
+        Log::Debug('Адаптивные записи после выбора вопроса');
+        Log::Debug('======================================');
+        Log::Debug('');
         foreach ($this->chosen_records as $record) {
             if ($record->isEmpty()) {
                 Log::Debug("Запись пуста. ID вопросов были удалены из пула: " . implode(", ", $record->getQuestionIds()));
             } else {
                 $this->logLines($record);
+                Log::Debug('');
             }
         }
 

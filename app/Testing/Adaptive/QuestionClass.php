@@ -8,6 +8,7 @@
 
 namespace App\Testing\Adaptive;
 
+use Illuminate\Support\Facades\Log;
 
 abstract class QuestionClass {
     const LOW = 1;
@@ -34,11 +35,13 @@ abstract class QuestionClass {
         // на предыдущий вопрос.
 
         if ($points_for_prev_question >= 0.8) {
+            Log::Debug('ПОВЫШАЕМ КЛАСС СЛОЖНОСТИ!');
             $current_class++;
             if ($current_class > self::HIGH) {
                 $current_class = self::HIGH;
             }
         } else if ($points_for_prev_question < 0.6) {
+            Log::Debug('ПОНИЖАЕМ КЛАСС СЛОЖНОСТИ!');
             $current_class--;
             if ($current_class < self::LOW) {
                 $current_class = self::LOW;
