@@ -368,7 +368,7 @@ class Graph {
             $node_to = $edge->getNodeTo();
             $flow = $edge->getFlow();
             $capacity = $edge->getCapacity();
-            $edge_info = "$flow / $capacity";
+            $edge_info = "$flow/$capacity";
     
             Log::Debug("{$node_from->toString()} -> {$node_to->toString()}: $edge_info");
         }

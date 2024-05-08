@@ -77,10 +77,10 @@ class AdaptiveRecord {
      * @return string
      */
     public function __toString() {
-        $recordDetails = "Запись: " . $this->record;
-        $amountDetails = "Осталось вопросов: " . $this->amount_left;
-        $questionIds = "ID вопросов: [" . implode(", ", $this->question_ids) . "]";
+        $recordDetails = "Запись: " . $this->record .
+            ' (осталось ' . $this->amount_left . ')';
+        $questionIds = "Вопросы: " . implode(", ", $this->question_ids);
         
-        return $recordDetails . "\n" . $amountDetails . "\n" . $questionIds;
+        return $recordDetails . "\n" . $questionIds;
     }
 }

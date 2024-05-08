@@ -86,6 +86,8 @@ class AdaptiveQuestionPool {
         return $this->common_pool;
     }
 
+    // Удаляет вопрос из обоих пулов при $phase === MAIN.
+    // Удаляет вопрос из экстра пула при $phase === COMMON (т.к. из главного он уже тогда точно удалён).
     public function remove($question_id, $phase) {
         $removed_from_main_phase_pool = $phase !== Phase::MAIN;
         $removed_from_common_pool = false;
@@ -95,7 +97,6 @@ class AdaptiveQuestionPool {
                 for ($j = 0; $j < count($this->getMainPhasePool()[$i]); $j++) {
                     if ($this->getMainPhasePool()[$i][$j]->getId() == $question_id) {
                         array_splice($this->main_phase_pool[$i], $j, 1);
-                        Log::Debug("Удалён вопрос из главной фазы: " . $question_id);
                         $removed_from_main_phase_pool = true;
                         break;
                     }
@@ -105,7 +106,6 @@ class AdaptiveQuestionPool {
                 for ($j = 0; $j < count($this->getCommonPool()[$i]); $j++) {
                     if ($this->getCommonPool()[$i][$j]->getId() == $question_id) {
                         array_splice($this->common_pool[$i], $j, 1);
-                        Log::Debug("Удалён вопрос из экстра фазы: " . $question_id);
                         $removed_from_common_pool = true;
                         break;
                     }
@@ -118,15 +118,23 @@ class AdaptiveQuestionPool {
     }
 
     public function questionsCountToString() {
-        $result = "Главная фаза:\n";
+        $result = "главный\n";
+        $result .= "-------\n";
         foreach ($this->main_phase_pool as $class => $questions) {
+            if (count($questions) <= 0) {
+                continue;
+            }
             $class_name = QuestionClass::getClassName($class);
             $ids = array_map(function($question) { return $question->getId(); }, $questions);
             $result .= count($questions) . " $class_name: " . implode(", ", $ids) . "\n";
         }
     
-        $result .= "\nЭкстра фаза:\n";
+        $result .= "\nэкстра\n";
+        $result .= "------\n";
         foreach ($this->common_pool as $class => $questions) {
+            if (count($questions) <= 0) {
+                continue;
+            }
             $class_name = QuestionClass::getClassName($class);
             $ids = array_map(function($question) { return $question->getId(); }, $questions);
             $result .= count($questions) . " $class_name: " . implode(", ", $ids) . "\n";

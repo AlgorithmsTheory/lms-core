@@ -167,14 +167,11 @@ class AdaptiveTestGenerator implements TestGenerator {
         // Находим максимальный поток
         $graph->fordFulkersonMaxFlow();
         // $graph->randomMaxFlow();
-        Log::Debug('');
-        Log::Debug('Создан граф теста:');
-        Log::Debug('');
-        Log::Debug('Раздел/Тема/Тип');
-        Log::Debug('? - это исток или сток');
-        Log::Debug('поток / capacity');
+        Log::Debug('Граф');
+        Log::Debug('====');
         Log::Debug('');
         $graph->display();
+        Log::Debug('');
 
         // Если flow !== capacity хотя бы в одном из (c), то Выходим.
         // то есть общее число Доступных вопросов по каждой из Записей
@@ -274,27 +271,23 @@ class AdaptiveTestGenerator implements TestGenerator {
     }
 
     public function chooseQuestion() {
-        Log::Debug('Адаптивные записи до выбора вопроса');
-        Log::Debug('===================================');
-        Log::Debug('');
-        foreach ($this->chosen_records as $record) {
-            if ($record->isEmpty()) {
-                Log::Debug("Запись пуста. ID вопросов были удалены из пула: " . implode(", ", $record->getQuestionIds()));
-            } else {
-                $this->logLines($record);
-                Log::Debug('');
-            }
-        }
-
-        Log::Debug("Пул до выбора вопроса");
-        Log::Debug('=====================');
+        Log::Debug("Пул");
+        Log::Debug('===');
         Log::Debug('');
         $this->logLines($this->question_pool->questionsCountToString());
+
+        Log::Debug('Адаптивные записи');
+        Log::Debug('=================');
+        Log::Debug('');
+        foreach ($this->chosen_records as $record) {
+            $this->logLines($record);
+            Log::Debug('');
+        }
 
         $this->current_question_number++;
         $phase = $this->getCurrentPhase();
 
-        Log::Debug("Текущая фаза: " . ($phase == Phase::MAIN ? "Главная" : "Экстра"));
+        Log::Debug(($phase == Phase::MAIN ? "Главная Фаза..." : "Экстра Фаза..."));
 
         if ($phase == Phase::MAIN) {
             if ($this->current_question_number >= $this->max_question_number) {
@@ -333,38 +326,18 @@ class AdaptiveTestGenerator implements TestGenerator {
         $rand_question_index = rand(0, $possible_questions_count - 1);
         $chosen_question = $possible_questions[$rand_question_index];
 
-        Log::Debug("Выбранный вопрос ID: " . $chosen_question->getId());
-        $this->logLines("Адаптивные данные: " . $chosen_question);
         $question = Question::whereIdQuestion($chosen_question->getId())->first();
-        if ($question) {
-            Log::Debug('Текст вопроса: ' . $question->text);
-            Log::Debug('Тема/Тип: ' . $question->theme_code . '/' . $question->type_code);
-            Log::Debug("ПРАВИЛЬНЫЙ ОТВЕТ: " . $question->answer);
-        } else {
-            Log::Debug('Вопрос не найден в БД');
-        }
+        Log::Debug("Выбран вопрос: " . $chosen_question->getId() . ' (' . $question->theme_code . '-' . $question->type_code . ')');
+        Log::Debug("ПРАВИЛЬНЫЙ ОТВЕТ: " . $question->answer);
+        Log::Debug('');
+        Log::Debug('************************************************************');
+        Log::Debug('');
 
         // Увеличить current_difficulty_sum на сложность выбранного Вопроса.
         // Добавить Класс Сложности выбранного вопроса в visited classes.
         //
         // Перенести выбранный Вопрос из question_pool в passed_questions.
         $this->setStateAfterChooseQuestion($chosen_question, $phase);
-
-        Log::Debug('Выбранный вопрос убран из пула:');
-        Log::Debug('');
-        $this->logLines($this->question_pool->questionsCountToString());
-
-        Log::Debug('');
-        Log::Debug('Пройденные вопросы:');
-        foreach ($this->passed_questions as $passed_question) {
-            Log::Debug("ID вопроса: " . $passed_question->getId());
-            Log::Debug("Сложность: " . $passed_question->getDifficulty());
-            Log::Debug("Класс сложности: " . QuestionClass::getClassName($passed_question->getClass()));
-            Log::Debug("Время прохождения: " . $passed_question->getPassTime() . " секунд");
-            Log::Debug("Фактор верности ответа: " . $passed_question->getRightFactor());
-            Log::Debug("Время окончания: " . date('Y-m-d H:i:s', $passed_question->getEndTime()));
-            Log::Debug('---');
-        }
 
         if ($phase == Phase::MAIN) {
             // Исключить из каждой chosen_records id вопроса
@@ -375,22 +348,6 @@ class AdaptiveTestGenerator implements TestGenerator {
             // Вопрос из question_pool.
             $this->handleGraphRecordsAfterChooseQuestion($chosen_question, $phase);
         }
-
-        Log::Debug('Адаптивные записи после выбора вопроса');
-        Log::Debug('======================================');
-        Log::Debug('');
-        foreach ($this->chosen_records as $record) {
-            if ($record->isEmpty()) {
-                Log::Debug("Запись пуста. ID вопросов были удалены из пула: " . implode(", ", $record->getQuestionIds()));
-            } else {
-                $this->logLines($record);
-                Log::Debug('');
-            }
-        }
-
-        Log::Debug('Состояние пула вопросов после изменений:');
-        $this->logLines($this->question_pool->questionsCountToString());
-
 
         // Задаём время, до которого Вопрос
         // должен быть решён. (сейчас + question.pass_time).
@@ -678,8 +635,6 @@ class AdaptiveTestGenerator implements TestGenerator {
         // пользователь ответит на Вопрос)
         $points_for_prev_question = $last_passed_question->getRightFactor();
 
-        Log::Debug("Очков за пред. ответ: " . $points_for_prev_question);
-
         // Определить Класс сложности Текущего вопроса на основе
         // Класса сложности и Очков (набранных) для Предыдущего вопроса.
         return QuestionClass::getNextClass($prev_class, $points_for_prev_question);
@@ -707,7 +662,6 @@ class AdaptiveTestGenerator implements TestGenerator {
         // Хорошо ответил на пред. вопрос -> возвращаем класс сложности сложнее.
         // Плохо -> проще.
         $class = $this->getCurrentClass();
-        Log::Debug("Выбранный класс сложности: " . QuestionClass::getClassName($class));
 
         $possible_questions_count = 0;
         $try = 0;
@@ -745,18 +699,34 @@ class AdaptiveTestGenerator implements TestGenerator {
         if ($possible_questions_count == 0) {
             $classes_questions = [];
         }
-        Log::Debug("Выбранные классы сложности для вопросов:");
-        foreach ($classes_for_choose as $class_for_choose) {
-            Log::Debug(QuestionClass::getClassName($class_for_choose));
+       
+        $this->logClassTransition($class, $classes_for_choose, $classes_questions);
+        return $classes_questions;
+    }
+
+    private function logClassTransition($class, $nearest_classes, $questions) {
+        $old_class = 'NO';
+        $prev_points = -1;
+
+        if ($this->current_question_number != 1) {
+            $old_class = end($this->visited_classes);
+            $last_passed_question = end($this->passed_questions);
+            $prev_points = $last_passed_question->getRightFactor();
         }
 
-        Log::Debug("ID и классы сложности выбранных вопросов:");
+        $nearest_class_names = implode(', ', array_map(function($nearest_classes) {
+            return QuestionClass::getClassName($nearest_classes);
+        }, $nearest_classes));
+
+        Log::Debug("Очков за ответ на пред. вопрос: " . $prev_points);
+        Log::Debug(QuestionClass::getClassName($old_class) . ' -> ' . QuestionClass::getClassName($class)
+            . ' -> ' . $nearest_class_names);
+
         $logMessages = [];
-        foreach ($classes_questions as $question) {
+        foreach ($questions as $question) {
             $logMessages[] = $question->getId() . " (" . QuestionClass::getClassName($question->getClass()) . ")";
         }
-        Log::Debug(implode(", ", $logMessages));
-        return $classes_questions;
+        Log::Debug("Выбираем любой из: " . implode(", ", $logMessages));
     }
 
     private function getPhasePool($phase) {

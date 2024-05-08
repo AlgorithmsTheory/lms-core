@@ -53,10 +53,10 @@ class RecordNode extends Node {
     }
 
     public function toString() {
-        return "{$this->section_code}/{$this->theme_code}/{$this->type_code}";
+        return "{$this->theme_code}-{$this->type_code}";
     }
 
     public function __toString() {
-        return "{$this->section_code}/{$this->theme_code}/{$this->type_code}";
+        return "{$this->theme_code}-{$this->type_code}";
     }
 }
