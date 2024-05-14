@@ -216,9 +216,16 @@ class Question extends Eloquent {
                 'users.knowledge_level as level'
             )
             ->get();
-        return $this->discrV2($tasks, $id_question);
+        return $this->discrV1($tasks, $id_question);
     }
 
+    
+
+    /**
+     * Метод discrV1 использует классический подход корреляции Пирсона для расчёта дискриминанта.
+     * Он вычисляет корреляцию между баллами, полученными на вопросе, и уровнем знаний пользователей.
+     * Этот метод хорошо подходит, когда данные распределены нормально и когда важно учитывать линейную зависимость между переменными.
+     */
     private function discrV1($tasks, $id_question) {
         $N = $tasks->count();
         if ($N <= 0) {
@@ -254,6 +261,10 @@ class Question extends Eloquent {
         return $division / $divider;
     }
 
+    /**
+     * Метод discrV2 использует подход, основанный на средних значениях и разностях от средних (delta метод).
+     * Этот метод может быть более устойчивым к выбросам в данных, так как он не подвержен квадратичному влиянию экстремальных значений, как в случае с корреляцией Пирсона.
+     */
     private function discrV2($tasks, $id_question) {
         $N = $tasks->count();
         if ($N <= 0) {
