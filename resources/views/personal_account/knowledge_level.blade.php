@@ -35,6 +35,89 @@
             <button class="btn btn-primary btn-raised" type="submit" id="eval-level">Рассчитать уровни</button>
         </div>
     </div>
+    <div class="col-lg-offset-1 col-md-10 col-sm-6">
+        <button class="btn btn-warning btn-raised" type="button" id="eval-level-by-test-results">Рассчитать уровни на основе тестов</button>
+    </div>
+    <script>
+        document.getElementById('eval-level-by-test-results').addEventListener('click', async function(ev) {
+            console.log('clicked');
+            ev.preventDefault();
+            try {
+                const response = await post('/students-knowledge-level-by-test-results', {});
+                if (response.status === 'success') {
+                    $('#successModal').modal('show');
+                } else {
+                    throw new Error('Ошибка при расчете уровней знаний студентов на основе тестов.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                $('#errorModal').modal('show');
+            }
+        });
+
+        
+        async function post(url, data) {
+            return new Promise((res, rej) => {
+            $.ajax({
+                cache: false,
+                type: 'POST',
+                url: url,
+                beforeSend: function (xhr) {
+                    var token = $('meta[name="csrf_token"]').attr('content');
+                    if (token) {
+                        return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                    }
+                },
+                data: {
+                    token: 'token',
+                    data: JSON.stringify(data),
+                },
+                success: data => {
+                res(data);
+                },
+                error: () => {
+                rej(new Error('Ошибка'));
+                },
+            });
+            });
+        }
+    </script>
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Успех</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Уровни знаний студентов успешно пересчитаны!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Ошибка</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Ошибка при пересчете уровней знаний студентов.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('js-down')

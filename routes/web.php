@@ -465,7 +465,13 @@ Route::prefix('algorithm')->group(function (){
 // Уровень знаний студента
 Route::get('students-knowledge-level', ['as' => 'students_level', 'uses' => 'StudentKnowledgeLevelController@index', 'middleware' => ['general_auth', 'admin']]);
 Route::get('students-knowledge-level/{error}', ['as' => 'students_level_with_errors', 'uses' => 'StudentKnowledgeLevelController@indexWithErrors', 'middleware' => ['general_auth', 'admin']]);
-Route::post('students-knowledge-level', ['as' => 'set_students_level', 'uses' => 'StudentKnowledgeLevelController@setLevel', 'middleware' => ['general_auth', 'admin']]);
+
+// The method `setLevel` is no longer used as CSV files of the required format are no longer available.
+// This method was intended for processing uploaded CSV files containing student grades.
+Route::post('students-knowledge-level', ['as' => 'set_students_level',
+    'uses' => 'StudentKnowledgeLevelController@setLevel', 'middleware' => ['general_auth', 'admin']]);
+Route::post('students-knowledge-level-by-test-results', ['as' => 'set_students_level_by_test_results',
+    'uses' => 'StudentKnowledgeLevelController@calculateOptimizedKnowledgeLevels', 'middleware' => ['general_auth', 'admin']]);
 
 // Пересчет параметров адаптивной модели
 Route::get('adaptive-tests/params', ['as' => 'adaptive_test_params', 'uses' => 'AdaptiveTestController@params', 'middleware' => ['general_auth', 'admin']]);
