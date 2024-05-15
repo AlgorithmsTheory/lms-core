@@ -471,7 +471,7 @@ Route::get('students-knowledge-level/{error}', ['as' => 'students_level_with_err
 Route::post('students-knowledge-level', ['as' => 'set_students_level',
     'uses' => 'StudentKnowledgeLevelController@setLevel', 'middleware' => ['general_auth', 'admin']]);
 Route::post('students-knowledge-level-by-test-results', ['as' => 'set_students_level_by_test_results',
-    'uses' => 'StudentKnowledgeLevelController@calculateOptimizedKnowledgeLevels', 'middleware' => ['general_auth', 'admin']]);
+    'uses' => 'StudentKnowledgeLevelController@calculateOptimizedKnowledgeLevelsExactly', 'middleware' => ['general_auth', 'admin']]);
 
 // Пересчет параметров адаптивной модели
 Route::get('adaptive-tests/params', ['as' => 'adaptive_test_params', 'uses' => 'AdaptiveTestController@params', 'middleware' => ['general_auth', 'admin']]);
