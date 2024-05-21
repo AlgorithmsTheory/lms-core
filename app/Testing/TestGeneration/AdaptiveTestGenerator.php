@@ -601,7 +601,7 @@ class AdaptiveTestGenerator implements TestGenerator {
     private function getCurrentCleanMark() {
         $points_sum = 0;
         foreach ($this->passed_questions as $question) {
-            $points_sum += $question->getDifficulty() * $question->getRightFactor();
+            $points_sum += $question->getPositiveDifficulty() * $question->getRightFactor();
         }
         return $points_sum;
     }
@@ -737,7 +737,7 @@ class AdaptiveTestGenerator implements TestGenerator {
     }
 
     private function setStateAfterChooseQuestion(AdaptiveQuestion $chosen_question, $phase) {
-        $this->current_difficulty_sum += $chosen_question->getDifficulty();
+        $this->current_difficulty_sum += $chosen_question->getPositiveDifficulty();
         array_push($this->visited_classes, $chosen_question->getClass());
 
         $this->question_pool->remove($chosen_question->getId(), $phase);

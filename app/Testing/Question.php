@@ -211,6 +211,7 @@ class Question extends Eloquent {
         $tasks = TestTask::whereId_question($id_question)
             ->join('results', 'test_tasks.id_result', '=', 'results.id_result')
             ->join('users', 'results.id', '=', 'users.id')
+            ->whereNotNull('users.knowledge_level')
             ->select(
                 'test_tasks.points as points',
                 'users.knowledge_level as level'

@@ -28,7 +28,7 @@ class AdaptiveQuestion {
     public function __construct(Question $question, $student_knowledge_level) {
         $this->id = $question['id_question'];
         $this->pass_time = $question['pass_time'];
-        $this->difficulty = $question['difficulty'] + 3;
+        $this->difficulty = $question['difficulty'];
         $this->right_factor = -1;
         $this->class = QuestionClass::getQuestionClass(
             1 - $this->evalProbabilityToBeCorrect($question['discriminant'],
@@ -38,6 +38,11 @@ class AdaptiveQuestion {
     }
 
     public function evalProbabilityToBeCorrect($discriminant, $guess, $student_knowledge_level) {
+        $exp = exp(1.7 * $discriminant * ($student_knowledge_level - $this->difficulty));
+        return $guess + (1 - $guess) * $exp / (1 + $exp);
+    }
+
+    public function evalProbabilityToBeCorrectOld($discriminant, $guess, $student_knowledge_level) {
         $exp = exp(1.7 + $discriminant * ($student_knowledge_level - $this->difficulty));
         return $guess + (1 - $guess) * $exp / (1 + $exp);
     }
@@ -56,6 +61,10 @@ class AdaptiveQuestion {
 
     public function getDifficulty() {
         return $this->difficulty;
+    }
+
+    public function getPositiveDifficulty() {
+        return $this->difficulty + 3;
     }
 
     public function getPassTime() {

@@ -236,7 +236,7 @@ class StudentKnowledgeLevelController extends Controller {
 
         $userIdsWithResults = [];
         foreach ($results as $result) {
-            User::where('id', $result->user_id)
+            User::withTrashed()->where('id', $result->user_id)
                 ->update(['knowledge_level' => $result->knowledge_level]);
             Log::debug('saved ' . $result->user_id . ' with knowledge level ' . $result->knowledge_level);
             $userIdsWithResults[] = $result->user_id;
@@ -246,7 +246,7 @@ class StudentKnowledgeLevelController extends Controller {
 
         // User::withTrashed()... чтобы для удалённых пользователей
         // то же учитывалось
-        User::whereNotIn('id', $userIdsWithResults)
+        User::withTrashed()->whereNotIn('id', $userIdsWithResults)
             ->update(['knowledge_level' => null]);
 
         return response()->json(['status' => 'success']);
