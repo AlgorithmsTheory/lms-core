@@ -39,6 +39,11 @@ class AdaptiveQuestion {
 
     public function evalProbabilityToBeCorrect($discriminant, $guess, $student_knowledge_level) {
         $exp = exp(1.7 * $discriminant * ($student_knowledge_level - $this->difficulty));
+        // $exp / (1 + $exp) = ($exp / $exp) / ((1 + $exp)/$exp) =
+        // = 1 / (1/$exp + 1) = 1 / ($exp^(-1) + 1) =
+        // = 1 / ($exp^(-1.7 * $discriminant * ($student_knowledge_level - %difficulty)) + 1)
+        // 
+        // $guess + (1 - $guess) * 1 / ($exp^(-1.7 * $discriminant * ($student_knowledge_level - %difficulty)) + 1)
         return $guess + (1 - $guess) * $exp / (1 + $exp);
     }
 

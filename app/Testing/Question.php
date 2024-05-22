@@ -228,10 +228,14 @@ class Question extends Eloquent {
      * Этот метод хорошо подходит, когда данные распределены нормально и когда важно учитывать линейную зависимость между переменными.
      */
     private function discrV1($tasks, $id_question) {
+        // 0.7 будем использовать для тех вопросов, для которых
+        // дискриминант не удаётся определить.
+        $avg_res = 0.8;
         $N = $tasks->count();
         if ($N <= 0) {
-            return Question::whereId_question($id_question)
-                ->select('discriminant')->first()->discriminant;
+            return $avg_res;
+            // return Question::whereId_question($id_question)
+            //     ->select('discriminant')->first()->discriminant;
         }
         $sum_points = 0;
         $sum_levels = 0;
@@ -255,11 +259,18 @@ class Question extends Eloquent {
         );
 
         if ($divider == 0) {
-            return Question::whereId_question($id_question)
-                ->select('discriminant')->first()->discriminant;
+            return $avg_res;
+            // return Question::whereId_question($id_question)
+            //     ->select('discriminant')->first()->discriminant;
         }
 
-        return $division / $divider;
+        // Без домножения на 3 получаются значения [-1; 0.6].
+        // В адаптивном вопросе используется в формуле 1.7 * discr.
+        // При таком множителе discr должен находиться в практическом диапазоне [-1.64; 1.64].
+        // Отрицательным он для хороший вопросов не должен быть, но это единичные случаи.
+        // Получится следующий диапазон при домножении на 3:
+        // [-3; 1.8]
+        return $division / $divider * 3;
     }
 
     /**
@@ -312,7 +323,14 @@ class Question extends Eloquent {
             else $wrong_answers_count++;
         }
 
-        if ($right_answers_count == 0 || $wrong_answers_count == 0) return $question->difficulty;
+        if ($right_answers_count == 0) {
+            // Этот if отдельно выделен для возможности идентификации ситуации, когда
+            // difficulty вопроса не определён именно по причине $right_answers_count == 0
+            return 0;
+        }
+        if ($wrong_answers_count == 0) {
+            return 0;
+        }
         // Натуральный логарифм.
         // Результат от -Infinity до Infinity.
         // 1) 1 при wrong/right === e.

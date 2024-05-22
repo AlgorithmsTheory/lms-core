@@ -131,6 +131,9 @@ class AdaptiveTestGenerator implements TestGenerator {
         $student_id = Auth::user()['id'];
         $student = User::whereId($student_id)->select('group', 'knowledge_level')->first();
         $this->student_knowledge_level = $student['knowledge_level'];
+        if ($this->student_knowledge_level === null) {
+            $this->student_knowledge_level = 0;
+        }
         $group_id = $student['group'];
         $this->student_expected_mark = $this->evalStudentExpectedMark($mark_expected_by_student, $student_id, $group_id);
         // Весь Пул вопросов делится на 2 категории:
@@ -362,6 +365,8 @@ class AdaptiveTestGenerator implements TestGenerator {
         end($this->passed_questions)->setEndTime($end_time);
     }
 
+    // setRightFactorAfterCheck вызывается при ответе на вопрос.
+    // Затем вызывается chooseQuestion()
     public function setRightFactorAfterCheck($right_factor) {
         end($this->passed_questions)->setRightFactor($right_factor);
     }
