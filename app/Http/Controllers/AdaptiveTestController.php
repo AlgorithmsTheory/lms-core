@@ -20,6 +20,7 @@ use Illuminate\Http\Response;
 use App\Testing\Question;
 use App\Testing\Test;
 use View;
+use Illuminate\Support\Facades\Log;
 
 class AdaptiveTestController extends Controller {
     private $question;
@@ -48,6 +49,50 @@ class AdaptiveTestController extends Controller {
         return view('tests.list.adaptive_tests', compact('adaptive_tests'));
     }
 
+    public function virtualStudent(Request $request, $id_test) {
+        $student_id = Auth::user()['id'];
+        // [0; 100]
+        $knowledge_level = 60;
+
+        $new_result_id = Result::max('id_result') + 1;
+        $expected_mark = 'A';
+        $generator = new AdaptiveTestGenerator($expected_mark, $id_test, $new_result_id);
+        $generator->generate(Test::whereId_test($id_test)->first());
+        Result::insert(['id_result' => $new_result_id, 'id_test' => $id_test, 'id' => $student_id]);
+        while (($id_question = $generator->chooseQuestion()) !== -1 ) {
+            $question = Question::whereId_question($id_question)->first();
+            // $response = $this->getNextQuestionResponse($generator, $question, $id_question);
+
+            $should_be_right = rand(0, 100) < $knowledge_level;
+
+            // $data = $request->input('0');
+            $answer = Question::getAnswer($id_question);
+            Log::debug('Ответ на вопрос ' . $id_question);
+            Log::debug($answer);
+            Log::debug(gettype($answer));
+            if ($should_be_right) {
+                $answer = Question::getAnswer($id_question);
+            } else {
+                $answer = '';
+            }
+            $array = array_merge([$id_question], explode(';', $answer));
+            // $array = [$id_question, $answer]; // json_decode($data);
+            // $id_question = $array[0];
+            $check_data = $this->question->check($array);
+            $right_percent = $check_data['right_percent'];
+            Log::debug($right_percent);
+            $generator->setRightFactorAfterCheck($right_percent / 100);
+
+            TestTask::insert([
+                'points' => $check_data['score'],
+                'id_question' =>  $id_question,
+                'id_result' => $generator->getIdResult(),
+            ]);
+        }
+        $request->session()->put('adaptive_test_'.$student_id, serialize($generator));
+        return redirect()->route('result_adaptive_test');
+    }
+
     /** Show prepare view with self-estimation form */
     public function prepare($id_test) {
         $marks = ['A', 'B', 'C', 'D(хор)', 'D(удвл)', 'E', 'F'];
@@ -57,14 +102,19 @@ class AdaptiveTestController extends Controller {
     /** Init test params, generate graph, create session, redirect to first question */
     public function init(Request $request, $id_test) {
         $expected_mark = $request->input('expected-mark')[0];
+        $first_question = $this->initInternal($request->session(), $id_test, $expected_mark);
+        return redirect()->route('show_adaptive_test', $first_question);
+    }
+
+    private function initInternal($session, $id_test, $expected_mark) {
         $student_id = Auth::user()['id'];
         $new_result_id = Result::max('id_result') + 1;
         $generator = new AdaptiveTestGenerator($expected_mark, $id_test, $new_result_id);
         $generator->generate(Test::whereId_test($id_test)->first());
         Result::insert(['id_result' => $new_result_id, 'id_test' => $id_test, 'id' => $student_id]);
         $first_question = $generator->chooseQuestion();
-        $request->session()->put('adaptive_test_'.$student_id, serialize($generator));
-        return redirect()->route('show_adaptive_test', $first_question);
+        $session->put('adaptive_test_'.$student_id, serialize($generator));
+        return $first_question;
     }
 
     /** Choose question */
@@ -91,17 +141,22 @@ class AdaptiveTestController extends Controller {
     /** Show question */
     public function showQuestion(Request $request, $id_question) {
         $student_id = Auth::user()['id'];
+        $response = $this->showQuestionInternal($request->session(), $student_id, $id_question);
+        return $response;
+    }
 
-        $serialized_test = $request->session()->get('adaptive_test_'.$student_id);
+    private function showQuestionInternal($session, $student_id, $id_question_or_null) {
+        $serialized_test = $session->get('adaptive_test_'.$student_id);
         $test_instance = unserialize($serialized_test);
 
         $expected_current_question_id = $test_instance->getCurrentQuestionId();
-        if ($id_question != $expected_current_question_id) {
+        if ($id_question_or_null !== null && $id_question_or_null != $expected_current_question_id) {
             return redirect()->route('show_adaptive_test', $expected_current_question_id);
         }
 
-        $question = Question::whereId_question($id_question)->first();
-        $response = $this->getNextQuestionResponse($test_instance, $question, $id_question);
+        $question = Question::whereId_question($expected_current_question_id)->first();
+        $response = $this->getNextQuestionResponse($test_instance, $question, $expected_current_question_id);
+
         return $response;
     }
 

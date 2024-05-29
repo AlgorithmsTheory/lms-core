@@ -52,6 +52,10 @@ abstract class QuestionType {
         $this->id_question = $id_question;
     }
 
+    public function getAnswer() {
+        return $this->answer;
+    }
+
     protected function getOptions(Request $request){
         $section = Section::whereSection_name($request->input('section'))->select('section_code')->first()->section_code;
         $theme = Theme::whereTheme_name($request->input('theme'))->select('theme_code')->first()->theme_code;

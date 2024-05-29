@@ -145,6 +145,14 @@ class Question extends Eloquent {
         }
     }
 
+    /** Получить правильный ответ */
+    public static function getAnswer($id_question) {
+        $type = Question::whereId_question($id_question)->join('types', 'questions.type_code', '=', 'types.type_code')
+                ->first()->type_name;
+        $question = QuestionTypeFactory::getQuestionTypeByTypeName($id_question, $type);
+        return $question->getAnswer();
+    }
+
     /** Показывает вопрос согласно типу */
     public function show($id_question, $count, $is_adaptive){
         $type = Question::whereId_question($id_question)->join('types', 'questions.type_code', '=', 'types.type_code')
@@ -167,7 +175,8 @@ class Question extends Eloquent {
         if (count($array)==1){
             $choice = [];
             $score = 0;
-            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points, 'choice' => $choice, 'right_percent' => 0);
+            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id,
+                'points' => $points, 'choice' => $choice, 'right_percent' => 0);
             return $data;
         }
         $this->shift_ar($array);
