@@ -22,6 +22,7 @@ use App\Testing\Qtypes\YesNo;
 use App\User;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\Question whereId_question($value)
@@ -147,6 +148,8 @@ class Question extends Eloquent {
 
     /** Получить правильный ответ */
     public static function getAnswer($id_question) {
+        Log::debug('$id_question');
+        Log::debug($id_question);
         $type = Question::whereId_question($id_question)->join('types', 'questions.type_code', '=', 'types.type_code')
                 ->first()->type_name;
         $question = QuestionTypeFactory::getQuestionTypeByTypeName($id_question, $type);
