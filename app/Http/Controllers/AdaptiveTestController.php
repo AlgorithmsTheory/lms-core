@@ -229,7 +229,20 @@ class AdaptiveTestController extends Controller {
 
     public function dropTest(Request $request) {
         $student_id = Auth::user()['id'];
+        $serialized_test = $request->session()->get('adaptive_test_'.$student_id);
+        $test_instance = unserialize($serialized_test);
+
+        $id_result = $test_instance->getIdResult();
+        $result = Result::whereId_result($id_result)->select('id_test', 'result')->first();
+
+        // $current_result = Result::getCurrentResult(Auth::user()['id'], $request->input('id_test'));
+        if ($result->result === null) {
+            date_default_timezone_set('Europe/Moscow');
+            $date = date('Y-m-d H:i:s', time());
+            Result::whereId_result($id_result)->update(['result_date' => $date, 'result' => -1, 'mark_ru' => -1, 'mark_eu' => 'drop']);                                 //Присваиваем результату и оценке значения -1
+        }
         $request->session()->remove('adaptive_test_'.$student_id);
+
         return redirect('home');
     }
 

@@ -49,7 +49,7 @@ class TestController extends Controller{
     public function trainTests() {
         $tr_tests = [];
         $query = $this->test->whereTest_type('Тренировочный')
-            ->whereVisibility(1)->whereArchived(0)->whereOnly_for_print(0)->get();
+            ->whereVisibility(1)->whereArchived(0)->whereOnly_for_print(0)->whereIs_adaptive(0)->get();
         foreach ($query as $test) {
             $availability_for_group = TestForGroup::whereId_group(Auth::user()['group'])
                 ->whereId_test($test['id_test'])
