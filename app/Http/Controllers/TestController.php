@@ -170,10 +170,29 @@ class TestController extends Controller{
     }
 
     public function validateTestStructure(Request $request) {
-        $restrictions = [];
-        $restrictions['test'] = json_decode($request->input('form')['general-settings']);
+        $general_settings = json_decode($request->input('form')['general-settings']);
         $number_of_structures = count($request->input('form')['sections']);
+        
+        // Проверить для адаптивного, что суммарное число вопросов структур не превышает максимального числа вопросов для теста
+        $max_questions = $general_settings->max_questions;
+        $amount_sum = 0;
+        for ($i = 0; $i < $number_of_structures; $i++) {
+            $amount = $request->input('form')['number-of-questions'][$i];
+            $amount_sum += $amount;
+        }
+        if ($general_settings->adaptive && $max_questions < $amount_sum) {
+            /*
+            return response()->json([
+                'error' => 'Для адаптивного теста суммарное число вопросов в структурах не должно превышать максимальное число вопросов в тесте',
+            ], 400);
+            */
+            return (String) false;
+        }
 
+
+        // Проверка корректности структур теста
+        $restrictions = [];
+        $restrictions['test'] = $general_settings;
         for ($i = 0; $i < $number_of_structures; $i++) {
             $restrictions['structures'][$i]['id_structure'] = $i;
             $restrictions['structures'][$i]['amount'] = $request->input('form')['number-of-questions'][$i];
@@ -212,6 +231,7 @@ class TestController extends Controller{
     /** Добавляет новый тест в БД */
     public function add(Request $request){
         $general_settings = $request->session()->get('general_settings');
+
         Test::insert(array(
             'test_name' => $general_settings['test_name'],
             'test_type' => $general_settings['test_type'],

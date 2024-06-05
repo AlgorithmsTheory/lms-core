@@ -293,7 +293,7 @@ class AdaptiveTestGenerator implements TestGenerator {
         Log::Debug(($phase == Phase::MAIN ? "Главная Фаза..." : "Экстра Фаза..."));
 
         if ($phase == Phase::MAIN) {
-            if ($this->current_question_number >= $this->max_question_number) {
+            if ($this->current_question_number > $this->max_question_number) {
                 throw new TestGenerationException("Invalid test state: " +
                     "main phase contains more questions than test limit");
             }
