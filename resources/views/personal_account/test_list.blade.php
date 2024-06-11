@@ -98,6 +98,7 @@
                                 <th class="text-center">Количество вопросов</th>
                                 <th class="text-center">Время прохождения, мин</th>
                                 <th class="text-center">Видимость</th>
+                                <th class="text-center">Адаптивный</th>
                                 <th class="text-center">Только для печати</th>
                                 <th class="text-center">Перейти в профиль</th>
                                 <th class="text-center">Редактировать тест</th>
@@ -116,6 +117,9 @@
                                             <span></span>
                                         </label>
                                     </div>
+                                </td>
+                                <td class="text-center">
+                                    {{$test['is_adaptive'] ? 'Да' : 'Нет'}}
                                 </td>
                                 <td class="text-center">
                                     <div class="checkbox checkbox-styled">
