@@ -49,7 +49,7 @@ class TestController extends Controller{
     public function trainTests() {
         $tr_tests = [];
         $query = $this->test->whereTest_type('Тренировочный')
-            ->whereVisibility(1)->whereArchived(0)->whereOnly_for_print(0)->get();
+            ->whereVisibility(1)->whereArchived(0)->whereOnly_for_print(0)->whereIs_adaptive(0)->get();
         foreach ($query as $test) {
             $availability_for_group = TestForGroup::whereId_group(Auth::user()['group'])
                 ->whereId_test($test['id_test'])
@@ -170,10 +170,29 @@ class TestController extends Controller{
     }
 
     public function validateTestStructure(Request $request) {
-        $restrictions = [];
-        $restrictions['test'] = json_decode($request->input('form')['general-settings']);
+        $general_settings = json_decode($request->input('form')['general-settings']);
         $number_of_structures = count($request->input('form')['sections']);
+        
+        // Проверить для адаптивного, что суммарное число вопросов структур не превышает максимального числа вопросов для теста
+        $max_questions = $general_settings->max_questions;
+        $amount_sum = 0;
+        for ($i = 0; $i < $number_of_structures; $i++) {
+            $amount = $request->input('form')['number-of-questions'][$i];
+            $amount_sum += $amount;
+        }
+        if ($general_settings->adaptive && $max_questions < $amount_sum) {
+            /*
+            return response()->json([
+                'error' => 'Для адаптивного теста суммарное число вопросов в структурах не должно превышать максимальное число вопросов в тесте',
+            ], 400);
+            */
+            return (String) false;
+        }
 
+
+        // Проверка корректности структур теста
+        $restrictions = [];
+        $restrictions['test'] = $general_settings;
         for ($i = 0; $i < $number_of_structures; $i++) {
             $restrictions['structures'][$i]['id_structure'] = $i;
             $restrictions['structures'][$i]['amount'] = $request->input('form')['number-of-questions'][$i];
@@ -212,6 +231,7 @@ class TestController extends Controller{
     /** Добавляет новый тест в БД */
     public function add(Request $request){
         $general_settings = $request->session()->get('general_settings');
+
         Test::insert(array(
             'test_name' => $general_settings['test_name'],
             'test_type' => $general_settings['test_type'],
@@ -726,6 +746,183 @@ class TestController extends Controller{
         $widgetListView = View::make('questions.student.widget_list',compact('amount', 'id_test','left_min', 'left_sec', 'test_type', 'result_id'))->with('widgets', $widgets);
         $response = new Response($widgetListView);
         return $response;
+    }
+
+    public function virtualStudent($id_test) {
+        // [0; 100]
+        $knowledge_level = 60;
+
+        $result = new Result();
+        $user = new User();
+        $question = new Question();
+        $saved_test = [];
+
+        // Информация о тесте (название и т.д.)
+        $test = $this->test->whereId_test($id_test)->first();
+
+        // Количество вопросов
+        $amount = $this->test->getAmount($id_test);
+
+        // Время прохождения
+        $test_time = $test->test_time;
+
+        // Идентификатор результата уже запущенного теста или же -1
+        $result_id = Result::getCurrentResult(Auth::user()['id'], $id_test);
+
+        $generator = new UsualTestGenerator();
+        $generator->generate($test);
+        $question_ids = [];
+        for ($i=0; $i < $amount; $i++) {
+            $id = $generator->chooseQuestion();
+
+            //должны получать название view и необходимые параметры
+            $data = $question->show($id, $i+1, false);
+
+            $saved_test[] = $data;
+
+            $question_ids[] = $id;
+        }
+
+        //время конца
+        $int_end_time =  date('U') + 60*$test_time;
+
+        //пример использования агрегатных функций!!!
+        $test = Result::max('id_result');
+
+        //создаем строку в таблице пройденных тестов
+        $result_id = $test+1;
+
+        $query2 = $user->whereEmail(Auth::user()['email'])->select('id')->first();
+        $result->id_result = $result_id;
+        $result->id = $query2->id;
+        $result->id_test = $id_test;
+        $result->result_date = date('Y-m-d H:i:s', $int_end_time);
+        $saved_test = serialize($saved_test);
+        $result->saved_test = $saved_test;
+        $result->save();
+
+        // check test
+
+        $userId = Auth::user()['id'];
+        // id контрольной
+        // $id_test = $request->input('id_test');
+        
+        // Получаем начатую пользователем попытку прохождения контрольной с id = $id_test
+        $current_test = Result::getCurrentResult($userId, $id_test);
+        // if ($current_test == -1) {
+        //     return redirect('tests');
+        // }
+        // Число вопросов.
+        // $amount = $request->input('amount');
+        // if ($amount < 2) {
+        //     return "Error. Too few questions";
+        // }
+        //сумма набранных баллов
+        $score_sum = 0;
+        //сумма максимально возможных баллов
+        $points_sum = 0;
+        //запоминаем выбранные варианты пользователя
+        $choice = [];
+        //Процент правильности ответа на неверный вопрос
+        $right_percent = [];
+        $j = 1;
+        $question = new Question();
+
+        $query = $this->test->whereId_test($id_test)->select('total', 'test_name', 'test_type')->first();
+        $total = $query->total;
+        $test_type = $query->test_type;
+
+        $id_user = Result::whereId_result($current_test)
+            ->join('users', 'results.id', '=', 'users.id')->select('users.id')->first()->id;
+
+        //обрабатываем каждый вопрос
+        for ($i=0; $i<$amount; $i++) {
+            // $data = $request->input($i);
+
+            // $array = json_decode($data);
+            $should_be_right = rand(0, 100) < $knowledge_level;
+
+            // $data = $request->input('0'
+            $id_question = $question_ids[$i];
+            $answer = Question::getAnswer($id_question);
+            Log::debug('Ответ на вопрос ' . $id_question);
+            Log::debug($answer);
+            Log::debug(gettype($answer));
+            if ($should_be_right) {
+                $answer = Question::getAnswer($id_question);
+            } else {
+                $answer = '';
+            }
+            $array = array_merge([$id_question], explode(';', $answer));
+
+            $link_to_lecture[$j] = $question->linkToLecture($array[0]);
+
+            // get type of test
+            $id_question = $array[0];
+            $query1 = Question::whereId_question($id_question)->select('answer','points', 'type_code')->first();
+            $type_name = Type::whereType_code($query1['type_code'])->select('type_name')->first()->type_name;
+
+            if ($type_name == 'Эмулятор Тьюринга' || $type_name == 'Эмулятор Маркова') {
+                /* Get current saved test */
+                $test = Result::whereId_result($current_test)->first();
+                $saved_test = $test->saved_test;
+                $saved_test = unserialize($saved_test);
+
+                $arguments = $saved_test[$i]['arguments'];
+                $debug_counter = $arguments['debug_counter'];
+                $solution = $array[2];
+                $should_increment_debug_counter = false;
+                $check_syntax_counter = $arguments['check_syntax_counter'];
+                $run_counter = $arguments['run_counter'];
+                $data = $question->check([$id_question, $debug_counter, $check_syntax_counter, $run_counter,
+                    $should_increment_debug_counter, $solution]);
+            } else {
+                $data = $question->check($array);
+            }
+            $right_or_wrong[$j] = $data['mark'];
+            $choice[$j] = $data['choice'];
+            $right_percent[$j] = $data['right_percent'];
+            TestTask::insert(['points' => $data['score'], 'id_question' => $array[0], 'id_result' => $current_test]);
+            $j++;
+            $score_sum += $data['score'];                                                                               //сумма набранных баллов
+            $points_sum += $data['points'];                                                                             //сумма максимально возможных баллов
+        }
+        if ($points_sum != 0){
+            $score = $total*$score_sum/$points_sum;
+            $score = round($score,1);
+        }
+        else $score = $total;
+
+        $fine = Fine::countFactor(Fine::whereId_test($id_test)->whereId($id_user)->select('fine')->first()->fine);      //учитываем штраф, если он есть
+        $score = $score * $fine;
+
+        $mark_bologna = $this->test->calcMarkBologna($total, $score);                                                         //оценки
+        $mark_rus = $this->test->calcMarkRus($total, $score);
+
+        $result = new Result();
+        $date = date('Y-m-d H:i:s', time());                                                                            //текущее время
+        $widgets = [];
+        $query = $result->whereId_result($current_test)->first();                                                       //берем сохраненный тест из БД
+        $saved_test = $query->saved_test;
+        $saved_test = unserialize($saved_test);
+
+        for ($i=0; $i<$amount; $i++){
+            $widgets[] = View::make($saved_test[$i]['view'].'T', $saved_test[$i]['arguments'])->with('choice', $choice[$i+1]);
+        }
+
+        if ($test_type != 'Тренировочный'){                                                                             //тест контрольный
+            $widgetListView = View::make('tests.ctrresults',compact('total','score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'id_test', 'id_user'))->with('widgets', $widgets);
+            $fine = new Fine();
+            $fine->updateFine(Auth::user()['id'], $id_test, $mark_rus);                                                 //вносим в таблицу штрафов необходимую инфу
+            $fraction_score = $score / $total;
+            Test::addToStatements($id_test, $id_user, $fraction_score);                                                          //занесение балла в ведомость
+            // $screenshot = $request->input('screenshot');
+            // $this->saveTestScreenshot($screenshot, $userId, $id_test);
+        } else {                                                                                                          //тест тренировочный
+            $widgetListView = View::make('questions.student.training_test',compact('total','score','right_or_wrong', 'mark_bologna', 'mark_rus', 'right_percent', 'link_to_lecture'))->with('widgets', $widgets);
+        }
+        $result->whereId_result($current_test)->update(['result_date' => $date, 'result' => $score, 'mark_ru' => $mark_rus, 'mark_eu' => $mark_bologna]);
+        return $widgetListView;
     }
 
     private function saveTestScreenshot($pngBase64Screenshot, $userId, $testId) {

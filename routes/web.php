@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use App\Testing\Result;
+use App\Testing\TestTask;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,13 +37,23 @@ Route::get('no-access', ['as' => 'no_access', function(Request $request) {
 }]);
 
 
-Route::get('tests/single-test/{id_test}/{id_test_new}', ['as' => 'single_test', function($id_test, $id_test_new) {
-    $test_name = App\Testing\Test::whereId_test($id_test)->select('test_name')->first()->test_name;
-    return view('tests.single_test', compact('test_name', 'id_test', 'id_test_new'));
+Route::get('tests/single-test/{active_test_id}/{active_is_adaptive}/{desired_test_id}/{desired_is_adaptive}',
+    ['as' => 'single_test', function($active_test_id, $active_is_adaptive, $desired_test_id, $desired_is_adaptive) {
+    $active_test_name = App\Testing\Test::whereId_test($active_test_id)->select('test_name')->first()->test_name;
+    return view('tests.single_test', compact('active_test_name',
+        'active_test_id', 'desired_test_id', 'active_is_adaptive', 'desired_is_adaptive'));
 }]);
 
 Route::get('tests/drop-opened-test/{id_test_new}', ['as' => 'drop_opened_test', function($id_test_new) {
+    $nonfinished_results = Result::whereId(Auth::user()['id'])->whereResult(null)->get();
+    foreach ($nonfinished_results as $res) {
+        TestTask::whereId_result($res->id_result)->delete();
+    }
     Result::whereId(Auth::user()['id'])->whereResult(null)->delete();
+    $is_adaptive = App\Testing\Test::whereId_test($id_test_new)->select('is_adaptive')->first()->is_adaptive;
+    if ($is_adaptive) {
+        return redirect()->route('prepare_adaptive_test', ['test_id' => $id_test_new]);
+    }
     return redirect()->route('question_showtest', ['id_test' => $id_test_new]);
 }]);
 
@@ -66,13 +77,24 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('passw
 
 // Модуль тестирования - прохождение тестов
 Route::get('tests/train', ['as' => 'train_tests', 'uses' => 'TestController@trainTests', 'middleware' => 'general_auth']);
-Route::get('tests/adaptive', ['as' => 'adaptive_tests', 'uses' => 'AdaptiveTestController@adaptiveTests', 'middleware' => ['general_auth', 'student', 'admin']]);
+Route::get('tests/adaptive', ['as' => 'adaptive_tests', 'uses' => 'AdaptiveTestController@adaptiveTests', 'middleware' => ['general_auth', 'student']]);
 Route::get('tests/control', ['as' => 'control_tests', 'uses' => 'TestController@controlTests', 'middleware' => ['general_auth', 'student']]);
 Route::get('questions/show-test/{id_test}', ['as' => 'question_showtest', 'uses' => 'TestController@showViews', 'middleware' => ['general_auth', 'single_test', 'have_attempts', 'test_is_available']]);
 Route::get('questions/show-adaptive-test/{id_test}', ['as' => 'show_adaptive_test', 'uses' => 'TestController@showAdaptiveTest', 'middleware' => ['general_auth', 'single_test', 'have_attempts', 'test_is_available']]);
 Route::patch('questions/check-test', ['as' => 'question_checktest', 'uses' => 'TestController@checkTest']);
+Route::get('questions/virtual-student/{id_test}', ['as' => 'traditional_test_virtual_student', 'uses' => 'TestController@virtualStudent', 'middleware' => ['general_auth', 'student']]);
 Route::post('tests/drop', ['as' => 'drop_test', 'uses' => 'TestController@dropTest', 'middleware' => 'general_auth']);
 Route::post('tests/get-protocol', ['as' => 'get_protocol', 'uses' => 'TestController@getProtocol', 'middleware' => 'general_auth']);
+
+// Прохождение адаптивного теста
+Route::get('adaptive-tests/prepare/{test_id}', ['as' => 'prepare_adaptive_test', 'uses' => 'AdaptiveTestController@prepare', 'middleware' => ['general_auth', 'single_test', 'have_attempts', 'test_is_available']]);
+Route::post('adaptive-tests/init/{test_id}', ['as' => 'init_adaptive_test', 'uses' => 'AdaptiveTestController@init', 'middleware' => ['general_auth', 'student']]);
+Route::get('adaptive-tests/virtual-student/{test_id}', ['as' => 'adaptive_test_virtual_student', 'uses' => 'AdaptiveTestController@virtualStudent', 'middleware' => ['general_auth', 'student']]);
+Route::get('adaptive-tests/show/{question_id}', ['as' => 'show_adaptive_test', 'uses' => 'AdaptiveTestController@showQuestion', 'middleware' => ['general_auth', 'student']]);
+Route::get('adaptive-tests/show/', ['as' => 'show_adaptive_test_immediate', 'uses' => 'AdaptiveTestController@showQuestionImmediate', 'middleware' => ['general_auth', 'student']]);
+Route::patch('adaptive-tests/check', ['as' => 'check_adaptive_test', 'uses' => 'AdaptiveTestController@checkQuestion', 'middleware' => ['general_auth', 'student']]);
+Route::get('adaptive-tests/results', ['as' => 'result_adaptive_test', 'uses' => 'AdaptiveTestController@showResults', 'middleware' => ['general_auth', 'student']]);
+Route::post('adaptive-tests/drop', ['as' => 'drop_adaptive_test', 'uses' => 'AdaptiveTestController@dropTest', 'middleware' => ['general_auth', 'student']]);
 
 
 //модуль тестирования для преподавателей
@@ -466,21 +488,19 @@ Route::prefix('algorithm')->group(function (){
 // Уровень знаний студента
 Route::get('students-knowledge-level', ['as' => 'students_level', 'uses' => 'StudentKnowledgeLevelController@index', 'middleware' => ['general_auth', 'admin']]);
 Route::get('students-knowledge-level/{error}', ['as' => 'students_level_with_errors', 'uses' => 'StudentKnowledgeLevelController@indexWithErrors', 'middleware' => ['general_auth', 'admin']]);
-Route::post('students-knowledge-level', ['as' => 'set_students_level', 'uses' => 'StudentKnowledgeLevelController@setLevel', 'middleware' => ['general_auth', 'admin']]);
+
+// The method `setLevel` is no longer used as CSV files of the required format are no longer available.
+// This method was intended for processing uploaded CSV files containing student grades.
+Route::post('students-knowledge-level', ['as' => 'set_students_level',
+    'uses' => 'StudentKnowledgeLevelController@setLevel', 'middleware' => ['general_auth', 'admin']]);
+Route::post('students-knowledge-level-by-test-results', ['as' => 'set_students_level_by_test_results',
+    'uses' => 'StudentKnowledgeLevelController@calculateOptimizedKnowledgeLevelsExactly', 'middleware' => ['general_auth', 'admin']]);
 
 // Пересчет параметров адаптивной модели
 Route::get('adaptive-tests/params', ['as' => 'adaptive_test_params', 'uses' => 'AdaptiveTestController@params', 'middleware' => ['general_auth', 'admin']]);
 Route::post('adaptive-tests/params', ['as' => 'eval_params', 'uses' => 'AdaptiveTestController@evalParams', 'middleware' => ['general_auth', 'admin']]);
 Route::post('adaptive-tests/reevaluate-difficulty', ['as' => 'reeval_difficulty', 'uses' => 'AdaptiveTestController@reEvalDifficulty', 'middleware' => ['general_auth', 'admin']]);
 Route::post('adaptive-tests/reevaluate-discriminant', ['as' => 'reeval_difficulty', 'uses' => 'AdaptiveTestController@reEvalDiscriminant', 'middleware' => ['general_auth', 'admin']]);
-
-// Прохождение адаптивного теста
-Route::get('adaptive-tests/prepare/{test_id}', ['as' => 'prepare_adaptive_test', 'uses' => 'AdaptiveTestController@prepare', 'middleware' => ['general_auth', 'student', 'admin']]);
-Route::post('adaptive-tests/init/{test_id}', ['as' => 'init_adaptive_test', 'uses' => 'AdaptiveTestController@init', 'middleware' => ['general_auth', 'student', 'admin']]);
-Route::get('adaptive-tests/show/{question_id}', ['as' => 'show_adaptive_test', 'uses' => 'AdaptiveTestController@showQuestion', 'middleware' => ['general_auth', 'student', 'admin']]);
-Route::patch('adaptive-tests/check', ['as' => 'check_adaptive_test', 'uses' => 'AdaptiveTestController@checkQuestion', 'middleware' => ['general_auth', 'student', 'admin']]);
-Route::get('adaptive-tests/results', ['as' => 'result_adaptive_test', 'uses' => 'AdaptiveTestController@showResults', 'middleware' => ['general_auth', 'student', 'admin']]);
-Route::post('adaptive-tests/drop', ['as' => 'drop_adaptive_test', 'uses' => 'AdaptiveTestController@dropTest', 'middleware' => ['general_auth', 'student', 'admin']]);
 
 // Модуль статистики
 Route::get('stat/get-question-success/{id_question}', ['as' => 'question_success_stat', 'uses' => 'StatisticController@getSuccess', 'middleware' => ['general_auth', 'admin']]);

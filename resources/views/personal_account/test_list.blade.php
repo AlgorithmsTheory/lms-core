@@ -19,7 +19,7 @@
                     <div class="col-lg-offset-0 col-md-12 col-sm-12 card style-gray">
                         <h2 class="text-default-bright">Контрольные тесты</h2>
                     </div>
-                    <form action="" method="POST" class="form" style="overflow-x: auto">
+                    <form action="" method="POST" class="form" style="overflow-x: auto; width: 100%">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <table class="table table-condensed control-tests-table" id="out-of-date-test-table">
                             <tr>
@@ -89,7 +89,7 @@
                     <div class="col-lg-offset-0 col-md-12 col-sm-12 card style-gray">
                         <h2 class="text-default-bright">Тренировочные тесты</h2>
                     </div>
-                    <form action="" method="POST" class="form" style="overflow-x: auto">
+                    <form action="" method="POST" class="form" style="overflow-x: auto; width: 100%">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="id_group" value="{{ $id_group }}">
                         <table class="table table-condensed train-tests-table" id="out-of-date-test-table">
@@ -98,6 +98,7 @@
                                 <th class="text-center">Количество вопросов</th>
                                 <th class="text-center">Время прохождения, мин</th>
                                 <th class="text-center">Видимость</th>
+                                <th class="text-center">Адаптивный</th>
                                 <th class="text-center">Только для печати</th>
                                 <th class="text-center">Перейти в профиль</th>
                                 <th class="text-center">Редактировать тест</th>
@@ -116,6 +117,9 @@
                                             <span></span>
                                         </label>
                                     </div>
+                                </td>
+                                <td class="text-center">
+                                    {{$test['is_adaptive'] ? 'Да' : 'Нет'}}
                                 </td>
                                 <td class="text-center">
                                     <div class="checkbox checkbox-styled">

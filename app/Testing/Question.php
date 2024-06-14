@@ -22,6 +22,7 @@ use App\Testing\Qtypes\YesNo;
 use App\User;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @method static \Illuminate\Database\Query\Builder|\App\Testing\Question whereId_question($value)
@@ -69,6 +70,8 @@ class Question extends Eloquent {
         }
 
         $questions  = new Question();
+
+        // Все Вопросы из Разделов $sections.
         $questions = $questions->where(function($query) use ($sections) {
             $query->whereSection_code($sections[0]);
             for ($i = 1; $i < count($sections); $i++) {
@@ -76,6 +79,8 @@ class Question extends Eloquent {
             }
         });
 
+        // Фильтруем, оставляя только Вопросы
+        // по Темам $themes
         $questions = $questions->where(function($query) use ($themes) {
             $query->whereTheme_code($themes[0]);
             for ($i = 1; $i < count($themes); $i++) {
@@ -83,16 +88,24 @@ class Question extends Eloquent {
             }
         });
 
+        // Фильтруем далее, оставляя только Вопросы
+        // Типов $types.
         $questions = $questions->where(function($query) use ($types) {
             $query->whereType_code($types[0]);
             for ($i = 1; $i < count($types); $i++) {
                 $query->orWhere('type_code', '=', $types[$i]);
             }
         });
+
+        // Для Тренировочных фильтруем далее,
+        // оставляя только Тренировочные вопросы.
+        // Выходит, что на Тренировке видим только Тренировочные Вопросы.
+        // На Контрольной видим Тренировочные и Контрольные Вопросы.
         if ($test_type == 'Тренировочный'){
             $questions = $questions->whereControl(0);
         }
-        if ($printable == 0){                                                                                           // если не только для печати, а для электронного прохождения
+        // если не только для печати, а для электронного прохождения
+        if ($printable == 0){
             $questions = $questions->whereRaw("type_code in (select type_code from types where only_for_print = 0)");
         }
         $amount = $questions->select('id_question')->count();
@@ -133,6 +146,16 @@ class Question extends Eloquent {
         }
     }
 
+    /** Получить правильный ответ */
+    public static function getAnswer($id_question) {
+        Log::debug('$id_question');
+        Log::debug($id_question);
+        $type = Question::whereId_question($id_question)->join('types', 'questions.type_code', '=', 'types.type_code')
+                ->first()->type_name;
+        $question = QuestionTypeFactory::getQuestionTypeByTypeName($id_question, $type);
+        return $question->getAnswer();
+    }
+
     /** Показывает вопрос согласно типу */
     public function show($id_question, $count, $is_adaptive){
         $type = Question::whereId_question($id_question)->join('types', 'questions.type_code', '=', 'types.type_code')
@@ -155,7 +178,8 @@ class Question extends Eloquent {
         if (count($array)==1){
             $choice = [];
             $score = 0;
-            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id, 'points' => $points, 'choice' => $choice, 'right_percent' => 0);
+            $data = array('mark'=>'Неверно','score'=> $score, 'id' => $id,
+                'points' => $points, 'choice' => $choice, 'right_percent' => 0);
             return $data;
         }
         $this->shift_ar($array);
@@ -196,56 +220,133 @@ class Question extends Eloquent {
     }
 
     public function evalDiscriminant($id_question) {
-        $points = [];
-        $levels = [];
+        $tasks = TestTask::whereId_question($id_question)
+            ->join('results', 'test_tasks.id_result', '=', 'results.id_result')
+            ->join('users', 'results.id', '=', 'users.id')
+            ->whereNotNull('users.knowledge_level')
+            ->select(
+                'test_tasks.points as points',
+                'users.knowledge_level as level'
+            )
+            ->get();
+        return $this->discrV1($tasks, $id_question);
+    }
 
-        $tasks = TestTask::whereId_question($id_question)->select('points', 'id_result')->get();
+    
+
+    /**
+     * Метод discrV1 использует классический подход корреляции Пирсона для расчёта дискриминанта.
+     * Он вычисляет корреляцию между баллами, полученными на вопросе, и уровнем знаний пользователей.
+     * Этот метод хорошо подходит, когда данные распределены нормально и когда важно учитывать линейную зависимость между переменными.
+     */
+    private function discrV1($tasks, $id_question) {
+        // 0.7 будем использовать для тех вопросов, для которых
+        // дискриминант не удаётся определить.
+        $avg_res = 0.8;
+        $N = $tasks->count();
+        if ($N <= 0) {
+            return $avg_res;
+            // return Question::whereId_question($id_question)
+            //     ->select('discriminant')->first()->discriminant;
+        }
+        $sum_points = 0;
+        $sum_levels = 0;
+        $sum_points_and_levels = 0;
+        $sum_quadratic_points = 0;
+        $sum_quadratic_levels = 0;
         foreach ($tasks as $task) {
-            array_push($points, $task->points);
-            $user_id = Result::whereId_result($task->id_result)->select('id')->first()->id;
-            $level = User::whereId($user_id)->select('knowledge_level')->first()->knowledge_level;
-            array_push($levels, $level);
+            $points = $task->points;
+            $level = $task->level;
+            $sum_points += $points;
+            $sum_levels += $level;
+            $sum_points_and_levels += $points * $level;
+            $sum_quadratic_points += $points * $points;
+            $sum_quadratic_levels += $level * $level;
         }
 
-        $number = count($points);
-        if ($number > 0) {
+        $division = ($N * $sum_points_and_levels) - ($sum_points * $sum_levels);
+        $divider = sqrt(
+            ($N * $sum_quadratic_points - pow($sum_points, 2)) *
+            ($N * $sum_quadratic_levels - pow($sum_levels, 2))
+        );
 
-            $sum_points = 0;
-            $sum_levels = 0;
-            $sum_points_and_levels = 0;
-            $sum_quadratic_points = 0;
-            $sum_quadratic_levels = 0;
-            for ($i = 0; $i < count($points); $i++) {
-                $sum_points += $points[$i];
-                $sum_levels += $levels[$i];
-                $sum_points_and_levels += $points[$i] * $levels[$i];
-                $sum_quadratic_points += $points[$i] * $points[$i];
-                $sum_quadratic_levels += $levels[$i] * $levels[$i];
-            }
-
-            $division = ($number * $sum_points_and_levels) - ($sum_points * $sum_levels);
-            $divider = sqrt(($number * $sum_quadratic_points - pow($sum_points, 2)) *
-                ($number * $sum_quadratic_levels - pow($sum_levels, 2)));
-
-            if ($divider != 0) return $division / $divider;
+        if ($divider == 0) {
+            return $avg_res;
+            // return Question::whereId_question($id_question)
+            //     ->select('discriminant')->first()->discriminant;
         }
-        return Question::whereId_question($id_question)
-            ->select('discriminant')->first()->discriminant;
+
+        // Без домножения на 3 получаются значения [-1; 0.6].
+        // В адаптивном вопросе используется в формуле 1.7 * discr.
+        // При таком множителе discr должен находиться в практическом диапазоне [-1.64; 1.64].
+        // Отрицательным он для хороший вопросов не должен быть, но это единичные случаи.
+        // Получится следующий диапазон при домножении на 3:
+        // [-3; 1.8]
+        return $division / $divider * 3;
+    }
+
+    /**
+     * Метод discrV2 использует подход, основанный на средних значениях и разностях от средних (delta метод).
+     * Этот метод может быть более устойчивым к выбросам в данных, так как он не подвержен квадратичному влиянию экстремальных значений, как в случае с корреляцией Пирсона.
+     */
+    private function discrV2($tasks, $id_question) {
+        $N = $tasks->count();
+        if ($N <= 0) {
+            return Question::whereId_question($id_question)
+                ->select('discriminant')->first()->discriminant;
+        }
+        $xAvg = $tasks->avg('points');
+        $yAvg = $tasks->avg('level');
+        $sumDeltaX = 0;
+        $sumDeltaY = 0;
+        $sumSquaredDeltaX = 0;
+        $sumSquaredDeltaY = 0;
+        foreach ($tasks as $task) {
+            $x = $task->points;
+            $y = $task->level;
+            $dx = $x - $xAvg;
+            $dy = $y - $yAvg;
+            $sumDeltaX += $dx;
+            $sumDeltaY += $dy;
+            $sumSquaredDeltaX += $dx*$dx;
+            $sumSquaredDeltaY += $dy*$dy;
+        }
+        $divider = sqrt($sumSquaredDeltaX * $sumSquaredDeltaY);
+        if ($divider == 0) {
+            return Question::whereId_question($id_question)
+                ->select('discriminant')->first()->discriminant;
+        }
+        return $sumDeltaX * $sumDeltaY / $divider;
     }
 
     public function evalDifficulty($id_question) {
         $right_answers_count = 0;
         $wrong_answers_count = 0;
 
+        // Вопрос (хранит код темы, код раздела, код типа)
         $question = Question::whereId_question($id_question)->select('points', 'difficulty')->first();
         $max_points = $question->points;
+        // Ответы на вопрос от разных пользователей (каждый ответ хранит ид результата, ид вопроса)
+        // P.S. Результат - пройденный кем-то тест (тест может быть пройден несколько раз)
         $tasks = TestTask::whereId_question($id_question)->select('points')->get();
         foreach ($tasks as $task) {
+            // Балл за ответ выше 60%?
             if (Question::isAnsweredRight($task->points, $max_points)) $right_answers_count++;
             else $wrong_answers_count++;
         }
 
-        if ($right_answers_count == 0 || $wrong_answers_count == 0) return $question->difficulty;
+        if ($right_answers_count == 0) {
+            // Этот if отдельно выделен для возможности идентификации ситуации, когда
+            // difficulty вопроса не определён именно по причине $right_answers_count == 0
+            return 0;
+        }
+        if ($wrong_answers_count == 0) {
+            return 0;
+        }
+        // Натуральный логарифм.
+        // Результат от -Infinity до Infinity.
+        // 1) 1 при wrong/right === e.
+        // 2) 0 при wrong/right === 1.
         return log($wrong_answers_count / $right_answers_count);
     }
-} 
+}

@@ -20,4 +20,8 @@ class StructuralNode extends Node {
         $this->id_structure = $id_structure;
         $this->amount = $amount;
     }
+
+    public function toString() {
+        return "{$this->id_structure}({$this->amount})";
+    }
 }

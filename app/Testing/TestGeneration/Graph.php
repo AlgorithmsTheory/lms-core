@@ -8,6 +8,8 @@
 
 namespace App\Testing\TestGeneration;
 
+use Illuminate\Support\Facades\Log;
+
 
 class Graph {
     /**
@@ -106,13 +108,25 @@ class Graph {
     }
 
     public function putInitialFlows() {
+        // Задаём пометку для каждой Вершины:
+        // 1. исходящий узел: null
+        // 2. значение: 0
         $this->flushMarks();
+
+        // allNodesMarked возвращает false,
+        // если хотя бы 1 Вершина (не являющаяся Стоком)
+        // имеет в пометке "значение" == 0.
+        //
+        // На начальный момент времени все Вершины имеют "значение" 0,
+        // так что условие изначально выполняется.
         while (!$this->allNodesMarked()) {
             $route = [];
             $route = $this->findWay($this->sink, $this->source, $route);
             $this->fillWay($route);
             $this->markNodes($this->source, $this->sink);
         }
+
+        // Сбрасываем пометки в null, 0.
         $this->flushMarks();
     }
 
@@ -345,6 +359,88 @@ class Graph {
     private function flushMarks() {
         foreach ($this->nodes as $node) {
             $node->setMark(null, 0);
+        }
+    }
+
+    public function display() {
+        foreach ($this->edges as $edge) {
+            $node_from = $edge->getNodeFrom();
+            $node_to = $edge->getNodeTo();
+            $flow = $edge->getFlow();
+            $capacity = $edge->getCapacity();
+            $edge_info = "$flow/$capacity";
+    
+            Log::Debug("{$node_from->toString()} -> {$node_to->toString()}: $edge_info");
+        }
+    }
+
+    // Альтернативный способ поиска максимального потока.
+    // Данный способ добавляет по единице в поток к случайно выбранному пути,
+    // чтобы Записи не пытались полностью быть выбранными.
+
+    public function randomMaxFlow() {
+        while ($this->isThereAnyAvailablePath()) {
+            $random_path = $this->findRandomPath();
+            $this->augmentFlowAlongPath($random_path);
+        }
+    }
+    
+    private function isThereAnyAvailablePath() {
+        $visited = [];
+        $queue = new \SplQueue();
+        $queue->enqueue($this->source);
+    
+        while (!$queue->isEmpty()) {
+            $current_node = $queue->dequeue();
+            if ($current_node === $this->sink) {
+                return true;
+            }
+    
+            foreach ($current_node->getNextNodes() as $next_node) {
+                $edge = $this->getEdge($current_node, $next_node);
+                if ($edge->getFlow() < $edge->getCapacity() && !isset($visited[$next_node->getId()])) {
+                    $visited[$next_node->getId()] = true;
+                    $queue->enqueue($next_node);
+                }
+            }
+        }
+    
+        return false;
+    }
+    
+    private function findRandomPath() {
+        $path = [];
+        $current_node = $this->source;
+    
+        while ($current_node !== $this->sink) {
+            $next_nodes = [];
+            foreach ($current_node->getNextNodes() as $next_node) {
+                $edge = $this->getEdge($current_node, $next_node);
+                if ($edge->getFlow() < $edge->getCapacity()) {
+                    $next_nodes[] = $next_node;
+                }
+            }
+    
+            if (empty($next_nodes)) {
+                throw new TestGenerationException("No available path found");
+            }
+    
+            $random_next_node = $next_nodes[array_rand($next_nodes)];
+            $path[] = $this->getEdge($current_node, $random_next_node);
+            $current_node = $random_next_node;
+        }
+    
+        return $path;
+    }
+    
+    private function augmentFlowAlongPath($path) {
+        $min_capacity = PHP_INT_MAX;
+        foreach ($path as $edge) {
+            $min_capacity = min($min_capacity, $edge->getCapacity() - $edge->getFlow());
+        }
+    
+        foreach ($path as $edge) {
+            $edge->setFlow($edge->getFlow() + $min_capacity);
         }
     }
 }

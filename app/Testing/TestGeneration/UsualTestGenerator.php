@@ -119,13 +119,15 @@ class UsualTestGenerator implements TestGenerator {
      * @return int
      */
     public function chooseQuestion() {
-        if (empty($this->chosen_questions)){                                                                                             //если вопросы кончились, завершаем тест
+        // если вопросы кончились, завершаем тест
+        if (empty($this->chosen_questions)){
             return -1;
         }
         else{
             $this->chosen_questions = Question::randomArray($this->chosen_questions);
             $chosen = $this->chosen_questions[count($this->chosen_questions) - 1];
-            array_pop($this->chosen_questions);                                                                                          //удаляем его из списка
+            // удаляем его из списка
+            array_pop($this->chosen_questions);
             return $chosen;
         }
     }

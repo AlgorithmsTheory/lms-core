@@ -42,6 +42,7 @@
 @section('js-down')
 {!! HTML::script('js/testCreate2.js') !!}
 {!! HTML::script('js/testEdit2.js') !!}
+</script>
 @stop
 
 

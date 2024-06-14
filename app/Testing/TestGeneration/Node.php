@@ -113,14 +113,25 @@ Class Node {
     }
 
     public function isSource() {
-        return count($this->prev_nodes) == 0 ? true : false;
+        return count($this->prev_nodes) == 0;
     }
 
     public function isSink() {
-        return count($this->next_nodes) == 0 ? true : false;
+        return count($this->next_nodes) == 0;
     }
 
     public function equals(Node $other) {
         return $this->id === $other->getId();
     }
+
+    public function toString() {
+        if ($this->isSource()) {
+            return 'источник';
+        }
+        if ($this->isSink()) {
+            return 'сток';
+        }
+        return "?";
+    }
 }
+
