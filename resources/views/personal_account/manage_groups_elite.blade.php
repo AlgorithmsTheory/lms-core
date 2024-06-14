@@ -17,10 +17,10 @@
 @section('content')
     <div class="mge-root">
         <div class="mge-subpages">
-            <a href="/manage_groups_elite" class="mge-subpage-btn" disabled>
+            <a href="/manage_groups" class="mge-subpage-btn" disabled>
                 Группы
             </a>
-            <a href="/manage_groups_by_teachers_elite" class="mge-subpage-btn">
+            <a href="/manage_groups_by_teachers" class="mge-subpage-btn">
                 Преподаватели
             </a>
         </div>

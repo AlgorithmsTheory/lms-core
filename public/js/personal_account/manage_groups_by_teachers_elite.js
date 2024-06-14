@@ -26,7 +26,7 @@
     const groupsEl = $('.mge-modal-groups');
     groupsEl.empty();
     try {
-      resp = await post('/mge_other_groups', {
+      resp = await post('/manage_groups_other_groups', {
         teacherId: teacherId,
       });
     } catch (er) {
@@ -64,7 +64,7 @@
     let newGroups;
     btnSave.prop('disabled', true);
     try {
-      newGroups = await post('/mge_add_groups_to_teacher', request)
+      newGroups = await post('/manage_groups_add_groups_to_teacher', request)
     } catch (er) {
       alert(er.message);
       btnSave.prop('disabled', false);
@@ -85,7 +85,7 @@
     };
     let newGroups;
     try {
-      newGroups = await post('/mge_remove_group_from_teacher', request)
+      newGroups = await post('/manage_groups_remove_group_from_teacher', request)
     } catch (er) {
       alert(er.message);
       return;
