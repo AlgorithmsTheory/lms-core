@@ -373,8 +373,7 @@ Route::post('statements/get-lectures', ['as' => 'get_lectures', 'uses' => 'State
 Route::post('statements/get-seminars', ['as' => 'get_seminars', 'uses' => 'StatementsController@get_seminars', 'middleware' => ['general_auth', 'admin']]);
 Route::post('statements/get-resulting', ['as' => 'get_resulting', 'uses' => 'StatementsController@get_resulting', 'middleware' => ['general_auth', 'admin']]);
 
-Route::post('statements/get-resulting-excel', ['as' => 'get_resulting_excel', 'uses' => 'StatementsController@get_resulting_excel', 'middleware' => ['general_auth', 'admin']]);
-Route::post('statements/get-resulting-excel-ex', ['as' => 'get_resulting_excel-ex', 'uses' => 'StatementsController@get_resulting_excel_ex', 'middleware' => ['general_auth', 'admin']]);
+Route::post('statements/gen-statement', ['as' => 'gen_statement', 'uses' => 'StatementsController@gen_statement', 'middleware' => ['general_auth', 'admin']]);
 
 
 Route::post('statements/lecture/mark_present', ['as' => 'lecture_mark_present', 'uses' => 'StatementsController@lecture_mark_present', 'middleware' => ['general_auth', 'admin']]);

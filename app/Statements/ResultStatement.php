@@ -61,9 +61,13 @@ class ResultStatement {
             ->setARGB($color);
     }
 
-    // $isForExam: true для экзаменационной ведомости, false - для зачётной ведомости
-    public function getExcelLoadOut($plan, $statements, $file, $isForExam) {
-        Excel::load($file, function($doc) use ($plan, $statements, $isForExam) {
+    // $stat_type - Тип ведомости:
+    // 1. credit - зачёт
+    // 2. credit-with-grade - зачёт с оценкой
+    // 3. exam - экзамен
+    // 4. section-evaluation - аттестация разделов
+    public function getExcelLoadOut($plan, $statements, $file, $stat_type) {
+        Excel::load($file, function($doc) use ($plan, $statements, $stat_type) {
             $sheet = $doc->setActiveSheetIndex(0);
             $startRow = 9;
             $row = $startRow;
@@ -85,46 +89,73 @@ class ResultStatement {
                 foreach ($plan->section_plans as $ind => $section_plan) {
                     $sectionResult = $stat == null ? 0 : $stat['sections'][$ind]['total'];
                     $sheet->setCellValue(chr($col) . $row, $sectionResult);
+                    if ($stat_type === 'section-evaluation') {
+                        break;
+                    }
                     $col++;
                 }
-                $sectionsResult = $stat == null ? 0 : $stat['sections_total'];
-                $sheet->setCellValue(chr($col) . $row, $sectionsResult);
-                $col++;
-                $certified = ($stat == null || !$stat['sections_total_ok']) ? 'н/а' : 'а';
-                $sheet->setCellValue(chr($col) . $row, $certified);
-                $col++;
-                $examResult = $stat == null ? 'Z' : $stat['exams_total'];
-                $sheet->setCellValue(chr($col) . $row, $examResult);
-                $col++;
-                $overallResult = $stat == null ? 'Z' : $stat['summary_total'];
-                $sheet->setCellValue(chr($col) . $row, $overallResult);
-                $col++;
-                $credited = ($stat == null || !$stat['summary_total_ok']) ? 'не зачтено' : 'зачтено';
-                $sheet->setCellValue(chr($col) . $row, $credited);
-                $col++;
-                if ($stat == null) {
-                    $markCode = 1;
-                } else {
-                    if ($isForExam) {
-                        $markCode = $stat['mark_rus'];
-                    } else {
-                        if (!$stat['summary_total_ok']) {
-                            $markCode = 2;
+                if ($stat_type !== 'section-evaluation') {
+                    $sectionsResult = $stat == null ? 0 : $stat['sections_total'];
+                    $sheet->setCellValue(chr($col) . $row, $sectionsResult);
+                    $col++;
+                    $certified = ($stat == null || !$stat['sections_total_ok']) ? 'н/а' : 'а';
+                    $sheet->setCellValue(chr($col) . $row, $certified);
+                    $col++;
+                    $examResult = $stat == null ? 'Z' : $stat['exams_total'];
+                    $sheet->setCellValue(chr($col) . $row, $examResult);
+                    $col++;
+                    $overallResult = $stat == null ? 'Z' : $stat['summary_total'];
+                    $sheet->setCellValue(chr($col) . $row, $overallResult);
+                    $col++;
+
+                    $credited = 'не зачтено';
+                    if ($stat != null) {
+                        if ($stat_type === 'credit-with-grade') {
+                            $rus = $stat['mark_rus'];
+                            if ($rus === '5') {
+                                $credited = 'отлично';
+                            } else if ($rus === '4') {
+                                $credited = 'хорошо';
+                            } else if ($rus === '3') {
+                                $credited = 'удовл.';
+                            } else {
+                                $credited = 'неудовл.';
+                            }
                         } else {
-                            $markCode = 3;
+                            $credited = $stat['summary_total_ok'] ? 'зачтено' : 'не зачтено';
                         }
                     }
+
+                    $sheet->setCellValue(chr($col) . $row, $credited);
+                    $col++;
+
+                    if ($stat == null) {
+                        $markCode = 1;
+                    } else {
+                        if (in_array($stat_type, ['exam', 'credit-with-grade'])) {
+                            $markCode = $stat['mark_rus'];
+                        } else {
+                            if (!$stat['summary_total_ok']) {
+                                $markCode = 2;
+                            } else {
+                                $markCode = 3;
+                            }
+                        }
+                    }
+                    $sheet->setCellValue(chr($col) . $row, $markCode);
+                    $col++;
+
+                    $markBologna = $stat == null ? 'F' : $stat['mark_bologna'];
+                    $sheet->setCellValue(chr($col) . $row, $markBologna);
                 }
-                $sheet->setCellValue(chr($col) . $row, $markCode);
-                $col++;
-                $markBologna = $stat == null ? 'F' : $stat['mark_bologna'];
-                $sheet->setCellValue(chr($col) . $row, $markBologna);
                 if ($col > $maxCol) {
                     $maxCol = $col;
                 }
+
                 $row++;
             }
-            $colForNotIncludedStats = chr($maxCol + 2);
+            $notInclCol = $stat_type === 'section-evaluation' ? $maxCol + 6 : $maxCol + 2;
+            $colForNotIncludedStats = chr($notInclCol);
             $notIncludedStatements = $this->findOthers($statements, $filledUserIdList);
             $row = $startRow;
             foreach ($notIncludedStatements as $st) {
@@ -244,41 +275,55 @@ class ResultStatement {
         $exam_work_groupBy_sections = $this->getExamWorksGroupBySection($exam_works);
 
         $sections_total = 0;
+        $sections_total_unrounded = 0;
         $section_with_bad_result_exists = false;
         $sections_result = array();
         foreach ($sections as $section) {
             $total = 0;
+            $total_unrounded = 0;
             $controls = array();
             $controls_max = 0;
             foreach ($control_work_groupBy_sections[$section->section_num] as $control_work) {
                 $presence = $control_work['presence'] == 1;
-                $points = $presence ? round($control_work['points'], 0) : 0;
+                $pointsRaw = $presence ? $control_work['points'] : 0;
+                $points = round($pointsRaw);
                 $total += $points;
+                $total_unrounded += $pointsRaw;
                 $controls_max += $control_work['max_points'];
                 $controls[] = array(
                     'id' => $control_work['id_control_work_pass'],
                     'section_num' => $control_work['section_num'],
                     'presence' => $presence,
+                    'points_raw' => $pointsRaw,
                     'points' => $points,
                 );
             }
             $lecture = $this->getLectureResult($section, $user);
             $seminar = $this->getSeminarResult($section, $user);
-            $total = round($total + $lecture + $seminar['presence_points'] + $seminar['work_points'], 0);
+            $others = $lecture + $seminar['presence_points'] + $seminar['work_points'];
+            $total = round($total + $others);
+            $total_unrounded += $others;
             $ok = $total >= 0.6 * $controls_max;
             if (!$ok) {
                 $section_with_bad_result_exists = true;
             }
             $sections_total += $total;
-            $sections_result[] = array(
+            $sections_total_unrounded += $total_unrounded;
+            $section_result = array(
                 'section_num' => $section['section_num'],
                 'controls_max_points' => $controls_max,
+                // КМы
                 'controls' => $controls,
+                // ПЛ
                 'lecture' => $lecture,
+                // ПС + РС
                 'seminar' => $seminar,
+                // Итог раздела
                 'total' => $total,
+                'total_unrounded' => $total_unrounded,
                 'total_ok' => $ok,
             );
+            $sections_result[] = $section_result;
         }
         $sections_total_ok = !$section_with_bad_result_exists && $sections_total >= 0.6 * $course_plan->max_semester;
 
@@ -288,7 +333,8 @@ class ResultStatement {
         foreach ($exam_work_groupBy_sections as $exams_by_section) {
             foreach ($exams_by_section as $exam_data) {
                 $presence = $exam_data['presence'] == 1;
-                $points = $presence ? round($exam_data['points'], 0) : 0;
+                $pointsRaw = $presence ? $exam_data['points'] : 0;
+                $points = round($pointsRaw);
                 $exams_total += $points;
                 if ($points < 0.6 * $exam_data['max_points']) {
                     $exam_with_bad_result_exists = true;
@@ -296,6 +342,7 @@ class ResultStatement {
                 $exams_result[] = array(
                     'id' => $exam_data['id_control_work_pass'],
                     'presence' => $presence,
+                    'points_raw' => $pointsRaw,
                     'points' => $points,
                 );
             }
@@ -313,6 +360,8 @@ class ResultStatement {
             'user' => $user,
             'sections' => $sections_result,
             'sections_total' => $sections_total,
+            'sections_total_unrounded' => $sections_total_unrounded,
+            'sections_total_diff_1_or_more' => abs($sections_total - $sections_total_unrounded) >= 1,
             'sections_total_ok' => $sections_total_ok,
             'exams' => $exams_result,
             'exams_total' => $exams_total,

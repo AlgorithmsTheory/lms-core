@@ -1,16 +1,20 @@
 function updateRow(row, statement) {
+    row.css({'background-color': statement.sections_total_diff_1_or_more ? 'rgb(220 255 0 / 19%)': ''});
     for (let section of statement.sections) {
         for (let control of section.controls) {
             const controlPassId = control.id;
             const controlTd = row.find(`td[data-id-control_work=${controlPassId}]`);
             controlTd.find('input[type=checkbox]').prop('checked', control.presence);
             const pointsInput = controlTd.find('input[type=number]');
-            pointsInput.val(control.points);
+            const pointsRounded = controlTd.find('.points-rounded')
+            pointsRounded.text(control.points);
+            pointsInput.val(control.points_raw);
             pointsInput.prop('disabled', !control.presence);
         }
         const sectionResultEl = row.find(`td[data-result-section_num=${section.section_num}]`);
         setColorTd(sectionResultEl, section.total_ok);
-        sectionResultEl.text(section.total);
+        sectionResultEl.find('.section_total').text(section.total);
+        sectionResultEl.find('.section_total_unrounded').text(section.total_unrounded);
     }
     for (let exam of statement.exams) {
         const controlPassId = exam.id;
@@ -19,12 +23,15 @@ function updateRow(row, statement) {
         presenceInput.prop('checked', exam.presence);
         presenceInput.prop('disabled', !statement.sections_total_ok);
         const pointsInput = controlTd.find('input[type=number]');
-        pointsInput.val(exam.points);
+        const pointsRounded = controlTd.find('.points-rounded')
+        pointsRounded.text(exam.points);
+        pointsInput.val(exam.points_raw);
         pointsInput.prop('disabled', !exam.presence || !statement.sections_total_ok);
     }
     const sectionsResultEl = row.find('.sum_result_section');
     setColorTd(sectionsResultEl, statement.sections_total_ok);
-    sectionsResultEl.text(statement.sections_total);
+    sectionsResultEl.find('.sections_total').text(statement.sections_total);
+    sectionsResultEl.find('.sections_total_unrounded').text(statement.sections_total_unrounded);
     const sumResultExamEl = row.find('.sum_result_exam');
     const resultAllCourseEl = row.find('.result_all_course');
     const markBolognaEl = row.find('.mark_bologna');
@@ -136,16 +143,24 @@ $('.print_to_pdf').on('click', ()=>{
     mywindow.close();
 });
 
-$('#getexcel').click(function(){
+// Сгенерировать ведомость
+$('.btn-gen-statement').on('click', function(ev){
+    // Тип ведомости:
+    // 1. credit - зачёт
+    // 2. credit-with-grade - зачёт с оценкой
+    // 3. exam - экзамен
+    // 4. section-evaluation - аттестация разделов
+    const type = ev.currentTarget.dataset.type;
     var group = $("#group_num").val();
     myBlurFunction(1);
     var formData = new FormData();
     formData.set('file', document.getElementById("image-file").files[0] ,'v.xlsx');
-    formData.set('filename',"v.xlsx" );
-    formData.set('group',group);
+    formData.set('filename', "v.xlsx" );
+    formData.set('group', group);
+    formData.set('type', type)
     $.ajax({
         type: 'POST',
-        url:   '/statements/get-resulting-excel',
+        url:   '/statements/gen-statement',
         processData: false,  // tell jQuery not to process the data
         contentType: false,  // tell jQuery not to set contentType
         beforeSend: function (xhr) {
@@ -162,56 +177,8 @@ $('#getexcel').click(function(){
         },
         success: function(data){
             myBlurFunction(0);
-            // Создаём ссылку на него
             var link = document.createElement('a')
             filename = 'file.xlsx';
-            // if(xhr.getResponseHeader('Content-Disposition')){//имя файла
-            //     filename = xhr.getResponseHeader('Content-Disposition');
-            //     filename=filename.match(/filename="(.*?)"/)[1];
-            //     filename=decodeURIComponent(escape(filename));
-            // }
-            link.href = URL.createObjectURL(data);
-            link.download = filename;
-            link.click();
-        }
-    });
-    return false;
-});
-
-$('#getexcelex').click(function(){
-    var group = $("#group_num").val();
-    myBlurFunction(1);
-    var formData = new FormData();
-    formData.set('file', document.getElementById("image-file").files[0] ,'v.xlsx');
-    formData.set('filename',"v.xlsx" );
-    formData.set('group',group);
-    $.ajax({
-        type: 'POST',
-        url:   '/statements/get-resulting-excel-ex',
-        processData: false,  // tell jQuery not to process the data
-        contentType: false,  // tell jQuery not to set contentType
-        beforeSend: function (xhr) {
-            var token = $('meta[name="csrf_token"]').attr('content');
-            if (token) {
-                return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-            }
-            formData.append('token',token);
-        },
-        data: formData,
-        dataType: 'binary',
-        xhrFields: {
-            'responseType': 'blob'
-        },
-        success: function(data){
-            myBlurFunction(0);
-            // Создаём ссылку на него
-            var link = document.createElement('a')
-            filename = 'file.xlsx';
-            // if(xhr.getResponseHeader('Content-Disposition')){//имя файла
-            //     filename = xhr.getResponseHeader('Content-Disposition');
-            //     filename=filename.match(/filename="(.*?)"/)[1];
-            //     filename=decodeURIComponent(escape(filename));
-            // }
             link.href = URL.createObjectURL(data);
             link.download = filename;
             link.click();
